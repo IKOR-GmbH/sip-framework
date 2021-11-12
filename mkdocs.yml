@@ -16,7 +16,7 @@ nav:
     - License: license.md
     - Contribution Guidelines: contributing.md
     - Changelog: changelog.md
-    - JavaDoc of latest Release: './javadoc/latest/index-all.html'
+    - JavaDoc of latest Release: './javadoc/latest/index.html'
     - Find out more about IKOR: 'https://ikor.one'
 
 collapse_navigation: false
