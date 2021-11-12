@@ -91,7 +91,6 @@
 
         <!-- sonar settings -->
         <sonar.organization>ikor-gmbh</sonar.organization>
-        <sonar.projectKey>IKOR-GmbH_sip-framework</sonar.projectKey>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
