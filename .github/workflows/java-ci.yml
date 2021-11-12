@@ -48,7 +48,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn ${MAVEN_ARGS} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=IKOR-GmbH_sip-framework
+      run: mvn ${MAVEN_ARGS} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=IKOR-GmbH_sip-framework -Psip-developer,package-deployment
 
 
   check-changelogs:
@@ -92,7 +92,7 @@ jobs:
       with:
         gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
     - name: "check javadocs"
-      run: mvn ${MAVEN_ARGS} javadoc:aggregate
+      run: mvn ${MAVEN_ARGS} javadoc:aggregate -Pjavadoc-lint-html
     - name: 'Upload Javadoc Artifact'
       if: ${{ github.ref == 'refs/heads/develop' }}
       uses: actions/upload-artifact@v2
@@ -180,7 +180,7 @@ jobs:
         git commit -m "Updated sip-framework version to ${RELEASE_VERSION}"
         git tag -a releases/${RELEASE_VERSION} -m "Released new sip-framework version ${RELEASE_VERSION}"
         echo "::set-output name=version::${RELEASE_VERSION}"
-        mvn ${MAVEN_ARGS} clean deploy -DskipTests
+        mvn ${MAVEN_ARGS} clean deploy -DskipTests -Ppackage-deployment
         mvn ${MAVEN_ARGS} versions:set -DnextSnapshot=true -DgenerateBackupPoms=false
         export SNAPSHOT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
         mvn ${MAVEN_ARGS} versions:set -pl ${STARTER_POM} -DnewVersion=${SNAPSHOT_VERSION} -DgenerateBackupPoms=false -DprocessDependencies=false
