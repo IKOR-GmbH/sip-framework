@@ -8,8 +8,7 @@ but also add some enterprise grade features which are, from our perspective, qui
 **Why use it?**
 Implementing code and configuration on top of Spring Security should help you jump-start your adapter development
 (along with the archetype), not waste your time, and enable you to focus on your core tasks - resolving integration problems.
-Nowadays, security is one of the most important topics in every application. Therefore, we decided to add SIP Security
-in every archetype-generated adapter project.
+Nowadays, security is one of the most important topics in every application.
 
 ### Dependency
 ```xml
