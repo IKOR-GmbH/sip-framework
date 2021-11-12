@@ -1,0 +1,82 @@
+body {
+	--dark-blue: #002E62;
+	--middle-blue: #A3B4DC;
+	--light-blue: #E9ECF8;
+	--ikor-blue: #0057B7;
+	--ikor-red: #C21B41;
+	--light-grey: #EDECEE;
+	--dark-grey: #545859;	
+}
+
+
+h1, h2, .rst-content .toctree-wrapper p.caption, h3, h4, h5, h6, legend {
+  color: var(--dark-blue);
+  font-family: "Helvetica Neue"
+}
+
+p {
+  color:  var(--dark-grey);
+  font-family: "Helvetica Neue"
+}
+
+ul, ol, dl {
+    color: var(--dark-grey);
+    font-family: "Helvetica Neue";
+}
+
+a:link {
+  color: var(--dark-grey);
+}
+
+a:visited {
+  color: var(--dark-grey);
+}
+
+a:hover {
+  color: var(--ikor-blue);
+}
+
+a:active {
+    color: var(--ikor-blue);
+}
+
+	
+/*main content*/
+.wy-nav-content {
+    max-width: 1200px
+}
+
+/*top and bottom boxes*/ 
+
+.wy-side-nav-search {
+    background: var(--dark-blue);
+}
+
+/*navigation*/
+.wy-nav-side {
+    background: var(--light-blue);
+}
+
+.wy-side-nav-search>a, .wy-side-nav-search .wy-dropdown>a {
+    color: white;
+}
+
+.rst-versions .rst-current-version {
+    background: var(--dark-blue);
+}
+
+/*links in navigation*/
+.wy-menu-vertical li.current a {
+	    background: white;
+    	color: var(--dark-grey);
+}
+
+.wy-menu-vertical li.current a:hover {
+	    background: var(--ikor-blue);
+		color: white;
+}
+
+.wy-menu-vertical li a:hover {
+	    background: var(--ikor-blue);
+		color: white;
+}
