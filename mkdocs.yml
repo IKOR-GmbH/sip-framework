@@ -1,0 +1,39 @@
+site_name: SIP Framework Documentation
+site_description: 'Documentation for using & developing with the SIP Framework'
+site_author: 'IKOR'
+repo_url: 'https://github.com/IKOR-GmbH/sip-framework'
+edit_uri: 'edit/main/docs/'
+
+nav:
+    - Introduction: index.md
+    - Installation Guide: installation.md
+    - Archetype: archetype.md
+    - Core: core.md
+    - Middle Component: middle-component.md
+    - Integration Starter: integration-starter.md
+    - Starter Parent: starter-parent.md
+    - Security: security.md
+    - License: license.md
+    - Contribution Guidelines: contributing.md
+    - Changelog: changelog.md
+    - JavaDoc of latest Release: './javadoc/latest/index-all.html'
+    - Find out more about IKOR: 'https://ikor.one'
+
+collapse_navigation: false
+
+theme:
+  name: 'readthedocs'
+  language: 'en'
+  include_homepage_in_sidebar: true
+
+docs_dir: 'docs'
+
+extra_css:
+    - css/extra.css
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - sane_lists
+  - plantuml_markdown:
+       server: https://www.plantuml.com/plantuml
