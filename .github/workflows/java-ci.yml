@@ -140,7 +140,7 @@ jobs:
       with:
         gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
     - name: check root has same spring-boot version as sip-starter-parent
-      run: test $(mvn help:evaluate -Dexpression=spring.boot.version -q -DforceStdout) = $(mvn help:evaluate -f sip-starter-parent/pom.xml -Dexpression=project.parent.version -q -DforceStdout)
+      run: test "$(mvn help:evaluate -Dexpression=spring.boot.version -q -DforceStdout)" = "$(mvn help:evaluate -f sip-starter-parent/pom.xml -Dexpression=project.parent.version -q -DforceStdout)"
 
 
   do-maven-release:
