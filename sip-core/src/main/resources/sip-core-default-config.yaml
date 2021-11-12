@@ -1,0 +1,22 @@
+sip.core:
+  translation:
+    fileLocations: classpath:translations/translated-messages, classpath:translations/sip-core-messages
+    default-encoding: UTF-8
+    fallback-to-system-locale: false
+    use-code-as-default-message: true
+    lang: en
+  tracing:
+    enabled: false
+    exchange-formatter:
+      showHeaders: true
+      showExchangeId: true
+
+management.endpoint.health.show-details: always
+management.endpoints.web.exposure.include: health,info,metrics,loggers,prometheus
+
+springdoc:
+  show-actuator: true
+  api-docs.path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
