@@ -1,0 +1,5 @@
+{
+    "author": "stieglma",
+    "pullrequestId": 2,
+    "message": "Disable automatic configuration of sip authentication, setting `sip.security.authentication.enabled: true` is required now"
+}
