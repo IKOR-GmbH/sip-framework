@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="IKOR">
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Core - SIP Framework Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+  <link href="../css/extra.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Core";
+    var mkdocs_page_input_path = "core.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> SIP Framework Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Introduction</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation Guide</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../archetype/">Archetype</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Core</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#features">Features</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#actuator-health-check-and-metrics">Actuator health check and metrics</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dynamic-proxy-for-apache-camel-processors">Dynamic proxy for Apache Camel Processors</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#working-with-routes-in-runtime">Working with routes in runtime</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#logging-translation">Logging Translation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#changing-log-level-programmatically">Changing log level programmatically</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#exchange-tracing">Exchange tracing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#openapi-descriptor">OpenAPI Descriptor</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../middle-component/">Middle Component</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../integration-starter/">Integration Starter</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../starter-parent/">Starter Parent</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contribution Guidelines</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../changelog/">Changelog</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="../javadoc/latest/index-all.html">JavaDoc of latest Release</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="https://ikor.one">Find out more about IKOR</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">SIP Framework Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Core</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/core.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="ikor-sip-framework-core">IKOR SIP Framework Core<a class="headerlink" href="#ikor-sip-framework-core" title="Permanent link">&para;</a></h1>
+<p><strong>[List of Content]</strong>
+- <a href="#description">Description</a>
+- <a href="#usage">Usage</a>
+- <a href="#features">Features:</a>
+    - <a href="#actuator-health-check-and-metrics">Actuator health check and metrics</a>
+    - <a href="#dynamic-proxy-for-apache-camel-processors">Proxy for Apache Camel Processors</a>
+    - <a href="#working-with-routes-in-runtime">Working with routes in runtime</a>
+    - <a href="#logging-translation">Logging Translation</a>
+    - <a href="#changing-log-level-programmatically">Changing log level programmatically</a>
+    - <a href="#exchange-tracing">Exchange tracing</a>
+    - <a href="#openapi-descriptor">OpenAPI Descriptor</a></p>
+<h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
+<p>Core project for base SIP functionalities</p>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<p>To enable SIP Core features use @SIPIntegrationAdapter to annotate the Spring Boot entry class.</p>
+<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
+<h3 id="actuator-health-check-and-metrics">Actuator health check and metrics<a class="headerlink" href="#actuator-health-check-and-metrics" title="Permanent link">&para;</a></h3>
+<p>SIP Core provides out-of-the-box health checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.</p>
+<p>Actuator can be accessed from {base_url}/actuator</p>
+<p>To customize health checks,
+or introduce health checks for other kinds of components,
+it is as simple as implementing the EndpointHealthConfigurer interface</p>
+<pre><code class="language-java">@Configuration
+public class EndpointMonitoringConfiguration {
+    @Bean
+    EndpointHealthConfigurer defaultHttpConfigurer() {
+        return registry -&gt; registry.register(&quot;http*://**&quot;,
+                HttpHealthIndicators::urlHealthIndicator);
+    }
+    @Bean
+    EndpointHealthConfigurer ftpConfigurer() {
+        return registry -&gt; registry.register(&quot;*ftp*://**&quot;,
+                FtpHealthIndicators::noopHealthIndicator);
+    }
+    @Bean
+    EndpointHealthConfigurer httpConfigurerById() {
+        return registry -&gt; registry.registerById(&quot;processor_id&quot;,
+                HttpHealthIndicators::urlHealthIndicator);
+    }
+}
+</code></pre>
+<p>There are a few possible ways to register health check indicators and they will be used in the following priority:</p>
+<ul>
+<li>by using the id of processor, it will be registered as the exact endpoint URI</li>
+<li>by using the exact endpoint URI as pattern</li>
+<li>by using wildcards (*) in pattern, priority is based on how close they match the URI</li>
+<li>default one for generic components</li>
+</ul>
+<p>If the same endpoint is used in more than one route,
+meaning multiple processors with different ids have the same endpoint uri,
+it is not possible to register 2 different health check functions (check important note below).
+Only one function per endpoint is possible.</p>
+<p><strong>Important</strong>: If same uri pattern is specified more than one time by any of these methods, DuplicateUriPatternError will be
+thrown and application will not be able to start.</p>
+<p><strong>Warning:</strong> Only one health indicator may exist for an exact endpoint URI.</p>
+<p>It is worth noting that the HTTP(S) Health Check lists all existing HTTP(S) endpoints by default, but sets the status to UNKNOWN.
+The reason for this is that for detected HTTP(S) endpoints a GET request is executed which may cause an unintended change of state
+of the system to be invoked. Thus this behavior does not occur, health checks should be added explicitly.
+To add an explicit Health Check for a URL it can be done in the following way.</p>
+<pre><code class="language-java">@Bean
+EndpointHealthConfigurer enableHttpHealthCheckForIKOR() {
+  return registry -&gt; registry.register(&quot;https://www.ikor.de&quot;,
+         HttpHealthIndicators::urlHealthIndicator);
+}
+</code></pre>
+<p>In case the URL https://www.ikor.de/kontakt.html is requested by the adapter, then on the one hand the explicit URL could be passed as
+a parameter to <code>register()</code> or wildcards could be used to add a Health Check for this URL and at the same
+time also matches https://www.ikor.de/karriere.html. The passed argument to <code>register()</code> would look like this <code>https://www.ikor.de/**</code>.
+However, HTTP(S) Health Checks can only be added for URLs that have also been detected in the adapter. In order to find out
+what URLs have been discovered one could inspect the result of <code>{base_url}/actuator/health</code>.</p>
+<p><strong>How to configure endpoint health checks:</strong></p>
+<p>To inspect the health of Camel endpoints in an integration adapter, one needs to:</p>
+<p>Make sure that this project uses sip-integration-starter maven dependency.
+Instead of using @SpringBootApplication, use Java annotation @SIPIntegrationAdapter to annotate the Spring Boot entry class.
+Configure the application actuator's Health endpoint to display details of health, as shown below.
+All prerequisites from above are met if you create an integration adapter using SIP archetype.</p>
+<p>Spring Boot Actuator:</p>
+<pre><code class="language-yaml">#configuring health endpoint
+management:
+  endpoint:
+    health:
+      show-details: always #or when_authorized if security is in place
+</code></pre>
+<h3 id="dynamic-proxy-for-apache-camel-processors">Dynamic proxy for Apache Camel Processors<a class="headerlink" href="#dynamic-proxy-for-apache-camel-processors" title="Permanent link">&para;</a></h3>
+<p>Dynamic proxy is implementation of decorator pattern on all Processors detected on all Camel routes. The base motivation
+is to gain more control over Camel dataflow, by providing placeholders for custom functionalities on different steps of
+the route. It's a mechanism for providing and applying new future features on already implemented adapters, through the
+configuration and without adapter code changes.</p>
+<p>During Camel route creation Processor Proxies are created and registered in ProcessorProxyRegistry. They can be accessed
+from registry through processor's ID. ProcessorProxyRegistry can be accessed as a spring bean or as an extension of CamelContext.</p>
+<p>The main feature for now is mock, which sets new behavior of a Camel processor and instead of using the real processor
+replace it with its mock. This can be achieved on any Processor on the route, including the outgoing endpoints. Mocking
+behavior with SIP can be triggered dynamically, and on single request level, leaving the original route intact and active
+all the time.</p>
+<p>To use it, header "proxy-modes" must be set, which consists of a map of processorIds as keys and list of commands as value:
+- proxy-modes: {"processorId": ["mock"]}</p>
+<p><strong>Setting mock behavior example:</strong></p>
+<pre><code class="language-java">@Configuration
+public class MockConfiguration {
+    private final ProcessorProxyRegistry proxyRegistry;
+
+    public void mockProcessorBehavior(String processorId) {
+        ProcessorProxy proxy = proxyRegistry
+                .getProxy(processorId)
+                .orElseThrow(
+                        () -&gt; new RuntimeException(&quot;There is no &quot; + processorId + &quot; proxy in the application&quot;));
+        proxy.mock(exchange -&gt; {/*define mock behavior*/});
+    }
+    //Reverts Processor to regular behavior
+    public void resetProcessorProxy(ProcessorProxy proxy){
+        proxy.reset();
+    }
+}
+</code></pre>
+<h3 id="working-with-routes-in-runtime">Working with routes in runtime<a class="headerlink" href="#working-with-routes-in-runtime" title="Permanent link">&para;</a></h3>
+<p>All routes with basic info can be listed by using the following URI:</p>
+<pre><code>GET /actuator/adapter-routes
+</code></pre>
+<p>Getting only routes with sip middle component consumer:</p>
+<pre><code>GET /actuator/adapter-routes/sipmc
+</code></pre>
+<p>More detailed info view for only one exact route can be seen by providing route id into following URI:</p>
+<pre><code>GET /actuator/adapter-routes/{routeId}
+</code></pre>
+<p>The following operations (case sensitive) can be executed per route, for all route or on sipmc:
+- start
+- stop
+- suspend
+- resume
+- reset</p>
+<p>To execute an operation on all routes, use following URIs:</p>
+<pre><code>POST /actuator/adapter-routes/{operation}
+</code></pre>
+<p>There is a possibility to execute a route lifecycle operation on an exact route, by providing route id and operation.
+This can be achieved by using following URI:</p>
+<pre><code>POST /actuator/adapter-routes/{routeId}/{operation}
+</code></pre>
+<p>Executing desired operation on the routes without providing route id is possible on sip middle component. By specifying operation
+on the following URI, operation will be executed for all routes which has sip middle component as a consumer:</p>
+<pre><code>POST /actuator/adapter-routes/sipmc/{operation}
+</code></pre>
+<p><strong>Warning:</strong>
+When using suspend or stop operation on route that has middle component as a consumer, default value (30 seconds) timeout will be used.
+Keep in mind that if route is not started for next 30 seconds after sending data to middle component, data could be lost.</p>
+<h3 id="logging-translation">Logging Translation<a class="headerlink" href="#logging-translation" title="Permanent link">&para;</a></h3>
+<p>Adds possibility to translate log messages</p>
+<p>By default, translation service is not activated, thus in order to use it a logback.xml file should be provided in resources. In this file we can specify that the adapter uses a custom logging encoder, which provides translations.</p>
+<pre><code class="language-xml">&lt;appender name=&quot;STDOUT&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
+    &lt;!-- encoders are  by default assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder --&gt;
+    &lt;encoder class=&quot;de.ikor.sip.foundation.core.translate.logging.SIPPatternLayoutEncoder&quot;&gt;
+        &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}: %msg%n&lt;/pattern&gt;
+    &lt;/encoder&gt;
+&lt;/appender&gt;
+</code></pre>
+<p>Files for defining translation values, should be created inside translate directory as a bundle of .property files, under a common name, which should be extended by a suffix in following format _{language}.</p>
+<p>Each file consists of keys, shared in the bundle, followed by its value as a phrase in the language used.</p>
+<p><strong>Warning:</strong>
+Be mindful of how MessageFormat handles String. Some characters, like apostrophe ('),
+are used as special characters and need to be escaped as shown in the example below.</p>
+<p>More details can be found here: <a href="https://docs.oracle.com/javase/6/docs/api/java/text/MessageFormat.html">MessageFormat</a></p>
+<pre><code class="language-properties">amessagekey = A message value
+amessagekey.welcome_{} = Hello {0}
+amessagekey.missingbean = Bean {0} doesn''t exist
+</code></pre>
+<p>The keys are automatically recognized and should be used in logs.</p>
+<pre><code class="language-java">log.info(&quot;amessagekey&quot;);
+log.info(&quot;amessagekey.welcome_{}&quot;, &quot;A user&quot;);
+</code></pre>
+<p>It can also be automatically used by Camel's log processor. In this case message key MUST be separated from parameters by
+blank space:</p>
+<pre><code class="language-java">.log(&quot;amessagekey&quot;);
+.log(&quot;amessagekey.welcome_{} ${header.userName}&quot;);
+</code></pre>
+<p>Enabling, disabling and other settings can be done in the configuration.</p>
+<pre><code class="language-yaml">sip:
+  core:
+    translation:
+      fileLocations: classpath:translations/translated-messages, classpath:translations/messages
+      default-encoding: &quot;UTF-8&quot;
+      fallback-to-system-locale: false
+      use-code-as-default-message: true
+      lang: en
+</code></pre>
+<h3 id="changing-log-level-programmatically">Changing log level programmatically<a class="headerlink" href="#changing-log-level-programmatically" title="Permanent link">&para;</a></h3>
+<p>Actuator enables us to dynamically change log levels of all loggers during runtime.
+This can be accomplished by using the following POST request:</p>
+<pre><code>http://localhost:8080/actuator/loggers/{logger-name}
+Header: Content-Type: application/json
+Body: {
+      &quot;configuredLevel&quot;: &quot;TRACE&quot;
+}
+</code></pre>
+<p>Log levels can be independently changed and will be individually set per logger or on root.</p>
+<p>We can also use logback.xml auto scan to update log levels.</p>
+<p>Here we need to enable auto scan and set the interval on which it occurs in logback.xml configuration, and then we can
+open logback.xml in target directory* and edit the log levels on loggers defined there.</p>
+<pre><code class="language-xml">&lt;configuration scan=&quot;true&quot; scanPeriod=&quot;30 seconds&quot;/&gt;
+</code></pre>
+<p>This works for all loggers except the ones on Camel routes.</p>
+<h3 id="exchange-tracing">Exchange tracing<a class="headerlink" href="#exchange-tracing" title="Permanent link">&para;</a></h3>
+<p>SIP Core offers usage of Camel's built-in Tracer for tracing and logging information about all processor
+an exchange when through and TraceHistory service which stores all data logged by it.
+Configuration of the Tracer is enabled by adapting ExchangeFormatter.</p>
+<p>First we need to enable the following:</p>
+<pre><code class="language-yaml">sip:
+  core:
+    tracing:
+      enabled: true
+</code></pre>
+<p>Configuring the ExchangeFormatter can be achieved in two ways</p>
+<ul>
+<li>through configuration file</li>
+</ul>
+<pre><code class="language-yaml">sip:
+  core:
+    tracing:
+      enabled: true
+      exchange-formatter:
+        multiline: true
+        showHeaders: true
+        showExchangeId: true
+        showProperties: true
+        maxChars: 100
+</code></pre>
+<ul>
+<li>by using the following POST request</li>
+</ul>
+<pre><code>/actuator/tracing/format/{exchangeFormatterParameterName}
+</code></pre>
+<p>The body of the request should include the value we want for the given parameter.</p>
+<p>TraceHistory is enabled with previous configuration.
+Exchanges will contain the "tracingId" header, which has the original Exchange's id as value.
+To see them in TraceHistory messages just set the "showHeaders" and "showExchangeId" parameters in ExchangeFormatter to true.
+A "tracingId' header will appear and will be linked to the original Exchange's id.</p>
+<p><strong>Expanding the traffic trace limit:</strong></p>
+<p>Introduced the SipLimitedLinkedList in order to limit the number of logged events in memory.
+Default limit is 100 events, but it could be changed by following configuration:</p>
+<pre><code class="language-yaml">sip:
+  core:
+    tracing:
+      limit: 120 #100 by default
+</code></pre>
+<h3 id="openapi-descriptor">OpenAPI Descriptor<a class="headerlink" href="#openapi-descriptor" title="Permanent link">&para;</a></h3>
+<p>Framework provides an Open API description of all custom or Spring provided endpoints within your adapter.
+Endpoints are created as extension of Spring's actuator.</p>
+<p>By using a sip-archetype code generator, you receive an adapter with a default setup for OpenAPI.</p>
+<p>For working with Swagger OpenAPI, check their official <a href="https://swagger.io/tools/swagger-ui/">documentation</a>.</p>
+<p><strong>Adding Custom Swagger Docs:</strong></p>
+<p>SIP Framework provides a Swagger documentation for the actuator endpoints out of the box. In case a custom Swagger documentation is needed
+it could be added by including the Swagger Apache Camel component. This component is only supporting the REST DSL component.
+For controller classes annotated with <code>@RestController</code> an entry is added to the default swagger docs.
+This might not be the expected behavior for which reason the <code>REST DSL</code> component is recommended.</p>
+<p>The custom Swagger documentation could easily be added by defining it in the <code>restConfiguration</code> as seen in the following listing.</p>
+<pre><code class="language-java">restConfiguration()
+  .contextPath(&quot;/adapter&quot;)
+  .apiContextPath(&quot;/api-docs&quot;)
+  .apiContextRouteId(&quot;api-docs&quot;);
+</code></pre>
+<p>If the application has a route based on the REST DSL a Swagger documentation is generated automatically.</p>
+<pre><code class="language-java">rest(&quot;/api/v1&quot;)
+  .tag(&quot;Data Controller&quot;).description(&quot;REST service for creating new objects&quot;)
+  .consumes(MediaType.APPLICATION_JSON_VALUE).produces(MediaType.APPLICATION_JSON_VALUE)
+  .post(&quot;/data&quot;)
+    .type(DataRequest.class)
+    .description(&quot;Create a new object&quot;)
+    .outType(DataResponse.class)
+    .to(&quot;direct:handleRequest&quot;);
+</code></pre>
+<p>This will create a new Swagger documentation for the REST service. For further informations see the Apache Camel documentation of the <a href="https://camel.apache.org/components/next/others/swagger-java.html">Swagger</a>
+and <a href="https://camel.apache.org/manual/rest-dsl.html">REST DSL</a> component. In case the custom Swagger documentation should be displayed by default in the Swagger UI you can configure it
+accordingly in the <code>application.yaml</code> file.</p>
+<pre><code class="language-yaml">springdoc:
+  show-actuator: true
+  api-docs:
+    path: /api-docs #default swagger docs
+  swagger-ui:
+    url: /adapter/api-docs #custom swagger docs set as default
+    path: /swagger-ui.html
+</code></pre>
+<p>Based on this configuration the custom Swagger documentation is accessible by <code>/adapter/api-docs</code>.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../middle-component/" class="btn btn-neutral float-right" title="Middle Component">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../archetype/" class="btn btn-neutral" title="Archetype"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/IKOR-GmbH/sip-framework/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../archetype/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../middle-component/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

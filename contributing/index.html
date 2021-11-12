@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="IKOR">
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Contribution Guidelines - SIP Framework Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+  <link href="../css/extra.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Contribution Guidelines";
+    var mkdocs_page_input_path = "contributing.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> SIP Framework Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Introduction</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation Guide</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../archetype/">Archetype</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../core/">Core</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../middle-component/">Middle Component</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../integration-starter/">Integration Starter</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../starter-parent/">Starter Parent</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Contribution Guidelines</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#code-of-conduct">Code of conduct</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-can-i-contribute">How can I contribute?</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#reporting-bugs">Reporting bugs</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#reporting-security-vulnerabilities">Reporting security vulnerabilities</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#requesting-features">Requesting features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#pull-requests-to-get-your-contribution-merged">Pull requests (to get YOUR contribution merged)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#guidelines">Guidelines</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#coding">Coding</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#pull-request-process">Pull request process</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../changelog/">Changelog</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="../javadoc/latest/index-all.html">JavaDoc of latest Release</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="https://ikor.one">Find out more about IKOR</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">SIP Framework Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Contribution Guidelines</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/contributing.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="contributing-to-sip">Contributing to SIP<a class="headerlink" href="#contributing-to-sip" title="Permanent link">&para;</a></h1>
+<p>First off, thanks for your contribution! :+1:</p>
+<p>SIP is released under the Apache 2.0 license. If you would like to contribute you are very welcome to do so and this document should help you having a good start.</p>
+<p>Please note we have a code of conduct, please follow it in all your interactions with the project.</p>
+<h2 id="code-of-conduct">Code of conduct<a class="headerlink" href="#code-of-conduct" title="Permanent link">&para;</a></h2>
+<p>This project adheres to the Contributor Covenant <a href="CODE_OF_CONDUCT.md">code of conduct</a>.</p>
+<p>By participating, you are expected to uphold this code. Please report unacceptable behavior to the given email address.</p>
+<h2 id="how-can-i-contribute">How can I contribute?<a class="headerlink" href="#how-can-i-contribute" title="Permanent link">&para;</a></h2>
+<h3 id="reporting-bugs">Reporting bugs<a class="headerlink" href="#reporting-bugs" title="Permanent link">&para;</a></h3>
+<p>We use GitHub issues to track bugs. Bug reports should be done by using and completing the bug tracking template.</p>
+<p>Please handle possibly security vulnerabilities with special care as described below.</p>
+<h3 id="reporting-security-vulnerabilities">Reporting security vulnerabilities<a class="headerlink" href="#reporting-security-vulnerabilities" title="Permanent link">&para;</a></h3>
+<p>If you think you have found a security vulnerability please <em>DO NOT</em> disclose it publicly until we've had a chance to fix it as this may result in an unnecessary security threat. We will handle these requests with special care.</p>
+<p>Please contact us with templated bug report via email at: opensource@ikor.de</p>
+<h3 id="requesting-features">Requesting features<a class="headerlink" href="#requesting-features" title="Permanent link">&para;</a></h3>
+<p>Feature requests can be done by creating a Github Issue using the feature request template.</p>
+<h3 id="pull-requests-to-get-your-contribution-merged">Pull requests (to get YOUR contribution merged)<a class="headerlink" href="#pull-requests-to-get-your-contribution-merged" title="Permanent link">&para;</a></h3>
+<p>Another option to contribute is to fix any bugs from the bug list, implement features, extend functionality, adapt the documentation or whatever else you can imagine! :+1:</p>
+<p>To get your adaptions merged you need to create a pull request. You have to complete the provided pull request template. We will take care of the submitted pull requests and to mention this once again: Thank you very much for your contribution!</p>
+<h2 id="guidelines">Guidelines<a class="headerlink" href="#guidelines" title="Permanent link">&para;</a></h2>
+<p>We welcome everyones work and engagement to evolve SIP. To make our life easier and we defined a couple of guidelines to follow while working on the code and we ask everyone to adhere to these points. During the pull request process the reviewer will check if the pull request adheres to the following rules. The rules are questions you should answer before creating a pull request:</p>
+<h3 id="coding">Coding<a class="headerlink" href="#coding" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Have you avoided to use field based autowiring? (see <a href="http://odrotbohm.de/2013/11/why-field-injection-is-evil/">here</a> why we chose to use constructor autowiring)</li>
+<li>Are all your unit tests written with junit5 and assertions with assertj (<a href="https://assertj.github.io/doc/">see</a>)?</li>
+<li>Does your code not add any new compile warnings?</li>
+<li>Does your contribution contain necessary and useful javadoc and is the linting process successful?</li>
+<li>Is the maven project version a SNAPSHOT version?</li>
+<li>Are all dependencies you added RELEASE versions?</li>
+</ul>
+<h3 id="pull-request-process">Pull request process<a class="headerlink" href="#pull-request-process" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Does your contribution follow the Goodle Java Coding style? (you can find it <a href="https://github.com/google/google-java-format">here</a>)</li>
+<li>Does your pull request only contain changes related to the topic the branch was intended for?</li>
+<li>Does your pull request contain useful and necessary tests?</li>
+<li>Was the Sonarqube analysis of your PR successful and all quality gates are met?</li>
+<li>Have you added a complete, valid and self explaining changelog?</li>
+<li>Is your pull request mergeable?</li>
+<li>Was your branch deleted after merging the sources?</li>
+<li>Does the pull request also contain necessary documentation changes or adaptions</li>
+<li>Have you used and completed the pull request form provided?</li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../changelog/" class="btn btn-neutral float-right" title="Changelog">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../license/" class="btn btn-neutral" title="License"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/IKOR-GmbH/sip-framework/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../license/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../changelog/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

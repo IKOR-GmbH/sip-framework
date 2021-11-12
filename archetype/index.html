@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="IKOR">
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Archetype - SIP Framework Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+  <link href="../css/extra.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Archetype";
+    var mkdocs_page_input_path = "archetype.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> SIP Framework Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Introduction</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation Guide</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Archetype</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-to-create-a-sip-adapter-using-sip-archetype">How to create a SIP Adapter using SIP Archetype</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../core/">Core</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../middle-component/">Middle Component</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../integration-starter/">Integration Starter</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../starter-parent/">Starter Parent</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contribution Guidelines</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../changelog/">Changelog</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="../javadoc/latest/index-all.html">JavaDoc of latest Release</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="https://ikor.one">Find out more about IKOR</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">SIP Framework Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Archetype</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/archetype.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="ikor-sip-archetype">IKOR SIP Archetype<a class="headerlink" href="#ikor-sip-archetype" title="Permanent link">&para;</a></h1>
+<p><strong>[List of Content]</strong>
+- <a href="#description">Description</a>
+- <a href="#how-to-create-a-sip-adapter-using-sip-archetype">How to create a SIP Adapter using SIP Archetype</a></p>
+<h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
+<p>This archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies</p>
+<h2 id="how-to-create-a-sip-adapter-using-sip-archetype">How to create a SIP Adapter using SIP Archetype<a class="headerlink" href="#how-to-create-a-sip-adapter-using-sip-archetype" title="Permanent link">&para;</a></h2>
+<p>In order to make setting up a new integration adapter project an easy task, we have created a dedicated SIP (Adapter) Maven archetype, that gives the ability to quickly bootstrap a new integration adapter, along with all needed Maven dependencies and goodies, as well as the recommended, preferred organization of the project.</p>
+<p>To make a long story short, you can create a SIP Adapter by using the following Maven command:</p>
+<p><code>mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=1.0.0 -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT</code></p>
+<p>When executing the command, pay attention to use the latest archetype version for the -DarchetypeVersion parameter.</p>
+<p>The following parameters -DgroupId, -DartifactId, -DprojectName and -Dversion should be adjusted to better match your project,
+as they set the properties for the adapter. It is recommended to follow the maven naming convention.</p>
+<p>After executing maven command, you will be requested to insert additional parameters about project structure:</p>
+<ul>
+<li>
+<p><strong>packageSuffix</strong> is used to create project package name by concatenating its value to the groupId. There is a strict validation
+for using only lower case letters and it is meant to name the package by extending your groupId for only one word.</p>
+</li>
+<li>
+<p><strong>package</strong> (optional) is used to override previous package naming and provide full package name. This can be skipped by leaving value empty.
+It is strongly recommended to follow package naming convention, otherwise your project will be created but it will consist
+package naming errors.</p>
+</li>
+<li>
+<p><strong>systemConnector1</strong>/<strong>systemConnector2</strong> are representing names of your connector modules inside the project.
+Naming recommendation is to use lower case letters and kebab-case.</p>
+</li>
+<li>
+<p><strong>systemConnector1Package</strong>/<strong>systemConnector2Package</strong> are used to define package name suffix for the connectors. Notice that
+  connector package name starts with prefix defined on <strong>package</strong> step.</p>
+</li>
+</ul>
+<p>After a successful build, a project with the 4 following modules will be created:</p>
+<ul>
+<li>{artifactId}-application</li>
+<li>{artifactId}-domain</li>
+<li>{systemConnector1}</li>
+<li>{systemConnector2}</li>
+</ul>
+<p>Our recommendation for modules naming is shown on the following Partner Adapter example:</p>
+<ul>
+<li>partner-adapter-application</li>
+<li>partner-adapter-domain</li>
+<li>partner-connector-{arbitrary connector1 name}</li>
+<li>partner-connector-{arbitrary connector2 name}</li>
+</ul>
+<p>More about modules and internal SIP structure you can find <a href="../README.md">here</a>.</p>
+<p>More information about Maven archetypes is available here:
+<a href="https://maven.apache.org/guides/introduction/introduction-to-archetypes.html">Maven Archetype</a></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../core/" class="btn btn-neutral float-right" title="Core">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../installation/" class="btn btn-neutral" title="Installation Guide"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/IKOR-GmbH/sip-framework/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../installation/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../core/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

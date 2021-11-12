@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Documentation for using & developing with the SIP Framework">
+  <meta name="author" content="IKOR">
+  
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <title>SIP Framework Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+  <link href="css/extra.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Introduction";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> SIP Framework Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href=".">Introduction</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#what-is-sip">What is SIP?</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#framework-components">Framework components</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#framework-features">Framework features</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#how-and-why-to-use-sip-middle-component">How and why to use SIP Middle Component</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#adding-additional-camel-starters-to-the-project">Adding additional Camel starters to the project</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#adding-new-system-connectors">Adding new System Connectors</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#sample-scenarios">Sample Scenarios</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#development-tips">Development Tips</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#configuration-properties">Configuration properties</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="installation/">Installation Guide</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="archetype/">Archetype</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="core/">Core</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="middle-component/">Middle Component</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="integration-starter/">Integration Starter</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="starter-parent/">Starter Parent</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="security/">Security</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="license/">License</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="contributing/">Contribution Guidelines</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="javadoc/latest/index-all.html">JavaDoc of latest Release</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="https://ikor.one">Find out more about IKOR</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">SIP Framework Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Introduction</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/index.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="system-integration-platform-framework">System Integration Platform Framework<a class="headerlink" href="#system-integration-platform-framework" title="Permanent link">&para;</a></h1>
+<p>The System Integration Platform (SIP) Framework is an IKOR product
+developed from 10 project years of experience with standardized integration of core and peripheral systems.</p>
+<p>The framework enables building light-weight integration adapters to achieve a technical and non-technical decoupling of
+systems, using microservices and is therefore highly scalable.</p>
+<p>It builds on Apache Camel Framework and extends it with a lot of usable features to create a standardized integration
+approach for all adapters.</p>
+<p><strong>List of Content:</strong>
+- <a href="#what-is-sip">What is SIP?</a>
+- <a href="#usage">Usage</a>
+  - <a href="#framework-components">Framework components</a>
+  - <a href="#framework-features">Framework features</a>
+- <a href="#getting-started">Getting started</a></p>
+<h2 id="what-is-sip">What is SIP?<a class="headerlink" href="#what-is-sip" title="Permanent link">&para;</a></h2>
+<p><strong>S</strong>ystem <strong>I</strong>ntegration <strong>P</strong>latform is a combination of SIP framework, SIP management application and various implementation
+guidelines and best practices. Combined they create an advantage when developing microservice integration adapters.
+SIP adapters are specially designed as middleware integrators of specific subdomains of an enterprise. SIP project structure
+and implementation guidelines provide higher degree of code consistency across different adapter instances, making them
+much easier to maintain, manage and monitor. The goal is to have minimal set of restrictions of developer's freedom with
+maximum comfort and efficiency while developing.</p>
+<p>To start developing with SIP, we should first get familiar with its basic concepts.
+Let's take a very simple scenario as an example. Say we have two systems working on the same domain (Partner, Policy, Billing
+etc.), but they were never designed to work together, and suddenly there is a need to connect them.</p>
+<p><img alt="Image of Unconnected systems image" src="doc-images/SIP_readme_systems.svg?raw=true" title="Unconnected systems" /></p>
+<p>Both systems expose APIs, which are mutually not compatible, both by data model and/or communication technology
+they use. SIP is designed as a standalone middleware app with a sole purpose to resolve exactly this kind of problems in
+a flexible and standardized way. Actual integration scenarios may include more than two APIs, or even more than two
+systems, but all the principles apply equally to such scenarios.</p>
+<p><img alt="Image of SIP connected systems" src="doc-images/SIP_readme_adapter.svg?raw=true" title="SIP connected systems" /></p>
+<p>The image below shows the modules structure of a single SIP adapter.
+To provide a level of flexibility, SIP splits the problem into two, giving the possibility to develop and/or deploy connectors
+for individual systems separately. The integration
+logic is divided into three modules: <strong>System A - Connector</strong>, <strong>System B - Connector</strong> and <strong>Domain</strong>. The fourth module is the <strong>Application</strong>
+module. Its purpose is to converge the three integration modules into one deployable and executable application.
+The blue arrows represent dependencies of the application module.</p>
+<p><img alt="Image of SIP Adapter" src="doc-images/SIP_readme_adapter_detail.svg?raw=true" title="SIP Adapter" /></p>
+<p><strong>Domain</strong></p>
+<p>The <strong>Domain</strong> module takes a central position in the image, because it provides the common data model for both systems
+and also separates the system connectors from each other to allow loose coupling between them. It should not contain any
+integration logic but only simple Java objects representing the respective domain in which the system connectors of an adapter
+operate. All connectors should adapt the data models of their systems to or from this common model, depending on data flow,
+due to their incompatibilities. The domain can be seen as a kind of contract between the different system connectors which
+ensures that they can communicate with each other. It contains common data model which uniforms the data models from all
+integration sides.</p>
+<p><strong>Connectors</strong></p>
+<p><strong>Connectors</strong> are designed to communicate with the associated external systems, thus all classes found in a connector
+should only relate to their integration side. To enable this, their local domain objects are aligned with the API of an
+external systems they communicate with. In order to send a message from one system connector
+to another, the local domain objects must be mapped to the shared domain object. Furthermore, this means that a message
+from system A is mapped to the shared domain object and then from the shared domain object to the model of system B and
+vice versa, due to their bidirectional nature.
+Notice the blue arrows pointing from the system connectors to the domain
+module, meaning that connectors are absolutely independent of each other. A developer can work on or deploy only one side,
+without the others being affected. This also means that changes on one of adapter's connector does not necessarily require
+changes of the other. That's especially important if the affected connector is reused across multiple adapters.
+In the picture domain A and domain B packages are shown optionally, together with corresponding mapper
+component, since integrated systems use the same communication data model sometimes.</p>
+<p>Each connector will have the following structure:</p>
+<ul>
+<li>config – a place for any configuration classes</li>
+<li>sink – here we should define Camel routes</li>
+<li>transformers – it should contain classes for adapting the connector model to common domain model.</li>
+<li>domain (optional) - it may contain the data model of the system.</li>
+</ul>
+<p><strong>Application</strong></p>
+<p>The Application module gathers all connector modules as one system and run them together.
+Starting your adapter is done by running SIPApplication class in the application module.
+Furthermore, its pom.xml must contain dependencies to all connector modules in adapter,
+in order to start them. This module should not contain any integration logic, but it's a good place for implementing Spring
+integration tests, such as default SIPApplicationTest, provided by archetype.</p>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<h3 id="framework-components">Framework components<a class="headerlink" href="#framework-components" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><a href="docs/archetype.md">sip-archetype</a></strong> - Archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies.
+Project is created by executing single maven command.</li>
+<li><strong><a href="docs/core.md">sip-core</a></strong> - Core project for base SIP functionalities.</li>
+<li><strong><a href="docs/middlecomponent.md">sip-middle-component</a></strong> - Custom Camel component used as abstracted connector between different integration sides.</li>
+<li><strong><a href="docs/integrationstarter.md">sip-integration-starter</a></strong> - Starter project adding necessary predefined dependencies for integration adapters.</li>
+<li><strong><a href="docs/starterparent.md">sip-starter-parent</a></strong> - This project takes care of versions for Spring Boot and Camel dependencies.</li>
+<li><strong><a href="docs/security.md">sip-security</a></strong> - Security in SIP framework.</li>
+</ul>
+<p>The following image displays how listed modules are utilized on SIP adapter where the up arrows represent inheritance,
+down arrows dependencies.</p>
+<p><img alt="Image of SIP connected systems" src="doc-images/SIP_readme_dependencies.svg?raw=true" title="SIP connected systems" /></p>
+<h3 id="framework-features">Framework features<a class="headerlink" href="#framework-features" title="Permanent link">&para;</a></h3>
+<p>Framework provides different features some of which are enabled by default. All the features are customizable and can be
+overwritten or turned off by configuration. More about how to use them you can find under the corresponding module's
+  documentation.</p>
+<ul>
+<li><strong><a href="docs/core.md#actuator-health-check-and-metrics">Actuator health check and metrics</a></strong> - Out-of-the-box health
+   checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.</li>
+<li><strong><a href="docs/core.md#proxy-for-apache-camel-processors">Proxy for Apache Camel Processors</a></strong> - Proxies for Apache Camel
+   processors with process and mock functionalities.</li>
+<li><strong><a href="docs/core.md#working-with-routes-in-runtime">Working with routes in runtime</a></strong> - Dynamical changing routes lifecycle.</li>
+<li><strong><a href="docs/core.md#logging-translation">Logging Translation</a></strong> - Translation of logging messages.</li>
+<li><strong><a href="docs/core.md#changing-log-level-programmatically">Changing log level programmatically</a></strong> - Dynamical changing of log level.</li>
+<li><strong><a href="docs/core.md#exchange-tracing">Exchange tracing</a></strong> - Tracing and storing exchanges on Camel Processor level.</li>
+<li><strong><a href="docs/core.md#openapi-descriptor">OpenAPI Descriptor</a></strong> - Built-in OpenAPI.</li>
+<li><strong><a href="docs/middlecomponent.md#description">SIP Middle component publish-subscribe</a></strong> - Multiple consumers on middle component.</li>
+<li><strong><a href="docs/security.md">SIP Security</a></strong> - Includes SSL setup, base and x509 authentication</li>
+</ul>
+<h2 id="getting-started">Getting started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<p>Before development, check the following <a href="INSTALLATION.md">Installation guide</a>.</p>
+<p>Once you have your adapter you can do the following steps:</p>
+<ul>
+<li>Run "mvn clean install"</li>
+<li>Crate common Data Model inside domain module</li>
+<li>Add necessary dependencies to each module</li>
+<li>Add RouteBuilders inside "sink" package in connectors</li>
+<li>Add classes which transform system data models to or from common domain model in "transformers" package in connectors
+  (if needed)</li>
+<li>Add any configuration classes for a specific system inside "config" package in connectors</li>
+<li>Add general integration configuration in application.yml found inside application module resources</li>
+<li>Run SIPApplication found inside application module</li>
+<li>After the application is up and running you can check SIP's management API under <a href="http://localhost:8080/swagger-ui.html">localhost:8080/swagger-ui.html</a></li>
+</ul>
+<h3 id="how-and-why-to-use-sip-middle-component">How and why to use SIP Middle Component<a class="headerlink" href="#how-and-why-to-use-sip-middle-component" title="Permanent link">&para;</a></h3>
+<p><a href="docs/middlecomponent.md">SIP Middle Component</a> (sipmc) is a key concept of SIP Framework.
+As such it is used as a communication device between connectors.
+To make a clear distinction between connectors, the point of separation can be seen with sipmc.
+It marks the end or beginning of integration sides.
+Currently, sipmc works as either 1 to 1 connector or publish subscribe,
+based on the number of consumers, without any additional configuration.</p>
+<h3 id="adding-additional-camel-starters-to-the-project">Adding additional Camel starters to the project<a class="headerlink" href="#adding-additional-camel-starters-to-the-project" title="Permanent link">&para;</a></h3>
+<p>The Maven dependency management techniques implemented in the SIP archetype give you the ability to easily add new
+camel-starter dependencies to integration adapters.</p>
+<p>Should you need additional <a href="https://camel.apache.org/components/latest/">Apache Camel Components</a> in the project, it is
+enough to add their Spring Boot starter dependency, without version number - as it is managed in the parent Maven module
+of the SIP integration adapter.</p>
+<p>For instance, to add ArangoDb Camel component, it is enough to add the following dependency to the project:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.camel.springboot&lt;/groupId&gt;
+    &lt;artifactId&gt;camel-arangodb-starter&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>The same stands for adding Spring Boot starters - as they are managed in the parent Maven module they too can be added
+without explicitly stating version numbers. As a matter of fact, the overall dependency management performed by the
+Spring Boot is in place in integration adapters too.</p>
+<p>However, if you need to use some third-party libraries - there are chances that you will be responsible for managing
+their versions in the application.
+It is important to add the required dependency to the corresponding connector module's pom. Only that way connector modules
+can keep their independence.</p>
+<h3 id="adding-new-system-connectors">Adding new System Connectors<a class="headerlink" href="#adding-new-system-connectors" title="Permanent link">&para;</a></h3>
+<p>By using the SIP archetype to create a new SIP adapter, by default there are two system connectors, designed to make it
+more convenient to integrate systems. In case there are more than two systems, which need to be integrated, you need to add
+additional modules to the project structure. There are a number of ways to add new system connectors to a SIP adapter.
+These possibilities are explained in detail in the following part.</p>
+<p>Initially each system connector module has two dependencies.
+These are the domain module and the <code>sip-integration-starter</code>.
+Make sure to add these to your <code>pom.xml</code> dependencies list.
+Please observe this exemplary <a href="#example-pom">pom.xml</a> to see how it should look like in a system connector module.</p>
+<p>The module structure usually looks like this:</p>
+<pre><code>fancy-sip-adapter
+├───new-system-connector-module
+│   ├───src/main/java/&lt;package-path&gt;
+│   │   ├───config
+│   │   ├───sink
+│   │   └───transformer
+│   └───pom.xml
+...
+</code></pre>
+<p><strong>Copying Existing Module</strong></p>
+<p>One way to add a system connector as a new module is to copy an existing module,
+that has been created by using the SIP archetype to your project structure.
+If the module was copied the <code>name</code> and <code>artifactId</code> in its <code>pom.xml</code> need to be adjusted.
+Then the module name should be added to the <code>modules</code> element of the <code>pom.xml</code> of the main project.</p>
+<pre><code class="language-xml">&lt;modules&gt;
+  &lt;module&gt;system-connector-A&lt;/module&gt;
+  &lt;module&gt;system-connector-B&lt;/module&gt;
+  &lt;module&gt;new-system-connector-module&lt;/module&gt;
+&lt;/modules&gt;
+</code></pre>
+<p>Additionally, the copied module must be added as a dependency to the <code>pom.xml</code> of the application module.</p>
+<pre><code class="language-xml">&lt;dependencies&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;de.ikor.sip.adapter&lt;/groupId&gt;
+    &lt;artifactId&gt;new-system-connector-module&lt;/artifactId&gt;
+    &lt;version&gt;${project.version}&lt;/version&gt;
+  &lt;/dependency&gt;
+  ...
+&lt;/dependencies&gt;
+</code></pre>
+<p>If necessary, refresh or rebuild the project so that the newly created module gets registered.</p>
+<p><strong>Using IDEs Built-In Functionality</strong></p>
+<ul>
+<li>
+<p>IntelliJ</p>
+<ul>
+<li>Right click on the parent project folder and select <code>New &gt; Module...</code>.</li>
+<li>Select <code>Maven</code> in the left menu and click on the <code>Next</code> button</li>
+<li>Provide a new module name and click on <code>Finish</code></li>
+</ul>
+</li>
+<li>
+<p>Eclipse</p>
+<ul>
+<li><code>File &gt; New &gt; Other...</code></li>
+<li>Enter <code>maven  module</code> select <code>Maven Module</code> from the search result list and click on <code>Next</code></li>
+<li>Enter a module name select the parent project and press <code>Next</code></li>
+<li>Choose a maven archetype version from the list and click <code>Next</code> (You can use the default selection)</li>
+<li>Check the archetype parameters and press <code>Finish</code></li>
+</ul>
+</li>
+</ul>
+<p>The result is a new subdirectory of the SIP adapter project.
+Compare the <code>pom.xml</code> of the newly created module with one of the modules that were created by SIP archetype.
+There are only a few differences that need to be adjusted.</p>
+<p>Make sure the newly created module is present in the <code>modules</code> element list of the main <code>pom.xml</code>
+and that it has been added as a dependency to the application <code>pom.xml</code>.</p>
+<p><strong>Example POM</strong></p>
+<p><a name="example-pom"/></p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+  &lt;parent&gt;
+    &lt;groupId&gt;de.ikor.sip.adapter&lt;/groupId&gt;
+    &lt;artifactId&gt;systemadapter&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+  &lt;/parent&gt;
+
+  &lt;artifactId&gt;outbound&lt;/artifactId&gt;
+  &lt;name&gt;outbound&lt;/name&gt;
+
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;de.ikor.sip.foundation&lt;/groupId&gt;
+      &lt;artifactId&gt;sip-integration-starter&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;de.ikor.sip.adapter&lt;/groupId&gt;
+      &lt;artifactId&gt;systemadapter-domain&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+&lt;/project&gt;
+</code></pre>
+<h3 id="sample-scenarios">Sample Scenarios<a class="headerlink" href="#sample-scenarios" title="Permanent link">&para;</a></h3>
+<p><strong>REST</strong></p>
+<pre><code class="language-java">package de.ikor.sip.adapter.partner.input.sink;
+
+// Input system
+@Cofiguration
+public class RESTConsumerRouteBuilder extends RouteBuilder {
+    @Override
+    public void configure() throws Exception {
+        from(&quot;rest:POST:update&quot;)
+            .routeId(&quot;inputRoute&quot;)
+            .process(&quot;sytemOneToDomainModel&quot;)
+            .to(&quot;sipmc:foo&quot;)
+            .id(&quot;sipmcProcessor&quot;);
+    }
+}
+</code></pre>
+<pre><code class="language-java">package de.ikor.sip.adapter.partner.output.sink;
+
+// Output system
+@Cofiguration
+public class RESTProducerRouteBuilder extends RouteBuilder {
+    @Override
+    public void configure() throws Exception {
+        from(&quot;sipmc:foo&quot;)
+            .routeId(&quot;outputRoute&quot;)
+            .process(&quot;domainToSystemTwoModel&quot;)
+            .to(&quot;http:example.com&quot;)
+            .id(&quot;exampleProcessor&quot;);
+    }
+}
+</code></pre>
+<h3 id="development-tips">Development Tips<a class="headerlink" href="#development-tips" title="Permanent link">&para;</a></h3>
+<p><strong>Property placeholders</strong></p>
+<p>When it comes to working with URIs in routes it is recommended to use property placeholders, which makes the routes configurable.
+This can be easily achieved in Camel by following their placeholder syntax. When building route URIs instead of hardcoding the URI,
+we should pull it from configuration. Now, when needed, we can just edit the configuration file instead of the route.</p>
+<p>Example route:</p>
+<pre><code class="language-java">from(&quot;{{endpoint.{adapter-name}.{external-system}.uri}}&quot;)
+    .id(&quot;{{endpoint.{adapter-name}.{external-system}.id}}&quot;)
+    .to(...);
+</code></pre>
+<p>Example configuration:</p>
+<pre><code class="language-yaml">
+endpoint:
+ {adapter-name}:
+  {external-system}:
+   {endpoint}: # optional - if more endpoints on single external-system are involved in integration
+    id: {adapterName}.{externalSystem}
+    uri: ftp://...
+</code></pre>
+<p><strong>Setting processor and route IDs</strong></p>
+<p>As we can see each external endpoint definition is followed by explicit setting of id. Although it's not mandatory, it's highly
+doing so is highly recommended. This will provide a reference of the external endpoints, which can be used for different
+functionalities, like mocking, custom health check or other functionalities that are yet to come.
+Notice that in case of incoming endpoints (those in "from" statement), following id refers to the routeId.</p>
+<h3 id="configuration-properties">Configuration properties<a class="headerlink" href="#configuration-properties" title="Permanent link">&para;</a></h3>
+<p>By default, the following properties come as a part of SIP Framework, to override them simply add them to your configuration file with desired values.</p>
+<p>When using a yaml configuration file, which is already available in application module, adapt the properties to its format.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Value</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sip.core.translation.fileLocations</td>
+<td>Sets locations of translation bundles</td>
+<td>List</td>
+<td>classpath:translations/translated-messages, classpath:translations/sip-core-messages</td>
+</tr>
+<tr>
+<td>sip.core.translation.default-encoding</td>
+<td>Sets default encoding</td>
+<td>String</td>
+<td>UTF-8</td>
+</tr>
+<tr>
+<td>sip.core.translation.fallback-to-system-locale</td>
+<td>Use system language if none defined</td>
+<td>boolean</td>
+<td>false</td>
+</tr>
+<tr>
+<td>sip.core.translation.use-code-as-default-message</td>
+<td>If key is not assigned use it in message</td>
+<td>boolean</td>
+<td>true</td>
+</tr>
+<tr>
+<td>sip.core.translation.lang</td>
+<td>Set language of log messages</td>
+<td>String</td>
+<td>en</td>
+</tr>
+<tr>
+<td>sip.core.tracing.enabled</td>
+<td>Enable SIP tracing and trace history</td>
+<td>boolean</td>
+<td>true</td>
+</tr>
+<tr>
+<td>sip.core.tracing.limit</td>
+<td>Sets storage limit in trace history</td>
+<td>number</td>
+<td>100</td>
+</tr>
+<tr>
+<td>sip.core.tracing.exchange-formatter.{property-name}</td>
+<td>Sets value for specific property in ExchangeFormatter</td>
+<td>/</td>
+<td>/</td>
+</tr>
+<tr>
+<td>management.endpoint.health.show-details</td>
+<td>Enable health details in actuator</td>
+<td>String</td>
+<td>always</td>
+</tr>
+<tr>
+<td>management.endpoints.web.exposure.include</td>
+<td>Set which endpoints are included</td>
+<td>String</td>
+<td>health,info,metrics,loggers,prometheus</td>
+</tr>
+<tr>
+<td>springdoc.show-actuator</td>
+<td>Show actuator API in Swagger docs</td>
+<td>boolean</td>
+<td>true</td>
+</tr>
+<tr>
+<td>springdoc.api-docs.path</td>
+<td>Custom path to API docs</td>
+<td>String</td>
+<td>/api-docs</td>
+</tr>
+<tr>
+<td>springdoc.swagger-ui.path</td>
+<td>Custom path to Swagger</td>
+<td>String</td>
+<td>/swagger-ui.html</td>
+</tr>
+<tr>
+<td>springdoc.swagger-ui.disable-swagger-default-url</td>
+<td>Disables default petshop API in swagger</td>
+<td>boolean</td>
+<td>true</td>
+</tr>
+<tr>
+<td>springdoc.api-docs.enabled</td>
+<td>Enable/Disable API docs</td>
+<td>boolean</td>
+<td>true</td>
+</tr>
+<tr>
+<td>springdoc.swagger-ui.enabled</td>
+<td>Enable/Disable swagger</td>
+<td>boolean</td>
+<td>true</td>
+</tr>
+<tr>
+<td>logging.level.root</td>
+<td>Sets the default log level</td>
+<td>String</td>
+<td>INFO</td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="installation/" class="btn btn-neutral float-right" title="Installation Guide">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/IKOR-GmbH/sip-framework/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+      <span><a href="installation/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme_extra.js" defer></script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.2.3
+Build Date UTC : 2021-11-12 13:57:52.798501+00:00
+-->
