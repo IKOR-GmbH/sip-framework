@@ -15,5 +15,5 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Documented
-@ConditionalOnProperty(name = "sip.security.authentication.enabled", matchIfMissing = true)
+@ConditionalOnProperty(name = "sip.security.authentication.enabled")
 public @interface ConditionalOnSIPSecurityAuthenticationEnabled {}
