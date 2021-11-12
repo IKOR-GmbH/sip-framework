@@ -1,20 +1,10 @@
-name: Java CI
+name: Java / Docs CI
 
 on:
   push:
     branches: [ develop ]
-    paths-ignore:
-    - 'docs/**'
-    - '.github/**'
-    - 'mkdocs.yml'
-    - 'README.md'
   pull_request:
     branches: [ develop ]
-    paths-ignore:
-    - 'docs/**'
-    - '.github/**'
-    - 'mkdocs.yml'
-    - 'README.md'
   workflow_dispatch:
     inputs:
       do-release:
@@ -56,10 +46,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - name: Install jq
       run: sudo apt-get install jq
     - name: Check pull request contains changelog entry
-      run: test ! $(git diff develop --diff-filter=M --name-only changelogs/ | wc -l) = 0
+      run: test ! $(git diff develop --diff-filter=A --name-only changelogs/ | wc -l) = 0
 
 
   check-snapshot-version:
