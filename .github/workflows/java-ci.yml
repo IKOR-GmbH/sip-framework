@@ -2,14 +2,14 @@ name: Java CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ develop ]
     paths-ignore:
     - 'docs/**'
     - '.github/**'
     - 'mkdocs.yml'
     - 'README.md'
   pull_request:
-    branches: [ main ]
+    branches: [ develop ]
     paths-ignore:
     - 'docs/**'
     - '.github/**'
@@ -52,14 +52,14 @@ jobs:
 
 
   check-changelogs:
-    if: ${{ github.ref != 'refs/heads/main' }}
+    if: ${{ github.ref != 'refs/heads/develop' }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Install jq
       run: sudo apt-get install jq
     - name: Check pull request contains changelog entry
-      run: test ! $(git diff main --diff-filter=M --name-only changelogs/ | wc -l) = 0
+      run: test ! $(git diff develop --diff-filter=M --name-only changelogs/ | wc -l) = 0
 
 
   check-snapshot-version:
@@ -94,7 +94,7 @@ jobs:
     - name: "check javadocs"
       run: mvn ${MAVEN_ARGS} javadoc:aggregate
     - name: 'Upload Javadoc Artifact'
-      if: ${{ github.ref == 'refs/heads/main' }}
+      if: ${{ github.ref == 'refs/heads/develop' }}
       uses: actions/upload-artifact@v2
       with:
         name: javadoc
@@ -106,7 +106,7 @@ jobs:
     needs:
     - build
     - check-javadocs
-    if: ${{ github.ref == 'refs/heads/main'}}
+    if: ${{ github.ref == 'refs/heads/develop'}}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -150,7 +150,7 @@ jobs:
     - check-formatting
     - check-snapshot-version
     - check-spring-boot-version
-    if: ${{ github.ref == 'refs/heads/main' && github.event.inputs.do-release == 'true' }}
+    if: ${{ github.ref == 'refs/heads/develop' && github.event.inputs.do-release == 'true' }}
     runs-on: ubuntu-latest
     outputs:
       release-version: ${{ steps.release-step.outputs.version}}
