@@ -1,0 +1,47 @@
+package de.ikor.sip.foundation.security.authentication.x509;
+
+import de.ikor.sip.foundation.security.authentication.common.extractors.SIPTokenExtractor;
+import java.security.cert.X509Certificate;
+import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
+
+/**
+ * Token extractor for getting the distinguished name of the client certificate.
+ *
+ * @author thomas.stieglmaier
+ */
+@Slf4j
+public class SIPX509TokenExtractor implements SIPTokenExtractor<SIPX509AuthenticationToken> {
+
+  @Override
+  public SIPX509AuthenticationToken extract(HttpServletRequest request) {
+    X509Certificate clientCertificate = extractClientCertificate(request);
+
+    if (clientCertificate == null) {
+      throw new BadCredentialsException("No client certificate found in request");
+    }
+
+    return new SIPX509AuthenticationToken(clientCertificate.getSubjectDN().toString(), false);
+  }
+
+  @Override
+  public Class<SIPX509AuthenticationToken> getTokenType() {
+    return SIPX509AuthenticationToken.class;
+  }
+
+  private static X509Certificate extractClientCertificate(HttpServletRequest request) {
+    X509Certificate[] certs =
+        (X509Certificate[]) request.getAttribute("javax.servlet.request.X509Certificate");
+
+    if (certs != null && certs.length > 0) {
+      if (log.isTraceEnabled()) {
+        log.trace("X.509 client authentication certificate:" + certs[0]);
+      }
+
+      return certs[0];
+    }
+
+    return null;
+  }
+}

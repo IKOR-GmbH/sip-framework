@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=de.ikor.sip.foundation.security.autoconfigure.SIPSecurityAutoConfiguration

@@ -1,0 +1,26 @@
+sip.security:
+  ssl.server:
+    key-store: classpath:keystore.p12
+    key-store-password: password
+    key-store-type: pkcs12
+    key-alias: springboot
+    key-password: password
+
+  authentication:
+    enabled: true
+    disable-csrf: true
+    auth-providers:
+      - classname: de.ikor.sip.foundation.security.authentication.providers.basic.SIPBasicAuthenticationProvider
+        ignored-endpoints:
+          - /actuator/health
+          - /actuator/env
+        validation:
+          classname: de.ikor.sip.foundation.security.authentication.providers.basic.SIPBasicAuthFileValidator
+          file-path: classpath:/basic-auth-users.json
+      - classname: de.ikor.sip.foundation.security.authentication.providers.x509.SIPX509AuthenticationProvider
+        ignored-endpoints:
+          - /favicon.ico
+          - /actuator/env
+        validation:
+          classname: de.ikor.sip.foundation.security.authentication.validators.SIPAlwaysAllowValidator
+          file-path: classpath://client-certs.acl
