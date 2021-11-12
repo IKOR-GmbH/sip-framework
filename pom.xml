@@ -99,7 +99,7 @@
         <!-- instead of aggregating coverage we reference all single coverage files for the projects
              this forces the unit-tests for specific tools to be part of the submodule, instead of
              beeing anywhere -->
-        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.coverage.exclusions>**/*Config*</sonar.coverage.exclusions>
     </properties>
 
