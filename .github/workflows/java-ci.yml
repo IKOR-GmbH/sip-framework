@@ -139,6 +139,10 @@ jobs:
     - uses: ./.github/workflows/actions/java-maven-action
       with:
         gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      with:
+        sudo: true
     - name: check root has same spring-boot version as sip-starter-parent
       run: test "$(mvn help:evaluate -Dexpression=spring.boot.version -q -DforceStdout)" = "$(mvn help:evaluate -f sip-starter-parent/pom.xml -Dexpression=project.parent.version -q -DforceStdout)"
 
