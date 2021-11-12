@@ -51,7 +51,7 @@ jobs:
     - name: Install jq
       run: sudo apt-get install jq
     - name: Check pull request contains changelog entry
-      run: test ! $(git diff develop --diff-filter=A --name-only changelogs/ | wc -l) = 0
+      run: test ! $(git diff origin/develop --diff-filter=A --name-only changelogs/ | wc -l) = 0
 
 
   check-snapshot-version:
