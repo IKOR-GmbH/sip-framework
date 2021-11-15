@@ -5,7 +5,7 @@ repo_url: 'https://github.com/IKOR-GmbH/sip-framework'
 edit_uri: 'edit/main/docs/'
 
 nav:
-    - Introduction: index.md
+    - Introduction: README.md
     - Installation Guide: installation.md
     - Archetype: archetype.md
     - Core: core.md
@@ -14,7 +14,8 @@ nav:
     - Starter Parent: starter-parent.md
     - Security: security.md
     - License: license.md
-    - Contribution Guidelines: contributing.md
+    - Contribution Guidelines: CONTRIBUTING.md
+    - Code Of Conduct: CODE_OF_CONDUCT.md
     - Changelog: changelog.md
     - JavaDoc of latest Release: './javadoc/latest/index.html'
     - Find out more about IKOR: 'https://ikor.one'
@@ -24,7 +25,7 @@ collapse_navigation: false
 theme:
   name: 'readthedocs'
   language: 'en'
-  include_homepage_in_sidebar: true
+  include_homepage_in_sidebar: True
 
 docs_dir: 'docs'
 
@@ -35,5 +36,6 @@ markdown_extensions:
   - toc:
       permalink: true
   - sane_lists
+  - pymdownx.superfences
   - plantuml_markdown:
-       server: https://www.plantuml.com/plantuml
+      server: https://www.plantuml.com/plantuml

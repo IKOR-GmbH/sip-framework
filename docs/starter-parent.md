@@ -1,8 +1,6 @@
 # SIP Starter Parent
 
-**[List of Content]**
-- [Description](#description)
-- [Usage](#usage)
+[TOC]
 
 ## Description
 

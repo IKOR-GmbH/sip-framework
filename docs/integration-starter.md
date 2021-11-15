@@ -1,9 +1,6 @@
 # SIP Integration Starter
 
-**[List of Content]**
-- [Description](#description)
-- [Includes](#includes)
-- [Usage](#usage)
+[TOC]
 
 ## Description
 
