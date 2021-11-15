@@ -35,5 +35,6 @@ markdown_extensions:
   - toc:
       permalink: true
   - sane_lists
+  - pymdownx.superfences
   - plantuml_markdown:
-       server: https://www.plantuml.com/plantuml
+      server: https://www.plantuml.com/plantuml

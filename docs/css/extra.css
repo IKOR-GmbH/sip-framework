@@ -32,18 +32,9 @@ dl {
   font-family: "Helvetica Neue";
 }
 
-a:link {
-  color: var(--dark-grey);
-}
-
-a:visited {
-  color: var(--dark-grey);
-}
-
-a:hover {
-  color: var(--ikor-blue);
-}
-
+a:link,
+a:visited,
+a:hover,
 a:active {
   color: var(--ikor-blue);
 }
@@ -63,6 +54,12 @@ a:active {
   background: var(--light-blue);
 }
 
+.wy-nav-side a:link,
+.wy-nav-side a:visited,
+.wy-nav-side a:hover {
+  color: var(--dark-grey);
+}
+
 .wy-side-nav-search > a,
 .wy-side-nav-search .wy-dropdown > a {
   color: white;
@@ -78,11 +75,7 @@ a:active {
   color: var(--dark-grey);
 }
 
-.wy-menu-vertical li a:hover {
-  background: var(--ikor-blue);
-  color: white;
-}
-
+.wy-menu-vertical li a:hover,
 .wy-menu-vertical li.current a:hover {
   background: var(--ikor-blue);
   color: white;

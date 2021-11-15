@@ -1,17 +1,6 @@
 # IKOR SIP Framework Core
 
-**\[List of Content\]**
-
-- [Description](#description)
-- [Usage](#usage)
-- [Features:](#features)
-  - [Actuator health check and metrics](#actuator-health-check-and-metrics)
-  - [Proxy for Apache Camel Processors](#dynamic-proxy-for-apache-camel-processors)
-  - [Working with routes in runtime](#working-with-routes-in-runtime)
-  - [Logging Translation](#logging-translation)
-  - [Changing log level programmatically](#changing-log-level-programmatically)
-  - [Exchange tracing](#exchange-tracing)
-  - [OpenAPI Descriptor](#openapi-descriptor)
+[TOC]
 
 ## Description
 

@@ -1,9 +1,6 @@
 # IKOR SIP Archetype
 
-**\[List of Content\]**
-
-- [Description](#description)
-- [How to create a SIP Adapter using SIP Archetype](#how-to-create-a-sip-adapter-using-sip-archetype)
+[TOC]
 
 ## Description
 

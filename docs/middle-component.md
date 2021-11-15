@@ -1,10 +1,6 @@
 # IKOR SIP Middle Component
 
-**\[List of Content\]**
-
-- [Description](#description)
-- [How to use?](#how-to-use)
-- [Examples](#examples)
+[TOC]
 
 ## Description
 
