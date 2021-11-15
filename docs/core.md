@@ -305,25 +305,22 @@ sip:
 Configuring the ExchangeFormatter can be achieved in two ways
 
 - through configuration file
-
-```yaml
-sip:
-  core:
-    tracing:
-      enabled: true
-      exchange-formatter:
-        multiline: true
-        showHeaders: true
-        showExchangeId: true
-        showProperties: true
-        maxChars: 100
-```
-
+    ```yaml
+    sip:
+      core:
+        tracing:
+          enabled: true
+          exchange-formatter:
+            multiline: true
+            showHeaders: true
+            showExchangeId: true
+            showProperties: true
+            maxChars: 100
+    ```
 - by using the following POST request
-
-```
-/actuator/tracing/format/{exchangeFormatterParameterName}
-```
+    ```
+    /actuator/tracing/format/{exchangeFormatterParameterName}
+    ```
 
 The body of the request should include the value we want for the given parameter.
 
