@@ -77,10 +77,10 @@ component, since integrated systems use the same communication data model someti
 
 Each connector will have the following structure:
 
-- config – a place for any configuration classes
-- sink – here we should define Camel routes
-- transformers – it should contain classes for adapting the connector model to common domain model.
-- domain (optional) - it may contain the data model of the system.
+- `config` a place for any configuration classes
+- `sink` here we should define Camel routes
+- `transformers` it should contain classes for adapting the connector model to common domain model.
+- `domain` (optional) it may contain the data model of the system.
 
 **Application**
 
@@ -94,8 +94,7 @@ integration tests, such as default SIPApplicationTest, provided by archetype.
 
 ### Framework components
 
-- **[sip-archetype](docs/archetype.md)** - Archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies.
-  Project is created by executing single maven command.
+- **[sip-archetype](docs/archetype.md)** - Archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies. Project is created by executing single maven command.
 - **[sip-core](docs/core.md)** - Core project for base SIP functionalities.
 - **[sip-middle-component](docs/middlecomponent.md)** - Custom Camel component used as abstracted connector between different integration sides.
 - **[sip-integration-starter](docs/integrationstarter.md)** - Starter project adding necessary predefined dependencies for integration adapters.
@@ -113,10 +112,8 @@ Framework provides different features some of which are enabled by default. All 
 overwritten or turned off by configuration. More about how to use them you can find under the corresponding module's
 documentation.
 
-- **[Actuator health check and metrics](docs/core.md#actuator-health-check-and-metrics)** - Out-of-the-box health
-  checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.
-- **[Proxy for Apache Camel Processors](docs/core.md#proxy-for-apache-camel-processors)** - Proxies for Apache Camel
-  processors with process and mock functionalities.
+- **[Actuator health check and metrics](docs/core.md#actuator-health-check-and-metrics)** - Out-of-the-box health checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.
+- **[Proxy for Apache Camel Processors](docs/core.md#proxy-for-apache-camel-processors)** - Proxies for Apache Camel processors with process and mock functionalities.
 - **[Working with routes in runtime](docs/core.md#working-with-routes-in-runtime)** - Dynamical changing routes lifecycle.
 - **[Logging Translation](docs/core.md#logging-translation)** - Translation of logging messages.
 - **[Changing log level programmatically](docs/core.md#changing-log-level-programmatically)** - Dynamical changing of log level.
@@ -131,12 +128,11 @@ Before development, check the following [Installation guide](INSTALLATION.md).
 
 Once you have your adapter you can do the following steps:
 
-- Run "mvn clean install"
+- Run `mvn clean install`
 - Crate common Data Model inside domain module
 - Add necessary dependencies to each module
 - Add RouteBuilders inside "sink" package in connectors
-- Add classes which transform system data models to or from common domain model in "transformers" package in connectors
-  (if needed)
+- Add classes which transform system data models to or from common domain model in "transformers" package in connectors (if needed)
 - Add any configuration classes for a specific system inside "config" package in connectors
 - Add general integration configuration in application.yml found inside application module resources
 - Run SIPApplication found inside application module
