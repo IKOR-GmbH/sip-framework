@@ -10,7 +10,7 @@ Please note we have a code of conduct, please follow it in all your interactions
 
 ## Code of conduct
 
-This project adheres to the Contributor Covenant [code of conduct](./code_of_conduct.md).
+This project adheres to the Contributor Covenant [code of conduct](./CODE_OF_CONDUCT.md).
 
 By participating, you are expected to uphold this code. Please report unacceptable behavior to the given email address.
 
@@ -50,6 +50,7 @@ We welcome everyones work and engagement to evolve SIP. To make our life easier 
 - Does your contribution contain necessary and useful javadoc and is the linting process successful?
 - Is the maven project version a SNAPSHOT version?
 - Are all dependencies you added RELEASE versions?
+- Did you change something in the documentation? Then run `./run-mkdocs-server.sh` and check that your changes look good (mkdocs server will be running on port 8000)
 
 ### Pull request process
 
@@ -58,6 +59,26 @@ We welcome everyones work and engagement to evolve SIP. To make our life easier 
 - Does your pull request contain useful and necessary tests?
 - Was the Sonarqube analysis of your PR successful and all quality gates are met?
 - Have you added a complete, valid and self explaining changelog?
+    - Changelogs have to be put into one of these folders: `changelogs/bugfix`, `changelogs/documentation`, `changelogs/feature`, `changelogs/major`
+    - The name of the changelog file has to end with the suffix `.json`
+    - The format of a changelog file is as follow (don't copy the comments, only the real json key-value pairs):
+      ```json
+      {
+        # put your github username here
+        "author": "stieglma",
+
+        # put the id of the pull request here (yes that means you will need to create the pull
+        # request before you can finish writing the changelog entry)
+        "pullrequestId": 1,
+
+        # put a precise and short description of your changes here
+        "message": "Update documentation, add information about changelog entries for contributors",
+
+        # issue id is optional, there may be pull requests without related issues,
+        # so this field can be left out if necessary
+        "issue": "123"
+      }
+      ```
 - Is your pull request mergeable?
 - Was your branch deleted after merging the sources?
 - Does the pull request also contain necessary documentation changes or adaptions
