@@ -1,6 +1,7 @@
 # IKOR SIP Archetype
 
-**[List of Content]**
+**\[List of Content\]**
+
 - [Description](#description)
 - [How to create a SIP Adapter using SIP Archetype](#how-to-create-a-sip-adapter-using-sip-archetype)
 
@@ -14,9 +15,7 @@ In order to make setting up a new integration adapter project an easy task, we h
 
 To make a long story short, you can create a SIP Adapter by using the following Maven command:
 
-`
-mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=1.0.0 -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT
-`
+`mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=1.0.0 -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT`
 
 When executing the command, pay attention to use the latest archetype version for the -DarchetypeVersion parameter.
 
@@ -26,14 +25,14 @@ as they set the properties for the adapter. It is recommended to follow the mave
 After executing maven command, you will be requested to insert additional parameters about project structure:
 
 - **packageSuffix** is used to create project package name by concatenating its value to the groupId. There is a strict validation
-for using only lower case letters and it is meant to name the package by extending your groupId for only one word.
+  for using only lower case letters and it is meant to name the package by extending your groupId for only one word.
 
 - **package** (optional) is used to override previous package naming and provide full package name. This can be skipped by leaving value empty.
-It is strongly recommended to follow package naming convention, otherwise your project will be created but it will consist
-package naming errors.
+  It is strongly recommended to follow package naming convention, otherwise your project will be created but it will consist
+  package naming errors.
 
 - **systemConnector1**/**systemConnector2** are representing names of your connector modules inside the project.
-Naming recommendation is to use lower case letters and kebab-case.
+  Naming recommendation is to use lower case letters and kebab-case.
 
 - **systemConnector1Package**/**systemConnector2Package** are used to define package name suffix for the connectors. Notice that
   connector package name starts with prefix defined on **package** step.

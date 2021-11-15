@@ -1,4 +1,5 @@
 ## Welcome!
+
 ### Thank you for using SIP Framework!
 
 You have successfully created ${artifactId}. We recommend you to describe the adapter you are developing within this file.

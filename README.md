@@ -12,6 +12,7 @@ It builds on Apache Camel Framework and extends it with a lot of usable features
 approach for all adapters.
 
 **List of Content:**
+
 - [What is SIP?](#what-is-sip)
 - [Usage](#usage)
   - [Framework components](#framework-components)
@@ -19,6 +20,7 @@ approach for all adapters.
 - [Getting started](#getting-started)
 
 ## What is SIP?
+
 **S**ystem **I**ntegration **P**latform is a combination of SIP framework, SIP management application and various implementation
 guidelines and best practices. Combined they create an advantage when developing microservice integration adapters.
 SIP adapters are specially designed as middleware integrators of specific subdomains of an enterprise. SIP project structure
@@ -29,7 +31,6 @@ maximum comfort and efficiency while developing.
 To start developing with SIP, we should first get familiar with its basic concepts.
 Let's take a very simple scenario as an example. Say we have two systems working on the same domain (Partner, Policy, Billing
 etc.), but they were never designed to work together, and suddenly there is a need to connect them.
-
 
 ![Image of Unconnected systems image](doc-images/SIP_readme_systems.svg?raw=true "Unconnected systems")
 
@@ -49,7 +50,6 @@ The blue arrows represent dependencies of the application module.
 
 ![Image of SIP Adapter](doc-images/SIP_readme_adapter_detail.svg?raw=true "SIP Adapter")
 
-
 **Domain**
 
 The **Domain** module takes a central position in the image, because it provides the common data model for both systems
@@ -59,7 +59,6 @@ operate. All connectors should adapt the data models of their systems to or from
 due to their incompatibilities. The domain can be seen as a kind of contract between the different system connectors which
 ensures that they can communicate with each other. It contains common data model which uniforms the data models from all
 integration sides.
-
 
 **Connectors**
 
@@ -92,10 +91,11 @@ in order to start them. This module should not contain any integration logic, bu
 integration tests, such as default SIPApplicationTest, provided by archetype.
 
 ## Usage
+
 ### Framework components
 
 - **[sip-archetype](docs/archetype.md)** - Archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies.
-Project is created by executing single maven command.
+  Project is created by executing single maven command.
 - **[sip-core](docs/core.md)** - Core project for base SIP functionalities.
 - **[sip-middle-component](docs/middlecomponent.md)** - Custom Camel component used as abstracted connector between different integration sides.
 - **[sip-integration-starter](docs/integrationstarter.md)** - Starter project adding necessary predefined dependencies for integration adapters.
@@ -108,14 +108,15 @@ down arrows dependencies.
 ![Image of SIP connected systems](doc-images/SIP_readme_dependencies.svg?raw=true "SIP connected systems")
 
 ### Framework features
+
 Framework provides different features some of which are enabled by default. All the features are customizable and can be
 overwritten or turned off by configuration. More about how to use them you can find under the corresponding module's
-  documentation.
+documentation.
 
 - **[Actuator health check and metrics](docs/core.md#actuator-health-check-and-metrics)** - Out-of-the-box health
-   checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.
+  checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.
 - **[Proxy for Apache Camel Processors](docs/core.md#proxy-for-apache-camel-processors)** - Proxies for Apache Camel
-   processors with process and mock functionalities.
+  processors with process and mock functionalities.
 - **[Working with routes in runtime](docs/core.md#working-with-routes-in-runtime)** - Dynamical changing routes lifecycle.
 - **[Logging Translation](docs/core.md#logging-translation)** - Translation of logging messages.
 - **[Changing log level programmatically](docs/core.md#changing-log-level-programmatically)** - Dynamical changing of log level.
@@ -178,6 +179,7 @@ It is important to add the required dependency to the corresponding connector mo
 can keep their independence.
 
 ### Adding new System Connectors
+
 By using the SIP archetype to create a new SIP adapter, by default there are two system connectors, designed to make it
 more convenient to integrate systems. In case there are more than two systems, which need to be integrated, you need to add
 additional modules to the project structure. There are a number of ways to add new system connectors to a SIP adapter.
@@ -189,6 +191,7 @@ Make sure to add these to your `pom.xml` dependencies list.
 Please observe this exemplary [pom.xml](#example-pom) to see how it should look like in a system connector module.
 
 The module structure usually looks like this:
+
 ```
 fancy-sip-adapter
 ├───new-system-connector-module
@@ -214,7 +217,9 @@ Then the module name should be added to the `modules` element of the `pom.xml` o
   <module>new-system-connector-module</module>
 </modules>
 ```
+
 Additionally, the copied module must be added as a dependency to the `pom.xml` of the application module.
+
 ```xml
 <dependencies>
   <dependency>
@@ -231,16 +236,18 @@ If necessary, refresh or rebuild the project so that the newly created module ge
 **Using IDEs Built-In Functionality**
 
 - IntelliJ
-    - Right click on the parent project folder and select `New > Module...`.
-    - Select `Maven` in the left menu and click on the `Next` button
-    - Provide a new module name and click on `Finish`
+
+  - Right click on the parent project folder and select `New > Module...`.
+  - Select `Maven` in the left menu and click on the `Next` button
+  - Provide a new module name and click on `Finish`
 
 - Eclipse
-    - `File > New > Other...`
-    - Enter `maven  module` select `Maven Module` from the search result list and click on `Next`
-    - Enter a module name select the parent project and press `Next`
-    - Choose a maven archetype version from the list and click `Next` (You can use the default selection)
-    - Check the archetype parameters and press `Finish`
+
+  - `File > New > Other...`
+  - Enter `maven  module` select `Maven Module` from the search result list and click on `Next`
+  - Enter a module name select the parent project and press `Next`
+  - Choose a maven archetype version from the list and click `Next` (You can use the default selection)
+  - Check the archetype parameters and press `Finish`
 
 The result is a new subdirectory of the SIP adapter project.
 Compare the `pom.xml` of the newly created module with one of the modules that were created by SIP archetype.
@@ -329,6 +336,7 @@ This can be easily achieved in Camel by following their placeholder syntax. When
 we should pull it from configuration. Now, when needed, we can just edit the configuration file instead of the route.
 
 Example route:
+
 ```java
 from("{{endpoint.{adapter-name}.{external-system}.uri}}")
     .id("{{endpoint.{adapter-name}.{external-system}.id}}")
@@ -336,6 +344,7 @@ from("{{endpoint.{adapter-name}.{external-system}.uri}}")
 ```
 
 Example configuration:
+
 ```yaml
 
 endpoint:
@@ -378,5 +387,3 @@ springdoc.swagger-ui.disable-swagger-default-url | Disables default petshop API 
 springdoc.api-docs.enabled | Enable/Disable API docs | boolean | true |
 springdoc.swagger-ui.enabled | Enable/Disable swagger | boolean | true |
 logging.level.root | Sets the default log level | String | INFO |
-
-

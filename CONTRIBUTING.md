@@ -37,9 +37,11 @@ Another option to contribute is to fix any bugs from the bug list, implement fea
 To get your adaptions merged you need to create a pull request. You have to complete the provided pull request template. We will take care of the submitted pull requests and to mention this once again: Thank you very much for your contribution!
 
 ## Guidelines
+
 We welcome everyones work and engagement to evolve SIP. To make our life easier and we defined a couple of guidelines to follow while working on the code and we ask everyone to adhere to these points. During the pull request process the reviewer will check if the pull request adheres to the following rules. The rules are questions you should answer before creating a pull request:
 
 ### Coding
+
 - Have you avoided to use field based autowiring? (see [here](http://odrotbohm.de/2013/11/why-field-injection-is-evil/) why we chose to use constructor autowiring)
 - Are all your unit tests written with junit5 and assertions with assertj ([see](https://assertj.github.io/doc/))?
 - Does your code not add any new compile warnings?
@@ -48,6 +50,7 @@ We welcome everyones work and engagement to evolve SIP. To make our life easier 
 - Are all dependencies you added RELEASE versions?
 
 ### Pull request process
+
 - Does your contribution follow the Goodle Java Coding style? (you can find it [here](https://github.com/google/google-java-format))
 - Does your pull request only contain changes related to the topic the branch was intended for?
 - Does your pull request contain useful and necessary tests?
