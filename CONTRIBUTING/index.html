@@ -188,7 +188,7 @@
 <p>SIP is released under the Apache 2.0 license. If you would like to contribute you are very welcome to do so and this document should help you having a good start.</p>
 <p>Please note we have a code of conduct, please follow it in all your interactions with the project.</p>
 <h2 id="code-of-conduct">Code of conduct<a class="headerlink" href="#code-of-conduct" title="Permanent link">&para;</a></h2>
-<p>This project adheres to the Contributor Covenant <a href="./code_of_conduct.md">code of conduct</a>.</p>
+<p>This project adheres to the Contributor Covenant <a href="../CODE_OF_CONDUCT/">code of conduct</a>.</p>
 <p>By participating, you are expected to uphold this code. Please report unacceptable behavior to the given email address.</p>
 <h2 id="how-can-i-contribute">How can I contribute<a class="headerlink" href="#how-can-i-contribute" title="Permanent link">&para;</a></h2>
 <h3 id="reporting-bugs">Reporting bugs<a class="headerlink" href="#reporting-bugs" title="Permanent link">&para;</a></h3>
@@ -212,6 +212,7 @@
 <li>Does your contribution contain necessary and useful javadoc and is the linting process successful?</li>
 <li>Is the maven project version a SNAPSHOT version?</li>
 <li>Are all dependencies you added RELEASE versions?</li>
+<li>Did you change something in the documentation? Then run <code>./run-mkdocs-server.sh</code> and check that your changes look good (mkdocs server will be running on port 8000)</li>
 </ul>
 <h3 id="pull-request-process">Pull request process<a class="headerlink" href="#pull-request-process" title="Permanent link">&para;</a></h3>
 <ul>
@@ -219,7 +220,27 @@
 <li>Does your pull request only contain changes related to the topic the branch was intended for?</li>
 <li>Does your pull request contain useful and necessary tests?</li>
 <li>Was the Sonarqube analysis of your PR successful and all quality gates are met?</li>
-<li>Have you added a complete, valid and self explaining changelog?</li>
+<li>Have you added a complete, valid and self explaining changelog?<ul>
+<li>Changelogs have to be put into one of these folders: <code>changelogs/bugfix</code>, <code>changelogs/documentation</code>, <code>changelogs/feature</code>, <code>changelogs/major</code></li>
+<li>The name of the changelog file has to end with the suffix <code>.json</code></li>
+<li>The format of a changelog file is as follow (don't copy the comments, only the real json key-value pairs):
+  <pre class="highlight"><code class="language-json">{
+  # put your github username here
+  "author": "stieglma",
+
+  # put the id of the pull request here (yes that means you will need to create the pull
+  # request before you can finish writing the changelog entry)
+  "pullrequestId": 1,
+
+  # put a precise and short description of your changes here
+  "message": "Update documentation, add information about changelog entries for contributors",
+
+  # issue id is optional, there may be pull requests without related issues,
+  # so this field can be left out if necessary
+  "issue": "123"
+}</code></pre></li>
+</ul>
+</li>
 <li>Is your pull request mergeable?</li>
 <li>Was your branch deleted after merging the sources?</li>
 <li>Does the pull request also contain necessary documentation changes or adaptions</li>

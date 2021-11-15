@@ -257,12 +257,12 @@ integration tests, such as default SIPApplicationTest, provided by archetype.</p
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <h3 id="framework-components">Framework components<a class="headerlink" href="#framework-components" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong><a href="docs/archetype.md">sip-archetype</a></strong> - Archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies. Project is created by executing single maven command.</li>
-<li><strong><a href="docs/core.md">sip-core</a></strong> - Core project for base SIP functionalities.</li>
-<li><strong><a href="docs/middlecomponent.md">sip-middle-component</a></strong> - Custom Camel component used as abstracted connector between different integration sides.</li>
-<li><strong><a href="docs/integrationstarter.md">sip-integration-starter</a></strong> - Starter project adding necessary predefined dependencies for integration adapters.</li>
-<li><strong><a href="docs/starterparent.md">sip-starter-parent</a></strong> - This project takes care of versions for Spring Boot and Camel dependencies.</li>
-<li><strong><a href="docs/security.md">sip-security</a></strong> - Security in SIP framework.</li>
+<li><strong><a href="archetype/">sip-archetype</a></strong> - Archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies. Project is created by executing single maven command.</li>
+<li><strong><a href="core/">sip-core</a></strong> - Core project for base SIP functionalities.</li>
+<li><strong><a href="middle-component/">sip-middle-component</a></strong> - Custom Camel component used as abstracted connector between different integration sides.</li>
+<li><strong><a href="integration-starter/">sip-integration-starter</a></strong> - Starter project adding necessary predefined dependencies for integration adapters.</li>
+<li><strong><a href="starter-parent/">sip-starter-parent</a></strong> - This project takes care of versions for Spring Boot and Camel dependencies.</li>
+<li><strong><a href="security/">sip-security</a></strong> - Security in SIP framework.</li>
 </ul>
 <p>The following image displays how listed modules are utilized on SIP adapter where the up arrows represent inheritance,
 down arrows dependencies.</p>
@@ -272,18 +272,18 @@ down arrows dependencies.</p>
 overwritten or turned off by configuration. More about how to use them you can find under the corresponding module's
 documentation.</p>
 <ul>
-<li><strong><a href="docs/core.md#actuator-health-check-and-metrics">Actuator health check and metrics</a></strong> - Out-of-the-box health checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.</li>
-<li><strong><a href="docs/core.md#proxy-for-apache-camel-processors">Proxy for Apache Camel Processors</a></strong> - Proxies for Apache Camel processors with process and mock functionalities.</li>
-<li><strong><a href="docs/core.md#working-with-routes-in-runtime">Working with routes in runtime</a></strong> - Dynamical changing routes lifecycle.</li>
-<li><strong><a href="docs/core.md#logging-translation">Logging Translation</a></strong> - Translation of logging messages.</li>
-<li><strong><a href="docs/core.md#changing-log-level-programmatically">Changing log level programmatically</a></strong> - Dynamical changing of log level.</li>
-<li><strong><a href="docs/core.md#exchange-tracing">Exchange tracing</a></strong> - Tracing and storing exchanges on Camel Processor level.</li>
-<li><strong><a href="docs/core.md#openapi-descriptor">OpenAPI Descriptor</a></strong> - Built-in OpenAPI.</li>
-<li><strong><a href="docs/middlecomponent.md#description">SIP Middle component publish-subscribe</a></strong> - Multiple consumers on middle component.</li>
-<li><strong><a href="docs/security.md">SIP Security</a></strong> - Includes SSL setup, base and x509 authentication</li>
+<li><strong><a href="core/#actuator-health-check-and-metrics">Actuator health check and metrics</a></strong> - Out-of-the-box health checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.</li>
+<li><strong><a href="core/#proxy-for-apache-camel-processors">Proxy for Apache Camel Processors</a></strong> - Proxies for Apache Camel processors with process and mock functionalities.</li>
+<li><strong><a href="core/#working-with-routes-in-runtime">Working with routes in runtime</a></strong> - Dynamical changing routes lifecycle.</li>
+<li><strong><a href="core/#logging-translation">Logging Translation</a></strong> - Translation of logging messages.</li>
+<li><strong><a href="core/#changing-log-level-programmatically">Changing log level programmatically</a></strong> - Dynamical changing of log level.</li>
+<li><strong><a href="core/#exchange-tracing">Exchange tracing</a></strong> - Tracing and storing exchanges on Camel Processor level.</li>
+<li><strong><a href="core/#openapi-descriptor">OpenAPI Descriptor</a></strong> - Built-in OpenAPI.</li>
+<li><strong><a href="middle-component/#description">SIP Middle component publish-subscribe</a></strong> - Multiple consumers on middle component.</li>
+<li><strong><a href="security/">SIP Security</a></strong> - Includes SSL setup, base and x509 authentication</li>
 </ul>
 <h2 id="getting-started">Getting started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
-<p>Before development, check the following <a href="INSTALLATION.md">Installation guide</a>.</p>
+<p>Before development, check the following <a href="installation/">Installation guide</a>.</p>
 <p>Once you have your adapter you can do the following steps:</p>
 <ul>
 <li>Run <code>mvn clean install</code></li>
@@ -297,7 +297,7 @@ documentation.</p>
 <li>After the application is up and running you can check SIP's management API under <a href="http://localhost:8080/swagger-ui.html">localhost:8080/swagger-ui.html</a></li>
 </ul>
 <h3 id="how-and-why-to-use-sip-middle-component">How and why to use SIP Middle Component<a class="headerlink" href="#how-and-why-to-use-sip-middle-component" title="Permanent link">&para;</a></h3>
-<p><a href="docs/middlecomponent.md">SIP Middle Component</a> (sipmc) is a key concept of SIP Framework.
+<p><a href="middle-component/">SIP Middle Component</a> (sipmc) is a key concept of SIP Framework.
 As such it is used as a communication device between connectors.
 To make a clear distinction between connectors, the point of separation can be seen with sipmc.
 It marks the end or beginning of integration sides.
@@ -640,5 +640,5 @@ Notice that in case of incoming endpoints (those in "from" statement), following
 
 <!--
 MkDocs version : 1.2.3
-Build Date UTC : 2021-11-15 14:15:22.152370+00:00
+Build Date UTC : 2021-11-15 15:14:06.875804+00:00
 -->
