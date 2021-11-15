@@ -19,11 +19,9 @@ jobs:
       - name: copy root markdown files to docs
         run: |
           cp README.md docs/index.md
-          cp INSTALLATION.md docs/installation.md
           cp LICENSE docs/license.md
           cp CHANGELOG.md docs/changelog.md
-          cp CONTRIBUTING.md docs/contributing.md
-      - run: pip install mkdocs plantuml-markdown
+      - run: pip install mkdocs plantuml-markdown pymdown-extensions
       - run: mkdocs build
       - uses: actions/checkout@v2
         # Disabling shallow clone is recommended for improving relevancy of reporting
