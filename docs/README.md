@@ -32,14 +32,14 @@ To start developing with SIP, we should first get familiar with its basic concep
 Let's take a very simple scenario as an example. Say we have two systems working on the same domain (Partner, Policy, Billing
 etc.), but they were never designed to work together, and suddenly there is a need to connect them.
 
-![Image of Unconnected systems image](doc-images/SIP_readme_systems.svg?raw=true "Unconnected systems")
+![Image of Unconnected systems image](./images/SIP_readme_systems.svg?raw=true "Unconnected systems")
 
 Both systems expose APIs, which are mutually not compatible, both by data model and/or communication technology
 they use. SIP is designed as a standalone middleware app with a sole purpose to resolve exactly this kind of problems in
 a flexible and standardized way. Actual integration scenarios may include more than two APIs, or even more than two
 systems, but all the principles apply equally to such scenarios.
 
-![Image of SIP connected systems](doc-images/SIP_readme_adapter.svg?raw=true "SIP connected systems")
+![Image of SIP connected systems](./images/SIP_readme_adapter.svg?raw=true "SIP connected systems")
 
 The image below shows the modules structure of a single SIP adapter.
 To provide a level of flexibility, SIP splits the problem into two, giving the possibility to develop and/or deploy connectors
@@ -48,7 +48,7 @@ logic is divided into three modules: **System A - Connector**, **System B - Conn
 module. Its purpose is to converge the three integration modules into one deployable and executable application.
 The blue arrows represent dependencies of the application module.
 
-![Image of SIP Adapter](doc-images/SIP_readme_adapter_detail.svg?raw=true "SIP Adapter")
+![Image of SIP Adapter](./images/SIP_readme_adapter_detail.svg?raw=true "SIP Adapter")
 
 **Domain**
 
@@ -104,7 +104,7 @@ integration tests, such as default SIPApplicationTest, provided by archetype.
 The following image displays how listed modules are utilized on SIP adapter where the up arrows represent inheritance,
 down arrows dependencies.
 
-![Image of SIP connected systems](doc-images/SIP_readme_dependencies.svg?raw=true "SIP connected systems")
+![Image of SIP connected systems](./images/SIP_readme_dependencies.svg?raw=true "SIP connected systems")
 
 ### Framework features
 

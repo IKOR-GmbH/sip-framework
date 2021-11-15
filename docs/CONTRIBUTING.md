@@ -1,5 +1,7 @@
 # Contributing to SIP
 
+[TOC]
+
 First off, thanks for your contribution! :+1:
 
 SIP is released under the Apache 2.0 license. If you would like to contribute you are very welcome to do so and this document should help you having a good start.
@@ -8,7 +10,7 @@ Please note we have a code of conduct, please follow it in all your interactions
 
 ## Code of conduct
 
-This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.md).
+This project adheres to the Contributor Covenant [code of conduct](./code_of_conduct.md).
 
 By participating, you are expected to uphold this code. Please report unacceptable behavior to the given email address.
 
