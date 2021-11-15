@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.actuator.routes;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -96,7 +97,15 @@ public class AdapterRouteEndpoint {
    * @param operation - RouteOperation
    */
   @PostMapping("/{routeId}/{operation}")
-  public void execute(@PathVariable String routeId, @PathVariable String operation) {
+  public void execute(
+      @PathVariable String routeId,
+      @Parameter(
+              name = "operation",
+              description =
+                  "Operation to be executed on route. Possible actions: start, stop, suspend, resume.",
+              required = true)
+          @PathVariable
+          String operation) {
     RouteOperation routeOperation = RouteOperation.fromId(operation);
     routeOperation.execute(camelContext, routeId);
   }
@@ -125,7 +134,13 @@ public class AdapterRouteEndpoint {
    * @param operation - RouteOperation
    */
   @PostMapping("/sipmc/{operation}")
-  public void executeOnSipmcRoute(@PathVariable String operation) {
+  public void executeOnSipmcRoute(
+      @Parameter(
+              description =
+                  "Operation to be executed on sipmc routes. Possible actions: start, stop, suspend, resume",
+              required = true)
+          @PathVariable
+          String operation) {
     Stream<Route> sipMcRoutes = filterMiddleComponentProducerRoutes(this.camelContext.getRoutes());
     sipMcRoutes.forEach(route -> this.execute(route.getRouteId(), operation));
   }
