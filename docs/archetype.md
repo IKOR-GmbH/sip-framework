@@ -53,7 +53,7 @@ Our recommendation for modules naming is shown on the following Partner Adapter 
 - partner-connector-{arbitrary connector1 name}
 - partner-connector-{arbitrary connector2 name}
 
-More about modules and internal SIP structure you can find [here](../README.md).
+More about modules and internal SIP structure you can find [here](./README.md).
 
 More information about Maven archetypes is available here:
 [Maven Archetype](https://maven.apache.org/guides/introduction/introduction-to-archetypes.html)
