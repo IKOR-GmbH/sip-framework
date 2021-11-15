@@ -1,0 +1,5 @@
+{
+    "author": "stieglma",
+    "pullrequestId": 4,
+    "message": "Cleanup and fix mkdocs generated pages, added plugin for proper visualisation of code blocks, and moved images to a resolvable folder"
+}
