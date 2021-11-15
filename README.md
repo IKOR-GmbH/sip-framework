@@ -232,18 +232,16 @@ If necessary, refresh or rebuild the project so that the newly created module ge
 **Using IDEs Built-In Functionality**
 
 - IntelliJ
-
-  - Right click on the parent project folder and select `New > Module...`.
-  - Select `Maven` in the left menu and click on the `Next` button
-  - Provide a new module name and click on `Finish`
+    - Right click on the parent project folder and select `New > Module...`.
+    - Select `Maven` in the left menu and click on the `Next` button
+    - Provide a new module name and click on `Finish`
 
 - Eclipse
-
-  - `File > New > Other...`
-  - Enter `maven  module` select `Maven Module` from the search result list and click on `Next`
-  - Enter a module name select the parent project and press `Next`
-  - Choose a maven archetype version from the list and click `Next` (You can use the default selection)
-  - Check the archetype parameters and press `Finish`
+    - `File > New > Other...`
+    - Enter `maven  module` select `Maven Module` from the search result list and click on `Next`
+    - Enter a module name select the parent project and press `Next`
+    - Choose a maven archetype version from the list and click `Next` (You can use the default selection)
+    - Check the archetype parameters and press `Finish`
 
 The result is a new subdirectory of the SIP adapter project.
 Compare the `pom.xml` of the newly created module with one of the modules that were created by SIP archetype.

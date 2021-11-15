@@ -1,9 +1,6 @@
 # Installation guide
 
-**List of Content:**
-
-- [Software requirements](#software-requirements)
-- [Create the project](#create-the-project)
+[TOC]
 
 ## Software requirements
 
@@ -11,23 +8,23 @@ Before getting started to develop a first adapter with SIP the following require
 
 ### Java Virtual Machine
 
-- Recommendation for using Java 8 or higher https://www.java.com/en/download/manual.jsp
+- Recommendation for using Java 8 or higher <https://www.java.com/en/download/manual.jsp>
 
 ### Maven
 
-- Maven downloaded from https://maven.apache.org/download.cgi
-- For the Maven documentation see https://maven.apache.org/guides/
+- Maven downloaded from <https://maven.apache.org/download.cgi>
+- For the Maven documentation see <https://maven.apache.org/guides/>
 
 ### IDE
 
-- IntelliJ - Download from https://www.jetbrains.com/idea/download/#section=windows
-- Eclipse - Download from https://www.eclipse.org/downloads/
+- IntelliJ - Download from <https://www.jetbrains.com/idea/download/#section=windows>
+- Eclipse - Download from <https://www.eclipse.org/downloads/>
 
 ### Plugins
 
-- Lombok with IntelliJ https://projectlombok.org/setup/intellij
-- Lombok with Eclipse https://projectlombok.org/setup/eclipse
-- Apache Camel with IntelliJ (recommendation) https://plugins.jetbrains.com/plugin/9371-apache-camel
+- Lombok with IntelliJ <https://projectlombok.org/setup/intellij>
+- Lombok with Eclipse <https://projectlombok.org/setup/eclipse>
+- Apache Camel with IntelliJ (recommendation) <https://plugins.jetbrains.com/plugin/9371-apache-camel>
 
 ## Create the project
 
@@ -37,9 +34,18 @@ In order to make setting up a new integration adapter project an easy task, we h
 
 To make a long story short, you can create a SIP Adapter by using the following Maven command:
 
-Creating an application using SIP archetype:
+Creating an application using SIP archetype on the command line:
 
-`mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=1.0.0 -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT`
+```shell
+  mvn archetype:generate \
+    -DarchetypeGroupId=de.ikor.sip.foundation \
+    -DarchetypeArtifactId=sip-archetype \
+    -DarchetypeVersion=1.0.0 \
+    -DgroupId=de.ikor.sip.adapter \
+    -DartifactId=demo \
+    -DprojectName=DemoAdapter \
+    -Dversion=1.0.0-SNAPSHOT
+```
 
 When executing the command, pay attention to use the latest archetype version for the -DarchetypeVersion parameter.
 
