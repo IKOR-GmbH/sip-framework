@@ -37,5 +37,9 @@ markdown_extensions:
       permalink: true
   - sane_lists
   - pymdownx.superfences
+  - pymdownx.emoji:
+      # with the unicode images provided by alt we should be safe regarding
+      # license attributions as we are not using pictures from a specific library
+      emoji_generator: !!python/name:pymdownx.emoji.to_alt
   - plantuml_markdown:
       server: https://www.plantuml.com/plantuml
