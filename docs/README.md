@@ -11,13 +11,7 @@ systems, using microservices and is therefore highly scalable.
 It builds on Apache Camel Framework and extends it with a lot of usable features to create a standardized integration
 approach for all adapters.
 
-**List of Content:**
-
-- [What is SIP?](#what-is-sip)
-- [Usage](#usage)
-  - [Framework components](#framework-components)
-  - [Framework features](#framework-features)
-- [Getting started](#getting-started)
+[TOC]
 
 ## What is SIP
 
