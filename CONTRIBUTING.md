@@ -12,7 +12,7 @@ This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDU
 
 By participating, you are expected to uphold this code. Please report unacceptable behavior to the given email address.
 
-## How can I contribute?
+## How can I contribute
 
 ### Reporting bugs
 

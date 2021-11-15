@@ -19,7 +19,7 @@ approach for all adapters.
   - [Framework features](#framework-features)
 - [Getting started](#getting-started)
 
-## What is SIP?
+## What is SIP
 
 **S**ystem **I**ntegration **P**latform is a combination of SIP framework, SIP management application and various implementation
 guidelines and best practices. Combined they create an advantage when developing microservice integration adapters.

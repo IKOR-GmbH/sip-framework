@@ -22,7 +22,7 @@ supports only in-memory connection channel implemented on top of Camel's SEDA co
 publish-subscribe patterns and can support many channels in single adapter. Middle component can automatically determine
 the number of consumers for a specific channel and auto-configure itself accordingly, as a 1 to 1 or publish-subscribe connector.
 
-## How to use?
+## How to use
 
 Middle component is used like any other Camel component, but has a simple URI pattern:
 
