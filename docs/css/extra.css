@@ -48,18 +48,17 @@ a:active {
   color: var(--ikor-blue);
 }
 
-/*main content*/
+/* main content */
 .wy-nav-content {
   max-width: 1200px;
 }
 
-/*top and bottom boxes*/
-
+/* top and bottom boxes */
 .wy-side-nav-search {
   background: var(--dark-blue);
 }
 
-/*navigation*/
+/* navigation */
 .wy-nav-side {
   background: var(--light-blue);
 }
@@ -73,18 +72,18 @@ a:active {
   background: var(--dark-blue);
 }
 
-/*links in navigation*/
+/* links in navigation */
 .wy-menu-vertical li.current a {
   background: white;
   color: var(--dark-grey);
 }
 
-.wy-menu-vertical li.current a:hover {
+.wy-menu-vertical li a:hover {
   background: var(--ikor-blue);
   color: white;
 }
 
-.wy-menu-vertical li a:hover {
+.wy-menu-vertical li.current a:hover {
   background: var(--ikor-blue);
   color: white;
 }
