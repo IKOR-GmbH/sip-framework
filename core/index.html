@@ -108,7 +108,11 @@
                     </li>
                 </ul>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contribution Guidelines</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING/">Contribution Guidelines</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../CODE_OF_CONDUCT/">Code Of Conduct</a>
                     </li>
                 </ul>
                 <ul>
@@ -160,17 +164,25 @@
             <div class="section">
               
                 <h1 id="ikor-sip-framework-core">IKOR SIP Framework Core<a class="headerlink" href="#ikor-sip-framework-core" title="Permanent link">&para;</a></h1>
-<p><strong>[List of Content]</strong>
-- <a href="#description">Description</a>
-- <a href="#usage">Usage</a>
-- <a href="#features">Features:</a>
-    - <a href="#actuator-health-check-and-metrics">Actuator health check and metrics</a>
-    - <a href="#dynamic-proxy-for-apache-camel-processors">Proxy for Apache Camel Processors</a>
-    - <a href="#working-with-routes-in-runtime">Working with routes in runtime</a>
-    - <a href="#logging-translation">Logging Translation</a>
-    - <a href="#changing-log-level-programmatically">Changing log level programmatically</a>
-    - <a href="#exchange-tracing">Exchange tracing</a>
-    - <a href="#openapi-descriptor">OpenAPI Descriptor</a></p>
+<div class="toc">
+<ul>
+<li><a href="#ikor-sip-framework-core">IKOR SIP Framework Core</a><ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#features">Features</a><ul>
+<li><a href="#actuator-health-check-and-metrics">Actuator health check and metrics</a></li>
+<li><a href="#dynamic-proxy-for-apache-camel-processors">Dynamic proxy for Apache Camel Processors</a></li>
+<li><a href="#working-with-routes-in-runtime">Working with routes in runtime</a></li>
+<li><a href="#logging-translation">Logging Translation</a></li>
+<li><a href="#changing-log-level-programmatically">Changing log level programmatically</a></li>
+<li><a href="#exchange-tracing">Exchange tracing</a></li>
+<li><a href="#openapi-descriptor">OpenAPI Descriptor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
 <h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
 <p>Core project for base SIP functionalities</p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
@@ -182,25 +194,24 @@
 <p>To customize health checks,
 or introduce health checks for other kinds of components,
 it is as simple as implementing the EndpointHealthConfigurer interface</p>
-<pre><code class="language-java">@Configuration
+<pre class="highlight"><code class="language-java">@Configuration
 public class EndpointMonitoringConfiguration {
     @Bean
     EndpointHealthConfigurer defaultHttpConfigurer() {
-        return registry -&gt; registry.register(&quot;http*://**&quot;,
+        return registry -&gt; registry.register("http*://**",
                 HttpHealthIndicators::urlHealthIndicator);
     }
     @Bean
     EndpointHealthConfigurer ftpConfigurer() {
-        return registry -&gt; registry.register(&quot;*ftp*://**&quot;,
+        return registry -&gt; registry.register("*ftp*://**",
                 FtpHealthIndicators::noopHealthIndicator);
     }
     @Bean
     EndpointHealthConfigurer httpConfigurerById() {
-        return registry -&gt; registry.registerById(&quot;processor_id&quot;,
+        return registry -&gt; registry.registerById("processor_id",
                 HttpHealthIndicators::urlHealthIndicator);
     }
-}
-</code></pre>
+}</code></pre>
 <p>There are a few possible ways to register health check indicators and they will be used in the following priority:</p>
 <ul>
 <li>by using the id of processor, it will be registered as the exact endpoint URI</li>
@@ -219,12 +230,11 @@ thrown and application will not be able to start.</p>
 The reason for this is that for detected HTTP(S) endpoints a GET request is executed which may cause an unintended change of state
 of the system to be invoked. Thus this behavior does not occur, health checks should be added explicitly.
 To add an explicit Health Check for a URL it can be done in the following way.</p>
-<pre><code class="language-java">@Bean
+<pre class="highlight"><code class="language-java">@Bean
 EndpointHealthConfigurer enableHttpHealthCheckForIKOR() {
-  return registry -&gt; registry.register(&quot;https://www.ikor.de&quot;,
+  return registry -&gt; registry.register("https://www.ikor.de",
          HttpHealthIndicators::urlHealthIndicator);
-}
-</code></pre>
+}</code></pre>
 <p>In case the URL https://www.ikor.de/kontakt.html is requested by the adapter, then on the one hand the explicit URL could be passed as
 a parameter to <code>register()</code> or wildcards could be used to add a Health Check for this URL and at the same
 time also matches https://www.ikor.de/karriere.html. The passed argument to <code>register()</code> would look like this <code>https://www.ikor.de/**</code>.
@@ -237,12 +247,11 @@ Instead of using @SpringBootApplication, use Java annotation @SIPIntegrationAdap
 Configure the application actuator's Health endpoint to display details of health, as shown below.
 All prerequisites from above are met if you create an integration adapter using SIP archetype.</p>
 <p>Spring Boot Actuator:</p>
-<pre><code class="language-yaml">#configuring health endpoint
+<pre class="highlight"><code class="language-yaml">#configuring health endpoint
 management:
   endpoint:
     health:
-      show-details: always #or when_authorized if security is in place
-</code></pre>
+      show-details: always #or when_authorized if security is in place</code></pre>
 <h3 id="dynamic-proxy-for-apache-camel-processors">Dynamic proxy for Apache Camel Processors<a class="headerlink" href="#dynamic-proxy-for-apache-camel-processors" title="Permanent link">&para;</a></h3>
 <p>Dynamic proxy is implementation of decorator pattern on all Processors detected on all Camel routes. The base motivation
 is to gain more control over Camel dataflow, by providing placeholders for custom functionalities on different steps of
@@ -254,10 +263,12 @@ from registry through processor's ID. ProcessorProxyRegistry can be accessed as 
 replace it with its mock. This can be achieved on any Processor on the route, including the outgoing endpoints. Mocking
 behavior with SIP can be triggered dynamically, and on single request level, leaving the original route intact and active
 all the time.</p>
-<p>To use it, header "proxy-modes" must be set, which consists of a map of processorIds as keys and list of commands as value:
-- proxy-modes: {"processorId": ["mock"]}</p>
+<p>To use it, header "proxy-modes" must be set, which consists of a map of processorIds as keys and list of commands as value:</p>
+<ul>
+<li><code>proxy-modes: {"processorId": ["mock"]}</code></li>
+</ul>
 <p><strong>Setting mock behavior example:</strong></p>
-<pre><code class="language-java">@Configuration
+<pre class="highlight"><code class="language-java">@Configuration
 public class MockConfiguration {
     private final ProcessorProxyRegistry proxyRegistry;
 
@@ -265,116 +276,102 @@ public class MockConfiguration {
         ProcessorProxy proxy = proxyRegistry
                 .getProxy(processorId)
                 .orElseThrow(
-                        () -&gt; new RuntimeException(&quot;There is no &quot; + processorId + &quot; proxy in the application&quot;));
+                        () -&gt; new RuntimeException("There is no " + processorId + " proxy in the application"));
         proxy.mock(exchange -&gt; {/*define mock behavior*/});
     }
     //Reverts Processor to regular behavior
     public void resetProcessorProxy(ProcessorProxy proxy){
         proxy.reset();
     }
-}
-</code></pre>
+}</code></pre>
 <h3 id="working-with-routes-in-runtime">Working with routes in runtime<a class="headerlink" href="#working-with-routes-in-runtime" title="Permanent link">&para;</a></h3>
 <p>All routes with basic info can be listed by using the following URI:</p>
-<pre><code>GET /actuator/adapter-routes
-</code></pre>
+<pre class="highlight"><code>GET /actuator/adapter-routes</code></pre>
 <p>Getting only routes with sip middle component consumer:</p>
-<pre><code>GET /actuator/adapter-routes/sipmc
-</code></pre>
+<pre class="highlight"><code>GET /actuator/adapter-routes/sipmc</code></pre>
 <p>More detailed info view for only one exact route can be seen by providing route id into following URI:</p>
-<pre><code>GET /actuator/adapter-routes/{routeId}
-</code></pre>
-<p>The following operations (case sensitive) can be executed per route, for all route or on sipmc:
-- start
-- stop
-- suspend
-- resume
-- reset</p>
+<pre class="highlight"><code>GET /actuator/adapter-routes/{routeId}</code></pre>
+<p>The following operations (case sensitive) can be executed per route, for all route or on sipmc:</p>
+<ul>
+<li>start</li>
+<li>stop</li>
+<li>suspend</li>
+<li>resume</li>
+<li>reset</li>
+</ul>
 <p>To execute an operation on all routes, use following URIs:</p>
-<pre><code>POST /actuator/adapter-routes/{operation}
-</code></pre>
+<pre class="highlight"><code>POST /actuator/adapter-routes/{operation}</code></pre>
 <p>There is a possibility to execute a route lifecycle operation on an exact route, by providing route id and operation.
 This can be achieved by using following URI:</p>
-<pre><code>POST /actuator/adapter-routes/{routeId}/{operation}
-</code></pre>
+<pre class="highlight"><code>POST /actuator/adapter-routes/{routeId}/{operation}</code></pre>
 <p>Executing desired operation on the routes without providing route id is possible on sip middle component. By specifying operation
 on the following URI, operation will be executed for all routes which has sip middle component as a consumer:</p>
-<pre><code>POST /actuator/adapter-routes/sipmc/{operation}
-</code></pre>
+<pre class="highlight"><code>POST /actuator/adapter-routes/sipmc/{operation}</code></pre>
 <p><strong>Warning:</strong>
 When using suspend or stop operation on route that has middle component as a consumer, default value (30 seconds) timeout will be used.
 Keep in mind that if route is not started for next 30 seconds after sending data to middle component, data could be lost.</p>
 <h3 id="logging-translation">Logging Translation<a class="headerlink" href="#logging-translation" title="Permanent link">&para;</a></h3>
 <p>Adds possibility to translate log messages</p>
 <p>By default, translation service is not activated, thus in order to use it a logback.xml file should be provided in resources. In this file we can specify that the adapter uses a custom logging encoder, which provides translations.</p>
-<pre><code class="language-xml">&lt;appender name=&quot;STDOUT&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
+<pre class="highlight"><code class="language-xml">&lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
     &lt;!-- encoders are  by default assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder --&gt;
-    &lt;encoder class=&quot;de.ikor.sip.foundation.core.translate.logging.SIPPatternLayoutEncoder&quot;&gt;
+    &lt;encoder class="de.ikor.sip.foundation.core.translate.logging.SIPPatternLayoutEncoder"&gt;
         &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}: %msg%n&lt;/pattern&gt;
     &lt;/encoder&gt;
-&lt;/appender&gt;
-</code></pre>
+&lt;/appender&gt;</code></pre>
 <p>Files for defining translation values, should be created inside translate directory as a bundle of .property files, under a common name, which should be extended by a suffix in following format _{language}.</p>
 <p>Each file consists of keys, shared in the bundle, followed by its value as a phrase in the language used.</p>
 <p><strong>Warning:</strong>
 Be mindful of how MessageFormat handles String. Some characters, like apostrophe ('),
 are used as special characters and need to be escaped as shown in the example below.</p>
 <p>More details can be found here: <a href="https://docs.oracle.com/javase/6/docs/api/java/text/MessageFormat.html">MessageFormat</a></p>
-<pre><code class="language-properties">amessagekey = A message value
+<pre class="highlight"><code class="language-properties">amessagekey = A message value
 amessagekey.welcome_{} = Hello {0}
-amessagekey.missingbean = Bean {0} doesn''t exist
-</code></pre>
+amessagekey.missingbean = Bean {0} doesn''t exist</code></pre>
 <p>The keys are automatically recognized and should be used in logs.</p>
-<pre><code class="language-java">log.info(&quot;amessagekey&quot;);
-log.info(&quot;amessagekey.welcome_{}&quot;, &quot;A user&quot;);
-</code></pre>
+<pre class="highlight"><code class="language-java">log.info("amessagekey");
+log.info("amessagekey.welcome_{}", "A user");</code></pre>
 <p>It can also be automatically used by Camel's log processor. In this case message key MUST be separated from parameters by
 blank space:</p>
-<pre><code class="language-java">.log(&quot;amessagekey&quot;);
-.log(&quot;amessagekey.welcome_{} ${header.userName}&quot;);
-</code></pre>
+<pre class="highlight"><code class="language-java">.log("amessagekey");
+.log("amessagekey.welcome_{} ${header.userName}");</code></pre>
 <p>Enabling, disabling and other settings can be done in the configuration.</p>
-<pre><code class="language-yaml">sip:
+<pre class="highlight"><code class="language-yaml">sip:
   core:
     translation:
       fileLocations: classpath:translations/translated-messages, classpath:translations/messages
-      default-encoding: &quot;UTF-8&quot;
+      default-encoding: "UTF-8"
       fallback-to-system-locale: false
       use-code-as-default-message: true
-      lang: en
-</code></pre>
+      lang: en</code></pre>
 <h3 id="changing-log-level-programmatically">Changing log level programmatically<a class="headerlink" href="#changing-log-level-programmatically" title="Permanent link">&para;</a></h3>
 <p>Actuator enables us to dynamically change log levels of all loggers during runtime.
 This can be accomplished by using the following POST request:</p>
-<pre><code>http://localhost:8080/actuator/loggers/{logger-name}
+<pre class="highlight"><code>http://localhost:8080/actuator/loggers/{logger-name}
 Header: Content-Type: application/json
 Body: {
-      &quot;configuredLevel&quot;: &quot;TRACE&quot;
-}
-</code></pre>
+      "configuredLevel": "TRACE"
+}</code></pre>
 <p>Log levels can be independently changed and will be individually set per logger or on root.</p>
 <p>We can also use logback.xml auto scan to update log levels.</p>
 <p>Here we need to enable auto scan and set the interval on which it occurs in logback.xml configuration, and then we can
 open logback.xml in target directory* and edit the log levels on loggers defined there.</p>
-<pre><code class="language-xml">&lt;configuration scan=&quot;true&quot; scanPeriod=&quot;30 seconds&quot;/&gt;
-</code></pre>
+<pre class="highlight"><code class="language-xml">&lt;configuration scan="true" scanPeriod="30 seconds"/&gt;</code></pre>
 <p>This works for all loggers except the ones on Camel routes.</p>
 <h3 id="exchange-tracing">Exchange tracing<a class="headerlink" href="#exchange-tracing" title="Permanent link">&para;</a></h3>
 <p>SIP Core offers usage of Camel's built-in Tracer for tracing and logging information about all processor
 an exchange when through and TraceHistory service which stores all data logged by it.
 Configuration of the Tracer is enabled by adapting ExchangeFormatter.</p>
 <p>First we need to enable the following:</p>
-<pre><code class="language-yaml">sip:
+<pre class="highlight"><code class="language-yaml">sip:
   core:
     tracing:
-      enabled: true
-</code></pre>
+      enabled: true</code></pre>
 <p>Configuring the ExchangeFormatter can be achieved in two ways</p>
 <ul>
-<li>through configuration file</li>
-</ul>
-<pre><code class="language-yaml">sip:
+<li>through configuration file
+  <pre class="highlight"><code class="language-yaml">sip:
   core:
     tracing:
       enabled: true
@@ -383,13 +380,10 @@ Configuration of the Tracer is enabled by adapting ExchangeFormatter.</p>
         showHeaders: true
         showExchangeId: true
         showProperties: true
-        maxChars: 100
-</code></pre>
-<ul>
-<li>by using the following POST request</li>
+        maxChars: 100</code></pre></li>
+<li>by using the following POST request
+  <pre class="highlight"><code>/actuator/tracing/format/{exchangeFormatterParameterName}</code></pre></li>
 </ul>
-<pre><code>/actuator/tracing/format/{exchangeFormatterParameterName}
-</code></pre>
 <p>The body of the request should include the value we want for the given parameter.</p>
 <p>TraceHistory is enabled with previous configuration.
 Exchanges will contain the "tracingId" header, which has the original Exchange's id as value.
@@ -398,11 +392,10 @@ A "tracingId' header will appear and will be linked to the original Exchange's i
 <p><strong>Expanding the traffic trace limit:</strong></p>
 <p>Introduced the SipLimitedLinkedList in order to limit the number of logged events in memory.
 Default limit is 100 events, but it could be changed by following configuration:</p>
-<pre><code class="language-yaml">sip:
+<pre class="highlight"><code class="language-yaml">sip:
   core:
     tracing:
-      limit: 120 #100 by default
-</code></pre>
+      limit: 120 #100 by default</code></pre>
 <h3 id="openapi-descriptor">OpenAPI Descriptor<a class="headerlink" href="#openapi-descriptor" title="Permanent link">&para;</a></h3>
 <p>Framework provides an Open API description of all custom or Spring provided endpoints within your adapter.
 Endpoints are created as extension of Spring's actuator.</p>
@@ -414,32 +407,29 @@ it could be added by including the Swagger Apache Camel component. This componen
 For controller classes annotated with <code>@RestController</code> an entry is added to the default swagger docs.
 This might not be the expected behavior for which reason the <code>REST DSL</code> component is recommended.</p>
 <p>The custom Swagger documentation could easily be added by defining it in the <code>restConfiguration</code> as seen in the following listing.</p>
-<pre><code class="language-java">restConfiguration()
-  .contextPath(&quot;/adapter&quot;)
-  .apiContextPath(&quot;/api-docs&quot;)
-  .apiContextRouteId(&quot;api-docs&quot;);
-</code></pre>
+<pre class="highlight"><code class="language-java">restConfiguration()
+  .contextPath("/adapter")
+  .apiContextPath("/api-docs")
+  .apiContextRouteId("api-docs");</code></pre>
 <p>If the application has a route based on the REST DSL a Swagger documentation is generated automatically.</p>
-<pre><code class="language-java">rest(&quot;/api/v1&quot;)
-  .tag(&quot;Data Controller&quot;).description(&quot;REST service for creating new objects&quot;)
+<pre class="highlight"><code class="language-java">rest("/api/v1")
+  .tag("Data Controller").description("REST service for creating new objects")
   .consumes(MediaType.APPLICATION_JSON_VALUE).produces(MediaType.APPLICATION_JSON_VALUE)
-  .post(&quot;/data&quot;)
+  .post("/data")
     .type(DataRequest.class)
-    .description(&quot;Create a new object&quot;)
+    .description("Create a new object")
     .outType(DataResponse.class)
-    .to(&quot;direct:handleRequest&quot;);
-</code></pre>
+    .to("direct:handleRequest");</code></pre>
 <p>This will create a new Swagger documentation for the REST service. For further informations see the Apache Camel documentation of the <a href="https://camel.apache.org/components/next/others/swagger-java.html">Swagger</a>
 and <a href="https://camel.apache.org/manual/rest-dsl.html">REST DSL</a> component. In case the custom Swagger documentation should be displayed by default in the Swagger UI you can configure it
 accordingly in the <code>application.yaml</code> file.</p>
-<pre><code class="language-yaml">springdoc:
+<pre class="highlight"><code class="language-yaml">springdoc:
   show-actuator: true
   api-docs:
     path: /api-docs #default swagger docs
   swagger-ui:
     url: /adapter/api-docs #custom swagger docs set as default
-    path: /swagger-ui.html
-</code></pre>
+    path: /swagger-ui.html</code></pre>
 <p>Based on this configuration the custom Swagger documentation is accessible by <code>/adapter/api-docs</code>.</p>
               
             </div>

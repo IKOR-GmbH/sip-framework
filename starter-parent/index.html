@@ -90,7 +90,11 @@
                     </li>
                 </ul>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contribution Guidelines</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING/">Contribution Guidelines</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../CODE_OF_CONDUCT/">Code Of Conduct</a>
                     </li>
                 </ul>
                 <ul>
@@ -142,9 +146,15 @@
             <div class="section">
               
                 <h1 id="sip-starter-parent">SIP Starter Parent<a class="headerlink" href="#sip-starter-parent" title="Permanent link">&para;</a></h1>
-<p><strong>[List of Content]</strong>
-- <a href="#description">Description</a>
-- <a href="#usage">Usage</a></p>
+<div class="toc">
+<ul>
+<li><a href="#sip-starter-parent">SIP Starter Parent</a><ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#usage">Usage</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
 <p>This project takes care of versions (transitive dependencies) for Spring Boot and Camel dependencies.</p>
 <p>It inherits spring-boot-parent-starter, so that it will, by default, bring everything needed for comfortable development of Spring Boot applications.
@@ -152,12 +162,11 @@ This includes transitive dependency management of all dependencies used by the S
 plus additional Maven plugin management and configuration.</p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <p>This project should be used as parent for SIP Adapters.</p>
-<pre><code class="language-xml">&lt;parent&gt;
+<pre class="highlight"><code class="language-xml">&lt;parent&gt;
     &lt;groupId&gt;de.ikor.sip.foundation&lt;/groupId&gt;
     &lt;artifactId&gt;sip-starter-parent&lt;/artifactId&gt;
     &lt;version&gt;${sip.starter.parent}&lt;/version&gt;
-&lt;/parent&gt;
-</code></pre>
+&lt;/parent&gt;</code></pre>
               
             </div>
           </div>

@@ -68,7 +68,7 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#description">Description</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#how-to-use">How to use?</a>
+    <li class="toctree-l2"><a class="reference internal" href="#how-to-use">How to use</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a>
     </li>
@@ -92,7 +92,11 @@
                     </li>
                 </ul>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contribution Guidelines</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING/">Contribution Guidelines</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../CODE_OF_CONDUCT/">Code Of Conduct</a>
                     </li>
                 </ul>
                 <ul>
@@ -144,10 +148,16 @@
             <div class="section">
               
                 <h1 id="ikor-sip-middle-component">IKOR SIP Middle Component<a class="headerlink" href="#ikor-sip-middle-component" title="Permanent link">&para;</a></h1>
-<p><strong>[List of Content]</strong>
-- <a href="#description">Description</a>
-- <a href="#how-to-use">How to use?</a>
-- <a href="#examples">Examples</a></p>
+<div class="toc">
+<ul>
+<li><a href="#ikor-sip-middle-component">IKOR SIP Middle Component</a><ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#how-to-use">How to use</a></li>
+<li><a href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
 <p>SIP middle component relates to the key SIP concept - splitting integration logic into submodules (connectors).
 Combining connectors into one data flow is quite easy with Camel and can be done in many ways. However, if we
@@ -161,33 +171,30 @@ which will make it easier to bridge connectors in different ways, e.g. by using 
 supports only in-memory connection channel implemented on top of Camel's SEDA component. It provides 1 to 1 and
 publish-subscribe patterns and can support many channels in single adapter. Middle component can automatically determine
 the number of consumers for a specific channel and auto-configure itself accordingly, as a 1 to 1 or publish-subscribe connector.</p>
-<h2 id="how-to-use">How to use?<a class="headerlink" href="#how-to-use" title="Permanent link">&para;</a></h2>
+<h2 id="how-to-use">How to use<a class="headerlink" href="#how-to-use" title="Permanent link">&para;</a></h2>
 <p>Middle component is used like any other Camel component, but has a simple URI pattern:</p>
-<pre><code>sipmc:channelName
-</code></pre>
+<pre class="highlight"><code>sipmc:channelName</code></pre>
 <p>The channel name is an arbitrary String value, but it should relate to one integration topic, e.q. partner.
 Multiple sipmc routes may exist with different channel names.</p>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
 <p><strong>1 to 1:</strong>
 In this scenario response provided by "mock:output" should be propagated back to the caller - "mock:input"</p>
-<pre><code class="language-java"> from(&quot;mock:input&quot;)
-    .to(&quot;sipmc:foo&quot;);
+<pre class="highlight"><code class="language-java"> from("mock:input")
+    .to("sipmc:foo");
 
- from(&quot;sipmc:foo&quot;)
-    .to(&quot;mock:output&quot;);
-</code></pre>
+ from("sipmc:foo")
+    .to("mock:output");</code></pre>
 <p><strong>Publish subscribe:</strong>
 With publish-subscribe pattern the caller (mock-input) does not know how many consumers are registered. Middle component
 makes sure the message is delivered to all of them. Notice that the URIs do not differ too much from the ones in
 previous case.</p>
-<pre><code class="language-java"> from(&quot;mock:input&quot;)
-    .to(&quot;sipmc:foo&quot;);
+<pre class="highlight"><code class="language-java"> from("mock:input")
+    .to("sipmc:foo");
 
-from(&quot;sipmc:foo&quot;)
-    .to(&quot;mock:output1&quot;);
-from(&quot;sipmc:foo&quot;)
-    .to(&quot;mock:output2&quot;);
-</code></pre>
+from("sipmc:foo")
+    .to("mock:output1");
+from("sipmc:foo")
+    .to("mock:output2");</code></pre>
               
             </div>
           </div>

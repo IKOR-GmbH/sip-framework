@@ -20,7 +20,7 @@
   <script>
     // Current page data
     var mkdocs_page_name = "Introduction";
-    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_input_path = "README.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -50,7 +50,7 @@
                 <ul class="current">
                     <li class="toctree-l1 current"><a class="reference internal current" href=".">Introduction</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#what-is-sip">What is SIP?</a>
+    <li class="toctree-l2"><a class="reference internal" href="#what-is-sip">What is SIP</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
         <ul>
@@ -112,7 +112,11 @@
                     </li>
                 </ul>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="contributing/">Contribution Guidelines</a>
+                    <li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING/">Contribution Guidelines</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="CODE_OF_CONDUCT/">Code Of Conduct</a>
                     </li>
                 </ul>
                 <ul>
@@ -151,7 +155,7 @@
     <li>Introduction</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/index.md"
+        <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/README.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -164,19 +168,36 @@
             <div class="section">
               
                 <h1 id="system-integration-platform-framework">System Integration Platform Framework<a class="headerlink" href="#system-integration-platform-framework" title="Permanent link">&para;</a></h1>
+<p><a href="https://sonarcloud.io/summary/new_code?id=IKOR-GmbH_sip-framework"><img alt="Quality Gate Status" src="https://sonarcloud.io/api/project_badges/measure?project=IKOR-GmbH_sip-framework&amp;metric=alert_status" /></a></p>
 <p>The System Integration Platform (SIP) Framework is an IKOR product
 developed from 10 project years of experience with standardized integration of core and peripheral systems.</p>
 <p>The framework enables building light-weight integration adapters to achieve a technical and non-technical decoupling of
 systems, using microservices and is therefore highly scalable.</p>
 <p>It builds on Apache Camel Framework and extends it with a lot of usable features to create a standardized integration
 approach for all adapters.</p>
-<p><strong>List of Content:</strong>
-- <a href="#what-is-sip">What is SIP?</a>
-- <a href="#usage">Usage</a>
-  - <a href="#framework-components">Framework components</a>
-  - <a href="#framework-features">Framework features</a>
-- <a href="#getting-started">Getting started</a></p>
-<h2 id="what-is-sip">What is SIP?<a class="headerlink" href="#what-is-sip" title="Permanent link">&para;</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#system-integration-platform-framework">System Integration Platform Framework</a><ul>
+<li><a href="#what-is-sip">What is SIP</a></li>
+<li><a href="#usage">Usage</a><ul>
+<li><a href="#framework-components">Framework components</a></li>
+<li><a href="#framework-features">Framework features</a></li>
+</ul>
+</li>
+<li><a href="#getting-started">Getting started</a><ul>
+<li><a href="#how-and-why-to-use-sip-middle-component">How and why to use SIP Middle Component</a></li>
+<li><a href="#adding-additional-camel-starters-to-the-project">Adding additional Camel starters to the project</a></li>
+<li><a href="#adding-new-system-connectors">Adding new System Connectors</a></li>
+<li><a href="#sample-scenarios">Sample Scenarios</a></li>
+<li><a href="#development-tips">Development Tips</a></li>
+<li><a href="#configuration-properties">Configuration properties</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="what-is-sip">What is SIP<a class="headerlink" href="#what-is-sip" title="Permanent link">&para;</a></h2>
 <p><strong>S</strong>ystem <strong>I</strong>ntegration <strong>P</strong>latform is a combination of SIP framework, SIP management application and various implementation
 guidelines and best practices. Combined they create an advantage when developing microservice integration adapters.
 SIP adapters are specially designed as middleware integrators of specific subdomains of an enterprise. SIP project structure
@@ -186,19 +207,19 @@ maximum comfort and efficiency while developing.</p>
 <p>To start developing with SIP, we should first get familiar with its basic concepts.
 Let's take a very simple scenario as an example. Say we have two systems working on the same domain (Partner, Policy, Billing
 etc.), but they were never designed to work together, and suddenly there is a need to connect them.</p>
-<p><img alt="Image of Unconnected systems image" src="doc-images/SIP_readme_systems.svg?raw=true" title="Unconnected systems" /></p>
+<p><img alt="Image of Unconnected systems image" src="images/SIP_readme_systems.svg?raw=true" title="Unconnected systems" /></p>
 <p>Both systems expose APIs, which are mutually not compatible, both by data model and/or communication technology
 they use. SIP is designed as a standalone middleware app with a sole purpose to resolve exactly this kind of problems in
 a flexible and standardized way. Actual integration scenarios may include more than two APIs, or even more than two
 systems, but all the principles apply equally to such scenarios.</p>
-<p><img alt="Image of SIP connected systems" src="doc-images/SIP_readme_adapter.svg?raw=true" title="SIP connected systems" /></p>
+<p><img alt="Image of SIP connected systems" src="images/SIP_readme_adapter.svg?raw=true" title="SIP connected systems" /></p>
 <p>The image below shows the modules structure of a single SIP adapter.
 To provide a level of flexibility, SIP splits the problem into two, giving the possibility to develop and/or deploy connectors
 for individual systems separately. The integration
 logic is divided into three modules: <strong>System A - Connector</strong>, <strong>System B - Connector</strong> and <strong>Domain</strong>. The fourth module is the <strong>Application</strong>
 module. Its purpose is to converge the three integration modules into one deployable and executable application.
 The blue arrows represent dependencies of the application module.</p>
-<p><img alt="Image of SIP Adapter" src="doc-images/SIP_readme_adapter_detail.svg?raw=true" title="SIP Adapter" /></p>
+<p><img alt="Image of SIP Adapter" src="images/SIP_readme_adapter_detail.svg?raw=true" title="SIP Adapter" /></p>
 <p><strong>Domain</strong></p>
 <p>The <strong>Domain</strong> module takes a central position in the image, because it provides the common data model for both systems
 and also separates the system connectors from each other to allow loose coupling between them. It should not contain any
@@ -222,10 +243,10 @@ In the picture domain A and domain B packages are shown optionally, together wit
 component, since integrated systems use the same communication data model sometimes.</p>
 <p>Each connector will have the following structure:</p>
 <ul>
-<li>config – a place for any configuration classes</li>
-<li>sink – here we should define Camel routes</li>
-<li>transformers – it should contain classes for adapting the connector model to common domain model.</li>
-<li>domain (optional) - it may contain the data model of the system.</li>
+<li><code>config</code> a place for any configuration classes</li>
+<li><code>sink</code> here we should define Camel routes</li>
+<li><code>transformers</code> it should contain classes for adapting the connector model to common domain model.</li>
+<li><code>domain</code> (optional) it may contain the data model of the system.</li>
 </ul>
 <p><strong>Application</strong></p>
 <p>The Application module gathers all connector modules as one system and run them together.
@@ -236,8 +257,7 @@ integration tests, such as default SIPApplicationTest, provided by archetype.</p
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <h3 id="framework-components">Framework components<a class="headerlink" href="#framework-components" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong><a href="docs/archetype.md">sip-archetype</a></strong> - Archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies.
-Project is created by executing single maven command.</li>
+<li><strong><a href="docs/archetype.md">sip-archetype</a></strong> - Archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies. Project is created by executing single maven command.</li>
 <li><strong><a href="docs/core.md">sip-core</a></strong> - Core project for base SIP functionalities.</li>
 <li><strong><a href="docs/middlecomponent.md">sip-middle-component</a></strong> - Custom Camel component used as abstracted connector between different integration sides.</li>
 <li><strong><a href="docs/integrationstarter.md">sip-integration-starter</a></strong> - Starter project adding necessary predefined dependencies for integration adapters.</li>
@@ -246,16 +266,14 @@ Project is created by executing single maven command.</li>
 </ul>
 <p>The following image displays how listed modules are utilized on SIP adapter where the up arrows represent inheritance,
 down arrows dependencies.</p>
-<p><img alt="Image of SIP connected systems" src="doc-images/SIP_readme_dependencies.svg?raw=true" title="SIP connected systems" /></p>
+<p><img alt="Image of SIP connected systems" src="images/SIP_readme_dependencies.svg?raw=true" title="SIP connected systems" /></p>
 <h3 id="framework-features">Framework features<a class="headerlink" href="#framework-features" title="Permanent link">&para;</a></h3>
 <p>Framework provides different features some of which are enabled by default. All the features are customizable and can be
 overwritten or turned off by configuration. More about how to use them you can find under the corresponding module's
-  documentation.</p>
+documentation.</p>
 <ul>
-<li><strong><a href="docs/core.md#actuator-health-check-and-metrics">Actuator health check and metrics</a></strong> - Out-of-the-box health
-   checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.</li>
-<li><strong><a href="docs/core.md#proxy-for-apache-camel-processors">Proxy for Apache Camel Processors</a></strong> - Proxies for Apache Camel
-   processors with process and mock functionalities.</li>
+<li><strong><a href="docs/core.md#actuator-health-check-and-metrics">Actuator health check and metrics</a></strong> - Out-of-the-box health checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.</li>
+<li><strong><a href="docs/core.md#proxy-for-apache-camel-processors">Proxy for Apache Camel Processors</a></strong> - Proxies for Apache Camel processors with process and mock functionalities.</li>
 <li><strong><a href="docs/core.md#working-with-routes-in-runtime">Working with routes in runtime</a></strong> - Dynamical changing routes lifecycle.</li>
 <li><strong><a href="docs/core.md#logging-translation">Logging Translation</a></strong> - Translation of logging messages.</li>
 <li><strong><a href="docs/core.md#changing-log-level-programmatically">Changing log level programmatically</a></strong> - Dynamical changing of log level.</li>
@@ -268,12 +286,11 @@ overwritten or turned off by configuration. More about how to use them you can f
 <p>Before development, check the following <a href="INSTALLATION.md">Installation guide</a>.</p>
 <p>Once you have your adapter you can do the following steps:</p>
 <ul>
-<li>Run "mvn clean install"</li>
+<li>Run <code>mvn clean install</code></li>
 <li>Crate common Data Model inside domain module</li>
 <li>Add necessary dependencies to each module</li>
 <li>Add RouteBuilders inside "sink" package in connectors</li>
-<li>Add classes which transform system data models to or from common domain model in "transformers" package in connectors
-  (if needed)</li>
+<li>Add classes which transform system data models to or from common domain model in "transformers" package in connectors (if needed)</li>
 <li>Add any configuration classes for a specific system inside "config" package in connectors</li>
 <li>Add general integration configuration in application.yml found inside application module resources</li>
 <li>Run SIPApplication found inside application module</li>
@@ -293,11 +310,10 @@ camel-starter dependencies to integration adapters.</p>
 enough to add their Spring Boot starter dependency, without version number - as it is managed in the parent Maven module
 of the SIP integration adapter.</p>
 <p>For instance, to add ArangoDb Camel component, it is enough to add the following dependency to the project:</p>
-<pre><code class="language-xml">&lt;dependency&gt;
+<pre class="highlight"><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;org.apache.camel.springboot&lt;/groupId&gt;
     &lt;artifactId&gt;camel-arangodb-starter&lt;/artifactId&gt;
-&lt;/dependency&gt;
-</code></pre>
+&lt;/dependency&gt;</code></pre>
 <p>The same stands for adding Spring Boot starters - as they are managed in the parent Maven module they too can be added
 without explicitly stating version numbers. As a matter of fact, the overall dependency management performed by the
 Spring Boot is in place in integration adapters too.</p>
@@ -315,36 +331,33 @@ These are the domain module and the <code>sip-integration-starter</code>.
 Make sure to add these to your <code>pom.xml</code> dependencies list.
 Please observe this exemplary <a href="#example-pom">pom.xml</a> to see how it should look like in a system connector module.</p>
 <p>The module structure usually looks like this:</p>
-<pre><code>fancy-sip-adapter
+<pre class="highlight"><code class="language-text">fancy-sip-adapter
 ├───new-system-connector-module
 │   ├───src/main/java/&lt;package-path&gt;
 │   │   ├───config
 │   │   ├───sink
 │   │   └───transformer
 │   └───pom.xml
-...
-</code></pre>
+...</code></pre>
 <p><strong>Copying Existing Module</strong></p>
 <p>One way to add a system connector as a new module is to copy an existing module,
 that has been created by using the SIP archetype to your project structure.
 If the module was copied the <code>name</code> and <code>artifactId</code> in its <code>pom.xml</code> need to be adjusted.
 Then the module name should be added to the <code>modules</code> element of the <code>pom.xml</code> of the main project.</p>
-<pre><code class="language-xml">&lt;modules&gt;
+<pre class="highlight"><code class="language-xml">&lt;modules&gt;
   &lt;module&gt;system-connector-A&lt;/module&gt;
   &lt;module&gt;system-connector-B&lt;/module&gt;
   &lt;module&gt;new-system-connector-module&lt;/module&gt;
-&lt;/modules&gt;
-</code></pre>
+&lt;/modules&gt;</code></pre>
 <p>Additionally, the copied module must be added as a dependency to the <code>pom.xml</code> of the application module.</p>
-<pre><code class="language-xml">&lt;dependencies&gt;
+<pre class="highlight"><code class="language-xml">&lt;dependencies&gt;
   &lt;dependency&gt;
     &lt;groupId&gt;de.ikor.sip.adapter&lt;/groupId&gt;
     &lt;artifactId&gt;new-system-connector-module&lt;/artifactId&gt;
     &lt;version&gt;${project.version}&lt;/version&gt;
   &lt;/dependency&gt;
   ...
-&lt;/dependencies&gt;
-</code></pre>
+&lt;/dependencies&gt;</code></pre>
 <p>If necessary, refresh or rebuild the project so that the newly created module gets registered.</p>
 <p><strong>Using IDEs Built-In Functionality</strong></p>
 <ul>
@@ -374,11 +387,11 @@ There are only a few differences that need to be adjusted.</p>
 and that it has been added as a dependency to the application <code>pom.xml</code>.</p>
 <p><strong>Example POM</strong></p>
 <p><a name="example-pom"/></p>
-<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+<pre class="highlight"><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 
-&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
   &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
   &lt;parent&gt;
     &lt;groupId&gt;de.ikor.sip.adapter&lt;/groupId&gt;
@@ -399,59 +412,54 @@ and that it has been added as a dependency to the application <code>pom.xml</cod
       &lt;artifactId&gt;systemadapter-domain&lt;/artifactId&gt;
     &lt;/dependency&gt;
   &lt;/dependencies&gt;
-&lt;/project&gt;
-</code></pre>
+&lt;/project&gt;</code></pre>
 <h3 id="sample-scenarios">Sample Scenarios<a class="headerlink" href="#sample-scenarios" title="Permanent link">&para;</a></h3>
 <p><strong>REST</strong></p>
-<pre><code class="language-java">package de.ikor.sip.adapter.partner.input.sink;
+<pre class="highlight"><code class="language-java">package de.ikor.sip.adapter.partner.input.sink;
 
 // Input system
 @Cofiguration
 public class RESTConsumerRouteBuilder extends RouteBuilder {
     @Override
     public void configure() throws Exception {
-        from(&quot;rest:POST:update&quot;)
-            .routeId(&quot;inputRoute&quot;)
-            .process(&quot;sytemOneToDomainModel&quot;)
-            .to(&quot;sipmc:foo&quot;)
-            .id(&quot;sipmcProcessor&quot;);
+        from("rest:POST:update")
+            .routeId("inputRoute")
+            .process("sytemOneToDomainModel")
+            .to("sipmc:foo")
+            .id("sipmcProcessor");
     }
-}
-</code></pre>
-<pre><code class="language-java">package de.ikor.sip.adapter.partner.output.sink;
+}</code></pre>
+<pre class="highlight"><code class="language-java">package de.ikor.sip.adapter.partner.output.sink;
 
 // Output system
 @Cofiguration
 public class RESTProducerRouteBuilder extends RouteBuilder {
     @Override
     public void configure() throws Exception {
-        from(&quot;sipmc:foo&quot;)
-            .routeId(&quot;outputRoute&quot;)
-            .process(&quot;domainToSystemTwoModel&quot;)
-            .to(&quot;http:example.com&quot;)
-            .id(&quot;exampleProcessor&quot;);
+        from("sipmc:foo")
+            .routeId("outputRoute")
+            .process("domainToSystemTwoModel")
+            .to("http:example.com")
+            .id("exampleProcessor");
     }
-}
-</code></pre>
+}</code></pre>
 <h3 id="development-tips">Development Tips<a class="headerlink" href="#development-tips" title="Permanent link">&para;</a></h3>
 <p><strong>Property placeholders</strong></p>
 <p>When it comes to working with URIs in routes it is recommended to use property placeholders, which makes the routes configurable.
 This can be easily achieved in Camel by following their placeholder syntax. When building route URIs instead of hardcoding the URI,
 we should pull it from configuration. Now, when needed, we can just edit the configuration file instead of the route.</p>
 <p>Example route:</p>
-<pre><code class="language-java">from(&quot;{{endpoint.{adapter-name}.{external-system}.uri}}&quot;)
-    .id(&quot;{{endpoint.{adapter-name}.{external-system}.id}}&quot;)
-    .to(...);
-</code></pre>
+<pre class="highlight"><code class="language-java">from("{{endpoint.{adapter-name}.{external-system}.uri}}")
+    .id("{{endpoint.{adapter-name}.{external-system}.id}}")
+    .to(...);</code></pre>
 <p>Example configuration:</p>
-<pre><code class="language-yaml">
+<pre class="highlight"><code class="language-yaml">
 endpoint:
  {adapter-name}:
   {external-system}:
    {endpoint}: # optional - if more endpoints on single external-system are involved in integration
     id: {adapterName}.{externalSystem}
-    uri: ftp://...
-</code></pre>
+    uri: ftp://...</code></pre>
 <p><strong>Setting processor and route IDs</strong></p>
 <p>As we can see each external endpoint definition is followed by explicit setting of id. Although it's not mandatory, it's highly
 doing so is highly recommended. This will provide a reference of the external endpoints, which can be used for different
@@ -632,5 +640,5 @@ Notice that in case of incoming endpoints (those in "from" statement), following
 
 <!--
 MkDocs version : 1.2.3
-Build Date UTC : 2021-11-12 16:28:36.311413+00:00
+Build Date UTC : 2021-11-15 14:15:22.152370+00:00
 -->

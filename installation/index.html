@@ -104,7 +104,11 @@
                     </li>
                 </ul>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contribution Guidelines</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING/">Contribution Guidelines</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../CODE_OF_CONDUCT/">Code Of Conduct</a>
                     </li>
                 </ul>
                 <ul>
@@ -156,37 +160,59 @@
             <div class="section">
               
                 <h1 id="installation-guide">Installation guide<a class="headerlink" href="#installation-guide" title="Permanent link">&para;</a></h1>
-<p><strong>List of Content:</strong>
-- <a href="#software-requirements">Software requirements</a>
-- <a href="#create-the-project">Create the project</a></p>
+<div class="toc">
+<ul>
+<li><a href="#installation-guide">Installation guide</a><ul>
+<li><a href="#software-requirements">Software requirements</a><ul>
+<li><a href="#java-virtual-machine">Java Virtual Machine</a></li>
+<li><a href="#maven">Maven</a></li>
+<li><a href="#ide">IDE</a></li>
+<li><a href="#plugins">Plugins</a></li>
+</ul>
+</li>
+<li><a href="#create-the-project">Create the project</a><ul>
+<li><a href="#how-to-create-a-sip-adapter-from-maven-archetype">How to create a SIP Adapter from Maven Archetype</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
 <h2 id="software-requirements">Software requirements<a class="headerlink" href="#software-requirements" title="Permanent link">&para;</a></h2>
 <p>Before getting started to develop a first adapter with SIP the following requirements should be fulfilled:</p>
 <h3 id="java-virtual-machine">Java Virtual Machine<a class="headerlink" href="#java-virtual-machine" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Recommendation for using Java 8 or higher https://www.java.com/en/download/manual.jsp</li>
+<li>Recommendation for using Java 8 or higher <a href="https://www.java.com/en/download/manual.jsp">https://www.java.com/en/download/manual.jsp</a></li>
 </ul>
 <h3 id="maven">Maven<a class="headerlink" href="#maven" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Maven downloaded from https://maven.apache.org/download.cgi</li>
-<li>For the Maven documentation see https://maven.apache.org/guides/</li>
+<li>Maven downloaded from <a href="https://maven.apache.org/download.cgi">https://maven.apache.org/download.cgi</a></li>
+<li>For the Maven documentation see <a href="https://maven.apache.org/guides/">https://maven.apache.org/guides/</a></li>
 </ul>
 <h3 id="ide">IDE<a class="headerlink" href="#ide" title="Permanent link">&para;</a></h3>
 <ul>
-<li>IntelliJ - Download from https://www.jetbrains.com/idea/download/#section=windows</li>
-<li>Eclipse - Download from https://www.eclipse.org/downloads/</li>
+<li>IntelliJ - Download from <a href="https://www.jetbrains.com/idea/download/#section=windows">https://www.jetbrains.com/idea/download/#section=windows</a></li>
+<li>Eclipse - Download from <a href="https://www.eclipse.org/downloads/">https://www.eclipse.org/downloads/</a></li>
 </ul>
 <h3 id="plugins">Plugins<a class="headerlink" href="#plugins" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Lombok with IntelliJ https://projectlombok.org/setup/intellij</li>
-<li>Lombok with Eclipse https://projectlombok.org/setup/eclipse</li>
-<li>Apache Camel with IntelliJ (recommendation) https://plugins.jetbrains.com/plugin/9371-apache-camel</li>
+<li>Lombok with IntelliJ <a href="https://projectlombok.org/setup/intellij">https://projectlombok.org/setup/intellij</a></li>
+<li>Lombok with Eclipse <a href="https://projectlombok.org/setup/eclipse">https://projectlombok.org/setup/eclipse</a></li>
+<li>Apache Camel with IntelliJ (recommendation) <a href="https://plugins.jetbrains.com/plugin/9371-apache-camel">https://plugins.jetbrains.com/plugin/9371-apache-camel</a></li>
 </ul>
 <h2 id="create-the-project">Create the project<a class="headerlink" href="#create-the-project" title="Permanent link">&para;</a></h2>
 <h3 id="how-to-create-a-sip-adapter-from-maven-archetype">How to create a SIP Adapter from Maven Archetype<a class="headerlink" href="#how-to-create-a-sip-adapter-from-maven-archetype" title="Permanent link">&para;</a></h3>
 <p>In order to make setting up a new integration adapter project an easy task, we have created a dedicated SIP (Adapter) Maven archetype, that gives the ability to quickly bootstrap a new integration adapter, along with all needed Maven dependencies and goodies, as well as the recommended, preferred organization of the project.</p>
 <p>To make a long story short, you can create a SIP Adapter by using the following Maven command:</p>
-<p>Creating an application using SIP archetype:</p>
-<p><code>mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=1.0.0 -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT</code></p>
+<p>Creating an application using SIP archetype on the command line:</p>
+<pre class="highlight"><code class="language-shell">  mvn archetype:generate \
+    -DarchetypeGroupId=de.ikor.sip.foundation \
+    -DarchetypeArtifactId=sip-archetype \
+    -DarchetypeVersion=1.0.0 \
+    -DgroupId=de.ikor.sip.adapter \
+    -DartifactId=demo \
+    -DprojectName=DemoAdapter \
+    -Dversion=1.0.0-SNAPSHOT</code></pre>
 <p>When executing the command, pay attention to use the latest archetype version for the -DarchetypeVersion parameter.</p>
 <p>The following parameters -DgroupId, -DartifactId, -DprojectName and -Dversion should be adjusted to better match your project,
 as they set the properties for the adapter. It is recommended to follow the maven naming convention.</p>
@@ -207,7 +233,7 @@ as they set the properties for the adapter. It is recommended to follow the mave
 </li>
 <li>
 <p><strong>systemConnector1Package</strong>/<strong>systemConnector2Package</strong> are used to define package name suffix for the connectors. Notice that
-connector package name starts with prefix defined on <strong>package</strong> step.</p>
+  connector package name starts with prefix defined on <strong>package</strong> step.</p>
 </li>
 </ul>
 <p>After a successful build, a project with the 4 following modules will be created:</p>
