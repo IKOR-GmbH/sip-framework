@@ -123,7 +123,7 @@ Following description shows SIP Security functionalities and configuration.
                       file-path: classpath:client-certs.acl  # possible resource strings are classpath:, file:, http:, _none_
       ```
       Sample file "client-certs.acl":
-      ```
+      ```text
       CN=Full Name, EMAILADDRESS=name@domain.de, O=[*], C=DE
       CN=Full Name2, EMAILADDRESS=name2@domain.de, O=[*], C=DE
       ```
@@ -136,6 +136,6 @@ Following description shows SIP Security functionalities and configuration.
 
 - To set the password for configuration value _sip.security.ssl.server.key-store-password_ by env_var:
 
-  > export SIP_SECURITY_SSL_SERVER_KEY_STORE_PASSWORD ="password"
+  > `export SIP_SECURITY_SSL_SERVER_KEY_STORE_PASSWORD="password"`
 
   Spring will automatically find the correct variable and set the value.

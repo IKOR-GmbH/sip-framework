@@ -188,7 +188,7 @@ Please observe this exemplary [pom.xml](#example-pom) to see how it should look 
 
 The module structure usually looks like this:
 
-```
+```text
 fancy-sip-adapter
 ├───new-system-connector-module
 │   ├───src/main/java/<package-path>

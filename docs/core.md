@@ -126,7 +126,7 @@ all the time.
 
 To use it, header "proxy-modes" must be set, which consists of a map of processorIds as keys and list of commands as value:
 
-- proxy-modes: {"processorId": \["mock"\]}
+- `proxy-modes: {"processorId": ["mock"]}`
 
 **Setting mock behavior example:**
 
