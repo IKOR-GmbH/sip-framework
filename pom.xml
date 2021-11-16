@@ -99,8 +99,10 @@
         <!-- instead of aggregating coverage we reference all single coverage files for the projects
              this forces the unit-tests for specific tools to be part of the submodule, instead of
              beeing anywhere -->
-        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
         <sonar.coverage.exclusions>**/*Config*</sonar.coverage.exclusions>
+        <sip-framework.version>1.0.0-SNAPSHOT</sip-framework.version>
     </properties>
 
     <modules>
@@ -112,7 +114,7 @@
         <module>sip-archetype</module>
     </modules>
 
-   <dependencyManagement>
+    <dependencyManagement>
         <dependencies>
             <!-- spring dependencies -->
             <dependency>
@@ -160,22 +162,22 @@
             <dependency>
                 <groupId>de.ikor.sip.foundation</groupId>
                 <artifactId>sip-integration-starter</artifactId>
-                <version>${project.version}</version>
+                <version>${sip-framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.ikor.sip.foundation</groupId>
                 <artifactId>sip-core</artifactId>
-                <version>${project.version}</version>
+                <version>${sip-framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.ikor.sip.foundation</groupId>
                 <artifactId>sip-middle-component</artifactId>
-                <version>${project.version}</version>
+                <version>${sip-framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.ikor.sip.foundation</groupId>
                 <artifactId>sip-security</artifactId>
-                <version>${project.version}</version>
+                <version>${sip-framework.version}</version>
             </dependency>
 
             <!-- camel -->
