@@ -3,6 +3,7 @@ site_description: 'Documentation for using & developing with the SIP Framework'
 site_author: 'IKOR'
 repo_url: 'https://github.com/IKOR-GmbH/sip-framework'
 edit_uri: 'edit/main/docs/'
+copyright:  © Copyright 2021, <a href="https://ikor.one">IKOR GmbH</a> & contributors
 
 nav:
     - Introduction: README.md
