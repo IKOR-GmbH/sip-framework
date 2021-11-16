@@ -1,5 +1,0 @@
-{
-  "author": "vladiikor",
-  "pullrequestId": 7,
-  "message": "Replacing ${project.version} in SIP dependencies with ${sip-framework.version}. Versioning will be handled trough release pipeline."
-}

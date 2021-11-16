@@ -1,5 +1,0 @@
-{
-    "author": "vladiIkor",
-    "pullrequestId": 1,
-    "message": "Update documentation, sip-security is not automatically included, if users want to use it, they have to add it as a dependency"
-}
