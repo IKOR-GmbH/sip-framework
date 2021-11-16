@@ -62,7 +62,7 @@ a:active {
 
 .wy-side-nav-search > a,
 .wy-side-nav-search .wy-dropdown > a {
-  color: white;
+  color: white !important;
 }
 
 .rst-versions .rst-current-version {
