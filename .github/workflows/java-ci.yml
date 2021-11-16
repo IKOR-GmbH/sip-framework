@@ -175,8 +175,9 @@ jobs:
       run: |
         export RELEASE_VERSION=$(./.github/workflows/computeReleaseVersion.sh)
         mvn ${MAVEN_ARGS} versions:set -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false
+        mvn ${MAVEN_ARGS} versions:set-property -Dproperty=sip-framework.version -DnewVersion=${RELEASE_VERSION}
         mvn ${MAVEN_ARGS} versions:set -pl ${STARTER_POM} -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false -DprocessDependencies=false
-        mvn ${MAVEN_ARGS} versions:set-property -pl ${STARTER_POM} -Dproperty=sip-dependency.version -DnewVersion=${RELEASE_VERSION}
+        mvn ${MAVEN_ARGS} versions:set-property -pl ${STARTER_POM} -Dproperty=sip-framework.version -DnewVersion=${RELEASE_VERSION}
         cd changelogs && ./update-changelog.sh ${RELEASE_VERSION}
         cd ..
         git add .
@@ -186,6 +187,7 @@ jobs:
         mvn ${MAVEN_ARGS} clean deploy -DskipTests -Ppackage-deployment
         mvn ${MAVEN_ARGS} versions:set -DnextSnapshot=true -DgenerateBackupPoms=false
         export SNAPSHOT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        mvn ${MAVEN_ARGS} versions:set-property -Dproperty=sip-framework.version -DnewVersion=${SNAPSHOT_VERSION}
         mvn ${MAVEN_ARGS} versions:set -pl ${STARTER_POM} -DnewVersion=${SNAPSHOT_VERSION} -DgenerateBackupPoms=false -DprocessDependencies=false
         mvn ${MAVEN_ARGS} versions:set-property -pl ${STARTER_POM} -Dproperty=sip-dependency.version -DnewVersion=${SNAPSHOT_VERSION}
         git add .
