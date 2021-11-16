@@ -162,8 +162,8 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
         STARTER_POM: sip-starter-parent
       run: |
-        mvn ${MAVEN_ARGS} versions:set -DremoveSnapshot=true -DgenerateBackupPoms=false
-        export RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        export RELEASE_VERSION=$(./.github/workflows/computeReleaseVersion.sh)
+        mvn ${MAVEN_ARGS} versions:set -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false
         mvn ${MAVEN_ARGS} versions:set -pl ${STARTER_POM} -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false -DprocessDependencies=false
         mvn ${MAVEN_ARGS} versions:set-property -pl ${STARTER_POM} -Dproperty=sip-dependency.version -DnewVersion=${RELEASE_VERSION}
         cd changelogs && ./update-changelog.sh ${RELEASE_VERSION}
