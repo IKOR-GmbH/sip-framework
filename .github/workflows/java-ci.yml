@@ -233,7 +233,7 @@ jobs:
         cd apidocs
         git rm -r javadoc/${{ needs.do-maven-release.outputs.release-version }} || true
         mkdir -p javadoc/${{ needs.do-maven-release.outputs.release-version }}
-        mv ../site/* .
+        mv ../target/site/* .
     - name: Publish javadocs
       run: |
         git add javadoc/${{ needs.do-maven-release.outputs.release-version }}
