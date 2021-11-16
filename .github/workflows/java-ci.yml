@@ -19,6 +19,7 @@ env:
 
 jobs:
   build:
+    if: ${{ !contains(github.ref_name, ':' }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -39,6 +40,16 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: mvn ${MAVEN_ARGS} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=IKOR-GmbH_sip-framework -Psip-developer,package-deployment
+
+
+  build-from-fork:
+    if: ${{ contains(github.ref_name, ':' }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ./.github/workflows/actions/java-maven-action
+    - name: Build and analyze
+      run: mvn ${MAVEN_ARGS} verify -Psip-developer
 
 
   check-changelogs:
