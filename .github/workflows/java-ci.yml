@@ -19,7 +19,7 @@ env:
 
 jobs:
   build:
-    if: ${{ !contains(github.ref_name, '\:' }}
+    if: ${{ !contains(github.ref_name, ':') }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -43,7 +43,7 @@ jobs:
 
 
   build-from-fork:
-    if: ${{ contains(github.ref_name, '\:' }}
+    if: ${{ contains(github.ref_name, ':') }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
