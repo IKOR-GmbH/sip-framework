@@ -62,6 +62,10 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
 
+        <!-- sip framework version, decoupled from actual version to make dependency resolution work properly in projects
+             where sip-framework is the dependency. This version should always be the same as the version of sip-framework itself -->
+        <sip-framework.version>1.0.0-SNAPSHOT</sip-framework.version>
+
         <!-- properly set encoding, this is especially necessary for resource filtering -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -112,7 +116,7 @@
         <module>sip-archetype</module>
     </modules>
 
-   <dependencyManagement>
+    <dependencyManagement>
         <dependencies>
             <!-- spring dependencies -->
             <dependency>
@@ -160,22 +164,22 @@
             <dependency>
                 <groupId>de.ikor.sip.foundation</groupId>
                 <artifactId>sip-integration-starter</artifactId>
-                <version>${project.version}</version>
+                <version>${sip-framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.ikor.sip.foundation</groupId>
                 <artifactId>sip-core</artifactId>
-                <version>${project.version}</version>
+                <version>${sip-framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.ikor.sip.foundation</groupId>
                 <artifactId>sip-middle-component</artifactId>
-                <version>${project.version}</version>
+                <version>${sip-framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.ikor.sip.foundation</groupId>
                 <artifactId>sip-security</artifactId>
-                <version>${project.version}</version>
+                <version>${sip-framework.version}</version>
             </dependency>
 
             <!-- camel -->
