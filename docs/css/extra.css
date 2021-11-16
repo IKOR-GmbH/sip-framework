@@ -80,3 +80,7 @@ a:active {
   background: var(--ikor-blue);
   color: white;
 }
+
+footer p {
+  color: grey;
+}
