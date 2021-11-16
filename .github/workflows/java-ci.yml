@@ -175,9 +175,8 @@ jobs:
       run: |
         export RELEASE_VERSION=$(./.github/workflows/computeReleaseVersion.sh)
         mvn ${MAVEN_ARGS} versions:set -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false
-        mvn ${MAVEN_ARGS} versions:set-property -Dproperty=sip-framework.version -DnewVersion=${RELEASE_VERSION}
+        sed -i "s/<sip-framework\.version>.*-SNAPSHOT<\/sip-framework\.version>/<sip-framework\.version>${RELEASE_VERSION}<\/sip-framework\.version>/g" pom.xml sip-starter-parent/pom.xml
         mvn ${MAVEN_ARGS} versions:set -pl ${STARTER_POM} -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false -DprocessDependencies=false
-        mvn ${MAVEN_ARGS} versions:set-property -pl ${STARTER_POM} -Dproperty=sip-framework.version -DnewVersion=${RELEASE_VERSION}
         cd changelogs && ./update-changelog.sh ${RELEASE_VERSION}
         cd ..
         git add .
