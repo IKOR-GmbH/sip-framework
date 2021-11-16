@@ -502,5 +502,18 @@
                 </pluginManagement>
             </build>
         </profile>
+
+        <profile>
+            <id>license-check</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>2.0.0</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>
