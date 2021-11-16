@@ -54,7 +54,7 @@ We welcome everyones work and engagement to evolve SIP. To make our life easier 
 
 ### Pull request process
 
-- Does your contribution follow the Goodle Java Coding style? (you can find it [here](https://github.com/google/google-java-format))
+- Does your contribution follow the Google Java Coding style? (you can find it [here](https://github.com/google/google-java-format))
 - Does your pull request only contain changes related to the topic the branch was intended for?
 - Does your pull request contain useful and necessary tests?
 - Was the Sonarqube analysis of your PR successful and all quality gates are met?
