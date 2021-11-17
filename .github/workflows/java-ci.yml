@@ -228,14 +228,12 @@ jobs:
         ref: gh-pages
         token: ${{ secrets.GH_ADMIN_TOKEN }}
         path: "apidocs"
-    - name: Move docs to gh_pages checkout
+    - name: Move docs to gh_pages checkout & commit & push docs
       run: |
         cd apidocs
         git rm -r javadoc/${{ needs.do-maven-release.outputs.release-version }} || true
         mkdir -p javadoc/${{ needs.do-maven-release.outputs.release-version }}
         mv ../target/site/apidocs/* javadoc/${{ needs.do-maven-release.outputs.release-version }}
-    - name: Publish javadocs
-      run: |
         git add javadoc/${{ needs.do-maven-release.outputs.release-version }}
         git commit -m "update javadocs for release ${{ needs.do-maven-release.outputs.release-version }}"
         git push
