@@ -294,8 +294,8 @@ endpoint:
       uri: ftp://...
 ```
 *\<in/out>* corresponds to consumers and producers respectively.
-This means in case a message is received through a route using from, then it is a consumer and in is used.
-On the other hand, it is a producer when a message is sent via to. In this case, out is used as key in the configuration file.  
+This means in case a message is received through a route using "from", then it is a consumer and "in" is used.
+On the other hand, it is a producer when a message is sent via "to". In this case, "out" is used as key in the configuration file.  
 
 *\<adapter-name>* should correspond to the domain adapter it is dealing with (e.g. billing, partner, policy etc.)  
 
@@ -331,7 +331,7 @@ from("{{endpoint.in.partner.my-assurance-co.uri}}")
 from(...)
     .process(...)    
     .to("{{endpoint.out.partner.their-assurance-co.uri}}")
-    .id(""{{endpoint.out.partner.their-assurance-co.id}}"")
+    .id("{{endpoint.out.partner.their-assurance-co.id}}")
 ```
 
 If this convention is followed in the configuration, it leads to a unified structure that makes it possible
