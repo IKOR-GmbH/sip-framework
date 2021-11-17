@@ -277,44 +277,6 @@ and that it has been added as a dependency to the application `pom.xml`.
 </project>
 ```
 
-### Sample Scenarios
-
-**REST**
-
-```java
-package de.ikor.sip.adapter.partner.input.sink;
-
-// Input system
-@Cofiguration
-public class RESTConsumerRouteBuilder extends RouteBuilder {
-    @Override
-    public void configure() throws Exception {
-        from("rest:POST:update")
-            .routeId("inputRoute")
-            .process("sytemOneToDomainModel")
-            .to("sipmc:foo")
-            .id("sipmcProcessor");
-    }
-}
-```
-
-```java
-package de.ikor.sip.adapter.partner.output.sink;
-
-// Output system
-@Cofiguration
-public class RESTProducerRouteBuilder extends RouteBuilder {
-    @Override
-    public void configure() throws Exception {
-        from("sipmc:foo")
-            .routeId("outputRoute")
-            .process("domainToSystemTwoModel")
-            .to("http:example.com")
-            .id("exampleProcessor");
-    }
-}
-```
-
 ### Development Tips
 
 **Property placeholders**
