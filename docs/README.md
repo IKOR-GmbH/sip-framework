@@ -279,34 +279,60 @@ and that it has been added as a dependency to the application `pom.xml`.
 
 ### Development Tips
 
-**Property placeholders**
+**Endpoint Configuration**
 
-When it comes to working with URIs in routes it is recommended to use property placeholders, which makes the routes configurable.
-This can be easily achieved in Camel by following their placeholder syntax. When building route URIs instead of hardcoding the URI,
-we should pull it from configuration. Now, when needed, we can just edit the configuration file instead of the route.
-
-Example route:
-
-```java
-from("{{endpoint.<adapter-name>.<external-system>.uri}}")
-    .id("{{endpoint.<adapter-name>.<external-system>.id}}")
-    .to(...);
-```
-It is also possible to use Spring's @ConfigurationProperties annotation to resolve the endpoint configuration as a class,
-instead of Camel's placeholders. This approach is also valid as long as endpoints are configurable, and the configuration
-follows the given guideline. We recommend you use one approach throughout one adapter.
-
-Example configuration:
+When it comes to working with URIs in routes, it is recommended to use property placeholders, which makes the routes configurable.
+Additionally, it would make much sense to follow suggested configuration convention for defining endpoint configuration.
 
 ```yaml
-
 endpoint:
+  <in/out>:
    <adapter-name>:
     <external-system>:
      <endpoint>: # optional - if more endpoints on single external-system are involved in integration
       id: <adapterName>.<externalSystem>
       uri: ftp://...
 ```
+**in/out** key corresponds to consumers and producers respectively. Meaning, if the message is entering the route ("from" statement)
+we are talking about consumer, and the proper configuration would have "in" key on this place. If the message is leaving the route
+("to" statement), we speak of producer and proper configuration key should be "out".
+**<adapter-name>** should correspond to the domain adapter is dealing with, like billing, partner, policy etc.
+**<external-system>** should correspond to the name of the system(or client) adapter is communicating with.
+**<endpoint>** in case we have more endpoints on one adapter with the same domain and external system, additional identification
+in required. For this purpose we use additional "endpoint" key to provide required distinction. 
+
+For example:
+
+```yaml
+endpoint:
+  in:
+    partner:
+      my-assurance-co:
+        id: partner.my-assurance-co
+        uri: ftp://...
+  out:
+    partner:
+      their-assurance-co:
+        id: partner.their-assurance-co
+        uri: https://...
+```
+
+Using this configuration can be easily achieved in Camel by following their placeholder syntax.
+Here's what the Example from above would look like in the Camel route:
+
+```java
+from("{{endpoint.in.partner.my-assurance-co.uri}}")
+    .id("{{endpoint.in.partner.my-assurance-co.id}}")
+    .to(...);
+
+from(...)
+    .process(...)    
+    .to("{{endpoint.out.partner.their-assurance-co.uri}}")
+    .id(""{{endpoint.out.partner.their-assurance-co.id}}"")
+```
+
+This approach would provide better understanding of what the adapter is about just by looking into the configuration.
+It makes the route more descriptive, and the adapters easier to maintain.
 
 **Setting processor and route IDs**
 
