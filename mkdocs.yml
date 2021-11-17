@@ -18,8 +18,10 @@ nav:
     - Contribution Guidelines: CONTRIBUTING.md
     - Code Of Conduct: CODE_OF_CONDUCT.md
     - Changelog: changelog.md
-    - JavaDoc of latest Release: './javadoc/latest/index.html'
-    - Find out more about IKOR: 'https://ikor.one'
+    - JavaDoc Latest Development: './javadoc/latest/index.html'
+    # JAVADOC_RELEASES sed marker, do not delete
+    - Find out more about IKOR: 'https://ikor.one/produkt/system-integration-platform'
+    - Impressum: 'https://ikor.one/impressum/'
 
 collapse_navigation: false
 
@@ -32,6 +34,9 @@ docs_dir: 'docs'
 
 extra_css:
     - css/extra.css
+
+extra_javascript:
+    - javascript/javadoc_menu_dropdown.js
 
 markdown_extensions:
   - toc:

@@ -179,6 +179,7 @@ jobs:
         mvn ${MAVEN_ARGS} versions:set -pl ${STARTER_POM} -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false -DprocessDependencies=false
         cd changelogs && ./update-changelog.sh ${RELEASE_VERSION}
         cd ..
+        sed -i "/.*JAVADOC_RELEASES.*/a \ \ \ \ - JavDoc ${RELEASE_VERSION}: './javadoc/${RELEASE_VERSION}/index.html'" mkdocs.yml
         git add .
         git commit -m "Updated sip-framework version to ${RELEASE_VERSION}"
         git tag -a releases/${RELEASE_VERSION} -m "Released new sip-framework version ${RELEASE_VERSION}"
