@@ -9,9 +9,9 @@ FEATURE=$(echo $CUR_VERSION | cut -d '.' -f 2)
 PATCH=$(echo $CUR_VERSION | cut -d '.' -f 3 | cut -d '-' -f 1)
 
 if test -n "$(find changelogs/major -name '*.json' -print -quit)"; then
-  MAJOR=$(($PATCH+1))
+  MAJOR=$(($MAJOR+1))
 elif test -n "$(find changelogs/feature -name '*.json' -print -quit)"; then
-  FEATURE=$(($PATCH+1))
+  FEATURE=$(($FEATURE+1))
 else
   PATCH=$(($PATCH+1))
 fi
