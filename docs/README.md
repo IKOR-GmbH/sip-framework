@@ -293,13 +293,16 @@ endpoint:
       id: <adapterName>.<externalSystem>
       uri: ftp://...
 ```
-**in/out** key corresponds to consumers and producers respectively. Meaning, if the message is entering the route ("from" statement)
-we are talking about consumer, and the proper configuration would have "in" key on this place. If the message is leaving the route
-("to" statement), we speak of producer and proper configuration key should be "out".
-**<adapter-name>** should correspond to the domain adapter is dealing with, like billing, partner, policy etc.
-**<external-system>** should correspond to the name of the system(or client) adapter is communicating with.
-**<endpoint>** in case we have more endpoints on one adapter with the same domain and external system, additional identification
-in required. For this purpose we use additional "endpoint" key to provide required distinction. 
+**<in/out>** corresponds to consumers and producers respectively.
+This means in case a message is received through a route using from, then it is a consumer and in is used.
+On the other hand, it is a producer when a message is sent via to. In this case, out is used as key in the configuration file.  
+
+**<adapter-name>** should correspond to the domain adapter it is dealing with (e.g. billing, partner, policy etc.)  
+
+**<external-system>** should match the name of the system or client the adapter is communicating with.  
+
+**<endpoint>** in case there are multiple endpoints for an adapter that uses the same domain and external system, additional identification
+is required. For this purpose we use an additional endpoint key to provide distinction.  
 
 For example:
 
@@ -318,7 +321,7 @@ endpoint:
 ```
 
 Using this configuration can be easily achieved in Camel by following their placeholder syntax.
-Here's what the Example from above would look like in the Camel route:
+Here's what the example from above would look like in the Camel route:
 
 ```java
 from("{{endpoint.in.partner.my-assurance-co.uri}}")
@@ -331,8 +334,10 @@ from(...)
     .id(""{{endpoint.out.partner.their-assurance-co.id}}"")
 ```
 
-This approach would provide better understanding of what the adapter is about just by looking into the configuration.
-It makes the route more descriptive, and the adapters easier to maintain.
+If this convention is followed in the configuration, it leads to a unified structure that makes it possible
+to identify at a single glance which systems are communicating with each other and which communication technologies are 
+being used.
+It also makes routes more descriptive and adapters much easier to maintain.
 
 **Setting processor and route IDs**
 
