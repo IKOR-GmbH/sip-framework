@@ -172,7 +172,7 @@ jobs:
       with:
         gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
     - name: Update licenses folder
-      run:
+      run: |
         git rm -rf licenses/*
         mvn ${MAVEN_ARGS} clean package license:aggregate-download-licenses -P license-check -DskipTests
         mkdir -p licenses
