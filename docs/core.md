@@ -120,7 +120,6 @@ To use it, header "proxy-modes" must be set, which consists of a map of processo
 **Setting mock behavior example:**
 
 ```java
-
 @Configuration
 @AllArgsConstructor
 public class MockConfiguration {
