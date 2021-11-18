@@ -173,15 +173,18 @@ jobs:
         gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
     - name: Update licenses folder
       run: |
-        git rm -rf licenses/*
         mvn ${MAVEN_ARGS} clean package license:aggregate-download-licenses -P license-check -DskipTests
-        mkdir -p licenses
-        cp -r target/generated-resources/* licenses
-        mv licenses/licenses licenses/details
-        git add licenses
-        if git status -s | grep "^[MADRCU]"; then
-            git commit -m "Update licenses folder"
-            git push
+        cp target/generated-resources/licenses.xml licenses/licenses.xml
+        if git status -s | grep "licenses/licenses.xml"; then
+          git rm -rf licenses/*
+          mkdir -p licenses
+          cp -r target/generated-resources/* licenses
+          mv licenses/licenses licenses/details
+          git add licenses
+          if git status -s | grep "^[MADRCU]"; then
+              git commit -m "Update licenses folder"
+              git push
+          fi
         fi
 
 
