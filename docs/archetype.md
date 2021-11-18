@@ -16,7 +16,7 @@ To make a long story short, you can create a SIP Adapter by using the following 
   mvn archetype:generate \
     -DarchetypeGroupId=de.ikor.sip.foundation \
     -DarchetypeArtifactId=sip-archetype \
-    -DarchetypeVersion=1.0.0 \
+    -DarchetypeVersion=<latest.sip-archetype.version> \
     -DgroupId=de.ikor.sip.adapter \
     -DartifactId=demo \
     -DprojectName=DemoAdapter \
