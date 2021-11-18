@@ -146,6 +146,44 @@ jobs:
       run: test "$(mvn help:evaluate -Dexpression=spring.boot.version -q -DforceStdout)" = "$(mvn help:evaluate -pl sip-starter-parent -Dexpression=project.parent.version -q -DforceStdout)"
 
 
+  check-licenses:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ./.github/workflows/actions/java-maven-action
+      with:
+        gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+    - name: check all dependencies follow our license whitelist
+      run: ./.github/workflows/check-licenses.sh
+
+  publish-deps-license-updates:
+    needs:
+    - build
+    - check-javadocs
+    if: ${{ github.ref == 'refs/heads/develop'}}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GH_ADMIN_TOKEN }}
+    - uses: ./.github/workflows/actions/java-maven-action
+      with:
+        gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+    - name: Update licenses folder
+      run:
+        git rm -rf licenses/*
+        mvn clean package license:aggregate-download-licenses -P license-check -DskipTests
+        mkdir -p licenses
+        cp -r target/generated-resources/* licenses
+        mv licenses/licenses licenses/details
+        git add licenses
+        if git status -s | grep "^[MADRCU]"; then
+            git commit -m "Update licenses folder"
+            git push
+        fi
+
+
   do-maven-release:
     needs:
     - build
@@ -153,6 +191,7 @@ jobs:
     - check-formatting
     - check-snapshot-version
     - check-spring-boot-version
+    - check-licenses
     if: ${{ github.ref == 'refs/heads/develop' && github.event.inputs.do-release == 'true' }}
     runs-on: ubuntu-latest
     outputs:
