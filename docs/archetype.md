@@ -38,6 +38,8 @@ After executing maven command, you will be requested to insert additional parame
 - **systemConnector1**/**systemConnector2** are representing names of your connector modules inside the project. Naming recommendation is to use lower case letters and kebab-case.
 - **systemConnector1Package**/**systemConnector2Package** are used to define package name suffix for the connectors. Notice that
   connector package name starts with prefix defined on **package** step.
+- **useLombok** is property used for including or excluding Lombok dependency in adapter. Possible values: 'y' - include Lombok,
+  'n' - exclude Lombok.
 
 After a successful build, a project with the 4 following modules will be created:
 

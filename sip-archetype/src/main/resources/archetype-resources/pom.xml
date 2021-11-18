@@ -24,10 +24,12 @@
     </modules>
 
     <dependencies>
+#if (${useLombok} == "y")
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+#end
     </dependencies>
 
     <dependencyManagement>
