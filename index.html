@@ -211,19 +211,19 @@ maximum comfort and efficiency while developing.</p>
 <p>To start developing with SIP, we should first get familiar with its basic concepts.
 Let's take a very simple scenario as an example. Say we have two systems working on the same domain (Partner, Policy, Billing
 etc.), but they were never designed to work together, and suddenly there is a need to connect them.</p>
-<p><img alt="Image of Unconnected systems image" src="images/SIP_readme_systems.svg?raw=true" title="Unconnected systems" /></p>
+<p><img alt="Image of Unconnected systems image" src="img/SIP_readme_systems.svg?raw=true" title="Unconnected systems" /></p>
 <p>Both systems expose APIs, which are mutually not compatible, both by data model and/or communication technology
 they use. SIP is designed as a standalone middleware app with a sole purpose to resolve exactly this kind of problems in
 a flexible and standardized way. Actual integration scenarios may include more than two APIs, or even more than two
 systems, but all the principles apply equally to such scenarios.</p>
-<p><img alt="Image of SIP connected systems" src="images/SIP_readme_adapter.svg?raw=true" title="SIP connected systems" /></p>
+<p><img alt="Image of SIP connected systems" src="img/SIP_readme_adapter.svg?raw=true" title="SIP connected systems" /></p>
 <p>The image below shows the modules structure of a single SIP adapter.
 To provide a level of flexibility, SIP splits the problem into two, giving the possibility to develop and/or deploy connectors
 for individual systems separately. The integration
 logic is divided into three modules: <strong>System A - Connector</strong>, <strong>System B - Connector</strong> and <strong>Domain</strong>. The fourth module is the <strong>Application</strong>
 module. Its purpose is to converge the three integration modules into one deployable and executable application.
 The blue arrows represent dependencies of the application module.</p>
-<p><img alt="Image of SIP Adapter" src="images/SIP_readme_adapter_detail.svg?raw=true" title="SIP Adapter" /></p>
+<p><img alt="Image of SIP Adapter" src="img/SIP_readme_adapter_detail.svg?raw=true" title="SIP Adapter" /></p>
 <p><strong>Domain</strong></p>
 <p>The <strong>Domain</strong> module takes a central position in the image, because it provides the common data model for both systems
 and also separates the system connectors from each other to allow loose coupling between them. It should not contain any
@@ -270,7 +270,7 @@ integration tests, such as default SIPApplicationTest, provided by archetype.</p
 </ul>
 <p>The following image displays how listed modules are utilized on SIP adapter where the up arrows represent inheritance,
 down arrows dependencies.</p>
-<p><img alt="Image of SIP connected systems" src="images/SIP_readme_dependencies.svg?raw=true" title="SIP connected systems" /></p>
+<p><img alt="Image of SIP connected systems" src="img/SIP_readme_dependencies.svg?raw=true" title="SIP connected systems" /></p>
 <h3 id="framework-features">Framework features<a class="headerlink" href="#framework-features" title="Permanent link">&para;</a></h3>
 <p>Framework provides different features some of which are enabled by default. All the features are customizable and can be
 overwritten or turned off by configuration. More about how to use them you can find under the corresponding module's
@@ -647,5 +647,5 @@ Notice that in case of incoming endpoints (those in "from" statement), following
 
 <!--
 MkDocs version : 1.2.3
-Build Date UTC : 2021-11-17 16:00:19.436656+00:00
+Build Date UTC : 2021-11-18 08:40:46.872340+00:00
 -->
