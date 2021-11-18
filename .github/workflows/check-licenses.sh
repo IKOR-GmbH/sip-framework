@@ -2,7 +2,7 @@
 
 set -e
 
-mvn clean package license:aggregate-add-third-party -P license-check -DskipTests
+mvn --batch-mode --no-transfer-progress clean package license:aggregate-add-third-party -P license-check -DskipTests
 
 IGNORED_HEADER_LINES=2
 COUNTER=0
