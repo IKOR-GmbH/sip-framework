@@ -8,7 +8,7 @@ developed from 10 project years of experience with standardized integration of c
 The framework enables building light-weight integration adapters to achieve a technical and non-technical decoupling of
 systems, using microservices and is therefore highly scalable.
 
-It builds on Apache Camel Framework and extends it with a lot of usable features to create a standardized integration
+It builds on [Apache Camel Framework](https://camel.apache.org/manual/) and extends it with a lot of usable features to create a standardized integration
 approach for all adapters.
 
 [TOC]
