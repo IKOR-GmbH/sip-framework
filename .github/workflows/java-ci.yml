@@ -156,6 +156,7 @@ jobs:
     - name: check all dependencies follow our license whitelist
       run: ./.github/workflows/check-licenses.sh
 
+
   publish-deps-license-updates:
     needs:
     - build
@@ -173,7 +174,7 @@ jobs:
     - name: Update licenses folder
       run:
         git rm -rf licenses/*
-        mvn clean package license:aggregate-download-licenses -P license-check -DskipTests
+        mvn ${MAVEN_ARGS} clean package license:aggregate-download-licenses -P license-check -DskipTests
         mkdir -p licenses
         cp -r target/generated-resources/* licenses
         mv licenses/licenses licenses/details
