@@ -120,21 +120,21 @@ To use it, header "proxy-modes" must be set, which consists of a map of processo
 **Setting mock behavior example:**
 
 ```java
-@Configuration
-public class MockConfiguration {
-    private final ProcessorProxyRegistry proxyRegistry;
 
-    public void mockProcessorBehavior(String processorId) {
-        ProcessorProxy proxy = proxyRegistry
-                .getProxy(processorId)
-                .orElseThrow(
-                        () -> new RuntimeException("There is no " + processorId + " proxy in the application"));
-        proxy.mock(exchange -> {/*define mock behavior*/});
-    }
-    //Reverts Processor to regular behavior
-    public void resetProcessorProxy(ProcessorProxy proxy){
-        proxy.reset();
-    }
+@Configuration
+@AllArgsConstructor
+public class MockConfiguration {
+  private ProcessorProxyRegistry proxyRegistry;
+  private final String PROCESSOR_ID = "endpoint.out.policy.assurance-co";
+
+  @EventListener(ApplicationReadyEvent.class)
+  public void mockProcessorBehavior() {
+    ProcessorProxy proxy = proxyRegistry
+            .getProxy(PROCESSOR_ID)
+            .orElseThrow(
+                    () -> new RuntimeException(format("There is no %s proxy in the application", PROCESSOR_ID)));
+    proxy.mock(exchange -> {/*define mock behavior*/});
+  }
 }
 ```
 
