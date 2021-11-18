@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 For unreleased changelogs look into the [changelogs](./changelogs) directory
 
+## 1.0.1 - 2021-11-18
+
+### 🚀 Major Changes
+-  /[#](https://github.com/IKOR-GmbH/sip-framework/issues/) by 
+
+
 ## 1.6.5 - 2021-11-17
 
 ### ⭐ Features
