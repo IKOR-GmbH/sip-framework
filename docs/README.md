@@ -46,8 +46,8 @@ The blue arrows represent dependencies of the application module.
 
 **Domain**
 
-The **Domain** module takes a central position in the image, because it provides the common data model for both systems
-and also separates the system connectors from each other to allow loose coupling between them. It should not contain any
+The **Domain** module takes a central position in the image, because it provides the common data model for both systems.
+Also, it separates the system connectors from each other to allow loose coupling between them. It should not contain any
 integration logic but only simple Java objects representing the respective domain in which the system connectors of an adapter
 operate. All connectors should adapt the data models of their systems to or from this common model, depending on data flow,
 due to their incompatibilities. The domain can be seen as a kind of contract between the different system connectors which
@@ -277,82 +277,80 @@ and that it has been added as a dependency to the application `pom.xml`.
 </project>
 ```
 
-### Sample Scenarios
-
-**REST**
-
-```java
-package de.ikor.sip.adapter.partner.input.sink;
-
-// Input system
-@Cofiguration
-public class RESTConsumerRouteBuilder extends RouteBuilder {
-    @Override
-    public void configure() throws Exception {
-        from("rest:POST:update")
-            .routeId("inputRoute")
-            .process("sytemOneToDomainModel")
-            .to("sipmc:foo")
-            .id("sipmcProcessor");
-    }
-}
-```
-
-```java
-package de.ikor.sip.adapter.partner.output.sink;
-
-// Output system
-@Cofiguration
-public class RESTProducerRouteBuilder extends RouteBuilder {
-    @Override
-    public void configure() throws Exception {
-        from("sipmc:foo")
-            .routeId("outputRoute")
-            .process("domainToSystemTwoModel")
-            .to("http:example.com")
-            .id("exampleProcessor");
-    }
-}
-```
-
 ### Development Tips
 
-**Property placeholders**
+**Endpoint Configuration**
 
-When it comes to working with URIs in routes it is recommended to use property placeholders, which makes the routes configurable.
-This can be easily achieved in Camel by following their placeholder syntax. When building route URIs instead of hardcoding the URI,
-we should pull it from configuration. Now, when needed, we can just edit the configuration file instead of the route.
-
-Example route:
-
-```java
-from("{{endpoint.{adapter-name}.{external-system}.uri}}")
-    .id("{{endpoint.{adapter-name}.{external-system}.id}}")
-    .to(...);
-```
-
-Example configuration:
+When it comes to working with URIs in routes, it is recommended to use property placeholders, which makes the routes configurable.
+Additionally, it would make much sense to follow suggested configuration convention for defining endpoint configuration.
 
 ```yaml
-
 endpoint:
- {adapter-name}:
-  {external-system}:
-   {endpoint}: # optional - if more endpoints on single external-system are involved in integration
-    id: {adapterName}.{externalSystem}
-    uri: ftp://...
+  <in/out>:
+   <adapter-name>:
+    <external-system>:
+     <endpoint>: # optional - if more endpoints on single external-system are involved in integration
+      id: <adapterName>.<externalSystem>
+      uri: ftp://...
 ```
+*\<in/out>* corresponds to consumers and producers respectively.
+This means in case a message is received through a route using "from", then it is a consumer and "in" is used.
+On the other hand, it is a producer when a message is sent via "to". In this case, "out" is used as key in the configuration file.  
+
+*\<adapter-name>* should correspond to the domain adapter it is dealing with (e.g. billing, partner, policy etc.)  
+
+*\<external-system>* should match the name of the system or client the adapter is communicating with.  
+
+*\<endpoint>* in case there are multiple endpoints for an adapter that uses the same domain and external system, additional identification
+is required. For this purpose we use an additional endpoint key to provide distinction.  
+
+For example:
+
+```yaml
+endpoint:
+  in:
+    partner:
+      my-assurance-co:
+        id: partner.my-assurance-co
+        uri: ftp://...
+  out:
+    partner:
+      their-assurance-co:
+        id: partner.their-assurance-co
+        uri: https://...
+```
+
+Using this configuration can be easily achieved in Camel by following their placeholder syntax.
+Here's what the example from above would look like in the Camel route:
+
+```java
+from("{{endpoint.in.partner.my-assurance-co.uri}}")
+    .id("{{endpoint.in.partner.my-assurance-co.id}}")
+    .to(...);
+
+from(...)
+    .process(...)    
+    .to("{{endpoint.out.partner.their-assurance-co.uri}}")
+    .id("{{endpoint.out.partner.their-assurance-co.id}}")
+```
+
+If this convention is followed in the configuration, it leads to a unified structure that makes it possible
+to identify at a single glance which systems are communicating with each other and which communication technologies are 
+being used.
+It also makes routes more descriptive and adapters much easier to maintain.
 
 **Setting processor and route IDs**
 
-As we can see each external endpoint definition is followed by explicit setting of id. Although it's not mandatory, it's highly
-doing so is highly recommended. This will provide a reference of the external endpoints, which can be used for different
-functionalities, like mocking, custom health check or other functionalities that are yet to come.
+As we can see each external endpoint, definition is followed by explicit setting of id. Although it's not mandatory,
+doing so is highly recommended especially in case of outgoing endpoints. This will provide a reference of the external
+endpoints, which can be used for different functionalities, like mocking, custom health check or other functionalities
+that are yet to come.
 Notice that in case of incoming endpoints (those in "from" statement), following id refers to the routeId.
 
 ### Configuration properties
 
-By default, the following properties come as a part of SIP Framework, to override them simply add them to your configuration file with desired values.
+By default, the following properties come as a part of SIP Framework, to override them simply add them to your configuration
+file with desired values.
 
 When using a yaml configuration file, which is already available in application module, adapt the properties to its format.
 
@@ -371,7 +369,7 @@ management.endpoints.web.exposure.include | Set which endpoints are included | S
 springdoc.show-actuator | Show actuator API in Swagger docs| boolean | true |
 springdoc.api-docs.path | Custom path to API docs | String | /api-docs |
 springdoc.swagger-ui.path | Custom path to Swagger | String | /swagger-ui.html |
-springdoc.swagger-ui.disable-swagger-default-url | Disables default petshop API in swagger | boolean | true |
+springdoc.swagger-ui.disable-swagger-default-url | Disables default petstore API in swagger | boolean | true |
 springdoc.api-docs.enabled | Enable/Disable API docs | boolean | true |
 springdoc.swagger-ui.enabled | Enable/Disable swagger | boolean | true |
 logging.level.root | Sets the default log level | String | INFO |
