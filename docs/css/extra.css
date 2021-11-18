@@ -34,9 +34,13 @@ dl {
 
 a:link,
 a:visited,
-a:hover,
 a:active {
   color: var(--ikor-blue);
+}
+
+a:hover {
+    color: var(--ikor-blue);
+    text-decoration-line: underline;
 }
 
 /* main content */
@@ -77,12 +81,20 @@ a:active {
 
 .wy-menu-vertical li a:hover,
 .wy-menu-vertical li.current a:hover {
-  background: var(--ikor-blue);
+  background: var(--ikor-blue) !important;
   color: white;
 }
 
+.wy-menu-vertical li.toctree-l2.current>a {
+    background: white;
+}
+
+.wy-menu-vertical li.toctree-l2.current li.toctree-l3>a {
+    background: white;
+}
+
 footer p {
-  color: grey;
+  color: var(--dark-grey);;
 }
 
 .wy-menu-vertical #javadoc-nav span {
