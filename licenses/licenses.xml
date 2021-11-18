@@ -173,6 +173,7 @@
         <license>
           <name>Revised BSD</name>
           <url>http://www.jcraft.com/jsch/LICENSE.txt</url>
+          <file>revised bsd - license.txt</file>
         </license>
       </licenses>
     </dependency>
