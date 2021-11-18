@@ -67,6 +67,10 @@ After executing maven command, you will be requested to insert additional parame
 - **systemConnector1Package**/**systemConnector2Package** are used to define package name suffix for the connectors. Notice that
   connector package name starts with prefix defined on **package** step.
 
+- **useLombokDefault**/**useLombok** are properties used for including or excluding Lombok dependency in adapter.
+  Parameter useLombokDefault is only used to include lombok by default. If you wish to exclude lombok you should set
+  useLombok to anything other than 'y' or 'Y'.
+
 After a successful build, a project with the 4 following modules will be created:
 
 - {artifactId}-application
