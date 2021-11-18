@@ -1,6 +1,7 @@
 # System Integration Platform Framework
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=IKOR-GmbH_sip-framework&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=IKOR-GmbH_sip-framework)
+[![Impressum](https://img.shields.io/badge/Imprint-ikor.one-blue)](https://ikor.one/impressum/)
 
 The System Integration Platform (SIP) Framework is an IKOR product
 developed from 10 project years of experience with standardized integration of core and peripheral systems.
