@@ -6,6 +6,24 @@ All notable changes to this project will be documented in this file.
 
 For unreleased changelogs look into the [changelogs](./changelogs) directory
 
+## 1.6.5 - 2021-11-17
+
+### ⭐ Features
+- dummy [#null](https://github.com/IKOR-GmbH/sip-framework/pull/null) by [stieglma](https://github.com/stieglma)
+
+
+## 1.1.4 - 2021-11-17
+
+### 🐞 Bugfixes
+- dummy [#null](https://github.com/IKOR-GmbH/sip-framework/pull/null) by [stieglma](https://github.com/stieglma)
+
+
+## 1.1.2 - 2021-11-17
+
+### 🐞 Bugfixes
+- dummy [#null](https://github.com/IKOR-GmbH/sip-framework/pull/null) by [stieglma](https://github.com/stieglma)
+
+
 ## 1.1.0 - 2021-11-16
 
 ### ⭐ Features

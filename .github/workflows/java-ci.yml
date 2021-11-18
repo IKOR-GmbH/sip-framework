@@ -179,6 +179,7 @@ jobs:
         mvn ${MAVEN_ARGS} versions:set -pl ${STARTER_POM} -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false -DprocessDependencies=false
         cd changelogs && ./update-changelog.sh ${RELEASE_VERSION}
         cd ..
+        sed -i "/.*JAVADOC_RELEASES.*/a \ \ \ \ - JavDoc ${RELEASE_VERSION}: './javadoc/${RELEASE_VERSION}/index.html'" mkdocs.yml
         git add .
         git commit -m "Updated sip-framework version to ${RELEASE_VERSION}"
         git tag -a releases/${RELEASE_VERSION} -m "Released new sip-framework version ${RELEASE_VERSION}"
@@ -228,14 +229,12 @@ jobs:
         ref: gh-pages
         token: ${{ secrets.GH_ADMIN_TOKEN }}
         path: "apidocs"
-    - name: Move docs to gh_pages checkout
+    - name: Move docs to gh_pages checkout & commit & push docs
       run: |
         cd apidocs
         git rm -r javadoc/${{ needs.do-maven-release.outputs.release-version }} || true
         mkdir -p javadoc/${{ needs.do-maven-release.outputs.release-version }}
-        mv ../target/site/* .
-    - name: Publish javadocs
-      run: |
+        mv ../target/site/apidocs/* javadoc/${{ needs.do-maven-release.outputs.release-version }}
         git add javadoc/${{ needs.do-maven-release.outputs.release-version }}
         git commit -m "update javadocs for release ${{ needs.do-maven-release.outputs.release-version }}"
         git push
