@@ -40,7 +40,7 @@ Creating an application using SIP archetype on the command line:
   mvn archetype:generate \
     -DarchetypeGroupId=de.ikor.sip.foundation \
     -DarchetypeArtifactId=sip-archetype \
-    -DarchetypeVersion=1.0.0 \
+    -DarchetypeVersion=<latest.sip-archetype.version> \
     -DgroupId=de.ikor.sip.adapter \
     -DartifactId=demo \
     -DprojectName=DemoAdapter \
