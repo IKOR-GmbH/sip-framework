@@ -110,7 +110,7 @@ from registry through processor's ID. ProcessorProxyRegistry can be accessed as 
 
 The main feature for now is mock, which sets new behavior of a Camel processor and instead of using the real processor
 replace it with its mock. This can be achieved on any Processor on the route, including the outgoing endpoints. Mocking
-behavior with SIP can be triggered dynamically, and on single request level, leaving the original route intact and active
+behavior with SIP can be triggered dynamically in runtime, and on single request level, leaving the original route intact and active
 all the time.
 
 To use it, header "proxy-modes" must be set, which consists of a map of processorIds as keys and list of commands as value:
