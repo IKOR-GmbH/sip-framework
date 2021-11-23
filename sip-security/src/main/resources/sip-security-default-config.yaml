@@ -6,6 +6,7 @@
 
 server:
   ssl:
+    client-auth: ${sip.security.ssl.server.client-auth}
     key-store: ${sip.security.ssl.server.key-store}
     key-store-password: ${sip.security.ssl.server.key-store-password}
     key-store-type: ${sip.security.ssl.server.key-store-type}
@@ -24,7 +25,6 @@ camel:
       resource: ${sip.security.ssl.client.key-store}
       password: ${sip.security.ssl.client.key-store-password}
       type: ${sip.security.ssl.client.key-store-type}
-  http.use-global-ssl-context-parameters: true # try without this, it should work
 
 sip.security:
   ssl:
