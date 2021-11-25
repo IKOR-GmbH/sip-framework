@@ -146,6 +146,48 @@ jobs:
       run: test "$(mvn help:evaluate -Dexpression=spring.boot.version -q -DforceStdout)" = "$(mvn help:evaluate -pl sip-starter-parent -Dexpression=project.parent.version -q -DforceStdout)"
 
 
+  check-licenses:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ./.github/workflows/actions/java-maven-action
+      with:
+        gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+    - name: check all dependencies follow our license whitelist
+      run: ./.github/workflows/check-licenses.sh
+
+
+  publish-deps-license-updates:
+    needs:
+    - build
+    - check-javadocs
+    if: ${{ github.ref == 'refs/heads/develop'}}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GH_ADMIN_TOKEN }}
+    - uses: ./.github/workflows/actions/java-maven-action
+      with:
+        gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
+    - name: Update licenses folder
+      run: |
+        mvn ${MAVEN_ARGS} clean package license:aggregate-download-licenses -P license-check -DskipTests
+        cp target/generated-resources/licenses.xml licenses/licenses.xml
+        if git status -s | grep "licenses/licenses.xml"; then
+          git rm -rf licenses/*
+          mkdir -p licenses
+          cp -r target/generated-resources/* licenses
+          mv licenses/licenses licenses/details
+          git add licenses
+          if git status -s | grep "^[MADRCU]"; then
+              git commit -m "Update licenses folder"
+              git push
+          fi
+        fi
+
+
   do-maven-release:
     needs:
     - build
@@ -153,6 +195,7 @@ jobs:
     - check-formatting
     - check-snapshot-version
     - check-spring-boot-version
+    - check-licenses
     if: ${{ github.ref == 'refs/heads/develop' && github.event.inputs.do-release == 'true' }}
     runs-on: ubuntu-latest
     outputs:
@@ -179,7 +222,7 @@ jobs:
         mvn ${MAVEN_ARGS} versions:set -pl ${STARTER_POM} -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false -DprocessDependencies=false
         cd changelogs && ./update-changelog.sh ${RELEASE_VERSION}
         cd ..
-        sed -i "/.*JAVADOC_RELEASES.*/a \ \ \ \ - JavDoc ${RELEASE_VERSION}: './javadoc/${RELEASE_VERSION}/index.html'" mkdocs.yml
+        sed -i "/.*JAVADOC_RELEASES.*/a \ \ \ \ - JavaDoc ${RELEASE_VERSION}: './javadoc/${RELEASE_VERSION}/index.html'" mkdocs.yml
         git add .
         git commit -m "Updated sip-framework version to ${RELEASE_VERSION}"
         git tag -a releases/${RELEASE_VERSION} -m "Released new sip-framework version ${RELEASE_VERSION}"
