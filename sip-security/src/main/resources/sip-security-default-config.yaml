@@ -30,6 +30,7 @@ sip.security:
   ssl:
     # These settings have to be set by the application, by default ssl is disabled
     server:
+      client-auth: none
       key-store:
       key-store-password:
       key-store-type:
