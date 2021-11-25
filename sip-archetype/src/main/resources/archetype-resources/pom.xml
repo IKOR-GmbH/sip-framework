@@ -24,7 +24,7 @@
     </modules>
 
     <dependencies>
-#if (${useLombok} == "y")
+#if (${useLombok} == "y" || ${useLombok} == "Y")
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

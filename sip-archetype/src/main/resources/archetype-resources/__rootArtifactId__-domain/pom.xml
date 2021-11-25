@@ -12,13 +12,4 @@
     <artifactId>${artifactId}</artifactId>
     <name>${artifactId}</name>
 
-    <dependencies>
-#if (${useLombok} == "y")
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-#end
-    </dependencies>
 </project>
