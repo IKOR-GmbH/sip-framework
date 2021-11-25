@@ -269,7 +269,7 @@ configuration and without adapter code changes.</p>
 from registry through processor's ID. ProcessorProxyRegistry can be accessed as a spring bean or as an extension of CamelContext.</p>
 <p>The main feature for now is mock, which sets new behavior of a Camel processor and instead of using the real processor
 replace it with its mock. This can be achieved on any Processor on the route, including the outgoing endpoints. Mocking
-behavior with SIP can be triggered dynamically, and on single request level, leaving the original route intact and active
+behavior with SIP can be triggered dynamically in runtime, and on single request level, leaving the original route intact and active
 all the time.</p>
 <p>To use it, header "proxy-modes" must be set, which consists of a map of processorIds as keys and list of commands as value:</p>
 <ul>
@@ -277,20 +277,30 @@ all the time.</p>
 </ul>
 <p><strong>Setting mock behavior example:</strong></p>
 <pre class="highlight"><code class="language-java">@Configuration
+@AllArgsConstructor
 public class MockConfiguration {
-    private final ProcessorProxyRegistry proxyRegistry;
+  private ProcessorProxyRegistry proxyRegistry;
+  private PropertiesComponent propsComponent;
 
-    public void mockProcessorBehavior(String processorId) {
-        ProcessorProxy proxy = proxyRegistry
-                .getProxy(processorId)
-                .orElseThrow(
-                        () -&gt; new RuntimeException("There is no " + processorId + " proxy in the application"));
-        proxy.mock(exchange -&gt; {/*define mock behavior*/});
-    }
-    //Reverts Processor to regular behavior
-    public void resetProcessorProxy(ProcessorProxy proxy){
-        proxy.reset();
-    }
+  @EventListener(ApplicationReadyEvent.class)
+  public void mockProcessorBehavior() {
+    Optional&lt;String&gt; prop =
+            propsComponent.resolveProperty("endpoint.out.partner.their-assurance-co.id");
+    String processorId = prop.orElseThrow(IllegalArgumentException::new/*Define your exception routine*/);
+
+    ProcessorProxy proxy =
+            proxyRegistry
+                    .getProxy(processorId)
+                    .orElseThrow(
+                            () -&gt;
+                                    new RuntimeException(
+                                            format("There is no %s proxy in the application", processorId)));
+    proxy.mock(
+            exchange -&gt; {
+              /*define mock behavior*/
+              return exchange;
+            });
+  }
 }</code></pre>
 <h3 id="working-with-routes-in-runtime">Working with routes in runtime<a class="headerlink" href="#working-with-routes-in-runtime" title="Permanent link">&para;</a></h3>
 <p>All routes with basic info can be listed by using the following URI:</p>
