@@ -6,7 +6,7 @@
 
     <groupId>de.ikor.sip.foundation</groupId>
     <artifactId>sip-framework</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SIP Framework</name>
     <url>https://github.com/IKOR-GmbH/sip-framework</url>
@@ -20,7 +20,7 @@
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
-            <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE.md</url>
+            <url>https://raw.githubusercontent.com/IKOR-GmbH/sip-framework/develop/LICENSE</url>
         </license>
     </licenses>
 
@@ -64,7 +64,7 @@
 
         <!-- sip framework version, decoupled from actual version to make dependency resolution work properly in projects
              where sip-framework is the dependency. This version should always be the same as the version of sip-framework itself -->
-        <sip-framework.version>1.0.2-SNAPSHOT</sip-framework.version>
+        <sip-framework.version>1.0.1-SNAPSHOT</sip-framework.version>
 
         <!-- properly set encoding, this is especially necessary for resource filtering -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
