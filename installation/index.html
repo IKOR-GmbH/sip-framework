@@ -243,6 +243,11 @@ as they set the properties for the adapter. It is recommended to follow the mave
 <p><strong>systemConnector1Package</strong>/<strong>systemConnector2Package</strong> are used to define package name suffix for the connectors. Notice that
   connector package name starts with prefix defined on <strong>package</strong> step.</p>
 </li>
+<li>
+<p><strong>useLombokDefault</strong>/<strong>useLombok</strong> are properties used for including or excluding Lombok dependency in adapter.
+  Parameter useLombokDefault is only used to include lombok by default. If you wish to exclude lombok you should set
+  useLombok to anything other than 'y' or 'Y'.</p>
+</li>
 </ul>
 <p>After a successful build, a project with the 4 following modules will be created:</p>
 <ul>
