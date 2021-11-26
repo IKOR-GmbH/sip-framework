@@ -1,0 +1,5 @@
+{
+  "author": "vladiIkor",
+  "pullrequestId": ,
+  "message": "Excluding Spring security auto-config classes to prevent default authentication"
+}
