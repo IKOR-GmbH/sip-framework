@@ -195,8 +195,8 @@ Implementing code and configuration on top of Spring Security should help you ju
 <h3 id="contents">Contents<a class="headerlink" href="#contents" title="Permanent link">&para;</a></h3>
 <p>Following description shows SIP Security functionalities and configuration.</p>
 <h4 id="ssl">SSL<a class="headerlink" href="#ssl" title="Permanent link">&para;</a></h4>
-<p>SSL is by default turned off. It can be activated by setting a server side certificate or turning the client SSL explicitly on and optionally setting a client certificate.
-If no server certificate is set a client certificate is mandatory when turning on client SSL.</p>
+<p>SSL is by default turned off. It can be activated by setting a server side certificate or turning the client SSL explicitly 
+on and optionally setting a client certificate. If no server certificate is set a client certificate is mandatory when turning on client SSL.</p>
 <ul>
 <li>
 <p>Client (our application is consuming APIs using the provided certificate)
@@ -216,8 +216,9 @@ If no server certificate is set a client certificate is mandatory when turning o
             enabled: false</code></pre>
   The truststore is handled with Java default:</p>
 <ul>
-<li>set the cacerts in the runtime accordingly (preferrable approach)</li>
-<li>for local development you could add any certificate, IntermediateCA, RootCA or complete certificate chain to the keystore as a trusted certificate (e.g. by importing it with tools like keytool), a possible command could be:
+<li>set the cacerts in the runtime accordingly (preferable approach)</li>
+<li>for local development you could add any certificate, IntermediateCA, RootCA or complete certificate chain to the 
+  keystore as a trusted certificate (e.g. by importing it with tools like keytool), a possible command could be:
   <code>keytool -importcert -file certificate.cer -keystore keystore.jks -alias "Alias"</code></li>
 </ul>
 </li>
@@ -230,7 +231,9 @@ If no server certificate is set a client certificate is mandatory when turning o
             key-store-password: password # we recommend to use env_vars or sealed secrets
             key-store-type: pkcs12 #possible options are pkcs12, jks, jceks
             key-alias: springboot #the alias of the key to be chosen from the container
-            key-password: password # we recommend to use env_vars or sealed secrets</code></pre>
+            key-password: password # we recommend to use env_vars or sealed secrets
+            client-auth: want # Could be: need (client auth is mandatory), want (client auth is is wanted but not 
+            # mandatory) and none (default)</code></pre>
   To turn the usage of the server certificate off:
   <pre class="highlight"><code class="language-yaml">sip.security:
     ssl:
@@ -251,7 +254,7 @@ If no server certificate is set a client certificate is mandatory when turning o
 <ul>
 <li><u>Extractors</u> (extract the relevant token from an http-requests)<ul>
 <li>BasicAuth: Extracts the BasicAuth credentials from the request</li>
-<li>X509: Extracts the X509 certificate from the request</li>
+<li>X509: Extracts the X509 certificate from the request (requires sip.security.ssl.server.client-auth set to need or want)</li>
 </ul>
 </li>
 <li><u>Providers</u> (triggers a Validator to validate a given authentication)<ul>
