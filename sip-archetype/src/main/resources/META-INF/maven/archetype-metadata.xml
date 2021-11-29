@@ -51,6 +51,12 @@ under the License.
             <validationRegex>^(?!.*([._%+-])\1)[a-z0-9\._]+$
             </validationRegex>
         </requiredProperty>
+        <requiredProperty key="useLombokDefault">
+            <defaultValue>y</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="useLombok">
+            <defaultValue>${useLombokDefault}</defaultValue>
+        </requiredProperty>
         <requiredProperty key="archetypeVersion"> </requiredProperty>
     </requiredProperties>
 

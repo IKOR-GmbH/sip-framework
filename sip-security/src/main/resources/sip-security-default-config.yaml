@@ -46,3 +46,9 @@ sip.security:
       key-store-type: ${sip.security.ssl.server.key-store-type}
       key-alias: ${sip.security.ssl.server.key-alias}
       key-password: ${sip.security.ssl.server.key-password}
+
+# Disabling Springs security autoconfiguration which applies base auth by default if no other authentication is provided.
+spring:
+  autoconfigure:
+    exclude[0]: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+    exclude[1]: org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
