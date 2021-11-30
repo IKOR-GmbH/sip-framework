@@ -28,7 +28,7 @@ class CustomTracerTest {
   @BeforeEach
   void setUp() {
     traceHistory = new TraceHistory(5);
-    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class));
+    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), 0);
     node = mock(NamedNode.class);
     exchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
 
