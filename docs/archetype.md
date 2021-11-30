@@ -12,6 +12,7 @@ In order to make setting up a new integration adapter project an easy task, we h
 
 To make a long story short, you can create a SIP Adapter by using the following Maven command:
 
+Mac OS
 ```shell
   mvn archetype:generate \
     -DarchetypeGroupId=de.ikor.sip.foundation \
@@ -20,6 +21,18 @@ To make a long story short, you can create a SIP Adapter by using the following 
     -DgroupId=de.ikor.sip.adapter \
     -DartifactId=demo \
     -DprojectName=DemoAdapter \
+    -Dversion=1.0.0-SNAPSHOT
+```
+
+Windows OS
+```shell
+  mvn archetype:generate ^
+    -DarchetypeGroupId=de.ikor.sip.foundation ^
+    -DarchetypeArtifactId=sip-archetype ^
+    -DarchetypeVersion=<latest.sip-archetype.version> ^
+    -DgroupId=de.ikor.sip.adapter ^
+    -DartifactId=demo ^
+    -DprojectName=DemoAdapter ^
     -Dversion=1.0.0-SNAPSHOT
 ```
 
