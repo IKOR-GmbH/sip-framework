@@ -6,6 +6,7 @@
 
 server:
   ssl:
+    client-auth: ${sip.security.ssl.server.client-auth}
     key-store: ${sip.security.ssl.server.key-store}
     key-store-password: ${sip.security.ssl.server.key-store-password}
     key-store-type: ${sip.security.ssl.server.key-store-type}
@@ -24,12 +25,12 @@ camel:
       resource: ${sip.security.ssl.client.key-store}
       password: ${sip.security.ssl.client.key-store-password}
       type: ${sip.security.ssl.client.key-store-type}
-  http.use-global-ssl-context-parameters: true # try without this, it should work
 
 sip.security:
   ssl:
     # These settings have to be set by the application, by default ssl is disabled
     server:
+      client-auth: none
       key-store:
       key-store-password:
       key-store-type:
@@ -45,3 +46,9 @@ sip.security:
       key-store-type: ${sip.security.ssl.server.key-store-type}
       key-alias: ${sip.security.ssl.server.key-alias}
       key-password: ${sip.security.ssl.server.key-password}
+
+# Disabling Springs security autoconfiguration which applies base auth by default if no other authentication is provided.
+spring:
+  autoconfigure:
+    exclude[0]: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+    exclude[1]: org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
