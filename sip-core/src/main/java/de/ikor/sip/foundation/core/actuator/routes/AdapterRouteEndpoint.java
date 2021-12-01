@@ -96,7 +96,8 @@ public class AdapterRouteEndpoint {
    * @param operation - RouteOperation
    */
   @PostMapping("/{routeId}/{operation}")
-  public void execute(@PathVariable String routeId, @PathVariable String operation) {
+  public void execute(
+      @PathVariable String routeId, @RouteOperationParameter @PathVariable String operation) {
     RouteOperation routeOperation = RouteOperation.fromId(operation);
     routeOperation.execute(camelContext, routeId);
   }
@@ -125,7 +126,7 @@ public class AdapterRouteEndpoint {
    * @param operation - RouteOperation
    */
   @PostMapping("/sipmc/{operation}")
-  public void executeOnSipmcRoute(@PathVariable String operation) {
+  public void executeOnSipmcRoute(@RouteOperationParameter @PathVariable String operation) {
     Stream<Route> sipMcRoutes = filterMiddleComponentProducerRoutes(this.camelContext.getRoutes());
     sipMcRoutes.forEach(route -> this.execute(route.getRouteId(), operation));
   }
