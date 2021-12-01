@@ -72,7 +72,7 @@
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
         <spring.boot.version>2.3.9.RELEASE</spring.boot.version>
-        <camel.version>3.8.0</camel.version>
+        <camel.version>3.13.0</camel.version>
         <jackson-jsr310.version>2.12.1</jackson-jsr310.version>
         <springdoc-openapi-ui.version>1.5.10</springdoc-openapi-ui.version>
         <lombok.version>1.18.20</lombok.version>
