@@ -12,26 +12,27 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = SIPTraceConfig.class)
 @TestPropertySource("classpath:config-test.properties")
 class CustomTracerTypeTest {
 
-  @Autowired
-  SIPTraceConfig traceConfiguration;
+  @Autowired SIPTraceConfig traceConfiguration;
 
   CustomTracer customTracer;
 
   @BeforeEach
   void setUp() {
-    customTracer = new CustomTracer(new TraceHistory(traceConfiguration.getLimit()), null, mock(CamelContext.class), traceConfiguration.getTraceType());
-
+    customTracer =
+        new CustomTracer(
+            new TraceHistory(traceConfiguration.getLimit()),
+            null,
+            mock(CamelContext.class),
+            traceConfiguration.getTraceType());
   }
 
   @Test
   void testLogtypeConfiguration() {
     assertThat(traceConfiguration.getTraceType()).isEqualTo(1);
-
   }
 }

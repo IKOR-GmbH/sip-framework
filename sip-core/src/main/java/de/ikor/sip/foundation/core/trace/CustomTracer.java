@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(prefix = "sip.core.tracing", name = "enabled")
 public class CustomTracer extends DefaultTracer {
 
-
   private int traceType;
 
   private final TraceHistory traceHistory;
@@ -45,6 +44,5 @@ public class CustomTracer extends DefaultTracer {
     if (traceType == 0 || traceType == 2) {
       traceHistory.add(out);
     }
-
   }
 }
