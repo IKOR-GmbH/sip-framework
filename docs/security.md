@@ -27,8 +27,8 @@ Implementing code and configuration on top of Spring Security should help you ju
 Following description shows SIP Security functionalities and configuration.
 
 #### SSL
-SSL is by default turned off. It can be activated by setting a server side certificate or turning the client SSL explicitly on and optionally setting a client certificate.
-If no server certificate is set a client certificate is mandatory when turning on client SSL.
+SSL is by default turned off. It can be activated by setting a server side certificate or turning the client SSL explicitly 
+on and optionally setting a client certificate. If no server certificate is set a client certificate is mandatory when turning on client SSL.
 
 - Client (our application is consuming APIs using the provided certificate)
   ```yaml
@@ -50,8 +50,9 @@ If no server certificate is set a client certificate is mandatory when turning o
               enabled: false
   ```
   The truststore is handled with Java default:
-    - set the cacerts in the runtime accordingly (preferrable approach)
-    - for local development you could add any certificate, IntermediateCA, RootCA or complete certificate chain to the keystore as a trusted certificate (e.g. by importing it with tools like keytool), a possible command could be:
+    - set the cacerts in the runtime accordingly (preferable approach)
+    - for local development you could add any certificate, IntermediateCA, RootCA or complete certificate chain to the 
+      keystore as a trusted certificate (e.g. by importing it with tools like keytool), a possible command could be:
   `keytool -importcert -file certificate.cer -keystore keystore.jks -alias "Alias"`
 
 - Server (our application is providing APIs using the provided certificate)
@@ -64,6 +65,8 @@ If no server certificate is set a client certificate is mandatory when turning o
               key-store-type: pkcs12 #possible options are pkcs12, jks, jceks
               key-alias: springboot #the alias of the key to be chosen from the container
               key-password: password # we recommend to use env_vars or sealed secrets
+              client-auth: want # Could be: need (client auth is mandatory), want (client auth is is wanted but not 
+              # mandatory) and none (default)
   ```
   To turn the usage of the server certificate off:
   ```yaml
@@ -89,7 +92,7 @@ sip.security:
 
 - <u>Extractors</u> (extract the relevant token from an http-requests)
     - BasicAuth: Extracts the BasicAuth credentials from the request
-    - X509: Extracts the X509 certificate from the request
+    - X509: Extracts the X509 certificate from the request (requires sip.security.ssl.server.client-auth set to need or want)
 - <u>Providers</u> (triggers a Validator to validate a given authentication)
     - BasicAuth: Takes the extracted basic auth token and uses the given validator from the configuration to validate the token
     - X509: Takes the extracted X509 token and uses the given validator from the configuration to validate the token
