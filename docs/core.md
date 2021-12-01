@@ -340,6 +340,18 @@ sip:
       limit: 120 #100 by default
 ```
 
+**Selecting the traffic trace logging type:**
+
+Introduced the traceType field in CustomTraces in order to allow for choosing where to events.
+Default limit is 0 events, but it could be changed by following configuration:
+
+```yaml
+sip:
+  core:
+    tracing:
+      traceType: 0 # 0 - BOTH (default), 1 - Logging only, 2 - In memory only
+```
+
 ### OpenAPI Descriptor
 
 Framework provides an Open API description of all custom or Spring provided endpoints within your adapter.

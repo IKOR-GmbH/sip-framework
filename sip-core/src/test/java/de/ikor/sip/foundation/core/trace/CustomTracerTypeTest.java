@@ -31,7 +31,7 @@ class CustomTracerTypeTest {
 
   @Test
   void testLogtypeConfiguration() {
-    assertThat(traceConfiguration.getTraceType()).isZero();
+    assertThat(traceConfiguration.getTraceType()).isEqualTo(1);
 
   }
 }

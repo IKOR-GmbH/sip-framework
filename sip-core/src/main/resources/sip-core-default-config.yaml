@@ -10,7 +10,7 @@ sip.core:
     exchange-formatter:
       showHeaders: true
       showExchangeId: true
-    traceType: 0 # 0 - BOTH (default), 1 - Logging only, 2 - Storing only
+    traceType: 1 # 0 - BOTH (default), 1 - Logging only, 2 - Storing only
 
 management.endpoint.health.show-details: always
 management.endpoints.web.exposure.include: health,info,metrics,loggers,prometheus
