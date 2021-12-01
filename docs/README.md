@@ -294,15 +294,15 @@ endpoint:
       id: <adapterName>.<externalSystem>
       uri: ftp://...
 ```
-*\<in/out>* corresponds to consumers and producers respectively.
+`<in/out>` corresponds to consumers and producers respectively.
 This means in case a message is received through a route using "from", then it is a consumer and "in" is used.
 On the other hand, it is a producer when a message is sent via "to". In this case, "out" is used as key in the configuration file.  
 
-*\<adapter-name>* should correspond to the domain adapter it is dealing with (e.g. billing, partner, policy etc.)  
+`<adapter-name>` should correspond to the domain adapter it is dealing with (e.g. billing, partner, policy etc.)  
 
-*\<external-system>* should match the name of the system or client the adapter is communicating with.  
+`<external-system>` should match the name of the system or client the adapter is communicating with.  
 
-*\<endpoint>* in case there are multiple endpoints for an adapter that uses the same domain and external system, additional identification
+`<endpoint>` in case there are multiple endpoints for an adapter that uses the same domain and external system, additional identification
 is required. For this purpose we use an additional endpoint key to provide distinction.  
 
 For example:
