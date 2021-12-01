@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.actuator.health.ftp;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -126,9 +125,9 @@ class FtpHealthConsumersTest {
 
     // act
     Exception exceptionSubject =
-        assertThrows(
-            IntegrationManagementException.class,
-            () -> FtpHealthConsumers.listDirectoryConsumer(endpoint, fileOps));
+        catchThrowableOfType(
+            () -> FtpHealthConsumers.listDirectoryConsumer(endpoint, fileOps),
+            IntegrationManagementException.class);
 
     // assert
     assertThat(exceptionSubject.getMessage()).isEqualTo("Folder " + directoryName + "not found");
