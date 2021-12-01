@@ -213,6 +213,7 @@
 <p>In order to make setting up a new integration adapter project an easy task, we have created a dedicated SIP (Adapter) Maven archetype, that gives the ability to quickly bootstrap a new integration adapter, along with all needed Maven dependencies and goodies, as well as the recommended, preferred organization of the project.</p>
 <p>To make a long story short, you can create a SIP Adapter by using the following Maven command:</p>
 <p>Creating an application using SIP archetype on the command line:</p>
+<p>Mac OS
 <pre class="highlight"><code class="language-shell">  mvn archetype:generate \
     -DarchetypeGroupId=de.ikor.sip.foundation \
     -DarchetypeArtifactId=sip-archetype \
@@ -220,7 +221,16 @@
     -DgroupId=de.ikor.sip.adapter \
     -DartifactId=demo \
     -DprojectName=DemoAdapter \
-    -Dversion=1.0.0-SNAPSHOT</code></pre>
+    -Dversion=1.0.0-SNAPSHOT</code></pre></p>
+<p>Windows OS
+<pre class="highlight"><code class="language-shell">  mvn archetype:generate ^
+    -DarchetypeGroupId=de.ikor.sip.foundation ^
+    -DarchetypeArtifactId=sip-archetype ^
+    -DarchetypeVersion=&lt;latest.sip-archetype.version&gt; ^
+    -DgroupId=de.ikor.sip.adapter ^
+    -DartifactId=demo ^
+    -DprojectName=DemoAdapter ^
+    -Dversion=1.0.0-SNAPSHOT</code></pre></p>
 <p>When executing the command, pay attention to use the latest archetype version for the -DarchetypeVersion parameter.</p>
 <p>The following parameters -DgroupId, -DartifactId, -DprojectName and -Dversion should be adjusted to better match your project,
 as they set the properties for the adapter. It is recommended to follow the maven naming convention.</p>
