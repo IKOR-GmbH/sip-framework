@@ -1,15 +1,18 @@
 package de.ikor.sip.foundation.core.trace;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.Synchronized;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 /** Contains history as list of traced exchanges */
 @Component
+@Getter
 @AllArgsConstructor
 public class TraceHistory {
 

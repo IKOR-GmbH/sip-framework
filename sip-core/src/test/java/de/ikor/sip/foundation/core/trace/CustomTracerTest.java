@@ -1,21 +1,22 @@
 package de.ikor.sip.foundation.core.trace;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
-import java.util.List;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.NamedNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.mock;
 
 class CustomTracerTest {
 
@@ -47,5 +48,44 @@ class CustomTracerTest {
     assertEquals("1", logsList.get(0).getMessage());
     assertEquals(Level.INFO, logsList.get(0).getLevel());
     assertThat(traceHistory.getAndClearHistory()).isNotEmpty();
+  }
+
+  @Test
+  void dumpTraceTypeZero() {
+
+    List<ILoggingEvent> logsList = listAppender.list;
+
+    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), 0);
+
+    customTracer.dumpTrace("0");
+
+    assertThat(logsList.get(0)).isNotNull();
+    assertThat(traceHistory.getList()).isNotEmpty();
+  }
+
+  @Test
+  void dumpTraceTypeOne() {
+
+    List<ILoggingEvent> logsList = listAppender.list;
+
+    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), 1);
+
+    customTracer.dumpTrace("1");
+
+    assertThat(logsList.get(0)).isNotNull();
+    assertThat(traceHistory.getList()).isEmpty();
+  }
+
+  @Test
+  void dumpTraceTypeTwo() {
+
+    List<ILoggingEvent> logsList = listAppender.list;
+
+    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), 2);
+
+    customTracer.dumpTrace("2");
+
+    assertThat(logsList.get(0)).isNull();
+    assertThat(traceHistory.getList()).isNotEmpty();
   }
 }
