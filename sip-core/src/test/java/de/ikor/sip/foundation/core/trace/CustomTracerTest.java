@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 
@@ -45,8 +44,8 @@ class CustomTracerTest {
 
     customTracer.dumpTrace("1");
 
-    assertEquals("1", logsList.get(0).getMessage());
-    assertEquals(Level.INFO, logsList.get(0).getLevel());
+    assertThat(logsList.get(0).getMessage()).isEqualTo("1");
+    assertThat(logsList.get(0).getLevel()).isEqualTo(Level.INFO);
     assertThat(traceHistory.getAndClearHistory()).isNotEmpty();
   }
 
