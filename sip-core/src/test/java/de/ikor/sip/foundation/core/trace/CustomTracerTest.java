@@ -57,7 +57,7 @@ class CustomTracerTest {
 
     customTracer.dumpTrace("0");
 
-    assertThat(logsList.get(0)).isNotNull();
+    assertThat(logsList).isNotEmpty();
     assertThat(traceHistory.getList()).isNotEmpty();
   }
 
@@ -70,7 +70,7 @@ class CustomTracerTest {
 
     customTracer.dumpTrace("1");
 
-    assertThat(logsList.get(0)).isNotNull();
+    assertThat(logsList).isNotEmpty();
     assertThat(traceHistory.getList()).isEmpty();
   }
 
@@ -83,7 +83,7 @@ class CustomTracerTest {
 
     customTracer.dumpTrace("2");
 
-    assertThat(logsList.get(0)).isNull();
+    assertThat(logsList).isEmpty();
     assertThat(traceHistory.getList()).isNotEmpty();
   }
 }
