@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(prefix = "sip.core.tracing", name = "enabled")
 public class CustomTracer extends DefaultTracer {
 
-  private int traceType;
+  private SIPTraceTypeEnum traceType;
 
   private final TraceHistory traceHistory;
 
@@ -29,7 +29,7 @@ public class CustomTracer extends DefaultTracer {
       TraceHistory traceHistory,
       SIPExchangeFormatter exchangeFormatter,
       CamelContext camelContext,
-      int traceType) {
+      SIPTraceTypeEnum traceType) {
     setExchangeFormatter(exchangeFormatter);
     camelContext.setTracing(true);
     this.traceHistory = traceHistory;
@@ -38,10 +38,10 @@ public class CustomTracer extends DefaultTracer {
 
   @Override
   protected void dumpTrace(String out) {
-    if (traceType == 0 || traceType == 1) {
+    if (traceType == SIPTraceTypeEnum.BOTH || traceType == SIPTraceTypeEnum.LOG) {
       super.dumpTrace(out);
     }
-    if (traceType == 0 || traceType == 2) {
+    if (traceType == SIPTraceTypeEnum.BOTH || traceType == SIPTraceTypeEnum.MEMORY) {
       traceHistory.add(out);
     }
   }

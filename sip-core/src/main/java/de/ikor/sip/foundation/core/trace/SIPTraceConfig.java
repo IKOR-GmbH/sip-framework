@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 public class SIPTraceConfig {
 
   private int limit;
-  private int traceType;
+  private String traceType;
   private boolean enabled;
+
 }

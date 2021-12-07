@@ -28,11 +28,12 @@ class CustomTracerTypeTest {
             new TraceHistory(traceConfiguration.getLimit()),
             null,
             mock(CamelContext.class),
-            traceConfiguration.getTraceType());
+                SIPTraceTypeEnum.valueOf(traceConfiguration.getTraceType()));
+
   }
 
   @Test
   void testLogtypeConfiguration() {
-    assertThat(traceConfiguration.getTraceType()).isEqualTo(1);
+    assertThat(traceConfiguration.getTraceType()).isEqualTo(SIPTraceTypeEnum.LOG.name());
   }
 }

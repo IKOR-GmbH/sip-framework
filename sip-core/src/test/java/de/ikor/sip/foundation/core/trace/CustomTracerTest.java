@@ -27,7 +27,7 @@ class CustomTracerTest {
   @BeforeEach
   void setUp() {
     traceHistory = new TraceHistory(5);
-    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), 0);
+    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), SIPTraceTypeEnum.BOTH);
     node = mock(NamedNode.class);
     exchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
 
@@ -53,7 +53,7 @@ class CustomTracerTest {
 
     List<ILoggingEvent> logsList = listAppender.list;
 
-    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), 0);
+    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), SIPTraceTypeEnum.BOTH);
 
     customTracer.dumpTrace("0");
 
@@ -66,7 +66,7 @@ class CustomTracerTest {
 
     List<ILoggingEvent> logsList = listAppender.list;
 
-    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), 1);
+    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), SIPTraceTypeEnum.LOG);
 
     customTracer.dumpTrace("1");
 
@@ -79,7 +79,7 @@ class CustomTracerTest {
 
     List<ILoggingEvent> logsList = listAppender.list;
 
-    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), 2);
+    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), SIPTraceTypeEnum.MEMORY);
 
     customTracer.dumpTrace("2");
 
