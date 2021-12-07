@@ -1,5 +1,8 @@
 package de.ikor.sip.foundation.core.registration;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -8,43 +11,49 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
 class RegistrationWebClientTest {
 
-  @Mock
-  private RestTemplate restTemplate;
+  @Mock private RestTemplate restTemplate;
 
   private RegistrationWebClient registrationWebClient;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.initMocks(this);
-    registrationWebClient = new RegistrationWebClient(restTemplate, "http://127.0.0.1:8082/api/v1/client", 5000L, 5000L);
+    registrationWebClient =
+        new RegistrationWebClient(
+            restTemplate, "http://127.0.0.1:8082/api/v1/client", 5000L, 5000L);
   }
 
   @Test
   void test_If_Proper_Register_Request_Causes_No_Problems() {
-    assertDoesNotThrow(() -> registrationWebClient.sendPostRequest("/register", new TelemetryData()));
+    assertDoesNotThrow(
+        () -> registrationWebClient.sendPostRequest("/register", new TelemetryData()));
   }
 
   @Test
   void test_If_Proper_Deregister_Request_Causes_No_Problems() {
-    assertDoesNotThrow(() -> registrationWebClient.sendDeleteRequest("/deregister/" + UUID.randomUUID()));
+    assertDoesNotThrow(
+        () -> registrationWebClient.sendDeleteRequest("/deregister/" + UUID.randomUUID()));
   }
 
   @Test
   void test_If_Exception_Caused_By_A_Bad_Register_Request_Is_Handled_And_Causes_No_Problems() {
-    Mockito.when(this.restTemplate.exchange(Mockito.anyString(), Mockito.any(), Mockito.any(), (Class<Object>) Mockito.any())).thenThrow(new RestClientException("Some Error"));
-    assertDoesNotThrow(() -> registrationWebClient.sendPostRequest("/register", new TelemetryData()));
+    Mockito.when(
+            this.restTemplate.exchange(
+                Mockito.anyString(), Mockito.any(), Mockito.any(), (Class<Object>) Mockito.any()))
+        .thenThrow(new RestClientException("Some Error"));
+    assertDoesNotThrow(
+        () -> registrationWebClient.sendPostRequest("/register", new TelemetryData()));
   }
 
   @Test
   void test_If_Exception_Caused_By_A_Bad_Deregister_Request_Is_Handled_And_Causes_No_Problems() {
-    Mockito.when(this.restTemplate.exchange(Mockito.anyString(), Mockito.any(), Mockito.any(), (Class<Object>) Mockito.any())).thenThrow(new RestClientException("Some Error"));
-    assertDoesNotThrow(() -> registrationWebClient.sendDeleteRequest("/deregister/" + UUID.randomUUID()));
+    Mockito.when(
+            this.restTemplate.exchange(
+                Mockito.anyString(), Mockito.any(), Mockito.any(), (Class<Object>) Mockito.any()))
+        .thenThrow(new RestClientException("Some Error"));
+    assertDoesNotThrow(
+        () -> registrationWebClient.sendDeleteRequest("/deregister/" + UUID.randomUUID()));
   }
-
 }

@@ -8,19 +8,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
-/**
- * Configuration in order to load all necessary beans.
- */
+/** Configuration in order to load all necessary beans. */
 @Configuration
 @ConditionalOnExpression("${sip.core.backend-registration.enabled:false}")
 class AdapterRegistrationConfiguration {
 
   @Bean
-  AdapterRegistration createAdapterRegistration(AdapterRegistrationProperties properties,
-                                                Environment environment, HealthEndpoint healthEndpoint,
-                                                AdapterRouteEndpoint adapterRouteEndpoint,
-                                                PathMappedEndpoints pathMappedEndpoints) {
-    return new AdapterRegistration(properties, environment, healthEndpoint, adapterRouteEndpoint, pathMappedEndpoints);
+  AdapterRegistration createAdapterRegistration(
+      AdapterRegistrationProperties properties,
+      Environment environment,
+      HealthEndpoint healthEndpoint,
+      AdapterRouteEndpoint adapterRouteEndpoint,
+      PathMappedEndpoints pathMappedEndpoints) {
+    return new AdapterRegistration(
+        properties, environment, healthEndpoint, adapterRouteEndpoint, pathMappedEndpoints);
   }
-
 }
