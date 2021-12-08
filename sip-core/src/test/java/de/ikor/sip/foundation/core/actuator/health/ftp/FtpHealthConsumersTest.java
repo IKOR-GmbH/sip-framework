@@ -1,17 +1,14 @@
 package de.ikor.sip.foundation.core.actuator.health.ftp;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import de.ikor.sip.foundation.core.actuator.common.IntegrationManagementException;
-import java.util.LinkedList;
 import java.util.List;
 import org.apache.camel.component.file.remote.RemoteFileConfiguration;
 import org.apache.camel.component.file.remote.RemoteFileEndpoint;
@@ -23,7 +20,7 @@ import org.slf4j.LoggerFactory;
 class FtpHealthConsumersTest {
 
   ListAppender<ILoggingEvent> listAppender;
-  RemoteFileOperations<?> fileOps;
+  RemoteFileOperations<Object> fileOps;
   RemoteFileEndpoint<?> endpoint;
   RemoteFileConfiguration configuration;
 
@@ -72,7 +69,7 @@ class FtpHealthConsumersTest {
   }
 
   @Test
-  void executeNoop_sendNoopTrue() {
+  void When_executeNoopAndSendNoopTrue_Expect_emptyLogList() {
     // arrange
     when(endpoint.getConfiguration()).thenReturn(null);
     when(fileOps.sendNoop()).thenReturn(true);
@@ -87,7 +84,7 @@ class FtpHealthConsumersTest {
   }
 
   @Test
-  void executeNoop_operationConnectFalse() {
+  void When_executeNoopAndOperationConnectFalse_Expect_emptyLogList() {
     // arrange
     when(endpoint.getConfiguration()).thenReturn(null);
     when(fileOps.sendNoop()).thenReturn(false);
@@ -102,13 +99,13 @@ class FtpHealthConsumersTest {
   }
 
   @Test
-  void executeListDir_statusUP() {
+  void When_executeListDirAndStatusUP_Expect_emptyLogList() {
     // arrange
     String directoryName = "dirName";
     when(configuration.getDirectoryName()).thenReturn(directoryName);
     when(endpoint.getConfiguration()).thenReturn(configuration);
     when(fileOps.existsFile(directoryName)).thenReturn(true);
-    when(fileOps.listFiles(directoryName)).thenReturn(new LinkedList<>());
+    when(fileOps.listFiles(directoryName)).thenReturn(new Object[0]);
 
     // act
     FtpHealthConsumers.listDirectoryConsumer(endpoint, fileOps);
@@ -119,7 +116,7 @@ class FtpHealthConsumersTest {
   }
 
   @Test
-  void executeListDir_unknownFolder() {
+  void When_executeListDirAndUnknownFolder_Expect_folderNotFoundMessage() {
     // arrange
     String directoryName = "dirName";
     when(configuration.getDirectoryName()).thenReturn(directoryName);
@@ -128,9 +125,9 @@ class FtpHealthConsumersTest {
 
     // act
     Exception exceptionSubject =
-        assertThrows(
-            IntegrationManagementException.class,
-            () -> FtpHealthConsumers.listDirectoryConsumer(endpoint, fileOps));
+        catchThrowableOfType(
+            () -> FtpHealthConsumers.listDirectoryConsumer(endpoint, fileOps),
+            IntegrationManagementException.class);
 
     // assert
     assertThat(exceptionSubject.getMessage()).isEqualTo("Folder " + directoryName + "not found");
