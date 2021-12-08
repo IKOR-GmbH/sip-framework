@@ -30,11 +30,27 @@ Before getting started to develop a first adapter with SIP the following require
 
 ### How to create a SIP Adapter from Maven Archetype
 
-In order to make setting up a new integration adapter project an easy task, we have created a dedicated SIP (Adapter) Maven archetype, that gives the ability to quickly bootstrap a new integration adapter, along with all needed Maven dependencies and goodies, as well as the recommended, preferred organization of the project.
+*We are currently waiting for the approval to upload our artifacts to maven central. Until then, you need to
+clone our repository, checkout release version and install your local artifact version. This can be easily done by following 
+git commands:*
+```shell
+  git clone https://github.com/IKOR-GmbH/sip-framework.git
+```
+```shell
+  cd sip-framework
+```
+```shell
+  git checkout tags/releases/1.0.0 -b release1.0.0
+```
+```shell
+  mvn install 
+```
+
+In order to make setting up a new integration adapter project an easy task, we have created a dedicated SIP (Adapter) 
+Maven archetype, that gives the ability to quickly bootstrap a new integration adapter, along with all needed Maven 
+dependencies and goodies, as well as the recommended, preferred organization of the project.
 
 To make a long story short, you can create a SIP Adapter by using the following Maven command:
-
-Creating an application using SIP archetype on the command line:
 
 Mac OS
 ```shell
