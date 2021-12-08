@@ -294,6 +294,7 @@ endpoint:
       id: <adapterName>.<externalSystem>
       uri: ftp://...
 ```
+
 `<in/out>` corresponds to consumers and producers respectively.
 This means in case a message is received through a route using "from", then it is a consumer and "in" is used.
 On the other hand, it is a producer when a message is sent via "to". In this case, "out" is used as key in the configuration file.  

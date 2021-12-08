@@ -28,7 +28,7 @@ class ProcessorProxyTest {
     ArrayList<ProxyExtension> exts = new ArrayList<>();
     exts.add(proxyExtension);
     proxyExtensions = exts;
-    processorProxySubject = new ProcessorProxy(null, namedNode, processor, proxyExtensions);
+    processorProxySubject = new ProcessorProxy(namedNode, processor, proxyExtensions);
   }
 
   @Test
