@@ -19,7 +19,7 @@
     <name>SIP Starter Parent</name>
     <description>Parent pom providing dependency and plugin management for SIP integration adapters built with Maven</description>
 
-        <scm>
+    <scm>
         <connection>scm:git:git://github.com/IKOR-GmbH/sip-framework.git</connection>
         <developerConnection>scm:git:ssh:IKOR-GmbH/sip-framework.git</developerConnection>
         <url>https://github.com/IKOR-GmbH/sip-framework/tree/main</url>
@@ -58,15 +58,17 @@
     </issueManagement>
 
     <distributionManagement>
-        <repository>
-            <id>github</id>
+        <snapshotRepository>
+            <id>maven-central</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/IKOR-GmbH/sip-framework</url>
-        </repository>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <properties>
         <sip-framework.version>1.0.1-SNAPSHOT</sip-framework.version>
+        <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -89,4 +91,73 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <gpgArguments>
+                            <arg>--pinentry-mode</arg>
+                            <arg>loopback</arg>
+                        </gpgArguments>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>${nexus-staging-maven-plugin.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <serverId>maven-central</serverId>
+                        <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    </configuration>
+                    <dependencies>
+                        <!--
+                        TODO:
+                            Remove after OSSRH-66257, NEXUS-26993 are fixed,
+                            possibly via https://github.com/sonatype/nexus-maven-plugins/pull/91
+                        -->
+                        <dependency>
+                            <groupId>com.thoughtworks.xstream</groupId>
+                            <artifactId>xstream</artifactId>
+                            <version>1.4.15</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>package-deployment</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
