@@ -1,20 +1,21 @@
 package de.ikor.sip.foundation.core.trace;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
-import java.util.List;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.NamedNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.mock;
 
 class CustomTracerTest {
 
@@ -27,7 +28,8 @@ class CustomTracerTest {
   @BeforeEach
   void setUp() {
     traceHistory = new TraceHistory(5);
-    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), SIPTraceTypeEnum.BOTH);
+    customTracer =
+        new CustomTracer(traceHistory, null, mock(CamelContext.class), SIPTraceTypeEnum.BOTH);
     node = mock(NamedNode.class);
     exchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
 
@@ -53,7 +55,8 @@ class CustomTracerTest {
 
     List<ILoggingEvent> logsList = listAppender.list;
 
-    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), SIPTraceTypeEnum.BOTH);
+    customTracer =
+        new CustomTracer(traceHistory, null, mock(CamelContext.class), SIPTraceTypeEnum.BOTH);
 
     customTracer.dumpTrace("0");
 
@@ -66,7 +69,8 @@ class CustomTracerTest {
 
     List<ILoggingEvent> logsList = listAppender.list;
 
-    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), SIPTraceTypeEnum.LOG);
+    customTracer =
+        new CustomTracer(traceHistory, null, mock(CamelContext.class), SIPTraceTypeEnum.LOG);
 
     customTracer.dumpTrace("1");
 
@@ -79,7 +83,8 @@ class CustomTracerTest {
 
     List<ILoggingEvent> logsList = listAppender.list;
 
-    customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class), SIPTraceTypeEnum.MEMORY);
+    customTracer =
+        new CustomTracer(traceHistory, null, mock(CamelContext.class), SIPTraceTypeEnum.MEMORY);
 
     customTracer.dumpTrace("2");
 
