@@ -6,7 +6,8 @@ import lombok.Getter;
 import org.apache.camel.Exchange;
 
 /**
- * {@link ProcessorProxyMock} is a simple POJO class used for ProcessorProxy {@link ProcessorProxy} mock function.
+ * {@link ProcessorProxyMock} is a simple POJO class used for ProcessorProxy {@link ProcessorProxy}
+ * mock function.
  */
 @Getter
 @AllArgsConstructor

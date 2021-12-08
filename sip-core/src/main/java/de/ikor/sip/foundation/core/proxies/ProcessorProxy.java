@@ -36,9 +36,7 @@ public class ProcessorProxy implements Processor {
    * @param extensions List of {@link ProxyExtension}
    */
   public ProcessorProxy(
-      NamedNode nodeDefinition,
-      Processor target,
-      List<ProxyExtension> extensions) {
+      NamedNode nodeDefinition, Processor target, List<ProxyExtension> extensions) {
     this.nodeDefinition = nodeDefinition;
     this.target = target;
     this.extensions = new ArrayList<>(extensions);
