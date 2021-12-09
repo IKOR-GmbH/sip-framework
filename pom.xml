@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <name>SIP Framework</name>
     <url>https://github.com/IKOR-GmbH/sip-framework</url>
+    <description>A framework for easy creation of spring-boot/camel integration adapters</description>
 
     <scm>
         <connection>scm:git:git://github.com/IKOR-GmbH/sip-framework.git</connection>
@@ -50,11 +51,11 @@
     </issueManagement>
 
     <distributionManagement>
-        <repository>
-            <id>github</id>
+        <snapshotRepository>
+            <id>maven-central</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/IKOR-GmbH/sip-framework</url>
-        </repository>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <properties>
@@ -72,7 +73,7 @@
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
         <spring.boot.version>2.3.9.RELEASE</spring.boot.version>
-        <camel.version>3.8.0</camel.version>
+        <camel.version>3.13.0</camel.version>
         <jackson-jsr310.version>2.12.1</jackson-jsr310.version>
         <springdoc-openapi-ui.version>1.5.10</springdoc-openapi-ui.version>
         <lombok.version>1.18.20</lombok.version>
@@ -92,6 +93,7 @@
         <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
         <fmt-maven-plugin.version>2.12</fmt-maven-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
 
         <!-- sonar settings -->
         <sonar.organization>ikor-gmbh</sonar.organization>
@@ -437,6 +439,30 @@
                         </gpgArguments>
                     </configuration>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>${nexus-staging-maven-plugin.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <serverId>maven-central</serverId>
+                        <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    </configuration>
+                    <dependencies>
+                        <!--
+                        TODO:
+                            Remove after OSSRH-66257, NEXUS-26993 are fixed,
+                            possibly via https://github.com/sonatype/nexus-maven-plugins/pull/91
+                        -->
+                        <dependency>
+                            <groupId>com.thoughtworks.xstream</groupId>
+                            <artifactId>xstream</artifactId>
+                            <version>1.4.15</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -473,6 +499,10 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>
