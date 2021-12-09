@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.proxies;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.UnaryOperator;
@@ -27,7 +28,9 @@ public class ProcessorProxyMockRegistry {
   public void registerMock(String processorId, UnaryOperator<Exchange> mockFunction) {
     if (processorId == null || proxyMocks.containsKey(processorId)) {
       throw new BadProxyProcessorIdException(
-          "Registering mock with processor id which is null or already exists");
+          MessageFormat.format(
+              "Registering mock with processor id: {0} which already exists or is null.",
+              processorId));
     }
     ProcessorProxyMock proxyMock = new ProcessorProxyMock(processorId, mockFunction);
     proxyMocks.put(processorId, proxyMock);

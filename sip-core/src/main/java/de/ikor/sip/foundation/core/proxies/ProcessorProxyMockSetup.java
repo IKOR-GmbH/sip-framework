@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.proxies;
 
+import java.text.MessageFormat;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -28,7 +29,9 @@ public class ProcessorProxyMockSetup {
                       .orElseThrow(
                           () ->
                               new BadProxyProcessorIdException(
-                                  "There is no proxy with processor id: " + processorId));
+                                  MessageFormat.format(
+                                      "There is no processor with processor id: {0}",
+                                      processorId)));
               processorProxy.mock(processorProxyMock.getMockFunction());
             });
   }
