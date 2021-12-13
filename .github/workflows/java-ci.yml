@@ -215,6 +215,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
         STARTER_POM: sip-starter-parent
+        MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+        MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
       run: |
         export RELEASE_VERSION=$(./.github/workflows/computeReleaseVersion.sh)
         mvn ${MAVEN_ARGS} versions:set -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false

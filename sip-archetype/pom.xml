@@ -15,6 +15,7 @@
     <packaging>maven-archetype</packaging>
 
     <name>sip-archetype</name>
+    <description>An archetype for creating an opinionated maven project for a sip adapter</description>
 
     <build>
         <extensions>

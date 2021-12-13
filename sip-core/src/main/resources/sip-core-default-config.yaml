@@ -12,7 +12,7 @@ sip.core:
       showExchangeId: true
 
 management.endpoint.health.show-details: always
-management.endpoints.web.exposure.include: health,info,metrics,loggers,prometheus
+management.endpoints.web.exposure.include: health,info,metrics,loggers,prometheus,adapter-routes
 
 springdoc:
   show-actuator: true
