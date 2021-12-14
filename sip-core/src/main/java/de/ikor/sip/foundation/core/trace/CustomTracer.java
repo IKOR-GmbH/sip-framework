@@ -2,7 +2,6 @@ package de.ikor.sip.foundation.core.trace;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.engine.DefaultTracer;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Component;
  * be registered as component
  */
 @Component
-@ConditionalOnProperty(prefix = "sip.core.tracing", name = "enabled")
 public class CustomTracer extends DefaultTracer {
 
   private SIPTraceTypeEnum traceType;
