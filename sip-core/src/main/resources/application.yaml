@@ -1,0 +1,9 @@
+{
+  "app": {
+    "markdownFiles": {
+      "readme.md": "Read me",
+      "changelog.md": "Change log",
+      "adapter-description.md": "Adapter description"
+    }
+  }
+}
