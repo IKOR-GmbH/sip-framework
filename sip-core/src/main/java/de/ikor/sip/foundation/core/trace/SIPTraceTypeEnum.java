@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum SIPTraceTypeEnum {
+  NONE("-1"),
   BOTH("0"),
   LOG("1"),
   MEMORY("2");

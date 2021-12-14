@@ -6,11 +6,10 @@ sip.core:
     use-code-as-default-message: true
     lang: en
   tracing:
-    enabled: false
     exchange-formatter:
       showHeaders: true
       showExchangeId: true
-    traceType: 1 # 0 - BOTH (default), 1 - Logging only, 2 - Storing only
+    traceType: LOG
 
 management.endpoint.health.show-details: always
 management.endpoints.web.exposure.include: health,info,metrics,loggers,prometheus

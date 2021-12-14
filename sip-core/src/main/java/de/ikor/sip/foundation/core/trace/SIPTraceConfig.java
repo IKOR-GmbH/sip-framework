@@ -16,5 +16,4 @@ public class SIPTraceConfig {
 
   private int limit;
   private String traceType;
-  private boolean enabled;
 }
