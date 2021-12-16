@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.security.authentication;
 
+import static org.apache.commons.collections4.CollectionUtils.isEmpty;
+
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties.AuthProviderSettings;
 import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionMessage;
@@ -19,20 +21,23 @@ public class SIPAuthProvidersExistCondition extends SpringBootCondition {
   @Override
   public ConditionOutcome getMatchOutcome(
       ConditionContext context, AnnotatedTypeMetadata metadata) {
+    ConditionOutcome outcome = ConditionOutcome.match();
+    String listPropertyName = "sip.security.authentication.auth-providers";
 
-    String listProperty = "sip.security.authentication.auth-providers";
-
-    BindResult<List<AuthProviderSettings>> property =
-        Binder.get(context.getEnvironment()).bind(listProperty, PROVIDER_LIST);
-    List<AuthProviderSettings> authSettings = property.orElse(null);
-
-    if (authSettings != null && !authSettings.isEmpty()) {
-      return ConditionOutcome.match();
+    if (isEmpty(getAuthProviderSettingsList(context, listPropertyName))) {
+      outcome =
+          ConditionOutcome.noMatch(
+              ConditionMessage.forCondition("SIP auth providers condition")
+                  .didNotFind("property")
+                  .items(listPropertyName));
     }
+    return outcome;
+  }
 
-    return ConditionOutcome.noMatch(
-        ConditionMessage.forCondition("SIP auth provider condition")
-            .didNotFind("property")
-            .items(listProperty));
+  private List<AuthProviderSettings> getAuthProviderSettingsList(
+      ConditionContext context, String listPropertyName) {
+    BindResult<List<AuthProviderSettings>> bindResult =
+        Binder.get(context.getEnvironment()).bind(listPropertyName, PROVIDER_LIST);
+    return bindResult.orElse(null);
   }
 }
