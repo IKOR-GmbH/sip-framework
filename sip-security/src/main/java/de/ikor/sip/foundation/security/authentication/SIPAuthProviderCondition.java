@@ -1,14 +1,13 @@
 package de.ikor.sip.foundation.security.authentication;
 
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
+
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties.AuthProviderSettings;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
-import org.springframework.boot.context.properties.bind.BindResult;
-import org.springframework.boot.context.properties.bind.Bindable;
-import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.util.MultiValueMap;
@@ -20,8 +19,6 @@ import org.springframework.util.MultiValueMap;
  * @author thomas.stieglmaier
  */
 public class SIPAuthProviderCondition extends SpringBootCondition {
-  private static final Bindable<List<AuthProviderSettings>> PROVIDER_LIST =
-      Bindable.listOf(AuthProviderSettings.class);
 
   @Override
   public ConditionOutcome getMatchOutcome(
@@ -29,13 +26,10 @@ public class SIPAuthProviderCondition extends SpringBootCondition {
     MultiValueMap<String, Object> attributes =
         metadata.getAllAnnotationAttributes(ConditionalOnSIPAuthProvider.class.getName());
 
-    String listProperty = "sip.security.authentication.auth-providers";
+    Collection<AuthProviderSettings> authSettings =
+        AuthProviderSettings.getAuthProviderSettingsList(context);
 
-    BindResult<List<AuthProviderSettings>> property =
-        Binder.get(context.getEnvironment()).bind(listProperty, PROVIDER_LIST);
-    List<AuthProviderSettings> authSettings = property.orElse(null);
-
-    if (authSettings != null) {
+    if (isNotEmpty(authSettings)) {
       Class<?> listItemValue = (Class<?>) attributes.get("listItemValue").get(0);
       Class<?> validationClass = (Class<?>) attributes.get("validationClass").get(0);
 
@@ -49,7 +43,7 @@ public class SIPAuthProviderCondition extends SpringBootCondition {
           return ConditionOutcome.noMatch(
               ConditionMessage.forCondition("SIP validation type check")
                   .didNotFind("property")
-                  .items(listProperty));
+                  .items(AuthProviderSettings.getListPropertyName()));
         }
         return ConditionOutcome.match();
       }
@@ -58,6 +52,6 @@ public class SIPAuthProviderCondition extends SpringBootCondition {
     return ConditionOutcome.noMatch(
         ConditionMessage.forCondition("SIP list location")
             .didNotFind("property")
-            .items(listProperty));
+            .items(AuthProviderSettings.getListPropertyName()));
   }
 }

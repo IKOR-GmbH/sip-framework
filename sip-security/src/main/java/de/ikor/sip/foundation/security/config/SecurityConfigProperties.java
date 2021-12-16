@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.security.config;
 
 import de.ikor.sip.foundation.security.authentication.SIPAuthenticationProvider;
 import de.ikor.sip.foundation.security.authentication.common.validators.SIPAlwaysAllowValidator;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.BindResult;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.context.annotation.ConditionContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.util.AntPathMatcher;
@@ -68,6 +73,22 @@ public class SecurityConfigProperties {
   @AllArgsConstructor
   public static class AuthProviderSettings {
     private final PathMatcher pathMatcher = new AntPathMatcher();
+
+    private static final Bindable<List<AuthProviderSettings>> PROVIDER_LIST =
+        Bindable.listOf(AuthProviderSettings.class);
+
+    private static final String LIST_PROPERTY_NAME = "sip.security.authentication.auth-providers";
+
+    public static String getListPropertyName() {
+      return LIST_PROPERTY_NAME;
+    }
+
+    public static Collection<AuthProviderSettings> getAuthProviderSettingsList(
+        ConditionContext context) {
+      BindResult<List<AuthProviderSettings>> bindResult =
+          Binder.get(context.getEnvironment()).bind(LIST_PROPERTY_NAME, PROVIDER_LIST);
+      return bindResult.orElse(null);
+    }
 
     /** The fully qualified classname of the current provider */
     private Class<?> classname = null;
