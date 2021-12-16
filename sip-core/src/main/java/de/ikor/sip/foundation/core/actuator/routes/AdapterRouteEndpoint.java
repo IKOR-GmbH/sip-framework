@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.actuator.routes;
 
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,6 +43,10 @@ public class AdapterRouteEndpoint {
    * @return AdapterRouteSummary
    */
   @GetMapping
+  @Operation(
+      summary = "Get all routes",
+      description = "Get list of Routes from Camel Context",
+      operationId = "routes")
   public List<AdapterRouteSummary> routes() {
     return camelContext.getRoutes().stream()
         .map(route -> new AdapterRouteSummary(mbeanContext.getManagedRoute(route.getRouteId())))
@@ -50,6 +55,7 @@ public class AdapterRouteEndpoint {
 
   /** Stops all routes */
   @PostMapping("/stop")
+  @Operation(summary = "Stop all routes", description = "Stops all routes in Camel Context")
   public void stopAll() {
     camelContext
         .getRoutes()
@@ -58,6 +64,7 @@ public class AdapterRouteEndpoint {
 
   /** Resumes all routes */
   @PostMapping("/resume")
+  @Operation(summary = "Resume all routes", description = "Resumes all routes in Camel Context")
   public void resumeAll() {
     camelContext
         .getRoutes()
@@ -65,6 +72,7 @@ public class AdapterRouteEndpoint {
   }
   /** Suspends all routes */
   @PostMapping("/suspend")
+  @Operation(summary = "Suspend all routes", description = "Suspends all routes in Camel Context")
   public void suspendAll() {
     camelContext
         .getRoutes()
@@ -74,6 +82,7 @@ public class AdapterRouteEndpoint {
   /** Starts all routes */
   @SneakyThrows
   @PostMapping("/start")
+  @Operation(summary = "Start all routes", description = "Starts all routes in Camel Context")
   public void startAll() {
     camelContext.getRouteController().startAllRoutes();
   }
@@ -85,7 +94,8 @@ public class AdapterRouteEndpoint {
    * @return AdapterRouteDetails
    */
   @GetMapping("/{routeId}")
-  public AdapterRouteDetails route(@PathVariable String routeId) {
+  @Operation(summary = "Get route details", description = "Get route details")
+  public AdapterRouteDetails route(@RouteIdParameter @PathVariable String routeId) {
     return new AdapterRouteDetails(mbeanContext.getManagedRoute(routeId));
   }
 
@@ -96,14 +106,17 @@ public class AdapterRouteEndpoint {
    * @param operation - RouteOperation
    */
   @PostMapping("/{routeId}/{operation}")
+  @Operation(summary = "Execute operation", description = "Executes operation on route")
   public void execute(
-      @PathVariable String routeId, @RouteOperationParameter @PathVariable String operation) {
+      @RouteIdParameter @PathVariable String routeId,
+      @RouteOperationParameter @PathVariable String operation) {
     RouteOperation routeOperation = RouteOperation.fromId(operation);
     routeOperation.execute(camelContext, routeId);
   }
 
   /** Resets all routes */
   @PostMapping("/reset")
+  @Operation(summary = "Reset all routes", description = "Resets all routes in Camel Context")
   public void resetAll() {
     camelContext
         .getRoutes()
@@ -116,7 +129,8 @@ public class AdapterRouteEndpoint {
    * @param routeId - PathVariable
    */
   @PostMapping("/{routeId}/reset")
-  public void resetStatistics(@PathVariable String routeId) {
+  @Operation(summary = "Reset route", description = "Reset route")
+  public void resetStatistics(@RouteIdParameter @PathVariable String routeId) {
     mbeanContext.getManagedRoute(routeId).reset();
   }
 
@@ -126,6 +140,9 @@ public class AdapterRouteEndpoint {
    * @param operation - RouteOperation
    */
   @PostMapping("/sipmc/{operation}")
+  @Operation(
+      summary = "Execute operation on sipmc",
+      description = "Execute operation on all routes with sipmc")
   public void executeOnSipmcRoute(@RouteOperationParameter @PathVariable String operation) {
     Stream<Route> sipMcRoutes = filterMiddleComponentProducerRoutes(this.camelContext.getRoutes());
     sipMcRoutes.forEach(route -> this.execute(route.getRouteId(), operation));
@@ -133,6 +150,7 @@ public class AdapterRouteEndpoint {
 
   /** Executes reset operation on SipMc route */
   @PostMapping("/sipmc/reset")
+  @Operation(summary = "Reset sipmc routes", description = "Reset all sipmc routes")
   public void resetSipmcRoute() {
     Stream<Route> sipMcRoutes = filterMiddleComponentProducerRoutes(this.camelContext.getRoutes());
     sipMcRoutes.forEach(route -> mbeanContext.getManagedRoute(route.getRouteId()).reset());
@@ -156,6 +174,7 @@ public class AdapterRouteEndpoint {
    * @return AdapterRouteSummary
    */
   @GetMapping("/sipmc")
+  @Operation(summary = "Get sipmc route summary", description = "Get list of sipmc route summaries")
   public List<AdapterRouteSummary> sipmcRoutes() {
     Stream<Route> routeStream = filterMiddleComponentProducerRoutes(camelContext.getRoutes());
 
