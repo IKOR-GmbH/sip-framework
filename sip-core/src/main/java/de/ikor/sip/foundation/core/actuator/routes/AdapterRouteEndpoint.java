@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.core.actuator.routes;
 
+import de.ikor.sip.foundation.core.actuator.routes.annotations.RouteIdParameter;
+import de.ikor.sip.foundation.core.actuator.routes.annotations.RouteOperationParameter;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,10 +45,7 @@ public class AdapterRouteEndpoint {
    * @return AdapterRouteSummary
    */
   @GetMapping
-  @Operation(
-      summary = "Get all routes",
-      description = "Get list of Routes from Camel Context",
-      operationId = "routes")
+  @Operation(summary = "Get all routes", description = "Get list of Routes from Camel Context")
   public List<AdapterRouteSummary> routes() {
     return camelContext.getRoutes().stream()
         .map(route -> new AdapterRouteSummary(mbeanContext.getManagedRoute(route.getRouteId())))
