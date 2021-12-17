@@ -425,40 +425,36 @@ and that it has been added as a dependency to the application <code>pom.xml</cod
 Additionally, it would make much sense to follow suggested configuration convention for defining endpoint configuration.</p>
 <pre class="highlight"><code class="language-yaml">endpoint:
   &lt;in/out&gt;:
-   &lt;adapter-name&gt;:
     &lt;external-system&gt;:
-     &lt;endpoint&gt;: # optional - if more endpoints on single external-system are involved in integration
-      id: &lt;adapterName&gt;.&lt;externalSystem&gt;
-      uri: ftp://...</code></pre>
+      &lt;endpoint&gt;: # optional - if more endpoints on single external-system are involved in integration
+        id: &lt;externalSystem&gt;
+        uri: ftp://...</code></pre>
 <p><code>&lt;in/out&gt;</code> corresponds to consumers and producers respectively.
 This means in case a message is received through a route using "from", then it is a consumer and "in" is used.
 On the other hand, it is a producer when a message is sent via "to". In this case, "out" is used as key in the configuration file.  </p>
-<p><code>&lt;adapter-name&gt;</code> should correspond to the domain adapter it is dealing with (e.g. billing, partner, policy etc.)  </p>
 <p><code>&lt;external-system&gt;</code> should match the name of the system or client the adapter is communicating with.  </p>
 <p><code>&lt;endpoint&gt;</code> in case there are multiple endpoints for an adapter that uses the same domain and external system, additional identification
 is required. For this purpose we use an additional endpoint key to provide distinction.  </p>
 <p>For example:</p>
 <pre class="highlight"><code class="language-yaml">endpoint:
   in:
-    partner:
-      my-assurance-co:
-        id: partner.my-assurance-co
-        uri: ftp://...
+    my-assurance-co:
+      id: my-assurance-co
+      uri: ftp://...
   out:
-    partner:
-      their-assurance-co:
-        id: partner.their-assurance-co
-        uri: https://...</code></pre>
+    their-assurance-co:
+      id: their-assurance-co
+      uri: https://...</code></pre>
 <p>Using this configuration can be easily achieved in Camel by following their placeholder syntax.
 Here's what the example from above would look like in the Camel route:</p>
-<pre class="highlight"><code class="language-java">from("{{endpoint.in.partner.my-assurance-co.uri}}")
-    .id("{{endpoint.in.partner.my-assurance-co.id}}")
+<pre class="highlight"><code class="language-java">from("{{endpoint.in.my-assurance-co.uri}}")
+    .id("{{endpoint.in.my-assurance-co.id}}")
     .to(...);
 
 from(...)
     .process(...)    
-    .to("{{endpoint.out.partner.their-assurance-co.uri}}")
-    .id("{{endpoint.out.partner.their-assurance-co.id}}")</code></pre>
+    .to("{{endpoint.out.their-assurance-co.uri}}")
+    .id("{{endpoint.out.their-assurance-co.id}}")</code></pre>
 <p>If this convention is followed in the configuration, it leads to a unified structure that makes it possible
 to identify at a single glance which systems are communicating with each other and which communication technologies are 
 being used.
@@ -648,5 +644,5 @@ file with desired values.</p>
 
 <!--
 MkDocs version : 1.2.3
-Build Date UTC : 2021-12-13 14:24:14.088300+00:00
+Build Date UTC : 2021-12-17 14:45:04.747568+00:00
 -->
