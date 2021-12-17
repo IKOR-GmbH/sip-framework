@@ -141,7 +141,8 @@ public class AdapterRouteEndpoint {
   @PostMapping("/sipmc/{operation}")
   @Operation(
       summary = "Execute operation on sipmc",
-      description = "Execute operation on all routes which use consumer from SIP Middle component (sipmc)")
+      description =
+          "Execute operation on all routes which use consumer from SIP Middle component (sipmc)")
   public void executeOnSipmcRoute(@RouteOperationParameter @PathVariable String operation) {
     Stream<Route> sipMcRoutes = filterMiddleComponentProducerRoutes(this.camelContext.getRoutes());
     sipMcRoutes.forEach(route -> this.execute(route.getRouteId(), operation));
@@ -149,7 +150,9 @@ public class AdapterRouteEndpoint {
 
   /** Executes reset operation on SipMc route */
   @PostMapping("/sipmc/reset")
-  @Operation(summary = "Reset sipmc routes", description = "Reset all routes which use consumer from SIP Middle component (sipmc)")
+  @Operation(
+      summary = "Reset sipmc routes",
+      description = "Reset all routes which use consumer from SIP Middle component (sipmc)")
   public void resetSipmcRoute() {
     Stream<Route> sipMcRoutes = filterMiddleComponentProducerRoutes(this.camelContext.getRoutes());
     sipMcRoutes.forEach(route -> mbeanContext.getManagedRoute(route.getRouteId()).reset());
@@ -173,7 +176,9 @@ public class AdapterRouteEndpoint {
    * @return AdapterRouteSummary
    */
   @GetMapping("/sipmc")
-  @Operation(summary = "Get sipmc route summary", description = "Get summaries of routes which use consumer from SIP Middle component (sipmc)")
+  @Operation(
+      summary = "Get sipmc route summary",
+      description = "Get summaries of routes which use consumer from SIP Middle component (sipmc)")
   public List<AdapterRouteSummary> sipmcRoutes() {
     Stream<Route> routeStream = filterMiddleComponentProducerRoutes(camelContext.getRoutes());
 
