@@ -13,8 +13,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
-import org.springframework.context.annotation.ConditionContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
@@ -77,16 +77,22 @@ public class SecurityConfigProperties {
     private static final Bindable<List<AuthProviderSettings>> PROVIDER_LIST =
         Bindable.listOf(AuthProviderSettings.class);
 
-    private static final String LIST_PROPERTY_NAME = "sip.security.authentication.auth-providers";
+    private static final String AUTH_PROVIDERS_PROPERTY_NAME =
+        "sip.security.authentication.auth-providers";
 
-    public static String getListPropertyName() {
-      return LIST_PROPERTY_NAME;
+    public static String getConfigurationPropertyName() {
+      return AUTH_PROVIDERS_PROPERTY_NAME;
     }
 
-    public static Collection<AuthProviderSettings> getAuthProviderSettingsList(
-        ConditionContext context) {
+    /**
+     * Bind AuthProviderSettings from PropertySource
+     *
+     * @param environment {@link Environment}
+     * @return collection of AuthProviderSettings or null if none exist
+     */
+    public static Collection<AuthProviderSettings> bindFromPropertySource(Environment environment) {
       BindResult<List<AuthProviderSettings>> bindResult =
-          Binder.get(context.getEnvironment()).bind(LIST_PROPERTY_NAME, PROVIDER_LIST);
+          Binder.get(environment).bind(AUTH_PROVIDERS_PROPERTY_NAME, PROVIDER_LIST);
       return bindResult.orElse(null);
     }
 

@@ -17,12 +17,12 @@ public class SIPAuthProvidersExistCondition extends SpringBootCondition {
       ConditionContext context, AnnotatedTypeMetadata metadata) {
     ConditionOutcome outcome = ConditionOutcome.match();
 
-    if (isEmpty(AuthProviderSettings.getAuthProviderSettingsList(context))) {
+    if (isEmpty(AuthProviderSettings.bindFromPropertySource(context.getEnvironment()))) {
       outcome =
           ConditionOutcome.noMatch(
               ConditionMessage.forCondition("SIP auth providers condition")
                   .didNotFind("property")
-                  .items(AuthProviderSettings.getListPropertyName()));
+                  .items(AuthProviderSettings.getConfigurationPropertyName()));
     }
     return outcome;
   }

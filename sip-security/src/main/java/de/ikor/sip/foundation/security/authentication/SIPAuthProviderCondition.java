@@ -27,7 +27,7 @@ public class SIPAuthProviderCondition extends SpringBootCondition {
         metadata.getAllAnnotationAttributes(ConditionalOnSIPAuthProvider.class.getName());
 
     Collection<AuthProviderSettings> authSettings =
-        AuthProviderSettings.getAuthProviderSettingsList(context);
+        AuthProviderSettings.bindFromPropertySource(context.getEnvironment());
 
     if (isNotEmpty(authSettings)) {
       Class<?> listItemValue = (Class<?>) attributes.get("listItemValue").get(0);
@@ -43,7 +43,7 @@ public class SIPAuthProviderCondition extends SpringBootCondition {
           return ConditionOutcome.noMatch(
               ConditionMessage.forCondition("SIP validation type check")
                   .didNotFind("property")
-                  .items(AuthProviderSettings.getListPropertyName()));
+                  .items(AuthProviderSettings.getConfigurationPropertyName()));
         }
         return ConditionOutcome.match();
       }
@@ -52,6 +52,6 @@ public class SIPAuthProviderCondition extends SpringBootCondition {
     return ConditionOutcome.noMatch(
         ConditionMessage.forCondition("SIP list location")
             .didNotFind("property")
-            .items(AuthProviderSettings.getListPropertyName()));
+            .items(AuthProviderSettings.getConfigurationPropertyName()));
   }
 }
