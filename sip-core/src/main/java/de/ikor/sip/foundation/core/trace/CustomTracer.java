@@ -21,17 +21,17 @@ public class CustomTracer extends DefaultTracer {
    * @param traceHistory {@link TraceHistory}
    * @param exchangeFormatter {@link SIPExchangeFormatter}
    * @param camelContext {@link CamelContext}
-   * @param traceType int
+   * @param traceConfig {@link SIPTraceConfig}
    */
   public CustomTracer(
       TraceHistory traceHistory,
       SIPExchangeFormatter exchangeFormatter,
       CamelContext camelContext,
-      SIPTraceTypeEnum traceType) {
+      SIPTraceConfig traceConfig) {
     setExchangeFormatter(exchangeFormatter);
     camelContext.setTracing(true);
     this.traceHistory = traceHistory;
-    this.traceType = traceType;
+    this.traceType = traceConfig.getTraceType();
   }
 
   @Override

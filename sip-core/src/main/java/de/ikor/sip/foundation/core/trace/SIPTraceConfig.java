@@ -15,5 +15,5 @@ import org.springframework.context.annotation.Configuration;
 public class SIPTraceConfig {
 
   private int limit;
-  private String traceType;
+  private SIPTraceTypeEnum traceType;
 }
