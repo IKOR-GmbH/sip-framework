@@ -77,12 +77,8 @@ public class SecurityConfigProperties {
     private static final Bindable<List<AuthProviderSettings>> PROVIDER_LIST =
         Bindable.listOf(AuthProviderSettings.class);
 
-    private static final String AUTH_PROVIDERS_PROPERTY_NAME =
+    public static final String AUTH_PROVIDERS_PROPERTY_NAME =
         "sip.security.authentication.auth-providers";
-
-    public static String getConfigurationPropertyName() {
-      return AUTH_PROVIDERS_PROPERTY_NAME;
-    }
 
     /**
      * Bind AuthProviderSettings from PropertySource

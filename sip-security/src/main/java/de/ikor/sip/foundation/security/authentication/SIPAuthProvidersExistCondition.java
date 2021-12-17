@@ -22,7 +22,7 @@ public class SIPAuthProvidersExistCondition extends SpringBootCondition {
           ConditionOutcome.noMatch(
               ConditionMessage.forCondition("SIP auth providers condition")
                   .didNotFind("property")
-                  .items(AuthProviderSettings.getConfigurationPropertyName()));
+                  .items(AuthProviderSettings.AUTH_PROVIDERS_PROPERTY_NAME));
     }
     return outcome;
   }

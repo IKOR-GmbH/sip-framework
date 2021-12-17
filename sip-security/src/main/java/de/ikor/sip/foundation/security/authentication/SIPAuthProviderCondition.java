@@ -43,7 +43,7 @@ public class SIPAuthProviderCondition extends SpringBootCondition {
           return ConditionOutcome.noMatch(
               ConditionMessage.forCondition("SIP validation type check")
                   .didNotFind("property")
-                  .items(AuthProviderSettings.getConfigurationPropertyName()));
+                  .items(AuthProviderSettings.AUTH_PROVIDERS_PROPERTY_NAME));
         }
         return ConditionOutcome.match();
       }
@@ -52,6 +52,6 @@ public class SIPAuthProviderCondition extends SpringBootCondition {
     return ConditionOutcome.noMatch(
         ConditionMessage.forCondition("SIP list location")
             .didNotFind("property")
-            .items(AuthProviderSettings.getConfigurationPropertyName()));
+            .items(AuthProviderSettings.AUTH_PROVIDERS_PROPERTY_NAME));
   }
 }
