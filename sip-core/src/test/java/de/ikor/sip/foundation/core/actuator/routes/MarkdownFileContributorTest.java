@@ -1,12 +1,11 @@
 package de.ikor.sip.foundation.core.actuator.routes;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.ArrayList;
 import org.assertj.core.api.AbstractStringAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.actuate.info.Info;
-
-import java.util.ArrayList;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class MarkdownFileContributorTest {
 
@@ -16,9 +15,7 @@ class MarkdownFileContributorTest {
     Info info = contributeFrom();
     ArrayList<MarkdownObject> filesArray = (ArrayList<MarkdownObject>) info.get("files");
     MarkdownObject file1 = (filesArray).get(0);
-    final AbstractStringAssert<?> files = assertThat(file1.getMdContent())
-            .isNotEmpty();
-
+    final AbstractStringAssert<?> files = assertThat(file1.getMdContent()).isNotEmpty();
   }
 
   private static Info contributeFrom() {
