@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.UUID;
 import org.apache.camel.CamelContext;
+import org.apache.camel.NoTypeConversionAvailableException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,12 +32,12 @@ class TrafficTracerControllerTest {
   }
 
   @Test
-  void changeParameter() {
+  void When_changeParameter_Expect_returnTrue() throws NoTypeConversionAvailableException {
     CamelContext camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
     TrafficTracerController tracingController =
         new TrafficTracerController(traceHistory, camelContext);
     when(camelContext.getTracer().getExchangeFormatter()).thenReturn(new SIPExchangeFormatter());
-    when(camelContext.getTypeConverter().convertTo(any(), any())).thenReturn(true);
+    when(camelContext.getTypeConverter().mandatoryConvertTo(any(), any())).thenReturn(true);
 
     assertTrue(tracingController.changeParameter("showexchangeid", true));
 
@@ -44,7 +45,7 @@ class TrafficTracerControllerTest {
   }
 
   @Test
-  void testGetTraceHistory() {
+  void When_getTraceHistory_Expect_tracyHistoryList() {
     // arrange
     String expectedValue = UUID.randomUUID().toString();
     traceHistory.add(expectedValue);
@@ -57,7 +58,7 @@ class TrafficTracerControllerTest {
   }
 
   @Test
-  void testRemoveTraceHistory() {
+  void When_removeTraceHistory_Expect_emptyTractHistoryList() {
     // arrange
     traceHistory.add("Test");
 
