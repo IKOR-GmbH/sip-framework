@@ -1,8 +1,6 @@
 package de.ikor.sip.foundation.core.trace;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
@@ -14,34 +12,38 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.NoTypeConversionAvailableException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class TrafficTracerControllerTest {
 
-  private TrafficTracerController endpoint;
-
+  private TrafficTracerController endpointSubject;
   private TraceHistory traceHistory;
+  private CamelContext camelContext;
 
   @BeforeEach
   public void setUp() throws Exception {
-    CamelContext camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
+    camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
     traceHistory = new TraceHistory(5);
-    endpoint = new TrafficTracerController(traceHistory, camelContext);
+    endpointSubject = new TrafficTracerController(traceHistory, camelContext);
   }
 
   @Test
-  void When_changeParameter_Expect_returnTrue() throws NoTypeConversionAvailableException {
-    CamelContext camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
-    TrafficTracerController tracingController =
-        new TrafficTracerController(traceHistory, camelContext);
+  void When_changeExistingParameter_Expect_returnTrue() throws NoTypeConversionAvailableException {
+    // arrange
     when(camelContext.getTracer().getExchangeFormatter()).thenReturn(new SIPExchangeFormatter());
     when(camelContext.getTypeConverter().mandatoryConvertTo(any(), any())).thenReturn(true);
 
-    assertTrue(tracingController.changeParameter("showexchangeid", true));
+    // assert
+    assertThat(endpointSubject.changeParameter("showexchangeid", true)).isTrue();
+  }
 
-    assertFalse(tracingController.changeParameter("doesnotexist", true));
+  @Test
+  void When_changeNonExistingParameter_Expect_returnFalse()
+      throws NoTypeConversionAvailableException {
+    // arrange
+    when(camelContext.getTracer().getExchangeFormatter()).thenReturn(new SIPExchangeFormatter());
+
+    // assert
+    assertThat(endpointSubject.changeParameter("doesnotexist", true)).isFalse();
   }
 
   @Test
@@ -51,21 +53,21 @@ class TrafficTracerControllerTest {
     traceHistory.add(expectedValue);
 
     // act
-    List<String> result = endpoint.getTraceHistory();
+    List<String> result = endpointSubject.getTraceHistory();
 
     // assert
     assertThat(result).containsExactly(expectedValue);
   }
 
   @Test
-  void When_removeTraceHistory_Expect_emptyTractHistoryList() {
+  void When_consecutiveGetTraceHistoryCallsWithoutNewMessages_Expect_emptyTraceHistoryList() {
     // arrange
     traceHistory.add("Test");
 
     // act
-    endpoint.getTraceHistory();
+    endpointSubject.getTraceHistory();
 
     // assert
-    assertThat(endpoint.getTraceHistory()).isEmpty();
+    assertThat(endpointSubject.getTraceHistory()).isEmpty();
   }
 }
