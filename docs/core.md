@@ -349,7 +349,7 @@ Default is BOTH, but it could be changed by following configuration:
 sip:
   core:
     tracing:
-      traceType: BOTH # BOTH (default), LOG - Logging only, MEMORY - In memory only
+      traceType: BOTH # BOTH (default), LOG - Logging only, MEMORY - In memory only, NONE - none
 ```
 
 ### OpenAPI Descriptor
