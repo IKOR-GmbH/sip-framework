@@ -1,11 +1,10 @@
 package de.ikor.sip.foundation.core.actuator.routes;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.actuate.info.Info;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.actuate.info.Info;
 
 class MarkdownFileContributorTest {
 

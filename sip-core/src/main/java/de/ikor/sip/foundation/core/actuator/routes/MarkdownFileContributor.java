@@ -1,17 +1,16 @@
 package de.ikor.sip.foundation.core.actuator.routes;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.info.Info;
 import org.springframework.boot.actuate.info.InfoContributor;
 import org.springframework.stereotype.Component;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 /**
  * {@link MarkdownFileContributor} extends {@link InfoContributor} to add needed information to the
@@ -40,7 +39,7 @@ public class MarkdownFileContributor implements InfoContributor {
     files.add(readMe);
     files.add(changeLog);
 
-    ArrayList<MarkdownObject> mdFiles = new ArrayList<> ();
+    ArrayList<MarkdownObject> mdFiles = new ArrayList<>();
 
     for (MarkdownObject obj : files) {
 
@@ -55,7 +54,8 @@ public class MarkdownFileContributor implements InfoContributor {
    * Logic fills the object with mdContent if the file exists on the Classpath. Otherwise it is
    * null.
    *
-   * @param mdObj - {@link MarkdownObject} is filled with mdContent if the file exists on the Classpath
+   * @param mdObj - {@link MarkdownObject} is filled with mdContent if the file exists on the
+   *     Classpath
    */
   private void addMdContentValue(MarkdownObject mdObj) {
 

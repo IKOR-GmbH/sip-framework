@@ -12,6 +12,5 @@ public class MarkdownObject {
   private String fileDescription;
   private static final String CONTENT = "content";
 
-  @Setter
-  private String mdContent;
+  @Setter private String mdContent;
 }
