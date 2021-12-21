@@ -82,7 +82,6 @@ Global authentication configuration:
 ```yaml
 sip.security:
     authentication:
-        enabled: true #turn on/off all authentication functionality
         disable-csrf: true
         ignored-endpoints: #a list of endpoints which are ignored by ALL authenticators based on Spring´s AntPathMatchers implementation
         - /actuator
@@ -101,8 +100,7 @@ sip.security:
       ```yaml
       sip.security:
           authentication:
-              enabled: true #turn on/off all authentication functionality
-              auth-providers:
+              auth-providers: #authentication functionality is enabled if valid providers are defined
                   - classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationProvider
                     ignored-endpoints: #a list of endpoints which are ignored by this specific authenticator based on Spring´s AntPathMatchers implementation
                       - /actuator/health
@@ -122,8 +120,7 @@ sip.security:
     ```yaml
     sip.security:
         authentication:
-            enabled: true  #turn on/off all authentication functionality
-            auth-providers:
+            auth-providers: #authentication functionality is enabled if valid providers are defined
                 - classname: de.ikor.sip.foundation.security.authentication.x509.SIPX509AuthenticationProvider
                   ignored-endpoints: #a list of endpoints which are ignored by this specific authenticator based on Spring´s AntPathMatchers implementation
                     - /favicon.ico

@@ -1,11 +1,12 @@
 package de.ikor.sip.foundation.security.config;
 
+import de.ikor.sip.foundation.security.authentication.SIPAuthProvidersExistCondition;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Conditional;
 
 /**
  * Conditional annotation for enabled/disabling sip securitie's authentication feature
@@ -15,5 +16,5 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Documented
-@ConditionalOnProperty(name = "sip.security.authentication.enabled")
+@Conditional(SIPAuthProvidersExistCondition.class)
 public @interface ConditionalOnSIPSecurityAuthenticationEnabled {}
