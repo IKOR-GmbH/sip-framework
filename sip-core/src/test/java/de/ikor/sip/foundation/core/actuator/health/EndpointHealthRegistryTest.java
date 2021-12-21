@@ -6,59 +6,63 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.function.Function;
 import org.apache.camel.Endpoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.actuate.health.Health;
 
 class EndpointHealthRegistryTest {
 
-  EndpointHealthRegistry endpointHealthRegistry;
+  private EndpointHealthRegistry subject;
+  private Function<Endpoint, Health> healthFunction;
+  private Endpoint endpoint;
+  private Health health;
   private static final String ENDPOINT_URI = "test";
   private static final String ENDPOINT_ID = "testId";
 
   @BeforeEach
   void setUp() {
-    endpointHealthRegistry = new EndpointHealthRegistry();
+    subject = new EndpointHealthRegistry();
+    health = Health.up().build();
+    healthFunction = anEndpoint -> health;
+    endpoint = mock(Endpoint.class);
   }
 
   @Test
-  void register() {
-
-    // assert
-    assertDoesNotThrow(() -> endpointHealthRegistry.register(ENDPOINT_URI, null));
-  }
-
-  @Test
-  void registerById() {
-
-    // assert
-    assertDoesNotThrow(() -> endpointHealthRegistry.registerById(ENDPOINT_ID, null));
-  }
-
-  @Test
-  void healthIndicator_isPresent() {
+  void
+      When_registerNewHealthFunctionByEndpointUri_Expect_healthIndicatorIsPresentAndHealthMatches() {
     // arrange
-    Endpoint endpoint = mock(Endpoint.class);
     when(endpoint.getEndpointUri()).thenReturn(ENDPOINT_URI);
 
     // act
-    endpointHealthRegistry.register(ENDPOINT_URI, null);
-    Optional<EndpointHealthIndicator> healthIndicator =
-        endpointHealthRegistry.healthIndicator(endpoint);
+    subject.register(ENDPOINT_URI, healthFunction);
+    Optional<EndpointHealthIndicator> healthIndicator = subject.healthIndicator(endpoint);
 
     // assert
     assertThat(healthIndicator).isNotNull().isPresent();
+    assertThat(healthIndicator.get().health()).isEqualTo(health);
   }
 
   @Test
-  void healthIndicator_notPresent() {
+  void
+      When_registerNewHealthFunctionByProcessorId_Expect_matchersByProcessorIdContainsEndpointIdAsKey() {
+    // act
+    subject.registerById(ENDPOINT_ID, healthFunction);
+
+    // assert
+    assertThat(subject.getMatchersByProcessorId().containsKey(ENDPOINT_ID)).isTrue();
+    assertThat(subject.getMatchersByProcessorId().get(ENDPOINT_ID).contains(healthFunction))
+        .isTrue();
+  }
+
+  @Test
+  void When_healthIndicatorIsNotRegistered_Expect_notPresent() {
     // arrange
-    Endpoint endpoint = mock(Endpoint.class);
     when(endpoint.getEndpointUri()).thenReturn(ENDPOINT_URI);
 
     // act
-    Optional<EndpointHealthIndicator> healthIndicator =
-        endpointHealthRegistry.healthIndicator(endpoint);
+    Optional<EndpointHealthIndicator> healthIndicator = subject.healthIndicator(endpoint);
 
     // assert
     assertThat(healthIndicator).isNotNull().isNotPresent();

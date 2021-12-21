@@ -7,32 +7,29 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Optional;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.ServiceStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.actuate.health.HealthContributor;
-import org.springframework.boot.actuate.health.NamedContributor;
 
 class CamelEndpointHealthMonitorTest {
 
-  CamelContext camelContext;
-  CamelEndpointHealthMonitor camelEndpointHealthMonitor;
-  EndpointHealthRegistry endpointHealthRegistry;
+  private CamelContext camelContext;
+  private CamelEndpointHealthMonitor subject;
+  private EndpointHealthRegistry endpointHealthRegistry;
 
   @BeforeEach
   void setup() {
     endpointHealthRegistry = mock(EndpointHealthRegistry.class);
     camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
-    camelEndpointHealthMonitor =
-        new CamelEndpointHealthMonitor(camelContext, endpointHealthRegistry);
+    subject = new CamelEndpointHealthMonitor(camelContext, endpointHealthRegistry);
   }
 
   @Test
-  void setupEndpointHealthIndicators() {
+  void
+      When_setupEndpointHealthIndicatorsAndEndpointHealthIndicatorExists_Expect_HealthIndicatorsIsNotEmpty() {
     // arrange
     EndpointHealthIndicator endpointHealthIndicator = mock(EndpointHealthIndicator.class);
     when(camelContext.getEndpoints()).thenReturn(Arrays.asList(mock(Endpoint.class)));
@@ -42,12 +39,23 @@ class CamelEndpointHealthMonitorTest {
         .thenReturn(Optional.of(endpointHealthIndicator));
 
     // act
-    Iterator<NamedContributor<HealthContributor>> iterator =
-        camelEndpointHealthMonitor.setupEndpointHealthIndicators();
+    subject.setupEndpointHealthIndicators();
 
     // assert
-    assertThat(iterator).isNotNull();
-    assertThat(camelEndpointHealthMonitor.getHealthIndicators()).isNotNull();
-    assertThat(camelEndpointHealthMonitor.healthIndicators()).isNotNull();
+    assertThat(subject.getHealthIndicators()).isNotEmpty();
+  }
+
+  @Test
+  void
+      When_setupEndpointHealthIndicatorsAndNoEndpointHealthIndicatorsExist_Expect_HealthIndicatorsIsEmpty() {
+    // arrange
+    when(camelContext.getEndpoints()).thenReturn(Arrays.asList(mock(Endpoint.class)));
+    when(camelContext.getStatus()).thenReturn(ServiceStatus.Started);
+
+    // act
+    subject.setupEndpointHealthIndicators();
+
+    // assert
+    assertThat(subject.getHealthIndicators()).isEmpty();
   }
 }

@@ -17,8 +17,8 @@ import org.springframework.boot.actuate.health.Status;
 
 class JmsHealthIndicatorsTest {
 
-  JmsEndpoint endpoint;
-  ConnectionFactory connectionFactory;
+  private JmsEndpoint endpoint;
+  private ConnectionFactory connectionFactory;
 
   @BeforeEach
   void setUp() {
@@ -32,7 +32,7 @@ class JmsHealthIndicatorsTest {
   }
 
   @Test
-  void connectionManageable_statusUp() throws JMSException {
+  void When_connectionManageableAndConnectionCreate_Expect_StatusUp() throws JMSException {
     // arrange
     Connection connection = mock(Connection.class);
     when(connectionFactory.createConnection()).thenReturn(connection);
@@ -42,7 +42,8 @@ class JmsHealthIndicatorsTest {
   }
 
   @Test
-  void connectionManageable_statusDown() throws JMSException {
+  void When_connectionManageableAndCreateConnectionThrowsException_Expect_StatusDown()
+      throws JMSException {
     // arrange
     when(connectionFactory.createConnection()).thenThrow(JMSException.class);
 
@@ -52,7 +53,7 @@ class JmsHealthIndicatorsTest {
   }
 
   @Test
-  void connectionManageable_typeMismatch() {
+  void When_connectionManageableWithIncorrectEndpoint_Expect_IntegrationManagementException() {
     // arrange
     Endpoint endpoint1 = mock(Endpoint.class);
 

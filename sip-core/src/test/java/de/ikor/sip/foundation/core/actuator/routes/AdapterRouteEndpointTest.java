@@ -19,10 +19,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 class AdapterRouteEndpointTest {
 
-  CamelContext context;
-  AdapterRouteEndpoint subject;
-  ManagedCamelContext managedCamelContext;
-  ManagedRouteMBean managedRoute;
+  private CamelContext context;
+  private AdapterRouteEndpoint subject;
+  private ManagedCamelContext managedCamelContext;
+  private ManagedRouteMBean managedRoute;
   private static final String ROUTE_ID = "test";
   private static final String SIPMC_ROUTE_URI = "sipmc:test";
 
@@ -46,7 +46,7 @@ class AdapterRouteEndpointTest {
   }
 
   @Test
-  void When_GettingRoutes_Expect_IsNotEmpty() throws Exception {
+  void When_GettingRoutes_Expect_RoutesNotEmpty() throws Exception {
     // arrange
     mockManagedRoute();
     Route route = getMockedRoute();
@@ -67,7 +67,7 @@ class AdapterRouteEndpointTest {
   }
 
   @Test
-  void When_ResettingSipmcRoutes_Expect_ManagedRouteToCall_reset() throws Exception {
+  void When_ResettingSipmcRoutes_Expect_ManagedRouteResetCalled() throws Exception {
     // arrange
     mockRoutesInContext();
 

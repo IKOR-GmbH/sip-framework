@@ -10,22 +10,29 @@ import org.mockito.Mockito;
 class PathMatcherTest {
 
   @Test
-  void GIVEN_pathExpression_WHEN_evaluated_THEN_matchesFound() {
+  void GIVEN_httpPathExpression_WHEN_evaluated_THEN_matchesFound() {
     // arrange
     Endpoint httpEndpointMock = Mockito.mock(Endpoint.class);
-    Endpoint httpsEndpointMock = Mockito.mock(Endpoint.class);
+    PathMatcher subject = new PathMatcher("http*//**");
 
     // act
     when(httpEndpointMock.getEndpointUri()).thenReturn("http://google.com");
-    when(httpsEndpointMock.getEndpointUri()).thenReturn("https://google.com");
-
-    PathMatcher matcher = new PathMatcher("http*//**");
 
     // assert
-    assertThat(matcher.test(httpEndpointMock))
+    assertThat(subject.test(httpEndpointMock))
         .withFailMessage("mock should be matching the http path but was not")
         .isTrue();
-    assertThat(matcher.test(httpsEndpointMock))
+  }
+
+  @Test
+  void GIVEN_httpsPathExpression_WHEN_evaluated_THEN_matchesFound() {
+    // arrange
+    Endpoint httpsEndpointMock = Mockito.mock(Endpoint.class);
+    PathMatcher subject = new PathMatcher("http*//**");
+    when(httpsEndpointMock.getEndpointUri()).thenReturn("https://google.com");
+
+    // assert
+    assertThat(subject.test(httpsEndpointMock))
         .withFailMessage("mock should be matching the https path but was not")
         .isTrue();
   }
@@ -34,41 +41,32 @@ class PathMatcherTest {
   void GIVEN_ftpCompoundExpression_WHEN_evaluated_THAN_matchesFound() {
     // arrange
     Endpoint ftpEndpointMock = Mockito.mock(Endpoint.class);
-
-    // act
+    PathMatcher subject = new PathMatcher("*ftp*//**");
     when(ftpEndpointMock.getEndpointUri()).thenReturn("ftp://ikor.de");
 
-    PathMatcher matcher = new PathMatcher("*ftp*//**");
-
     // assert
-    assertThat(matcher.test(ftpEndpointMock)).isTrue();
+    assertThat(subject.test(ftpEndpointMock)).isTrue();
   }
 
   @Test
   void GIVEN_sftpCompoundExpression_WHEN_evaluated_THAN_matchesFound() {
     // arrange
     Endpoint sftpEndpointMock = Mockito.mock(Endpoint.class);
-
-    // act
+    PathMatcher subject = new PathMatcher("*ftp*//**");
     when(sftpEndpointMock.getEndpointUri()).thenReturn("sftp://ikor.de");
 
-    PathMatcher matcher = new PathMatcher("*ftp*//**");
-
     // assert
-    assertThat(matcher.test(sftpEndpointMock)).isTrue();
+    assertThat(subject.test(sftpEndpointMock)).isTrue();
   }
 
   @Test
   void GIVEN_ftpsCompoundExpression_WHEN_evaluated_THAN_matchesFound() {
     // arrange
     Endpoint ftpsEndpointMock = Mockito.mock(Endpoint.class);
-
-    // act
+    PathMatcher subject = new PathMatcher("*ftp*//**");
     when(ftpsEndpointMock.getEndpointUri()).thenReturn("ftps://ikor.de");
 
-    PathMatcher matcher = new PathMatcher("*ftp*//**");
-
     // assert
-    assertThat(matcher.test(ftpsEndpointMock)).isTrue();
+    assertThat(subject.test(ftpsEndpointMock)).isTrue();
   }
 }

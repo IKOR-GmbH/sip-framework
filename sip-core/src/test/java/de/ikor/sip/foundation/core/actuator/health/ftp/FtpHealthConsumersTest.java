@@ -19,10 +19,11 @@ import org.slf4j.LoggerFactory;
 
 class FtpHealthConsumersTest {
 
-  ListAppender<ILoggingEvent> listAppender;
-  RemoteFileOperations<Object> fileOps;
-  RemoteFileEndpoint<?> endpoint;
-  RemoteFileConfiguration configuration;
+  private ListAppender<ILoggingEvent> listAppender;
+  private RemoteFileOperations<Object> fileOps;
+  private RemoteFileEndpoint<?> endpoint;
+  private RemoteFileConfiguration configuration;
+  private List<ILoggingEvent> logsList;
 
   @BeforeEach
   void setUp() {
@@ -34,10 +35,11 @@ class FtpHealthConsumersTest {
     listAppender.start();
 
     logger.addAppender(listAppender);
+    logsList = listAppender.list;
   }
 
   @Test
-  void executeNoop_sendNoopFalse() {
+  void When_noopConsumerAndSendNoopNotSuccessfulAndConnectSuccessful_Expect_connectedMessage() {
     // arrange
     when(endpoint.getConfiguration()).thenReturn(null);
     when(fileOps.sendNoop()).thenReturn(false);
@@ -45,15 +47,15 @@ class FtpHealthConsumersTest {
 
     // act
     FtpHealthConsumers.noopConsumer(endpoint, fileOps);
-    List<ILoggingEvent> logsListSubject = listAppender.list;
+    ILoggingEvent subject = logsList.get(0);
 
     // assert
-    assertThat(logsListSubject.get(0).getMessage()).isEqualTo("Connected and authenticated to: {}");
-    assertThat(logsListSubject.get(0).getLevel()).isEqualTo(Level.DEBUG);
+    assertThat(subject.getMessage()).isEqualTo("Connected and authenticated to: {}");
+    assertThat(subject.getLevel()).isEqualTo(Level.DEBUG);
   }
 
   @Test
-  void executeNoop_Exception() {
+  void When_noopConsumerAndSendNoopThrowsException_failMessage() {
     // arrange
     when(endpoint.getConfiguration()).thenReturn(null);
     when(fileOps.sendNoop()).thenThrow(new RuntimeException());
@@ -61,15 +63,15 @@ class FtpHealthConsumersTest {
 
     // act
     FtpHealthConsumers.noopConsumer(endpoint, fileOps);
-    List<ILoggingEvent> logsListSubject = listAppender.list;
+    ILoggingEvent subject = logsList.get(0);
 
     // assert
-    assertThat((logsListSubject.get(0).getMessage())).isEqualTo("Failed to sendNoop to {}: {}");
-    assertThat(logsListSubject.get(0).getLevel()).isEqualTo(Level.DEBUG);
+    assertThat(subject.getMessage()).isEqualTo("Failed to sendNoop to {}: {}");
+    assertThat(subject.getLevel()).isEqualTo(Level.DEBUG);
   }
 
   @Test
-  void When_executeNoopAndSendNoopTrue_Expect_emptyLogList() {
+  void When_executeNoopAndSendNoopSuccessful_Expect_emptyLogList() {
     // arrange
     when(endpoint.getConfiguration()).thenReturn(null);
     when(fileOps.sendNoop()).thenReturn(true);
@@ -77,14 +79,13 @@ class FtpHealthConsumersTest {
 
     // act
     FtpHealthConsumers.noopConsumer(endpoint, fileOps);
-    List<ILoggingEvent> logsListSubject = listAppender.list;
 
     // assert
-    assertThat(logsListSubject).isEmpty();
+    assertThat(logsList).isEmpty();
   }
 
   @Test
-  void When_executeNoopAndOperationConnectFalse_Expect_emptyLogList() {
+  void When_executeNoopAndOperationConnectUnsuccessful_Expect_emptyLogList() {
     // arrange
     when(endpoint.getConfiguration()).thenReturn(null);
     when(fileOps.sendNoop()).thenReturn(false);
@@ -92,10 +93,9 @@ class FtpHealthConsumersTest {
 
     // act
     FtpHealthConsumers.noopConsumer(endpoint, fileOps);
-    List<ILoggingEvent> logsListSubject = listAppender.list;
 
     // assert
-    assertThat(logsListSubject).isEmpty();
+    assertThat(logsList).isEmpty();
   }
 
   @Test
@@ -109,10 +109,9 @@ class FtpHealthConsumersTest {
 
     // act
     FtpHealthConsumers.listDirectoryConsumer(endpoint, fileOps);
-    List<ILoggingEvent> logsListSubject = listAppender.list;
 
     // assert
-    assertThat(logsListSubject).isEmpty();
+    assertThat(logsList).isEmpty();
   }
 
   @Test
