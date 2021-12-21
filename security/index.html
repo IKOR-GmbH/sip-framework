@@ -245,7 +245,6 @@ on and optionally setting a client certificate. If no server certificate is set 
 <p>Global authentication configuration:</p>
 <pre class="highlight"><code class="language-yaml">sip.security:
     authentication:
-        enabled: true #turn on/off all authentication functionality
         disable-csrf: true
         ignored-endpoints: #a list of endpoints which are ignored by ALL authenticators based on Spring´s AntPathMatchers implementation
         - /actuator
@@ -266,8 +265,7 @@ on and optionally setting a client certificate. If no server certificate is set 
 <li>BasicAuth
   <pre class="highlight"><code class="language-yaml">sip.security:
     authentication:
-        enabled: true #turn on/off all authentication functionality
-        auth-providers:
+        auth-providers: #authentication functionality is enabled if valid providers are defined
             - classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationProvider
               ignored-endpoints: #a list of endpoints which are ignored by this specific authenticator based on Spring´s AntPathMatchers implementation
                 - /actuator/health
@@ -285,8 +283,7 @@ on and optionally setting a client certificate. If no server certificate is set 
 <li>X509 Configuration:
     <pre class="highlight"><code class="language-yaml">sip.security:
     authentication:
-        enabled: true  #turn on/off all authentication functionality
-        auth-providers:
+        auth-providers: #authentication functionality is enabled if valid providers are defined
             - classname: de.ikor.sip.foundation.security.authentication.x509.SIPX509AuthenticationProvider
               ignored-endpoints: #a list of endpoints which are ignored by this specific authenticator based on Spring´s AntPathMatchers implementation
                 - /favicon.ico
