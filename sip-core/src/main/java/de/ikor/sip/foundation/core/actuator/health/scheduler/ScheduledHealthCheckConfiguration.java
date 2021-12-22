@@ -23,9 +23,4 @@ public class ScheduledHealthCheckConfiguration {
       HealthGaugeConfiguration healthGaugeConfiguration) {
     return new HealthCheckMetricsConfiguration(registry, healthEndpoint, healthGaugeConfiguration);
   }
-
-  @Bean
-  ScheduledHealthCheck createScheduledHealthCheck() {
-    return new ScheduledHealthCheck();
-  }
 }

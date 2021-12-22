@@ -9,10 +9,7 @@ import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
-import org.springframework.boot.actuate.health.CompositeHealthContributor;
-import org.springframework.boot.actuate.health.HealthContributor;
-import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.boot.actuate.health.NamedContributor;
+import org.springframework.boot.actuate.health.*;
 
 /**
  * {@link CamelEndpointHealthMonitor} is a central point in evaluating Health information of the
@@ -41,11 +38,11 @@ public class CamelEndpointHealthMonitor implements CompositeHealthContributor {
     return healthIndicators();
   }
 
-  synchronized Map<String, EndpointHealthIndicator> getHealthIndicators() {
+  public synchronized Map<String, EndpointHealthIndicator> getHealthIndicators() {
     return healthIndicators;
   }
 
-  Iterator<NamedContributor<HealthContributor>> setupEndpointHealthIndicators() {
+  public Iterator<NamedContributor<HealthContributor>> setupEndpointHealthIndicators() {
     Collection<Endpoint> endpoints = camelContext.getEndpoints();
     if (camelContext.getStatus().isStarted()) {
       this.healthIndicators =
