@@ -6,13 +6,12 @@ import static org.mockito.Mockito.when;
 
 import de.ikor.sip.foundation.core.actuator.health.CamelEndpointHealthMonitor;
 import de.ikor.sip.foundation.core.actuator.health.EndpointHealthIndicator;
-import org.apache.camel.Endpoint;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.actuate.health.Health;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import org.apache.camel.Endpoint;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.actuate.health.Health;
 
 class ScheduledHealthCheckTest {
 
@@ -28,8 +27,12 @@ class ScheduledHealthCheckTest {
     scheduledHealthCheck = new ScheduledHealthCheck(camelEndpointHealthMonitor);
 
     Map<String, EndpointHealthIndicator> healthIndicators = new HashMap<>();
-    Function<Endpoint, Health> healthFunction = (x) -> { return (new Health.Builder()).up().build(); };
-    EndpointHealthIndicator endpointHealthIndicator = new EndpointHealthIndicator(mock(Endpoint.class), healthFunction);
+    Function<Endpoint, Health> healthFunction =
+        endpoint -> {
+          return (new Health.Builder()).up().build();
+        };
+    EndpointHealthIndicator endpointHealthIndicator =
+        new EndpointHealthIndicator(mock(Endpoint.class), healthFunction);
     healthIndicators.put(ENDPOINT, endpointHealthIndicator);
 
     when(camelEndpointHealthMonitor.getHealthIndicators()).thenReturn(healthIndicators);

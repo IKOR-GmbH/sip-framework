@@ -37,9 +37,7 @@ public class EndpointHealthIndicator implements HealthContributor, HealthIndicat
     return health;
   }
 
-  /**
-   * Calculates health of the endpoint.
-   */
+  /** Calculates health of the endpoint. */
   public void executeHealthCheck() {
     this.health = healthFunction.apply(this.endpoint);
   }

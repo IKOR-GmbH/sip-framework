@@ -2,19 +2,18 @@ package de.ikor.sip.foundation.core.actuator.health.scheduler;
 
 import de.ikor.sip.foundation.core.actuator.health.CamelEndpointHealthMonitor;
 import de.ikor.sip.foundation.core.actuator.health.EndpointHealthIndicator;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-
 /**
  * Scheduled execution for connection checks.
  *
- * <p>Switched on by default. Default fixed delay (interval): every 15 minutes, or 900000ms
- * Default initial delay: 5 seconds, or 5000ms
+ * <p>Switched on by default. Default fixed delay (interval): every 15 minutes, or 900000ms Default
+ * initial delay: 5 seconds, or 5000ms
  *
  * <p>sip.core.metrics.scheduled-health-check.enabled:true
  * sip.core.metrics.scheduled-health-check.fixed-delay:900000
@@ -35,6 +34,7 @@ public class ScheduledHealthCheck {
   public void scheduledExecution() {
     Map<String, EndpointHealthIndicator> healthIndicators = monitor.getHealthIndicators();
 
-    healthIndicators.forEach(((s, endpointHealthIndicator) -> endpointHealthIndicator.executeHealthCheck()));
+    healthIndicators.forEach(
+        ((s, endpointHealthIndicator) -> endpointHealthIndicator.executeHealthCheck()));
   }
 }
