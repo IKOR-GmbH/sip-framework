@@ -13,10 +13,10 @@ import java.util.Map;
 /**
  * Scheduled execution for connection checks.
  *
- * <p>Switched off by default Default fixed delay (interval): every 15 minutes, or 900000ms Default
- * initial delay: 5 seconds, or 5000ms
+ * <p>Switched on by default. Default fixed delay (interval): every 15 minutes, or 900000ms
+ * Default initial delay: 5 seconds, or 5000ms
  *
- * <p>sip.core.metrics.scheduled-health-check.enabled:false
+ * <p>sip.core.metrics.scheduled-health-check.enabled:true
  * sip.core.metrics.scheduled-health-check.fixed-delay:900000
  * sip.core.metrics.scheduled-health-check.initial-delay:5000
  */

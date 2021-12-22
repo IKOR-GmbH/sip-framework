@@ -42,7 +42,7 @@ public class CamelEndpointHealthMonitor implements CompositeHealthContributor {
     return healthIndicators;
   }
 
-  public Iterator<NamedContributor<HealthContributor>> setupEndpointHealthIndicators() {
+  Iterator<NamedContributor<HealthContributor>> setupEndpointHealthIndicators() {
     Collection<Endpoint> endpoints = camelContext.getEndpoints();
     if (camelContext.getStatus().isStarted()) {
       this.healthIndicators =
