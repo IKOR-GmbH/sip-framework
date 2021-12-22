@@ -20,7 +20,7 @@ class CustomTracerTest {
   void When_dumpTrace_Expect_messageInLog() {
     // arrange
     TraceHistory traceHistory = new TraceHistory(5);
-    CustomTracer customTracer = new CustomTracer(traceHistory, null, mock(CamelContext.class));
+    CustomTracer subject = new CustomTracer(traceHistory, null, mock(CamelContext.class));
     Logger logger = (Logger) LoggerFactory.getLogger("org.apache.camel.Tracing");
     ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
     listAppender.start();
@@ -28,7 +28,7 @@ class CustomTracerTest {
     List<ILoggingEvent> logsList = listAppender.list;
 
     // act
-    customTracer.dumpTrace(LOG_MESSAGE);
+    subject.dumpTrace(LOG_MESSAGE);
 
     // assert
     assertThat(logsList.get(0).getMessage()).isEqualTo(LOG_MESSAGE);

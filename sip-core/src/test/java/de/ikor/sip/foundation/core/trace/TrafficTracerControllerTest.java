@@ -58,16 +58,4 @@ class TrafficTracerControllerTest {
     // assert
     assertThat(result).containsExactly(expectedValue);
   }
-
-  @Test
-  void When_consecutiveGetTraceHistoryCallsWithoutNewMessages_Expect_emptyTraceHistoryList() {
-    // arrange
-    traceHistory.add("Test");
-
-    // act
-    endpointSubject.getTraceHistory();
-
-    // assert
-    assertThat(endpointSubject.getTraceHistory()).isEmpty();
-  }
 }
