@@ -26,7 +26,7 @@ class EndpointHealthRegistryTest {
   void setUp() {
     subject = new EndpointHealthRegistry();
     health = Health.up().build();
-    healthFunction = anEndpoint -> health;
+    healthFunction = endpoint -> health;
     endpoint = mock(Endpoint.class);
   }
 
