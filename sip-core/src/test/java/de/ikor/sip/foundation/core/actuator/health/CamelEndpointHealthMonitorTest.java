@@ -2,9 +2,7 @@ package de.ikor.sip.foundation.core.actuator.health;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -28,8 +26,7 @@ class CamelEndpointHealthMonitorTest {
   }
 
   @Test
-  void
-      When_setupEndpointHealthIndicatorsAndEndpointHealthIndicatorExists_Expect_HealthIndicatorsIsNotEmpty() {
+  void Given_EndpointHealthIndicatorExists_When_setupEndpointHealthIndicators_Then_HealthIndicatorsIsNotEmpty() {
     // arrange
     EndpointHealthIndicator endpointHealthIndicator = mock(EndpointHealthIndicator.class);
     when(camelContext.getEndpoints()).thenReturn(Arrays.asList(mock(Endpoint.class)));
@@ -39,6 +36,7 @@ class CamelEndpointHealthMonitorTest {
         .thenReturn(Optional.of(endpointHealthIndicator));
 
     // act
+    assertThat(subject.getHealthIndicators()).isEmpty();
     subject.setupEndpointHealthIndicators();
 
     // assert
@@ -46,16 +44,17 @@ class CamelEndpointHealthMonitorTest {
   }
 
   @Test
-  void
-      When_setupEndpointHealthIndicatorsAndNoEndpointHealthIndicatorsExist_Expect_HealthIndicatorsIsEmpty() {
+  void Given_NoEndpointHealthIndicatorsExist_When_setupEndpointHealthIndicators_Then_HealthIndicatorsIsEmpty() {
     // arrange
-    when(camelContext.getEndpoints()).thenReturn(Arrays.asList(mock(Endpoint.class)));
+    Endpoint endpoint = mock(Endpoint.class);
+    when(camelContext.getEndpoints()).thenReturn(Arrays.asList(endpoint));
     when(camelContext.getStatus()).thenReturn(ServiceStatus.Started);
 
     // act
     subject.setupEndpointHealthIndicators();
 
     // assert
+    verify(endpointHealthRegistry, times(1)).healthIndicator(endpoint);
     assertThat(subject.getHealthIndicators()).isEmpty();
   }
 }

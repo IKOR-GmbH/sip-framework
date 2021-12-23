@@ -22,7 +22,6 @@ class JmsHealthIndicatorsTest {
 
   @BeforeEach
   void setUp() {
-
     endpoint = mock(JmsEndpoint.class);
     JmsComponent component = mock(JmsComponent.class);
     connectionFactory = mock(ConnectionFactory.class);
@@ -32,7 +31,7 @@ class JmsHealthIndicatorsTest {
   }
 
   @Test
-  void When_connectionManageableAndConnectionCreate_Expect_StatusUp() throws JMSException {
+  void Given_ConnectionCreated_When_connectionManageable_Then_StatusUp() throws JMSException {
     // arrange
     Connection connection = mock(Connection.class);
     when(connectionFactory.createConnection()).thenReturn(connection);
@@ -42,7 +41,7 @@ class JmsHealthIndicatorsTest {
   }
 
   @Test
-  void When_connectionManageableAndCreateConnectionThrowsException_Expect_StatusDown()
+  void Given_CreateConnectionThrowsException_When_connectionManageable_Then_StatusDown()
       throws JMSException {
     // arrange
     when(connectionFactory.createConnection()).thenThrow(JMSException.class);
@@ -53,7 +52,7 @@ class JmsHealthIndicatorsTest {
   }
 
   @Test
-  void When_connectionManageableWithIncorrectEndpoint_Expect_IntegrationManagementException() {
+  void Given_IncorrectEndpoint_When_connectionManageable_Then_IntegrationManagementException() {
     // arrange
     Endpoint endpoint1 = mock(Endpoint.class);
 

@@ -15,15 +15,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class HealthMonitorSetupTest {
 
-  EndpointHealthRegistry endpointHealthRegistry;
-  HealthMonitorSetup subject;
-
   private static final String ENDPOINT_URI = "endpoint";
   private static final String PROCESSOR_ID = "processor";
 
-  @Mock CamelContext camelContext;
+  private EndpointHealthRegistry endpointHealthRegistry;
+  private HealthMonitorSetup subject;
 
-  @Mock CamelEndpointHealthMonitor camelEndpointHealthMonitor;
+  @Mock private CamelContext camelContext;
+
+  @Mock private CamelEndpointHealthMonitor camelEndpointHealthMonitor;
 
   @BeforeEach
   void setUp() {
@@ -54,8 +54,7 @@ class HealthMonitorSetupTest {
   }
 
   @Test
-  void
-      When_setupCamelEndpointHealthMonitorAndIdAlreadyRegistered_Expect_ThrowDuplicateUriPatternError() {
+  void Given_IdAlreadyRegistered_When_setupCamelEndpointHealthMonitorAnd_Then_ThrowDuplicateUriPatternError() {
     // arrange
     endpointHealthRegistry.registerById(PROCESSOR_ID, null);
     endpointHealthRegistry.registerById(PROCESSOR_ID, null);

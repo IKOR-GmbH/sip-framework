@@ -11,9 +11,10 @@ import org.junit.jupiter.api.Test;
 
 class RouteOperationTest {
 
+  public static final String ROUTE_ID = "id";
+
   private CamelContext camelContext;
   private RouteController routeController;
-  public static final String ROUTE_ID = "id";
 
   @BeforeEach
   void setup() {

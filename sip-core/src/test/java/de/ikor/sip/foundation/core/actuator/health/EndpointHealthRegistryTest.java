@@ -14,12 +14,13 @@ import org.springframework.boot.actuate.health.Health;
 
 class EndpointHealthRegistryTest {
 
+  private static final String ENDPOINT_URI = "test";
+  private static final String ENDPOINT_ID = "testId";
+
   private EndpointHealthRegistry subject;
   private Function<Endpoint, Health> healthFunction;
   private Endpoint endpoint;
   private Health health;
-  private static final String ENDPOINT_URI = "test";
-  private static final String ENDPOINT_ID = "testId";
 
   @BeforeEach
   void setUp() {

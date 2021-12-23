@@ -12,8 +12,9 @@ import org.springframework.boot.actuate.health.Status;
 
 class HttpHealthIndicatorsTest {
 
-  private Endpoint endpoint;
   private static final String ENDPOINT_URI = "https://www.google.com/";
+
+  private Endpoint endpoint;
 
   @BeforeEach
   void setUp() {
@@ -40,7 +41,7 @@ class HttpHealthIndicatorsTest {
   }
 
   @Test
-  void When_urlHealthIndicatorAndEndpointIsConnectedAndReturnsStatus2xx_Expect_StatusUp() {
+  void Given_EndpointIsConnectedAndReturnsStatus2xx_When_urlHealthIndicator_Then_StatusUp() {
     // arrange
     when(endpoint.getEndpointKey()).thenReturn(ENDPOINT_URI);
 

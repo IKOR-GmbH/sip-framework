@@ -12,35 +12,35 @@ import org.springframework.boot.actuate.health.Health;
 
 class EndpointHealthIndicatorTest {
 
-  private EndpointHealthIndicator subject;
-  private Endpoint endpoint;
-  private static final String ENDPOINT_URI = "uri";
+  EndpointHealthIndicator endpointHealthIndicator;
+  Endpoint endpoint;
+  Health health;
+  private static final String ENDPOINT_NAME = "name";
 
   @BeforeEach
   void setup() {
     endpoint = mock(Endpoint.class);
+    health = Health.up().build();
+    Function<Endpoint, Health> healthFunction =
+        endpoint1 -> {
+          return health;
+        };
+    endpointHealthIndicator = new EndpointHealthIndicator(endpoint, healthFunction);
   }
 
   @Test
-  void When_name_Expect_HealthIndicatorNameMatchingEndpointURI() {
-    // arrange
-    subject = new EndpointHealthIndicator(endpoint, null);
-
+  void name() {
     // act
-    when(endpoint.getEndpointUri()).thenReturn(ENDPOINT_URI);
+    when(endpoint.getEndpointUri()).thenReturn(ENDPOINT_NAME);
 
     // assert
-    assertThat(subject.name()).isEqualTo(ENDPOINT_URI);
+    assertThat(endpointHealthIndicator.name()).isEqualTo(ENDPOINT_NAME);
   }
 
   @Test
-  void When_healthAndHealthFunctionExist_Expect_IndicatorHealthMatchingHealthFunctionHealth() {
-    // arrange
-    Health health = Health.up().build();
-    Function<Endpoint, Health> healthFunction = endpoint1 -> health;
-    subject = new EndpointHealthIndicator(endpoint, healthFunction);
+  void health() {
 
     // assert
-    assertThat(subject.health()).isEqualTo(health);
+    assertThat(health).isEqualTo(endpointHealthIndicator.health());
   }
 }
