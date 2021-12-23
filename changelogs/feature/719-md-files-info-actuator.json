@@ -1,5 +1,5 @@
 {
   "author": "smirglagit",
   "pullrequestId": "34",
-  "message": "Added markdown file to actuator info endpoint."
+  "message": "Added markdown file to actuator info endpoint. MarkdownFileContributor is as main driver of the logic"
 }
