@@ -26,7 +26,8 @@ class CamelEndpointHealthMonitorTest {
   }
 
   @Test
-  void Given_EndpointHealthIndicatorExists_When_setupEndpointHealthIndicators_Then_HealthIndicatorsIsNotEmpty() {
+  void
+      Given_EndpointHealthIndicatorExists_When_setupEndpointHealthIndicators_Then_HealthIndicatorsIsNotEmpty() {
     // arrange
     EndpointHealthIndicator endpointHealthIndicator = mock(EndpointHealthIndicator.class);
     when(camelContext.getEndpoints()).thenReturn(Arrays.asList(mock(Endpoint.class)));
@@ -44,7 +45,8 @@ class CamelEndpointHealthMonitorTest {
   }
 
   @Test
-  void Given_NoEndpointHealthIndicatorsExist_When_setupEndpointHealthIndicators_Then_HealthIndicatorsIsEmpty() {
+  void
+      Given_NoEndpointHealthIndicatorsExist_When_setupEndpointHealthIndicators_Then_HealthIndicatorsIsEmpty() {
     // arrange
     Endpoint endpoint = mock(Endpoint.class);
     when(camelContext.getEndpoints()).thenReturn(Arrays.asList(endpoint));

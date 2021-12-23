@@ -54,7 +54,8 @@ class HealthMonitorSetupTest {
   }
 
   @Test
-  void Given_IdAlreadyRegistered_When_setupCamelEndpointHealthMonitorAnd_Then_ThrowDuplicateUriPatternError() {
+  void
+      Given_IdAlreadyRegistered_When_setupCamelEndpointHealthMonitorAnd_Then_ThrowDuplicateUriPatternError() {
     // arrange
     endpointHealthRegistry.registerById(PROCESSOR_ID, null);
     endpointHealthRegistry.registerById(PROCESSOR_ID, null);

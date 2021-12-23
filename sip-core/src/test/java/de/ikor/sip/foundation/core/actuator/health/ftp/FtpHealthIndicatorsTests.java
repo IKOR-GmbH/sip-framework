@@ -29,8 +29,9 @@ class FtpHealthIndicatorsTests {
   }
 
   @Test
-  void Given_CreateRemoteFileOperationsThrowsException_When_noopHealthIndicatorAnd_Then_statusUnknown()
-      throws Exception {
+  void
+      Given_CreateRemoteFileOperationsThrowsException_When_noopHealthIndicatorAnd_Then_statusUnknown()
+          throws Exception {
     // act
     when(endpoint.createRemoteFileOperations()).thenThrow(new Exception());
 
