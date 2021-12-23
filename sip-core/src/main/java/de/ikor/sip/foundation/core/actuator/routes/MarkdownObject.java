@@ -8,9 +8,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MarkdownObject {
 
+  private static final String CONTENT = "content";
   private String fileName;
   private String fileDescription;
-  private static final String CONTENT = "content";
 
   @Setter private String mdContent;
 }

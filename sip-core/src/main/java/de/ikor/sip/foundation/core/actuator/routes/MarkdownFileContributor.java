@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.info.Info;
@@ -16,10 +17,9 @@ import org.springframework.stereotype.Component;
  * {@link MarkdownFileContributor} extends {@link InfoContributor} to add needed information to the
  * info actuator
  */
+@Slf4j
 @Component
 public class MarkdownFileContributor implements InfoContributor {
-
-  private static final Logger logger = LoggerFactory.getLogger(MarkdownFileContributor.class);
 
   /**
    * Entry point. {@link MarkdownObject} List of MarkdownObjects with its informtion is crated and
@@ -67,7 +67,7 @@ public class MarkdownFileContributor implements InfoContributor {
       mdObj.setMdContent(data);
     } catch (IOException e) {
 
-      logger.error(e.toString());
+      log.warn(e.toString());
     } finally {
       try {
         if (is != null) is.close();
