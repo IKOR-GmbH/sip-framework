@@ -393,3 +393,22 @@ springdoc:
 ```
 
 Based on this configuration the custom Swagger documentation is accessible by `/adapter/api-docs`.
+
+
+### Markdown files in actuator endpoint
+
+In order to keep documentation and source code tightly together and clean over different adapter versions the 
+`/actuator/info` endpoint shall be extended to be able to provide information about the running adapter
+by finding relevant markdown files and provide these in a key-value structure.
+
+List of markdown files to be found (not case sensitive):
+
+readme.md → readme
+changelog.md → changelog
+adapter-description.md → adapter-description
+
+The endpoint provides files with content in a key-value-pair representation in an own JSON element.
+
+
+
+
