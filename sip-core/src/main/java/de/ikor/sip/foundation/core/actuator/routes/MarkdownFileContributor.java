@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.info.Info;
 import org.springframework.boot.actuate.info.InfoContributor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.FileCopyUtils;
 
 /**
  * {@link MarkdownFileContributor} extends {@link InfoContributor} to add needed information to the
@@ -31,8 +32,8 @@ public class MarkdownFileContributor implements InfoContributor {
 
     ArrayList<MarkdownObject> files = new ArrayList<>();
 
-    MarkdownObject readMe = new MarkdownObject("README.md", "Read me", "");
-    MarkdownObject changeLog = new MarkdownObject("changelog.md", "Change log", "");
+    MarkdownObject readMe = new MarkdownObject("/README.md", "Read me", null);
+    MarkdownObject changeLog = new MarkdownObject("/changelog.md", "Change log", null);
 
     files.add(readMe);
     files.add(changeLog);
@@ -42,10 +43,15 @@ public class MarkdownFileContributor implements InfoContributor {
     for (MarkdownObject obj : files) {
 
       addMdContentValue(obj);
-      mdFiles.add(obj);
+
+      if (obj.getMdContent() != null) {
+        mdFiles.add(obj);
+      }
     }
 
-    builder.withDetail("files", mdFiles);
+    if (mdFiles.isEmpty()) {
+      builder.withDetail("files", mdFiles);
+    }
   }
 
   /**
@@ -57,39 +63,11 @@ public class MarkdownFileContributor implements InfoContributor {
    */
   private void addMdContentValue(MarkdownObject mdObj) {
 
-    InputStream is = getClass().getClassLoader().getResourceAsStream(mdObj.getFileName());
-
-    String data;
-    try {
-      data = readFromInputStream(is);
-      mdObj.setMdContent(data);
+    try (InputStream is = getClass().getResourceAsStream(mdObj.getFileName());
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+      mdObj.setMdContent(FileCopyUtils.copyToString(reader));
     } catch (IOException e) {
-
       log.warn(e.toString());
-    } finally {
-      try {
-        if (is != null) is.close();
-      } catch (Exception e) {
-        // nothing
-      }
     }
-  }
-
-  /**
-   * Read from InputStream and return a text representation of file contents.
-   *
-   * @param inputStream - InputStream of the MD file
-   * @return String - File contents
-   * @throws IOException - in case file cannot be read
-   */
-  private String readFromInputStream(InputStream inputStream) throws IOException {
-    StringBuilder resultStringBuilder = new StringBuilder();
-    try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
-      String line;
-      while ((line = br.readLine()) != null) {
-        resultStringBuilder.append(line).append("\n");
-      }
-    }
-    return resultStringBuilder.toString();
   }
 }
