@@ -9,14 +9,12 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-
-import java.util.ArrayList;
-import java.util.List;
 
 class SIPStaticSpringContextTest {
 
@@ -38,7 +36,7 @@ class SIPStaticSpringContextTest {
     when(applicationContext.getBean(any(Class.class))).thenReturn(bean);
 
     // act
-    subject.setApplicationContext( applicationContext);
+    subject.setApplicationContext(applicationContext);
 
     // assert
     assertThat(SIPStaticSpringContext.getBean((Object.class))).isEqualTo(bean);
@@ -49,17 +47,15 @@ class SIPStaticSpringContextTest {
     // arrange
     when(applicationContext.getBean(any(Class.class))).thenThrow(new RuntimeException());
     Logger logger =
-            (Logger)
-                    LoggerFactory.getLogger(
-                            "de.ikor.sip.foundation.core.util.SIPStaticSpringContext");
+        (Logger) LoggerFactory.getLogger("de.ikor.sip.foundation.core.util.SIPStaticSpringContext");
     ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
     listAppender.start();
     logger.addAppender(listAppender);
 
     List<ILoggingEvent> logsList = listAppender.list;
 
-    //act
-    subject.setApplicationContext( applicationContext);
+    // act
+    subject.setApplicationContext(applicationContext);
 
     // assert
     assertThat(SIPStaticSpringContext.getBean(Object.class)).isNull();
