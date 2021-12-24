@@ -49,7 +49,7 @@ public class MarkdownFileContributor implements InfoContributor {
       }
     }
 
-    if (mdFiles.isEmpty()) {
+    if (!mdFiles.isEmpty()) {
       builder.withDetail("files", mdFiles);
     }
   }
@@ -63,10 +63,17 @@ public class MarkdownFileContributor implements InfoContributor {
    */
   private void addMdContentValue(MarkdownObject mdObj) {
 
-    try (InputStream is = getClass().getResourceAsStream(mdObj.getFileName());
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-      mdObj.setMdContent(FileCopyUtils.copyToString(reader));
+    try (InputStream is = getClass().getResourceAsStream(mdObj.getFileName()) ) {
+      addFromBuffReader(mdObj, is);
     } catch (IOException e) {
+      log.warn(e.toString());
+    }
+  }
+
+  private void addFromBuffReader(MarkdownObject mdObj, InputStream is) {
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+      mdObj.setMdContent(FileCopyUtils.copyToString(reader));
+    } catch (Exception e) {
       log.warn(e.toString());
     }
   }
