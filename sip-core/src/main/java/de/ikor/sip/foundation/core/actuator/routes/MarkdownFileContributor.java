@@ -63,7 +63,7 @@ public class MarkdownFileContributor implements InfoContributor {
    */
   private void addMdContentValue(MarkdownObject mdObj) {
 
-    try (InputStream is = getClass().getResourceAsStream(mdObj.getFileName()) ) {
+    try (InputStream is = getClass().getResourceAsStream(mdObj.getFileName())) {
       addFromBuffReader(mdObj, is);
     } catch (IOException e) {
       log.warn(e.toString());
