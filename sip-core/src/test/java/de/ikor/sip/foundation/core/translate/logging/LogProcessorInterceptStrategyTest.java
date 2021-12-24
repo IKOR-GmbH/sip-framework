@@ -100,7 +100,7 @@ class LogProcessorInterceptStrategyTest {
         subject.wrapProcessorInInterceptors(camelContext, null, logProcessor, null);
 
     // assert
-    assertThat(((LogProcessor) processor).getExpression().toString()).isEqualTo(translatedMessage);
+    assertThat(((LogProcessor) processor).getExpression()).hasToString(translatedMessage);
   }
 
   private void initLogProcessor() {
