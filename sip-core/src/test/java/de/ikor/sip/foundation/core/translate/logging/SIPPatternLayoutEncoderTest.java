@@ -16,7 +16,8 @@ class SIPPatternLayoutEncoderTest {
     subject.start();
 
     // assign
-    assertThat(ReflectionTestUtils.getField(subject, "layout").getClass()).isEqualTo(TranslateMessageLayout.class);
+    assertThat(ReflectionTestUtils.getField(subject, "layout").getClass())
+        .isEqualTo(TranslateMessageLayout.class);
     assertThat((Boolean) ReflectionTestUtils.getField(subject, "started")).isTrue();
   }
 }

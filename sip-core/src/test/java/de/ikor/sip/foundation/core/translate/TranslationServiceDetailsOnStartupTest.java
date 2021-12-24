@@ -27,8 +27,7 @@ class TranslationServiceDetailsOnStartupTest {
     translateConfiguration = mock(TranslateConfiguration.class);
     when(translateConfiguration.getLang()).thenReturn("en");
     when(translateConfiguration.getDefaultEncoding()).thenReturn("UTF-8");
-    subject =
-        new TranslationServiceDetailsOnStartup(translateConfiguration);
+    subject = new TranslationServiceDetailsOnStartup(translateConfiguration);
 
     Logger logger =
         (Logger)
@@ -45,7 +44,6 @@ class TranslationServiceDetailsOnStartupTest {
   @Test
   void Given_ExistingBundle_When_logTranslationDetails_Then_bundleMessagesInLog() {
     // arrange
-
     fileLocations.add("classpath:sip-core-messages");
     when(translateConfiguration.getFileLocations()).thenReturn(fileLocations);
 
@@ -67,8 +65,7 @@ class TranslationServiceDetailsOnStartupTest {
     subject.logTranslationDetails();
 
     // assert
-    assertThat(logsList.get(3).getMessage())
-        .isEqualTo("sip.core.translation.missingbundle_{}");
+    assertThat(logsList.get(3).getMessage()).isEqualTo("sip.core.translation.missingbundle_{}");
     assertThat(logsList.get(3).getLevel()).isEqualTo(Level.ERROR);
   }
 }

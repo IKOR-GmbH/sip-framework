@@ -15,18 +15,16 @@ class SIPTranslateMessageServiceImplTest {
   private static final String MESSAGE_CONTENT = "test";
   private static final String LANG = "en";
 
-  SIPTranslateMessageServiceImpl sipTranslateMessageService;
+  SIPTranslateMessageServiceImpl subject;
   MessageSource messageSource;
   TranslateConfiguration translateConfiguration;
-
 
   @BeforeEach
   void setUp() {
     messageSource = mock(MessageSource.class);
     translateConfiguration = mock(TranslateConfiguration.class);
     when(translateConfiguration.getLang()).thenReturn(LANG);
-    sipTranslateMessageService =
-        new SIPTranslateMessageServiceImpl(messageSource, translateConfiguration);
+    subject = new SIPTranslateMessageServiceImpl(messageSource, translateConfiguration);
   }
 
   @Test
@@ -35,8 +33,7 @@ class SIPTranslateMessageServiceImplTest {
     when(messageSource.getMessage(MESSAGE_KEY, null, new Locale(LANG))).thenReturn(MESSAGE_CONTENT);
 
     // assert
-    assertThat(sipTranslateMessageService.getTranslatedMessage(MESSAGE_KEY))
-        .isEqualTo(MESSAGE_CONTENT);
+    assertThat(subject.getTranslatedMessage(MESSAGE_KEY)).isEqualTo(MESSAGE_CONTENT);
   }
 
   @Test
@@ -47,7 +44,6 @@ class SIPTranslateMessageServiceImplTest {
         .thenReturn(MESSAGE_CONTENT);
 
     // assert
-    assertThat(sipTranslateMessageService.getTranslatedMessage(MESSAGE_KEY, array))
-        .isEqualTo(MESSAGE_CONTENT);
+    assertThat(subject.getTranslatedMessage(MESSAGE_KEY, array)).isEqualTo(MESSAGE_CONTENT);
   }
 }
