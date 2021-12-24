@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
  * be registered as component
  */
 @Component
-@ConditionalOnProperty(prefix = "sip.core.tracing.traceType", name = "enabled")
+
+@ConditionalOnProperty(prefix = "sip.core.tracing", name = "enabled")
 public class CustomTracer extends DefaultTracer {
 
   private SIPTraceTypeEnum traceType;

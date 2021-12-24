@@ -6,6 +6,7 @@ sip.core:
     use-code-as-default-message: true
     lang: en
   tracing:
+    enabled: false
     exchange-formatter:
       showHeaders: true
       showExchangeId: true
