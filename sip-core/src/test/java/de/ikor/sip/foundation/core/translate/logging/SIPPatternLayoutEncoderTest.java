@@ -8,14 +8,15 @@ import org.springframework.test.util.ReflectionTestUtils;
 class SIPPatternLayoutEncoderTest {
 
   @Test
-  void start_successful() {
+  void When_startEncoder_Expect_successfullyStarted() {
     // arrange
-    SIPPatternLayoutEncoder sipPatternLayoutEncoder = new SIPPatternLayoutEncoder();
+    SIPPatternLayoutEncoder subject = new SIPPatternLayoutEncoder();
 
     // act
-    sipPatternLayoutEncoder.start();
+    subject.start();
 
     // assign
-    assertThat((Boolean) ReflectionTestUtils.getField(sipPatternLayoutEncoder, "started")).isTrue();
+    assertThat(ReflectionTestUtils.getField(subject, "layout").getClass()).isEqualTo(TranslateMessageLayout.class);
+    assertThat((Boolean) ReflectionTestUtils.getField(subject, "started")).isTrue();
   }
 }
