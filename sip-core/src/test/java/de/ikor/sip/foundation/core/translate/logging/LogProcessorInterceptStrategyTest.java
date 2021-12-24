@@ -46,7 +46,6 @@ class LogProcessorInterceptStrategyTest {
 
     // assert
     assertThat(processor).isEqualTo(notLogProcessor);
-    verify(logProcessor, times(0)).getExpression();
   }
 
   @Test
