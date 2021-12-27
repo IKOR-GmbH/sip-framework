@@ -12,11 +12,10 @@ import org.springframework.boot.actuate.health.Health;
 
 class EndpointHealthIndicatorTest {
 
-  private static final String ENDPOINT_NAME = "name";
-
   EndpointHealthIndicator endpointHealthIndicator;
   Endpoint endpoint;
   Health health;
+  private static final String ENDPOINT_NAME = "name";
 
   @BeforeEach
   void setup() {
