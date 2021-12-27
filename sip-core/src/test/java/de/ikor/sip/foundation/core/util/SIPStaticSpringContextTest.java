@@ -15,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class SIPStaticSpringContextTest {
 
@@ -34,8 +35,6 @@ class SIPStaticSpringContextTest {
     // arrange
     Object bean = new Object();
     when(applicationContext.getBean(any(Class.class))).thenReturn(bean);
-
-    // act
     subject.setApplicationContext(applicationContext);
 
     // assert
@@ -43,7 +42,7 @@ class SIPStaticSpringContextTest {
   }
 
   @Test
-  void When_getBeanWithMissingBean_Expect_noBeanReturned() {
+  void When_getNonExistingBean_Expect_nullBean() {
     // arrange
     when(applicationContext.getBean(any(Class.class))).thenThrow(new RuntimeException());
     Logger logger =
@@ -53,13 +52,21 @@ class SIPStaticSpringContextTest {
     logger.addAppender(listAppender);
 
     List<ILoggingEvent> logsList = listAppender.list;
-
-    // act
     subject.setApplicationContext(applicationContext);
 
     // assert
     assertThat(SIPStaticSpringContext.getBean(Object.class)).isNull();
     assertThat(logsList.get(0).getMessage()).isEqualTo("sip.core.util.missingbean_{}");
     assertThat(logsList.get(0).getLevel()).isEqualTo(Level.DEBUG);
+  }
+
+  @Test
+  void When_setApplicationContext_Expect_ApplicationContextSet() {
+    // act
+    subject.setApplicationContext(applicationContext);
+
+    // assert
+    assertThat(ReflectionTestUtils.getField(subject, "context"))
+            .isEqualTo(applicationContext);
   }
 }
