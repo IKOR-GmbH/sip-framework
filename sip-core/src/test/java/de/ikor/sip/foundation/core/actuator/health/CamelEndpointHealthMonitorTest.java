@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 
 class CamelEndpointHealthMonitorTest {
 
+  private static final String ENDPOINT_NAME = "test";
+
   private CamelContext camelContext;
   private CamelEndpointHealthMonitor subject;
   private EndpointHealthRegistry endpointHealthRegistry;
@@ -32,7 +34,7 @@ class CamelEndpointHealthMonitorTest {
     EndpointHealthIndicator endpointHealthIndicator = mock(EndpointHealthIndicator.class);
     when(camelContext.getEndpoints()).thenReturn(Arrays.asList(mock(Endpoint.class)));
     when(camelContext.getStatus()).thenReturn(ServiceStatus.Started);
-    when(endpointHealthIndicator.name()).thenReturn("test");
+    when(endpointHealthIndicator.name()).thenReturn(ENDPOINT_NAME);
     when(endpointHealthRegistry.healthIndicator(any()))
         .thenReturn(Optional.of(endpointHealthIndicator));
 

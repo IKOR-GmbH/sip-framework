@@ -1,13 +1,13 @@
 package de.ikor.sip.foundation.core.actuator.health;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import java.util.function.Function;
 import org.apache.camel.Endpoint;
+import org.apache.commons.collections4.MultiValuedMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.actuate.health.Health;
@@ -20,29 +20,38 @@ class EndpointHealthRegistryTest {
   private EndpointHealthRegistry subject;
   private Function<Endpoint, Health> healthFunction;
   private Endpoint endpoint;
-  private Health health;
 
   @BeforeEach
   void setUp() {
     subject = new EndpointHealthRegistry();
-    health = Health.up().build();
-    healthFunction = endpoint -> health;
+    healthFunction = endpoint -> Health.up().build();
     endpoint = mock(Endpoint.class);
   }
 
   @Test
-  void
-      When_registerNewHealthFunctionByEndpointUri_Expect_healthIndicatorIsPresentAndHealthMatches() {
+  void When_registerNewHealthFunctionByEndpointUri_Expect_healthIndicatorMatchersIsNotEmpty() {
     // arrange
     when(endpoint.getEndpointUri()).thenReturn(ENDPOINT_URI);
 
     // act
+    assertThat(subject.getHealthIndicatorMatchers()).isEmpty();
     subject.register(ENDPOINT_URI, healthFunction);
+
+    // assert
+    assertThat(subject.getHealthIndicatorMatchers()).isNotEmpty();
+  }
+
+  @Test
+  void When_gettingHealthIndicatorForEndpoint_Expect_healthIndicatorIsPresent() {
+    // arrange
+    when(endpoint.getEndpointUri()).thenReturn(ENDPOINT_URI);
+    subject.register(ENDPOINT_URI, healthFunction);
+
+    // act
     Optional<EndpointHealthIndicator> healthIndicator = subject.healthIndicator(endpoint);
 
     // assert
     assertThat(healthIndicator).isNotNull().isPresent();
-    assertThat(healthIndicator.get().health()).isEqualTo(health);
   }
 
   @Test
@@ -50,11 +59,12 @@ class EndpointHealthRegistryTest {
       When_registerNewHealthFunctionByProcessorId_Expect_matchersByProcessorIdContainsEndpointIdAsKey() {
     // act
     subject.registerById(ENDPOINT_ID, healthFunction);
+    MultiValuedMap<String, Function<Endpoint, Health>> matchers =
+        subject.getMatchersByProcessorId();
 
     // assert
-    assertThat(subject.getMatchersByProcessorId().containsKey(ENDPOINT_ID)).isTrue();
-    assertThat(subject.getMatchersByProcessorId().get(ENDPOINT_ID).contains(healthFunction))
-        .isTrue();
+    assertThat(matchers.containsKey(ENDPOINT_ID)).isTrue();
+    assertThat(matchers.get(ENDPOINT_ID)).contains(healthFunction);
   }
 
   @Test

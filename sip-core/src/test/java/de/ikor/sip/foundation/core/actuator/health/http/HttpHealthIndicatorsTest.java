@@ -13,6 +13,7 @@ import org.springframework.boot.actuate.health.Status;
 class HttpHealthIndicatorsTest {
 
   private static final String ENDPOINT_URI = "https://www.google.com/";
+  private static final String URL_KEY = "url";
 
   private Endpoint endpoint;
 
@@ -37,7 +38,7 @@ class HttpHealthIndicatorsTest {
 
     // assert
     assertThat(subject.getStatus()).isEqualTo(Status.UNKNOWN);
-    assertThat(subject.getDetails().get("url")).isEqualTo(ENDPOINT_URI);
+    assertThat(subject.getDetails()).containsEntry(URL_KEY, ENDPOINT_URI);
   }
 
   @Test
@@ -50,6 +51,6 @@ class HttpHealthIndicatorsTest {
 
     // assert
     assertThat(subject.getStatus()).isEqualTo(Status.UP);
-    assertThat(subject.getDetails().get("url")).isEqualTo(ENDPOINT_URI);
+    assertThat(subject.getDetails()).containsEntry(URL_KEY, ENDPOINT_URI);
   }
 }
