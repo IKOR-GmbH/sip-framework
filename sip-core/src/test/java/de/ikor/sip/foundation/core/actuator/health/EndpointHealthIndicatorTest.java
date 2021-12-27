@@ -12,10 +12,11 @@ import org.springframework.boot.actuate.health.Health;
 
 class EndpointHealthIndicatorTest {
 
-  private EndpointHealthIndicator endpointHealthIndicator;
+  private static final String ENDPOINT_URI = "uri";
+
+  private EndpointHealthIndicator subject;
   private Endpoint endpoint;
   private Health health;
-  private static final String ENDPOINT_URI = "uri";
 
   @BeforeEach
   void setup() {
@@ -25,47 +26,47 @@ class EndpointHealthIndicatorTest {
         endpoint -> {
           return health;
         };
-    endpointHealthIndicator = new EndpointHealthIndicator(endpoint, healthFunction);
+    subject = new EndpointHealthIndicator(endpoint, healthFunction);
   }
 
   @Test
-  void WHEN_name_EXPECT_endpointNameReturned() {
+  void WHEN_fetchingName_EXPECT_endpointNameReturned() {
     // arrange
     when(endpoint.getEndpointUri()).thenReturn(ENDPOINT_URI);
 
     // act
-    String nameSubject = endpointHealthIndicator.name();
+    String nameResult = subject.name();
 
     // assert
-    assertThat(nameSubject).isEqualTo(ENDPOINT_URI);
+    assertThat(nameResult).isEqualTo(ENDPOINT_URI);
   }
 
   @Test
   void WHEN_health_WITH_NoHealthCalculation_THEN_NoHealth() {
     // act
-    Health healthSubject = endpointHealthIndicator.health();
+    Health healthResult = subject.health();
 
     // assert
-    assertThat(healthSubject).isNull();
+    assertThat(healthResult).isNull();
   }
 
   @Test
   void WHEN_health_WITH_HealthCalculation_THEN_ReturnHealth() {
     // act
-    endpointHealthIndicator.executeHealthCheck();
-    Health healthSubject = endpointHealthIndicator.health();
+    subject.executeHealthCheck();
+    Health healthResult = subject.health();
 
     // assert
-    assertThat(healthSubject).isEqualTo(health);
+    assertThat(healthResult).isEqualTo(health);
   }
 
   @Test
   void WHEN_executeHealthCheck_EXPECT_HealthIsCalculated() {
     // act
-    endpointHealthIndicator.executeHealthCheck();
-    Health healthSubject = endpointHealthIndicator.getHealth(false);
+    subject.executeHealthCheck();
+    Health healthResult = subject.getHealth(false);
 
     // assert
-    assertThat(healthSubject).isEqualTo(health);
+    assertThat(healthResult).isEqualTo(health);
   }
 }

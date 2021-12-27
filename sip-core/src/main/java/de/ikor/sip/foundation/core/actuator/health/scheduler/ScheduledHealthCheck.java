@@ -34,7 +34,6 @@ public class ScheduledHealthCheck {
   public void scheduledExecution() {
     Map<String, EndpointHealthIndicator> healthIndicators = monitor.getHealthIndicators();
 
-    healthIndicators.forEach(
-        ((s, endpointHealthIndicator) -> endpointHealthIndicator.executeHealthCheck()));
+    healthIndicators.values().forEach(EndpointHealthIndicator::executeHealthCheck);
   }
 }

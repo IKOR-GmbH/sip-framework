@@ -15,16 +15,16 @@ import org.springframework.boot.actuate.health.Health;
 
 class ScheduledHealthCheckTest {
 
-  private CamelEndpointHealthMonitor camelEndpointHealthMonitor;
-  private ScheduledHealthCheck scheduledHealthCheck;
-
   private static final String ENDPOINT = "endpoint";
+
+  private CamelEndpointHealthMonitor camelEndpointHealthMonitor;
+  private ScheduledHealthCheck scheduledHealthCheckSubject;
 
   @Test
   void WHEN_scheduledExecution_EXPECT_HealthEndpointsAreCalculated() {
     // arrange
     camelEndpointHealthMonitor = mock(CamelEndpointHealthMonitor.class);
-    scheduledHealthCheck = new ScheduledHealthCheck(camelEndpointHealthMonitor);
+    scheduledHealthCheckSubject = new ScheduledHealthCheck(camelEndpointHealthMonitor);
 
     Map<String, EndpointHealthIndicator> healthIndicators = new HashMap<>();
     Function<Endpoint, Health> healthFunction =
@@ -38,10 +38,10 @@ class ScheduledHealthCheckTest {
     when(camelEndpointHealthMonitor.getHealthIndicators()).thenReturn(healthIndicators);
 
     // act
-    scheduledHealthCheck.scheduledExecution();
-    Health healthSubject = healthIndicators.get(ENDPOINT).getHealth(false);
+    scheduledHealthCheckSubject.scheduledExecution();
+    Health healthResult = healthIndicators.get(ENDPOINT).getHealth(false);
 
     // assert
-    assertThat(healthSubject).isEqualTo(Health.up().build());
+    assertThat(healthResult).isEqualTo(Health.up().build());
   }
 }
