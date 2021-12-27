@@ -48,7 +48,7 @@ class RouteOperationTest {
   }
 
   @Test
-  void When_executeRouteOperationSTART_Expect_stopRouteCalled() throws Exception {
+  void When_executeRouteOperationSTART_Expect_startRouteCalled() throws Exception {
     // arrange
     RouteOperation subject = RouteOperation.START;
 
@@ -60,7 +60,7 @@ class RouteOperationTest {
   }
 
   @Test
-  void When_executeRouteOperationSUSPEND_Expect_stopRouteCalled() throws Exception {
+  void When_executeRouteOperationSUSPEND_Expect_suspendRouteCalled() throws Exception {
     // arrange
     RouteOperation subject = RouteOperation.SUSPEND;
 
