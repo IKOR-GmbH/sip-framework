@@ -15,9 +15,9 @@ class SIPTranslateMessageServiceImplTest {
   private static final String MESSAGE_CONTENT = "test";
   private static final String LANG = "en";
 
-  SIPTranslateMessageServiceImpl subject;
-  MessageSource messageSource;
-  TranslateConfiguration translateConfiguration;
+  private SIPTranslateMessageServiceImpl subject;
+  private MessageSource messageSource;
+  private TranslateConfiguration translateConfiguration;
 
   @BeforeEach
   void setUp() {
