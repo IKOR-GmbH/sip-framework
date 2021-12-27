@@ -21,7 +21,6 @@ class ScheduledHealthCheckTest {
   private CamelEndpointHealthMonitor camelEndpointHealthMonitor;
   private ScheduledHealthCheck scheduledHealthCheckSubject;
 
-
   @Test
   void WHEN_scheduledExecution_EXPECT_HealthEndpointsAreCalculated() {
     // arrange
