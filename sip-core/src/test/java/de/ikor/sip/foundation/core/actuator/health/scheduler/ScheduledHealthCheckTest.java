@@ -39,6 +39,6 @@ class ScheduledHealthCheckTest {
     Health healthResult = healthIndicators.get(ENDPOINT).getHealth(false);
 
     // assert
-    assertThat(healthResult).isEqualTo(healthFunction);
+    assertThat(healthResult).isEqualTo(Health.up().build());
   }
 }
