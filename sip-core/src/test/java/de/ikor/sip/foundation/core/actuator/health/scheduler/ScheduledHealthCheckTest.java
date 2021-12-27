@@ -27,10 +27,7 @@ class ScheduledHealthCheckTest {
     scheduledHealthCheckSubject = new ScheduledHealthCheck(camelEndpointHealthMonitor);
 
     Map<String, EndpointHealthIndicator> healthIndicators = new HashMap<>();
-    Function<Endpoint, Health> healthFunction =
-        endpoint -> {
-          return (new Health.Builder()).up().build();
-        };
+    Function<Endpoint, Health> healthFunction = endpoint -> Health.up().build();
     EndpointHealthIndicator endpointHealthIndicator =
         new EndpointHealthIndicator(mock(Endpoint.class), healthFunction);
     healthIndicators.put(ENDPOINT, endpointHealthIndicator);
@@ -42,6 +39,6 @@ class ScheduledHealthCheckTest {
     Health healthResult = healthIndicators.get(ENDPOINT).getHealth(false);
 
     // assert
-    assertThat(healthResult).isEqualTo(Health.up().build());
+    assertThat(healthResult).isEqualTo(healthFunction);
   }
 }
