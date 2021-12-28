@@ -15,20 +15,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class HealthMonitorSetupTest {
 
-  EndpointHealthRegistry endpointHealthRegistry;
-  HealthMonitorSetup healthMonitorSetup;
-
   private static final String ENDPOINT_URI = "endpoint";
   private static final String PROCESSOR_ID = "processor";
 
-  @Mock CamelContext camelContext;
+  private EndpointHealthRegistry endpointHealthRegistry;
+  private HealthMonitorSetup subject;
 
-  @Mock CamelEndpointHealthMonitor camelEndpointHealthMonitor;
+  @Mock private CamelContext camelContext;
+
+  @Mock private CamelEndpointHealthMonitor camelEndpointHealthMonitor;
 
   @BeforeEach
   void setUp() {
     endpointHealthRegistry = new EndpointHealthRegistry();
-    healthMonitorSetup =
+    subject =
         new HealthMonitorSetup(camelContext, endpointHealthRegistry, camelEndpointHealthMonitor);
 
     when(camelContext.getProcessor(PROCESSOR_ID)).thenReturn(mock(SendProcessor.class));
@@ -41,12 +41,12 @@ class HealthMonitorSetupTest {
   }
 
   @Test
-  void setupCamelEndpointHealthMonitor() {
+  void When_setupCamelEndpointHealthMonitor_Expect_MatchersAndIndicatorMatcherNotEmpty() {
     // arrange
     endpointHealthRegistry.registerById(PROCESSOR_ID, null);
 
     // act
-    healthMonitorSetup.setupCamelEndpointHealthMonitor();
+    subject.setupCamelEndpointHealthMonitor();
 
     // assert
     assertThat(endpointHealthRegistry.getMatchersByProcessorId().size()).isEqualTo(1);
@@ -54,13 +54,14 @@ class HealthMonitorSetupTest {
   }
 
   @Test
-  void setupCamelEndpointHealthMonitor_whenThrowDuplicateUriPatternError() {
+  void
+      Given_IdAlreadyRegistered_When_setupCamelEndpointHealthMonitorAnd_Then_ThrowDuplicateUriPatternError() {
     // arrange
     endpointHealthRegistry.registerById(PROCESSOR_ID, null);
     endpointHealthRegistry.registerById(PROCESSOR_ID, null);
 
     // assert
     assertThatExceptionOfType(DuplicateUriPatternError.class)
-        .isThrownBy(() -> healthMonitorSetup.setupCamelEndpointHealthMonitor());
+        .isThrownBy(() -> subject.setupCamelEndpointHealthMonitor());
   }
 }
