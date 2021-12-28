@@ -16,18 +16,18 @@ import org.slf4j.LoggerFactory;
 
 class TranslationServiceDetailsOnStartupTest {
 
-  TranslationServiceDetailsOnStartup translationServiceDetailsOnStartup;
-  TranslateConfiguration translateConfiguration;
-  List<String> fileLocations;
-  ListAppender<ILoggingEvent> listAppender;
+  private TranslationServiceDetailsOnStartup subject;
+  private TranslateConfiguration translateConfiguration;
+  private List<String> fileLocations;
+  private ListAppender<ILoggingEvent> listAppender;
+  private List<ILoggingEvent> logsList;
 
   @BeforeEach
   void setup() {
     translateConfiguration = mock(TranslateConfiguration.class);
     when(translateConfiguration.getLang()).thenReturn("en");
     when(translateConfiguration.getDefaultEncoding()).thenReturn("UTF-8");
-    translationServiceDetailsOnStartup =
-        new TranslationServiceDetailsOnStartup(translateConfiguration);
+    subject = new TranslationServiceDetailsOnStartup(translateConfiguration);
 
     Logger logger =
         (Logger)
@@ -36,32 +36,36 @@ class TranslationServiceDetailsOnStartupTest {
     listAppender = new ListAppender<>();
     listAppender.start();
     logger.addAppender(listAppender);
+
+    logsList = listAppender.list;
+    fileLocations = new ArrayList<>();
   }
 
   @Test
-  void logTranslationDetails_noException() {
-    List<ILoggingEvent> logsListSubject = listAppender.list;
-    fileLocations = new ArrayList<>();
+  void Given_ExistingBundle_When_logTranslationDetails_Then_bundleMessagesInLog() {
+    // arrange
     fileLocations.add("classpath:sip-core-messages");
     when(translateConfiguration.getFileLocations()).thenReturn(fileLocations);
 
-    translationServiceDetailsOnStartup.logTranslationDetails();
+    // act
+    subject.logTranslationDetails();
 
-    assertThat(logsListSubject.get(3).getMessage()).isEqualTo("sip.core.translation.bundle_{}");
-    assertThat(logsListSubject.get(3).getLevel()).isEqualTo(Level.INFO);
+    // assert
+    assertThat(logsList.get(3).getMessage()).isEqualTo("sip.core.translation.bundle_{}");
+    assertThat(logsList.get(3).getLevel()).isEqualTo(Level.INFO);
   }
 
   @Test
-  void logTranslationDetails_withException() {
-    List<ILoggingEvent> logsListSubject = listAppender.list;
-    fileLocations = new ArrayList<>();
+  void Given_MissingBundle_When_logTranslationDetails_Then_missingBundleMessageInLog() {
+    // arrange
     fileLocations.add("classpath:sa");
     when(translateConfiguration.getFileLocations()).thenReturn(fileLocations);
 
-    translationServiceDetailsOnStartup.logTranslationDetails();
+    // act
+    subject.logTranslationDetails();
 
-    assertThat(logsListSubject.get(3).getMessage())
-        .isEqualTo("sip.core.translation.missingbundle_{}");
-    assertThat(logsListSubject.get(3).getLevel()).isEqualTo(Level.ERROR);
+    // assert
+    assertThat(logsList.get(3).getMessage()).isEqualTo("sip.core.translation.missingbundle_{}");
+    assertThat(logsList.get(3).getLevel()).isEqualTo(Level.ERROR);
   }
 }
