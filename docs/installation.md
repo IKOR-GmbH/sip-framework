@@ -26,9 +26,7 @@ Before getting started to develop a first adapter with SIP the following require
 - Lombok with Eclipse <https://projectlombok.org/setup/eclipse>
 - Apache Camel with IntelliJ (recommendation) <https://plugins.jetbrains.com/plugin/9371-apache-camel>
 
-## Create the project
-
-### How to create a SIP Adapter using SIP Archetype
+## Create a SIP Adapter using SIP Archetype
 
 Guide for creating a new SIP Adapter from archetype can be found [here](https://ikor-gmbh.github.io/sip-framework/archetype/).
 
