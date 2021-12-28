@@ -10,11 +10,8 @@ import de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenti
 import de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthTokenExtractor;
 import java.util.Objects;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-@ExtendWith(MockitoExtension.class)
 class TokenExtractorsTest {
 
   private final TokenExtractors subject = new TokenExtractors();
@@ -42,8 +39,10 @@ class TokenExtractorsTest {
     SIPBasicAuthTokenExtractor extractor = new SIPBasicAuthTokenExtractor();
     Class<?> mappingKey = Object.class;
 
-    // act + assert
+    // act
     subject.addMapping(mappingKey, extractor);
+
+    // assert
     assertThatExceptionOfType(IllegalStateException.class)
         .isThrownBy(() -> subject.addMapping(mappingKey, extractor))
         .withMessageContaining("Token extractor mapping for this provider exists already:");
@@ -55,13 +54,15 @@ class TokenExtractorsTest {
     // arrange
     SIPBasicAuthTokenExtractor extractor1 = new SIPBasicAuthTokenExtractor();
     Class<?> mappingKey1 = Object.class;
-    // the {} force this to be an anyomous class with the same tokentype, so we can easily
+    // the {} force this to be an anonymous class with the same token type, so we can easily
     // mock what would be bad code in the real implementation
     SIPBasicAuthTokenExtractor extractor2 = new SIPBasicAuthTokenExtractor() {};
     Class<?> mappingKey2 = Objects.class;
 
-    // act + assert
+    // act
     subject.addMapping(mappingKey1, extractor1);
+
+    // assert
     assertThatExceptionOfType(IllegalStateException.class)
         .isThrownBy(() -> subject.addMapping(mappingKey2, extractor2))
         .withMessageContaining(
@@ -76,8 +77,10 @@ class TokenExtractorsTest {
     Class<?> mappingKey1 = Object.class;
     Class<?> mappingKey2 = Objects.class;
 
-    // act + assert
+    // act
     subject.addMapping(mappingKey1, extractor);
+
+    // assert
     assertThatExceptionOfType(IllegalStateException.class)
         .isThrownBy(() -> subject.addMapping(mappingKey2, extractor))
         .withMessageContaining("Token extractor mapping for this extractor exists already:");

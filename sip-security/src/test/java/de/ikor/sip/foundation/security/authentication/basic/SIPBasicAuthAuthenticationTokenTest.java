@@ -21,26 +21,6 @@ class SIPBasicAuthAuthenticationTokenTest {
   }
 
   @Test
-  void WHEN_ctor_WITH_validParams_THEN_correctValueslReturned() throws Exception {
-    // arrange
-    String expectedPrincipal = UUID.randomUUID().toString();
-    String expectedCredential = UUID.randomUUID().toString();
-    boolean expectedAuth = false;
-
-    // act
-    SIPBasicAuthAuthenticationToken subject =
-        new SIPBasicAuthAuthenticationToken(expectedPrincipal, expectedCredential, expectedAuth);
-
-    // assert
-    assertThat(subject.getAuthorities()).isEmpty();
-    assertThat(subject.getCredentials()).isEqualTo(expectedCredential);
-    assertThat(subject.getDetails()).isNull();
-    assertThat(subject.getName()).isEqualTo(expectedPrincipal);
-    assertThat(subject.getPrincipal()).isEqualTo(expectedPrincipal);
-    assertThat(subject.isAuthenticated()).isEqualTo(expectedAuth);
-  }
-
-  @Test
   void WHEN_withAuthenticated_WITH_true_THEN_sameObjectWithTrueAuthReturned() throws Exception {
     // arrange
     String expectedPrincipal = UUID.randomUUID().toString();
