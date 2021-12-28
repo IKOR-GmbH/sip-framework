@@ -28,5 +28,9 @@ Before getting started to develop a first adapter with SIP the following require
 
 ## Create the project
 
-### How to create a SIP Adapter using [SIP Archetype](./archetype.md)
+### How to create a SIP Adapter using SIP Archetype
+
+Guide for creating a new SIP Adapter from archetype can be found [here](https://ikor-gmbh.github.io/sip-framework/archetype/).
+
+
 
