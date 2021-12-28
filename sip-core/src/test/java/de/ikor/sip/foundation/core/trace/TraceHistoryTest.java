@@ -15,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(classes = {TraceHistory.class})
 class TraceHistoryTest {
 
-  @Autowired private TraceHistory traceHistory;
+  @Autowired private TraceHistory subject;
 
   @Test
   void WHEN_add_WITH_message_THEN_messageAdded() {
@@ -23,35 +23,33 @@ class TraceHistoryTest {
     String message = UUID.randomUUID().toString();
 
     // act
-    traceHistory.add(message);
+    subject.add(message);
 
     // assert
-    assertThat(traceHistory.getAndClearHistory()).containsExactly(message);
+    assertThat(subject.getAndClearHistory()).containsExactly(message);
   }
 
   @Test
   void WHEN_add_WITH_limitReached_THEN_firstMessageRemoved() {
-    // arrange
-
     // act
     for (int i = 0; i < 6; i++) {
-      traceHistory.add("message" + i);
+      subject.add("message" + i);
     }
 
     // assert
-    assertThat(traceHistory.getAndClearHistory()).doesNotContain("message0");
+    assertThat(subject.getAndClearHistory()).doesNotContain("message0");
   }
 
   @Test
-  void WHEN_getAndClearHistory_THEN_historyEmptyAfterwards() {
+  void WHEN_getAndClearHistoryConsecutively_THEN_historyEmptyAfterwards() {
     // arrange
     String message = UUID.randomUUID().toString();
-    traceHistory.add(message);
 
     // act
-    traceHistory.getAndClearHistory();
+    subject.add(message);
+    subject.getAndClearHistory();
 
     // assert
-    assertThat(traceHistory.getAndClearHistory()).isEmpty();
+    assertThat(subject.getAndClearHistory()).isEmpty();
   }
 }
