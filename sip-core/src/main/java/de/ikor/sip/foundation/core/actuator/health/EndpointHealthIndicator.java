@@ -15,6 +15,7 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 public class EndpointHealthIndicator implements HealthContributor, HealthIndicator {
   private final Endpoint endpoint;
   private final Function<Endpoint, Health> healthFunction;
+  private Health health;
 
   /**
    * Returns the name of the endpoint. It will be used and visible in the health information report
@@ -33,6 +34,11 @@ public class EndpointHealthIndicator implements HealthContributor, HealthIndicat
    */
   @Override
   public Health health() {
-    return healthFunction.apply(this.endpoint);
+    return health;
+  }
+
+  /** Calculates health of the endpoint. */
+  public void executeHealthCheck() {
+    this.health = healthFunction.apply(this.endpoint);
   }
 }

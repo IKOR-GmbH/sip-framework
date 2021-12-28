@@ -19,10 +19,11 @@ import org.slf4j.LoggerFactory;
 
 class FtpHealthConsumersTest {
 
-  ListAppender<ILoggingEvent> listAppender;
-  RemoteFileOperations<Object> fileOps;
-  RemoteFileEndpoint<?> endpoint;
-  RemoteFileConfiguration configuration;
+  private ListAppender<ILoggingEvent> listAppender;
+  private RemoteFileOperations<Object> fileOps;
+  private RemoteFileEndpoint<?> endpoint;
+  private RemoteFileConfiguration configuration;
+  private List<ILoggingEvent> logsList;
 
   @BeforeEach
   void setUp() {
@@ -34,10 +35,11 @@ class FtpHealthConsumersTest {
     listAppender.start();
 
     logger.addAppender(listAppender);
+    logsList = listAppender.list;
   }
 
   @Test
-  void executeNoop_sendNoopFalse() {
+  void Given_SendNoopNotSuccessfulAndConnectSuccessful_When_noopConsumer_Then_connectedMessage() {
     // arrange
     when(endpoint.getConfiguration()).thenReturn(null);
     when(fileOps.sendNoop()).thenReturn(false);
@@ -45,15 +47,16 @@ class FtpHealthConsumersTest {
 
     // act
     FtpHealthConsumers.noopConsumer(endpoint, fileOps);
-    List<ILoggingEvent> logsListSubject = listAppender.list;
+    ILoggingEvent subject = logsList.get(0);
 
     // assert
-    assertThat(logsListSubject.get(0).getMessage()).isEqualTo("Connected and authenticated to: {}");
-    assertThat(logsListSubject.get(0).getLevel()).isEqualTo(Level.DEBUG);
+    verify(fileOps, times(1)).connect(any(), any());
+    assertThat(subject.getMessage()).isEqualTo("Connected and authenticated to: {}");
+    assertThat(subject.getLevel()).isEqualTo(Level.DEBUG);
   }
 
   @Test
-  void executeNoop_Exception() {
+  void Given_SendNoopThrowsException_When_noopConsumer_Then_failMessage() {
     // arrange
     when(endpoint.getConfiguration()).thenReturn(null);
     when(fileOps.sendNoop()).thenThrow(new RuntimeException());
@@ -61,15 +64,15 @@ class FtpHealthConsumersTest {
 
     // act
     FtpHealthConsumers.noopConsumer(endpoint, fileOps);
-    List<ILoggingEvent> logsListSubject = listAppender.list;
+    ILoggingEvent subject = logsList.get(0);
 
     // assert
-    assertThat((logsListSubject.get(0).getMessage())).isEqualTo("Failed to sendNoop to {}: {}");
-    assertThat(logsListSubject.get(0).getLevel()).isEqualTo(Level.DEBUG);
+    assertThat(subject.getMessage()).isEqualTo("Failed to sendNoop to {}: {}");
+    assertThat(subject.getLevel()).isEqualTo(Level.DEBUG);
   }
 
   @Test
-  void When_executeNoopAndSendNoopTrue_Expect_emptyLogList() {
+  void Given_sendNoopSuccessful_When_executeNoop_Then_emptyLogList() {
     // arrange
     when(endpoint.getConfiguration()).thenReturn(null);
     when(fileOps.sendNoop()).thenReturn(true);
@@ -77,14 +80,14 @@ class FtpHealthConsumersTest {
 
     // act
     FtpHealthConsumers.noopConsumer(endpoint, fileOps);
-    List<ILoggingEvent> logsListSubject = listAppender.list;
 
     // assert
-    assertThat(logsListSubject).isEmpty();
+    verify(fileOps, times(0)).connect(any(), any());
+    assertThat(logsList).isEmpty();
   }
 
   @Test
-  void When_executeNoopAndOperationConnectFalse_Expect_emptyLogList() {
+  void Given_OperationConnectUnsuccessful_When_executeNoop_Then_emptyLogList() {
     // arrange
     when(endpoint.getConfiguration()).thenReturn(null);
     when(fileOps.sendNoop()).thenReturn(false);
@@ -92,14 +95,14 @@ class FtpHealthConsumersTest {
 
     // act
     FtpHealthConsumers.noopConsumer(endpoint, fileOps);
-    List<ILoggingEvent> logsListSubject = listAppender.list;
 
     // assert
-    assertThat(logsListSubject).isEmpty();
+    verify(fileOps, times(1)).connect(any(), any());
+    assertThat(logsList).isEmpty();
   }
 
   @Test
-  void When_executeListDirAndStatusUP_Expect_emptyLogList() {
+  void Given_StatusUp_When_executeListDir_Then_emptyLogList() {
     // arrange
     String directoryName = "dirName";
     when(configuration.getDirectoryName()).thenReturn(directoryName);
@@ -109,14 +112,14 @@ class FtpHealthConsumersTest {
 
     // act
     FtpHealthConsumers.listDirectoryConsumer(endpoint, fileOps);
-    List<ILoggingEvent> logsListSubject = listAppender.list;
 
     // assert
-    assertThat(logsListSubject).isEmpty();
+    verify(fileOps, times(1)).listFiles(directoryName);
+    assertThat(logsList).isEmpty();
   }
 
   @Test
-  void When_executeListDirAndUnknownFolder_Expect_folderNotFoundMessage() {
+  void Given_UnknownFolder_When_executeListDir_Then_folderNotFoundMessage() {
     // arrange
     String directoryName = "dirName";
     when(configuration.getDirectoryName()).thenReturn(directoryName);
@@ -130,6 +133,7 @@ class FtpHealthConsumersTest {
             IntegrationManagementException.class);
 
     // assert
+    verify(fileOps, times(0)).listFiles(directoryName);
     assertThat(exceptionSubject.getMessage()).isEqualTo("Folder " + directoryName + "not found");
   }
 }

@@ -12,35 +12,61 @@ import org.springframework.boot.actuate.health.Health;
 
 class EndpointHealthIndicatorTest {
 
-  EndpointHealthIndicator endpointHealthIndicator;
-  Endpoint endpoint;
-  Health health;
-  private static final String ENDPOINT_NAME = "name";
+  private static final String ENDPOINT_URI = "uri";
+
+  private EndpointHealthIndicator subject;
+  private Endpoint endpoint;
+  private Health health;
 
   @BeforeEach
   void setup() {
     endpoint = mock(Endpoint.class);
     health = Health.up().build();
     Function<Endpoint, Health> healthFunction =
-        endpoint1 -> {
+        endpoint -> {
           return health;
         };
-    endpointHealthIndicator = new EndpointHealthIndicator(endpoint, healthFunction);
+    subject = new EndpointHealthIndicator(endpoint, healthFunction);
   }
 
   @Test
-  void name() {
+  void WHEN_fetchingName_EXPECT_endpointNameReturned() {
+    // arrange
+    when(endpoint.getEndpointUri()).thenReturn(ENDPOINT_URI);
+
     // act
-    when(endpoint.getEndpointUri()).thenReturn(ENDPOINT_NAME);
+    String nameResult = subject.name();
 
     // assert
-    assertThat(endpointHealthIndicator.name()).isEqualTo(ENDPOINT_NAME);
+    assertThat(nameResult).isEqualTo(ENDPOINT_URI);
   }
 
   @Test
-  void health() {
+  void WHEN_health_WITH_NoHealthCalculation_THEN_NoHealth() {
+    // act
+    Health healthResult = subject.health();
 
     // assert
-    assertThat(health).isEqualTo(endpointHealthIndicator.health());
+    assertThat(healthResult).isNull();
+  }
+
+  @Test
+  void WHEN_health_WITH_HealthCalculation_THEN_ReturnHealth() {
+    // act
+    subject.executeHealthCheck();
+    Health healthResult = subject.health();
+
+    // assert
+    assertThat(healthResult).isEqualTo(health);
+  }
+
+  @Test
+  void WHEN_executeHealthCheck_EXPECT_HealthIsCalculated() {
+    // act
+    subject.executeHealthCheck();
+    Health healthResult = subject.getHealth(false);
+
+    // assert
+    assertThat(healthResult).isEqualTo(health);
   }
 }

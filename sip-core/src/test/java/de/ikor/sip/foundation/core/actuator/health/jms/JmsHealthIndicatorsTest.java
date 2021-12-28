@@ -17,12 +17,11 @@ import org.springframework.boot.actuate.health.Status;
 
 class JmsHealthIndicatorsTest {
 
-  JmsEndpoint endpoint;
-  ConnectionFactory connectionFactory;
+  private JmsEndpoint endpoint;
+  private ConnectionFactory connectionFactory;
 
   @BeforeEach
   void setUp() {
-
     endpoint = mock(JmsEndpoint.class);
     JmsComponent component = mock(JmsComponent.class);
     connectionFactory = mock(ConnectionFactory.class);
@@ -32,7 +31,7 @@ class JmsHealthIndicatorsTest {
   }
 
   @Test
-  void connectionManageable_statusUp() throws JMSException {
+  void Given_ConnectionCreated_When_connectionManageable_Then_StatusUp() throws JMSException {
     // arrange
     Connection connection = mock(Connection.class);
     when(connectionFactory.createConnection()).thenReturn(connection);
@@ -42,7 +41,8 @@ class JmsHealthIndicatorsTest {
   }
 
   @Test
-  void connectionManageable_statusDown() throws JMSException {
+  void Given_CreateConnectionThrowsException_When_connectionManageable_Then_StatusDown()
+      throws JMSException {
     // arrange
     when(connectionFactory.createConnection()).thenThrow(JMSException.class);
 
@@ -52,12 +52,9 @@ class JmsHealthIndicatorsTest {
   }
 
   @Test
-  void connectionManageable_typeMismatch() {
-    // arrange
-    Endpoint endpoint1 = mock(Endpoint.class);
-
+  void Given_IncorrectEndpoint_When_connectionManageable_Then_IntegrationManagementException() {
     // assert
-    assertThatThrownBy(() -> JmsHealthIndicators.connectionManageable(endpoint1))
+    assertThatThrownBy(() -> JmsHealthIndicators.connectionManageable(mock(Endpoint.class)))
         .isInstanceOf(IntegrationManagementException.class);
   }
 }
