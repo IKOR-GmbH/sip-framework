@@ -20,23 +20,24 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class SipMiddleEndpointTest {
 
   private static final String BASE_URI = "sipmc:foo";
-  private static final String TARGET_URI = "seda:foo?multpipleConsumers=false";
+  private static final String TARGET_URI = "seda:foo?multipleConsumers=false";
 
   @Mock private SpringBootCamelContext context;
   @Mock private SipMiddleComponent component;
   @Mock private Endpoint endpoint;
 
+  private SipMiddleEndpoint subject;
+
   @BeforeEach
   void setUp() {
     when(component.getCamelContext()).thenReturn(context);
     when(context.getEndpoint(TARGET_URI)).thenReturn(endpoint);
+
+    subject = new SipMiddleEndpoint(BASE_URI, component, TARGET_URI);
   }
 
   @Test
-  void WHEN_createProduer_THEN_middleProducerReturned() throws Exception {
-    // arrange
-    SipMiddleEndpoint subject = new SipMiddleEndpoint(BASE_URI, component, TARGET_URI);
-
+  void WHEN_createProducer_THEN_middleProducerReturned() throws Exception {
     // act
     Producer result = subject.createProducer();
 
@@ -48,7 +49,6 @@ class SipMiddleEndpointTest {
   @Test
   void WHEN_createConsumer_THEN_consumerReturned() throws Exception {
     // arrange
-    SipMiddleEndpoint subject = new SipMiddleEndpoint(BASE_URI, component, TARGET_URI);
     Processor processor = mock(Processor.class);
     Consumer consumer = mock(Consumer.class);
     when(endpoint.createConsumer(processor)).thenReturn(consumer);
