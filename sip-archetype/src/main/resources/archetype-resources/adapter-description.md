@@ -1,5 +1,3 @@
-# Welcome!
+# SIP Adapter Description
 
-**Thank you for using SIP Framework!**
-
-Please describe your adapter workflow.
+Please describe the workflow of your adapter.
