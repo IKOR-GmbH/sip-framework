@@ -1,3 +1,3 @@
 # SIP Adapter Description
 
-Please describe the workflow of your adapter.
+This file should contain details about what your adapter does, which services does it connect, what is the workflow etc.
