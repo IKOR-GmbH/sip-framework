@@ -7,7 +7,15 @@ import org.springframework.context.annotation.PropertySource;
 
 /** Configuration class for scanning beans in package de.ikor.sip.foundation.core */
 @Configuration
-@ComponentScan(basePackages = {"de.ikor.sip.foundation.core"})
+@ComponentScan(
+    basePackages = {
+      "de.ikor.sip.foundation.core.actuator",
+      "de.ikor.sip.foundation.core.annotation",
+      "de.ikor.sip.foundation.core.proxies",
+      "de.ikor.sip.foundation.core.trace",
+      "de.ikor.sip.foundation.core.translate",
+      "de.ikor.sip.foundation.core.util"
+    })
 @PropertySource(
     value = "classpath:sip-core-default-config.yaml",
     factory = YamlPropertSourceFactory.class)

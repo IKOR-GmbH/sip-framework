@@ -1,17 +1,27 @@
-package de.ikor.sip.foundation.core.registration;
+package de.ikor.sip.foundation.core.premiumsupport.registration;
 
+import java.time.Duration;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.time.DurationMax;
+import org.hibernate.validator.constraints.time.DurationMin;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotBlank;
 
 /** A configuration class that provides properties specific to an adapter instance. */
 @Data
+@Validated
 @Configuration
 @ConfigurationProperties(prefix = "sip.core.backend-registration")
-public class AdapterRegistrationProperties {
+@ComponentScan("de.ikor.sip.foundation.core.premiumsupport.registration")
+public class RegistrationConfigurationProperties {
 
   /**
    * This is a unique id that identifies an instance of an adapter. The value is generated and can
@@ -26,6 +36,8 @@ public class AdapterRegistrationProperties {
    *
    * <p>This property is required
    */
+  @NotBlank()
+  @Length(max = 64)
   private String adapterName;
 
   /**
@@ -33,14 +45,8 @@ public class AdapterRegistrationProperties {
    *
    * <p>This property is required
    */
+  @NotBlank()
   private String url;
-
-  /**
-   * The URI of this adapter instance. e.g. http://127.0.0.1:8080
-   *
-   * <p>This property is optional
-   */
-  private String instanceUri;
 
   /**
    * The interval in which this adapter will send the telemetry data. The value of register interval
@@ -48,7 +54,7 @@ public class AdapterRegistrationProperties {
    *
    * <p>This property is optional
    */
-  private Long interval = 30000L;
+  private Long interval = 30000L;//TODO add test to check if default val is set
 
   /**
    * Connection timeout of the web client. The value of read timeout has to be between 100ms and
@@ -56,7 +62,9 @@ public class AdapterRegistrationProperties {
    *
    * <p>This property is optional
    */
-  private Long connectTimeout = 5000L;
+  @DurationMin(millis = 100)
+  @DurationMax(millis = 6000)
+  private Duration connectTimeout = Duration.ofMillis(5000);
 
   /**
    * Read timeout of the web client. The value of read timeout has to be between 100ms and 60000ms.
@@ -64,13 +72,8 @@ public class AdapterRegistrationProperties {
    *
    * <p>This property is optional
    */
-  private Long readTimeout = 5000L;
+  @DurationMin(millis = 100)
+  @DurationMax(millis = 6000)
+  private Duration readTimeout = Duration.ofMillis(5000);
 
-  /**
-   * The stage refers to the staging environment in which the application is executed. This value is
-   * relevant to be able to differentiate between different adapter instances in the SIP backend.
-   *
-   * <p>This property is optional
-   */
-  private String stage;
 }
