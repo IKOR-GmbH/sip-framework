@@ -21,6 +21,29 @@ class SIPBasicAuthAuthenticationTokenTest {
   }
 
   @Test
+  void WHEN_ctor_WITH_validParams_THEN_correctValueslReturned() throws Exception {
+    // arrange
+    String expectedPrincipal = UUID.randomUUID().toString();
+    String expectedCredential = UUID.randomUUID().toString();
+
+    // act
+    SIPBasicAuthAuthenticationToken subject =
+            new SIPBasicAuthAuthenticationToken(expectedPrincipal, expectedCredential, false);
+
+    // assert
+    assertCtorReturnsValidValues(expectedPrincipal, expectedCredential, subject);
+    assertThat(subject.isAuthenticated()).isFalse();
+  }
+
+  private void assertCtorReturnsValidValues(String expectedPrincipal, String expectedCredential, SIPBasicAuthAuthenticationToken subject) {
+    assertThat(subject.getAuthorities()).isEmpty();
+    assertThat(subject.getCredentials()).isEqualTo(expectedCredential);
+    assertThat(subject.getDetails()).isNull();
+    assertThat(subject.getName()).isEqualTo(expectedPrincipal);
+    assertThat(subject.getPrincipal()).isEqualTo(expectedPrincipal);
+  }
+
+  @Test
   void WHEN_withAuthenticated_WITH_true_THEN_sameObjectWithTrueAuthReturned() throws Exception {
     // arrange
     String expectedPrincipal = UUID.randomUUID().toString();
@@ -33,11 +56,7 @@ class SIPBasicAuthAuthenticationTokenTest {
     SIPBasicAuthAuthenticationToken result = subject.withAuthenticated(true);
 
     // assert
-    assertThat(result.getAuthorities()).isEmpty();
-    assertThat(result.getCredentials()).isEqualTo(expectedCredential);
-    assertThat(result.getDetails()).isNull();
-    assertThat(result.getName()).isEqualTo(expectedPrincipal);
-    assertThat(result.getPrincipal()).isEqualTo(expectedPrincipal);
+    assertCtorReturnsValidValues(expectedPrincipal, expectedCredential, result);
     assertThat(result.isAuthenticated()).isTrue();
   }
 
