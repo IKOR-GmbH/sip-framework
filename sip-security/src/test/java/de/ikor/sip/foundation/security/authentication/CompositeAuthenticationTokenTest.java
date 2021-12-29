@@ -17,9 +17,8 @@ class CompositeAuthenticationTokenTest {
   @Test
   void WHEN_ctor_WITH_validParams_THEN_correctValueslReturned() throws Exception {
     // arrange
-    boolean expectedAuth = false;
     SIPBasicAuthAuthenticationToken token =
-        new SIPBasicAuthAuthenticationToken("user", "pw", expectedAuth);
+        new SIPBasicAuthAuthenticationToken("user", "pw", false);
 
     // act
     CompositeAuthenticationToken subject =
@@ -31,7 +30,7 @@ class CompositeAuthenticationTokenTest {
     assertThat(subject.getDetails()).isNull();
     assertThat(subject.getName()).isNull();
     assertThat(subject.getPrincipal()).isNull();
-    assertThat(subject.isAuthenticated()).isEqualTo(expectedAuth);
+    assertThat(subject.isAuthenticated()).isFalse();
     assertThat(subject.getAuthTokens()).containsExactly(token);
   }
 

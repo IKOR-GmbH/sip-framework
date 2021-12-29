@@ -9,8 +9,6 @@ import de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthFileVali
 import de.ikor.sip.foundation.security.authentication.common.validators.SIPAlwaysAllowValidator;
 import de.ikor.sip.foundation.security.authentication.x509.SIPX509AuthenticationProvider;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
@@ -18,9 +16,12 @@ import org.springframework.mock.env.MockEnvironment;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-@ExtendWith(MockitoExtension.class)
 class SIPAuthProviderConditionTest {
 
+  private static final String AUTH_PROVIDERS_PROPERTY_CLASSNAME =
+      "sip.security.authentication.auth-providers[0].classname";
+  private static final String AUTH_PROVIDERS_VALIDATION_CLASSNAME =
+      "sip.security.authentication.auth-providers[0].validation.classname";
   private SIPAuthProviderCondition subject = new SIPAuthProviderCondition();
 
   @Test
@@ -30,8 +31,7 @@ class SIPAuthProviderConditionTest {
 
     ConditionContext context = mock(ConditionContext.class);
     MockEnvironment environment = new MockEnvironment();
-    environment.setProperty(
-        "sip.security.authentication.auth-providers[0].classname", annotatedClass.getName());
+    environment.setProperty(AUTH_PROVIDERS_PROPERTY_CLASSNAME, annotatedClass.getName());
 
     when(context.getEnvironment()).thenReturn(environment);
     AnnotatedTypeMetadata metadata = mock(AnnotatedTypeMetadata.class);
@@ -58,8 +58,7 @@ class SIPAuthProviderConditionTest {
 
     ConditionContext context = mock(ConditionContext.class);
     MockEnvironment environment = new MockEnvironment();
-    environment.setProperty(
-        "sip.security.authentication.auth-providers[0].classname", configuredClass.getName());
+    environment.setProperty(AUTH_PROVIDERS_PROPERTY_CLASSNAME, configuredClass.getName());
 
     when(context.getEnvironment()).thenReturn(environment);
     AnnotatedTypeMetadata metadata = mock(AnnotatedTypeMetadata.class);
@@ -86,11 +85,9 @@ class SIPAuthProviderConditionTest {
 
     ConditionContext context = mock(ConditionContext.class);
     MockEnvironment environment = new MockEnvironment();
+    environment.setProperty(AUTH_PROVIDERS_PROPERTY_CLASSNAME, annotatedClass.getName());
     environment.setProperty(
-        "sip.security.authentication.auth-providers[0].classname", annotatedClass.getName());
-    environment.setProperty(
-        "sip.security.authentication.auth-providers[0].validation.classname",
-        SIPAlwaysAllowValidator.class.getName());
+        AUTH_PROVIDERS_VALIDATION_CLASSNAME, SIPAlwaysAllowValidator.class.getName());
 
     when(context.getEnvironment()).thenReturn(environment);
     AnnotatedTypeMetadata metadata = mock(AnnotatedTypeMetadata.class);
@@ -117,11 +114,8 @@ class SIPAuthProviderConditionTest {
 
     ConditionContext context = mock(ConditionContext.class);
     MockEnvironment environment = new MockEnvironment();
-    environment.setProperty(
-        "sip.security.authentication.auth-providers[0].classname", annotatedClass.getName());
-    environment.setProperty(
-        "sip.security.authentication.auth-providers[0].validation.classname",
-        validatorClass.getName());
+    environment.setProperty(AUTH_PROVIDERS_PROPERTY_CLASSNAME, annotatedClass.getName());
+    environment.setProperty(AUTH_PROVIDERS_VALIDATION_CLASSNAME, validatorClass.getName());
 
     when(context.getEnvironment()).thenReturn(environment);
     AnnotatedTypeMetadata metadata = mock(AnnotatedTypeMetadata.class);

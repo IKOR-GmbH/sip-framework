@@ -36,6 +36,9 @@ class CompositeAuthenticationFilterTest {
 
   @Mock private AuthenticationManager authManager;
 
+  private final MockHttpServletRequest request = new MockHttpServletRequest();
+  private final MockHttpServletResponse response = new MockHttpServletResponse();
+
   private SecurityConfigProperties config;
   private CompositeAuthenticationFilter subject;
   private SIPBasicAuthAuthenticationToken token =
@@ -58,8 +61,6 @@ class CompositeAuthenticationFilterTest {
   @Test
   void WHEN_doFilterInternal_WITH_badCredentials_THEN_401() throws Exception {
     // arrange
-    MockHttpServletRequest request = new MockHttpServletRequest();
-    MockHttpServletResponse response = new MockHttpServletResponse();
     when(authManager.authenticate(token)).thenThrow(BadCredentialsException.class);
 
     // act
@@ -72,8 +73,6 @@ class CompositeAuthenticationFilterTest {
   @Test
   void WHEN_doFilterInternal_WITH_incompleteCredentials_THEN_403() throws Exception {
     // arrange
-    MockHttpServletRequest request = new MockHttpServletRequest();
-    MockHttpServletResponse response = new MockHttpServletResponse();
     when(authManager.authenticate(token)).thenThrow(InsufficientAuthenticationException.class);
 
     // act
@@ -86,8 +85,6 @@ class CompositeAuthenticationFilterTest {
   @Test
   void WHEN_doFilterInternal_WITH_serverError_THEN_500() throws Exception {
     // arrange
-    MockHttpServletRequest request = new MockHttpServletRequest();
-    MockHttpServletResponse response = new MockHttpServletResponse();
     when(authManager.authenticate(token)).thenThrow(IllegalStateException.class);
 
     // act
@@ -100,8 +97,6 @@ class CompositeAuthenticationFilterTest {
   @Test
   void WHEN_doFilterInternal_WITH_validCredentials_THEN_everythingOk() throws Exception {
     // arrange
-    MockHttpServletRequest request = new MockHttpServletRequest();
-    MockHttpServletResponse response = new MockHttpServletResponse();
     when(authManager.authenticate(token)).thenReturn(token);
     FilterChain chain = mock(FilterChain.class);
 
@@ -119,18 +114,16 @@ class CompositeAuthenticationFilterTest {
   @Test
   void WHEN_doFilterInternal_WITH_ignoredRoute_THEN_everythingOk() throws Exception {
     // arrange
-    MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/ignored");
-    MockHttpServletResponse response = new MockHttpServletResponse();
     FilterChain chain = mock(FilterChain.class);
 
     // act
     subject.doFilter(request, response, chain);
+    Authentication contextToken = SecurityContextHolder.getContext().getAuthentication();
 
     // assert
     verifyNoInteractions(authManager, tokenExtractors);
     verify(chain).doFilter(request, response);
-    Authentication contextToken = SecurityContextHolder.getContext().getAuthentication();
     assertThat(contextToken).isInstanceOf(CompositeAuthenticationToken.class);
     assertThat(((CompositeAuthenticationToken) contextToken).getAuthTokens()).isEmpty();
   }

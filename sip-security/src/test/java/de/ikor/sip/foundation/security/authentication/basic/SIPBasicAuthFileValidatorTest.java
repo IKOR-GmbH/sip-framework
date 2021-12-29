@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties.AuthProviderSettings;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties.ValidationSettings;
-
 import java.io.IOException;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
@@ -77,12 +76,12 @@ class SIPBasicAuthFileValidatorTest {
         .isFalse();
   }
 
-  private SIPBasicAuthFileValidator getSipBasicAuthFileValidator(String fileName) throws IOException {
+  private SIPBasicAuthFileValidator getSipBasicAuthFileValidator(String fileName)
+      throws IOException {
     AuthProviderSettings authProvSettings = new AuthProviderSettings();
     authProvSettings.setClassname(SIPBasicAuthAuthenticationProvider.class);
     authProvSettings.setValidation(
-            new ValidationSettings(
-                    SIPBasicAuthFileValidator.class, new ClassPathResource(fileName)));
+        new ValidationSettings(SIPBasicAuthFileValidator.class, new ClassPathResource(fileName)));
     SecurityConfigProperties config = new SecurityConfigProperties();
     config.setAuthProviders(Collections.singletonList(authProvSettings));
 
