@@ -28,14 +28,17 @@ class SIPBasicAuthAuthenticationTokenTest {
 
     // act
     SIPBasicAuthAuthenticationToken subject =
-            new SIPBasicAuthAuthenticationToken(expectedPrincipal, expectedCredential, false);
+        new SIPBasicAuthAuthenticationToken(expectedPrincipal, expectedCredential, false);
 
     // assert
     assertCtorReturnsValidValues(expectedPrincipal, expectedCredential, subject);
     assertThat(subject.isAuthenticated()).isFalse();
   }
 
-  private void assertCtorReturnsValidValues(String expectedPrincipal, String expectedCredential, SIPBasicAuthAuthenticationToken subject) {
+  private void assertCtorReturnsValidValues(
+      String expectedPrincipal,
+      String expectedCredential,
+      SIPBasicAuthAuthenticationToken subject) {
     assertThat(subject.getAuthorities()).isEmpty();
     assertThat(subject.getCredentials()).isEqualTo(expectedCredential);
     assertThat(subject.getDetails()).isNull();

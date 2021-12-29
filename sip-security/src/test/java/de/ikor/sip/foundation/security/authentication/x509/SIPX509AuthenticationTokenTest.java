@@ -20,8 +20,7 @@ class SIPX509AuthenticationTokenTest {
     String expectedPrincipal = UUID.randomUUID().toString();
 
     // act
-    SIPX509AuthenticationToken subject =
-            new SIPX509AuthenticationToken(expectedPrincipal, false);
+    SIPX509AuthenticationToken subject = new SIPX509AuthenticationToken(expectedPrincipal, false);
 
     // assert
     assertCtorCorrectValues(expectedPrincipal, subject);
@@ -43,7 +42,8 @@ class SIPX509AuthenticationTokenTest {
     assertThat(result.isAuthenticated()).isTrue();
   }
 
-  private void assertCtorCorrectValues(String expectedPrincipal, SIPX509AuthenticationToken subject) {
+  private void assertCtorCorrectValues(
+      String expectedPrincipal, SIPX509AuthenticationToken subject) {
     assertThat(subject.getAuthorities()).isEmpty();
     assertThat(subject.getCredentials()).isNull();
     assertThat(subject.getDetails()).isNull();
