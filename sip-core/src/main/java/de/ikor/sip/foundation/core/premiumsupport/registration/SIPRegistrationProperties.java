@@ -1,27 +1,28 @@
 package de.ikor.sip.foundation.core.premiumsupport.registration;
 
-import java.time.Duration;
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.time.DurationMax;
 import org.hibernate.validator.constraints.time.DurationMin;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
+import java.net.URI;
+import java.time.Duration;
+import java.util.UUID;
 
 /** A configuration class that provides properties specific to an adapter instance. */
 @Data
+@Slf4j
 @Validated
 @Configuration
 @ConfigurationProperties(prefix = "sip.core.backend-registration")
-@ComponentScan("de.ikor.sip.foundation.core.premiumsupport.registration")
-public class RegistrationConfigurationProperties {
+public class SIPRegistrationProperties {
 
   /**
    * This is a unique id that identifies an instance of an adapter. The value is generated and can
@@ -47,6 +48,27 @@ public class RegistrationConfigurationProperties {
    */
   @NotBlank()
   private String url;
+
+  /**
+   * Registration endpoint path. Default value is /register.
+   *
+   * <p>This property is required
+   */
+  private String registrationPath = "/register";
+
+  /**
+   * De-registration endpoint path. Default value is /register.
+   *
+   * <p>This property is required
+   */
+  private String deregistrationPath = "/deregister";
+
+  /**
+   * The URI of this adapter instance. e.g. http://127.0.0.1:8080
+   *
+   * <p>This property is optional
+   */
+  private URI instanceUri;
 
   /**
    * The interval in which this adapter will send the telemetry data. The value of register interval
@@ -76,4 +98,11 @@ public class RegistrationConfigurationProperties {
   @DurationMax(millis = 6000)
   private Duration readTimeout = Duration.ofMillis(5000);
 
+  /**
+   * The stage refers to the staging environment in which the application is executed. This value is
+   * relevant to be able to differentiate between different adapter instances in the SIP backend.
+   *
+   * <p>This property is optional
+   */
+  private String stage;
 }

@@ -2,22 +2,14 @@ package de.ikor.sip.foundation.core.premiumsupport.registration;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import java.util.UUID;
-
-import de.ikor.sip.foundation.core.premiumsupport.registration.TelemetryData;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 class RegistrationWebClientTest {
 
   @Mock private RestTemplate restTemplate;
 
-  private RegistrationWebClient registrationWebClient;
+  private SIPRegistrationWebClient SIPRegistrationWebClient;
 
 //  @BeforeEach
 //  void setUp() {

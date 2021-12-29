@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteSummary;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -25,52 +24,25 @@ import java.util.*;
 @Data
 @Slf4j
 @Validated
-@Configuration
-@ConfigurationProperties(prefix = "sip.core.backend-registration")
-@JsonSerialize
-public class TelemetryData {
+//todo javadoc
+class TelemetryData {
 
-  public TelemetryData(Environment environment) {
-    setInstanceUri(null, environment);
-    this.instanceScheme = determineHostScheme(environment);
-    this.instanceHost = determineHostAddress();
-    this.instancePort = determineHostPort(environment);
-    setStage("", environment);
+  public TelemetryData(SIPRegistrationProperties configProps, Environment environment) {
+    this.setInstanceUri(configProps.getInstanceUri(), environment);
+    this.instanceId = configProps.getInstanceId();
+    setStage(configProps.getStage(), environment);
   }
 
   /**
-   * This is a unique id that identifies an instance of an adapter. Its value is assigned in {@link
-   * RegistrationConfigurationProperties}
+   * This is a unique id that identifies an instance of an adapter. Its value is assigned from {@link
+   * SIPRegistrationProperties}
    */
   @Setter(AccessLevel.NONE)
-  private UUID instanceId = UUID.randomUUID();
+  private UUID instanceId;
 
   /**
-   * Used protocol of this adapter instance. If ssl is enabled https is used otherwise http. It is
-   * either set via the config or determined automatically. Default value is http. Its value is
-   * assigned in {@link TelemetryDataCollector}
-   */
-  @Setter(AccessLevel.NONE)
-  private String instanceScheme;
-
-  /**
-   * Host address of this adapter instance. It is either set via the config or determined
-   * automatically. Default value is 127.0.0.1 Its value is assigned in {@link
-   * TelemetryDataCollector}
-   */
-  @Setter(AccessLevel.NONE)
-  private String instanceHost;
-
-  /**
-   * Port of this adapter instance It is either set via the config or determined automatically. Its
-   * value is assigned in {@link TelemetryDataCollector} Default value is 8080
-   */
-  @Setter(AccessLevel.NONE)
-  private Integer instancePort;
-
-  /**
-   * The instance uri is composed of {@link #instanceScheme}, {@link #instanceHost} and {@link
-   * #instancePort} Its value is assigned in {@link TelemetryDataCollector}
+   * The instance uri is composed of {@link #getInstanceScheme()}, {@link #getInstanceHost} and {@link
+   * #getInstancePort()}
    */
   private URI instanceUri;
 
@@ -120,22 +92,29 @@ public class TelemetryData {
    */
   private String stage;
 
-  public void setInstanceUri(URI instanceUri) {
-    setInstanceUri(instanceUri, null);
-  }
-
-  public void setInstanceUri(URI instanceUri, Environment environment) {
+  private void setInstanceUri(URI instanceUri, Environment environment) {
     this.instanceUri = determineInstanceUri(instanceUri, environment);
   }
 
+  /**
+   * Host address of this adapter instance. It is either set via the config or determined
+   * automatically. Default value is 127.0.0.1
+   */
   public String getInstanceHost() {
     return instanceUri.getHost();
   }
 
+  /**
+   * Port of this adapter instance It is either set via the config or determined automatically. Default value is 8080
+   */
   public int getInstancePort() {
     return instanceUri.getPort();
   }
 
+  /**
+   * Used protocol of this adapter instance. If ssl is enabled https is used otherwise http. It is
+   * either set via the config or determined automatically. Default value is http.
+   */
   public String getInstanceScheme() {
     return instanceUri.getScheme();
   }
