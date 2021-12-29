@@ -64,6 +64,7 @@ class SIPAuthenticationProviderTest {
   @Test
   void WHEN_authenticate_WITH_badToken_THEN_badCredentialsException() throws Exception {
     // arrange
+    ((Logger) LoggerFactory.getLogger(SIPAuthenticationProvider.class)).setLevel(Level.INFO);
     SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken> subject =
         new SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken>(
             SIPBasicAuthAuthenticationToken.class, validator) {};

@@ -30,6 +30,7 @@ class SIPX509TokenExtractorTest {
   @Test
   void WHEN_extract_WITH_validCert_THEN_certExtracted() throws Exception {
     // arrange
+    ((Logger) LoggerFactory.getLogger(SIPX509TokenExtractor.class)).setLevel(Level.INFO);
     X509Certificate certMock = mock(X509Certificate.class);
     Principal principalMock = mock(Principal.class);
     when(certMock.getSubjectDN()).thenReturn(principalMock);
