@@ -4,7 +4,7 @@ import de.ikor.sip.foundation.core.actuator.health.CamelEndpointHealthMonitor;
 import de.ikor.sip.foundation.core.actuator.health.EndpointHealthIndicator;
 import java.util.Map;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @AllArgsConstructor
-@ConditionalOnExpression("${sip.core.metrics.scheduled-health-check.enabled:true}")
+@EnableScheduling
+@HealthCheckEnabledCondition
 public class ScheduledHealthCheck {
 
   private final CamelEndpointHealthMonitor monitor;
