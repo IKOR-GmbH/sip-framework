@@ -33,7 +33,7 @@ class FtpHealthConsumersTest {
     Logger logger = (Logger) LoggerFactory.getLogger(FtpHealthConsumers.class);
     listAppender = new ListAppender<>();
     listAppender.start();
-
+    logger.setLevel(Level.DEBUG);
     logger.addAppender(listAppender);
     logsList = listAppender.list;
   }
