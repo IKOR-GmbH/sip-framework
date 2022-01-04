@@ -8,11 +8,14 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -96,13 +99,16 @@ class TelemetryDataTest {
   }
 
   @Test
-  void When_instanceURIisNotConfigured_Expect_uriIsTakenFromEnvironment() {
+  void When_instanceURIisNotConfigured_Expect_uriIsTakenFromEnvironment()
+      throws UnknownHostException {
     // arrange
     when(environment.getProperty("server.port", Integer.class, 8080)).thenReturn(8080);
     // act
     TelemetryData telemetryData = new TelemetryData(properties, environment);
     // assert
-    assertThat(telemetryData.getInstanceUri()).isEqualTo(URI.create("http://172.18.0.1:8080"));
+    assertThat(telemetryData.getInstanceUri())
+        .isEqualTo(
+            URI.create(format("http://%s:8080", InetAddress.getLocalHost().getHostAddress())));
   }
 
   @Test
@@ -127,16 +133,17 @@ class TelemetryDataTest {
     TelemetryData telemetryData = new TelemetryData(properties, environment);
     telemetryData.setInterval(120001L);
     Optional<ConstraintViolation<TelemetryData>> interval =
-            getValidationViolationForField(telemetryData, "interval");
+        getValidationViolationForField(telemetryData, "interval");
     assertThat(interval).isPresent();
   }
 
   @Test
   void When_configuredAdapterNameIsToLong_Expect_ValidationError() {
     TelemetryData telemetryData = new TelemetryData(properties, environment);
-    telemetryData.setAdapterName("to long adapter name which definitely must cause validation error");
+    telemetryData.setAdapterName(
+        "to long adapter name which definitely must cause validation error");
     Optional<ConstraintViolation<TelemetryData>> interval =
-            getValidationViolationForField(telemetryData, "adapterName");
+        getValidationViolationForField(telemetryData, "adapterName");
     assertThat(interval).isPresent();
   }
 
