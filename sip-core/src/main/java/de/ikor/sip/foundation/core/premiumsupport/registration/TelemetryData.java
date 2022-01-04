@@ -147,7 +147,7 @@ class TelemetryData {
       return InetAddress.getLocalHost().getHostAddress();
     } catch (UnknownHostException unknownHostException) {
       log.warn("Instance host could not be determined fallback to 127.0.0.1");
-      //todo really fall back to 127.0.0.1?
+      // todo really fall back to 127.0.0.1?
     }
     return "127.0.0.1";
   }
@@ -179,7 +179,6 @@ class TelemetryData {
    * dev, prod) In case active profiles are used for different purposes instead of the staging areas
    * this value can be overridden by using the config property sip.core.backend-registration.stage
    * (e.g. sip.core.backend-registration.stage=dev)
-   *
    */
   private void setStage(String stage, Environment environment) {
     activeProfiles =
