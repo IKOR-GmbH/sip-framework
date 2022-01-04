@@ -1,30 +1,30 @@
 package de.ikor.sip.foundation.core.premiumsupport.registration;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteSummary;
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.boot.actuate.health.Status;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.validation.annotation.Validated;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.boot.actuate.health.Status;
+import org.springframework.core.env.Environment;
+import org.springframework.validation.annotation.Validated;
 
 /** POJO that is used to transmit adapter instance specific data to the SIP Backend. */
 @Data
 @Slf4j
 @Validated
-//todo javadoc
+/**
+ * Content of adapter-platform heartbeat requests.
+ */
 class TelemetryData {
 
   public TelemetryData(SIPRegistrationProperties configProps, Environment environment) {
@@ -34,15 +34,15 @@ class TelemetryData {
   }
 
   /**
-   * This is a unique id that identifies an instance of an adapter. Its value is assigned from {@link
-   * SIPRegistrationProperties}
+   * This is a unique id that identifies an instance of an adapter. Its value is assigned from
+   * {@link SIPRegistrationProperties}
    */
   @Setter(AccessLevel.NONE)
   private UUID instanceId;
 
   /**
-   * The instance uri is composed of {@link #getInstanceScheme()}, {@link #getInstanceHost} and {@link
-   * #getInstancePort()}
+   * The instance uri is composed of {@link #getInstanceScheme()}, {@link #getInstanceHost} and
+   * {@link #getInstancePort()}
    */
   private URI instanceUri;
 
@@ -62,7 +62,7 @@ class TelemetryData {
    * between 1000ms and 120000ms. Default value is 30000 milliseconds.
    */
   @Min(1000)
-  @Max(120000) // TODO add test to check value range
+  @Max(120000)
   private Long interval = 30000L;
 
   /**
@@ -105,7 +105,8 @@ class TelemetryData {
   }
 
   /**
-   * Port of this adapter instance It is either set via the config or determined automatically. Default value is 8080
+   * Port of this adapter instance It is either set via the config or determined automatically.
+   * Default value is 8080
    */
   public int getInstancePort() {
     return instanceUri.getPort();

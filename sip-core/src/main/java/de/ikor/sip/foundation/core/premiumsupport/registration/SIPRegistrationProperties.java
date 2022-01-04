@@ -1,5 +1,10 @@
 package de.ikor.sip.foundation.core.premiumsupport.registration;
 
+import java.net.URI;
+import java.time.Duration;
+import java.util.UUID;
+import javax.annotation.PostConstruct;
+import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -11,11 +16,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotBlank;
-import java.net.URI;
-import java.time.Duration;
-import java.util.UUID;
-
 /** A configuration class that provides properties specific to an adapter instance. */
 @Data
 @Slf4j
@@ -23,6 +23,12 @@ import java.util.UUID;
 @Configuration
 @ConfigurationProperties(prefix = "sip.core.backend-registration")
 public class SIPRegistrationProperties {
+
+  @PostConstruct
+  public void setCompositeParameters() {
+    this.checkOutUrl = this.platformUrl + this.checkOutPath;
+    this.checkInUrl = this.platformUrl + this.checkInPath;
+  }
 
   /**
    * This is a unique id that identifies an instance of an adapter. The value is generated and can
@@ -46,22 +52,13 @@ public class SIPRegistrationProperties {
    *
    * <p>This property is required
    */
-  @NotBlank()
-  private String url;
+  @NotBlank() private String platformUrl;
 
-  /**
-   * Registration endpoint path. Default value is /register.
-   *
-   * <p>This property is required
-   */
-  private String registrationPath = "/register";
+  /** Registration endpoint path. Default value is /register. */
+  private String checkInPath = "/register";
 
-  /**
-   * De-registration endpoint path. Default value is /register.
-   *
-   * <p>This property is required
-   */
-  private String deregistrationPath = "/deregister";
+  /** De-registration endpoint path. Default value is /register. */
+  private String checkOutPath = "/deregister";
 
   /**
    * The URI of this adapter instance. e.g. http://127.0.0.1:8080
@@ -76,7 +73,7 @@ public class SIPRegistrationProperties {
    *
    * <p>This property is optional
    */
-  private Long interval = 30000L;//TODO add test to check if default val is set
+  private Long interval = 30000L; // TODO add test to check if default val is set
 
   /**
    * Connection timeout of the web client. The value of read timeout has to be between 100ms and
@@ -105,4 +102,7 @@ public class SIPRegistrationProperties {
    * <p>This property is optional
    */
   private String stage;
+
+  private String checkOutUrl;
+  private String checkInUrl;
 }

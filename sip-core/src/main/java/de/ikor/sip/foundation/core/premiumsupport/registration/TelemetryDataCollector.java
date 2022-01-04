@@ -17,13 +17,22 @@ class TelemetryDataCollector {
   private final PathMappedEndpoints pathMappedEndpoints;
   private final HealthEndpoint healthEndpoint;
 
-  //todo javadoc
+  /**
+   * Creates and populates {@link TelemetryData} from {@link SIPRegistrationProperties} and {@link
+   * Environment}
+   *
+   * @param configProps - Static telemetry data source
+   * @param adapterRouteEndpoint - Camel routes telemetry data source
+   * @param pathMappedEndpoints - Web API telemetry data source
+   * @param healthEndpoint - Health telemetry data source
+   * @param environment - Server and application static data sources
+   */
   public TelemetryDataCollector(
-          SIPRegistrationProperties configProps,
-          AdapterRouteEndpoint adapterRouteEndpoint,
-          PathMappedEndpoints pathMappedEndpoints,
-          HealthEndpoint healthEndpoint,
-          Environment environment) {
+      SIPRegistrationProperties configProps,
+      AdapterRouteEndpoint adapterRouteEndpoint,
+      PathMappedEndpoints pathMappedEndpoints,
+      HealthEndpoint healthEndpoint,
+      Environment environment) {
     this.telemetryData = new TelemetryData(configProps, environment);
     this.adapterRouteEndpoint = adapterRouteEndpoint;
     this.pathMappedEndpoints = pathMappedEndpoints;
@@ -31,7 +40,7 @@ class TelemetryDataCollector {
   }
 
   /**
-   * Collect current telemetry data of this application.
+   * Collect current(dynamic) telemetry data of this application.
    *
    * @return the collected data as {@link TelemetryData}
    */

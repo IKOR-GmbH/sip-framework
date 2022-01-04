@@ -1,0 +1,150 @@
+package de.ikor.sip.foundation.core.premiumsupport.registration;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.core.env.Environment;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.net.URI;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+class TelemetryDataTest {
+  public static final long DEFAULT_INTERVAL = 30000L;
+  private static SIPRegistrationProperties properties;
+  private static Environment environment;
+  private static Validator validator;
+
+  @BeforeAll
+  public static void setUp() {
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    validator = factory.getValidator();
+
+    environment = mock(Environment.class);
+    properties = mock(SIPRegistrationProperties.class);
+    when(environment.getProperty("server.ssl.enabled", Boolean.class, false)).thenReturn(false);
+    when(environment.getActiveProfiles()).thenReturn(new String[] {"test"});
+  }
+
+  @Test
+  void When_activeProfileIsNotInConfig_Expect_telemetryDataPicksItUpFromEnvironment() {
+    // arrange
+    when(properties.getStage()).thenReturn(null);
+    // act
+    TelemetryData telemetryData = new TelemetryData(properties, environment);
+    // assert
+    assertThat(telemetryData.getActiveProfiles()).contains(environment.getActiveProfiles());
+  }
+
+  @Test
+  void When_activeProfileIsInConfig_Expect_telemetryDataPicksItUpFromEnvironment() {
+    // arrange
+    when(properties.getStage()).thenReturn("develop");
+    // act
+    TelemetryData telemetryData = new TelemetryData(properties, environment);
+    // assert
+    assertThat(telemetryData.getActiveProfiles())
+        .isEqualTo(Collections.singletonList(properties.getStage()));
+  }
+
+  @Test
+  void When_SSLisDisabled_Expect_instanceSchemeIsSetToHTTP() {
+    // arrange
+    when(environment.getProperty("server.ssl.enabled", Boolean.class, false)).thenReturn(false);
+    // act
+    TelemetryData telemetryData = new TelemetryData(properties, environment);
+    // assert
+    assertThat(telemetryData.getInstanceScheme()).isEqualTo("http");
+  }
+
+  @Test
+  void When_sslIsEnabled_Expect_instanceSchemeIsSetToHTTPS() {
+    // arrange
+    when(environment.getProperty("server.ssl.enabled", Boolean.class, false)).thenReturn(true);
+    // act
+    TelemetryData telemetryData = new TelemetryData(properties, environment);
+    // assert
+    assertThat(telemetryData.getInstanceScheme()).isEqualTo("https");
+  }
+
+  @Test
+  void When_telemetryDataIsCreated_Expect_instancePortIsSet() {
+    // arrange
+    when(environment.getProperty("server.port", Integer.class, 8080)).thenReturn(8080);
+    // act
+    TelemetryData telemetryData = new TelemetryData(properties, environment);
+    // assert
+    assertThat(telemetryData.getInstancePort()).isEqualTo(8080);
+  }
+
+  @Test
+  void When_instanceURIisConfigured_Expect_uriIsTakenFromConfig() {
+    // arrange
+    when(properties.getInstanceUri()).thenReturn(URI.create("http://myhost:442"));
+    // act
+    TelemetryData telemetryData = new TelemetryData(properties, environment);
+    // assert
+    assertThat(telemetryData.getInstanceUri()).isEqualTo(properties.getInstanceUri());
+  }
+
+  @Test
+  void When_instanceURIisNotConfigured_Expect_uriIsTakenFromEnvironment() {
+    // arrange
+    when(environment.getProperty("server.port", Integer.class, 8080)).thenReturn(8080);
+    // act
+    TelemetryData telemetryData = new TelemetryData(properties, environment);
+    // assert
+    assertThat(telemetryData.getInstanceUri()).isEqualTo(URI.create("http://172.18.0.1:8080"));
+  }
+
+  @Test
+  void When_telemetryDataIsCreated_Expect_getIntervalReturnsDefaultValue() {
+    // act
+    TelemetryData telemetryData = new TelemetryData(properties, environment);
+    // assert
+    assertThat(telemetryData.getInterval()).isEqualTo(DEFAULT_INTERVAL);
+  }
+
+  @Test
+  void When_configuredIntervalIsToShort_Expect_ValidationError() {
+    TelemetryData telemetryData = new TelemetryData(properties, environment);
+    telemetryData.setInterval(999L);
+    Optional<ConstraintViolation<TelemetryData>> interval =
+        getValidationViolationForField(telemetryData, "interval");
+    assertThat(interval).isPresent();
+  }
+
+  @Test
+  void When_configuredIntervalIsToLong_Expect_ValidationError() {
+    TelemetryData telemetryData = new TelemetryData(properties, environment);
+    telemetryData.setInterval(120001L);
+    Optional<ConstraintViolation<TelemetryData>> interval =
+            getValidationViolationForField(telemetryData, "interval");
+    assertThat(interval).isPresent();
+  }
+
+  @Test
+  void When_configuredAdapterNameIsToLong_Expect_ValidationError() {
+    TelemetryData telemetryData = new TelemetryData(properties, environment);
+    telemetryData.setAdapterName("to long adapter name which definitely must cause validation error");
+    Optional<ConstraintViolation<TelemetryData>> interval =
+            getValidationViolationForField(telemetryData, "adapterName");
+    assertThat(interval).isPresent();
+  }
+
+  private Optional<ConstraintViolation<TelemetryData>> getValidationViolationForField(
+      TelemetryData telemetryData, String fieldName) {
+    Set<ConstraintViolation<TelemetryData>> violations = validator.validate(telemetryData);
+    return violations.stream()
+        .filter(violation -> violation.getPropertyPath().toString().equals(fieldName))
+        .findFirst();
+  }
+}

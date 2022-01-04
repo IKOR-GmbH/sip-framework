@@ -13,7 +13,7 @@ import org.springframework.context.annotation.PropertySource;
     value = "classpath:sip-core-default-config.yaml",
     factory = YamlPropertSourceFactory.class)
 @ComponentScan(
-        // Section contains all packages enabled by default
+    // Section contains all packages enabled by default
     basePackages = {
       "de.ikor.sip.foundation.core.actuator",
       "de.ikor.sip.foundation.core.annotation",
@@ -22,7 +22,8 @@ import org.springframework.context.annotation.PropertySource;
       "de.ikor.sip.foundation.core.translate",
       "de.ikor.sip.foundation.core.util"
     })
-// @Import contains classes with conditional @ComponentScan. This way certain packages are loaded on demand,
+// @Import contains classes with conditional @ComponentScan. This way certain packages are loaded on
+// demand,
 // based on configuration.
 @Import({AdapterRegistration.class})
 public class SIPCoreConfiguration {}
