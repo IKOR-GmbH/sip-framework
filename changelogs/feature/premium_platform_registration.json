@@ -1,0 +1,5 @@
+{
+  "author": "vladiIkor",
+  "pullrequestId": "46",
+  "message": "Implementing rest client for communicating with SIP premium platform. It registers and sends heartbeat requests with telemetry data content."
+}
