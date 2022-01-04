@@ -259,7 +259,7 @@
     <dependency>
       <groupId>commons-net</groupId>
       <artifactId>commons-net</artifactId>
-      <version>3.7.2</version>
+      <version>3.8.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -322,7 +322,7 @@
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-annotations</artifactId>
-      <version>2.1.10</version>
+      <version>2.1.11</version>
       <licenses>
         <license>
           <name>Apache License 2.0</name>
@@ -512,8 +512,112 @@
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-bean-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-browse-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-controlbus-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-core-starter</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-dataformat-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-dataset-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-direct-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-directvm-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-file-starter</artifactId>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -526,7 +630,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-jackson-starter</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -539,7 +643,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-jmx-starter</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -552,7 +656,111 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-kafka-starter</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-language-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-log-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-mock-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-ref-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-rest-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-saga-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-scheduler-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-seda-starter</artifactId>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -565,7 +773,7 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-spring-boot-starter</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -578,7 +786,98 @@
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-spring-boot</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-stub-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-timer-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-validator-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-vm-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-xml-jaxp-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-xpath-starter</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-xslt-starter</artifactId>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -591,7 +890,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-api</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -604,7 +903,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-attachments</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -617,7 +916,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-base-engine</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -630,7 +929,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-base</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -643,7 +942,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-bean</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -656,7 +955,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-browse</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -669,7 +968,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cloud</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -682,7 +981,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cluster</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -695,7 +994,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-controlbus</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -708,7 +1007,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-catalog</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -721,7 +1020,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-engine</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -734,7 +1033,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-languages</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -747,7 +1046,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-model</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -760,7 +1059,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-processor</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -773,7 +1072,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-reifier</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -786,7 +1085,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-xml</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -799,7 +1098,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -812,7 +1111,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-dataformat</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -825,7 +1124,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-dataset</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -838,7 +1137,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-direct</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -851,7 +1150,20 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-directvm</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-dsl-support</artifactId>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -864,7 +1176,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-endpointdsl</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -877,7 +1189,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-file</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -890,7 +1202,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-ftp</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -903,7 +1215,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-health</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -916,7 +1228,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-http-base</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -929,7 +1241,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-http-common</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -942,7 +1254,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-http</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -955,7 +1267,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jackson</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -968,7 +1280,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jms</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -981,7 +1293,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jmx</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -994,7 +1306,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-kafka</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1007,7 +1319,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-language</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1020,7 +1332,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-log</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1033,7 +1345,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-main</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1046,7 +1358,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-management-api</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1059,7 +1371,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-management</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1072,7 +1384,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-mock</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1085,7 +1397,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-ref</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1098,7 +1410,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-rest</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1111,7 +1423,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-saga</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1124,7 +1436,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-scheduler</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1137,7 +1449,33 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-seda</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-spring-main</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-spring-xml</artifactId>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1150,7 +1488,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-spring</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1163,7 +1501,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-stub</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1176,7 +1514,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-support</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1189,7 +1527,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-timer</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1202,7 +1540,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-tooling-model</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1215,7 +1553,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-util-json</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1228,7 +1566,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-util</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1241,7 +1579,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-validator</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1254,7 +1592,33 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-vm</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-xml-io-util</artifactId>
+      <version>3.13.0</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>apache license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-xml-jaxb-dsl</artifactId>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1267,7 +1631,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xml-jaxb</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1280,7 +1644,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xml-jaxp</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1293,7 +1657,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xpath</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -1306,7 +1670,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xslt</artifactId>
-      <version>3.8.0</version>
+      <version>3.13.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>

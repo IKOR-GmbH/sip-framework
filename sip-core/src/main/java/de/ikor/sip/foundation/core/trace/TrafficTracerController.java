@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.core.trace;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
@@ -26,6 +28,7 @@ public class TrafficTracerController {
    * @return the trace history
    */
   @GetMapping
+  @Operation(summary = "Get trace history", description = "Get trace history and clear storage")
   public List<String> getTraceHistory() {
     return traceHistory.getAndClearHistory();
   }
@@ -38,7 +41,12 @@ public class TrafficTracerController {
    * @return true if parameter is changed, otherwise false
    */
   @PostMapping("/format/{parameter}")
-  public boolean changeParameter(@PathVariable String parameter, @RequestBody Object value) {
+  @Operation(
+      summary = "Set ExchangeFormatter parameter value",
+      description = "Sets the value of a parameter in ExchangeFormatter for Trace logs")
+  public boolean changeParameter(
+      @Parameter(name = "parameter", description = "Parameter name") @PathVariable String parameter,
+      @Parameter(name = "value", description = "Parameter value") @RequestBody Object value) {
     DefaultExchangeFormatterConfigurer configurer = new DefaultExchangeFormatterConfigurer();
     return configurer.configure(
         camelContext, camelContext.getTracer().getExchangeFormatter(), parameter, value, true);

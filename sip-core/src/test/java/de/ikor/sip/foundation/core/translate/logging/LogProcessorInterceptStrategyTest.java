@@ -21,10 +21,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class LogProcessorInterceptStrategyTest {
   public static final String TRANSLATED_MESSAGE = "just a message";
   private static final String TRANSLATION_MESSAGE_KEY = "translation.key";
-  private static LogProcessorInterceptStrategy objectUnderTest;
+  private static LogProcessorInterceptStrategy subject;
   private static SIPTranslateMessageService translateMessageService;
 
-  @Mock LogProcessor subject;
+  @Mock private LogProcessor logProcessor;
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private static ExtendedCamelContext camelContext;
@@ -32,48 +32,48 @@ class LogProcessorInterceptStrategyTest {
   @BeforeAll
   public static void setup() {
       translateMessageService = mock(SIPTranslateMessageService.class);
-    objectUnderTest = new LogProcessorInterceptStrategy(translateMessageService);
+    subject = new LogProcessorInterceptStrategy(translateMessageService);
   }
 
   @Test
-  void when_ProcessorIsNotLogProcessor_then_ProcessorIsNotChanged() {
-    // act
-    Processor processor =
-        objectUnderTest.wrapProcessorInInterceptors(camelContext, null, subject, null);
-
-    // assert
-    assertThat(processor).isEqualTo(subject);
-  }
-
-  @Test
-  void when_ProcessorIsLogProcessorWithNoExpression_then_ProcessorExpressionIsNotChanged() {
+  void When_ProcessorIsNotLogProcessor_Expect_ProcessorIsNotChanged() {
     // arrange
-    subject = mock(LogProcessor.class);
+    Processor notLogProcessor = mock(Processor.class);
 
     // act
     Processor processor =
-        objectUnderTest.wrapProcessorInInterceptors(camelContext, null, subject, null);
+        subject.wrapProcessorInInterceptors(camelContext, null, notLogProcessor, null);
 
     // assert
-    assertThat(subject).isEqualTo(processor);
+    assertThat(processor).isEqualTo(notLogProcessor);
   }
 
   @Test
-  void when_ProcessorIsLogProcessor_then_ProcessorExpressionIsChanged() {
+  void When_ProcessorIsLogProcessorWithNoExpression_Expect_ProcessorExpressionIsNotChanged() {
+    // act
+    Processor processor =
+        subject.wrapProcessorInInterceptors(camelContext, null, logProcessor, null);
+
+    // assert
+    assertThat(processor).isEqualTo(logProcessor);
+    verify(logProcessor, times(1)).getExpression();
+  }
+
+  @Test
+  void When_ProcessorIsLogProcessor_Expect_ProcessorExpressionIsChanged() {
     // arrange
     when(translateMessageService.getTranslatedMessage("translation.key", new Object[0]))
         .thenReturn(TRANSLATED_MESSAGE);
-
-    // act
     Expression translatedExpression = expression(TRANSLATED_MESSAGE);
     when(camelContext.resolveLanguage("simple").createExpression(TRANSLATED_MESSAGE))
         .thenReturn(translatedExpression);
 
-    subject = this.initLogProcessor();
+    this.initLogProcessor();
     when(camelContext.adapt(any())).thenReturn(camelContext);
 
+    // act
     Processor processor =
-        objectUnderTest.wrapProcessorInInterceptors(camelContext, null, subject, null);
+        subject.wrapProcessorInInterceptors(camelContext, null, logProcessor, null);
 
     // assert
     assertThat(((LogProcessor) processor).getExpression().toString())
@@ -88,29 +88,26 @@ class LogProcessorInterceptStrategyTest {
     when(translateMessageService.getTranslatedMessage("translation.key", args))
         .thenReturn(translatedMessage);
 
-    // act
     Expression translatedExpression = expression(translatedMessage);
     when(camelContext.resolveLanguage("simple").createExpression(translatedMessage))
         .thenReturn(translatedExpression);
 
-    subject = this.initLogProcessor(TRANSLATION_MESSAGE_KEY.concat(" ${body} ${header.type}"));
+    this.initLogProcessor(TRANSLATION_MESSAGE_KEY.concat(" ${body} ${header.type}"));
     when(camelContext.adapt(any())).thenReturn(camelContext);
 
+    // act
     Processor processor =
-        objectUnderTest.wrapProcessorInInterceptors(camelContext, null, subject, null);
+        subject.wrapProcessorInInterceptors(camelContext, null, logProcessor, null);
 
     // assert
-    assertThat(translatedMessage).isEqualTo(((LogProcessor) processor).getExpression().toString());
-    ;
+    assertThat(((LogProcessor) processor).getExpression()).hasToString(translatedMessage);
   }
 
-  private LogProcessor initLogProcessor() {
-    return initLogProcessor(TRANSLATION_MESSAGE_KEY);
+  private void initLogProcessor() {
+    initLogProcessor(TRANSLATION_MESSAGE_KEY);
   }
 
-  private LogProcessor initLogProcessor(String expressionString) {
-    LogProcessor logProcessor = mock(LogProcessor.class);
-
+  private void initLogProcessor(String expressionString) {
     Expression expression = expression(expressionString);
     when(logProcessor.getExpression()).thenReturn(expression);
 
@@ -119,8 +116,6 @@ class LogProcessorInterceptStrategyTest {
 
     CamelLogger camelLoggerMock = mock(CamelLogger.class);
     when(logProcessor.getLogger()).thenReturn(camelLoggerMock);
-
-    return logProcessor;
   }
 
   private Expression expression(String expressionString) {

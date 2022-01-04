@@ -2,69 +2,72 @@ package de.ikor.sip.foundation.core.actuator.health.ftp;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.core.actuator.common.IntegrationManagementException;
 import org.apache.camel.Endpoint;
 import org.apache.camel.component.file.remote.RemoteFileEndpoint;
 import org.apache.camel.component.file.remote.RemoteFileOperations;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.actuate.health.Status;
 
 class FtpHealthIndicatorsTests {
-  @Test
-  void noopHealthIndicator_typeMismatch() {
-    // act
-    Endpoint endpointSubject = mock(Endpoint.class);
 
+  private RemoteFileEndpoint endpoint;
+
+  @BeforeEach
+  void setUp() {
+    endpoint = mock(RemoteFileEndpoint.class);
+  }
+
+  @Test
+  void Given_NoneRemoteFileEndpoint_When_noopHealthIndicator_Then_IntegrationManagementException() {
     // assert
-    assertThatThrownBy(() -> FtpHealthIndicators.noopHealthIndicator(endpointSubject))
+    assertThatThrownBy(() -> FtpHealthIndicators.noopHealthIndicator(mock(Endpoint.class)))
         .isInstanceOf(IntegrationManagementException.class);
   }
 
   @Test
-  void noopHealthIndicator_statusUNKNOWN_createRemoteFileOperations_throwsException()
-      throws Exception {
-    // arrange
-    RemoteFileEndpoint endpointSubject = mock(RemoteFileEndpoint.class);
-
+  void
+      Given_CreateRemoteFileOperationsThrowsException_When_noopHealthIndicatorAnd_Then_statusUnknown()
+          throws Exception {
     // act
-    when(endpointSubject.createRemoteFileOperations()).thenThrow(new Exception());
+    when(endpoint.createRemoteFileOperations()).thenThrow(new Exception());
 
     // assert
-    assertThat(FtpHealthIndicators.noopHealthIndicator(endpointSubject).getStatus())
+    assertThat(FtpHealthIndicators.noopHealthIndicator(endpoint).getStatus())
         .isEqualTo(Status.UNKNOWN);
   }
 
   @Test
-  void noopHealthIndicator_statusUP_case2() throws Exception {
+  void Given_OperationNotConnected_When_noopHealthIndicator_Then_statusUp() throws Exception {
     // arrange
-    RemoteFileEndpoint endpointSubject = mock(RemoteFileEndpoint.class);
     RemoteFileOperations operations = mock(RemoteFileOperations.class);
-
-    // act
-    when(endpointSubject.createRemoteFileOperations()).thenReturn(operations);
+    when(endpoint.createRemoteFileOperations()).thenReturn(operations);
     when(operations.isConnected()).thenReturn(false);
 
+    // act
+    Status subjectStatus = FtpHealthIndicators.noopHealthIndicator(endpoint).getStatus();
+
     // assert
-    assertThat(FtpHealthIndicators.noopHealthIndicator(endpointSubject).getStatus())
-        .isEqualTo(Status.UP);
+    assertThat(subjectStatus).isEqualTo(Status.UP);
+    verify(operations, times(2)).connect(any(), any());
   }
 
   @Test
-  void noopHealthIndicator_statusUP() throws Exception {
+  void Given_OperationConnected_When_noopHealthIndicator_Then_statusUp() throws Exception {
     // arrange
-    RemoteFileEndpoint endpointSubject = mock(RemoteFileEndpoint.class);
     RemoteFileOperations operations = mock(RemoteFileOperations.class);
-
-    // act
-    when(endpointSubject.createRemoteFileOperations()).thenReturn(operations);
+    when(endpoint.createRemoteFileOperations()).thenReturn(operations);
     when(operations.isConnected()).thenReturn(true);
     when(operations.connect(any(), any())).thenReturn(true);
 
+    // act
+    Status subjectStatus = FtpHealthIndicators.noopHealthIndicator(endpoint).getStatus();
+
     // assert
-    assertThat(FtpHealthIndicators.noopHealthIndicator(endpointSubject).getStatus())
-        .isEqualTo(Status.UP);
+    assertThat(subjectStatus).isEqualTo(Status.UP);
+    verify(operations, times(1)).connect(any(), any());
   }
 }

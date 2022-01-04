@@ -1,45 +1,45 @@
 package de.ikor.sip.foundation.core.actuator.health.scheduler;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
-import java.util.List;
+import de.ikor.sip.foundation.core.actuator.health.CamelEndpointHealthMonitor;
+import de.ikor.sip.foundation.core.actuator.health.EndpointHealthIndicator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import org.apache.camel.Endpoint;
 import org.junit.jupiter.api.Test;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.actuate.health.HealthComponent;
-import org.springframework.boot.actuate.health.HealthEndpoint;
-import org.springframework.boot.actuate.health.Status;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.boot.actuate.health.Health;
 
 class ScheduledHealthCheckTest {
 
+  private static final String ENDPOINT = "endpoint";
+  private static final Health HEALTH_STATUS_UP = Health.up().build();
+
+  private CamelEndpointHealthMonitor camelEndpointHealthMonitor;
+  private ScheduledHealthCheck scheduledHealthCheckSubject;
+
   @Test
-  void scheduledExecution() {
+  void WHEN_scheduledExecution_EXPECT_HealthEndpointsAreCalculated() {
     // arrange
-    ListAppender<ILoggingEvent> listAppender;
-    Logger logger = (Logger) LoggerFactory.getLogger(ScheduledHealthCheck.class);
-    listAppender = new ListAppender<>();
-    listAppender.start();
-    logger.addAppender(listAppender);
-    HealthEndpoint endpoint = mock(HealthEndpoint.class);
-    HealthComponent component = mock(HealthComponent.class);
-    when(endpoint.health()).thenReturn(component);
-    when(component.getStatus()).thenReturn(Status.UP);
-    ScheduledHealthCheck scheduledHealthCheck = new ScheduledHealthCheck();
-    ReflectionTestUtils.setField(scheduledHealthCheck, "healthEndpoint", endpoint);
-    List<ILoggingEvent> logsList = listAppender.list;
+    camelEndpointHealthMonitor = mock(CamelEndpointHealthMonitor.class);
+    scheduledHealthCheckSubject = new ScheduledHealthCheck(camelEndpointHealthMonitor);
+
+    Map<String, EndpointHealthIndicator> healthIndicators = new HashMap<>();
+    Function<Endpoint, Health> healthFunction = endpoint -> HEALTH_STATUS_UP;
+    EndpointHealthIndicator endpointHealthIndicator =
+        new EndpointHealthIndicator(mock(Endpoint.class), healthFunction);
+    healthIndicators.put(ENDPOINT, endpointHealthIndicator);
+
+    when(camelEndpointHealthMonitor.getHealthIndicators()).thenReturn(healthIndicators);
 
     // act
-    scheduledHealthCheck.scheduledExecution();
+    scheduledHealthCheckSubject.scheduledExecution();
+    Health healthResult = healthIndicators.get(ENDPOINT).getHealth(false);
 
     // assert
-    assertThat(logsList.get(0).getMessage()).isEqualTo("sip.core.health.applicationstatus_{}");
-    assertThat(logsList.get(0).getLevel()).isEqualTo(Level.INFO);
+    assertThat(healthResult).isEqualTo(HEALTH_STATUS_UP);
   }
 }

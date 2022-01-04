@@ -12,6 +12,7 @@
 
     <artifactId>sip-security</artifactId>
     <name>SIP Security</name>
+    <description>SIP component encapsulating all security related features</description>
 
     <dependencies>
         <dependency>

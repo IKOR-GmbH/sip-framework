@@ -11,39 +11,39 @@ import org.springframework.context.MessageSource;
 
 class SIPTranslateMessageServiceImplTest {
 
-  SIPTranslateMessageServiceImpl sipTranslateMessageService;
-  MessageSource messageSource;
-  TranslateConfiguration translateConfiguration;
   private static final String MESSAGE_KEY = "key";
   private static final String MESSAGE_CONTENT = "test";
+  private static final String LANG = "en";
+
+  private SIPTranslateMessageServiceImpl subject;
+  private MessageSource messageSource;
+  private TranslateConfiguration translateConfiguration;
 
   @BeforeEach
   void setUp() {
     messageSource = mock(MessageSource.class);
     translateConfiguration = mock(TranslateConfiguration.class);
-    when(translateConfiguration.getLang()).thenReturn("en");
-    sipTranslateMessageService =
-        new SIPTranslateMessageServiceImpl(messageSource, translateConfiguration);
+    when(translateConfiguration.getLang()).thenReturn(LANG);
+    subject = new SIPTranslateMessageServiceImpl(messageSource, translateConfiguration);
   }
 
   @Test
-  void getTranslatedMessage_noArguments() {
+  void When_getTranslatedMessageWithoutArguments_Expect_TranslatedMessage() {
     // arrange
-    when(messageSource.getMessage(MESSAGE_KEY, null, new Locale("en"))).thenReturn(MESSAGE_CONTENT);
+    when(messageSource.getMessage(MESSAGE_KEY, null, new Locale(LANG))).thenReturn(MESSAGE_CONTENT);
 
     // assert
-    assertThat(sipTranslateMessageService.getTranslatedMessage(MESSAGE_KEY))
-        .isEqualTo(MESSAGE_CONTENT);
+    assertThat(subject.getTranslatedMessage(MESSAGE_KEY)).isEqualTo(MESSAGE_CONTENT);
   }
 
   @Test
-  void testGetTranslatedMessage_withArguments() {
+  void When_getTranslatedMessageWithArguments_Expect_translatedMessage() {
     // arrange
     Object[] array = new Object[1];
-    when(messageSource.getMessage(MESSAGE_KEY, array, new Locale("en")))
+    when(messageSource.getMessage(MESSAGE_KEY, array, new Locale(LANG)))
         .thenReturn(MESSAGE_CONTENT);
 
-    assertThat(sipTranslateMessageService.getTranslatedMessage(MESSAGE_KEY, array))
-        .isEqualTo(MESSAGE_CONTENT);
+    // assert
+    assertThat(subject.getTranslatedMessage(MESSAGE_KEY, array)).isEqualTo(MESSAGE_CONTENT);
   }
 }
