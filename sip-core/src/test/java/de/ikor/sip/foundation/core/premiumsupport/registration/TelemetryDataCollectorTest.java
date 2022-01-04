@@ -1,7 +1,11 @@
 package de.ikor.sip.foundation.core.premiumsupport.registration;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.when;
+
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteEndpoint;
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteSummary;
+import java.util.*;
 import org.apache.camel.api.management.mbean.ManagedRouteMBean;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,11 +16,6 @@ import org.springframework.boot.actuate.health.HealthComponent;
 import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.core.env.Environment;
-
-import java.util.*;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.when;
 
 class TelemetryDataCollectorTest {
 
@@ -52,7 +51,8 @@ class TelemetryDataCollectorTest {
   }
 
   @Test
-  void when_telemetryDataCollectorIsCalled_Expect_ActuatorEndpointListReturnedFromPathMappedEndpoints() {
+  void
+      when_telemetryDataCollectorIsCalled_Expect_ActuatorEndpointListReturnedFromPathMappedEndpoints() {
     // arrange
     when(pathMappedEndpoints.getAllPaths()).thenReturn(Arrays.asList("health", "metrics"));
     // act

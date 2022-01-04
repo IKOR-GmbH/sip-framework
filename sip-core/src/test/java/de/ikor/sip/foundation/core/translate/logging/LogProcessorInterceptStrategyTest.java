@@ -31,7 +31,7 @@ class LogProcessorInterceptStrategyTest {
 
   @BeforeAll
   public static void setup() {
-      translateMessageService = mock(SIPTranslateMessageService.class);
+    translateMessageService = mock(SIPTranslateMessageService.class);
     subject = new LogProcessorInterceptStrategy(translateMessageService);
   }
 

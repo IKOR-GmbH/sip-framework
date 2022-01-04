@@ -1,16 +1,17 @@
 package de.ikor.sip.foundation.core.premiumsupport.registration;
 
+import static org.mockito.Mockito.*;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 
-import static org.mockito.Mockito.*;
-
 class AdapterRegistrationTest {
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private static ScheduledAnnotationBeanPostProcessor scheduledProcessor;
+
   @Mock private static SIPRegistrationWebClient sipRegistrationWebClient;
   private static AdapterRegistration subject;
 

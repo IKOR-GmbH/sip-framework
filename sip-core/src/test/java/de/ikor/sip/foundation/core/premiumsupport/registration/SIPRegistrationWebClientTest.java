@@ -1,19 +1,16 @@
 package de.ikor.sip.foundation.core.premiumsupport.registration;
 
+import static org.mockito.Mockito.*;
+
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
-
-import java.net.URI;
-import java.util.UUID;
-
-import static org.mockito.Mockito.*;
 
 class SIPRegistrationWebClientTest {
 
@@ -73,12 +70,8 @@ class SIPRegistrationWebClientTest {
     when(properties.getCheckOutUrl()).thenReturn("http://mydomain.com");
     when(properties.getInstanceId()).thenReturn(testID);
     String checkoutUrl = properties.getCheckOutUrl() + "/" + testID;
-    when(restTemplate.exchange(
-            checkoutUrl,
-            HttpMethod.DELETE,
-            null,
-            String.class))
-            .thenReturn(null);
+    when(restTemplate.exchange(checkoutUrl, HttpMethod.DELETE, null, String.class))
+        .thenReturn(null);
 
     TelemetryData telemetryDataMock = mock(TelemetryData.class);
     when(telemetryDataCollector.collectData()).thenReturn(telemetryDataMock);
@@ -88,12 +81,7 @@ class SIPRegistrationWebClientTest {
 
     // assert
     final ResponseEntity<String> verify =
-            verify(restTemplate, times(1))
-                    .exchange(
-                            checkoutUrl,
-                            HttpMethod.DELETE,
-                            null,
-                            String.class);
+        verify(restTemplate, times(1)).exchange(checkoutUrl, HttpMethod.DELETE, null, String.class);
   }
 
   //    @Test

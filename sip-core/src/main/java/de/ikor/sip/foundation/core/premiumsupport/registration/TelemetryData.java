@@ -22,9 +22,7 @@ import org.springframework.validation.annotation.Validated;
 @Data
 @Slf4j
 @Validated
-/**
- * Content of adapter-platform heartbeat requests.
- */
+/** Content of adapter-platform heartbeat requests. */
 class TelemetryData {
 
   public TelemetryData(SIPRegistrationProperties configProps, Environment environment) {
