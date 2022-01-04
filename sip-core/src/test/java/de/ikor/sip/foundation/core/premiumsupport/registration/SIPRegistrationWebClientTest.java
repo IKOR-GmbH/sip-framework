@@ -1,15 +1,25 @@
 package de.ikor.sip.foundation.core.premiumsupport.registration;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
 import java.util.UUID;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import de.ikor.sip.foundation.core.actuator.health.ftp.FtpHealthConsumers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 class SIPRegistrationWebClientTest {
@@ -21,6 +31,7 @@ class SIPRegistrationWebClientTest {
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private RestTemplateBuilder restTemplateBuilder;
 
+  private ListAppender<ILoggingEvent> listAppender;
   private SIPRegistrationWebClient subject;
 
   @BeforeEach
@@ -33,6 +44,12 @@ class SIPRegistrationWebClientTest {
             .build())
         .thenReturn(restTemplate);
     subject = new SIPRegistrationWebClient(telemetryDataCollector, restTemplateBuilder, properties);
+
+    Logger logger = (Logger) LoggerFactory.getLogger(SIPRegistrationWebClient.class);
+    listAppender = new ListAppender<>();
+    listAppender.start();
+
+    logger.addAppender(listAppender);
   }
 
   @Test
@@ -84,34 +101,22 @@ class SIPRegistrationWebClientTest {
         verify(restTemplate, times(1)).exchange(checkoutUrl, HttpMethod.DELETE, null, String.class);
   }
 
-  //    @Test
-  //    void test_If_Proper_Deregister_Request_Causes_No_Problems() {
-  //      assertDoesNotThrow(
-  //          () -> registrationWebClient.sendDeleteRequest("/deregister/" + UUID.randomUUID()));
-  //    }
-  //
-  //    @Test
-  //    void test_If_Exception_Caused_By_A_Bad_Register_Request_Is_Handled_And_Causes_No_Problems()
-  // {
-  //      when(
-  //              this.restTemplate.exchange(
-  //                  Mockito.anyString(), Mockito.any(), Mockito.any(), (Class<Object>)
-  //   Mockito.any()))
-  //          .thenThrow(new RestClientException("Some Error"));
-  //      assertDoesNotThrow(
-  //          () -> registrationWebClient.sendPostRequest("/register", new TelemetryData()));
-  //    }
-  //
-  //    @Test
-  //    void
-  // test_If_Exception_Caused_By_A_Bad_Deregister_Request_Is_Handled_And_Causes_No_Problems()
-  //   {
-  //      when(
-  //              this.restTemplate.exchange(
-  //                  Mockito.anyString(), Mockito.any(), Mockito.any(), (Class<Object>)
-  //   Mockito.any()))
-  //          .thenThrow(new RestClientException("Some Error"));
-  //      assertDoesNotThrow(
-  //          () -> registrationWebClient.sendDeleteRequest("/deregister/" + UUID.randomUUID()));
-  //    }
+  @Test
+  void When_communicationExceptionHappens_Expect_warnMessageWithProperArgumentsIsLogged() {
+    // arrange
+    when(properties.getCheckInUrl()).thenReturn("http://mydomain.com");
+
+    when(restTemplate.exchange(
+            properties.getCheckInUrl(),
+            HttpMethod.POST,
+            new HttpEntity<>(telemetryDataCollector.collectData()),
+            String.class))
+        .thenThrow(new RestClientException("Simulated error"));
+    // act
+    subject.registerAdapter();
+    // assert
+    ILoggingEvent logEvent = listAppender.list.get(1);
+    assertThat(logEvent.getArgumentArray()).contains("registration", "http://mydomain.com");
+    assertThat(logEvent.getLevel()).isEqualTo(Level.WARN);
+  }
 }
