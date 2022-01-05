@@ -7,10 +7,10 @@ import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-/** Collects telemetry data of an adapter instance. */
+
 @Slf4j
 @Service
-class TelemetryDataCollector {
+class TelemetryDataCollector implements SIPTelemetryDataCollector {
 
   private final TelemetryData telemetryData;
   private final AdapterRouteEndpoint adapterRouteEndpoint;
@@ -39,11 +39,7 @@ class TelemetryDataCollector {
     this.healthEndpoint = healthEndpoint;
   }
 
-  /**
-   * Collect current(dynamic) telemetry data of this application.
-   *
-   * @return the collected data as {@link TelemetryData}
-   */
+  @Override
   public TelemetryData collectData() {
     telemetryData.setActuatorEndpoints(pathMappedEndpoints.getAllPaths());
     telemetryData.setHealthStatus(this.healthEndpoint.health().getStatus());

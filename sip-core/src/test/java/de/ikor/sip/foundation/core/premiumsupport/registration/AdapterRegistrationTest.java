@@ -12,14 +12,14 @@ class AdapterRegistrationTest {
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private static ScheduledAnnotationBeanPostProcessor scheduledProcessor;
 
-  @Mock private static SIPRegistrationWebClient sipRegistrationWebClient;
+  @Mock private static SIPRegistrationClient registrationClient;
   private static AdapterRegistration subject;
 
   @BeforeAll
   public static void setUp() {
-    sipRegistrationWebClient = mock(SIPRegistrationWebClient.class);
+    registrationClient = mock(SIPRegistrationClient.class);
     scheduledProcessor = mock(ScheduledAnnotationBeanPostProcessor.class);
-    subject = new AdapterRegistration(scheduledProcessor, sipRegistrationWebClient);
+    subject = new AdapterRegistration(scheduledProcessor, registrationClient);
   }
 
   @Test
@@ -27,7 +27,7 @@ class AdapterRegistrationTest {
     // act
     subject.afterPropertiesSet();
     // assert
-    verify(sipRegistrationWebClient, times(1)).registerAdapter();
+    verify(registrationClient, times(1)).registerAdapter();
   }
 
   @Test
@@ -35,6 +35,6 @@ class AdapterRegistrationTest {
     // act
     subject.destroy();
     // assert
-    verify(sipRegistrationWebClient, times(1)).unregisterAdapter();
+    verify(registrationClient, times(1)).unregisterAdapter();
   }
 }

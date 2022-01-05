@@ -19,7 +19,7 @@ import org.springframework.http.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-class SIPRegistrationWebClientTest {
+class RegistrationWebClientTest {
 
   @Mock private RestTemplate restTemplate;
   @Mock private TelemetryDataCollector telemetryDataCollector;
@@ -29,7 +29,7 @@ class SIPRegistrationWebClientTest {
   private RestTemplateBuilder restTemplateBuilder;
 
   private ListAppender<ILoggingEvent> listAppender;
-  private SIPRegistrationWebClient subject;
+  private RegistrationWebClient subject;
 
   @BeforeEach
   void setUp() {
@@ -40,9 +40,9 @@ class SIPRegistrationWebClientTest {
             .setReadTimeout(properties.getReadTimeout())
             .build())
         .thenReturn(restTemplate);
-    subject = new SIPRegistrationWebClient(telemetryDataCollector, restTemplateBuilder, properties);
+    subject = new RegistrationWebClient(telemetryDataCollector, restTemplateBuilder, properties);
 
-    Logger logger = (Logger) LoggerFactory.getLogger(SIPRegistrationWebClient.class);
+    Logger logger = (Logger) LoggerFactory.getLogger(RegistrationWebClient.class);
     listAppender = new ListAppender<>();
     listAppender.start();
 

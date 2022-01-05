@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "sip.core.backend-registration.enabled", havingValue = "true")
 public class AdapterRegistration implements InitializingBean, DisposableBean {
   private final ScheduledAnnotationBeanPostProcessor processor;
-  private final SIPRegistrationWebClient sipRegistrationWebClient;
+  private final SIPRegistrationClient registrationClient;
 
   /**
    * Is executed after the application has been started and its properties have been set, and
@@ -32,7 +32,7 @@ public class AdapterRegistration implements InitializingBean, DisposableBean {
   @Override
   @Scheduled(fixedDelayString = "${sip.core.backend-registration.interval}")
   public void afterPropertiesSet() {
-    this.sipRegistrationWebClient.registerAdapter();
+    this.registrationClient.registerAdapter();
   }
 
   /**
@@ -45,6 +45,6 @@ public class AdapterRegistration implements InitializingBean, DisposableBean {
     this.processor.getScheduledTasks().forEach(ScheduledTask::cancel);
 
     log.info("Sending unregister request before shutting down");
-    this.sipRegistrationWebClient.unregisterAdapter();
+    this.registrationClient.unregisterAdapter();
   }
 }

@@ -11,18 +11,15 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * Communicates with platform system. It sends heartbeat POST requests with telemetry data, or
- * adapter un-register DELETE request.
- */
+
 @Slf4j
 @Service
-class SIPRegistrationWebClient {
+class RegistrationWebClient implements SIPRegistrationClient {
   private final RestTemplate sipBackendRestTemplate;
   private final SIPRegistrationProperties properties;
-  private final TelemetryDataCollector telemetryDataCollector;
+  private final SIPTelemetryDataCollector telemetryDataCollector;
 
-  public SIPRegistrationWebClient(
+  public RegistrationWebClient(
       TelemetryDataCollector telemetryDataCollector,
       RestTemplateBuilder restTemplateBuilder,
       SIPRegistrationProperties properties) {
@@ -31,16 +28,14 @@ class SIPRegistrationWebClient {
     this.sipBackendRestTemplate = initRestTemplate(restTemplateBuilder);
   }
 
-  /**
-   * Sends a POST request to provide the SIP Backend with telemetry data about an adapter instance.
-   */
-  void registerAdapter() {
+  @Override
+  public void registerAdapter() {
     HttpEntity<TelemetryData> entity = new HttpEntity<>(telemetryDataCollector.collectData());
     sendRequestToBackend(properties.getCheckInUrl(), HttpMethod.POST, entity);
   }
 
-  /** Sends a DELETE request to inform the SIP Backend that this adapter instance is shut down. */
-  void unregisterAdapter() {
+  @Override
+  public void unregisterAdapter() {
     String compositeUrl = format("%s/%s", properties.getCheckOutUrl(), properties.getInstanceId());
     sendRequestToBackend(compositeUrl, HttpMethod.DELETE, null);
   }
