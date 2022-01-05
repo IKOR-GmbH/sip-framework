@@ -5,11 +5,11 @@ package de.ikor.sip.foundation.core.premiumsupport.registration;
  * un-registers the adapter from the platform.
  */
 public interface SIPRegistrationClient {
-    /**
-     * Sends a POST request to provide the SIP Backend with telemetry data about an adapter instance.
-     */
-    void registerAdapter();
+  /**
+   * Sends a POST request to provide the SIP Backend with telemetry data about an adapter instance.
+   */
+  void registerAdapter();
 
-    /** Sends a DELETE request to inform the SIP Backend that this adapter instance is shut down. */
-    void unregisterAdapter();
+  /** Sends a DELETE request to inform the SIP Backend that this adapter instance is shut down. */
+  void unregisterAdapter();
 }
