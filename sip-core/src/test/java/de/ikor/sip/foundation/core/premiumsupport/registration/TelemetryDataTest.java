@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.env.Environment;
 
 class TelemetryDataTest {
-  public static final long DEFAULT_INTERVAL = 30000L;
+  private static final long DEFAULT_INTERVAL = 30000L;
   private static SIPRegistrationProperties properties;
   private static Environment environment;
   private static Validator validator;

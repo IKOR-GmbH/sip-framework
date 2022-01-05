@@ -19,10 +19,6 @@ import org.springframework.core.env.Environment;
 
 class TelemetryDataCollectorTest {
 
-  private final UUID VALID_INSTANCE_ID = UUID.randomUUID();
-  private final String VALID_ADAPTER_NAME = "adapter-name";
-  private final String VALID_INSTANCE_URI = "http://127.0.0.1:8080";
-  private final Long VALID_REGISTER_INTERVAL = 30000L;
   @Mock SIPRegistrationProperties properties;
   @Mock private Environment environment;
   @Mock private HealthEndpoint healthEndpoint;

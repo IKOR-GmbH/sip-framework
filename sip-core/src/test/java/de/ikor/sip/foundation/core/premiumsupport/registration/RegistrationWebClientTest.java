@@ -21,6 +21,8 @@ import org.springframework.web.client.RestTemplate;
 
 class RegistrationWebClientTest {
 
+  private static final String DEMO_DOMAIN = "http://mydomain.com";
+
   @Mock private RestTemplate restTemplate;
   @Mock private TelemetryDataCollector telemetryDataCollector;
   @Mock private SIPRegistrationProperties properties;
@@ -50,9 +52,9 @@ class RegistrationWebClientTest {
   }
 
   @Test
-  void When_registerAdapterIsCalled_PostWithTelemetryDataIsSent() {
+  void When_registerAdapterIsCalled_Expect_PostWithTelemetryDataIsSent() {
     // arrange
-    when(properties.getCheckInUrl()).thenReturn("http://mydomain.com");
+    when(properties.getCheckInUrl()).thenReturn(DEMO_DOMAIN);
 
     when(restTemplate.exchange(
             properties.getCheckInUrl(),
@@ -68,20 +70,19 @@ class RegistrationWebClientTest {
     subject.registerAdapter();
 
     // assert
-    final ResponseEntity<String> verify =
-        verify(restTemplate, times(1))
-            .exchange(
-                properties.getCheckInUrl(),
-                HttpMethod.POST,
-                new HttpEntity<>(telemetryDataCollector.collectData()),
-                String.class);
+    verify(restTemplate, times(1))
+        .exchange(
+            properties.getCheckInUrl(),
+            HttpMethod.POST,
+            new HttpEntity<>(telemetryDataCollector.collectData()),
+            String.class);
   }
 
   @Test
-  void When_unregisterAdapterIsCalled_DeleteWithoutTelemetryDataIsSent() {
+  void When_unregisterAdapterIsCalled_Expect_DeleteWithoutTelemetryDataIsSent() {
     // arrange
     UUID testID = UUID.randomUUID();
-    when(properties.getCheckOutUrl()).thenReturn("http://mydomain.com");
+    when(properties.getCheckOutUrl()).thenReturn(DEMO_DOMAIN);
     when(properties.getInstanceId()).thenReturn(testID);
     String checkoutUrl = properties.getCheckOutUrl() + "/" + testID;
     when(restTemplate.exchange(checkoutUrl, HttpMethod.DELETE, null, String.class))
@@ -94,14 +95,13 @@ class RegistrationWebClientTest {
     subject.unregisterAdapter();
 
     // assert
-    final ResponseEntity<String> verify =
-        verify(restTemplate, times(1)).exchange(checkoutUrl, HttpMethod.DELETE, null, String.class);
+    verify(restTemplate, times(1)).exchange(checkoutUrl, HttpMethod.DELETE, null, String.class);
   }
 
   @Test
   void When_communicationExceptionHappens_Expect_warnMessageWithProperArgumentsIsLogged() {
     // arrange
-    when(properties.getCheckInUrl()).thenReturn("http://mydomain.com");
+    when(properties.getCheckInUrl()).thenReturn(DEMO_DOMAIN);
 
     when(restTemplate.exchange(
             properties.getCheckInUrl(),
@@ -113,7 +113,7 @@ class RegistrationWebClientTest {
     subject.registerAdapter();
     // assert
     ILoggingEvent logEvent = listAppender.list.get(1);
-    assertThat(logEvent.getArgumentArray()).contains("registration", "http://mydomain.com");
+    assertThat(logEvent.getArgumentArray()).contains("registration", DEMO_DOMAIN);
     assertThat(logEvent.getLevel()).isEqualTo(Level.WARN);
   }
 }
