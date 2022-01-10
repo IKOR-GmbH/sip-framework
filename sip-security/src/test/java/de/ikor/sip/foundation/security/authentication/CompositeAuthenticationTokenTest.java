@@ -10,6 +10,15 @@ import org.junit.jupiter.api.Test;
 class CompositeAuthenticationTokenTest {
 
   @Test
+  void WHEN_ctor_WITH_NullAuthTokens_THEN_isAuthenticatedFalse() {
+    // act
+    CompositeAuthenticationToken subject = new CompositeAuthenticationToken(null);
+
+    // assert
+    assertThat(subject.isAuthenticated()).isFalse();
+  }
+
+  @Test
   void WHEN_ctor_WITH_validParams_THEN_correctValueslReturned() throws Exception {
     // arrange
     SIPBasicAuthAuthenticationToken token =
