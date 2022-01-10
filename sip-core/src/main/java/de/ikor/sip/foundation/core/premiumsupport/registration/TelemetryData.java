@@ -18,17 +18,19 @@ import org.springframework.boot.actuate.health.Status;
 import org.springframework.core.env.Environment;
 import org.springframework.validation.annotation.Validated;
 
-/** POJO that is used to transmit adapter instance specific data to the SIP Backend. */
+/**
+ * POJO that is used to transmit adapter instance specific data to the SIP Backend. Content of
+ * adapter-platform heartbeat requests.
+ */
 @Data
 @Slf4j
 @Validated
-/** Content of adapter-platform heartbeat requests. */
 class TelemetryData {
 
   public TelemetryData(SIPRegistrationProperties configProps, Environment environment) {
-    this.setInstanceUri(configProps.getInstanceUri(), environment);
+    this.instanceUri = determineInstanceUri(configProps.getInstanceUri(), environment);
     this.instanceId = configProps.getInstanceId();
-    setStage(configProps.getStage(), environment);
+    this.activeProfiles = determineStage(configProps.getStage(), environment);
   }
 
   /**
@@ -52,7 +54,9 @@ class TelemetryData {
   @Length(max = 64)
   private String adapterName;
 
-  /** The version of the SIP Framework. This value must be defined in the configuration file. */
+  /**
+   * The version of the SIP Framework. This value must be defined in the configuration file.
+   */
   private String version = "1.0.0";
 
   /**
@@ -76,10 +80,14 @@ class TelemetryData {
    */
   private Collection<String> actuatorEndpoints;
 
-  /** Overall health status of this application. */
+  /**
+   * Overall health status of this application.
+   */
   private Status healthStatus;
 
-  /** Detailed information of all adapter routes. */
+  /**
+   * Detailed information of all adapter routes.
+   */
   private List<AdapterRouteSummary> adapterRoutes;
 
   /**
@@ -89,10 +97,6 @@ class TelemetryData {
    * <p>This property is optional
    */
   private String stage;
-
-  private void setInstanceUri(URI instanceUri, Environment environment) {
-    this.instanceUri = determineInstanceUri(instanceUri, environment);
-  }
 
   /**
    * Host address of this adapter instance. It is either set via the config or determined
@@ -180,8 +184,8 @@ class TelemetryData {
    * this value can be overridden by using the config property sip.core.backend-registration.stage
    * (e.g. sip.core.backend-registration.stage=dev)
    */
-  private void setStage(String stage, Environment environment) {
-    activeProfiles =
+  private List<String> determineStage(String stage, Environment environment) {
+    return
         Objects.nonNull(stage)
             ? Collections.singletonList(stage)
             : Arrays.asList(environment.getActiveProfiles());
