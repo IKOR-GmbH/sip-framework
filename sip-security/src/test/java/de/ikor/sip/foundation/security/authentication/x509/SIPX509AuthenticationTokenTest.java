@@ -1,11 +1,18 @@
 package de.ikor.sip.foundation.security.authentication.x509;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class SIPX509AuthenticationTokenTest {
+
+  @Test
+  void WHEN_ctor_WITH_nullPrincipal_THEN_exception() throws Exception {
+    assertThatExceptionOfType(NullPointerException.class)
+        .isThrownBy(() -> new SIPX509AuthenticationToken(null, true));
+  }
 
   @Test
   void WHEN_ctor_WITH_validParams_THEN_correctValueslReturned() throws Exception {
