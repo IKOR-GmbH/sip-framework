@@ -24,10 +24,9 @@ public class CompositeAuthenticationToken
   public CompositeAuthenticationToken(List<SIPAuthenticationToken<?>> authTokens) {
     super(
         authTokens != null
-            ? authTokens.stream()
+            && authTokens.stream()
                 .map(SIPAuthenticationToken::isAuthenticated)
-                .reduce(true, Boolean::logicalAnd)
-            : false);
+                .reduce(true, Boolean::logicalAnd));
     this.authTokens = authTokens;
   }
 
