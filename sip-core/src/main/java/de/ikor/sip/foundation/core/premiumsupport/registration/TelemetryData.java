@@ -54,9 +54,7 @@ class TelemetryData {
   @Length(max = 64)
   private String adapterName;
 
-  /**
-   * The version of the SIP Framework. This value must be defined in the configuration file.
-   */
+  /** The version of the SIP Framework. This value must be defined in the configuration file. */
   private String version = "1.0.0";
 
   /**
@@ -80,14 +78,10 @@ class TelemetryData {
    */
   private Collection<String> actuatorEndpoints;
 
-  /**
-   * Overall health status of this application.
-   */
+  /** Overall health status of this application. */
   private Status healthStatus;
 
-  /**
-   * Detailed information of all adapter routes.
-   */
+  /** Detailed information of all adapter routes. */
   private List<AdapterRouteSummary> adapterRoutes;
 
   /**
@@ -185,9 +179,8 @@ class TelemetryData {
    * (e.g. sip.core.backend-registration.stage=dev)
    */
   private List<String> determineStage(String stage, Environment environment) {
-    return
-        Objects.nonNull(stage)
-            ? Collections.singletonList(stage)
-            : Arrays.asList(environment.getActiveProfiles());
+    return Objects.nonNull(stage)
+        ? Collections.singletonList(stage)
+        : Arrays.asList(environment.getActiveProfiles());
   }
 }
