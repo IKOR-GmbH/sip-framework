@@ -8,11 +8,6 @@ import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
 class CompositeAuthenticationTokenTest {
-  @Test
-  void WHEN_ctor_WITH_nullAuthTokens_THEN_exception() throws Exception {
-    assertThatExceptionOfType(NullPointerException.class)
-        .isThrownBy(() -> new CompositeAuthenticationToken(null));
-  }
 
   @Test
   void WHEN_ctor_WITH_validParams_THEN_correctValueslReturned() throws Exception {

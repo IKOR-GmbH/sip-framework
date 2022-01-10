@@ -9,18 +9,6 @@ import org.junit.jupiter.api.Test;
 class SIPBasicAuthAuthenticationTokenTest {
 
   @Test
-  void WHEN_ctor_WITH_nullPrincipal_THEN_exception() throws Exception {
-    assertThatExceptionOfType(NullPointerException.class)
-        .isThrownBy(() -> new SIPBasicAuthAuthenticationToken(null, "pw", true));
-  }
-
-  @Test
-  void WHEN_ctor_WITH_nullCredential_THEN_exception() throws Exception {
-    assertThatExceptionOfType(NullPointerException.class)
-        .isThrownBy(() -> new SIPBasicAuthAuthenticationToken("user", null, true));
-  }
-
-  @Test
   void WHEN_ctor_WITH_validParams_THEN_correctValueslReturned() throws Exception {
     // arrange
     String expectedPrincipal = UUID.randomUUID().toString();

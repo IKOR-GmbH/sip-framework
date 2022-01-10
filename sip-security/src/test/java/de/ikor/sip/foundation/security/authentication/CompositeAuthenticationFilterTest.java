@@ -119,11 +119,11 @@ class CompositeAuthenticationFilterTest {
 
     // act
     subject.doFilter(request, response, chain);
-    Authentication contextToken = SecurityContextHolder.getContext().getAuthentication();
 
     // assert
     verifyNoInteractions(authManager, tokenExtractors);
     verify(chain).doFilter(request, response);
+    Authentication contextToken = SecurityContextHolder.getContext().getAuthentication();
     assertThat(contextToken).isInstanceOf(CompositeAuthenticationToken.class);
     assertThat(((CompositeAuthenticationToken) contextToken).getAuthTokens()).isEmpty();
   }
