@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.premiumsupport.registration;
 
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteDetails;
-import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteSummary;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
