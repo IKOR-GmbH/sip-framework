@@ -10,13 +10,13 @@ class SIPBasicAuthAuthenticationTokenTest {
 
   @Test
   void WHEN_ctor_WITH_nullPrincipal_THEN_exception() throws Exception {
-    assertThatExceptionOfType(NullPointerException.class)
+    assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> new SIPBasicAuthAuthenticationToken(null, "pw", true));
   }
 
   @Test
   void WHEN_ctor_WITH_nullCredential_THEN_exception() throws Exception {
-    assertThatExceptionOfType(NullPointerException.class)
+    assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> new SIPBasicAuthAuthenticationToken("user", null, true));
   }
 

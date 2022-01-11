@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 class SIPX509AuthenticationTokenTest {
 
   @Test
-  void WHEN_ctor_WITH_nullPrincipal_THEN_exception() throws Exception {
-    assertThatExceptionOfType(NullPointerException.class)
+  void WHEN_ctor_WITH_nullPrincipal_THEN_IllegalArgument() throws Exception {
+    assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> new SIPX509AuthenticationToken(null, true));
   }
 

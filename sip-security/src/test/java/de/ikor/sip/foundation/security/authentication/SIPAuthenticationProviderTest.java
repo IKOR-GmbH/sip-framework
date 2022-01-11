@@ -26,16 +26,16 @@ class SIPAuthenticationProviderTest {
   @Mock private SIPTokenValidator<SIPBasicAuthAuthenticationToken> validator;
 
   @Test
-  void WHEN_ctor_WITH_nullTokenType_THEN_NPE() throws Exception {
-    assertThatExceptionOfType(NullPointerException.class)
+  void WHEN_ctor_WITH_nullTokenType_THEN_IllegalArgument() throws Exception {
+    assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(
             () ->
                 new SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken>(null, validator) {});
   }
 
   @Test
-  void WHEN_ctor_WITH_nullValidator_THEN_NPE() throws Exception {
-    assertThatExceptionOfType(NullPointerException.class)
+  void WHEN_ctor_WITH_nullValidator_THEN_IllegalArgument() throws Exception {
+    assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(
             () ->
                 new SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken>(
