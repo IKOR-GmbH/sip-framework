@@ -28,7 +28,7 @@ class RegistrationWebClient implements SIPRegistrationClient {
   }
 
   @Override
-  public void registerAdapter() {
+  public void sendTelemetryData() {
     HttpEntity<TelemetryData> entity = new HttpEntity<>(telemetryDataCollector.collectData());
     sendRequestToBackend(properties.getCheckInUrl(), HttpMethod.POST, entity);
   }

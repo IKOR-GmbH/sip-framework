@@ -27,7 +27,7 @@ class AdapterRegistrationTest {
     // act
     subject.afterPropertiesSet();
     // assert
-    verify(registrationClient, times(1)).registerAdapter();
+    verify(registrationClient, times(1)).sendTelemetryData();
   }
 
   @Test

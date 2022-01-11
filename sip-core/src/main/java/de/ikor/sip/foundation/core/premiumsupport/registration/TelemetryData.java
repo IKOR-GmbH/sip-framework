@@ -6,8 +6,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -31,6 +29,7 @@ class TelemetryData {
     this.instanceUri = determineInstanceUri(configProps.getInstanceUri(), environment);
     this.instanceId = configProps.getInstanceId();
     this.activeProfiles = determineStage(configProps.getStage(), environment);
+    this.interval = configProps.getInterval();
   }
 
   /**
@@ -54,16 +53,18 @@ class TelemetryData {
   @Length(max = 64)
   private String adapterName;
 
-  /** The version of the SIP Framework. This value must be defined in the configuration file. */
+  /** The version of the Adapter itself. */
+  private String adapterVersion = "1.0.0";
+
+  /** The version of the SIP Framework. */
   private String version = "1.0.0";
+  // TODO: Adapter name, version and framework versions should be fetched from build configuration
 
   /**
-   * The interval the adpater registeres at the SIP Backend. The value of register interval has to
-   * between 1000ms and 120000ms. Default value is 30000 milliseconds.
+   * The interval the adapter registeres at the SIP Backend. Valid values and default value is
+   * defined in the SIPRegistrationProperties.
    */
-  @Min(1000)
-  @Max(120000)
-  private Long interval = 30000L;
+  private Long interval;
 
   /**
    * Active profiles that have ben set for this application. It is used to determine on which stage
@@ -145,7 +146,6 @@ class TelemetryData {
       return InetAddress.getLocalHost().getHostAddress();
     } catch (UnknownHostException unknownHostException) {
       log.warn("Instance host could not be determined fallback to 127.0.0.1");
-      // todo really fall back to 127.0.0.1?
     }
     return "127.0.0.1";
   }

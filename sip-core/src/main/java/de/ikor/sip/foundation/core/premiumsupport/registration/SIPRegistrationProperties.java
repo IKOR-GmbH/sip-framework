@@ -4,6 +4,8 @@ import java.net.URI;
 import java.time.Duration;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -25,9 +27,11 @@ import org.springframework.validation.annotation.Validated;
 public class SIPRegistrationProperties {
 
   @PostConstruct
-  public void setCompositeParameters() {
-    this.checkOutUrl = this.platformUrl + this.checkOutPath;
-    this.checkInUrl = this.platformUrl + this.checkInPath;
+  public void setCompositeProperties() {
+    String urlWithSlash =
+        this.platformUrl.endsWith("/") ? this.platformUrl : this.platformUrl + "/";
+    this.checkOutUrl = urlWithSlash + this.checkOutPath;
+    this.checkInUrl = urlWithSlash + this.checkInPath;
   }
 
   /**
@@ -54,11 +58,11 @@ public class SIPRegistrationProperties {
    */
   @NotBlank() private String platformUrl;
 
-  /** Registration endpoint path. Default value is /register. */
-  private String checkInPath = "/register";
+  /** Registration endpoint path. Default value is 'register'. */
+  private String checkInPath = "register";
 
-  /** De-registration endpoint path. Default value is /register. */
-  private String checkOutPath = "/deregister";
+  /** De-registration endpoint path. Default value is 'deregister'. */
+  private String checkOutPath = "deregister";
 
   /**
    * The URI of this adapter instance. e.g. http://127.0.0.1:8080
@@ -73,7 +77,9 @@ public class SIPRegistrationProperties {
    *
    * <p>This property is optional
    */
-  private Long interval = 30000L; // TODO add test to check if default val is set
+  @Min(1000)
+  @Max(120000)
+  private Long interval = 30000L;
 
   /**
    * Connection timeout of the web client. The value of read timeout has to be between 100ms and

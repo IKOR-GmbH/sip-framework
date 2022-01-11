@@ -32,6 +32,7 @@ class TelemetryDataTest {
 
     environment = mock(Environment.class);
     properties = mock(SIPRegistrationProperties.class);
+    when(properties.getInterval()).thenReturn(DEFAULT_INTERVAL);
     when(environment.getProperty("server.ssl.enabled", Boolean.class, false)).thenReturn(false);
     when(environment.getActiveProfiles()).thenReturn(new String[] {"test"});
   }
@@ -120,19 +121,19 @@ class TelemetryDataTest {
 
   @Test
   void When_configuredIntervalIsToShort_Expect_ValidationError() {
-    TelemetryData telemetryData = new TelemetryData(properties, environment);
-    telemetryData.setInterval(999L);
-    Optional<ConstraintViolation<TelemetryData>> interval =
-        getValidationViolationForField(telemetryData, "interval");
+    SIPRegistrationProperties properties = new SIPRegistrationProperties();
+    properties.setInterval(999L);
+    Optional<ConstraintViolation<SIPRegistrationProperties>> interval =
+        getValidationViolationForField(properties, "interval");
     assertThat(interval).isPresent();
   }
 
   @Test
   void When_configuredIntervalIsToLong_Expect_ValidationError() {
-    TelemetryData telemetryData = new TelemetryData(properties, environment);
-    telemetryData.setInterval(120001L);
-    Optional<ConstraintViolation<TelemetryData>> interval =
-        getValidationViolationForField(telemetryData, "interval");
+    SIPRegistrationProperties properties = new SIPRegistrationProperties();
+    properties.setInterval(120001L);
+    Optional<ConstraintViolation<SIPRegistrationProperties>> interval =
+        getValidationViolationForField(properties, "interval");
     assertThat(interval).isPresent();
   }
 
@@ -149,6 +150,15 @@ class TelemetryDataTest {
   private Optional<ConstraintViolation<TelemetryData>> getValidationViolationForField(
       TelemetryData telemetryData, String fieldName) {
     Set<ConstraintViolation<TelemetryData>> violations = validator.validate(telemetryData);
+    return violations.stream()
+        .filter(violation -> violation.getPropertyPath().toString().equals(fieldName))
+        .findFirst();
+  }
+
+  private Optional<ConstraintViolation<SIPRegistrationProperties>> getValidationViolationForField(
+      SIPRegistrationProperties registrationProperties, String fieldName) {
+    Set<ConstraintViolation<SIPRegistrationProperties>> violations =
+        validator.validate(registrationProperties);
     return violations.stream()
         .filter(violation -> violation.getPropertyPath().toString().equals(fieldName))
         .findFirst();

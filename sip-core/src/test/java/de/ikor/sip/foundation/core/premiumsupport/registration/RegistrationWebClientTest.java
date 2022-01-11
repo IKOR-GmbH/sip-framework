@@ -67,7 +67,7 @@ class RegistrationWebClientTest {
     when(telemetryDataCollector.collectData()).thenReturn(telemetryDataMock);
 
     // act
-    subject.registerAdapter();
+    subject.sendTelemetryData();
 
     // assert
     verify(restTemplate, times(1))
@@ -110,7 +110,7 @@ class RegistrationWebClientTest {
             String.class))
         .thenThrow(new RestClientException("Simulated error"));
     // act
-    subject.registerAdapter();
+    subject.sendTelemetryData();
     // assert
     ILoggingEvent logEvent = listAppender.list.get(1);
     assertThat(logEvent.getArgumentArray()).contains("registration", DEMO_DOMAIN);

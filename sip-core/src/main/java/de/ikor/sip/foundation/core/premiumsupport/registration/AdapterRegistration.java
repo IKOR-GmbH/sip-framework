@@ -30,9 +30,9 @@ public class AdapterRegistration implements InitializingBean, DisposableBean {
    * scheduled for further invocations based on sip.core.backend-registration.interval property.
    */
   @Override
-  @Scheduled(fixedDelayString = "${sip.core.backend-registration.interval}")
+  @Scheduled(fixedDelayString = "#{@SIPRegistrationProperties.interval}")
   public void afterPropertiesSet() {
-    this.registrationClient.registerAdapter();
+    this.registrationClient.sendTelemetryData();
   }
 
   /**

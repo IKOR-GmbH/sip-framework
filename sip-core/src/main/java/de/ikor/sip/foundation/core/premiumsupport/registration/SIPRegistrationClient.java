@@ -8,7 +8,7 @@ public interface SIPRegistrationClient {
   /**
    * Sends a POST request to provide the SIP Backend with telemetry data about an adapter instance.
    */
-  void registerAdapter();
+  void sendTelemetryData();
 
   /** Sends a DELETE request to inform the SIP Backend that this adapter instance is shut down. */
   void unregisterAdapter();
