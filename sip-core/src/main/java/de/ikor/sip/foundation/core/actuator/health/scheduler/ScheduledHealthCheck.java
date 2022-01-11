@@ -28,6 +28,7 @@ public class ScheduledHealthCheck {
 
   /** Scheduled health check */
   @Scheduled(
+      // Default scheduler values are set in sip-core-default-config.yaml
       fixedDelayString = "${sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay}",
       initialDelayString =
           "${sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay}")
