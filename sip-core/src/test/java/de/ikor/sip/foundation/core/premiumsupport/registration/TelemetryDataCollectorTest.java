@@ -1,8 +1,10 @@
 package de.ikor.sip.foundation.core.premiumsupport.registration;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteDetails;
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteEndpoint;
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteSummary;
 import java.util.*;
@@ -26,7 +28,7 @@ class TelemetryDataCollectorTest {
   @Mock private PathMappedEndpoints pathMappedEndpoints;
   @Mock private HealthComponent healthComponent;
   @Mock private ManagedRouteMBean managedRouteMBean;
-  private TelemetryDataCollector telemetryDataCollector;
+  private TelemetryDataCollector subject;
 
   @BeforeEach
   void setUp() {
@@ -41,7 +43,7 @@ class TelemetryDataCollectorTest {
 
     when(environment.getActiveProfiles()).thenReturn(new String[] {"test"});
     when(environment.getProperty("server.ssl.enabled", Boolean.class, false)).thenReturn(false);
-    this.telemetryDataCollector =
+    this.subject =
         new TelemetryDataCollector(
             properties, adapterRouteEndpoint, pathMappedEndpoints, healthEndpoint, environment);
   }
@@ -52,9 +54,9 @@ class TelemetryDataCollectorTest {
     // arrange
     when(pathMappedEndpoints.getAllPaths()).thenReturn(Arrays.asList("health", "metrics"));
     // act
-    TelemetryData telemetryData = telemetryDataCollector.collectData();
+    TelemetryData telemetryData = subject.collectData();
     // assert
-    assertThat(pathMappedEndpoints.getAllPaths()).isEqualTo(telemetryData.getActuatorEndpoints());
+    assertThat(telemetryData.getActuatorEndpoints()).isEqualTo(pathMappedEndpoints.getAllPaths());
   }
 
   @Test
@@ -63,10 +65,12 @@ class TelemetryDataCollectorTest {
     List<AdapterRouteSummary> routes = new LinkedList<>();
     routes.add(new AdapterRouteSummary(managedRouteMBean));
     when(adapterRouteEndpoint.routes()).thenReturn(routes);
+    AdapterRouteDetails adapterRouteDetails = mock(AdapterRouteDetails.class);
+    when(adapterRouteEndpoint.route(routes.get(0).getId())).thenReturn(adapterRouteDetails);
     // act
-    TelemetryData telemetryData = telemetryDataCollector.collectData();
+    TelemetryData telemetryData = subject.collectData();
     // assert
-    assertThat(adapterRouteEndpoint.routes()).isEqualTo(telemetryData.getAdapterRoutes());
+    assertThat(telemetryData.getAdapterRoutes()).isEqualTo(Collections.singletonList(adapterRouteDetails));
   }
 
   @Test
@@ -74,8 +78,8 @@ class TelemetryDataCollectorTest {
     // arrange
     when(healthEndpoint.health().getStatus()).thenReturn(Status.DOWN);
     // act
-    TelemetryData telemetryData = telemetryDataCollector.collectData();
+    TelemetryData telemetryData = subject.collectData();
     // assert
-    assertThat(healthEndpoint.health().getStatus()).isEqualTo(telemetryData.getHealthStatus());
+    assertThat(telemetryData.getHealthStatus()).isEqualTo(healthEndpoint.health().getStatus());
   }
 }
