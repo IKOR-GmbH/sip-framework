@@ -27,7 +27,7 @@ class SipMiddleProducerTest {
   }
 
   @Test
-  void WHEN_doStart_THEN_started() throws Exception {
+  void WHEN_doStart_THEN_startProducerCalled() throws Exception {
     // arrange
 
     // act
@@ -38,7 +38,7 @@ class SipMiddleProducerTest {
   }
 
   @Test
-  void WHEN_doStop_THEN_stopped() throws Exception {
+  void WHEN_doStop_THEN_stopProducerCalled() throws Exception {
     // arrange
 
     // act
@@ -49,7 +49,7 @@ class SipMiddleProducerTest {
   }
 
   @Test
-  void WHEN_process_THEN_process() throws Exception {
+  void WHEN_processExchange_THEN_processExchangeOnProducerCalled() throws Exception {
     // arrange
     Exchange exchange = mock(Exchange.class);
 

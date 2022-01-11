@@ -66,6 +66,8 @@ under the License.
             <includes>
                 <include>.gitignore</include>
                 <include>README.md</include>
+                <include>changelog.md</include>
+                <include>adapter-description.md</include>
             </includes>
         </fileSet>
     </fileSets>
