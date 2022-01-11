@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.premiumsupport.registration;
 
+import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteDetails;
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteSummary;
 import java.net.InetAddress;
 import java.net.URI;
@@ -82,7 +83,7 @@ class TelemetryData {
   private Status healthStatus;
 
   /** Detailed information of all adapter routes. */
-  private List<AdapterRouteSummary> adapterRoutes;
+  private List<AdapterRouteDetails> adapterRoutes;
 
   /**
    * The stage refers to the staging environment in which the application is executed. This value is

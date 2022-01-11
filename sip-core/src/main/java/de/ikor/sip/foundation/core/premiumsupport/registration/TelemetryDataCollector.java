@@ -1,11 +1,17 @@
 package de.ikor.sip.foundation.core.premiumsupport.registration;
 
+import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteDetails;
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteEndpoint;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.endpoint.web.PathMappedEndpoints;
 import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -42,7 +48,13 @@ class TelemetryDataCollector implements SIPTelemetryDataCollector {
   public TelemetryData collectData() {
     telemetryData.setActuatorEndpoints(pathMappedEndpoints.getAllPaths());
     telemetryData.setHealthStatus(this.healthEndpoint.health().getStatus());
-    telemetryData.setAdapterRoutes(this.adapterRouteEndpoint.routes());
+    telemetryData.setAdapterRoutes(getAdapterRoutes());
     return telemetryData;
+  }
+
+  private List<AdapterRouteDetails> getAdapterRoutes() {
+    return this.adapterRouteEndpoint.routes().stream()
+        .map(route -> this.adapterRouteEndpoint.route(route.getId()))
+        .collect(Collectors.toList());
   }
 }
