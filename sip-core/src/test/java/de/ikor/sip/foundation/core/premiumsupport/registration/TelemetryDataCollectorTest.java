@@ -70,7 +70,8 @@ class TelemetryDataCollectorTest {
     // act
     TelemetryData telemetryData = subject.collectData();
     // assert
-    assertThat(telemetryData.getAdapterRoutes()).isEqualTo(Collections.singletonList(adapterRouteDetails));
+    assertThat(telemetryData.getAdapterRoutes())
+        .isEqualTo(Collections.singletonList(adapterRouteDetails));
   }
 
   @Test
