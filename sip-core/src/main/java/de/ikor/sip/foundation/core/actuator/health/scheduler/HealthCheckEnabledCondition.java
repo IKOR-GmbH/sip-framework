@@ -9,5 +9,5 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 @ConditionalOnExpression(
-    "${sip.core.metrics.scheduled-health-check.enabled:true} and '${management.endpoints.web.exposure.include}'.contains('health')")
+    "${sip.core.metrics.external-endpoint-health-check.enabled} and '${management.endpoints.web.exposure.include}'.contains('health')")
 public @interface HealthCheckEnabledCondition {}
