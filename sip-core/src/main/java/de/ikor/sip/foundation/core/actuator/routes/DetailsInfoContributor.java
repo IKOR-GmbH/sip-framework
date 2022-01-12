@@ -29,7 +29,8 @@ public class DetailsInfoContributor implements InfoContributor {
   private static final String SIP_FRAMEWORK_VERSION_BUILD_KEY = "sipFrameworkVersion";
 
   /**
-   * Adding Markdown files {@link MarkdownObject} and base project information in actuator/info page.
+   * Adding Markdown files {@link MarkdownObject} and base project information in actuator/info
+   * page.
    *
    * @param builder Info.Builder of the SpringBoot actuator specification
    */
