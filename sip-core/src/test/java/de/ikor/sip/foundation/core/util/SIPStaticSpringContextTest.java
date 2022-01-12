@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.util;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -13,51 +13,44 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 class SIPStaticSpringContextTest {
 
-  ApplicationContext applicationContext;
-  SIPStaticSpringContext sipStaticSpringContext;
+  private ApplicationContext applicationContext;
+  private SIPStaticSpringContext subject;
 
   @BeforeEach
   void setUp() {
     applicationContext = mock(ApplicationContext.class);
-    sipStaticSpringContext = new SIPStaticSpringContext();
+    subject = new SIPStaticSpringContext();
   }
 
   @Test
   @DisplayName(
       "Given any bean from context, when setting field context, then this and context bean shall be equal")
-  void getBean() {
+  void When_getBeanFromStaticContext_Expect_BeanReturned() {
     // arrange
     Object bean = new Object();
     when(applicationContext.getBean(any(Class.class))).thenReturn(bean);
-
-    // act
-    ReflectionTestUtils.setField(sipStaticSpringContext, "context", applicationContext);
+    subject.setApplicationContext(applicationContext);
 
     // assert
-    assertThat(bean).isEqualTo(SIPStaticSpringContext.getBean((Object.class)));
+    assertThat(SIPStaticSpringContext.getBean((Object.class))).isEqualTo(bean);
   }
 
   @Test
-  @DisplayName(
-      "Given any bean from context, when setting field context, then this and context bean shall be equal")
-  void getBean_ExceptionThrown() {
+  void When_getNonExistingBean_Expect_nullBean() {
     // arrange
     when(applicationContext.getBean(any(Class.class))).thenThrow(new RuntimeException());
-
-    // act
-    ReflectionTestUtils.setField(sipStaticSpringContext, "context", applicationContext);
+    subject.setApplicationContext(applicationContext);
 
     // assert
     assertThat(SIPStaticSpringContext.getBean(Object.class)).isNull();
   }
 
   @Test
-  void setApplicationContext() {
-    // arrange
-    sipStaticSpringContext.setApplicationContext(applicationContext);
+  void When_setApplicationContext_Expect_ApplicationContextSet() {
+    // act
+    subject.setApplicationContext(applicationContext);
 
     // assert
-    assertThat(applicationContext)
-        .isEqualTo(ReflectionTestUtils.getField(sipStaticSpringContext, "context"));
+    assertThat(ReflectionTestUtils.getField(subject, "context")).isEqualTo(applicationContext);
   }
 }

@@ -2094,7 +2094,6 @@
         <license>
           <name>BSD</name>
           <url>http://asm.objectweb.org/license.html</url>
-          <file>bsd - license.html</file>
         </license>
       </licenses>
     </dependency>
