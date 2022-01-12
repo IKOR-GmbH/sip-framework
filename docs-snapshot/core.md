@@ -394,11 +394,11 @@ springdoc:
 
 Based on this configuration the custom Swagger documentation is accessible by `/adapter/api-docs`.
 
-### SIP Actuator info endpoint data
+### SIP Details in actuator info endpoint
 
-Under actuator endpoint `/actutor/info` there is a basic information about the adapter.
-Additional there is also a list of all markdown files located in the project root directory.
-Names and content of files are exposed.
+Under actuator endpoint `/actuator/info` there is basic information about the adapter.
+Additionally, there is also a list of all markdown files located in the adapter root directory, with their names and 
+content exposed.
 
-**Warning:** There is a mandatory **build-info** maven plugin in application module `pom.xml` which is included by
-default and mandatory for this feature to provide all basic information.
+**Warning:** By default, a mandatory **build-info** maven plugin is located in the `pom.xml` of adapter's application
+module, which provides all basic information for this feature.

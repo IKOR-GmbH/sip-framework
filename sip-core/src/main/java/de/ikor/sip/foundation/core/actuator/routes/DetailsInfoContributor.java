@@ -19,7 +19,6 @@ import org.springframework.util.FileCopyUtils;
 public class DetailsInfoContributor implements InfoContributor {
 
   private static final String MARKDOWN_EXTENSION = ".md";
-  private static final String DETAILS_KEY = "details";
   private static final String BUILD_KEY = "build";
   private static final String FILES_KEY = "files";
   private static final String ADAPTER_NAME_DETAILS_KEY = "adapter-name";
@@ -30,41 +29,39 @@ public class DetailsInfoContributor implements InfoContributor {
   private static final String SIP_FRAMEWORK_VERSION_BUILD_KEY = "sipFrameworkVersion";
 
   /**
-   * Adding the information in actuator/info page. Adding Markdown files {@link MarkdownObject}.
-   * Adding base project information.
+   * Adding Markdown files {@link MarkdownObject} and base project information in actuator/info page.
    *
    * @param builder Info.Builder of the SpringBoot actuator specification
    */
   @SneakyThrows
   @Override
   public void contribute(Info.Builder builder) {
-
-    Map<String, Object> detailsInfo = new LinkedHashMap<>();
-    Map<String, String> buildInfo = (LinkedHashMap<String, String>) builder.build().get(BUILD_KEY);
-
-    List<MarkdownObject> mdFiles = fetchMarkdownObjects();
+    Map<String, Object> buildInfo = (LinkedHashMap<String, Object>) builder.build().get(BUILD_KEY);
 
     if (buildInfo != null) {
-      collectAdapterInfo(detailsInfo, buildInfo);
+      collectAdapterInfo(buildInfo);
+    } else {
+      buildInfo = new LinkedHashMap<>();
+      builder.withDetail(BUILD_KEY, buildInfo);
     }
 
-    if (!mdFiles.isEmpty()) {
-      detailsInfo.put(FILES_KEY, mdFiles);
-    }
-
-    if (!detailsInfo.isEmpty()) {
-      builder.withDetail(DETAILS_KEY, detailsInfo);
-    }
+    buildInfo.put(FILES_KEY, fetchMarkdownObjects());
   }
 
-  private void collectAdapterInfo(Map<String, Object> detailsInfo, Map<String, String> buildInfo) {
-    String adapterName = buildInfo.get(ADAPTER_NAME_BUILD_KEY);
-    String adapterVersion = buildInfo.get(ADAPTER_VERSION_BUILD_KEY);
-    String sipFrameworkVersion = buildInfo.get(SIP_FRAMEWORK_VERSION_BUILD_KEY);
+  private void collectAdapterInfo(Map<String, Object> buildInfo) {
+    String adapterName = (String) buildInfo.get(ADAPTER_NAME_BUILD_KEY);
+    String adapterVersion = (String) buildInfo.get(ADAPTER_VERSION_BUILD_KEY);
+    String sipFrameworkVersion = (String) buildInfo.get(SIP_FRAMEWORK_VERSION_BUILD_KEY);
 
-    detailsInfo.put(ADAPTER_NAME_DETAILS_KEY, adapterName);
-    detailsInfo.put(ADAPTER_VERSION_DETAILS_KEY, adapterVersion);
-    detailsInfo.put(SIP_FRAMEWORK_VERSION_DETAILS_KEY, sipFrameworkVersion);
+    clearOriginalBuildInfo(buildInfo);
+
+    buildInfo.put(ADAPTER_NAME_DETAILS_KEY, adapterName);
+    buildInfo.put(ADAPTER_VERSION_DETAILS_KEY, adapterVersion);
+    buildInfo.put(SIP_FRAMEWORK_VERSION_DETAILS_KEY, sipFrameworkVersion);
+  }
+
+  private void clearOriginalBuildInfo(Map<String, Object> buildInfo) {
+    buildInfo.clear();
   }
 
   private List<MarkdownObject> fetchMarkdownObjects() {
@@ -99,7 +96,7 @@ public class DetailsInfoContributor implements InfoContributor {
         new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
       mdObject.setContent(FileCopyUtils.copyToString(reader));
     } catch (Exception e) {
-      log.warn("sip.core.actuator.info.filebadcontent");
+      log.warn("sip.core.actuator.info.filebadcontent_{}", mdObject.getName());
     }
     return Optional.of(mdObject);
   }
