@@ -28,8 +28,10 @@ class TelemetryData {
   public TelemetryData(SIPRegistrationProperties configProps, Environment environment) {
     this.instanceUri = determineInstanceUri(configProps.getInstanceUri(), environment);
     this.instanceId = configProps.getInstanceId();
-    this.activeProfiles = determineStage(configProps.getStage(), environment);
+    this.activeProfiles = determineActiveProfiles(configProps.getStage(), environment);
     this.interval = configProps.getInterval();
+    this.adapterName = configProps.getAdapterName();
+    this.stage = configProps.getStage();
   }
 
   /**
@@ -58,6 +60,7 @@ class TelemetryData {
 
   /** The version of the SIP Framework. */
   private String version = "1.0.0";
+
   // TODO: Adapter name, version and framework versions should be fetched from build configuration
 
   /**
@@ -67,7 +70,7 @@ class TelemetryData {
   private Long interval;
 
   /**
-   * Active profiles that have ben set for this application. It is used to determine on which stage
+   * Active profiles that have been set for this application. It is used to determine on which stage
    * this application is deployed. For example test, dev or prod. There can be multiple active
    * profiles for which reason this is a list.
    */
@@ -137,7 +140,7 @@ class TelemetryData {
 
   /**
    * The host address of this application can either configured or it is automatically set using
-   * {@link InetAddress}. In case this does not work 127.0.0.1 is used as default.
+   * {@link InetAddress}. In case this does not work 0.0.0.0 is used as default.
    *
    * @return host address of this application
    */
@@ -145,9 +148,9 @@ class TelemetryData {
     try {
       return InetAddress.getLocalHost().getHostAddress();
     } catch (UnknownHostException unknownHostException) {
-      log.warn("Instance host could not be determined fallback to 127.0.0.1");
+      log.warn("Instance host could not be determined fallback to 0.0.0.0");
     }
-    return "127.0.0.1";
+    return "0.0.0.0";
   }
 
   /**
@@ -178,7 +181,7 @@ class TelemetryData {
    * this value can be overridden by using the config property sip.core.backend-registration.stage
    * (e.g. sip.core.backend-registration.stage=dev)
    */
-  private List<String> determineStage(String stage, Environment environment) {
+  private List<String> determineActiveProfiles(String stage, Environment environment) {
     return Objects.nonNull(stage)
         ? Collections.singletonList(stage)
         : Arrays.asList(environment.getActiveProfiles());

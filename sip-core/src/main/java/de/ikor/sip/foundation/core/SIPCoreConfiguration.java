@@ -17,8 +17,8 @@ import org.springframework.context.annotation.PropertySource;
     basePackages = {"de.ikor.sip.foundation.core"},
     excludeFilters =
         @ComponentScan.Filter(
-            type = FilterType.ASSIGNABLE_TYPE,
-            classes = {AdapterRegistration.class}))
+            type = FilterType.REGEX,
+            pattern = "de.ikor.sip.foundation.core.premiumsupport.*"))
 
 // @Import contains classes with conditional @ComponentScan. This way certain packages are loaded on
 // demand, based on configuration.
