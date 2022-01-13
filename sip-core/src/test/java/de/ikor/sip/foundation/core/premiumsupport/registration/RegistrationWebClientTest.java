@@ -45,6 +45,7 @@ class RegistrationWebClientTest {
     subject = new RegistrationWebClient(telemetryDataCollector, restTemplateBuilder, properties);
 
     Logger logger = (Logger) LoggerFactory.getLogger(RegistrationWebClient.class);
+    logger.setLevel(Level.DEBUG);
     listAppender = new ListAppender<>();
     listAppender.start();
 
