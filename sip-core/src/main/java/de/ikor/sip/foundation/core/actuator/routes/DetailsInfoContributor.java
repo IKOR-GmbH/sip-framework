@@ -67,7 +67,7 @@ public class DetailsInfoContributor implements InfoContributor {
 
   private List<MarkdownObject> fetchMarkdownObjects() {
     List<MarkdownObject> result = new ArrayList<>();
-    File folder = new File("./");
+    File folder = fetchFilesFromDirectory("./");
     List<File> files =
         Arrays.stream(folder.listFiles())
             .filter((file -> file.getName().toLowerCase().endsWith(MARKDOWN_EXTENSION)))
@@ -79,6 +79,10 @@ public class DetailsInfoContributor implements InfoContributor {
       log.info("sip.core.actuator.info.missingmdfiles");
     }
     return result;
+  }
+
+  private File fetchFilesFromDirectory(String path) {
+    return new File(path);
   }
 
   private List<MarkdownObject> createMdObjectsList(List<File> files) {
