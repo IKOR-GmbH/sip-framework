@@ -86,13 +86,6 @@ class DetailsInfoContributorTest {
     File file1 = createFile(FILENAME_MD, FILE_CONTENT);
     File file2 = createFile(FILENAME_TXT, FILE_CONTENT);
 
-    File[] testFiles = new File[2];
-    testFiles[0] = file1;
-    testFiles[1] = file2;
-
-    File folder = mock(File.class);
-    when(folder.listFiles()).thenReturn(testFiles);
-
     // act
     subject.contribute(builder);
 
