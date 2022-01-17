@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import de.ikor.sip.foundation.core.api.ApiKeyStrategy;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,8 @@ class SIPApiKeyTokenValidatorTest {
     SecurityConfigProperties config = new SecurityConfigProperties();
     config.setAuthProviders(Collections.singletonList(authProvSettings));
 
-    List<ApiKeyStrategy> apiKeyStrategies = Collections.singletonList(new SIPApiKeyStrategy(config));
+    List<ApiKeyStrategy> apiKeyStrategies =
+        Collections.singletonList(new SIPApiKeyStrategy(config));
     SIPApiKeyTokenValidator sipApiKeyTokenValidator = new SIPApiKeyTokenValidator(apiKeyStrategies);
 
     SIPApiKeyAuthenticationToken sipApiKeyAuthenticationToken =
@@ -51,7 +51,8 @@ class SIPApiKeyTokenValidatorTest {
     SecurityConfigProperties config = new SecurityConfigProperties();
     config.setAuthProviders(Collections.singletonList(authProvSettings));
 
-    List<ApiKeyStrategy> apiKeyStrategies = Collections.singletonList(new SIPApiKeyStrategy(config));
+    List<ApiKeyStrategy> apiKeyStrategies =
+        Collections.singletonList(new SIPApiKeyStrategy(config));
     SIPApiKeyTokenValidator sipApiKeyTokenValidator = new SIPApiKeyTokenValidator(apiKeyStrategies);
 
     SIPApiKeyAuthenticationToken sipApiKeyAuthenticationToken =
