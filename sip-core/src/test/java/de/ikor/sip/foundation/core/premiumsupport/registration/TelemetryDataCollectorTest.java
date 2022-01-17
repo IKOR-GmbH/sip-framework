@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteDetails;
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteEndpoint;
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteSummary;
+import de.ikor.sip.foundation.core.api.ApiKeyStrategy;
 import java.util.*;
 import org.apache.camel.api.management.mbean.ManagedRouteMBean;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,7 @@ class TelemetryDataCollectorTest {
   @Mock private PathMappedEndpoints pathMappedEndpoints;
   @Mock private HealthComponent healthComponent;
   @Mock private ManagedRouteMBean managedRouteMBean;
+  private List<ApiKeyStrategy> apiKeyStrategies = new ArrayList<>();
   private TelemetryDataCollector subject;
 
   @BeforeEach
@@ -45,7 +47,12 @@ class TelemetryDataCollectorTest {
     when(environment.getProperty("server.ssl.enabled", Boolean.class, false)).thenReturn(false);
     this.subject =
         new TelemetryDataCollector(
-            properties, adapterRouteEndpoint, pathMappedEndpoints, healthEndpoint, environment);
+            properties,
+            adapterRouteEndpoint,
+            pathMappedEndpoints,
+            healthEndpoint,
+            environment,
+            apiKeyStrategies);
   }
 
   @Test
