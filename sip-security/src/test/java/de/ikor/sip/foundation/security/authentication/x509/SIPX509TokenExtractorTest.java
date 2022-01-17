@@ -1,14 +1,16 @@
 package de.ikor.sip.foundation.security.authentication.x509;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import java.security.Principal;
 import java.security.cert.X509Certificate;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,61 +21,67 @@ import org.springframework.security.authentication.BadCredentialsException;
 @ExtendWith(MockitoExtension.class)
 class SIPX509TokenExtractorTest {
 
+  public static final String EXPECTED_DN =
+      "CN=Full Name, EMAILADDRESS=name@domain.de, O=IKOR Gmbh, C=DE";
+  public static final String X_509_CERTIFICATE = "javax.servlet.request.X509Certificate";
+
   private final SIPX509TokenExtractor subject = new SIPX509TokenExtractor();
 
   @Test
   void WHEN_extract_WITH_validCert_THEN_certExtracted() throws Exception {
     // arrange
     ((Logger) LoggerFactory.getLogger(SIPX509TokenExtractor.class)).setLevel(Level.INFO);
-    String expectedDn = "CN=Full Name, EMAILADDRESS=name@domain.de, O=IKOR Gmbh, C=DE";
-
     X509Certificate certMock = mock(X509Certificate.class);
     Principal principalMock = mock(Principal.class);
     when(certMock.getSubjectDN()).thenReturn(principalMock);
-    when(principalMock.toString()).thenReturn(expectedDn);
+    when(principalMock.toString()).thenReturn(EXPECTED_DN);
 
     X509Certificate[] certs = {certMock};
 
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request.setAttribute("javax.servlet.request.X509Certificate", certs);
+    request.setAttribute(X_509_CERTIFICATE, certs);
 
     // act
     SIPX509AuthenticationToken result = subject.extract(request);
 
     // assert
-    assertThat(result.getPrincipal()).asString().isEqualTo(expectedDn);
+    assertThat(result.getPrincipal()).asString().isEqualTo(EXPECTED_DN);
   }
 
   @Test
   void WHEN_extract_WITH_validCertTraceLogging_THEN_certExtracted() throws Exception {
     // arrange
-    ((Logger) LoggerFactory.getLogger(SIPX509TokenExtractor.class)).setLevel(Level.TRACE);
-    String expectedDn = "CN=Full Name, EMAILADDRESS=name@domain.de, O=IKOR Gmbh, C=DE";
-
+    Logger logger = (Logger) LoggerFactory.getLogger(SIPX509TokenExtractor.class);
+    logger.setLevel(Level.TRACE);
+    ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+    listAppender.start();
+    logger.addAppender(listAppender);
+    List<ILoggingEvent> logsList = listAppender.list;
     X509Certificate certMock = mock(X509Certificate.class);
     Principal principalMock = mock(Principal.class);
     when(certMock.getSubjectDN()).thenReturn(principalMock);
-    when(principalMock.toString()).thenReturn(expectedDn);
+    when(principalMock.toString()).thenReturn(EXPECTED_DN);
 
     X509Certificate[] certs = {certMock};
 
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request.setAttribute("javax.servlet.request.X509Certificate", certs);
+    request.setAttribute(X_509_CERTIFICATE, certs);
 
     // act
     SIPX509AuthenticationToken result = subject.extract(request);
 
     // assert
-    assertThat(result.getPrincipal()).asString().isEqualTo(expectedDn);
+    assertThat(result.getPrincipal()).asString().isEqualTo(EXPECTED_DN);
+    ILoggingEvent message = logsList.get(0);
+    assertThat(message.getLevel()).isEqualTo(Level.TRACE);
+    assertThat(message.getMessage()).startsWith("X.509 client authentication certificate:");
   }
 
   @Test
   void WHEN_extract_WITH_nullCertificate_THEN_badCredentialsException() throws Exception {
     // arrange
-    X509Certificate[] certs = null;
-
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request.setAttribute("javax.servlet.request.X509Certificate", certs);
+    request.setAttribute(X_509_CERTIFICATE, null);
 
     // act + assert
     assertThatExceptionOfType(BadCredentialsException.class)
@@ -86,7 +94,7 @@ class SIPX509TokenExtractorTest {
     X509Certificate[] certs = {};
 
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request.setAttribute("javax.servlet.request.X509Certificate", certs);
+    request.setAttribute(X_509_CERTIFICATE, certs);
 
     // act + assert
     assertThatExceptionOfType(BadCredentialsException.class)

@@ -8,11 +8,8 @@ import static org.mockito.Mockito.verify;
 import de.ikor.sip.foundation.security.authentication.common.extractors.TokenExtractors;
 import de.ikor.sip.foundation.security.authentication.common.validators.SIPAlwaysAllowValidator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-@ExtendWith(MockitoExtension.class)
 class SIPX509AuthenticationProviderTest {
 
   @Test

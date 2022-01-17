@@ -10,6 +10,12 @@ sip.core:
     exchange-formatter:
       showHeaders: true
       showExchangeId: true
+  metrics:
+    external-endpoint-health-check:
+      enabled: true
+      scheduler:
+        fixed-delay: 900000
+        initial-delay: 5000
 
 management.endpoint.health.show-details: always
 management.endpoints.web.exposure.include: health,info,metrics,loggers,prometheus,adapter-routes

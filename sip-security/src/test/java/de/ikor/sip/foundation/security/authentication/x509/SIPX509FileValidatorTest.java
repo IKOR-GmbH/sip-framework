@@ -12,36 +12,20 @@ import org.springframework.core.io.ClassPathResource;
 
 class SIPX509FileValidatorTest {
 
+  private static final String X_509_TEST_GOOD_ACL = "x509-test-good.acl";
+  private static final String X_509_TEST_BAD_ACL = "x509-test-bad.acl";
+
   @Test
   void WHEN_ctor_WITH_badFileConfig_THEN_exception() throws Exception {
-    // arrange
-    AuthProviderSettings authProvSettings = new AuthProviderSettings();
-    authProvSettings.setClassname(SIPX509AuthenticationProvider.class);
-    authProvSettings.setValidation(
-        new ValidationSettings(
-            SIPX509FileValidator.class, new ClassPathResource("x509-test-bad.acl")));
-    SecurityConfigProperties config = new SecurityConfigProperties();
-    config.setAuthProviders(Collections.singletonList(authProvSettings));
-
-    // act
+    // act + assert
     assertThatExceptionOfType(IllegalStateException.class)
-        .isThrownBy(() -> new SIPX509FileValidator(config));
-
-    // assert via exception
+        .isThrownBy(() -> getSipX509FileValidator(X_509_TEST_BAD_ACL));
   }
 
   @Test
   void WHEN_isValid_WITH_validUser_THEN_true() throws Exception {
     // arrange
-    AuthProviderSettings authProvSettings = new AuthProviderSettings();
-    authProvSettings.setClassname(SIPX509AuthenticationProvider.class);
-    authProvSettings.setValidation(
-        new ValidationSettings(
-            SIPX509FileValidator.class, new ClassPathResource("x509-test-good.acl")));
-    SecurityConfigProperties config = new SecurityConfigProperties();
-    config.setAuthProviders(Collections.singletonList(authProvSettings));
-
-    SIPX509FileValidator subject = new SIPX509FileValidator(config);
+    SIPX509FileValidator subject = getSipX509FileValidator(X_509_TEST_GOOD_ACL);
 
     SIPX509AuthenticationToken authToken =
         new SIPX509AuthenticationToken(
@@ -59,15 +43,7 @@ class SIPX509FileValidatorTest {
   @Test
   void WHEN_isValid_WITH_validUserWithWildcard_THEN_true() throws Exception {
     // arrange
-    AuthProviderSettings authProvSettings = new AuthProviderSettings();
-    authProvSettings.setClassname(SIPX509AuthenticationProvider.class);
-    authProvSettings.setValidation(
-        new ValidationSettings(
-            SIPX509FileValidator.class, new ClassPathResource("x509-test-good.acl")));
-    SecurityConfigProperties config = new SecurityConfigProperties();
-    config.setAuthProviders(Collections.singletonList(authProvSettings));
-
-    SIPX509FileValidator subject = new SIPX509FileValidator(config);
+    SIPX509FileValidator subject = getSipX509FileValidator(X_509_TEST_GOOD_ACL);
 
     SIPX509AuthenticationToken authToken =
         new SIPX509AuthenticationToken(
@@ -86,15 +62,7 @@ class SIPX509FileValidatorTest {
   @Test
   void WHEN_isValid_WITH_invalidUser_THEN_false() throws Exception {
     // arrange
-    AuthProviderSettings authProvSettings = new AuthProviderSettings();
-    authProvSettings.setClassname(SIPX509AuthenticationProvider.class);
-    authProvSettings.setValidation(
-        new ValidationSettings(
-            SIPX509FileValidator.class, new ClassPathResource("x509-test-good.acl")));
-    SecurityConfigProperties config = new SecurityConfigProperties();
-    config.setAuthProviders(Collections.singletonList(authProvSettings));
-
-    SIPX509FileValidator subject = new SIPX509FileValidator(config);
+    SIPX509FileValidator subject = getSipX509FileValidator(X_509_TEST_GOOD_ACL);
 
     SIPX509AuthenticationToken authToken =
         new SIPX509AuthenticationToken(
@@ -107,5 +75,16 @@ class SIPX509FileValidatorTest {
     assertThat(result)
         .withFailMessage("Auth token validation should have failed, but it succeeded")
         .isFalse();
+  }
+
+  private SIPX509FileValidator getSipX509FileValidator(String fileName) {
+    AuthProviderSettings authProvSettings = new AuthProviderSettings();
+    authProvSettings.setClassname(SIPX509AuthenticationProvider.class);
+    authProvSettings.setValidation(
+        new ValidationSettings(SIPX509FileValidator.class, new ClassPathResource(fileName)));
+    SecurityConfigProperties config = new SecurityConfigProperties();
+    config.setAuthProviders(Collections.singletonList(authProvSettings));
+
+    return new SIPX509FileValidator(config);
   }
 }
