@@ -59,10 +59,7 @@ class AdapterInfoContributorTest {
     // assert
     LinkedHashMap<String, Object> buildInfoResult =
         (LinkedHashMap<String, Object>) builder.build().get(BUILD_KEY);
-    assertThat(buildInfoResult.size()).isZero();
-    assertThat(buildInfoResult.get(ADAPTER_NAME_DETAILS_KEY)).isNull();
-    assertThat(buildInfoResult.get(ADAPTER_VERSION_DETAILS_KEY)).isNull();
-    assertThat(buildInfoResult.get(SIP_FRAMEWORK_VERSION_DETAILS_KEY)).isNull();
+    assertThat(buildInfoResult).isEmpty();
   }
 
   private LinkedHashMap<String, Object> createBuildInfo() {
