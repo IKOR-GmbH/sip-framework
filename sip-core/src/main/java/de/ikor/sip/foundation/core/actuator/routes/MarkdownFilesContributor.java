@@ -63,21 +63,11 @@ public class MarkdownFilesContributor implements InfoContributor {
   private List<MarkdownObject> createMdObjectsList(List<File> files) {
     List<MarkdownObject> mdFiles = new ArrayList<>();
     for (File file : files) {
-      Optional<MarkdownObject> mdObject = createMdObject(file);
-      mdFiles.add(mdObject.get());
+      Optional<MarkdownObject> mdObject = MarkdownObject.createMdObject(file);
+      if (mdObject.isPresent()) {
+        mdFiles.add(mdObject.get());
+      }
     }
     return mdFiles;
-  }
-
-  private Optional<MarkdownObject> createMdObject(File file) {
-    MarkdownObject mdObject = new MarkdownObject(file.getName());
-
-    try (BufferedReader reader =
-        new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
-      mdObject.setContent(FileCopyUtils.copyToString(reader));
-    } catch (Exception e) {
-      log.warn("sip.core.actuator.info.filebadcontent_{}", mdObject.getName());
-    }
-    return Optional.of(mdObject);
   }
 }
