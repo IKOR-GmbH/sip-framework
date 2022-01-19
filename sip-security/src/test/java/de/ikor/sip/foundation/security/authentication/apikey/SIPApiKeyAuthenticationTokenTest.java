@@ -10,7 +10,7 @@ class SIPApiKeyAuthenticationTokenTest {
 
   @Test
   void WHEN_constructor_WITH_nullPrincipal_THEN_exception() throws Exception {
-    assertThatExceptionOfType(NullPointerException.class)
+    assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> new SIPApiKeyAuthenticationToken(null, true));
   }
 

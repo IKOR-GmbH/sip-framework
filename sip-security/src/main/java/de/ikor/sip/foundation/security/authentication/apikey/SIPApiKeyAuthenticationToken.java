@@ -10,7 +10,7 @@ public class SIPApiKeyAuthenticationToken
   private String apiKey;
 
   /**
-   * Creates a API Key token
+   * Creates an API Key token
    *
    * @param apiKey the api key a string
    * @param isAuthenticated indicates of the token is authenticated or not
