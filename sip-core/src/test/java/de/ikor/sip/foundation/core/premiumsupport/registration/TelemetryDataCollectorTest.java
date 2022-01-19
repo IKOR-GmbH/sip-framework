@@ -46,18 +46,18 @@ class TelemetryDataCollectorTest {
     when(environment.getActiveProfiles()).thenReturn(new String[] {"test"});
     when(environment.getProperty("server.ssl.enabled", Boolean.class, false)).thenReturn(false);
     this.subject =
-            new TelemetryDataCollector(
-                    properties,
-                    adapterRouteEndpoint,
-                    pathMappedEndpoints,
-                    healthEndpoint,
-                    environment,
-                    apiKeyStrategies);
+        new TelemetryDataCollector(
+            properties,
+            adapterRouteEndpoint,
+            pathMappedEndpoints,
+            healthEndpoint,
+            environment,
+            apiKeyStrategies);
   }
 
   @Test
   void
-  when_telemetryDataCollectorIsCalled_Expect_ActuatorEndpointListReturnedFromPathMappedEndpoints() {
+      when_telemetryDataCollectorIsCalled_Expect_ActuatorEndpointListReturnedFromPathMappedEndpoints() {
     // arrange
     when(pathMappedEndpoints.getAllPaths()).thenReturn(Arrays.asList("health", "metrics"));
     // act
@@ -78,7 +78,7 @@ class TelemetryDataCollectorTest {
     TelemetryData telemetryData = subject.collectData();
     // assert
     assertThat(telemetryData.getAdapterRoutes())
-            .isEqualTo(Collections.singletonList(adapterRouteDetails));
+        .isEqualTo(Collections.singletonList(adapterRouteDetails));
   }
 
   @Test

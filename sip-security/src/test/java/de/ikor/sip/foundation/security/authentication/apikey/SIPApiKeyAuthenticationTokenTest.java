@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 class SIPApiKeyAuthenticationTokenTest {
 
   @Test
-  void WHEN_constructor_WITH_nullPrincipal_THEN_exception() {
+  void WHEN_constructor_WITH_nullPrincipal_THEN_exception() throws Exception {
     assertThatExceptionOfType(NullPointerException.class)
         .isThrownBy(() -> new SIPApiKeyAuthenticationToken(null, true));
   }
 
   @Test
-  void WHEN_constructor_WITH_validParams_THEN_correctValueslReturned() {
+  void WHEN_constructor_WITH_validParams_THEN_correctValueslReturned() throws Exception {
     // arrange
     String expectedPrincipal = UUID.randomUUID().toString();
     boolean expectedAuth = false;
@@ -34,7 +34,7 @@ class SIPApiKeyAuthenticationTokenTest {
   }
 
   @Test
-  void WHEN_withAuthenticated_WITH_true_THEN_sameObjectWithTrueAuthReturned() {
+  void WHEN_withAuthenticated_WITH_true_THEN_sameObjectWithTrueAuthReturned() throws Exception {
     // arrange
     String expectedPrincipal = UUID.randomUUID().toString();
 

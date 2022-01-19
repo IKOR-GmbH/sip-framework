@@ -129,17 +129,17 @@ class TelemetryData {
     try {
       if (instanceUri == null) {
         return new URI(
-                String.format(
-                        "%s://%s:%s",
-                        this.determineHostScheme(environment),
-                        this.determineHostAddress(),
-                        this.determineHostPort(environment)));
+            String.format(
+                "%s://%s:%s",
+                this.determineHostScheme(environment),
+                this.determineHostAddress(),
+                this.determineHostPort(environment)));
       } else {
         return instanceUri;
       }
     } catch (URISyntaxException e) {
       throw new IllegalArgumentException(
-              String.format("The instance uri %s was invalid", instanceUri));
+          String.format("The instance uri %s was invalid", instanceUri));
     }
   }
 
@@ -188,7 +188,7 @@ class TelemetryData {
    */
   private List<String> determineActiveProfiles(String stage, Environment environment) {
     return Objects.nonNull(stage)
-            ? Collections.singletonList(stage)
-            : Arrays.asList(environment.getActiveProfiles());
+        ? Collections.singletonList(stage)
+        : Arrays.asList(environment.getActiveProfiles());
   }
 }
