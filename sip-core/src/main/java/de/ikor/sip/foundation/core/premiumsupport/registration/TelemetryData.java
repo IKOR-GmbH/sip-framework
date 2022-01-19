@@ -64,15 +64,10 @@ class TelemetryData {
   // TODO: Adapter name, version and framework versions should be fetched from build configuration
 
   /**
-   * The interval the adapter registers at the SIP Backend. Valid values and default value is
+   * The interval the adapter registeres at the SIP Backend. Valid values and default value is
    * defined in the SIPRegistrationProperties.
    */
   private Long interval;
-
-  /**
-   * An API Key that is either generated or extracted from a file in order to have access protection
-   */
-  private String apiKey;
 
   /**
    * Active profiles that have been set for this application. It is used to determine on which stage

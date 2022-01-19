@@ -2,8 +2,6 @@ package de.ikor.sip.foundation.core.premiumsupport.registration;
 
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteDetails;
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteEndpoint;
-import de.ikor.sip.foundation.core.api.ApiKeyStrategy;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +18,6 @@ class TelemetryDataCollector implements SIPTelemetryDataCollector {
   private final AdapterRouteEndpoint adapterRouteEndpoint;
   private final PathMappedEndpoints pathMappedEndpoints;
   private final HealthEndpoint healthEndpoint;
-  private final List<ApiKeyStrategy> apiKeyStrategies;
 
   /**
    * Creates and populates {@link TelemetryData} from {@link SIPRegistrationProperties} and {@link
@@ -37,13 +34,11 @@ class TelemetryDataCollector implements SIPTelemetryDataCollector {
       AdapterRouteEndpoint adapterRouteEndpoint,
       PathMappedEndpoints pathMappedEndpoints,
       HealthEndpoint healthEndpoint,
-      Environment environment,
-      List<ApiKeyStrategy> apiKeyStrategies) {
+      Environment environment) {
     this.telemetryData = new TelemetryData(configProps, environment);
     this.adapterRouteEndpoint = adapterRouteEndpoint;
     this.pathMappedEndpoints = pathMappedEndpoints;
     this.healthEndpoint = healthEndpoint;
-    this.apiKeyStrategies = new ArrayList<>(apiKeyStrategies);
   }
 
   @Override
@@ -51,12 +46,6 @@ class TelemetryDataCollector implements SIPTelemetryDataCollector {
     telemetryData.setActuatorEndpoints(pathMappedEndpoints.getAllPaths());
     telemetryData.setHealthStatus(this.healthEndpoint.health().getStatus());
     telemetryData.setAdapterRoutes(getAdapterRoutes());
-    this.apiKeyStrategies.stream()
-        .findFirst()
-        .ifPresent(
-            apiKeyStrategy -> {
-              telemetryData.setApiKey(apiKeyStrategy.getApiKey());
-            });
     return telemetryData;
   }
 
