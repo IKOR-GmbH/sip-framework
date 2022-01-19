@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.info.Info;
 import org.springframework.boot.actuate.info.InfoContributor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.FileCopyUtils;
 
 /**
  * {@link MarkdownFilesContributor} extends {@link InfoContributor} to add needed information to the
