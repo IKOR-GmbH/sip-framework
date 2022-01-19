@@ -64,10 +64,15 @@ class TelemetryData {
   // TODO: Adapter name, version and framework versions should be fetched from build configuration
 
   /**
-   * The interval the adapter registeres at the SIP Backend. Valid values and default value is
+   * The interval the adapter registers at the SIP Backend. Valid values and default value is
    * defined in the SIPRegistrationProperties.
    */
   private Long interval;
+
+  /**
+   * An API Key that is either generated or extracted from a file in order to have access protection
+   */
+  private String apiKey;
 
   /**
    * Active profiles that have been set for this application. It is used to determine on which stage
@@ -124,17 +129,17 @@ class TelemetryData {
     try {
       if (instanceUri == null) {
         return new URI(
-            String.format(
-                "%s://%s:%s",
-                this.determineHostScheme(environment),
-                this.determineHostAddress(),
-                this.determineHostPort(environment)));
+                String.format(
+                        "%s://%s:%s",
+                        this.determineHostScheme(environment),
+                        this.determineHostAddress(),
+                        this.determineHostPort(environment)));
       } else {
         return instanceUri;
       }
     } catch (URISyntaxException e) {
       throw new IllegalArgumentException(
-          String.format("The instance uri %s was invalid", instanceUri));
+              String.format("The instance uri %s was invalid", instanceUri));
     }
   }
 
@@ -183,7 +188,7 @@ class TelemetryData {
    */
   private List<String> determineActiveProfiles(String stage, Environment environment) {
     return Objects.nonNull(stage)
-        ? Collections.singletonList(stage)
-        : Arrays.asList(environment.getActiveProfiles());
+            ? Collections.singletonList(stage)
+            : Arrays.asList(environment.getActiveProfiles());
   }
 }
