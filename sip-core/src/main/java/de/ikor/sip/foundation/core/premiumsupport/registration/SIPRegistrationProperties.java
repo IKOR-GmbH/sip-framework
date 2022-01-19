@@ -11,7 +11,6 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.time.DurationMax;
 import org.hibernate.validator.constraints.time.DurationMin;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -40,16 +39,6 @@ public class SIPRegistrationProperties {
    */
   @Setter(AccessLevel.NONE)
   private final UUID instanceId = UUID.randomUUID();
-
-  /**
-   * The adapter name is equal for every adapter instance. It is used to assign the adapter
-   * instances to an adapter type. Maximum length of adapter name length is 64
-   *
-   * <p>This property is required
-   */
-  @NotBlank()
-  @Length(max = 64)
-  private String adapterName;
 
   /**
    * URL of the SIP Backend. e.g. https://sip-backend.ikor.de/api/v1/client

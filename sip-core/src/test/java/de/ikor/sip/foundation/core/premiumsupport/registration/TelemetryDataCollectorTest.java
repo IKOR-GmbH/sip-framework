@@ -17,6 +17,7 @@ import org.springframework.boot.actuate.endpoint.web.PathMappedEndpoints;
 import org.springframework.boot.actuate.health.HealthComponent;
 import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.boot.actuate.health.Status;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.env.Environment;
 
 class TelemetryDataCollectorTest {
@@ -27,6 +28,7 @@ class TelemetryDataCollectorTest {
   @Mock private AdapterRouteEndpoint adapterRouteEndpoint;
   @Mock private PathMappedEndpoints pathMappedEndpoints;
   @Mock private HealthComponent healthComponent;
+  @Mock private BuildProperties buildProperties;
   @Mock private ManagedRouteMBean managedRouteMBean;
   private TelemetryDataCollector subject;
 
@@ -45,7 +47,12 @@ class TelemetryDataCollectorTest {
     when(environment.getProperty("server.ssl.enabled", Boolean.class, false)).thenReturn(false);
     this.subject =
         new TelemetryDataCollector(
-            properties, adapterRouteEndpoint, pathMappedEndpoints, healthEndpoint, environment);
+            properties,
+            adapterRouteEndpoint,
+            pathMappedEndpoints,
+            healthEndpoint,
+            environment,
+            buildProperties);
   }
 
   @Test

@@ -30,7 +30,6 @@ class TelemetryData {
     this.instanceId = configProps.getInstanceId();
     this.activeProfiles = determineActiveProfiles(configProps.getStage(), environment);
     this.interval = configProps.getInterval();
-    this.adapterName = configProps.getAdapterName();
     this.stage = configProps.getStage();
   }
 
@@ -47,21 +46,16 @@ class TelemetryData {
    */
   private URI instanceUri;
 
-  /**
-   * The name of this adapter instance. This value must be defined in the configuration file.
-   * Maximum length of adapter name is 64.
-   */
+  /** The name of this adapter instance. Maximum length of adapter name is 64. */
   @NotBlank()
   @Length(max = 64)
   private String adapterName;
 
   /** The version of the Adapter itself. */
-  private String adapterVersion = "1.0.0";
+  private String adapterVersion;
 
   /** The version of the SIP Framework. */
-  private String version = "1.0.0";
-
-  // TODO: Adapter name, version and framework versions should be fetched from build configuration
+  private String sipFrameworkVersion;
 
   /**
    * The interval the adapter registeres at the SIP Backend. Valid values and default value is
