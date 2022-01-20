@@ -53,10 +53,7 @@ class TelemetryDataCollector implements SIPTelemetryDataCollector {
     telemetryData.setAdapterRoutes(getAdapterRoutes());
     this.apiKeyStrategies.stream()
         .findFirst()
-        .ifPresent(
-            apiKeyStrategy -> {
-              telemetryData.setApiKey(apiKeyStrategy.getApiKey());
-            });
+        .ifPresent(apiKeyStrategy -> telemetryData.setApiKey(apiKeyStrategy.getApiKey()));
     return telemetryData;
   }
 

@@ -34,6 +34,8 @@ class TelemetryDataTest {
     properties = mock(SIPRegistrationProperties.class);
     when(properties.getInterval()).thenReturn(DEFAULT_INTERVAL);
     when(environment.getProperty("server.ssl.enabled", Boolean.class, false)).thenReturn(false);
+    when(environment.getProperty("sip.security.ssl.server.enabled", Boolean.class, false))
+        .thenReturn(false);
     when(environment.getActiveProfiles()).thenReturn(new String[] {"test"});
   }
 

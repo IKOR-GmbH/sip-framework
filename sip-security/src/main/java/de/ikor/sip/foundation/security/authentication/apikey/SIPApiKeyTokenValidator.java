@@ -1,12 +1,11 @@
 package de.ikor.sip.foundation.security.authentication.apikey;
 
 import de.ikor.sip.foundation.core.api.ApiKeyStrategy;
+import de.ikor.sip.foundation.security.authentication.ConditionalOnSIPAuthProvider;
 import de.ikor.sip.foundation.security.authentication.common.validators.SIPTokenValidator;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 
@@ -15,9 +14,10 @@ import org.springframework.stereotype.Component;
  * characters And then validates the extracted API Token from the request with the generated API Key
  * or API Key from a file.
  */
-@ConditionalOnBean(SIPApiKeyTokenValidator.class)
+@ConditionalOnSIPAuthProvider(
+    listItemValue = SIPApiKeyAuthenticationProvider.class,
+    validationClass = SIPApiKeyTokenValidator.class)
 @Component
-@Slf4j
 public class SIPApiKeyTokenValidator implements SIPTokenValidator<SIPApiKeyAuthenticationToken> {
 
   private final List<ApiKeyStrategy> apiKeyStrategies;

@@ -45,6 +45,8 @@ class TelemetryDataCollectorTest {
 
     when(environment.getActiveProfiles()).thenReturn(new String[] {"test"});
     when(environment.getProperty("server.ssl.enabled", Boolean.class, false)).thenReturn(false);
+    when(environment.getProperty("sip.security.ssl.server.enabled", Boolean.class, false))
+        .thenReturn(false);
     this.subject =
         new TelemetryDataCollector(
             properties,

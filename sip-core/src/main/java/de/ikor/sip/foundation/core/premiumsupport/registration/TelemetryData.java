@@ -176,7 +176,9 @@ class TelemetryData {
    */
   private String determineHostScheme(Environment environment) {
     boolean isSslEnabled = environment.getProperty("server.ssl.enabled", Boolean.class, false);
-    return isSslEnabled ? "https" : "http";
+    boolean isSIPSecurityEnabled =
+        environment.getProperty("sip.security.ssl.server.enabled", Boolean.class, false);
+    return (isSslEnabled || isSIPSecurityEnabled) ? "https" : "http";
   }
 
   /**
