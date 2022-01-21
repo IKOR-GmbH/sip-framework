@@ -6,10 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.actuate.health.HealthEndpoint;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-@ConditionalOnExpression("${sip.core.metrics.external-endpoint-health-check.enabled}")
+@ConditionalOnProperty("sip.core.metrics.external-endpoint-health-check.enabled")
 @ConditionalOnAvailableEndpoint(endpoint = HealthEndpoint.class)
 public @interface HealthCheckEnabledCondition {}
