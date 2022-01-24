@@ -50,7 +50,13 @@
                     <execution>
                         <goals>
                             <goal>repackage</goal>
+                            <goal>build-info</goal>
                         </goals>
+                        <configuration>
+                            <additionalProperties>
+                                <sipFrameworkVersion>${archetypeVersion}</sipFrameworkVersion>
+                            </additionalProperties>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
