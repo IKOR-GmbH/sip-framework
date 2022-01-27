@@ -401,4 +401,4 @@ Additionally, there is also a list of all markdown files located in the adapter 
 content exposed.
 
 **Warning:** By default, a mandatory **build-info** maven plugin is located in the `pom.xml` of adapter's application
-module, which provides all basic information for this feature.
+module, which provides all basic information for this feature. We highly recommend using this plugin in your adapter!

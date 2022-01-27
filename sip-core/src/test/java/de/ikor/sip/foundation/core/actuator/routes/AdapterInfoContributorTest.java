@@ -49,7 +49,7 @@ class AdapterInfoContributorTest {
   }
 
   @Test
-  void Given_nullBuildInfo_When_contribute_Then_returnNoBasicAdapterInfo() {
+  void Given_nullBuildInfo_When_contribute_Then_returnNoBasicAdapterInfoAndThrowException() {
     // arrange
     builder.withDetail(BUILD_KEY, null);
 
@@ -57,9 +57,7 @@ class AdapterInfoContributorTest {
     subject.contribute(builder);
 
     // assert
-    LinkedHashMap<String, Object> buildInfoResult =
-        (LinkedHashMap<String, Object>) builder.build().get(BUILD_KEY);
-    assertThat(buildInfoResult).isEmpty();
+    assertThat(builder.build().get(BUILD_KEY)).isNull();
   }
 
   private LinkedHashMap<String, Object> createBuildInfo() {

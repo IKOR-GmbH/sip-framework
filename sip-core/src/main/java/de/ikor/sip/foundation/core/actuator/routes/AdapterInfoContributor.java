@@ -23,11 +23,13 @@ public class AdapterInfoContributor implements InfoContributor {
   public void contribute(Info.Builder builder) {
     Map<String, Object> buildInfo = (LinkedHashMap<String, Object>) builder.build().get(BUILD_KEY);
 
-    if (buildInfo != null) {
+    try {
+      if (buildInfo == null) {
+        throw new NoBuildInfoFileException("There is no generated build-info.properties file.");
+      }
       collectAdapterInfo(buildInfo);
-    } else {
-      buildInfo = new LinkedHashMap<>();
-      builder.withDetail(BUILD_KEY, buildInfo);
+    } catch (NoBuildInfoFileException e) {
+      e.printStackTrace();
     }
   }
 
