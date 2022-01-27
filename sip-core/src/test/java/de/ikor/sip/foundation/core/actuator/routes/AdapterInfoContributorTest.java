@@ -39,17 +39,15 @@ class AdapterInfoContributorTest {
     subject.contribute(builder);
 
     // assert
-    LinkedHashMap<String, Object> buildInfoResult =
-        (LinkedHashMap<String, Object>) builder.build().get(BUILD_KEY);
-    assertThat(buildInfoResult.size()).isEqualTo(3);
-    assertThat(buildInfoResult.get(ADAPTER_NAME_DETAILS_KEY)).isEqualTo(ADAPTER_NAME_TEST);
-    assertThat(buildInfoResult.get(ADAPTER_VERSION_DETAILS_KEY)).isEqualTo(ADAPTER_VERSION_TEST);
-    assertThat(buildInfoResult.get(SIP_FRAMEWORK_VERSION_DETAILS_KEY))
-        .isEqualTo(SIP_FRAMEWORK_VERSION_TEST);
+    assertThat((LinkedHashMap<String, Object>) builder.build().get(BUILD_KEY))
+        .hasSize(3)
+        .containsEntry(ADAPTER_NAME_DETAILS_KEY, ADAPTER_NAME_TEST)
+        .containsEntry(ADAPTER_VERSION_DETAILS_KEY, ADAPTER_VERSION_TEST)
+        .containsEntry(SIP_FRAMEWORK_VERSION_DETAILS_KEY, SIP_FRAMEWORK_VERSION_TEST);
   }
 
   @Test
-  void Given_nullBuildInfo_When_contribute_Then_returnNoBasicAdapterInfoAndThrowException() {
+  void Given_nullBuildInfo_When_contribute_Then_returnNoBasicAdapterInfo() {
     // arrange
     builder.withDetail(BUILD_KEY, null);
 

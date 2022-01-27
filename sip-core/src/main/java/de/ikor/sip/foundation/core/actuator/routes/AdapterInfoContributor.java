@@ -2,11 +2,13 @@ package de.ikor.sip.foundation.core.actuator.routes;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.info.Info;
 import org.springframework.boot.actuate.info.InfoContributor;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @Order(1)
 public class AdapterInfoContributor implements InfoContributor {
@@ -23,13 +25,10 @@ public class AdapterInfoContributor implements InfoContributor {
   public void contribute(Info.Builder builder) {
     Map<String, Object> buildInfo = (LinkedHashMap<String, Object>) builder.build().get(BUILD_KEY);
 
-    try {
-      if (buildInfo == null) {
-        throw new NoBuildInfoFileException("There is no generated build-info.properties file.");
-      }
+    if (buildInfo != null) {
       collectAdapterInfo(buildInfo);
-    } catch (NoBuildInfoFileException e) {
-      e.printStackTrace();
+    } else {
+      log.warn("sip.core.actuator.info.missingbuildinfo");
     }
   }
 

@@ -53,8 +53,8 @@ class MarkdownFilesContributorTest {
     List<MarkdownObject> resultFiles = (List<MarkdownObject>) buildInfoResult.get(FILES_KEY);
     MarkdownObject mdFile = resultFiles.get(0);
 
-    assertThat(buildInfoResult.size()).isEqualTo(1);
-    assertThat(resultFiles.size()).isEqualTo(1);
+    assertThat(buildInfoResult).hasSize(1);
+    assertThat(resultFiles).hasSize(1);
     assertThat(mdFile.getName()).isEqualTo(FILENAME_MD);
     assertThat(mdFile.getContent()).isEqualTo(FILE_CONTENT);
   }
