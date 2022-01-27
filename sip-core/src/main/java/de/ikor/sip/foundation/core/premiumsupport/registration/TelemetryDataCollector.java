@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.core.premiumsupport.registration;
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteDetails;
 import de.ikor.sip.foundation.core.actuator.routes.AdapterRouteEndpoint;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.endpoint.web.PathMappedEndpoints;
@@ -21,7 +22,7 @@ class TelemetryDataCollector implements SIPTelemetryDataCollector {
   private final AdapterRouteEndpoint adapterRouteEndpoint;
   private final PathMappedEndpoints pathMappedEndpoints;
   private final HealthEndpoint healthEndpoint;
-  private final BuildProperties buildProperties;
+  private final Optional<BuildProperties> buildProperties;
 
   /**
    * Creates and populates {@link TelemetryData} from {@link SIPRegistrationProperties} and {@link
@@ -40,7 +41,7 @@ class TelemetryDataCollector implements SIPTelemetryDataCollector {
       PathMappedEndpoints pathMappedEndpoints,
       HealthEndpoint healthEndpoint,
       Environment environment,
-      BuildProperties buildProperties) {
+      Optional<BuildProperties> buildProperties) {
     this.telemetryData = new TelemetryData(configProps, environment);
     this.adapterRouteEndpoint = adapterRouteEndpoint;
     this.pathMappedEndpoints = pathMappedEndpoints;
@@ -52,10 +53,12 @@ class TelemetryDataCollector implements SIPTelemetryDataCollector {
   public TelemetryData collectData() {
     telemetryData.setActuatorEndpoints(pathMappedEndpoints.getAllPaths());
     telemetryData.setHealthStatus(this.healthEndpoint.health().getStatus());
-    telemetryData.setAdapterName(this.buildProperties.getName());
-    telemetryData.setAdapterVersion(this.buildProperties.getVersion());
-    telemetryData.setSipFrameworkVersion(this.buildProperties.get(SIP_FRAMEWORK_VERSION));
     telemetryData.setAdapterRoutes(getAdapterRoutes());
+    if (buildProperties.isPresent()) {
+      telemetryData.setAdapterName(this.buildProperties.get().getName());
+      telemetryData.setAdapterVersion(this.buildProperties.get().getVersion());
+      telemetryData.setSipFrameworkVersion(this.buildProperties.get().get(SIP_FRAMEWORK_VERSION));
+    }
     return telemetryData;
   }
 

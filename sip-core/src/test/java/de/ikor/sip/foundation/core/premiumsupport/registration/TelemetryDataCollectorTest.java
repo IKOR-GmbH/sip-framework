@@ -28,13 +28,15 @@ class TelemetryDataCollectorTest {
   @Mock private AdapterRouteEndpoint adapterRouteEndpoint;
   @Mock private PathMappedEndpoints pathMappedEndpoints;
   @Mock private HealthComponent healthComponent;
-  @Mock private BuildProperties buildProperties;
   @Mock private ManagedRouteMBean managedRouteMBean;
+  private Optional<BuildProperties> buildProperties;
   private TelemetryDataCollector subject;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.initMocks(this);
+
+    buildProperties = Optional.of(mock(BuildProperties.class));
 
     when(healthEndpoint.health()).thenReturn(healthComponent);
     when(healthEndpoint.health().getStatus()).thenReturn(Status.UP);
