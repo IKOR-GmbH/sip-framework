@@ -65,9 +65,7 @@ on and optionally setting a client certificate. If no server certificate is set 
               key-store-type: pkcs12 #possible options are pkcs12, jks, jceks
               key-alias: springboot #the alias of the key to be chosen from the container
               key-password: password # we recommend to use env_vars or sealed secrets
-  server:
-    ssl:
-      client-auth: want # Could be: need (client auth is mandatory), want (client auth is is wanted but not 
+              client-auth: want # Could be: need (client auth is mandatory), want (client auth is is wanted but not 
               # mandatory) and none (default)
   ```
   To turn the usage of the server certificate off:
@@ -84,7 +82,6 @@ Global authentication configuration:
 ```yaml
 sip.security:
     authentication:
-        enabled: true #turn on/off all authentication functionality
         disable-csrf: true
         ignored-endpoints: #a list of endpoints which are ignored by ALL authenticators based on Spring´s AntPathMatchers implementation
         - /actuator
@@ -94,7 +91,7 @@ sip.security:
 
 - <u>Extractors</u> (extract the relevant token from an http-requests)
     - BasicAuth: Extracts the BasicAuth credentials from the request
-    - X509: Extracts the X509 certificate from the request (requires server.ssl.client-auth set to need or want)
+    - X509: Extracts the X509 certificate from the request (requires sip.security.ssl.server.client-auth set to need or want)
 - <u>Providers</u> (triggers a Validator to validate a given authentication)
     - BasicAuth: Takes the extracted basic auth token and uses the given validator from the configuration to validate the token
     - X509: Takes the extracted X509 token and uses the given validator from the configuration to validate the token
@@ -103,7 +100,6 @@ sip.security:
       ```yaml
       sip.security:
           authentication:
-              enabled: true #turn on/off all authentication functionality
               auth-providers: #authentication functionality is enabled if valid providers are defined
                   - classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationProvider
                     ignored-endpoints: #a list of endpoints which are ignored by this specific authenticator based on Spring´s AntPathMatchers implementation
@@ -123,7 +119,6 @@ sip.security:
   - X509 Configuration:
     ```yaml
     sip.security:
-        enabled: true #turn on/off all authentication functionality
         authentication:
             auth-providers: #authentication functionality is enabled if valid providers are defined
                 - classname: de.ikor.sip.foundation.security.authentication.x509.SIPX509AuthenticationProvider

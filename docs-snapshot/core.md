@@ -16,7 +16,22 @@ To enable SIP Core features use @SIPIntegrationAdapter to annotate the Spring Bo
 
 SIP Core provides out-of-the-box health checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.
 
+The health check functions will be executed periodically on a set interval and will only be available if actuator's 
+HealthEndpoint is enabled.
+
 Actuator can be accessed from {base_url}/actuator
+
+To enable/disable health calculation or set its execution interval the following configuration properties are available:
+
+```yaml
+sip:
+  core:
+    metrics:
+      external-endpoint-health-check:
+        enabled: true
+        scheduler:
+          fixed-delay: 900000
+```
 
 To customize health checks,
 or introduce health checks for other kinds of components,
@@ -96,6 +111,19 @@ management:
   endpoint:
     health:
       show-details: always #or when_authorized if security is in place
+```
+
+**Health Status Gauge**
+
+The calculated health status is also available as a gauge inside `/actuator/metrics`. 
+If all endpoints are healthy it returns 0, otherwise 1. 
+By default, it is named `sip.core.metrics.health`, but can be changed via configuration.
+
+```yaml
+sip:
+  core:
+    metrics:
+      gauge: "sip.core.metrics.health"
 ```
 
 ### Dynamic proxy for Apache Camel Processors
