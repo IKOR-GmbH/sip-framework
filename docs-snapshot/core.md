@@ -126,6 +126,7 @@ sip:
       gauge: "sip.core.metrics.health"
 ```
 
+
 ### Dynamic proxy for Apache Camel Processors
 
 Dynamic proxy is implementation of decorator pattern on all Processors detected on all Camel routes. The base motivation
@@ -424,9 +425,37 @@ Based on this configuration the custom Swagger documentation is accessible by `/
 
 ### SIP Details in actuator info endpoint
 
-Under actuator endpoint `/actuator/info` there is basic information about the adapter.
+Under actuator endpoint `/actuator/info` there is basic information about the adapter (`adapter-name`, `adapter-version`, 
+`sip-framework-version`).
 Additionally, there is also a list of all markdown files located in the adapter root directory, with their names and 
 content exposed.
 
-**Warning:** By default, a mandatory **build-info** maven plugin is located in the `pom.xml` of adapter's application
+By default, a mandatory **build-info** maven plugin is located in the `pom.xml` of adapter's application
 module, which provides all basic information for this feature. We highly recommend using this plugin in your adapter!
+
+**Warning about potential feature issue:**
+
+There is one unpredictable problem with this feature that could happen only in your local environment and it 
+depends on IDE used for development. It is happening only after initial adapter generation and build/rebuild process
+is executed after `mvn clean install` command.
+
+Keep in mind that even if build and rebuild processes are not executed explicitly, simple running of the adapter could 
+execute them in the background, depending on IDE used.
+
+Build/rebuild processes are deleting some generated sources. In our case build-info.properties which is used for
+fetching adapter basic information is deleted.
+
+The problem itself could be resolved by doing build/rebuild explicitly before `mvn clean install`.
+Or for example in IntelliJ IDE by updating the specific settings:
+
+Uncheck "Clear Output Directory On Rebuild" field which can be found under File -> Settings ->
+Build, Execution, Deployment -> Compiler. Keep in mind that this setup has to be done with every new adapter created
+or new IntelliJ repository used.
+
+Check the image and additional warning message by IntelliJ:
+
+"WARNING!
+If option 'Clear output directory on rebuild' is enabled, the entire contents of directories where generated sources
+are stored WILL BE CLEARED on rebuild."
+
+![Image of SIP connected systems](./img/intellij_setting_clear_on_rebuild.png?raw=true "IntelliJ rebuild settings")

@@ -50,7 +50,7 @@ public class MarkdownFilesContributor implements InfoContributor {
     if (!files.isEmpty()) {
       result = createMdObjectsList(files);
     } else {
-      log.info("sip.core.actuator.info.missingmdfiles");
+      log.warn("sip.core.actuator.info.missingmdfiles");
     }
     return result;
   }
