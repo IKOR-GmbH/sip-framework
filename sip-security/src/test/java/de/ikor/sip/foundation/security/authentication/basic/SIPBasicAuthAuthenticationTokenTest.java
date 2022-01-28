@@ -10,13 +10,13 @@ class SIPBasicAuthAuthenticationTokenTest {
 
   @Test
   void WHEN_ctor_WITH_nullPrincipal_THEN_exception() throws Exception {
-    assertThatExceptionOfType(NullPointerException.class)
+    assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> new SIPBasicAuthAuthenticationToken(null, "pw", true));
   }
 
   @Test
   void WHEN_ctor_WITH_nullCredential_THEN_exception() throws Exception {
-    assertThatExceptionOfType(NullPointerException.class)
+    assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> new SIPBasicAuthAuthenticationToken("user", null, true));
   }
 
@@ -25,19 +25,25 @@ class SIPBasicAuthAuthenticationTokenTest {
     // arrange
     String expectedPrincipal = UUID.randomUUID().toString();
     String expectedCredential = UUID.randomUUID().toString();
-    boolean expectedAuth = false;
 
     // act
     SIPBasicAuthAuthenticationToken subject =
-        new SIPBasicAuthAuthenticationToken(expectedPrincipal, expectedCredential, expectedAuth);
+        new SIPBasicAuthAuthenticationToken(expectedPrincipal, expectedCredential, false);
 
     // assert
+    assertCtorReturnsValidValues(expectedPrincipal, expectedCredential, subject);
+    assertThat(subject.isAuthenticated()).isFalse();
+  }
+
+  private void assertCtorReturnsValidValues(
+      String expectedPrincipal,
+      String expectedCredential,
+      SIPBasicAuthAuthenticationToken subject) {
     assertThat(subject.getAuthorities()).isEmpty();
     assertThat(subject.getCredentials()).isEqualTo(expectedCredential);
     assertThat(subject.getDetails()).isNull();
     assertThat(subject.getName()).isEqualTo(expectedPrincipal);
     assertThat(subject.getPrincipal()).isEqualTo(expectedPrincipal);
-    assertThat(subject.isAuthenticated()).isEqualTo(expectedAuth);
   }
 
   @Test
@@ -53,11 +59,7 @@ class SIPBasicAuthAuthenticationTokenTest {
     SIPBasicAuthAuthenticationToken result = subject.withAuthenticated(true);
 
     // assert
-    assertThat(result.getAuthorities()).isEmpty();
-    assertThat(result.getCredentials()).isEqualTo(expectedCredential);
-    assertThat(result.getDetails()).isNull();
-    assertThat(result.getName()).isEqualTo(expectedPrincipal);
-    assertThat(result.getPrincipal()).isEqualTo(expectedPrincipal);
+    assertCtorReturnsValidValues(expectedPrincipal, expectedCredential, result);
     assertThat(result.isAuthenticated()).isTrue();
   }
 
