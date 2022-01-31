@@ -433,7 +433,7 @@ content exposed.
 By default, a mandatory **build-info** maven plugin is located in the `pom.xml` of adapter's application
 module, which provides all basic information for this feature. We highly recommend using this plugin in your adapter!
 
-**Warning about potential feature issue:**
+**Warning about potential issue during development:**
 
 There is one unpredictable problem with this feature that could happen only in your local environment and it 
 depends on IDE used for development. It is happening only after initial adapter generation and build/rebuild process
