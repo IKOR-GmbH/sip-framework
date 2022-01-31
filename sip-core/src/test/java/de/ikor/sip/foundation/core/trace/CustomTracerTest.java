@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 class CustomTracerTest {
 
+  private static final String LOG_MESSAGE = "log message";
   CustomTracer customTracer;
   TraceHistory traceHistory;
   NamedNode node;
@@ -41,14 +42,23 @@ class CustomTracerTest {
   }
 
   @Test
-  void dumpTrace() {
+  void When_dumpTrace_Expect_messageInLog() {
+    // arrange
+    TraceHistory traceHistory = new TraceHistory(5);
+    CustomTracer subject = new CustomTracer(traceHistory, null, mock(CamelContext.class));
+    Logger logger = (Logger) LoggerFactory.getLogger("org.apache.camel.Tracing");
+    ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+    listAppender.start();
+    logger.addAppender(listAppender);
     List<ILoggingEvent> logsList = listAppender.list;
 
-    customTracer.dumpTrace("1");
+    // act
+    subject.dumpTrace(LOG_MESSAGE);
 
-    assertThat(logsList.get(0).getMessage()).isEqualTo("1");
+    // assert
+    assertThat(logsList.get(0).getMessage()).isEqualTo(LOG_MESSAGE);
     assertThat(logsList.get(0).getLevel()).isEqualTo(Level.INFO);
-    assertThat(traceHistory.getAndClearHistory()).isNotEmpty();
+    assertThat(traceHistory.getAndClearHistory()).containsExactly(LOG_MESSAGE);
   }
 
   @Test

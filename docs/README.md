@@ -288,17 +288,15 @@ Additionally, it would make much sense to follow suggested configuration convent
 ```yaml
 endpoint:
   <in/out>:
-   <adapter-name>:
     <external-system>:
-     <endpoint>: # optional - if more endpoints on single external-system are involved in integration
-      id: <adapterName>.<externalSystem>
-      uri: ftp://...
+      <endpoint>: # optional - if more endpoints on single external-system are involved in integration
+        id: <externalSystem>
+        uri: ftp://...
 ```
+
 `<in/out>` corresponds to consumers and producers respectively.
 This means in case a message is received through a route using "from", then it is a consumer and "in" is used.
 On the other hand, it is a producer when a message is sent via "to". In this case, "out" is used as key in the configuration file.  
-
-`<adapter-name>` should correspond to the domain adapter it is dealing with (e.g. billing, partner, policy etc.)  
 
 `<external-system>` should match the name of the system or client the adapter is communicating with.  
 
@@ -310,29 +308,27 @@ For example:
 ```yaml
 endpoint:
   in:
-    partner:
-      my-assurance-co:
-        id: partner.my-assurance-co
-        uri: ftp://...
+    my-assurance-co:
+      id: my-assurance-co
+      uri: ftp://...
   out:
-    partner:
-      their-assurance-co:
-        id: partner.their-assurance-co
-        uri: https://...
+    their-assurance-co:
+      id: their-assurance-co
+      uri: https://...
 ```
 
 Using this configuration can be easily achieved in Camel by following their placeholder syntax.
 Here's what the example from above would look like in the Camel route:
 
 ```java
-from("{{endpoint.in.partner.my-assurance-co.uri}}")
-    .id("{{endpoint.in.partner.my-assurance-co.id}}")
+from("{{endpoint.in.my-assurance-co.uri}}")
+    .id("{{endpoint.in.my-assurance-co.id}}")
     .to(...);
 
 from(...)
     .process(...)    
-    .to("{{endpoint.out.partner.their-assurance-co.uri}}")
-    .id("{{endpoint.out.partner.their-assurance-co.id}}")
+    .to("{{endpoint.out.their-assurance-co.uri}}")
+    .id("{{endpoint.out.their-assurance-co.id}}")
 ```
 
 If this convention is followed in the configuration, it leads to a unified structure that makes it possible

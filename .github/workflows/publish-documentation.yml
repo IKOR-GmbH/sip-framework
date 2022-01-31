@@ -3,6 +3,7 @@ on:
   push:
     branches: [ develop ]
     paths:
+    - '.github/workflows/publish-documentation.yml'
     - 'docs/**'
     - 'mkdocs.yml'
     - 'CHANGELOG.md'
@@ -10,7 +11,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  # This workflow contains a single job called "build"
   deploy:
     runs-on: ubuntu-latest
     steps:
@@ -25,14 +25,13 @@ jobs:
       - run: pip install mkdocs plantuml-markdown pymdown-extensions
       - run: mkdocs build
       - uses: actions/checkout@v2
-        # Disabling shallow clone is recommended for improving relevancy of reporting
         with:
+          # disabling shallow clone, otherwise we cannot pull/push as we need to
           fetch-depth: 0
           ref: gh-pages
           token: ${{ secrets.GH_ADMIN_TOKEN }}
           path: "apidocs"
       - name: Publish documentation
-        # todo only publish latest javadocs from main branch
         run: |
           cd apidocs
           git rm -r * || true

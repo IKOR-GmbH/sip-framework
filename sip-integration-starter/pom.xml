@@ -13,6 +13,7 @@
 
     <artifactId>sip-integration-starter</artifactId>
     <name>SIP Integration Starter</name>
+    <description>Starter project adding necessary predefined depenencies for integration adapters</description>
 
     <dependencies>
         <!-- ikor dependencies -->

@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.security.config;
 
 import de.ikor.sip.foundation.security.authentication.SIPAuthenticationProvider;
 import de.ikor.sip.foundation.security.authentication.common.validators.SIPAlwaysAllowValidator;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.BindResult;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
@@ -68,6 +73,24 @@ public class SecurityConfigProperties {
   @AllArgsConstructor
   public static class AuthProviderSettings {
     private final PathMatcher pathMatcher = new AntPathMatcher();
+
+    private static final Bindable<List<AuthProviderSettings>> PROVIDER_LIST =
+        Bindable.listOf(AuthProviderSettings.class);
+
+    public static final String AUTH_PROVIDERS_PROPERTY_NAME =
+        "sip.security.authentication.auth-providers";
+
+    /**
+     * Bind AuthProviderSettings from PropertySource
+     *
+     * @param environment {@link Environment}
+     * @return collection of AuthProviderSettings or null if none exist
+     */
+    public static Collection<AuthProviderSettings> bindFromPropertySource(Environment environment) {
+      BindResult<List<AuthProviderSettings>> bindResult =
+          Binder.get(environment).bind(AUTH_PROVIDERS_PROPERTY_NAME, PROVIDER_LIST);
+      return bindResult.orElse(null);
+    }
 
     /** The fully qualified classname of the current provider */
     private Class<?> classname = null;

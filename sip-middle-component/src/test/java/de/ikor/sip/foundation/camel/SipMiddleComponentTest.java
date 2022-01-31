@@ -21,6 +21,10 @@ class SipMiddleComponentTest {
 
   private static final String REMAINING_URI_PART = "foo";
   private static final String CONSUMER_URI = "sipmc:" + REMAINING_URI_PART;
+  private static final String SEDA_URI_NO_MULTIPLE_CONSUMERS =
+      "seda:" + REMAINING_URI_PART + "?multipleConsumers=false";
+  private static final String SEDA_URI_WITH_MULTIPLE_CONSUMERS =
+      "seda:" + REMAINING_URI_PART + "?multipleConsumers=true";
 
   @Mock private SpringBootCamelContext context;
   private SipMiddleComponent subject;
@@ -28,35 +32,47 @@ class SipMiddleComponentTest {
 
   @BeforeEach
   void setUp() {
-    RouteDefinition rd = createRouteDefinition(CONSUMER_URI);
-    rdList.add(rd);
-    when(context.getRouteDefinitions()).thenReturn(rdList);
     subject = new SipMiddleComponent(context);
   }
 
   @Test
-  void WHEN_createEndpoint_WITH_singleConsumer_THEN_noMultiConsumers() throws Exception {
+  void WHEN_createEndpoint_WITH_noConsumers_THEN_noMultiConsumers() throws Exception {
+    // act
+    Endpoint result = subject.createEndpoint(CONSUMER_URI, REMAINING_URI_PART, null);
+
+    // assert
+    assertThat(result).isInstanceOf(SipMiddleEndpoint.class);
+    verify(context).getEndpoint(SEDA_URI_NO_MULTIPLE_CONSUMERS);
+  }
+
+  @Test
+  void WHEN_createEndpoint_WITH_singleConsumers_THEN_noMultiConsumers() throws Exception {
     // arrange
+    rdList.add(createRouteDefinition(CONSUMER_URI));
+    when(context.getRouteDefinitions()).thenReturn(rdList);
 
     // act
     Endpoint result = subject.createEndpoint(CONSUMER_URI, REMAINING_URI_PART, null);
 
     // assert
     assertThat(result).isInstanceOf(SipMiddleEndpoint.class);
-    verify(context).getEndpoint("seda:" + REMAINING_URI_PART + "?multipleConsumers=false");
+    verify(context).getEndpoint(SEDA_URI_NO_MULTIPLE_CONSUMERS);
   }
 
   @Test
   void WHEN_createEndpoint_WITH_manyConsumers_THEN_multiConsumers() throws Exception {
     // arrange
-    rdList.add(createRouteDefinition(CONSUMER_URI));
+    RouteDefinition routeWithSipmcConsumer = createRouteDefinition(CONSUMER_URI);
+    rdList.add(routeWithSipmcConsumer);
+    rdList.add(routeWithSipmcConsumer);
+    when(context.getRouteDefinitions()).thenReturn(rdList);
 
     // act
     Endpoint result = subject.createEndpoint(CONSUMER_URI, REMAINING_URI_PART, null);
 
     // assert
     assertThat(result).isInstanceOf(SipMiddleEndpoint.class);
-    verify(context).getEndpoint("seda:" + REMAINING_URI_PART + "?multipleConsumers=true");
+    verify(context).getEndpoint(SEDA_URI_WITH_MULTIPLE_CONSUMERS);
   }
 
   private RouteDefinition createRouteDefinition(String componentUri) {

@@ -6,9 +6,12 @@ import static org.mockito.Mockito.when;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationToken;
 import de.ikor.sip.foundation.security.authentication.common.validators.SIPTokenValidator;
 import de.ikor.sip.foundation.security.authentication.x509.SIPX509AuthenticationToken;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -23,16 +26,16 @@ class SIPAuthenticationProviderTest {
   @Mock private SIPTokenValidator<SIPBasicAuthAuthenticationToken> validator;
 
   @Test
-  void WHEN_ctor_WITH_nullTokenType_THEN_exception() throws Exception {
-    assertThatExceptionOfType(NullPointerException.class)
+  void WHEN_ctor_WITH_nullTokenType_THEN_IllegalArgument() throws Exception {
+    assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(
             () ->
                 new SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken>(null, validator) {});
   }
 
   @Test
-  void WHEN_ctor_WITH_nullValidator_THEN_exception() throws Exception {
-    assertThatExceptionOfType(NullPointerException.class)
+  void WHEN_ctor_WITH_nullValidator_THEN_IllegalArgument() throws Exception {
+    assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(
             () ->
                 new SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken>(
@@ -59,7 +62,7 @@ class SIPAuthenticationProviderTest {
   }
 
   @Test
-  void WHEN_authenticate_WITH_badToken_THEN_badcredentialsException() throws Exception {
+  void WHEN_authenticate_WITH_badToken_THEN_badCredentialsException() throws Exception {
     // arrange
     ((Logger) LoggerFactory.getLogger(SIPAuthenticationProvider.class)).setLevel(Level.INFO);
     SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken> subject =
@@ -77,10 +80,19 @@ class SIPAuthenticationProviderTest {
   }
 
   @Test
-  void WHEN_authenticate_WITH_badTokenWithDebugLoging_THEN_badcredentialsException()
+  void WHEN_authenticate_WITH_badTokenWithDebugLogging_THEN_badCredentialsExceptionAndDebugMessage()
       throws Exception {
     // arrange
-    ((Logger) LoggerFactory.getLogger(SIPAuthenticationProvider.class)).setLevel(Level.DEBUG);
+    Logger logger =
+        (Logger)
+            LoggerFactory.getLogger(
+                "de.ikor.sip.foundation.security.authentication.SIPAuthenticationProvider");
+
+    ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+    listAppender.start();
+    logger.addAppender(listAppender);
+    logger.setLevel(Level.DEBUG);
+    List<ILoggingEvent> logsList = listAppender.list;
     SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken> subject =
         new SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken>(
             SIPBasicAuthAuthenticationToken.class, validator) {};
@@ -93,6 +105,10 @@ class SIPAuthenticationProviderTest {
     // act + assert
     assertThatExceptionOfType(BadCredentialsException.class)
         .isThrownBy(() -> subject.authenticate(token));
+    ILoggingEvent message = logsList.get(0);
+    assertThat(message.getLevel()).isEqualTo(Level.DEBUG);
+    assertThat(message.getMessage())
+        .isEqualTo("Authentication was not successful for authtoken of type: {}");
   }
 
   @Test
@@ -102,10 +118,7 @@ class SIPAuthenticationProviderTest {
         new SIPAuthenticationProvider<SIPBasicAuthAuthenticationToken>(
             SIPBasicAuthAuthenticationToken.class, validator) {};
 
-    // act
-    boolean result = subject.supports(SIPX509AuthenticationToken.class);
-
-    // assert
-    assertThat(result).isFalse();
+    // act + assert
+    assertThat(subject.supports(SIPX509AuthenticationToken.class)).isFalse();
   }
 }

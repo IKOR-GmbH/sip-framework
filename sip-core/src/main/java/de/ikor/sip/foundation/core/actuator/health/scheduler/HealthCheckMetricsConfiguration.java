@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.core.actuator.health.scheduler;
 
+import de.ikor.sip.foundation.core.actuator.health.CamelEndpointHealthMonitor;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
-import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,25 +11,31 @@ import org.springframework.context.annotation.Configuration;
  * this
  */
 @Configuration
+@HealthCheckEnabledCondition
 public class HealthCheckMetricsConfiguration {
 
   /**
    * Creates new instance of HealthCheckMetricsConfiguration
    *
    * @param registry {@link MeterRegistry}
-   * @param healthEndpoint {@link HealthEndpoint}
+   * @param monitor {@link CamelEndpointHealthMonitor}
    * @param healthGaugeConfiguration {@link HealthGaugeConfiguration}
    */
   public HealthCheckMetricsConfiguration(
       MeterRegistry registry,
-      HealthEndpoint healthEndpoint,
+      CamelEndpointHealthMonitor monitor,
       HealthGaugeConfiguration healthGaugeConfiguration) {
-    Gauge.builder(healthGaugeConfiguration.getName(), healthEndpoint, this::getStatusCode)
+    Gauge.builder(healthGaugeConfiguration.getName(), monitor, this::getStatusCode)
         .strongReference(true)
         .register(registry);
   }
 
-  private int getStatusCode(HealthEndpoint healthEndpoint) {
-    return healthEndpoint.health().getStatus().equals(Status.UP) ? 0 : 1;
+  private int getStatusCode(CamelEndpointHealthMonitor monitor) {
+    return monitor.getHealthIndicators().values().stream()
+            .allMatch(
+                endpointHealthIndicator ->
+                    endpointHealthIndicator.health().getStatus().equals(Status.UP))
+        ? 0
+        : 1;
   }
 }
