@@ -337,19 +337,22 @@ Default limit is 100 events, but it could be changed by following configuration:
 sip:
   core:
     tracing:
+      enabled: true
       limit: 120 #100 by default
 ```
 
 **Selecting the traffic trace logging type:**
 
-Introduced the traceType field in CustomTraces in order to allow for choosing where to events.
-Default is BOTH, but it could be changed by following configuration:
+When SIP tracing is enabled, by default, it will log the traffic in console on INFO level and store the messages in 
+TraceHistory. 
+But, through configuration only logging (LOG) or storing (MEMORY) can be selected.
 
 ```yaml
 sip:
   core:
     tracing:
-      traceType: BOTH # BOTH (default), LOG - Logging only, MEMORY - In memory only, NONE - none
+      enabled: true
+      trace-type: LOG | MEMORY | "*" | LOG,MEMORY
 ```
 
 ### OpenAPI Descriptor

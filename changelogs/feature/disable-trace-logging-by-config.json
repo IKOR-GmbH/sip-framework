@@ -1,8 +1,8 @@
 {
-"author": "smirglagit",
+"author": "Nemikor",
 
-"pullrequestId": 21,
+"pullrequestId": 56,
 
-"message": "Added new configuration parameter to handle tracing options. Removed enabled prop."
+"message": "Added trace-type configuration parameter to handle tracing options"
 
 }

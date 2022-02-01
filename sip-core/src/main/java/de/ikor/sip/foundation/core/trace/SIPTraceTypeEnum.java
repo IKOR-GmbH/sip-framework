@@ -1,8 +1,7 @@
 package de.ikor.sip.foundation.core.trace;
 
-import lombok.AllArgsConstructor;
-
 import java.util.function.BiConsumer;
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum SIPTraceTypeEnum {
@@ -15,5 +14,4 @@ public enum SIPTraceTypeEnum {
   public void execute(CustomTracer customTracer, String out) {
     consumer.accept(customTracer, out);
   }
-
 }

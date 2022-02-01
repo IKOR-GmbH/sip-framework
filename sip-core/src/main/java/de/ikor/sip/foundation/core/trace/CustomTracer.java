@@ -1,12 +1,11 @@
 package de.ikor.sip.foundation.core.trace;
 
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.engine.DefaultTracer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-
-import java.util.Set;
 
 /**
  * Implementation of Apache Camel's {@link DefaultTracer} Requires sip.core.tracing.enabled=true to
