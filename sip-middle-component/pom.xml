@@ -51,7 +51,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-kafka-starter</artifactId>
+            <artifactId>camel-spring-boot</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
