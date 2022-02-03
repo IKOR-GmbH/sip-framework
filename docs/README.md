@@ -360,7 +360,6 @@ sip.core.translation.use-code-as-default-message | If key is not assigned use it
 sip.core.translation.lang | Set language of log messages | String | en |
 sip.core.tracing.enabled | Enable SIP tracing and trace history | boolean | true |
 sip.core.tracing.limit | Sets storage limit in trace history | number | 100 |
-sip.core.tracing.trace-type | Sets how tracer should behave | String | "*" |
 sip.core.tracing.exchange-formatter.{property-name} | Sets value for specific property in ExchangeFormatter | / | / |
 management.endpoint.health.show-details | Enable health details in actuator | String | always |
 management.endpoints.web.exposure.include | Set which endpoints are included | String | health,info,metrics,loggers,prometheus |

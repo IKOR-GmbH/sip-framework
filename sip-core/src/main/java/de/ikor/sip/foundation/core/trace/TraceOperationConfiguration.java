@@ -11,15 +11,15 @@ import org.springframework.context.annotation.Configuration;
  * is set
  */
 @Configuration
-public class TraceTypeConfiguration {
+public class TraceOperationConfiguration {
 
   @Bean
-  public Set<SIPTraceTypeEnum> sipTraceTypeEnums(SIPTraceConfig traceConfig) {
-    LinkedHashSet<SIPTraceTypeEnum> set = new LinkedHashSet<>();
+  public Set<SIPTraceOperation> sipTraceOperations(SIPTraceConfig traceConfig) {
+    LinkedHashSet<SIPTraceOperation> set = new LinkedHashSet<>();
     if (traceConfig.getTraceType().contains("*")) {
-      Arrays.stream(SIPTraceTypeEnum.values()).forEach(set::add);
+      Arrays.stream(SIPTraceOperation.values()).forEach(set::add);
     } else {
-      traceConfig.getTraceType().forEach(name -> set.add(SIPTraceTypeEnum.valueOf(name)));
+      traceConfig.getTraceType().forEach(name -> set.add(SIPTraceOperation.valueOf(name)));
     }
     return set;
   }

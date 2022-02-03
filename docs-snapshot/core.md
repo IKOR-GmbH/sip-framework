@@ -369,6 +369,20 @@ sip:
       limit: 120 #100 by default
 ```
 
+**Selecting the traffic trace logging type:**
+
+When SIP tracing is enabled, by default, it will log the traffic in console on INFO level and store the messages in
+TraceHistory.
+But, through configuration only logging (LOG) or storing (MEMORY) can be selected.
+
+```yaml
+sip:
+  core:
+    tracing:
+      enabled: true
+      trace-type: LOG | MEMORY | "*" | LOG,MEMORY
+```
+
 ### OpenAPI Descriptor
 
 Framework provides an Open API description of all custom or Spring provided endpoints within your adapter.

@@ -12,14 +12,16 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TraceTypeConfiguration.class)
+@ContextConfiguration(classes = TraceOperationConfiguration.class)
 @TestPropertySource("classpath:config-test.properties")
 @EnableConfigurationProperties(value = SIPTraceConfig.class)
-class TraceTypeConfigurationTest {
-  @Autowired Set<SIPTraceTypeEnum> sipTraceTypeEnums;
+class TraceOperationConfigurationTest {
+  @Autowired Set<SIPTraceOperation> sipTraceOperations;
 
   @Test
   void When_Configuration_With_Asterisk_Expect_AllEnumsRegistered() {
-    assertThat(sipTraceTypeEnums).contains(SIPTraceTypeEnum.LOG).contains(SIPTraceTypeEnum.MEMORY);
+    assertThat(sipTraceOperations)
+        .contains(SIPTraceOperation.LOG)
+        .contains(SIPTraceOperation.MEMORY);
   }
 }

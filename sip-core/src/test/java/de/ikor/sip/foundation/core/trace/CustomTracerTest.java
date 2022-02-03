@@ -22,11 +22,11 @@ class CustomTracerTest {
   TraceHistory traceHistory;
   ListAppender<ILoggingEvent> listAppender;
   SIPTraceConfig traceConfig;
-  Set<SIPTraceTypeEnum> sipTraceTypeEnumSet;
+  Set<SIPTraceOperation> sipTraceOperationSet;
 
   @BeforeEach
   void setUp() {
-    sipTraceTypeEnumSet = new LinkedHashSet<>();
+    sipTraceOperationSet = new LinkedHashSet<>();
     traceHistory = new TraceHistory(5);
     traceConfig = new SIPTraceConfig();
 
@@ -39,9 +39,9 @@ class CustomTracerTest {
   @Test
   void When_dumpTrace_With_LogAndMemory_Expect_messageInLogAndHistory() {
     // arrange
-    sipTraceTypeEnumSet.add(SIPTraceTypeEnum.LOG);
-    sipTraceTypeEnumSet.add(SIPTraceTypeEnum.MEMORY);
-    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), sipTraceTypeEnumSet);
+    sipTraceOperationSet.add(SIPTraceOperation.LOG);
+    sipTraceOperationSet.add(SIPTraceOperation.MEMORY);
+    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), sipTraceOperationSet);
     List<ILoggingEvent> logsList = listAppender.list;
 
     // act
@@ -56,8 +56,8 @@ class CustomTracerTest {
   @Test
   void When_dumpTrace_With_LOG_Expect_messageInLog() {
     // arrange
-    sipTraceTypeEnumSet.add(SIPTraceTypeEnum.LOG);
-    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), sipTraceTypeEnumSet);
+    sipTraceOperationSet.add(SIPTraceOperation.LOG);
+    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), sipTraceOperationSet);
     List<ILoggingEvent> logsList = listAppender.list;
 
     // act
@@ -72,8 +72,8 @@ class CustomTracerTest {
   @Test
   void When_dumpTrace_With_MEMORY_Expect_messageInLog() {
     // arrange
-    sipTraceTypeEnumSet.add(SIPTraceTypeEnum.MEMORY);
-    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), sipTraceTypeEnumSet);
+    sipTraceOperationSet.add(SIPTraceOperation.MEMORY);
+    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), sipTraceOperationSet);
     List<ILoggingEvent> logsList = listAppender.list;
 
     // act

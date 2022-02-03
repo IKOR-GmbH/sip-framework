@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(prefix = "sip.core.tracing", name = "enabled")
 public class CustomTracer extends DefaultTracer {
 
-  private final Set<SIPTraceTypeEnum> sipTraceTypeEnums;
+  private final Set<SIPTraceOperation> sipTraceOperations;
 
   private final TraceHistory traceHistory;
 
@@ -26,22 +26,22 @@ public class CustomTracer extends DefaultTracer {
    * @param traceHistory {@link TraceHistory}
    * @param exchangeFormatter {@link SIPExchangeFormatter}
    * @param camelContext {@link CamelContext}
-   * @param sipTraceTypeEnums set of {@link SIPTraceTypeEnum}
+   * @param sipTraceOperations set of {@link SIPTraceOperation}
    */
   public CustomTracer(
       TraceHistory traceHistory,
       SIPExchangeFormatter exchangeFormatter,
       CamelContext camelContext,
-      Set<SIPTraceTypeEnum> sipTraceTypeEnums) {
+      Set<SIPTraceOperation> sipTraceOperations) {
     setExchangeFormatter(exchangeFormatter);
     camelContext.setTracing(true);
     this.traceHistory = traceHistory;
-    this.sipTraceTypeEnums = sipTraceTypeEnums;
+    this.sipTraceOperations = sipTraceOperations;
   }
 
   @Override
   protected void dumpTrace(String out) {
-    sipTraceTypeEnums.forEach(traceType -> traceType.execute(this, out));
+    sipTraceOperations.forEach(traceType -> traceType.execute(this, out));
   }
 
   void logTrace(String out) {

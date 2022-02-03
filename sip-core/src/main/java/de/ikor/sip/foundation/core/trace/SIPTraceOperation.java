@@ -4,7 +4,7 @@ import java.util.function.BiConsumer;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum SIPTraceTypeEnum {
+public enum SIPTraceOperation {
   LOG("log", CustomTracer::logTrace),
   MEMORY("memory", CustomTracer::storeInMemory);
 
