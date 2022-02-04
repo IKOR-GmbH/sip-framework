@@ -59,9 +59,9 @@
     </distributionManagement>
 
     <properties>
-        <java.version>1.8</java.version>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <java.version>11</java.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
 
         <!-- sip framework version, decoupled from actual version to make dependency resolution work properly in projects
              where sip-framework is the dependency. This version should always be the same as the version of sip-framework itself -->
@@ -72,8 +72,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>2.3.9.RELEASE</spring.boot.version>
-        <camel.version>3.13.0</camel.version>
+        <spring.boot.version>2.6.1</spring.boot.version>
+        <camel.version>3.14.0</camel.version>
         <jackson-jsr310.version>2.12.1</jackson-jsr310.version>
         <springdoc-openapi-ui.version>1.5.10</springdoc-openapi-ui.version>
         <lombok.version>1.18.20</lombok.version>
@@ -91,7 +91,7 @@
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
-        <fmt-maven-plugin.version>2.12</fmt-maven-plugin.version>
+        <fmt-maven-plugin.version>2.13</fmt-maven-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
 
@@ -378,7 +378,7 @@
                             <configuration>
                                 <rules>
                                     <enforceBytecodeVersion>
-                                        <maxJdkVersion>1.8</maxJdkVersion>
+                                        <maxJdkVersion>11</maxJdkVersion>
                                     </enforceBytecodeVersion>
                                     <dependencyConvergence/>
                                     <banDuplicatePomDependencyVersions/>
