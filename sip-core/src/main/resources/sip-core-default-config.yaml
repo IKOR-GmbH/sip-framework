@@ -10,6 +10,7 @@ sip.core:
     exchange-formatter:
       showHeaders: true
       showExchangeId: true
+    traceType: "*"
   metrics:
     external-endpoint-health-check:
       enabled: true
@@ -26,3 +27,8 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     disable-swagger-default-url: true
+
+management:
+  info:
+    camel:
+      enabled: false

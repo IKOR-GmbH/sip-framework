@@ -363,6 +363,7 @@ sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay | Sets hea
 sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay | Sets health check execution initial delay | number | 5000 |
 sip.core.tracing.enabled | Enable SIP tracing and trace history | boolean | true |
 sip.core.tracing.limit | Sets storage limit in trace history | number | 100 |
+sip.core.tracing.trace-type | Sets how tracer should behave | String | "*" |
 sip.core.tracing.exchange-formatter.{property-name} | Sets value for specific property in ExchangeFormatter | / | / |
 management.endpoint.health.show-details | Enable health details in actuator | String | always |
 management.endpoints.web.exposure.include | Set which endpoints are included | String | health,info,metrics,loggers,prometheus |
