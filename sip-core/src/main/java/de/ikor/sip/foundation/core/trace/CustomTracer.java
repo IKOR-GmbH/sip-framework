@@ -41,7 +41,7 @@ public class CustomTracer extends DefaultTracer {
 
   @Override
   protected void dumpTrace(String out) {
-    sipTraceOperations.forEach(traceType -> traceType.execute(this, out));
+    sipTraceOperations.forEach(traceOperation -> traceOperation.execute(this, out));
   }
 
   void logTrace(String out) {

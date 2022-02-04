@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Configures bean "sipTraceTypeEnums" with trace types defined in "trace-type" property or all if *
+ * Configures bean "sipTraceOperations" with trace types defined in "trace-type" property or all if *
  * is set
  */
 @Configuration
