@@ -337,6 +337,7 @@ Default limit is 100 events, but it could be changed by following configuration:
 sip:
   core:
     tracing:
+      enabled: true
       limit: 120 #100 by default
 ```
 

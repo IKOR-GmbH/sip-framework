@@ -7,24 +7,41 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import org.apache.camel.CamelContext;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
 class CustomTracerTest {
 
   private static final String LOG_MESSAGE = "log message";
+  CustomTracer subject;
+  TraceHistory traceHistory;
+  ListAppender<ILoggingEvent> listAppender;
+  SIPTraceConfig traceConfig;
+  Set<SIPTraceOperation> sipTraceOperationSet;
 
-  @Test
-  void When_dumpTrace_Expect_messageInLog() {
-    // arrange
-    TraceHistory traceHistory = new TraceHistory(5);
-    CustomTracer subject = new CustomTracer(traceHistory, null, mock(CamelContext.class));
+  @BeforeEach
+  void setUp() {
+    sipTraceOperationSet = new LinkedHashSet<>();
+    traceHistory = new TraceHistory(5);
+    traceConfig = new SIPTraceConfig();
+
     Logger logger = (Logger) LoggerFactory.getLogger("org.apache.camel.Tracing");
-    ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+    listAppender = new ListAppender<>();
     listAppender.start();
     logger.addAppender(listAppender);
+  }
+
+  @Test
+  void When_dumpTrace_With_LogAndMemory_Expect_messageInLogAndHistory() {
+    // arrange
+    sipTraceOperationSet.add(SIPTraceOperation.LOG);
+    sipTraceOperationSet.add(SIPTraceOperation.MEMORY);
+    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), sipTraceOperationSet);
     List<ILoggingEvent> logsList = listAppender.list;
 
     // act
@@ -33,6 +50,37 @@ class CustomTracerTest {
     // assert
     assertThat(logsList.get(0).getMessage()).isEqualTo(LOG_MESSAGE);
     assertThat(logsList.get(0).getLevel()).isEqualTo(Level.INFO);
+    assertThat(traceHistory.getAndClearHistory()).containsExactly(LOG_MESSAGE);
+  }
+
+  @Test
+  void When_dumpTrace_With_LOG_Expect_messageInLog() {
+    // arrange
+    sipTraceOperationSet.add(SIPTraceOperation.LOG);
+    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), sipTraceOperationSet);
+    List<ILoggingEvent> logsList = listAppender.list;
+
+    // act
+    subject.dumpTrace(LOG_MESSAGE);
+
+    // assert
+    assertThat(logsList.get(0).getMessage()).isEqualTo(LOG_MESSAGE);
+    assertThat(logsList.get(0).getLevel()).isEqualTo(Level.INFO);
+    assertThat(traceHistory.getList()).isEmpty();
+  }
+
+  @Test
+  void When_dumpTrace_With_MEMORY_Expect_messageInLog() {
+    // arrange
+    sipTraceOperationSet.add(SIPTraceOperation.MEMORY);
+    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), sipTraceOperationSet);
+    List<ILoggingEvent> logsList = listAppender.list;
+
+    // act
+    subject.dumpTrace(LOG_MESSAGE);
+
+    // assert
+    assertThat(logsList).isEmpty();
     assertThat(traceHistory.getAndClearHistory()).containsExactly(LOG_MESSAGE);
   }
 }
