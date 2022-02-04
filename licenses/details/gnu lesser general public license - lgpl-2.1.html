@@ -11,7 +11,8 @@
 
 
 
-<!-- Parent-Version: 1.84 -->
+<!-- Parent-Version: 1.97 -->
+<!-- This page is derived from /server/standards/boilerplate.html -->
 <title>GNU Lesser General Public License v2.1 - GNU Project - Free Software Foundation</title>
 <link rel="alternate" type="application/rdf+xml" href="lgpl-2.1.rdf" /> 
 <!-- begin translist file -->
@@ -29,23 +30,6 @@
 <!-- start of server/banner.html -->
 <!-- start of head-include-2.html -->
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-
-<link rel="stylesheet" type="text/css" href="/server/banners/fundraiser.css" media="screen" />
-<style type="text/css" media="screen"><!--
-.progress-bar {
-  width: 54%;
-}
--->
-</style>
-
-<style type="text/css" media="screen">
-<!-- TRANSLATORS: Change direction to rtl if you translate
-     the fundraiser and your script is right-to-left.  -->
-.fundraiser {
-  direction: ltr;
-}
-</style>
 <!-- end of head-include-2.html -->
 
 </head>
@@ -56,25 +40,27 @@
 <a class="skip" href="#content"><b>Skip to main text</b></a>
 </div>
 
-<div id='fundraiser'>
-  <img class="fence" src="/server/banners/ladder.png" alt="" />
-  <div class="message">
-    <p><a href="https://fsf.org/appeal?mtm_campaign=fall21&amp;mtm_source=banner">
-      Your example can empower users just like you to take important steps
-      towards software freedom. Become an FSF associate member by January 20.
-      <i>Read more &gt;</i><span class="gnun-split"></span></a>
-    </p>
-  </div><!-- .message -->
-  <div class="progresswidget">
-    <div class="progress">
+<div id="fsf-frame" role="complementary">
+<form id="fssbox" action="https://my.fsf.org/civicrm/profile/create?reset=1&amp;gid=31"
+      method="post">
+ <div>
+  <input name="postURL" type="hidden" value="" />
+  <input type="hidden" name="group[25]" value="1" />
+  <input name="cancelURL" type="hidden" value="https://crm.fsf.org/civicrm/profile?reset=1&amp;gid=31" />
+  <input name="_qf_default" type="hidden" value="Edit:cancel" />
+  <label for="frmEmail">
+   <a href="//www.fsf.org/fss">Free Software Supporter</a>:
+  </label>
+  <input type="text" id="frmEmail" name="email-Primary" size="18" maxlength="80"
+         value="email address" onfocus="this.value=''"/>
+  <input type="submit" name="_qf_Edit_next" value="Sign up" />
+ </div>
+</form>
 
-      <div class="progress-bar"><span class="percentage">270</span></div>
-      <span class="goal">500 Members</span>
-    </div>
-  </div><!-- .progresswidget -->
-</div><!-- #fundraiser -->
-
-<div style="clear: both"></div>
+<div id="join-fsf" class="button"><a
+href="https://www.fsf.org/associate/support_freedom?referrer=4052">JOIN&nbsp;THE&nbsp;FSF</a>
+</div>
+</div>
 
 <div id="header" role="banner">
 <p id="gnu-banner">
@@ -133,6 +119,9 @@
   <li id="tabSoftware"><a href="/software/software.html">SOFTWARE</a></li>
 
 
+  <li id="tabDistros"><a href="/distros/distros.html">DISTROS</a></li>
+
+
   <li id="tabDoc"><a href="/doc/doc.html">DOCS</a></li>
 
 
@@ -145,11 +134,14 @@
   <li id="tabArt"><a href="/graphics/graphics.html">GNU&nbsp;ART</a></li>
 
 
+  <li id="tabFun"><a href="/fun/humor.html">FUN</a></li>
+
+
   <li id="tabPeople"><a href="/people/people.html">GNU'S&nbsp;WHO?</a></li>
 
-  <li><a href="/server/sitemap.html">SITEMAP</a></li>
   <li><a href="//directory.fsf.org">SOFTWARE&nbsp;DIRECTORY</a></li>
   <li><a href="https://h-node.org/">HARDWARE</a></li>
+  <li><a href="/server/sitemap.html">SITEMAP</a></li>
  </ul>
  <div style="clear: both"></div>
 </div><!-- /"navigation -->
@@ -158,7 +150,9 @@
 <div id="content" role="main">
 <!-- end of server/banner.html -->
 
-<h2>GNU Lesser General Public License, version 2.1</h2>
+<div class="reduced-width">
+<h2>GNU Lesser General Public License, version&nbsp;2.1</h2>
+<div class="thin"></div>
 
 <ul>
   <li><a href="/licenses/lgpl.html">The latest version of the LGPL, version
@@ -183,7 +177,7 @@
     the LGPL</a></li>
 </ul>
 
-<hr />
+<div class="thin"></div>
 
 <p>This GNU Lesser General Public License counts as the successor of the GNU
 Library General Public License. For an explanation of why this change was
@@ -203,12 +197,11 @@ the Lesser GPL for your next library</a> article.</p>
   </li>
 </ul>
 
-<hr style="clear: both;" />
+<hr class="thin" />
 
 <!-- The license text is in English and appears broken in RTL as
 Arabic, Farsi, etc. Explicitly set the direction to override the
 one defined in the translation. -->
-
 <div dir="ltr">
 <h3 id="SEC1">GNU LESSER GENERAL PUBLIC LICENSE</h3>
 <p>
@@ -819,6 +812,7 @@ Ty Coon, President of Vice
 That's all there is to it!</p>
 
 </div>
+</div>
 
 </div><!-- for id="content", starts in the include above -->
 
@@ -886,7 +880,7 @@ software users.&rdquo;</strong></p>
 <!-- end server/footer-text.html -->
 
 
-<div id="footer">
+<div id="footer" role="contentinfo">
 <div class="unprintable">
 
 <p>Please send general FSF &amp; GNU inquiries to
@@ -904,13 +898,13 @@ to <a href="mailto:webmasters@gnu.org">&lt;webmasters@gnu.org&gt;</a>.</p>
         to <a href="mailto:web-translators@gnu.org">
         &lt;web-translators@gnu.org&gt;</a>.</p>
 
-        <p>For information on coordinating and submitting translations of
+        <p>For information on coordinating and contributing translations of
         our web pages, see <a
         href="/server/standards/README.translations.html">Translations
         README</a>. -->
 Please see the <a
 href="/server/standards/README.translations.html">Translations
-README</a> for information on coordinating and submitting translations
+README</a> for information on coordinating and contributing translations
 of this article.</p>
 </div>
 
@@ -929,9 +923,9 @@ of this article.</p>
 
 <p class="unprintable">Updated:
 <!-- timestamp start -->
-$Date: 2018/02/14 15:57:20 $
+$Date: 2022/01/10 20:05:44 $
 <!-- timestamp end --></p>
 </div>
-</div>
+</div><!-- for class="inner", starts in the banner include -->
 </body>
 </html>
