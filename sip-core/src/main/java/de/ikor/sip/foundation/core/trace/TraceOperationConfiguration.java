@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Configures bean "sipTraceOperations" with trace types defined in "trace-type" property or all if *
- * is set
+ * Configures bean "sipTraceOperations" with trace types defined in "trace-type" property or all if
+ * * is set
  */
 @Configuration
 public class TraceOperationConfiguration {
