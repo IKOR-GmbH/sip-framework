@@ -66,8 +66,6 @@ under the License.
             <includes>
                 <include>.gitignore</include>
                 <include>README.md</include>
-                <include>changelog.md</include>
-                <include>adapter-description.md</include>
             </includes>
         </fileSet>
     </fileSets>
@@ -85,6 +83,14 @@ under the License.
                         <include>**/*.xml</include>
                         <include>**/*.properties</include>
                         <include>**/*.yaml</include>
+                    </includes>
+                </fileSet>
+                <fileSet filtered="true">
+                    <directory>src/main/resources/documents</directory>
+                    <includes>
+                        <include>readme.md</include>
+                        <include>changelog.md</include>
+                        <include>adapter-description.md</include>
                     </includes>
                 </fileSet>
                 <fileSet filtered="true" packaged="true">
