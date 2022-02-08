@@ -17,6 +17,7 @@ class ProcessorProxyTest {
   NamedNode namedNode;
   Processor processor;
   ProxyExtension proxyExtension;
+  AsyncCallback callback;
 
   private static final String PROXY_ID = "proxy";
 
@@ -28,7 +29,8 @@ class ProcessorProxyTest {
     ArrayList<ProxyExtension> exts = new ArrayList<>();
     exts.add(proxyExtension);
     proxyExtensions = exts;
-    processorProxySubject = new ProcessorProxy(null, namedNode, processor, proxyExtensions);
+    callback = mock(AsyncCallback.class);
+    processorProxySubject = new ProcessorProxy(namedNode, processor, false, proxyExtensions);
   }
 
   @Test
@@ -44,7 +46,8 @@ class ProcessorProxyTest {
     // act
     processorProxySubject.mock(exchange1 -> exchange1);
 
-    assertThatCode(() -> processorProxySubject.process(exchange)).doesNotThrowAnyException();
+    assertThatCode(() -> processorProxySubject.process(exchange, callback))
+        .doesNotThrowAnyException();
   }
 
   @Test
@@ -60,8 +63,8 @@ class ProcessorProxyTest {
     when(proxyExtension.isApplicable(any(), any())).thenReturn(true);
     doNothing().when(proxyExtension).run(any(), any());
 
-    assertThatCode(() -> processorProxySubject.process(exchange)).doesNotThrowAnyException();
-    ;
+    assertThatCode(() -> processorProxySubject.process(exchange, callback))
+        .doesNotThrowAnyException();
   }
 
   @Test
@@ -73,7 +76,7 @@ class ProcessorProxyTest {
 
     // assert
     assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(() -> processorProxySubject.process(exchange));
+        .isThrownBy(() -> processorProxySubject.process(exchange, callback));
   }
 
   @Test
@@ -86,6 +89,6 @@ class ProcessorProxyTest {
 
     // assert
     assertThatExceptionOfType(MockMissingFunctionException.class)
-        .isThrownBy(() -> processorProxySubject.process(exchange));
+        .isThrownBy(() -> processorProxySubject.process(exchange, callback));
   }
 }

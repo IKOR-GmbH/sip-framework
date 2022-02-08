@@ -8,57 +8,64 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import lombok.SneakyThrows;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.NamedNode;
-import org.apache.camel.Processor;
+import org.apache.camel.*;
+import org.apache.camel.support.AsyncProcessorSupport;
 import org.apache.camel.support.ExchangeHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Proxy for Apache Camel Processors */
-public class ProcessorProxy implements Processor {
+public class ProcessorProxy extends AsyncProcessorSupport {
   private static final Logger logger = LoggerFactory.getLogger(ProcessorProxy.class);
 
   private final NamedNode nodeDefinition;
   private final Processor target;
   private final List<ProxyExtension> extensions;
   private final Map<String, Consumer<Exchange>> proxyCommands;
-
+  private final boolean endpointProcessor;
   private Function<Exchange, Exchange> mockFunction;
+  private Function<Exchange, Exchange> skipFunction;
 
   private static final String TRACING_ID = "tracingId";
+  private static final String TEST_MODE_HEADER = "test-mode";
+
+  private static final String COMMAND_MOCK = "mock";
+  private static final String COMMAND_PROCESS = "process";
+  private static final String COMMAND_SKIP = "skip";
 
   /**
    * Creates new instance of ProcessorProxy
    *
-   * @param context {@link CamelContext}
    * @param nodeDefinition {@link NamedNode}
    * @param target target {@link Processor}
    * @param extensions List of {@link ProxyExtension}
    */
   public ProcessorProxy(
-      CamelContext context,
       NamedNode nodeDefinition,
       Processor target,
+      boolean endpointProcessor,
       List<ProxyExtension> extensions) {
     this.nodeDefinition = nodeDefinition;
     this.target = target;
     this.extensions = new ArrayList<>(extensions);
+    this.endpointProcessor = endpointProcessor;
     this.mockFunction = null;
+    this.skipFunction = null;
     this.proxyCommands = initCommands();
   }
 
   private Map<String, Consumer<Exchange>> initCommands() {
     Map<String, Consumer<Exchange>> commands = new HashMap<>();
-    commands.put("mock", this::mockProcessing);
-    commands.put("process", this::processExchange);
+    commands.put(COMMAND_MOCK, this::mockProcessing);
+    commands.put(COMMAND_PROCESS, this::processExchange);
+    commands.put(COMMAND_SKIP, this::skipProcessing);
     return commands;
   }
 
   /** Resets the state of the proxy to default. */
   public synchronized void reset() {
     mockFunction = null;
+    skipFunction = null;
   }
 
   /**
@@ -72,6 +79,15 @@ public class ProcessorProxy implements Processor {
   }
 
   /**
+   * Sets proxy a function that proxy should execute when it skips original processor logic.
+   *
+   * @param exchangeFunction callback function for skip behavior
+   */
+  public synchronized void skipFunction(UnaryOperator<Exchange> exchangeFunction) {
+    this.skipFunction = exchangeFunction;
+  }
+
+  /**
    * Add new ProxyExtension for this ProcessorProxy
    *
    * @param proxyExtension {@link ProxyExtension}
@@ -81,14 +97,18 @@ public class ProcessorProxy implements Processor {
   }
 
   @Override
-  public void process(Exchange exchange) {
+  public boolean process(Exchange exchange, AsyncCallback callback) {
     if (exchange.getIn().getHeader(TRACING_ID) == null) {
       exchange.getIn().setHeader(TRACING_ID, exchange.getExchangeId());
     }
     Exchange originalExchange = exchange.copy();
 
-    for (String key : getCommands(exchange)) {
-      proxyCommands.get(key).accept(exchange);
+    if (shouldSkipRegularExecution(exchange)) {
+      proxyCommands.get(COMMAND_SKIP).accept(exchange);
+    } else {
+      for (String key : getCommands(exchange)) {
+        proxyCommands.get(key).accept(exchange);
+      }
     }
 
     for (ProxyExtension extension : extensions) {
@@ -96,6 +116,21 @@ public class ProcessorProxy implements Processor {
         extension.run(originalExchange, exchange);
       }
     }
+
+    callback.done(true);
+    return true;
+  }
+
+  private boolean isTestMode(Exchange exchange) {
+    return "true".equals(exchange.getIn().getHeader(TEST_MODE_HEADER, String.class));
+  }
+
+  private boolean mockedProcessor(Exchange exchange) {
+    return getCommands(exchange).contains(COMMAND_MOCK);
+  }
+
+  private boolean shouldSkipRegularExecution(Exchange exchange) {
+    return isTestMode(exchange) && this.endpointProcessor && !mockedProcessor(exchange);
   }
 
   private List<String> getCommands(Exchange exchange) {
@@ -109,7 +144,7 @@ public class ProcessorProxy implements Processor {
         throw new IllegalArgumentException("Error occurred when resolving proxy-modes header", e);
       }
     }
-    return proxyModes.getOrDefault(getId(), Arrays.asList("process"));
+    return proxyModes.getOrDefault(getId(), Collections.singletonList(COMMAND_PROCESS));
   }
 
   @SneakyThrows
@@ -124,6 +159,13 @@ public class ProcessorProxy implements Processor {
           "Mock function in ProxyProcessor with id '" + getId() + "' is not defined");
     }
     ExchangeHelper.copyResults(exchange, mockFunction.apply(exchange));
+  }
+
+  private void skipProcessing(Exchange exchange) {
+    logger.trace("Skipping execution for the {}", exchange);
+    if (skipFunction != null) {
+      skipFunction.apply(exchange);
+    }
   }
 
   private String getId() {
