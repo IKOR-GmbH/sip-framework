@@ -35,9 +35,7 @@ public class ProcessorProxyRegistry {
     return Optional.ofNullable(proxies.get(processorId));
   }
 
-  /**
-   * @return map of processorId and {@link ProcessorProxy}
-   * */
+  /** @return map of processorId and {@link ProcessorProxy} */
   public Map<String, ProcessorProxy> getProxies() {
     return proxies;
   }
