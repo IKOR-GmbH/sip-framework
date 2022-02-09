@@ -96,6 +96,13 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     this.extensions.add(proxyExtension);
   }
 
+  /**
+   * @return true if this is processor that outputs to Endpoint
+   * */
+  public boolean isEndpointProcessor() {
+    return this.endpointProcessor;
+  }
+
   @Override
   public boolean process(Exchange exchange, AsyncCallback callback) {
     if (exchange.getIn().getHeader(TRACING_ID) == null) {
