@@ -100,7 +100,7 @@ management:
 
 ### Dynamic proxy for Apache Camel Processors
 
-Dynamic proxy is implementation of decorator pattern on all Processors detected on all Camel routes. The base motivation
+Dynamic proxy is implementation of Decorator pattern on all Processors detected on all Camel routes. The base motivation
 is to gain more control over Camel dataflow, by providing placeholders for custom functionalities on different steps of
 the route. It's a mechanism for providing and applying new future features on already implemented adapters, through the
 configuration and without adapter code changes.
@@ -113,9 +113,9 @@ replace it with its mock. This can be achieved on any Processor on the route, in
 behavior with SIP can be triggered dynamically in runtime, and on single request level, leaving the original route intact and active
 all the time.
 
-To use it, header "proxy-modes" must be set, which consists of a map of processorIds as keys and list of commands as value:
-
-- `proxy-modes: {"processorId": ["mock"]}`
+To use it, header "test-mode" must be set. In that mode, proxies will try to execute preassigned mock functions.
+- `test-mode: "true"`
+While in test mode the adapter will automatically skip executing the original processor behaviour for outgoing endpoints.
 
 **Setting mock behavior example:**
 
