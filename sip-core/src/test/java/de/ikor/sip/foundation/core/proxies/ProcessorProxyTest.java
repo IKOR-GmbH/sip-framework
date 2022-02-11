@@ -8,18 +8,22 @@ import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import java.util.List;
 import java.util.function.UnaryOperator;
 import org.apache.camel.*;
+import org.apache.camel.processor.SendProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ProcessorProxyTest {
 
   ProcessorProxy processorProxySubject;
+  ProcessorProxy processorProxySubjectOutgoing;
   List<ProxyExtension> proxyExtensions;
   NamedNode namedNode;
   Processor processor;
   ProxyExtension proxyExtension;
   AsyncCallback callback;
   Exchange exchange;
+  SendProcessor outgoingProcessor;
+  Endpoint outgoingEndpoint;
 
   private static final String PROXY_ID = "proxy";
 
@@ -31,7 +35,12 @@ class ProcessorProxyTest {
     proxyExtensions = List.of(proxyExtension);
     callback = mock(AsyncCallback.class);
     exchange = mock(ExtendedExchange.class, RETURNS_DEEP_STUBS);
-    processorProxySubject = new ProcessorProxy(namedNode, processor, false, proxyExtensions);
+    processorProxySubject = new ProcessorProxy(namedNode, processor, processor, proxyExtensions);
+    outgoingProcessor = mock(SendProcessor.class);
+    outgoingEndpoint = mock(Endpoint.class);
+    when(outgoingProcessor.getEndpoint()).thenReturn(outgoingEndpoint);
+    processorProxySubjectOutgoing =
+        new ProcessorProxy(namedNode, outgoingProcessor, outgoingProcessor, proxyExtensions);
   }
 
   private void putProxyInTestMode() {
@@ -50,14 +59,16 @@ class ProcessorProxyTest {
 
     // assert
     verify(proxyExtension, times(1)).isApplicable(any(), any());
+    verify(proxyExtension, times(0)).run(any(), any());
     verify(processor, times(1)).process(exchange);
   }
 
   @Test
   void process_executeMock() throws Exception {
     // arrange
-    when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
     putProxyInTestMode();
+
+    when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
 
     UnaryOperator<Exchange> mockFunction = mock(UnaryOperator.class);
     when(mockFunction.apply(exchange)).thenReturn(exchange);
@@ -119,12 +130,10 @@ class ProcessorProxyTest {
   void process_endpointProcessorTestMode() throws Exception {
     // arrange
     putProxyInTestMode();
-    ProcessorProxy endpointProcessorProxySubject =
-        new ProcessorProxy(namedNode, processor, true, proxyExtensions);
     when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
 
     // act
-    assertThatCode(() -> endpointProcessorProxySubject.process(exchange, callback))
+    assertThatCode(() -> processorProxySubjectOutgoing.process(exchange, callback))
         .doesNotThrowAnyException();
 
     // assert
@@ -135,20 +144,42 @@ class ProcessorProxyTest {
   void process_endpointProcessorTestModeAfterRemovingMockFunction() throws Exception {
     // arrange
     putProxyInTestMode();
-    ProcessorProxy endpointProcessorProxySubject =
-        new ProcessorProxy(namedNode, processor, true, proxyExtensions);
     when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
     UnaryOperator<Exchange> mockFunction = mock(UnaryOperator.class);
     when(mockFunction.apply(exchange)).thenReturn(exchange);
     // act
-    endpointProcessorProxySubject.mock(mockFunction);
-    endpointProcessorProxySubject.reset();
+    processorProxySubjectOutgoing.mock(mockFunction);
+    processorProxySubjectOutgoing.reset();
 
-    assertThatCode(() -> endpointProcessorProxySubject.process(exchange, callback))
+    assertThatCode(() -> processorProxySubjectOutgoing.process(exchange, callback))
         .doesNotThrowAnyException();
 
     // assert
     verify(processor, times(0)).process(exchange);
     verify(mockFunction, times(0)).apply(exchange);
+  }
+
+  @Test
+  void isEndpointProcessor_regularProcessor() throws Exception {
+    // assert
+    assertThat(processorProxySubject.isEndpointProcessor()).isFalse();
+  }
+
+  @Test
+  void isEndpointProcessor_regularEndpointProcessor() throws Exception {
+    // arrange
+    when(outgoingEndpoint.getEndpointUri()).thenReturn("file://test.txt");
+
+    // assert
+    assertThat(processorProxySubjectOutgoing.isEndpointProcessor()).isTrue();
+  }
+
+  @Test
+  void isEndpointProcessor_ignoredEndpointProcessor() throws Exception {
+    // arange
+    when(outgoingEndpoint.getEndpointUri()).thenReturn("sipmc:middleComponent");
+
+    // assert
+    assertThat(processorProxySubjectOutgoing.isEndpointProcessor()).isFalse();
   }
 }

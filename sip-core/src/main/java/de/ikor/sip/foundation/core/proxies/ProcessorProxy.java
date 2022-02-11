@@ -6,8 +6,10 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import lombok.SneakyThrows;
 import org.apache.camel.*;
+import org.apache.camel.processor.SendDynamicProcessor;
 import org.apache.camel.support.AsyncProcessorSupport;
 import org.apache.camel.support.ExchangeHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,11 +20,12 @@ public class ProcessorProxy extends AsyncProcessorSupport {
 
   private final NamedNode nodeDefinition;
   private final Processor wrappedProcessor;
+  private final Processor originalProcessor;
   private final List<ProxyExtension> extensions;
-  private final boolean endpointProcessor;
   private Function<Exchange, Exchange> mockFunction;
 
   private static final String TRACING_ID = "tracingId";
+  private static final String[] NON_OUTGOING_PROCESSOR_PREFIXES = {"seda", "direct", "sipmc"};
 
   /**
    * Creates new instance of ProcessorProxy
@@ -34,12 +37,12 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   public ProcessorProxy(
       NamedNode nodeDefinition,
       Processor wrappedProcessor,
-      boolean endpointProcessor,
+      Processor originalProcessor,
       List<ProxyExtension> extensions) {
     this.nodeDefinition = nodeDefinition;
     this.wrappedProcessor = wrappedProcessor;
+    this.originalProcessor = originalProcessor;
     this.extensions = new ArrayList<>(extensions);
-    this.endpointProcessor = endpointProcessor;
     this.mockFunction = defaultMockFunction();
   }
 
@@ -69,7 +72,14 @@ public class ProcessorProxy extends AsyncProcessorSupport {
 
   /** @return true if this is a processor that outputs to Endpoint */
   public boolean isEndpointProcessor() {
-    return this.endpointProcessor;
+    if (originalProcessor instanceof EndpointAware) {
+      Endpoint destinationEndpoint = ((EndpointAware) originalProcessor).getEndpoint();
+      if (!StringUtils.startsWithAny(
+          destinationEndpoint.getEndpointUri(), NON_OUTGOING_PROCESSOR_PREFIXES)) {
+        return true;
+      }
+    }
+    return originalProcessor instanceof SendDynamicProcessor;
   }
 
   @Override
