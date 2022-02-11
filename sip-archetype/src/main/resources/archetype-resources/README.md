@@ -8,7 +8,8 @@ This is an auto-generated project and you can find more information about develo
 sip framework concept at:
 https://git.ikor.cloud/sip-2-product/sip/sip-framework/-/blob/develop/README.md
 
-Please use this document to describe how to build and run your adapter.
+Please use `readme.md` document to describe how to build and run your adapter. This document can be found in your
+adapter application module under `main/resources/documents`.
 
 We encourage you to explore our features and hope you enjoy developing your adapter with SIP.
 
