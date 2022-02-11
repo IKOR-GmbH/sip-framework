@@ -45,7 +45,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
 
   /** Resets the state of the proxy to default. */
   public synchronized void reset() {
-    mockFunction = null;
+    mockFunction = defaultMockFunction();
   }
 
   /**

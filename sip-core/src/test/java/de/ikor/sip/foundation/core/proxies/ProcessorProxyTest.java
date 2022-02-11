@@ -34,11 +34,30 @@ class ProcessorProxyTest {
     processorProxySubject = new ProcessorProxy(namedNode, processor, false, proxyExtensions);
   }
 
+  private void putProxyInTestMode() {
+    when(exchange.getIn().getHeader(TEST_MODE_HEADER, String.class)).thenReturn("true");
+  }
+
+  @Test
+  void process_executeProcessExchange() throws Exception {
+    // arrange
+    when(namedNode.getId()).thenReturn(PROXY_ID);
+    when(proxyExtension.isApplicable(any(), any())).thenReturn(false);
+
+    // act
+    assertThatCode(() -> processorProxySubject.process(exchange, callback))
+        .doesNotThrowAnyException();
+
+    // assert
+    verify(proxyExtension, times(1)).isApplicable(any(), any());
+    verify(processor, times(1)).process(exchange);
+  }
+
   @Test
   void process_executeMock() throws Exception {
     // arrange
     when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
-    when(exchange.getIn().getHeader(TEST_MODE_HEADER, String.class)).thenReturn("true");
+    putProxyInTestMode();
 
     UnaryOperator<Exchange> mockFunction = mock(UnaryOperator.class);
     when(mockFunction.apply(exchange)).thenReturn(exchange);
@@ -55,17 +74,16 @@ class ProcessorProxyTest {
   }
 
   @Test
-  void process_executeProcessExchange() throws Exception {
+  void process_executeProcessExchangeInTestMode() throws Exception {
     // arrange
-    when(namedNode.getId()).thenReturn(PROXY_ID);
-    when(proxyExtension.isApplicable(any(), any())).thenReturn(false);
+    putProxyInTestMode();
+    when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
 
     // act
     assertThatCode(() -> processorProxySubject.process(exchange, callback))
         .doesNotThrowAnyException();
 
     // assert
-    verify(proxyExtension, times(1)).isApplicable(any(), any());
     verify(processor, times(1)).process(exchange);
   }
 
@@ -100,9 +118,9 @@ class ProcessorProxyTest {
   @Test
   void process_endpointProcessorTestMode() throws Exception {
     // arrange
+    putProxyInTestMode();
     ProcessorProxy endpointProcessorProxySubject =
         new ProcessorProxy(namedNode, processor, true, proxyExtensions);
-    when(exchange.getIn().getHeader(TEST_MODE_HEADER, String.class)).thenReturn("true");
     when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
 
     // act
@@ -111,5 +129,26 @@ class ProcessorProxyTest {
 
     // assert
     verify(processor, times(0)).process(exchange);
+  }
+
+  @Test
+  void process_endpointProcessorTestModeAfterRemovingMockFunction() throws Exception {
+    // arrange
+    putProxyInTestMode();
+    ProcessorProxy endpointProcessorProxySubject =
+        new ProcessorProxy(namedNode, processor, true, proxyExtensions);
+    when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
+    UnaryOperator<Exchange> mockFunction = mock(UnaryOperator.class);
+    when(mockFunction.apply(exchange)).thenReturn(exchange);
+    // act
+    endpointProcessorProxySubject.mock(mockFunction);
+    endpointProcessorProxySubject.reset();
+
+    assertThatCode(() -> endpointProcessorProxySubject.process(exchange, callback))
+        .doesNotThrowAnyException();
+
+    // assert
+    verify(processor, times(0)).process(exchange);
+    verify(mockFunction, times(0)).apply(exchange);
   }
 }
