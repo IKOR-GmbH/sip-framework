@@ -11,4 +11,4 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(
     value = "classpath:sip-core-default-config.yaml",
     factory = YamlPropertSourceFactory.class)
-public class SIPCoreConfiguration {}
+public class SIPCoreAutoConfiguration {}
