@@ -13,7 +13,7 @@ import org.apache.camel.api.management.mbean.RouteError;
  * Internally, it uses Camel's JMX component: @{@link ManagedRouteMBean}.
  */
 @Data
-class AdapterRouteDetails {
+public class AdapterRouteDetails {
   private final String id;
   private final String group;
   private final String description;
