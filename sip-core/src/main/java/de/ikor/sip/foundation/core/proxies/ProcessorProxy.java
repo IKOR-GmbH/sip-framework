@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import lombok.SneakyThrows;
-import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.NamedNode;
 import org.apache.camel.Processor;
@@ -32,16 +31,12 @@ public class ProcessorProxy implements Processor {
   /**
    * Creates new instance of ProcessorProxy
    *
-   * @param context {@link CamelContext}
    * @param nodeDefinition {@link NamedNode}
    * @param target target {@link Processor}
    * @param extensions List of {@link ProxyExtension}
    */
   public ProcessorProxy(
-      CamelContext context,
-      NamedNode nodeDefinition,
-      Processor target,
-      List<ProxyExtension> extensions) {
+      NamedNode nodeDefinition, Processor target, List<ProxyExtension> extensions) {
     this.nodeDefinition = nodeDefinition;
     this.target = target;
     this.extensions = new ArrayList<>(extensions);
@@ -128,5 +123,9 @@ public class ProcessorProxy implements Processor {
 
   private String getId() {
     return this.nodeDefinition.getId();
+  }
+
+  public Function<Exchange, Exchange> getMockFunction() {
+    return this.mockFunction;
   }
 }

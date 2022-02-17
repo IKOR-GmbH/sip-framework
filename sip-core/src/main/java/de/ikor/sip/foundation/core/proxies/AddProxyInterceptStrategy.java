@@ -25,7 +25,7 @@ public class AddProxyInterceptStrategy implements InterceptStrategy {
       throws Exception {
     String processorId = definition.getId();
     log.info("sip.core.proxy.register.info_{}", processorId);
-    ProcessorProxy processorProxy = new ProcessorProxy(context, definition, target, extensions);
+    ProcessorProxy processorProxy = new ProcessorProxy(definition, target, extensions);
     proxyRegistry.register(processorId, processorProxy);
     return AsyncProcessorConverterHelper.convert(processorProxy);
   }
