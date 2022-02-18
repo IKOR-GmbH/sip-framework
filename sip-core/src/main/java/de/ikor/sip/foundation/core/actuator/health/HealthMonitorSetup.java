@@ -1,6 +1,8 @@
 package de.ikor.sip.foundation.core.actuator.health;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +11,7 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.processor.SendProcessor;
 import org.apache.commons.collections4.MapIterator;
 import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
+@ConditionalOnBean(CamelContext.class)
 @AllArgsConstructor
 public class HealthMonitorSetup {
   private final CamelContext camelContext;

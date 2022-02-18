@@ -1,13 +1,11 @@
 package de.ikor.sip.foundation.core.actuator.routes;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 
 /** POJO object for storing the markdown file */
@@ -22,11 +20,16 @@ public class MarkdownObject {
     this.name = name;
   }
 
-  public static Optional<MarkdownObject> createMdObject(File file) {
-    MarkdownObject mdObject = new MarkdownObject(file.getName());
+  /**
+   * Creating a {@link MarkdownObject} from a Resource object.
+   *
+   * @param resource Resource.
+   */
+  public static Optional<MarkdownObject> createMdObject(Resource resource) {
+    MarkdownObject mdObject = new MarkdownObject(resource.getFilename());
 
     try (BufferedReader reader =
-        new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
+        new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
       mdObject.setContent(FileCopyUtils.copyToString(reader));
     } catch (Exception e) {
       log.warn("sip.core.actuator.info.filebadcontent_{}", mdObject.getName());
