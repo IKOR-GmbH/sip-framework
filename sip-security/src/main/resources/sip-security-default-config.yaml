@@ -6,6 +6,7 @@
 
 server:
   ssl:
+    enabled: ${sip.security.ssl.enabled}
     client-auth: ${sip.security.ssl.server.client-auth}
     key-store: ${sip.security.ssl.server.key-store}
     key-store-password: ${sip.security.ssl.server.key-store-password}
@@ -28,6 +29,7 @@ camel:
 
 sip.security:
   ssl:
+    enabled: false
     # These settings have to be set by the application, by default ssl is disabled
     server:
       client-auth: none
