@@ -35,7 +35,8 @@ class MarkdownFilesContributorTest {
   }
 
   @Test
-  void Given_markdownAndTextFilesInDocumentsFolder_When_contribute_Then_returnOnlyMarkdownFiles() throws Exception {
+  void Given_markdownAndTextFilesInDocumentsFolder_When_contribute_Then_returnOnlyMarkdownFiles()
+      throws Exception {
     // arrange
     Path directory = Paths.get(FILES_TARGET_TESTING_DIRECTORY);
     Files.createDirectories(directory);
@@ -62,7 +63,8 @@ class MarkdownFilesContributorTest {
     assertThat(resultFiles).hasSize(2);
   }
 
-  private File createFile(String directory, String fileName, String fileContent) throws IOException {
+  private File createFile(String directory, String fileName, String fileContent)
+      throws IOException {
     File file = new File(directory + fileName);
     FileWriter writer = new FileWriter(file);
     writer.write(fileContent);
