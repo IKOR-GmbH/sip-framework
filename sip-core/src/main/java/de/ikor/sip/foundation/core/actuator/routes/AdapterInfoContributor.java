@@ -8,6 +8,10 @@ import org.springframework.boot.actuate.info.InfoContributor;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+/**
+ * {@link AdapterInfoContributor} extends {@link InfoContributor} to add adapter information to the
+ * info actuator
+ */
 @Slf4j
 @Component
 @Order(1)
@@ -21,6 +25,11 @@ public class AdapterInfoContributor implements InfoContributor {
   private static final String SIP_FRAMEWORK_VERSION_DETAILS_KEY = "sip-framework-version";
   private static final String SIP_FRAMEWORK_VERSION_BUILD_KEY = "sipFrameworkVersion";
 
+  /**
+   * Adding adapter base info in actuator/info page.
+   *
+   * @param builder Info.Builder of the SpringBoot actuator specification.
+   */
   @Override
   public void contribute(Info.Builder builder) {
     Map<String, Object> buildInfo = (LinkedHashMap<String, Object>) builder.build().get(BUILD_KEY);
