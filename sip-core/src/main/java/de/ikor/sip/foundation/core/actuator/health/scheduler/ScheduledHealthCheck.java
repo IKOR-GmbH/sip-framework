@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.actuator.health.CamelEndpointHealthMonitor;
 import de.ikor.sip.foundation.core.actuator.health.EndpointHealthIndicator;
 import java.util.Map;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
  * sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay:5000
  */
 @Service
+@ConditionalOnBean(CamelEndpointHealthMonitor.class)
 @AllArgsConstructor
 @EnableScheduling
 @HealthCheckEnabledCondition

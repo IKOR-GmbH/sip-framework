@@ -4,6 +4,7 @@ import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.http.HttpComponent;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * @author thomas.stieglmaier
  */
 @Configuration
+@ConditionalOnBean(CamelContext.class)
 @ConditionalOnProperty(name = "sip.security.ssl.client.enabled", havingValue = "true")
 @AllArgsConstructor
 public class CamelSslClientConfiguration {
