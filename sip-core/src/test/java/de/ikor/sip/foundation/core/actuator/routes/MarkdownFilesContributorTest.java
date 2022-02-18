@@ -2,6 +2,9 @@ package de.ikor.sip.foundation.core.actuator.routes;
 
 import static org.assertj.core.api.Assertions.*;
 
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.info.Info;
 
 class MarkdownFilesContributorTest {
@@ -61,6 +65,25 @@ class MarkdownFilesContributorTest {
 
     assertThat(buildInfoResult).hasSize(1);
     assertThat(resultFiles).hasSize(2);
+  }
+
+  @Test
+  void Given_noMarkdownFiles_When_contribute_Then_returnMissingMdFilesLog() {
+    // arrange
+    Logger logger =
+        (Logger)
+            LoggerFactory.getLogger(
+                "de.ikor.sip.foundation.core.actuator.routes.MarkdownFilesContributor");
+    ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+    listAppender.start();
+    logger.addAppender(listAppender);
+    List<ILoggingEvent> logsList = listAppender.list;
+
+    // act
+    subject.contribute(builder);
+
+    // assert
+    assertThat(logsList.get(0).getMessage()).isEqualTo("sip.core.actuator.info.missingmdfiles");
   }
 
   private File createFile(String directory, String fileName, String fileContent)
