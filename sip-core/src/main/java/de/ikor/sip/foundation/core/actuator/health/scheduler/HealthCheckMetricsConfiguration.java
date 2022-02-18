@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.actuator.health.CamelEndpointHealthMonitor;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.actuate.health.Status;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * this
  */
 @Configuration
+@ConditionalOnBean(CamelEndpointHealthMonitor.class)
 @HealthCheckEnabledCondition
 public class HealthCheckMetricsConfiguration {
 

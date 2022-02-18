@@ -1,0 +1,5 @@
+{
+  "author": "vladiIkor",
+  "pullrequestId": "60",
+  "message": "Adding sip.security.ssl.enabled switch with false default value"
+}

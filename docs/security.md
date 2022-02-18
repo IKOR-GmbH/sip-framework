@@ -27,8 +27,8 @@ Implementing code and configuration on top of Spring Security should help you ju
 Following description shows SIP Security functionalities and configuration.
 
 #### SSL
-SSL is by default turned off. It can be activated by setting a server side certificate or turning the client SSL explicitly 
-on and optionally setting a client certificate. If no server certificate is set a client certificate is mandatory when turning on client SSL.
+SSL is by default turned off. It can be activated by setting sip.security.ssl.enabled to ture, adding server side 
+certificate and optionally setting a client certificate. If no server certificate is set, a client certificate is mandatory when turning on client SSL.
 
 - Client (our application is consuming APIs using the provided certificate)
   ```yaml
