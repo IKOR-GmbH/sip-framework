@@ -127,20 +127,6 @@ class ProcessorProxyTest {
   }
 
   @Test
-  void process_endpointProcessorTestMode() throws Exception {
-    // arrange
-    putProxyInTestMode();
-    when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
-
-    // act
-    assertThatCode(() -> processorProxySubjectOutgoing.process(exchange, callback))
-        .doesNotThrowAnyException();
-
-    // assert
-    verify(processor, times(0)).process(exchange);
-  }
-
-  @Test
   void process_endpointProcessorTestModeAfterRemovingMockFunction() throws Exception {
     // arrange
     putProxyInTestMode();
@@ -155,7 +141,7 @@ class ProcessorProxyTest {
         .doesNotThrowAnyException();
 
     // assert
-    verify(processor, times(0)).process(exchange);
+    verify(outgoingProcessor, times(1)).process(exchange);
     verify(mockFunction, times(0)).apply(exchange);
   }
 

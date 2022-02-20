@@ -43,12 +43,12 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     this.wrappedProcessor = wrappedProcessor;
     this.originalProcessor = originalProcessor;
     this.extensions = new ArrayList<>(extensions);
-    this.mockFunction = defaultMockFunction();
+    this.mockFunction = null;
   }
 
   /** Resets the state of the proxy to default. */
   public synchronized void reset() {
-    mockFunction = defaultMockFunction();
+    mockFunction = null;
   }
 
   /**
@@ -126,13 +126,5 @@ public class ProcessorProxy extends AsyncProcessorSupport {
 
   private String getId() {
     return this.nodeDefinition.getId();
-  }
-
-  private Function<Exchange, Exchange> defaultMockFunction() {
-    if (isEndpointProcessor()) {
-      // do nothing
-      return exchange -> exchange;
-    }
-    return null;
   }
 }
