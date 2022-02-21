@@ -51,15 +51,15 @@ class ProcessorProxyTest {
   void process_executeProcessExchange() throws Exception {
     // arrange
     when(namedNode.getId()).thenReturn(PROXY_ID);
-    when(proxyExtension.isApplicable(any(), any())).thenReturn(false);
+    when(proxyExtension.isApplicable(any(), any(), any())).thenReturn(false);
 
     // act
     assertThatCode(() -> processorProxySubject.process(exchange, callback))
         .doesNotThrowAnyException();
 
     // assert
-    verify(proxyExtension, times(1)).isApplicable(any(), any());
-    verify(proxyExtension, times(0)).run(any(), any());
+    verify(proxyExtension, times(1)).isApplicable(any(), any(), any());
+    verify(proxyExtension, times(0)).run(any(), any(), any());
     verify(processor, times(1)).process(exchange);
   }
 
@@ -114,7 +114,7 @@ class ProcessorProxyTest {
   void process_executeProcessExtension() throws Exception {
     // arrange
     when(namedNode.getId()).thenReturn(PROXY_ID);
-    when(proxyExtension.isApplicable(any(), any())).thenReturn(true);
+    when(proxyExtension.isApplicable(any(), any(), any())).thenReturn(true);
 
     // act
     assertThatCode(() -> processorProxySubject.process(exchange, callback))
@@ -122,8 +122,8 @@ class ProcessorProxyTest {
 
     // assert
     verify(processor, times(1)).process(exchange);
-    verify(proxyExtension, times(1)).isApplicable(any(), any());
-    verify(proxyExtension, times(1)).run(any(), any());
+    verify(proxyExtension, times(1)).isApplicable(any(), any(), any());
+    verify(proxyExtension, times(1)).run(any(), any(), any());
   }
 
   @Test
@@ -155,6 +155,8 @@ class ProcessorProxyTest {
   void isEndpointProcessor_regularEndpointProcessor() throws Exception {
     // arrange
     when(outgoingEndpoint.getEndpointUri()).thenReturn("file://test.txt");
+    processorProxySubjectOutgoing =
+            new ProcessorProxy(namedNode, outgoingProcessor, outgoingProcessor, proxyExtensions);
 
     // assert
     assertThat(processorProxySubjectOutgoing.isEndpointProcessor()).isTrue();
@@ -162,8 +164,10 @@ class ProcessorProxyTest {
 
   @Test
   void isEndpointProcessor_ignoredEndpointProcessor() throws Exception {
-    // arange
+    // arrange
     when(outgoingEndpoint.getEndpointUri()).thenReturn("sipmc:middleComponent");
+    processorProxySubjectOutgoing =
+            new ProcessorProxy(namedNode, outgoingProcessor, outgoingProcessor, proxyExtensions);
 
     // assert
     assertThat(processorProxySubjectOutgoing.isEndpointProcessor()).isFalse();

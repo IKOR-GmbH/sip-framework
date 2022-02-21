@@ -44,6 +44,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     this.originalProcessor = originalProcessor;
     this.extensions = new ArrayList<>(extensions);
     this.mockFunction = null;
+    this.isEndpointProcessor = determineEndpointProcessor();
   }
 
   /** Resets the state of the proxy to default. */
