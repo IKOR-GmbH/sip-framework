@@ -156,7 +156,7 @@ class ProcessorProxyTest {
     // arrange
     when(outgoingEndpoint.getEndpointUri()).thenReturn("file://test.txt");
     processorProxySubjectOutgoing =
-            new ProcessorProxy(namedNode, outgoingProcessor, outgoingProcessor, proxyExtensions);
+        new ProcessorProxy(namedNode, outgoingProcessor, outgoingProcessor, proxyExtensions);
 
     // assert
     assertThat(processorProxySubjectOutgoing.isEndpointProcessor()).isTrue();
@@ -167,7 +167,7 @@ class ProcessorProxyTest {
     // arrange
     when(outgoingEndpoint.getEndpointUri()).thenReturn("sipmc:middleComponent");
     processorProxySubjectOutgoing =
-            new ProcessorProxy(namedNode, outgoingProcessor, outgoingProcessor, proxyExtensions);
+        new ProcessorProxy(namedNode, outgoingProcessor, outgoingProcessor, proxyExtensions);
 
     // assert
     assertThat(processorProxySubjectOutgoing.isEndpointProcessor()).isFalse();

@@ -7,8 +7,9 @@ import org.apache.camel.Exchange;
 public interface ProxyExtension {
 
   /**
-   * Method every extention should implement. Called when extension detected
+   * Method every extension should implement. Called when extension detected
    *
+   * @param proxy {@link ProcessorProxy}
    * @param original Original Exchange
    * @param current Currently modified Exchange
    */
@@ -17,6 +18,7 @@ public interface ProxyExtension {
   /**
    * Check whether this ProxyExtension should be used
    *
+   * @param proxy {@link ProcessorProxy}
    * @param original {@link Exchange} before processing
    * @param current {@link Exchange} after processing
    * @return true if this ProxyExtension is applicable

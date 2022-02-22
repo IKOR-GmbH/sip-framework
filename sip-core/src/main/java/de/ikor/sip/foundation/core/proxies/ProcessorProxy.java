@@ -129,6 +129,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     return this.nodeDefinition.getId();
   }
 
+  /** @return true if this is a processor that outputs to Endpoint */
   public boolean isEndpointProcessor() {
     return this.isEndpointProcessor;
   }
