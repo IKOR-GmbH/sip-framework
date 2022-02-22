@@ -4,7 +4,6 @@ import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
-
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.camel.*;
@@ -27,8 +26,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   private final Processor originalProcessor;
   private final List<ProxyExtension> extensions;
   private Function<Exchange, Exchange> mockFunction;
-  @Getter
-  private boolean endpointProcessor;
+  @Getter private boolean endpointProcessor;
 
   /**
    * Creates new instance of ProcessorProxy
