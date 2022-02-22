@@ -1,5 +1,6 @@
 sip.core:
   translation:
+    enabled: true
     fileLocations: classpath:translations/translated-messages, classpath:translations/sip-core-messages
     default-encoding: UTF-8
     fallback-to-system-locale: false
@@ -11,6 +12,10 @@ sip.core:
       showHeaders: true
       showExchangeId: true
     traceType: "*"
+  actuator:
+    enabled: true
+  proxy:
+    enabled: true
   metrics:
     external-endpoint-health-check:
       enabled: true

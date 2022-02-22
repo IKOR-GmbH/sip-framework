@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.support.processor.DefaultExchangeFormatterConfigurer;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 /** Endpoint to get TraceHistory */
 @Component
-@ConditionalOnBean(CamelContext.class)
 @RequiredArgsConstructor
 @RestControllerEndpoint(id = "tracing")
 public class TrafficTracerController {

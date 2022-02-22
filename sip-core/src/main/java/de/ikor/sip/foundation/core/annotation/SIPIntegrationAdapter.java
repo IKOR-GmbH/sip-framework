@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.core.annotation;
 
-import de.ikor.sip.foundation.core.SIPCoreConfiguration;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -8,7 +7,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.AliasFor;
 
 /**
@@ -20,7 +18,6 @@ import org.springframework.core.annotation.AliasFor;
 @Documented
 @Inherited
 @SpringBootApplication
-@Import(SIPCoreConfiguration.class)
 public @interface SIPIntegrationAdapter {
 
   /**
