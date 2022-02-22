@@ -4,6 +4,8 @@ import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.camel.*;
 import org.apache.camel.processor.SendDynamicProcessor;
@@ -25,7 +27,8 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   private final Processor originalProcessor;
   private final List<ProxyExtension> extensions;
   private Function<Exchange, Exchange> mockFunction;
-  private boolean isEndpointProcessor;
+  @Getter
+  private boolean endpointProcessor;
 
   /**
    * Creates new instance of ProcessorProxy
@@ -44,7 +47,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     this.originalProcessor = originalProcessor;
     this.extensions = new ArrayList<>(extensions);
     this.mockFunction = null;
-    this.isEndpointProcessor = determineEndpointProcessor();
+    this.endpointProcessor = determineEndpointProcessor();
   }
 
   /** Resets the state of the proxy to default. */
@@ -127,10 +130,5 @@ public class ProcessorProxy extends AsyncProcessorSupport {
 
   public String getId() {
     return this.nodeDefinition.getId();
-  }
-
-  /** @return true if this is a processor that outputs to Endpoint */
-  public boolean isEndpointProcessor() {
-    return this.isEndpointProcessor;
   }
 }
