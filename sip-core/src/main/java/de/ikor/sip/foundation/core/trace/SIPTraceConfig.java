@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "sip.core.tracing")
 public class SIPTraceConfig {
-
   private int limit;
   private Set<String> traceType = new LinkedHashSet<>();
 }

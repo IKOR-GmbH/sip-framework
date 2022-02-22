@@ -4,7 +4,6 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.engine.DefaultTracer;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-@ConditionalOnProperty(prefix = "sip.core.tracing", name = "enabled")
 public class CustomTracer extends DefaultTracer {
 
   private final Set<SIPTraceOperation> sipTraceOperations;
