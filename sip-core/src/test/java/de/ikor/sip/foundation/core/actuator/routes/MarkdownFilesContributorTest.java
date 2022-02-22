@@ -8,6 +8,9 @@ import ch.qos.logback.core.read.ListAppender;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +23,9 @@ class MarkdownFilesContributorTest {
   private static final String BUILD_KEY = "build";
   private static final String FILES_KEY = "files";
 
-  private static final String FILENAME_MD = "readme.md";
+  private static final String FILES_TARGET_TESTING_DIRECTORY = "target/test-classes/documents/";
+  private static final String README_MD = "readme.md";
+  private static final String CHANGELOG_MD = "changelog.md";
   private static final String FILENAME_TXT = "test.txt";
   private static final String FILE_CONTENT = "Test data";
 
@@ -34,33 +39,36 @@ class MarkdownFilesContributorTest {
   }
 
   @Test
-  void Given_markdownAndTextFiles_When_contribute_Then_returnOnlyMarkdownFileContentAndName()
-      throws IOException {
+  void Given_markdownAndTextFilesInDocumentsFolder_When_contribute_Then_returnOnlyMarkdownFiles()
+      throws Exception {
     // arrange
-    File file1 = createFile(FILENAME_MD, FILE_CONTENT);
-    File file2 = createFile(FILENAME_TXT, FILE_CONTENT);
+    Path directory = Paths.get(FILES_TARGET_TESTING_DIRECTORY);
+    Files.createDirectories(directory);
+
+    File file1 = createFile(FILES_TARGET_TESTING_DIRECTORY, README_MD, FILE_CONTENT);
+    File file2 = createFile(FILES_TARGET_TESTING_DIRECTORY, CHANGELOG_MD, FILE_CONTENT);
+    File file3 = createFile(FILES_TARGET_TESTING_DIRECTORY, FILENAME_TXT, FILE_CONTENT);
 
     // act
     subject.contribute(builder);
 
-    // Leave environment clean
+    // Keep environment clean
     file1.delete();
     file2.delete();
+    file3.delete();
+    Files.deleteIfExists(directory);
 
     // assert
     LinkedHashMap<String, Object> buildInfoResult =
         (LinkedHashMap<String, Object>) builder.build().get(BUILD_KEY);
     List<MarkdownObject> resultFiles = (List<MarkdownObject>) buildInfoResult.get(FILES_KEY);
-    MarkdownObject mdFile = resultFiles.get(0);
 
     assertThat(buildInfoResult).hasSize(1);
-    assertThat(resultFiles).hasSize(1);
-    assertThat(mdFile.getName()).isEqualTo(FILENAME_MD);
-    assertThat(mdFile.getContent()).isEqualTo(FILE_CONTENT);
+    assertThat(resultFiles).hasSize(2);
   }
 
   @Test
-  void Given_noMarkdownFiles_When_contribute_Then_returnMissingMdFilesLog() throws IOException {
+  void Given_noMarkdownFiles_When_contribute_Then_returnMissingMdFilesLog() {
     // arrange
     Logger logger =
         (Logger)
@@ -78,8 +86,9 @@ class MarkdownFilesContributorTest {
     assertThat(logsList.get(0).getMessage()).isEqualTo("sip.core.actuator.info.missingmdfiles");
   }
 
-  private File createFile(String fileName, String fileContent) throws IOException {
-    File file = new File(fileName);
+  private File createFile(String directory, String fileName, String fileContent)
+      throws IOException {
+    File file = new File(directory + fileName);
     FileWriter writer = new FileWriter(file);
     writer.write(fileContent);
     writer.close();

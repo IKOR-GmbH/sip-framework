@@ -1,0 +1,5 @@
+{
+  "author": "MartinBuchheimIkor",
+  "pullrequestId": 61,
+  "message": "Added Conditional-checks that allow to start a Spring Boot application from the test sources without the need for a CamelContext (which is typically provided by the adapter code)"
+}
