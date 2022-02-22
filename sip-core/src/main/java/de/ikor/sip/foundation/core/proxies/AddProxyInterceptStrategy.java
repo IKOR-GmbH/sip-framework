@@ -4,11 +4,8 @@ import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.CamelContext;
-import org.apache.camel.NamedNode;
-import org.apache.camel.Processor;
+import org.apache.camel.*;
 import org.apache.camel.spi.InterceptStrategy;
-import org.apache.camel.support.AsyncProcessorConverterHelper;
 import org.springframework.stereotype.Component;
 
 /** Apache Camel Processor creation interception */
@@ -25,8 +22,10 @@ public class AddProxyInterceptStrategy implements InterceptStrategy {
       throws Exception {
     String processorId = definition.getId();
     log.info("sip.core.proxy.register.info_{}", processorId);
-    ProcessorProxy processorProxy = new ProcessorProxy(context, definition, target, extensions);
+
+    // nextTarget is the original processor, target is Camel's wrapped WrapProcessor
+    ProcessorProxy processorProxy = new ProcessorProxy(definition, target, nextTarget, extensions);
     proxyRegistry.register(processorId, processorProxy);
-    return AsyncProcessorConverterHelper.convert(processorProxy);
+    return processorProxy;
   }
 }

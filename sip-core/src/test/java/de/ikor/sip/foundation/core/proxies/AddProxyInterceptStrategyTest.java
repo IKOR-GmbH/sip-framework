@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.proxies;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import java.util.ArrayList;
@@ -38,5 +38,6 @@ class AddProxyInterceptStrategyTest {
     // assert
     Optional<ProcessorProxy> proxy = proxyRegistry.getProxy(PROCESSOR_ID);
     assertThat(proxy).isPresent();
+    assertThat(proxyRegistry.getProxies()).hasSize(1);
   }
 }
