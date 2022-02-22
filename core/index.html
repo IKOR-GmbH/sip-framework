@@ -261,7 +261,7 @@ management:
     health:
       show-details: always #or when_authorized if security is in place</code></pre>
 <h3 id="dynamic-proxy-for-apache-camel-processors">Dynamic proxy for Apache Camel Processors<a class="headerlink" href="#dynamic-proxy-for-apache-camel-processors" title="Permanent link">&para;</a></h3>
-<p>Dynamic proxy is implementation of decorator pattern on all Processors detected on all Camel routes. The base motivation
+<p>Dynamic proxy is implementation of Decorator pattern on all Processors detected on all Camel routes. The base motivation
 is to gain more control over Camel dataflow, by providing placeholders for custom functionalities on different steps of
 the route. It's a mechanism for providing and applying new future features on already implemented adapters, through the
 configuration and without adapter code changes.</p>
@@ -271,10 +271,9 @@ from registry through processor's ID. ProcessorProxyRegistry can be accessed as 
 replace it with its mock. This can be achieved on any Processor on the route, including the outgoing endpoints. Mocking
 behavior with SIP can be triggered dynamically in runtime, and on single request level, leaving the original route intact and active
 all the time.</p>
-<p>To use it, header "proxy-modes" must be set, which consists of a map of processorIds as keys and list of commands as value:</p>
-<ul>
-<li><code>proxy-modes: {"processorId": ["mock"]}</code></li>
-</ul>
+<p>To use it, header "test-mode" must be set. In that mode, proxies will try to execute preassigned mock functions.
+- <code>test-mode: "true"</code>
+While in test mode the adapter will automatically skip executing the original processor behaviour for outgoing endpoints.</p>
 <p><strong>Setting mock behavior example:</strong></p>
 <pre class="highlight"><code class="language-java">@Configuration
 @AllArgsConstructor
