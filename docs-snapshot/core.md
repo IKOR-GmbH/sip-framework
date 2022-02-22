@@ -370,6 +370,19 @@ sip:
       limit: 120 #100 by default
 ```
 
+Tracing result can be checked under endpoint `/actuator/tracing`. The tracing endpoint is not included by default and 
+it can be included by extending the following list of endpoints in configuration:
+
+```yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers,prometheus,adapter-routes,tracing
+```
+
+When adding tracing endpoint, please configure the entire list of endpoints listed above.
+
 **Selecting the traffic trace logging type:**
 
 When SIP tracing is enabled, by default, it will log the traffic in console on INFO level and store the messages in
