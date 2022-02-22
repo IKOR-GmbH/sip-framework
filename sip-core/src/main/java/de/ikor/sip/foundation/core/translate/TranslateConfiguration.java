@@ -13,9 +13,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
  */
 @Data
 @Configuration
-@ComponentScan
 @ConfigurationProperties(prefix = "sip.core.translation")
-@ConditionalOnProperty(value = "sip.core.translation.enabled", havingValue = "true")
 public class TranslateConfiguration {
   private List<String> fileLocations;
   private String lang = "en";

@@ -10,10 +10,9 @@ import org.springframework.context.annotation.Configuration;
 
 /** Configuration for ProcessorProxy */
 @Slf4j
-@ComponentScan
 @Configuration
 @AllArgsConstructor
-@ConditionalOnProperty(value = "sip.core.proxy.enabled", havingValue = "true")
+
 public class ProcessorProxyConfiguration {
   private final CamelContext camelContext;
   private final ProcessorProxyRegistry proxyRegistry;
