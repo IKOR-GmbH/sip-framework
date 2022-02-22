@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.camel.*;
 import org.apache.camel.processor.SendDynamicProcessor;
@@ -17,15 +18,15 @@ import org.slf4j.LoggerFactory;
 public class ProcessorProxy extends AsyncProcessorSupport {
   private static final Logger logger = LoggerFactory.getLogger(ProcessorProxy.class);
   public static final String TEST_MODE_HEADER = "test-mode";
+  private static final String TRACING_ID = "tracingId";
+  private static final String[] NON_OUTGOING_PROCESSOR_PREFIXES = {"seda", "direct", "sipmc"};
 
   private final NamedNode nodeDefinition;
   private final Processor wrappedProcessor;
   private final Processor originalProcessor;
   private final List<ProxyExtension> extensions;
   private Function<Exchange, Exchange> mockFunction;
-
-  private static final String TRACING_ID = "tracingId";
-  private static final String[] NON_OUTGOING_PROCESSOR_PREFIXES = {"seda", "direct", "sipmc"};
+  @Getter private boolean endpointProcessor;
 
   /**
    * Creates new instance of ProcessorProxy
@@ -44,6 +45,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     this.originalProcessor = originalProcessor;
     this.extensions = new ArrayList<>(extensions);
     this.mockFunction = null;
+    this.endpointProcessor = determineEndpointProcessor();
   }
 
   /** Resets the state of the proxy to default. */
@@ -71,7 +73,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   }
 
   /** @return true if this is a processor that outputs to Endpoint */
-  public boolean isEndpointProcessor() {
+  private boolean determineEndpointProcessor() {
     if (originalProcessor instanceof EndpointAware) {
       Endpoint destinationEndpoint = ((EndpointAware) originalProcessor).getEndpoint();
       if (!StringUtils.startsWithAny(
@@ -96,8 +98,8 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     }
 
     for (ProxyExtension extension : extensions) {
-      if (extension.isApplicable(originalExchange, exchange)) {
-        extension.run(originalExchange, exchange);
+      if (extension.isApplicable(this, originalExchange, exchange)) {
+        extension.run(this, originalExchange, exchange);
       }
     }
 
@@ -124,7 +126,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     ExchangeHelper.copyResults(exchange, mockFunction.apply(exchange));
   }
 
-  private String getId() {
+  public String getId() {
     return this.nodeDefinition.getId();
   }
 }
