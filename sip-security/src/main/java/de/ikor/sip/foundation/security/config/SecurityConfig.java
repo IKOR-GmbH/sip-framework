@@ -43,7 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
    * @param config SIP Security config
    * @param tokenExtractors (optional) registered token extractors filled by authProviders
    */
-  // TODO: FILL this up
   @Autowired
   public SecurityConfig(
       Optional<List<SIPAuthenticationProvider<?>>> authProviders,
