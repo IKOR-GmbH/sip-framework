@@ -4,15 +4,12 @@ import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /** Configuration for ProcessorProxy */
 @Slf4j
 @Configuration
 @AllArgsConstructor
-
 public class ProcessorProxyConfiguration {
   private final CamelContext camelContext;
   private final ProcessorProxyRegistry proxyRegistry;
