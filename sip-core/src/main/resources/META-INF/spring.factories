@@ -1,1 +1,6 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=de.ikor.sip.foundation.core.SIPCoreAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=de.ikor.sip.foundation.core.SIPCoreAutoConfiguration,\
+de.ikor.sip.foundation.core.util.SIPStaticSpringContext,\
+de.ikor.sip.foundation.core.translate.TranslationsAutoConfig,\
+de.ikor.sip.foundation.core.trace.TraceAutoConfig,\
+de.ikor.sip.foundation.core.proxies.ProxyAutoConfig,\
+de.ikor.sip.foundation.core.actuator.ActuatorAutoConfig
