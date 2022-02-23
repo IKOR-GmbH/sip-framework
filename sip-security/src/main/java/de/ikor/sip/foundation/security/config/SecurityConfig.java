@@ -67,16 +67,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     List<Class<?>> autowiredAuthProviders =
         authProviders.stream().map(Object::getClass).collect(Collectors.toList());
 
-    List<Class<?>> missingProvidersFromConfig =
+    List<Class<?>> providersUnavailableAtRuntime =
         config.getAuthProviders().stream()
             .map(AuthProviderSettings::getClassname)
             .filter(a -> !autowiredAuthProviders.contains(a))
             .collect(Collectors.toList());
 
-    if (!missingProvidersFromConfig.isEmpty()) {
+    if (!providersUnavailableAtRuntime.isEmpty()) {
       throw new IllegalStateException(
           "Some providers declared in the config are not available in runtime: "
-              + missingProvidersFromConfig);
+              + providersUnavailableAtRuntime);
     }
 
     if (configHasDuplicateAuthProviders()) {
