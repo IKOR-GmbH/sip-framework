@@ -129,7 +129,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-exec</artifactId>
+                <version>${commons-exec.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
@@ -182,6 +186,11 @@
             <dependency>
                 <groupId>de.ikor.sip.foundation</groupId>
                 <artifactId>sip-security</artifactId>
+                <version>${sip-framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.ikor.sip.foundation</groupId>
+                <artifactId>sip-test-kit</artifactId>
                 <version>${sip-framework.version}</version>
             </dependency>
 
