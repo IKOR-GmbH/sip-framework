@@ -80,6 +80,7 @@
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <commons-text.version>1.9</commons-text.version>
         <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-exec.version>1.3</commons-exec.version>
         <equalsverifier.version>3.7.1</equalsverifier.version>
 
         <!-- plugin versions -->
@@ -128,7 +129,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-exec</artifactId>
+                <version>${commons-exec.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
@@ -181,6 +186,11 @@
             <dependency>
                 <groupId>de.ikor.sip.foundation</groupId>
                 <artifactId>sip-security</artifactId>
+                <version>${sip-framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.ikor.sip.foundation</groupId>
+                <artifactId>sip-test-kit</artifactId>
                 <version>${sip-framework.version}</version>
             </dependency>
 
