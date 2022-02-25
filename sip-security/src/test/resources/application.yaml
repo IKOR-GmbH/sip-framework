@@ -10,17 +10,17 @@ sip.security:
     enabled: true
     disable-csrf: true
     auth-providers:
-      - classname: de.ikor.sip.foundation.security.authentication.providers.basic.SIPBasicAuthenticationProvider
+      - classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationProvider
         ignored-endpoints:
           - /actuator/health
           - /actuator/env
         validation:
-          classname: de.ikor.sip.foundation.security.authentication.providers.basic.SIPBasicAuthFileValidator
+          classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthFileValidator
           file-path: classpath:/basic-auth-users.json
-      - classname: de.ikor.sip.foundation.security.authentication.providers.x509.SIPX509AuthenticationProvider
+      - classname: de.ikor.sip.foundation.security.authentication.x509.SIPX509AuthenticationProvider
         ignored-endpoints:
           - /favicon.ico
           - /actuator/env
         validation:
-          classname: de.ikor.sip.foundation.security.authentication.validators.SIPAlwaysAllowValidator
+          classname: de.ikor.sip.foundation.security.authentication.common.validators.SIPAlwaysAllowValidator
           file-path: classpath://client-certs.acl

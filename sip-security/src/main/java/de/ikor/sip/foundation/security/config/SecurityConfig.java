@@ -4,7 +4,9 @@ import de.ikor.sip.foundation.security.authentication.CompositeAuthenticationFil
 import de.ikor.sip.foundation.security.authentication.SIPAuthenticationProvider;
 import de.ikor.sip.foundation.security.authentication.common.extractors.TokenExtractors;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties.AuthProviderSettings;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -24,15 +26,35 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
  *
  * @author thomas.stieglmaier
  */
-@ConditionalOnSIPSecurityAuthenticationEnabled
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  @Autowired private List<SIPAuthenticationProvider<?>> authProviders;
-  @Autowired private SecurityConfigProperties config;
-  @Autowired private TokenExtractors tokenExtractors;
+  private final List<SIPAuthenticationProvider<?>> authProviders;
 
+  private final SecurityConfigProperties config;
+
+  private final TokenExtractors tokenExtractors;
+
+  /**
+   * Autowired constructor for creating SIP Security Configuration
+   *
+   * @param authProviders (optional) list of auth providers defined in the config
+   * @param config SIP Security config
+   * @param tokenExtractors (optional) registered token extractors filled by authProviders
+   */
+  @Autowired
+  public SecurityConfig(
+      Optional<List<SIPAuthenticationProvider<?>>> authProviders,
+      SecurityConfigProperties config,
+      Optional<TokenExtractors> tokenExtractors) {
+    super();
+    this.authProviders = authProviders.orElse(Collections.emptyList());
+    this.config = config;
+    this.tokenExtractors = tokenExtractors.orElse(null);
+  }
+
+  /** Register Spring-security provided authenticationManager as a @Bean */
   @Bean
   @Override
   public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -40,29 +62,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Override
-  protected void configure(AuthenticationManagerBuilder authManagerBuilder) throws Exception {
-    List<Class<?>> existingAuthProviderClasses =
+  protected void configure(AuthenticationManagerBuilder authManagerBuilder)
+      throws IllegalStateException {
+    List<Class<?>> autowiredAuthProviders =
         authProviders.stream().map(Object::getClass).collect(Collectors.toList());
-    List<Class<?>> missingAuthProviders =
+
+    List<Class<?>> providersUnavailableAtRuntime =
         config.getAuthProviders().stream()
             .map(AuthProviderSettings::getClassname)
-            .filter(a -> !existingAuthProviderClasses.contains(a))
+            .filter(a -> !autowiredAuthProviders.contains(a))
             .collect(Collectors.toList());
 
-    if (!missingAuthProviders.isEmpty()) {
+    if (!providersUnavailableAtRuntime.isEmpty()) {
       throw new IllegalStateException(
-          "Some configured auth providers are not available in code: " + missingAuthProviders);
+          "Some providers declared in the config are not available in runtime: "
+              + providersUnavailableAtRuntime);
     }
 
-    if (config.getAuthProviders().size()
-        > config.getAuthProviders().stream()
-            .map(AuthProviderSettings::getClassname)
-            .distinct()
-            .count()) {
+    if (configHasDuplicateAuthProviders()) {
       throw new IllegalStateException(
           "Each auth provider may only be configured once, duplicates are not allowed");
     }
 
+    // Register all auth providers that exist in the config
     authProviders.stream()
         .filter(
             a ->
@@ -72,12 +94,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .forEach(authManagerBuilder::authenticationProvider);
   }
 
+  private boolean configHasDuplicateAuthProviders() {
+    return config.getAuthProviders().size()
+        > config.getAuthProviders().stream()
+            .map(AuthProviderSettings::getClassname)
+            .distinct()
+            .count();
+  }
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     // disable sessions completely
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-    // add our composite authentication filter for all requests (besides the ones ignored separately
+    // add our composite authentication Filter for all requests (besides the ones ignored separately
     // in the WebSecurity configure method
     http.addFilterAt(
             new CompositeAuthenticationFilter(tokenExtractors, config, authenticationManagerBean()),
@@ -91,6 +121,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
   }
 
+  /** Set globally ignored endpoints from config */
   @Override
   public void configure(WebSecurity web) {
     final WebSecurity.IgnoredRequestConfigurer ignoredRequestConfigurer = web.ignoring();
