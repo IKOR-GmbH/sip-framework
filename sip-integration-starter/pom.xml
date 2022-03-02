@@ -8,7 +8,7 @@
         <groupId>de.ikor.sip.foundation</groupId>
         <artifactId>sip-framework</artifactId>
         <version>1.0.1-SNAPSHOT</version>
-        <relativePath>../</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>sip-integration-starter</artifactId>
@@ -24,6 +24,10 @@
         <dependency>
             <groupId>de.ikor.sip.foundation</groupId>
             <artifactId>sip-middle-component</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.ikor.sip.foundation</groupId>
+            <artifactId>sip-test-kit</artifactId>
         </dependency>
 
         <!-- camel -->

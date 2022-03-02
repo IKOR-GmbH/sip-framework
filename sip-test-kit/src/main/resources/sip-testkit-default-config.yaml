@@ -1,0 +1,4 @@
+sip:
+  core:
+    testkit:
+      enabled: true
