@@ -50,7 +50,7 @@ class HealthMonitorSetupTest {
 
     // assert
     assertThat(endpointHealthRegistry.getMatchersByProcessorId().size()).isEqualTo(1);
-    assertThat(endpointHealthRegistry.getHealthIndicatorMatchers().size()).isEqualTo(1);
+    assertThat(endpointHealthRegistry.getHealthIndicatorMatchers()).hasSize(1);
   }
 
   @Test
