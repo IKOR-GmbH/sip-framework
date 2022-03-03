@@ -3,13 +3,12 @@ package de.ikor.sip.testframework.workflow.reporting.model;
 import de.ikor.sip.testframework.configurationproperties.models.MessageProperties;
 import de.ikor.sip.testframework.util.SIPExchangeHelper;
 import de.ikor.sip.testframework.workflow.thenphase.result.ValidationResult;
+import java.util.List;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import org.apache.camel.Exchange;
-
-import java.util.List;
-import java.util.Map;
 
 @Data
 public class SIPAdapterExecutionReport {

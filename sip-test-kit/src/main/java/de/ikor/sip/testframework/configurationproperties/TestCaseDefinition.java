@@ -12,10 +12,13 @@ public class TestCaseDefinition {
   private double schemaVersion;
 
   private String title = UUID.randomUUID().toString();
+
   @JsonProperty("when-execute")
   private EndpointProperties whenExecute;
+
   @JsonProperty("with-mocks")
   private List<EndpointProperties> withMocks = new ArrayList<>();
+
   @JsonProperty("then-expect")
   private List<EndpointProperties> thenExpect = new ArrayList<>();
 }

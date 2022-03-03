@@ -1,22 +1,21 @@
 package de.ikor.sip.testframework.config;
 
+import static java.util.stream.Collectors.toList;
+
 import de.ikor.sip.testframework.configurationproperties.TestCaseDefinition;
 import de.ikor.sip.testframework.configurationproperties.models.EndpointProperties;
-import de.ikor.sip.testframework.workflow.reporting.model.MockReport;
 import de.ikor.sip.testframework.workflow.TestExecutionStatus;
+import de.ikor.sip.testframework.workflow.reporting.model.MockReport;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static java.util.stream.Collectors.toList;
 
 @Component
 @RequiredArgsConstructor

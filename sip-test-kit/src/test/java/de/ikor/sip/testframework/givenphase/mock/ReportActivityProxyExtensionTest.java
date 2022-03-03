@@ -1,22 +1,21 @@
 package de.ikor.sip.testframework.givenphase.mock;
 
-import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
-import de.ikor.sip.testframework.workflow.TestCase;
-import de.ikor.sip.testframework.workflow.TestExecutionStatus;
-import de.ikor.sip.testframework.workflow.givenphase.ReportActivityProxyExtension;
-import org.apache.camel.Exchange;
-import org.apache.camel.Message;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
+
+import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
+import de.ikor.sip.testframework.workflow.TestCase;
+import de.ikor.sip.testframework.workflow.TestExecutionStatus;
+import de.ikor.sip.testframework.workflow.givenphase.ReportActivityProxyExtension;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class ReportActivityProxyExtensionTest {
   private final String TEST_NAME = "test name";

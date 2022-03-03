@@ -10,6 +10,7 @@ public class TestKitLogbackFilter extends AbstractMatcherFilter<ILoggingEvent> {
 
   /**
    * Filters logs based on logger name
+   *
    * @param event log event
    */
   @Override

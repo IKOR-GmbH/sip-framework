@@ -34,5 +34,4 @@ public class TestRunner {
     }
     return testCase.getTestExecutionStatus();
   }
-
 }

@@ -32,6 +32,7 @@ public class CamelBodyValidator implements ExchangeValidator {
 
   @Override
   public boolean isApplicable(Exchange executionResult, Exchange expectedResponse) {
-    return expectedResponse != null && MessageHelper.extractBodyAsString(expectedResponse.getMessage()) != null;
+    return expectedResponse != null
+        && MessageHelper.extractBodyAsString(expectedResponse.getMessage()) != null;
   }
 }

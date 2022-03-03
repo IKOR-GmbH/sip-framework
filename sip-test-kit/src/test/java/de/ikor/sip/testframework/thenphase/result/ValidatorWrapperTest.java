@@ -1,22 +1,21 @@
 package de.ikor.sip.testframework.thenphase.result;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.*;
+
 import de.ikor.sip.testframework.workflow.TestExecutionStatus;
 import de.ikor.sip.testframework.workflow.thenphase.result.ValidationResult;
 import de.ikor.sip.testframework.workflow.thenphase.validator.TestCaseValidator;
-import org.apache.camel.Exchange;
-import org.apache.camel.Message;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.*;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 
 class ValidatorWrapperTest {
   private static final String TEST_NAME = "testname";
 
-//  @Test
+  //  @Test
   void When_validate_Expect_Success() {
     // arrange
     Message message = mock(Message.class);

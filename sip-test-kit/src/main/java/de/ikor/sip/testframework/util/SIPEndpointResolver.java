@@ -38,7 +38,7 @@ public class SIPEndpointResolver {
   private Endpoint resolveEndpoint(Exchange exchange) {
     String routeId = exchange.getProperty(CONNECTION_ALIAS, String.class);
     Route route = camelContext.getRoute(routeId);
-    if(route == null) {
+    if (route == null) {
       throw new IllegalArgumentException("Route with id " + routeId + " was not found");
     }
     return route.getEndpoint();

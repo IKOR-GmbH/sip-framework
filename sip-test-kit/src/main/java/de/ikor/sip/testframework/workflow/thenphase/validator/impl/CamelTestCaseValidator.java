@@ -1,22 +1,21 @@
 package de.ikor.sip.testframework.workflow.thenphase.validator.impl;
 
+import de.ikor.sip.testframework.workflow.TestExecutionStatus;
 import de.ikor.sip.testframework.workflow.reporting.model.EndpointValidationOutcome;
 import de.ikor.sip.testframework.workflow.reporting.model.MockReport;
 import de.ikor.sip.testframework.workflow.reporting.model.SIPAdapterExecutionReport;
-import de.ikor.sip.testframework.workflow.TestExecutionStatus;
 import de.ikor.sip.testframework.workflow.thenphase.result.ValidationResult;
 import de.ikor.sip.testframework.workflow.thenphase.result.ValidationType;
-import de.ikor.sip.testframework.workflow.thenphase.validator.TestCaseValidator;
 import de.ikor.sip.testframework.workflow.thenphase.validator.ExchangeValidator;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.Exchange;
-import org.springframework.stereotype.Component;
-
+import de.ikor.sip.testframework.workflow.thenphase.validator.TestCaseValidator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.Exchange;
+import org.springframework.stereotype.Component;
 
 /** Batch test validator for Camel */
 @Slf4j
@@ -49,8 +48,7 @@ public class CamelTestCaseValidator implements TestCaseValidator {
   private void validateAdapterResponse(SIPAdapterExecutionReport adapterExecutionReport) {
     Exchange actual = adapterExecutionReport.getActualResponse();
     Exchange expected = adapterExecutionReport.getExpectedResponse();
-    List<ValidationResult> adapterValidationResults =
-        runValidators(actual, expected);
+    List<ValidationResult> adapterValidationResults = runValidators(actual, expected);
     adapterExecutionReport
         .setValidationResults(adapterValidationResults)
         .setValidatedHeaders(extractValidatedHeaders(actual, expected))
@@ -103,7 +101,7 @@ public class CamelTestCaseValidator implements TestCaseValidator {
   }
 
   private List<ValidationResult> runValidators(
-          Exchange executionResult, Exchange expectedResponse) {
+      Exchange executionResult, Exchange expectedResponse) {
     List<ValidationResult> validationResults = new ArrayList<>();
     for (ExchangeValidator validator : this.exchangeValidators) {
       if (validator.isApplicable(executionResult, expectedResponse)) {

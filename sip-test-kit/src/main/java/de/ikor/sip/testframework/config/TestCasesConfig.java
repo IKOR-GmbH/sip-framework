@@ -1,5 +1,8 @@
 package de.ikor.sip.testframework.config;
 
+import static de.ikor.sip.testframework.workflow.thenphase.result.ValidationType.FULL;
+import static java.util.stream.Collectors.toList;
+
 import de.ikor.sip.testframework.configurationproperties.TestCaseBatchDefinition;
 import de.ikor.sip.testframework.configurationproperties.TestCaseDefinition;
 import de.ikor.sip.testframework.configurationproperties.models.EndpointProperties;
@@ -11,6 +14,8 @@ import de.ikor.sip.testframework.workflow.thenphase.result.ValidationType;
 import de.ikor.sip.testframework.workflow.thenphase.validator.TestValidatorFactory;
 import de.ikor.sip.testframework.workflow.whenphase.ExecutionWrapper;
 import de.ikor.sip.testframework.workflow.whenphase.executor.Executor;
+import java.util.LinkedList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
@@ -19,12 +24,6 @@ import org.apache.camel.builder.ExchangeBuilder;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import static de.ikor.sip.testframework.workflow.thenphase.result.ValidationType.FULL;
-import static java.util.stream.Collectors.toList;
 
 /** Configuration class used for creation of batch test cases based on test definitions. */
 @Slf4j

@@ -4,8 +4,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
 import de.ikor.sip.testframework.workflow.TestCase;
-import de.ikor.sip.testframework.workflow.TestRunner;
 import de.ikor.sip.testframework.workflow.TestExecutionStatus;
+import de.ikor.sip.testframework.workflow.TestRunner;
 import de.ikor.sip.testframework.workflow.reporting.resultprocessor.ResultProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,8 @@ class TestRunnerTest {
   void When_runBuildTest_WithSuccessfulVerification_Then_Success() {
     // arrange
     TestCase testCase = mock(TestCase.class);
-    when(testCase.getTestExecutionStatus()).thenReturn(new TestExecutionStatus("test").setSuccessfulExecution(true));
+    when(testCase.getTestExecutionStatus())
+        .thenReturn(new TestExecutionStatus("test").setSuccessfulExecution(true));
 
     // act + assert
     assertThat(testRunner.run(testCase)).isTrue();
@@ -39,7 +40,8 @@ class TestRunnerTest {
   void When_runBuildTest_WithoutSuccessfulVerification_Then_Fail() {
     // arrange
     TestCase testCase = mock(TestCase.class);
-    when(testCase.getTestExecutionStatus()).thenReturn(new TestExecutionStatus("test").setSuccessfulExecution(false));
+    when(testCase.getTestExecutionStatus())
+        .thenReturn(new TestExecutionStatus("test").setSuccessfulExecution(false));
 
     // act + assert
     assertThat(testRunner.run(testCase)).isFalse();

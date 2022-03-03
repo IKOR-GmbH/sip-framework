@@ -2,9 +2,8 @@ package de.ikor.sip.testframework.workflow.thenphase.validator.impl;
 
 import de.ikor.sip.testframework.util.RegexUtil;
 import de.ikor.sip.testframework.workflow.thenphase.result.ValidationResult;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import de.ikor.sip.testframework.workflow.thenphase.validator.ExchangeValidator;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.AllArgsConstructor;
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Component;
@@ -30,7 +29,8 @@ public class CamelHeaderValidator implements ExchangeValidator {
         .forEach(
             (key, value) -> {
               if (executionResult.getMessage().getHeader(key) == null
-                  || !RegexUtil.compare((String) value, executionResult.getMessage().getHeader(key, String.class))) {
+                  || !RegexUtil.compare(
+                      (String) value, executionResult.getMessage().getHeader(key, String.class))) {
                 result.set(false);
               }
             });

@@ -9,12 +9,14 @@ public interface TestCaseValidator {
   /**
    * Validates configured conditions based on data collected during test execution, like adapter
    * response or requests received by endpoint mocks.
+   *
    * @param testExecutionStatus - provides test execution data and stores validation results
    */
   void validate(TestExecutionStatus testExecutionStatus);
 
   /**
    * SIP internal interface, used to separate runtime from batch tests.
+   *
    * @return Returns validation type this validator performs
    */
   ValidationType getValidationType();

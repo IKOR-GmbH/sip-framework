@@ -2,15 +2,13 @@ package de.ikor.sip.testframework.workflow;
 
 import de.ikor.sip.testframework.workflow.reporting.model.MockReport;
 import de.ikor.sip.testframework.workflow.reporting.model.SIPAdapterExecutionReport;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.experimental.Accessors;
-import org.apache.camel.Exchange;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import org.apache.camel.Exchange;
 
 /** Report for a test case */
 @Data
@@ -35,8 +33,9 @@ public class TestExecutionStatus {
   }
 
   /**
-   * Sets response which is expected to be returned by adapter during test. Even though it belongs to enclosing
-   * {@link SIPAdapterExecutionReport} class, setter is also provided here to support chain pattern.
+   * Sets response which is expected to be returned by adapter during test. Even though it belongs
+   * to enclosing {@link SIPAdapterExecutionReport} class, setter is also provided here to support
+   * chain pattern.
    *
    * @param expectedAdapterResponse {@link Exchange} that is the result of a test run
    * @return Updated test execution status
@@ -49,12 +48,12 @@ public class TestExecutionStatus {
   /**
    * Sets exception that was thrown by sip test kit, probably during test setup or validation phase.
    * Implicitly it will set workflowExceptionMessage
+   *
    * @param workflowException exception thrown by SIP test kit
    */
   public void setWorkflowException(Exception workflowException) {
     this.workflowException = workflowException;
-    this.workflowExceptionMessage =
-        errorMessage(workflowException);
+    this.workflowExceptionMessage = errorMessage(workflowException);
   }
 
   private String errorMessage(Exception e) {

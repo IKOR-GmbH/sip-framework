@@ -1,9 +1,14 @@
 package de.ikor.sip.testframework;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assumptions.assumeThat;
+
 import de.ikor.sip.testframework.workflow.TestCase;
+import de.ikor.sip.testframework.workflow.TestExecutionStatus;
 import de.ikor.sip.testframework.workflow.TestRunner;
 import de.ikor.sip.testframework.workflow.givenphase.ReportActivityProxyExtension;
-import de.ikor.sip.testframework.workflow.TestExecutionStatus;
+import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
@@ -12,12 +17,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
-import java.util.stream.Stream;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.Assumptions.assumeThat;
 
 /** SIP batch test run */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -49,6 +48,6 @@ public abstract class SIPBatchTest {
   private boolean isValid(TestCase testCase) {
     TestExecutionStatus testExecutionStatus = testCase.getTestExecutionStatus();
     return !testExecutionStatus.getMockReports().isEmpty()
-            || testExecutionStatus.getAdapterReport().getExpectedResponse() != null;
+        || testExecutionStatus.getAdapterReport().getExpectedResponse() != null;
   }
 }

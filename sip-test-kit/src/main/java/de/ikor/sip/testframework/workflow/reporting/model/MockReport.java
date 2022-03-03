@@ -1,13 +1,12 @@
 package de.ikor.sip.testframework.workflow.reporting.model;
 
+import static de.ikor.sip.testframework.util.SIPExchangeHelper.mapToMessageProperties;
+
 import de.ikor.sip.testframework.configurationproperties.models.MessageProperties;
+import java.util.Map;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.camel.Exchange;
-
-import java.util.Map;
-
-import static de.ikor.sip.testframework.util.SIPExchangeHelper.mapToMessageProperties;
 
 /** Report for a single Mock */
 @Data

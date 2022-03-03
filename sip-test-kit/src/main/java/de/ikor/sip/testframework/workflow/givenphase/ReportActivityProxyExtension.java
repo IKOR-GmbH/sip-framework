@@ -1,20 +1,19 @@
 package de.ikor.sip.testframework.workflow.givenphase;
 
+import static javax.xml.bind.DatatypeConverter.parseBoolean;
+
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import de.ikor.sip.testframework.util.SIPExchangeHelper;
 import de.ikor.sip.testframework.workflow.TestCase;
 import de.ikor.sip.testframework.workflow.TestExecutionStatus;
 import de.ikor.sip.testframework.workflow.whenphase.executor.Executor;
+import java.util.List;
+import java.util.Optional;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
-import java.util.Optional;
-
-import static javax.xml.bind.DatatypeConverter.parseBoolean;
 
 /** Proxy extensions for tracking activity of mocked ProcessorProxy */
 @Slf4j
