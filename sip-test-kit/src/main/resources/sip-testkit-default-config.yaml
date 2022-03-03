@@ -1,4 +1,3 @@
 sip:
-  core:
-    testkit:
-      enabled: true
+  testkit:
+    enabled: true
