@@ -95,7 +95,8 @@ integration tests, such as default SIPApplicationTest, provided by archetype.
 - **[sip-integration-starter](./integration-starter.md)** - Starter project adding necessary predefined dependencies for integration adapters.
 - **[sip-starter-parent](./starter-parent.md)** - This project takes care of versions for Spring Boot and Camel dependencies.
 - **[sip-security](./security.md)** - Security in SIP framework.
-
+- **[sip-test-kit](./sip-test-kit.md)** - Provides ability to run integration tests inside SIP adapters, define mocks for endpoints and generate test reports.
+- 
 The following image displays how listed modules are utilized on SIP adapter where the up arrows represent inheritance,
 down arrows dependencies.
 
@@ -365,6 +366,7 @@ sip.core.tracing.enabled | Enable SIP tracing and trace history | boolean | true
 sip.core.tracing.limit | Sets storage limit in trace history | number | 100 |
 sip.core.tracing.trace-type | Sets how tracer should behave | String | "*" |
 sip.core.tracing.exchange-formatter.{property-name} | Sets value for specific property in ExchangeFormatter | / | / |
+sip.testkit.enabled | Enables SIP Test Kit | boolean | true |
 management.endpoint.health.show-details | Enable health details in actuator | String | always |
 management.endpoints.web.exposure.include | Set which endpoints are included | String | health,info,metrics,loggers,prometheus |
 springdoc.show-actuator | Show actuator API in Swagger docs| boolean | true |
