@@ -14,6 +14,9 @@ import org.junit.jupiter.api.Test;
 
 class ProcessorProxyTest {
 
+  private static final String PROXY_ID = "proxy";
+  private static final String TRACING_ID = "tracingId";
+
   ProcessorProxy processorProxySubject;
   ProcessorProxy processorProxySubjectOutgoing;
   List<ProxyExtension> proxyExtensions;
@@ -24,8 +27,6 @@ class ProcessorProxyTest {
   Exchange exchange;
   SendProcessor outgoingProcessor;
   Endpoint outgoingEndpoint;
-
-  private static final String PROXY_ID = "proxy";
 
   @BeforeEach
   void setup() {
@@ -64,7 +65,7 @@ class ProcessorProxyTest {
   }
 
   @Test
-  void process_executeMock() throws Exception {
+  void WHEN_executeMock_THEN_setMockFunction() throws Exception {
     // arrange
     putProxyInTestMode();
 
@@ -85,7 +86,7 @@ class ProcessorProxyTest {
   }
 
   @Test
-  void process_executeProcessExchangeInTestMode() throws Exception {
+  void WHEN_doingTestMode_THEN_executeProcessExchangeInTestMode() throws Exception {
     // arrange
     putProxyInTestMode();
     when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
@@ -99,19 +100,20 @@ class ProcessorProxyTest {
   }
 
   @Test
-  void process_addTracingId() {
+  void WHEN_processWithTracingId_THEN_setTracingId() {
     // arrange
-    when(exchange.getIn().getHeader("tracingId", String.class)).thenReturn("id");
+    when(exchange.getIn().getHeader(TRACING_ID, String.class)).thenReturn("id");
 
     // act
     assertThatCode(() -> processorProxySubject.process(exchange, callback))
         .doesNotThrowAnyException();
+
     // assert
-    verify(exchange.getIn(), times(1)).setHeader("tracingId", exchange.getExchangeId());
+    verify(exchange.getIn(), times(1)).setHeader(TRACING_ID, exchange.getExchangeId());
   }
 
   @Test
-  void process_executeProcessExtension() throws Exception {
+  void WHEN_havingProxyExtension_THEN_executeProcessExtension() throws Exception {
     // arrange
     when(namedNode.getId()).thenReturn(PROXY_ID);
     when(proxyExtension.isApplicable(any(), any(), any())).thenReturn(true);
@@ -127,12 +129,14 @@ class ProcessorProxyTest {
   }
 
   @Test
-  void process_endpointProcessorTestModeAfterRemovingMockFunction() throws Exception {
+  void WHEN_doingTestModeWithoutMock_THEN_endpointProcessorTestModeAfterRemovingMockFunction()
+      throws Exception {
     // arrange
     putProxyInTestMode();
     when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
     UnaryOperator<Exchange> mockFunction = mock(UnaryOperator.class);
     when(mockFunction.apply(exchange)).thenReturn(exchange);
+
     // act
     processorProxySubjectOutgoing.mock(mockFunction);
     processorProxySubjectOutgoing.reset();
@@ -146,13 +150,13 @@ class ProcessorProxyTest {
   }
 
   @Test
-  void isEndpointProcessor_regularProcessor() throws Exception {
+  void WHEN_isEndpointProcessor_THEN_expectRegularProcessor() throws Exception {
     // assert
     assertThat(processorProxySubject.isEndpointProcessor()).isFalse();
   }
 
   @Test
-  void isEndpointProcessor_regularEndpointProcessor() throws Exception {
+  void WHEN_isEndpointProcessor_THEN_expectRegularEndpointProcessor() throws Exception {
     // arrange
     when(outgoingEndpoint.getEndpointUri()).thenReturn("file://test.txt");
     processorProxySubjectOutgoing =
@@ -163,7 +167,7 @@ class ProcessorProxyTest {
   }
 
   @Test
-  void isEndpointProcessor_ignoredEndpointProcessor() throws Exception {
+  void WHEN_isEndpointProcessor_THEN_expectIgnoredEndpointProcessor() throws Exception {
     // arrange
     when(outgoingEndpoint.getEndpointUri()).thenReturn("sipmc:middleComponent");
     processorProxySubjectOutgoing =
