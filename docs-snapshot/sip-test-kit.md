@@ -115,7 +115,7 @@ In this section a request that should be sent to the adapter is defined.
 
 "endpoint" refers to ID (routeId in camel routes) of the endpoint to which we wish to send a test request.
 In "with" part we define content of the request we wish to send, meaning body and headers are added here.
-The body can also be defined as JSON string or plain text
+The body can also be defined as plain text or JSON string, which represents a POJO.
 
 ```yaml
     when-execute:
