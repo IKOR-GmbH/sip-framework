@@ -1,4 +1,4 @@
-package de.ikor.sip.testframework;
+package de.ikor.sip.testframework.workflow;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
@@ -46,5 +46,21 @@ class TestRunnerTest {
     // act + assert
     assertThat(testRunner.run(testCase)).isFalse();
     verify(testCase).run();
+  }
+
+  @Test
+  void When_runBuildTest_With_Exception_Then_Fail() {
+    // arrange
+    TestCase testCase = mock(TestCase.class, CALLS_REAL_METHODS);
+    TestExecutionStatus testExecutionStatus = new TestExecutionStatus("test");
+    testCase.setTestExecutionStatus(testExecutionStatus);
+    doThrow(new RuntimeException()).when(testCase).run();
+    doNothing().when(testCase).clearMocks();
+
+    // act + assert
+    assertThat(testRunner.run(testCase)).isFalse();
+    verify(testCase).run();
+    verify(testCase).clearMocks();
+    assertThat(testCase.getTestExecutionStatus().getWorkflowException()).isNotNull();
   }
 }
