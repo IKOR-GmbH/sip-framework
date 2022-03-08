@@ -3,3 +3,41 @@ camel:
     servlet:
       mapping:
         context-path: /adapter/*
+
+
+# SIP Security configuration
+# This configuration represents the template to use for configuring security. If security is not needed, all
+# configuration properties below under sip.security can be deleted.
+sip.security:
+  # Template for SSL configuration. By default SSL is disabled.
+  ssl:
+    enabled: false # SSL will be enabled by simply setting this value to true
+
+    # These settings have to be set by the application, by default ssl is disabled
+    server:
+      client-auth: none
+      key-store:
+      key-store-password:
+      key-store-type:
+      key-alias:
+      key-password:
+
+    # Default for these settings are not to set anything, but take what comes out of the box
+    # with spring boot, by setting enabled to true, we take the configured values
+    client:
+      enabled: false
+      key-store: ${sip.security.ssl.server.key-store}
+      key-store-password: ${sip.security.ssl.server.key-store-password}
+      key-store-type: ${sip.security.ssl.server.key-store-type}
+      key-alias: ${sip.security.ssl.server.key-alias}
+      key-password: ${sip.security.ssl.server.key-password}
+
+  # Template for authentication configuration. For using it uncomment the configuratio and fill in the proper values
+#  authentication:
+#    disable-csrf:
+#    auth-providers:
+#      - classname:
+#        ignored-endpoints:
+#        validation:
+#          classname:
+#          file-path:

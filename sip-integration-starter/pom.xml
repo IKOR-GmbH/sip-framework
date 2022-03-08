@@ -25,6 +25,10 @@
             <groupId>de.ikor.sip.foundation</groupId>
             <artifactId>sip-middle-component</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.ikor.sip.foundation</groupId>
+            <artifactId>sip-security</artifactId>
+        </dependency>
 
         <!-- camel -->
         <dependency>
