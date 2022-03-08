@@ -36,7 +36,7 @@ public abstract class SIPBatchTest {
   @DisplayName("Batch Tests")
   @ParameterizedTest(name = "{0}")
   void testCaseArguments(String name, TestCase testCase) {
-    assumeThat(isValid(testCase)).isTrue();
+    assumeThat(isValid(testCase)).isTrue().withFailMessage("No validation defined in then-expect");
     assertThat(testRunner.run(testCase)).isTrue();
   }
 
