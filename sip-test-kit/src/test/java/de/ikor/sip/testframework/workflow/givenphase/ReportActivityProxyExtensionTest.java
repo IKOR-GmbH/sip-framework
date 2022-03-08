@@ -1,4 +1,4 @@
-package de.ikor.sip.testframework.givenphase.mock;
+package de.ikor.sip.testframework.workflow.givenphase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;

@@ -1,5 +1,6 @@
-package de.ikor.sip.testframework.givenphase.mock;
+package de.ikor.sip.testframework.workflow.givenphase;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -10,20 +11,16 @@ import org.junit.jupiter.api.Test;
 
 class MockTest {
 
-  Mock aMock;
-
-  @BeforeEach
-  void setUp() {
-    aMock = mock(Mock.class, CALLS_REAL_METHODS);
-  }
-
   @Test
-  void getID() {
+  void When_getID_Expect_correctID() {
+    // arrange
+    Mock aMock = mock(Mock.class, CALLS_REAL_METHODS);
     String alias = "alias";
     Exchange exchange = mock(Exchange.class);
     when(exchange.getProperty("connectionAlias", String.class)).thenReturn(alias);
     aMock.setReturnExchange(exchange);
 
-    assertEquals(alias, aMock.getId());
+    // act + assert
+    assertThat(aMock.getId()).isEqualTo(alias);
   }
 }
