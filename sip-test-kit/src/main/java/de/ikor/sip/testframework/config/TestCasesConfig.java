@@ -108,7 +108,7 @@ public class TestCasesConfig {
     ExchangeBuilder exchangeBuilder =
         ExchangeBuilder.anExchange(camelContext).withBody(properties.getMessage().getBody());
     properties.getMessage().getHeaders().forEach(exchangeBuilder::withHeader);
-    exchangeBuilder.withProperty("connectionAlias", properties.getEndpoint());
+    exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpoint());
     return exchangeBuilder.build();
   }
 }

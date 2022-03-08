@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.toList;
 import de.ikor.sip.testframework.configurationproperties.TestCaseDefinition;
 import de.ikor.sip.testframework.configurationproperties.models.EndpointProperties;
 import de.ikor.sip.testframework.workflow.TestExecutionStatus;
+import de.ikor.sip.testframework.workflow.givenphase.Mock;
 import de.ikor.sip.testframework.workflow.reporting.model.MockReport;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,7 +71,7 @@ public class TestExecutionStatusFactory {
     ExchangeBuilder exchangeBuilder =
         ExchangeBuilder.anExchange(camelContext).withBody(properties.getMessage().getBody());
     properties.getMessage().getHeaders().forEach(exchangeBuilder::withHeader);
-    exchangeBuilder.withProperty("connectionAlias", properties.getEndpoint());
+    exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpoint());
     return exchangeBuilder.build();
   }
 }

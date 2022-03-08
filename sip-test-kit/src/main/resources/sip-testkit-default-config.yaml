@@ -1,4 +1,4 @@
 sip:
-  core:
-    testkit:
-      enabled: true
+  testkit:
+    enabled: true
+    test-cases-path: test-case-definition.yml

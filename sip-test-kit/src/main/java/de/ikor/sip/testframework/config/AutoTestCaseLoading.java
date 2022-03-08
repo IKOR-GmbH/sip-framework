@@ -2,6 +2,7 @@ package de.ikor.sip.testframework.config;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Properties;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -20,33 +21,28 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 @Profile("test")
 public class AutoTestCaseLoading {
 
-  private static final String TEST_CASES_LOCATION = "testCases.path";
-  private static final String DEFAULT_TEST_CASES_LOCATION = "test-case-definition.yml";
+  private static final String YML_TEST_CASES_PATH_PROPERTY = "sip.testkit.test-cases-path";
   private static final String TEST_CASES_PROPERTIES_NAME = "TestCasesProperties";
 
   /** Adds testcases to environment */
   @Bean
-  public PropertySourcesPlaceholderConfigurer setProperties(Environment environment) {
-    String testCasesLocation =
-        environment.getProperty(TEST_CASES_LOCATION, DEFAULT_TEST_CASES_LOCATION);
-
-    addTestCasesToPropertySources((ConfigurableEnvironment) environment, testCasesLocation);
-
+  public PropertySourcesPlaceholderConfigurer testKitTests(ConfigurableEnvironment environment) {
+    String testCasePath = environment.getProperty(YML_TEST_CASES_PATH_PROPERTY);
+    Properties testCasesFromFile = loadTestsFromYMLPropertiesFile(testCasePath);
+    PropertiesPropertySource testCasesPropertySource =
+        new PropertiesPropertySource(TEST_CASES_PROPERTIES_NAME, testCasesFromFile);
+    environment.getPropertySources().addLast(testCasesPropertySource);
     return new PropertySourcesPlaceholderConfigurer();
   }
 
-  private void addTestCasesToPropertySources(
-      ConfigurableEnvironment environment, String testCasesLocation) {
+  private static Properties loadTestsFromYMLPropertiesFile(String path) {
     YamlPropertiesFactoryBean yamlPropertiesFactory = new YamlPropertiesFactoryBean();
-    yamlPropertiesFactory.setResources(getResources(testCasesLocation));
-    PropertiesPropertySource yamlPropertySource =
-        new PropertiesPropertySource(
-            TEST_CASES_PROPERTIES_NAME, Objects.requireNonNull(yamlPropertiesFactory.getObject()));
-    environment.getPropertySources().addLast(yamlPropertySource);
+    yamlPropertiesFactory.setResources(getResources(path));
+    return Objects.requireNonNull(yamlPropertiesFactory.getObject());
   }
 
-  private Resource[] getResources(String path) {
-    ClassLoader classLoader = this.getClass().getClassLoader();
+  private static Resource[] getResources(String path) {
+    ClassLoader classLoader = AutoTestCaseLoading.class.getClassLoader();
     ResourcePatternResolver resourcePatternResolver =
         new PathMatchingResourcePatternResolver(classLoader);
     try {

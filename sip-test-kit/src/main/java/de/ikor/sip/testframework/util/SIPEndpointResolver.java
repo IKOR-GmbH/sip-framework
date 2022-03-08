@@ -1,5 +1,6 @@
 package de.ikor.sip.testframework.util;
 
+import de.ikor.sip.testframework.workflow.givenphase.Mock;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 public class SIPEndpointResolver {
 
   private static final String CONTEXT_PATH_SUFFIX = "/*";
-  private static final String CONNECTION_ALIAS = "connectionAlias";
   private final ServletRegistrationBean<?> camelServletRegistrationBean;
   private final CamelContext camelContext;
 
@@ -36,7 +36,7 @@ public class SIPEndpointResolver {
   }
 
   private Endpoint resolveEndpoint(Exchange exchange) {
-    String routeId = exchange.getProperty(CONNECTION_ALIAS, String.class);
+    String routeId = exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class);
     Route route = camelContext.getRoute(routeId);
     if (route == null) {
       throw new IllegalArgumentException("Route with id " + routeId + " was not found");
