@@ -4,7 +4,6 @@ import de.ikor.sip.foundation.testkit.exception.ExceptionType;
 import de.ikor.sip.foundation.testkit.exception.TestCaseInitializationException;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationType;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

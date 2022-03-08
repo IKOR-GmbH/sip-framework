@@ -5,9 +5,7 @@ import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
 import de.ikor.sip.foundation.testkit.exception.ExceptionType;
 import de.ikor.sip.foundation.testkit.exception.TestCaseInitializationException;
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
-
 import java.util.function.UnaryOperator;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;

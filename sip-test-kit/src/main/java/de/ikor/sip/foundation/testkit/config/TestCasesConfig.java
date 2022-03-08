@@ -16,7 +16,6 @@ import de.ikor.sip.foundation.testkit.workflow.whenphase.ExecutionWrapper;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.executor.Executor;
 import java.util.LinkedList;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
@@ -31,6 +30,12 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class TestCasesConfig {
+
+  /**
+   * Constant used to identify endpoint ID in the tests, will be passed on as an {@link Exchange}
+   * property
+   */
+  public static final String ENDPOINT_ID_EXCHANGE_PROPERTY = "connectionAlias";
 
   private final Executor executor;
   private final MockFactory mockFactory;
@@ -109,7 +114,7 @@ public class TestCasesConfig {
     ExchangeBuilder exchangeBuilder =
         ExchangeBuilder.anExchange(camelContext).withBody(properties.getMessage().getBody());
     properties.getMessage().getHeaders().forEach(exchangeBuilder::withHeader);
-    exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpoint());
+    exchangeBuilder.withProperty(ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpoint());
     return exchangeBuilder.build();
   }
 }

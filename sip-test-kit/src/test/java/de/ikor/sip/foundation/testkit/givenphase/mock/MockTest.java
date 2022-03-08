@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.testkit.givenphase.mock;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import de.ikor.sip.foundation.testkit.config.TestCasesConfig;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import org.apache.camel.Exchange;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +22,8 @@ class MockTest {
   void getID() {
     String alias = "alias";
     Exchange exchange = mock(Exchange.class);
-    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class)).thenReturn(alias);
+    when(exchange.getProperty(TestCasesConfig.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class))
+        .thenReturn(alias);
     aMock.setReturnExchange(exchange);
 
     assertEquals(alias, aMock.getId());

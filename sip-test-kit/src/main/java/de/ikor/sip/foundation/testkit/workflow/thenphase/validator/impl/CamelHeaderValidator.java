@@ -4,7 +4,6 @@ import de.ikor.sip.foundation.testkit.util.RegexUtil;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.ExchangeValidator;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import lombok.AllArgsConstructor;
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Component;

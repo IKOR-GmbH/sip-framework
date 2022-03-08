@@ -9,7 +9,6 @@ import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
 import de.ikor.sip.foundation.testkit.workflow.TestRunner;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.ReportActivityProxyExtension;
 import java.util.List;
-
 import lombok.Getter;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;

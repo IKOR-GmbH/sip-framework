@@ -8,10 +8,8 @@ import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.TestCase;
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.executor.Executor;
-
 import java.util.List;
 import java.util.Optional;
-
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;

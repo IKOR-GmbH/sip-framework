@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.testkit.workflow.givenphase;
 
+import de.ikor.sip.foundation.testkit.config.TestCasesConfig;
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,8 +10,6 @@ import org.apache.camel.Exchange;
 @Getter
 @Setter
 public abstract class Mock {
-
-  public static final String ENDPOINT_ID_EXCHANGE_PROPERTY = "connectionAlias";
 
   protected String testName;
   protected Exchange returnExchange;
@@ -27,6 +26,6 @@ public abstract class Mock {
 
   /** @return ID of the Mock */
   public String getId() {
-    return returnExchange.getProperty(ENDPOINT_ID_EXCHANGE_PROPERTY, String.class);
+    return returnExchange.getProperty(TestCasesConfig.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class);
   }
 }

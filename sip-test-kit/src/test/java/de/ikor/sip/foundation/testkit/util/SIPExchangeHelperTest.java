@@ -7,8 +7,6 @@ import static org.mockito.Mockito.when;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties;
 import java.util.HashMap;
 import java.util.Map;
-
-import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.jupiter.api.BeforeEach;

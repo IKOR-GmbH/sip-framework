@@ -1,12 +1,10 @@
 package de.ikor.sip.foundation.testkit.workflow.reporting.model;
 
+import de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties;
 import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
-import de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties;
-
 import java.util.List;
 import java.util.Map;
-
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;

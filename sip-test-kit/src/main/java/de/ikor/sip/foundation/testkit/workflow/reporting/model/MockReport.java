@@ -2,9 +2,7 @@ package de.ikor.sip.foundation.testkit.workflow.reporting.model;
 
 import de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties;
 import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
-
 import java.util.Map;
-
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.camel.Exchange;

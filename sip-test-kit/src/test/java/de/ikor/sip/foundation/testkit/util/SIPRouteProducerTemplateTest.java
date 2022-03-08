@@ -3,7 +3,6 @@ package de.ikor.sip.foundation.testkit.util;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import de.ikor.sip.foundation.testkit.util.SIPRouteProducerTemplate;
 import org.apache.camel.*;
 
 class SIPRouteProducerTemplateTest {

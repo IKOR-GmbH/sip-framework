@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.testkit.util;
 
-import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
+import de.ikor.sip.foundation.testkit.config.TestCasesConfig;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
@@ -36,7 +36,8 @@ public class SIPEndpointResolver {
   }
 
   private Endpoint resolveEndpoint(Exchange exchange) {
-    String routeId = exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class);
+    String routeId =
+        exchange.getProperty(TestCasesConfig.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class);
     Route route = camelContext.getRoute(routeId);
     if (route == null) {
       throw new IllegalArgumentException("Route with id " + routeId + " was not found");

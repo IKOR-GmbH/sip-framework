@@ -5,13 +5,11 @@ import static java.util.stream.Collectors.toList;
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
-import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.reporting.model.MockReport;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
@@ -72,7 +70,8 @@ public class TestExecutionStatusFactory {
     ExchangeBuilder exchangeBuilder =
         ExchangeBuilder.anExchange(camelContext).withBody(properties.getMessage().getBody());
     properties.getMessage().getHeaders().forEach(exchangeBuilder::withHeader);
-    exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpoint());
+    exchangeBuilder.withProperty(
+        TestCasesConfig.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpoint());
     return exchangeBuilder.build();
   }
 }
