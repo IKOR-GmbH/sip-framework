@@ -1,5 +1,8 @@
 package de.ikor.sip.testframework.util;
 
+import static org.junit.jupiter.api.Named.named;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+
 import de.ikor.sip.testframework.SIPBatchTest;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -13,6 +16,6 @@ public class SIPBatchTestArgumentSource implements ArgumentsProvider {
       throws Exception {
     SIPBatchTest executedBatchTest = (SIPBatchTest) extensionContext.getRequiredTestInstance();
     return executedBatchTest.getTestCases().stream()
-        .map(testCase -> Arguments.of(testCase.getTestName(), testCase));
+        .map(testCase -> arguments(named(testCase.getTestName(), testCase)));
   }
 }
