@@ -8,20 +8,33 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.spi.RouteController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationContext;
 
 class RouteOperationTest {
 
   public static final String ROUTE_ID = "id";
 
-  private CamelContext camelContext;
+  private ApplicationContext applicationContext;
   private RouteController routeController;
+  private CamelContext camelContext;
 
   @BeforeEach
   void setup() {
-    camelContext = mock(CamelContext.class);
+    applicationContext = mock(ApplicationContext.class, RETURNS_DEEP_STUBS);
+    camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
     routeController = mock(RouteController.class);
 
+    when(applicationContext.getBean(RouteControllerLoggingDecorator.class))
+            .thenReturn(new RouteControllerLoggingDecorator(camelContext));
+    when(applicationContext.getBean(CamelContext.class)).thenReturn(camelContext);
     when(camelContext.getRouteController()).thenReturn(routeController);
+    when(camelContext.getRoute(anyString()).getEndpoint().getEndpointUri()).thenReturn(ROUTE_ID);
   }
 
   @Test
@@ -29,7 +42,7 @@ class RouteOperationTest {
     // arrange
     RouteOperation subject = RouteOperation.RESUME;
 
-    subject.execute(camelContext, ROUTE_ID);
+    subject.execute(applicationContext, ROUTE_ID);
 
     // assert
     verify(routeController, times(1)).resumeRoute(ROUTE_ID);
@@ -41,7 +54,7 @@ class RouteOperationTest {
     RouteOperation subject = RouteOperation.STOP;
 
     // act
-    subject.execute(camelContext, ROUTE_ID);
+    subject.execute(applicationContext, ROUTE_ID);
 
     // assert
     verify(routeController, times(1)).stopRoute(ROUTE_ID);
@@ -53,7 +66,7 @@ class RouteOperationTest {
     RouteOperation subject = RouteOperation.START;
 
     // act
-    subject.execute(camelContext, ROUTE_ID);
+    subject.execute(applicationContext, ROUTE_ID);
 
     // assert
     verify(routeController, times(1)).startRoute(ROUTE_ID);
@@ -65,7 +78,7 @@ class RouteOperationTest {
     RouteOperation subject = RouteOperation.SUSPEND;
 
     // act
-    subject.execute(camelContext, ROUTE_ID);
+    subject.execute(applicationContext, ROUTE_ID);
 
     // assert
     verify(routeController, times(1)).suspendRoute(ROUTE_ID);
@@ -79,7 +92,7 @@ class RouteOperationTest {
     doThrow(new Exception()).when(routeController).resumeRoute(anyString());
 
     // assert
-    assertThatThrownBy(() -> subject.execute(camelContext, "test"))
+    assertThatThrownBy(() -> subject.execute(applicationContext, "test"))
         .isInstanceOf(IntegrationManagementException.class);
   }
 }
