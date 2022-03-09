@@ -1,12 +1,9 @@
 package de.ikor.sip.testframework.workflow.givenphase;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import de.ikor.sip.testframework.workflow.givenphase.Mock;
 import org.apache.camel.Exchange;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class MockTest {

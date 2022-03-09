@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import de.ikor.sip.testframework.workflow.thenphase.result.ValidationResult;
-import de.ikor.sip.testframework.workflow.thenphase.validator.impl.CamelHeaderValidator;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.camel.Exchange;

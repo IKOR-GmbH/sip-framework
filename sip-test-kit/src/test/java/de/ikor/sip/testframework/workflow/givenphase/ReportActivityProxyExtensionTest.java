@@ -1,6 +1,7 @@
 package de.ikor.sip.testframework.workflow.givenphase;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -8,7 +9,7 @@ import static org.mockito.Mockito.*;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.testframework.workflow.TestCase;
 import de.ikor.sip.testframework.workflow.TestExecutionStatus;
-import de.ikor.sip.testframework.workflow.givenphase.ReportActivityProxyExtension;
+import de.ikor.sip.testframework.workflow.whenphase.executor.Executor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,9 +46,8 @@ class ReportActivityProxyExtensionTest {
   void When_run_Expect_GeneratedReport() {
     // arrange
     TestExecutionStatus testExecutionStatus = new TestExecutionStatus();
-    when(original.getIn().getHeader("test-mode")).thenReturn("true");
     when(original.getMessage()).thenReturn(message);
-    when(message.getHeader("test-name", String.class)).thenReturn(TEST_NAME);
+    when(message.getHeader(Executor.TEST_NAME_HEADER, String.class)).thenReturn(TEST_NAME);
     String ORIGINAL_BODY = "originalbody";
     when(message.getBody()).thenReturn(ORIGINAL_BODY);
     String PROXY_ID = "proxy id";
@@ -62,17 +62,64 @@ class ReportActivityProxyExtensionTest {
   }
 
   @Test
-  void When_isApplicable_With_endpointProcessor_Expect_true() {
+  void When_run_With_NoTestCases_Then_exception() {
+    // arrange
+    subject.setTestCases(new ArrayList<>());
+    when(original.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class))
+        .thenReturn(TEST_NAME);
+
+    // act + assert
+    assertThatThrownBy(() -> subject.run(proxy, original, current))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Test case with name " + TEST_NAME + " could not be found!");
+  }
+
+  @Test
+  void When_isApplicable_With_AllConditionsMatch_Then_true() {
     when(proxy.isEndpointProcessor()).thenReturn(true);
-    when(original.getMessage().getHeader("test-name", String.class)).thenReturn(TEST_NAME);
-    when(original.getIn().getHeader("test-mode", String.class)).thenReturn("true");
+    when(original.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class))
+        .thenReturn(TEST_NAME);
+    when(original.getIn().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class))
+        .thenReturn("true");
     assertTrue(subject.isApplicable(proxy, original, current));
   }
 
   @Test
-  void When_isApplicable_With_nonEndpointProcessor_false() {
+  void When_isApplicable_With_NonEndpointProcessor_Then_false() {
     when(proxy.isEndpointProcessor()).thenReturn(false);
-    when(original.getIn().getHeader("test-mode", String.class)).thenReturn("false");
+    when(original.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class))
+        .thenReturn(TEST_NAME);
+    when(original.getIn().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class))
+        .thenReturn("true");
+    assertFalse(subject.isApplicable(proxy, original, current));
+  }
+
+  @Test
+  void When_isApplicable_With_NoTestCases_Then_false() {
+    subject.setTestCases(null);
+    when(original.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class))
+        .thenReturn(TEST_NAME);
+    when(proxy.isEndpointProcessor()).thenReturn(true);
+    when(original.getIn().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class))
+        .thenReturn("true");
+    assertFalse(subject.isApplicable(proxy, original, current));
+  }
+
+  @Test
+  void When_isApplicable_With_TestModeFalse_Then_false() {
+    when(proxy.isEndpointProcessor()).thenReturn(true);
+    when(original.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class))
+        .thenReturn(TEST_NAME);
+    when(original.getIn().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class))
+        .thenReturn("false");
+    assertFalse(subject.isApplicable(proxy, original, current));
+  }
+
+  @Test
+  void When_isApplicable_With_NoTestName_Then_false() {
+    when(proxy.isEndpointProcessor()).thenReturn(true);
+    when(original.getIn().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class))
+        .thenReturn("true");
     assertFalse(subject.isApplicable(proxy, original, current));
   }
 }
