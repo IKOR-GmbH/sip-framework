@@ -1,5 +1,12 @@
 package de.ikor.sip.foundation.core.actuator.routes;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+import java.util.Collections;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Route;
@@ -9,14 +16,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import java.util.Collections;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
 
 class AdapterRouteEndpointTest {
 
@@ -33,12 +32,11 @@ class AdapterRouteEndpointTest {
     ApplicationContext appContext;
     appContext = mock(ApplicationContext.class, RETURNS_DEEP_STUBS);
     when(appContext.getBean(RouteControllerLoggingDecorator.class))
-            .thenReturn(new RouteControllerLoggingDecorator(camelContext));
+        .thenReturn(new RouteControllerLoggingDecorator(camelContext));
     camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
-    when(camelContext.getRoute(anyString()).getEndpoint().getEndpointUri())
-            .thenReturn("");
+    when(camelContext.getRoute(anyString()).getEndpoint().getEndpointUri()).thenReturn("");
     when(appContext.getBean(RouteControllerLoggingDecorator.class))
-            .thenReturn(new RouteControllerLoggingDecorator(camelContext));
+        .thenReturn(new RouteControllerLoggingDecorator(camelContext));
     managedCamelContext = mock(ManagedCamelContext.class);
     subject = new AdapterRouteEndpoint(camelContext, appContext);
   }

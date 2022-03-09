@@ -1,10 +1,9 @@
 package de.ikor.sip.foundation.core.actuator.routes;
 
 import de.ikor.sip.foundation.core.actuator.common.IntegrationManagementException;
-import org.springframework.context.ApplicationContext;
-
 import java.util.Arrays;
 import java.util.Optional;
+import org.springframework.context.ApplicationContext;
 
 enum RouteOperation {
   START("start", RouteControllerLoggingDecorator::startRoute),
@@ -12,7 +11,9 @@ enum RouteOperation {
   SUSPEND("suspend", RouteControllerLoggingDecorator::suspendRoute),
   RESUME("resume", RouteControllerLoggingDecorator::resumeRoute);
 
-  RouteOperation(String operationId, CheckedBiConsumer<RouteControllerLoggingDecorator, String> routeIdConsumer) {
+  RouteOperation(
+      String operationId,
+      CheckedBiConsumer<RouteControllerLoggingDecorator, String> routeIdConsumer) {
     this.operationId = operationId;
     this.routeConsumer = routeIdConsumer;
   }

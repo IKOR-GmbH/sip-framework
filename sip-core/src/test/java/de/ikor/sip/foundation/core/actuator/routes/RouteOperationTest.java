@@ -8,12 +8,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.spi.RouteController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
 
 class RouteOperationTest {
@@ -31,7 +25,7 @@ class RouteOperationTest {
     routeController = mock(RouteController.class);
 
     when(applicationContext.getBean(RouteControllerLoggingDecorator.class))
-            .thenReturn(new RouteControllerLoggingDecorator(camelContext));
+        .thenReturn(new RouteControllerLoggingDecorator(camelContext));
     when(applicationContext.getBean(CamelContext.class)).thenReturn(camelContext);
     when(camelContext.getRouteController()).thenReturn(routeController);
     when(camelContext.getRoute(anyString()).getEndpoint().getEndpointUri()).thenReturn(ROUTE_ID);
