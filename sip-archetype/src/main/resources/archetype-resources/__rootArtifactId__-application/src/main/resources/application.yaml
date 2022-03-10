@@ -26,11 +26,11 @@ sip.security:
     # with spring boot, by setting enabled to true, we take the configured values
     client:
       enabled: false
-      key-store: ${sip.security.ssl.server.key-store}
-      key-store-password: ${sip.security.ssl.server.key-store-password}
-      key-store-type: ${sip.security.ssl.server.key-store-type}
-      key-alias: ${sip.security.ssl.server.key-alias}
-      key-password: ${sip.security.ssl.server.key-password}
+      key-store:
+      key-store-password:
+      key-store-type:
+      key-alias:
+      key-password:
 
   # Template for authentication configuration. For using it uncomment the configuratio and fill in the proper values
 #  authentication:
