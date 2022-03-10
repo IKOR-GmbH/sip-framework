@@ -3,7 +3,6 @@ package de.ikor.sip.foundation.core.actuator.routes;
 import de.ikor.sip.foundation.core.actuator.common.IntegrationManagementException;
 import java.util.Arrays;
 import java.util.Optional;
-import org.springframework.context.ApplicationContext;
 
 enum RouteOperation {
   START("start", RouteControllerLoggingDecorator::startRoute),
@@ -24,12 +23,12 @@ enum RouteOperation {
   /**
    * Executes a route operation
    *
-   * @param ctx CamelContext
+   * @param routeController CamelContext
    * @param routeId Id of the route
    */
-  public void execute(ApplicationContext ctx, String routeId) {
+  public void execute(RouteControllerLoggingDecorator routeController, String routeId) {
     try {
-      routeConsumer.consume(ctx.getBean(RouteControllerLoggingDecorator.class), routeId);
+      routeConsumer.consume(routeController, routeId);
     } catch (Exception e) {
       throw new IntegrationManagementException(
           "Cannot execute " + name() + " for route " + routeId, e);

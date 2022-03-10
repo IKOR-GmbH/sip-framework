@@ -8,27 +8,24 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.spi.RouteController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.ApplicationContext;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class RouteOperationTest {
 
   public static final String ROUTE_ID = "id";
 
-  private ApplicationContext applicationContext;
+  private RouteControllerLoggingDecorator routeControllerDecorator;
   private RouteController routeController;
   private CamelContext camelContext;
 
   @BeforeEach
   void setup() {
-    applicationContext = mock(ApplicationContext.class, RETURNS_DEEP_STUBS);
+    routeControllerDecorator = mock(RouteControllerLoggingDecorator.class, CALLS_REAL_METHODS);
     camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
     routeController = mock(RouteController.class);
-
-    when(applicationContext.getBean(RouteControllerLoggingDecorator.class))
-        .thenReturn(new RouteControllerLoggingDecorator(camelContext));
-    when(applicationContext.getBean(CamelContext.class)).thenReturn(camelContext);
     when(camelContext.getRouteController()).thenReturn(routeController);
     when(camelContext.getRoute(anyString()).getEndpoint().getEndpointUri()).thenReturn(ROUTE_ID);
+    ReflectionTestUtils.setField(routeControllerDecorator, "ctx", camelContext);
   }
 
   @Test
@@ -36,7 +33,7 @@ class RouteOperationTest {
     // arrange
     RouteOperation subject = RouteOperation.RESUME;
 
-    subject.execute(applicationContext, ROUTE_ID);
+    subject.execute(routeControllerDecorator, ROUTE_ID);
 
     // assert
     verify(routeController, times(1)).resumeRoute(ROUTE_ID);
@@ -48,7 +45,7 @@ class RouteOperationTest {
     RouteOperation subject = RouteOperation.STOP;
 
     // act
-    subject.execute(applicationContext, ROUTE_ID);
+    subject.execute(routeControllerDecorator, ROUTE_ID);
 
     // assert
     verify(routeController, times(1)).stopRoute(ROUTE_ID);
@@ -60,7 +57,7 @@ class RouteOperationTest {
     RouteOperation subject = RouteOperation.START;
 
     // act
-    subject.execute(applicationContext, ROUTE_ID);
+    subject.execute(routeControllerDecorator, ROUTE_ID);
 
     // assert
     verify(routeController, times(1)).startRoute(ROUTE_ID);
@@ -72,7 +69,7 @@ class RouteOperationTest {
     RouteOperation subject = RouteOperation.SUSPEND;
 
     // act
-    subject.execute(applicationContext, ROUTE_ID);
+    subject.execute(routeControllerDecorator, ROUTE_ID);
 
     // assert
     verify(routeController, times(1)).suspendRoute(ROUTE_ID);
@@ -86,7 +83,7 @@ class RouteOperationTest {
     doThrow(new Exception()).when(routeController).resumeRoute(anyString());
 
     // assert
-    assertThatThrownBy(() -> subject.execute(applicationContext, "test"))
+    assertThatThrownBy(() -> subject.execute(routeControllerDecorator, "test"))
         .isInstanceOf(IntegrationManagementException.class);
   }
 }

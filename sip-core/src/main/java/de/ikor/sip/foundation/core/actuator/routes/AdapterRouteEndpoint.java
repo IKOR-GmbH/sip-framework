@@ -11,7 +11,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Route;
 import org.apache.camel.api.management.ManagedCamelContext;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RestControllerEndpoint(id = "adapter-routes")
 public class AdapterRouteEndpoint {
   private final CamelContext camelContext;
-  private final ApplicationContext appContext;
+  private final RouteControllerLoggingDecorator routeController;
   private final ManagedCamelContext mbeanContext;
 
   /**
@@ -36,9 +35,10 @@ public class AdapterRouteEndpoint {
    *
    * @param camelContext - CamelContext
    */
-  public AdapterRouteEndpoint(CamelContext camelContext, ApplicationContext applicationContext) {
+  public AdapterRouteEndpoint(
+      CamelContext camelContext, RouteControllerLoggingDecorator routeController) {
     this.camelContext = camelContext;
-    this.appContext = applicationContext;
+    this.routeController = routeController;
     this.mbeanContext = camelContext.getExtension(ManagedCamelContext.class);
   }
 
@@ -61,7 +61,7 @@ public class AdapterRouteEndpoint {
   public void stopAll() {
     camelContext
         .getRoutes()
-        .forEach(route -> RouteOperation.STOP.execute(appContext, route.getRouteId()));
+        .forEach(route -> RouteOperation.STOP.execute(routeController, route.getRouteId()));
   }
 
   /** Resumes all routes */
@@ -70,7 +70,7 @@ public class AdapterRouteEndpoint {
   public void resumeAll() {
     camelContext
         .getRoutes()
-        .forEach(route -> RouteOperation.RESUME.execute(appContext, route.getRouteId()));
+        .forEach(route -> RouteOperation.RESUME.execute(routeController, route.getRouteId()));
   }
   /** Suspends all routes */
   @PostMapping("/suspend")
@@ -78,7 +78,7 @@ public class AdapterRouteEndpoint {
   public void suspendAll() {
     camelContext
         .getRoutes()
-        .forEach(route -> RouteOperation.SUSPEND.execute(appContext, route.getRouteId()));
+        .forEach(route -> RouteOperation.SUSPEND.execute(routeController, route.getRouteId()));
   }
 
   /** Starts all routes */
@@ -113,7 +113,7 @@ public class AdapterRouteEndpoint {
       @RouteIdParameter @PathVariable String routeId,
       @RouteOperationParameter @PathVariable String operation) {
     RouteOperation routeOperation = RouteOperation.fromId(operation);
-    routeOperation.execute(appContext, routeId);
+    routeOperation.execute(routeController, routeId);
   }
 
   /** Resets all routes */

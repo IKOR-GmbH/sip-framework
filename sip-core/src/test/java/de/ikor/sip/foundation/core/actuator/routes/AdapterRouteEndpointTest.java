@@ -14,7 +14,6 @@ import org.apache.camel.api.management.ManagedCamelContext;
 import org.apache.camel.api.management.mbean.ManagedRouteMBean;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.util.ReflectionTestUtils;
 
 class AdapterRouteEndpointTest {
@@ -29,16 +28,14 @@ class AdapterRouteEndpointTest {
 
   @BeforeEach
   void setUp() {
-    ApplicationContext appContext;
-    appContext = mock(ApplicationContext.class, RETURNS_DEEP_STUBS);
-    when(appContext.getBean(RouteControllerLoggingDecorator.class))
-        .thenReturn(new RouteControllerLoggingDecorator(camelContext));
+    RouteControllerLoggingDecorator routeControllerLoggingDecorator;
+    routeControllerLoggingDecorator =
+        mock(RouteControllerLoggingDecorator.class, CALLS_REAL_METHODS);
     camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
     when(camelContext.getRoute(anyString()).getEndpoint().getEndpointUri()).thenReturn("");
-    when(appContext.getBean(RouteControllerLoggingDecorator.class))
-        .thenReturn(new RouteControllerLoggingDecorator(camelContext));
     managedCamelContext = mock(ManagedCamelContext.class);
-    subject = new AdapterRouteEndpoint(camelContext, appContext);
+    ReflectionTestUtils.setField(routeControllerLoggingDecorator, "ctx", camelContext);
+    subject = new AdapterRouteEndpoint(camelContext, routeControllerLoggingDecorator);
   }
 
   @Test
