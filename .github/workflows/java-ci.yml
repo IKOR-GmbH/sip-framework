@@ -226,6 +226,8 @@ jobs:
         cd ..
         sed -i "/.*JAVADOC_RELEASES.*/a \ \ \ \ - JavaDoc ${RELEASE_VERSION}: './javadoc/${RELEASE_VERSION}/index.html'" mkdocs.yml
         git add .
+        git mv -f docs-snapshot/*.md docs
+        git mv -f docs-snapshot/img/* docs/img
         git commit -m "Updated sip-framework version to ${RELEASE_VERSION}"
         git tag -a releases/${RELEASE_VERSION} -m "Released new sip-framework version ${RELEASE_VERSION}"
         echo "::set-output name=version::${RELEASE_VERSION}"
