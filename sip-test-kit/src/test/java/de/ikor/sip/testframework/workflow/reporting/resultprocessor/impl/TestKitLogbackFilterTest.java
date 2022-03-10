@@ -30,7 +30,7 @@ class TestKitLogbackFilterTest {
     subject.setLoggerName(null);
 
     assertThatNoException().isThrownBy(() -> subject.start());
-    assertThat(subject.getName()).isEqualTo(null);
+    assertThat(subject.getName()).isNull();
   }
 
   @Test
