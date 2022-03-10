@@ -22,8 +22,8 @@ sip.security:
       key-alias:
       key-password:
 
-    # Default for these settings are not to set anything, but take what comes out of the box
-    # with spring boot, by setting enabled to true, we take the configured values
+    # If the adapter requires different setups for outgoing traffic (http client) and server, values for the following
+    # client properties should be added. By default, the outgoing traffic properties will fallback to sip.ssl.server configuration.
     client:
       enabled: false
       key-store:
