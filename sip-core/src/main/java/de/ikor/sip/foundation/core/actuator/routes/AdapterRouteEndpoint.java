@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.SneakyThrows;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Route;
 import org.apache.camel.api.management.ManagedCamelContext;
@@ -82,11 +81,12 @@ public class AdapterRouteEndpoint {
   }
 
   /** Starts all routes */
-  @SneakyThrows
   @PostMapping("/start")
   @Operation(summary = "Start all routes", description = "Starts all routes in Camel Context")
   public void startAll() {
-    camelContext.getRouteController().startAllRoutes();
+    this.camelContext
+        .getRoutes()
+        .forEach(route -> RouteOperation.START.execute(this.routeController, route.getRouteId()));
   }
 
   /**
