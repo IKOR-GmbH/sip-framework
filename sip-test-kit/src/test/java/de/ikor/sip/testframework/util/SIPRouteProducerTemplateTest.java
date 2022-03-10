@@ -1,33 +1,33 @@
 package de.ikor.sip.testframework.util;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-import org.apache.camel.*;
+import org.apache.camel.Exchange;
+import org.apache.camel.ProducerTemplate;
+import org.junit.jupiter.api.Test;
 
 class SIPRouteProducerTemplateTest {
 
-  // @Test
-  void requestOnRoute() {
+  public static final String URI = "uri";
+
+  @Test
+  void When_requestOnRoute_Expect_ExchangeReturned() {
+    // arrange
     ProducerTemplate producerTemplate = mock(ProducerTemplate.class);
-    CamelContext camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
-    Endpoint endpoint = mock(Endpoint.class);
-    Exchange input = mock(Exchange.class);
+    SIPEndpointResolver sipEndpointResolver = mock(SIPEndpointResolver.class);
+    Exchange exchange = mock(Exchange.class);
     Exchange expected = mock(Exchange.class);
-    Message in = mock(Message.class);
-    Message message = mock(Message.class);
+    when(sipEndpointResolver.resolveURI(exchange)).thenReturn(URI);
+    when(producerTemplate.send(URI, exchange)).thenReturn(expected);
     SIPRouteProducerTemplate sipRouteProducerTemplate =
-        new SIPRouteProducerTemplate(producerTemplate, null);
+        new SIPRouteProducerTemplate(producerTemplate, sipEndpointResolver);
 
-    when(camelContext.getRoute(anyString()).getEndpoint()).thenReturn(endpoint);
-    when(endpoint.createExchange()).thenReturn(input);
-    when(message.getBody(String.class)).thenReturn("test");
-    when(input.getIn()).thenReturn(in);
-    when(expected.getMessage()).thenReturn(message);
-    when(producerTemplate.send(endpoint, input)).thenReturn(expected);
+    // act
+    Exchange result = sipRouteProducerTemplate.requestOnRoute(exchange);
 
-    Exchange result = sipRouteProducerTemplate.requestOnRoute(input);
-
-    assertEquals(expected, result);
+    // assert
+    verify(producerTemplate, times(1)).send(URI, exchange);
+    assertThat(result).isEqualTo(expected);
   }
 }
