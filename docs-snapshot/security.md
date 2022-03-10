@@ -22,6 +22,8 @@ Implementing code and configuration on top of Spring Security should help you ju
 </dependency>
 ```
 
+SIP Security dependency is included by default when creating adapter with SIP Archetype.
+
 ### Contents
 
 Following description shows SIP Security functionalities and configuration.

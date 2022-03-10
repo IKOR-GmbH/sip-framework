@@ -27,6 +27,10 @@
         </dependency>
         <dependency>
             <groupId>de.ikor.sip.foundation</groupId>
+            <artifactId>sip-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.ikor.sip.foundation</groupId>
             <artifactId>sip-test-kit</artifactId>
         </dependency>
 
