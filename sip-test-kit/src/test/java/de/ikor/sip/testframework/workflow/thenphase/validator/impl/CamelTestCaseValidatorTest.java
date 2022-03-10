@@ -85,7 +85,7 @@ class CamelTestCaseValidatorTest {
     // assert
     assertThat(testExecutionStatus.isSuccessfulExecution()).isTrue();
     assertThat(testExecutionStatus.getAdapterReport().getValidatedHeaders())
-            .containsEntry(HEADER_KEY, HEADER_VALUE);
+        .containsEntry(HEADER_KEY, HEADER_VALUE);
   }
 
   @Test

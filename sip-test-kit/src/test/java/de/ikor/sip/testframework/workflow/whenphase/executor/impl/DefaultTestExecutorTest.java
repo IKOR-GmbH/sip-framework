@@ -27,7 +27,8 @@ class DefaultTestExecutorTest {
 
     // act + assert
     assertThat(subject.execute(request, testName)).isEqualTo(response);
-    assertThat(headers).containsEntry(Executor.TEST_NAME_HEADER, testName)
-            .containsEntry(ProcessorProxy.TEST_MODE_HEADER, true);
+    assertThat(headers)
+        .containsEntry(Executor.TEST_NAME_HEADER, testName)
+        .containsEntry(ProcessorProxy.TEST_MODE_HEADER, true);
   }
 }

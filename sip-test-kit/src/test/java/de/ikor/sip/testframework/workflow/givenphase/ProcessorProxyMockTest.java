@@ -50,8 +50,7 @@ class ProcessorProxyMockTest {
   void When_setBehavior_With_ProxyMissing_Then_TestCaseInitializationException() {
     // act + assert
     TestExecutionStatus testExecutionStatus = new TestExecutionStatus();
-    assertThatThrownBy(
-            () -> subject.setBehavior(testExecutionStatus))
+    assertThatThrownBy(() -> subject.setBehavior(testExecutionStatus))
         .isInstanceOf(TestCaseInitializationException.class);
   }
 

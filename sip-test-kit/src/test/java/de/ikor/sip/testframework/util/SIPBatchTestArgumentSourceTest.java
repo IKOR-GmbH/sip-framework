@@ -9,7 +9,6 @@ import de.ikor.sip.testframework.workflow.TestCase;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -33,7 +32,7 @@ class SIPBatchTestArgumentSourceTest {
     // act
     List<Arguments> testCases =
         subject.provideArguments(extensionContext).collect(Collectors.toList());
-    Named namedArg = (Named)testCases.get(0).get()[0];
+    Named namedArg = (Named) testCases.get(0).get()[0];
 
     // assert
     assertThat(namedArg.getName()).isEqualTo(testName);
