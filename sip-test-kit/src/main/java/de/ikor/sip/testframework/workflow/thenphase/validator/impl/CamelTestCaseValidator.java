@@ -5,7 +5,6 @@ import de.ikor.sip.testframework.workflow.reporting.model.EndpointValidationOutc
 import de.ikor.sip.testframework.workflow.reporting.model.MockReport;
 import de.ikor.sip.testframework.workflow.reporting.model.SIPAdapterExecutionReport;
 import de.ikor.sip.testframework.workflow.thenphase.result.ValidationResult;
-import de.ikor.sip.testframework.workflow.thenphase.result.ValidationType;
 import de.ikor.sip.testframework.workflow.thenphase.validator.ExchangeValidator;
 import de.ikor.sip.testframework.workflow.thenphase.validator.TestCaseValidator;
 import java.util.ArrayList;
@@ -23,11 +22,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class CamelTestCaseValidator implements TestCaseValidator {
   private final List<ExchangeValidator> exchangeValidators;
-
-  @Override
-  public ValidationType getValidationType() {
-    return ValidationType.FULL;
-  }
 
   /** Validates actual of test execution and forwards it to report service */
   @Override
@@ -110,5 +104,10 @@ public class CamelTestCaseValidator implements TestCaseValidator {
     }
 
     return validationResults;
+  }
+
+  @Override
+  public boolean isApplicable() {
+    return true;
   }
 }

@@ -9,7 +9,6 @@ import de.ikor.sip.testframework.workflow.reporting.model.EndpointValidationOutc
 import de.ikor.sip.testframework.workflow.reporting.model.MockReport;
 import de.ikor.sip.testframework.workflow.reporting.model.SIPAdapterExecutionReport;
 import de.ikor.sip.testframework.workflow.thenphase.result.ValidationResult;
-import de.ikor.sip.testframework.workflow.thenphase.result.ValidationType;
 import de.ikor.sip.testframework.workflow.thenphase.validator.ExchangeValidator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,12 +51,6 @@ class CamelTestCaseValidatorTest {
     when(actualMessage.getHeaders()).thenReturn(new HashMap<>());
     when(expectedMessage.getHeaders()).thenReturn(new HashMap<>());
     when(exchangeValidator.isApplicable(actual, expected)).thenReturn(true);
-  }
-
-  @Test
-  void When_getValidationType_Expect_ValidationFULL() {
-    // act + assert
-    assertThat(subject.getValidationType()).isEqualTo(ValidationType.FULL);
   }
 
   @Test
