@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.testkit.workflow.thenphase.validator;
 
-
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
 
 /** Parent class for test result validators */

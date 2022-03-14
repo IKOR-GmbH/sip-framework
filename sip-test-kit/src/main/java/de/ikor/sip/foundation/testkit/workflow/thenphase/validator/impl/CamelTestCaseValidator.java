@@ -7,15 +7,14 @@ import de.ikor.sip.foundation.testkit.workflow.reporting.model.SIPAdapterExecuti
 import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.ExchangeValidator;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.TestCaseValidator;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.Exchange;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.Exchange;
+import org.springframework.stereotype.Component;
 
 /** Batch test validator for Camel */
 @Slf4j

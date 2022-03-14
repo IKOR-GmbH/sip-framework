@@ -2,9 +2,6 @@ package de.ikor.sip.foundation.testkit.config;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseBatchDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
@@ -15,6 +12,8 @@ import de.ikor.sip.foundation.testkit.workflow.givenphase.MockFactory;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.TestCaseValidator;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.ExecutionWrapper;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.executor.Executor;
+import java.util.LinkedList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;

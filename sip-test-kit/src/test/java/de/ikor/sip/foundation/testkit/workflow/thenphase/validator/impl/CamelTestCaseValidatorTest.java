@@ -4,17 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
 import de.ikor.sip.foundation.testkit.workflow.reporting.model.EndpointValidationOutcome;
 import de.ikor.sip.foundation.testkit.workflow.reporting.model.MockReport;
 import de.ikor.sip.foundation.testkit.workflow.reporting.model.SIPAdapterExecutionReport;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.ExchangeValidator;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.jupiter.api.BeforeEach;
