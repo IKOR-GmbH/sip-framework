@@ -1,20 +1,21 @@
 package de.ikor.sip.foundation.testkit.workflow.thenphase.validator.impl;
 
-import de.ikor.sip.testframework.workflow.TestExecutionStatus;
-import de.ikor.sip.testframework.workflow.reporting.model.EndpointValidationOutcome;
-import de.ikor.sip.testframework.workflow.reporting.model.MockReport;
-import de.ikor.sip.testframework.workflow.reporting.model.SIPAdapterExecutionReport;
-import de.ikor.sip.testframework.workflow.thenphase.result.ValidationResult;
-import de.ikor.sip.testframework.workflow.thenphase.validator.ExchangeValidator;
-import de.ikor.sip.testframework.workflow.thenphase.validator.TestCaseValidator;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
+import de.ikor.sip.foundation.testkit.workflow.reporting.model.EndpointValidationOutcome;
+import de.ikor.sip.foundation.testkit.workflow.reporting.model.MockReport;
+import de.ikor.sip.foundation.testkit.workflow.reporting.model.SIPAdapterExecutionReport;
+import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
+import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.ExchangeValidator;
+import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.TestCaseValidator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /** Batch test validator for Camel */
 @Slf4j
