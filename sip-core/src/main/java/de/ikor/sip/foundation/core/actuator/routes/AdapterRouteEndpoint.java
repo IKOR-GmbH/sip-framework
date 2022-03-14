@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.SneakyThrows;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Route;
 import org.apache.camel.api.management.ManagedCamelContext;
@@ -27,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RestControllerEndpoint(id = "adapter-routes")
 public class AdapterRouteEndpoint {
   private final CamelContext camelContext;
+  private final RouteControllerLoggingDecorator routeController;
   private final ManagedCamelContext mbeanContext;
 
   /**
@@ -34,8 +34,10 @@ public class AdapterRouteEndpoint {
    *
    * @param camelContext - CamelContext
    */
-  public AdapterRouteEndpoint(CamelContext camelContext) {
+  public AdapterRouteEndpoint(
+      CamelContext camelContext, RouteControllerLoggingDecorator routeController) {
     this.camelContext = camelContext;
+    this.routeController = routeController;
     this.mbeanContext = camelContext.getExtension(ManagedCamelContext.class);
   }
 
@@ -58,7 +60,7 @@ public class AdapterRouteEndpoint {
   public void stopAll() {
     camelContext
         .getRoutes()
-        .forEach(route -> RouteOperation.STOP.execute(camelContext, route.getRouteId()));
+        .forEach(route -> RouteOperation.STOP.execute(routeController, route.getRouteId()));
   }
 
   /** Resumes all routes */
@@ -67,7 +69,7 @@ public class AdapterRouteEndpoint {
   public void resumeAll() {
     camelContext
         .getRoutes()
-        .forEach(route -> RouteOperation.RESUME.execute(camelContext, route.getRouteId()));
+        .forEach(route -> RouteOperation.RESUME.execute(routeController, route.getRouteId()));
   }
   /** Suspends all routes */
   @PostMapping("/suspend")
@@ -75,15 +77,16 @@ public class AdapterRouteEndpoint {
   public void suspendAll() {
     camelContext
         .getRoutes()
-        .forEach(route -> RouteOperation.SUSPEND.execute(camelContext, route.getRouteId()));
+        .forEach(route -> RouteOperation.SUSPEND.execute(routeController, route.getRouteId()));
   }
 
   /** Starts all routes */
-  @SneakyThrows
   @PostMapping("/start")
   @Operation(summary = "Start all routes", description = "Starts all routes in Camel Context")
   public void startAll() {
-    camelContext.getRouteController().startAllRoutes();
+    this.camelContext
+        .getRoutes()
+        .forEach(route -> RouteOperation.START.execute(this.routeController, route.getRouteId()));
   }
 
   /**
@@ -110,7 +113,7 @@ public class AdapterRouteEndpoint {
       @RouteIdParameter @PathVariable String routeId,
       @RouteOperationParameter @PathVariable String operation) {
     RouteOperation routeOperation = RouteOperation.fromId(operation);
-    routeOperation.execute(camelContext, routeId);
+    routeOperation.execute(routeController, routeId);
   }
 
   /** Resets all routes */

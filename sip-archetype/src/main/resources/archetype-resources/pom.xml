@@ -7,6 +7,7 @@
         <groupId>de.ikor.sip.foundation</groupId>
         <artifactId>sip-framework</artifactId>
         <version>${archetypeVersion}</version>
+        <relativePath/>
     </parent>
 
     <groupId>${groupId}</groupId>
