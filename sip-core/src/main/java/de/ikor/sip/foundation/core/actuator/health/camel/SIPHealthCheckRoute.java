@@ -1,11 +1,10 @@
 package de.ikor.sip.foundation.core.actuator.health.camel;
 
+import java.util.Map;
+import java.util.Objects;
 import org.apache.camel.ServiceStatus;
 import org.apache.camel.health.HealthCheckResultBuilder;
 import org.apache.camel.impl.health.RouteHealthCheck;
-
-import java.util.Map;
-import java.util.Objects;
 
 public class SIPHealthCheckRoute extends RouteHealthCheck {
 

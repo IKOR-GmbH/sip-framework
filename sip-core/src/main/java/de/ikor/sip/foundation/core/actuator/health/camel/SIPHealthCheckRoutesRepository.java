@@ -1,16 +1,15 @@
 package de.ikor.sip.foundation.core.actuator.health.camel;
 
+import java.util.stream.Stream;
 import org.apache.camel.DeferredContextBinding;
 import org.apache.camel.health.HealthCheck;
 import org.apache.camel.impl.health.RouteHealthCheck;
 import org.apache.camel.impl.health.RoutesHealthCheckRepository;
 
-import java.util.stream.Stream;
-
 @DeferredContextBinding
-public class SIPHealthCheckRepositoryRoutes extends RoutesHealthCheckRepository {
+public class SIPHealthCheckRoutesRepository extends RoutesHealthCheckRepository {
 
-  public SIPHealthCheckRepositoryRoutes() {
+  public SIPHealthCheckRoutesRepository() {
     super();
   }
 
