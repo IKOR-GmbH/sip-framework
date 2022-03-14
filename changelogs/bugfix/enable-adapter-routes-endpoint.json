@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "25",
-  "message": "Enabled adapter-routes to be present in actuator endpoint by default"
-}

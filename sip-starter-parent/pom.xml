@@ -14,7 +14,7 @@
 
     <groupId>de.ikor.sip.foundation</groupId>
     <artifactId>sip-starter-parent</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>2.0.0</version>
     <packaging>pom</packaging>
     <name>SIP Starter Parent</name>
     <description>Parent pom providing dependency and plugin management for SIP integration adapters built with Maven</description>
@@ -66,7 +66,7 @@
     </distributionManagement>
 
     <properties>
-        <sip-framework.version>1.0.1-SNAPSHOT</sip-framework.version>
+        <sip-framework.version>2.0.0</sip-framework.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
     </properties>

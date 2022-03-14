@@ -20,6 +20,7 @@ nav:
     - Changelog: changelog.md
     - JavaDoc Latest Development: './javadoc/latest/index.html'
     # JAVADOC_RELEASES sed marker, do not delete
+    - JavaDoc 2.0.0: './javadoc/2.0.0/index.html'
     - JavaDoc 1.0.0: './javadoc/1.0.0/index.html'
     - Find out more about IKOR: 'https://ikor.one/produkt/system-integration-platform'
     - Impressum: 'https://ikor.one/impressum/'

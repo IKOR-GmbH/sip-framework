@@ -1,5 +1,0 @@
-{
-  "author": "Nemicore",
-  "pullrequestId": 45,
-  "message": "Refactored scheduler to be active if property is set to true and HealthEndpoint is enabled"
-}

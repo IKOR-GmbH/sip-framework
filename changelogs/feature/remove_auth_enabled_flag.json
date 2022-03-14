@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "30",
-  "message": "Removed sip.security.authentication.enabled flag, now only authentication provider list is necessary."
-}

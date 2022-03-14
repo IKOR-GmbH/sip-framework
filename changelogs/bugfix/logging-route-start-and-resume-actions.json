@@ -1,5 +1,0 @@
-{
-  "author": "vladiIkor",
-  "pullrequestId": 71,
-  "message": "Decorating Camel's RouteController in order to add missing logs when route is started and resumed."
-}

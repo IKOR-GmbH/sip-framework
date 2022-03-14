@@ -1,5 +1,0 @@
-{
-  "author": "vladiIkor",
-  "pullrequestId": "80",
-  "message": "Changing http response status to 200 by default if adapter health results with DOWN"
-}

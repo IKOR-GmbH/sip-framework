@@ -95,6 +95,7 @@ integration tests, such as default SIPApplicationTest, provided by archetype.
 - **[sip-integration-starter](./integration-starter.md)** - Starter project adding necessary predefined dependencies for integration adapters.
 - **[sip-starter-parent](./starter-parent.md)** - This project takes care of versions for Spring Boot and Camel dependencies.
 - **[sip-security](./security.md)** - Security in SIP framework.
+- **[sip-test-kit](./test-kit.md)** - Tool for integration testing.
 
 The following image displays how listed modules are utilized on SIP adapter where the up arrows represent inheritance,
 down arrows dependencies.
@@ -116,6 +117,7 @@ documentation.
 - **[OpenAPI Descriptor](./core.md#openapi-descriptor)** - Built-in OpenAPI.
 - **[SIP Middle component publish-subscribe](./middle-component.md#description)** - Multiple consumers on middle component.
 - **[SIP Security](./security.md)** - Includes SSL setup, base and x509 authentication
+- **[SIP Test Kit](./test-kit.md)** - Provides ability to run integration tests inside SIP adapters, define mocks for endpoints and generate test reports.
 
 ## Getting started
 
@@ -358,9 +360,14 @@ sip.core.translation.default-encoding | Sets default encoding | String | UTF-8 |
 sip.core.translation.fallback-to-system-locale | Use system language if none defined | boolean | false |
 sip.core.translation.use-code-as-default-message | If key is not assigned use it in message | boolean | true |
 sip.core.translation.lang | Set language of log messages | String | en |
+sip.core.metrics.external-endpoint-health-check.enabled | Enable health status calculation | boolean | true |
+sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay | Sets health check execution interval | number | 900000 |
+sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay | Sets health check execution initial delay | number | 5000 |
 sip.core.tracing.enabled | Enable SIP tracing and trace history | boolean | true |
 sip.core.tracing.limit | Sets storage limit in trace history | number | 100 |
+sip.core.tracing.trace-type | Sets how tracer should behave | String | "*" |
 sip.core.tracing.exchange-formatter.{property-name} | Sets value for specific property in ExchangeFormatter | / | / |
+sip.testkit.enabled | Enables SIP Test Kit | boolean | true |
 management.endpoint.health.show-details | Enable health details in actuator | String | always |
 management.endpoints.web.exposure.include | Set which endpoints are included | String | health,info,metrics,loggers,prometheus |
 springdoc.show-actuator | Show actuator API in Swagger docs| boolean | true |

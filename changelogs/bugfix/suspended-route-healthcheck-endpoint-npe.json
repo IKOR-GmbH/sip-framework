@@ -1,5 +1,0 @@
-{
-  "author": "LetoBukarica",
-  "pullrequestId": 83,
-  "message": "/actuator/health IllegalArgumentException fix when route is suspended"
-}

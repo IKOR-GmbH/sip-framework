@@ -8,7 +8,7 @@ Before getting started to develop a first adapter with SIP the following require
 
 ### Java Virtual Machine
 
-- Recommendation for using Java 8 or higher <https://www.java.com/en/download/manual.jsp>
+- Recommendation for using Java 11 or higher <https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html>
 
 ### Maven
 

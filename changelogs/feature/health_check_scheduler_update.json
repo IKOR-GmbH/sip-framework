@@ -1,5 +1,0 @@
-{
-  "author": "nikolag-ikor",
-  "pullrequestId": "37",
-  "message": "Removed health calculation from actuator health endpoint. Calculation of endpoints health is moved to health check scheduler instead."
-}

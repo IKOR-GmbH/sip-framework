@@ -1,5 +1,0 @@
-{
-  "author": "nikolag-ikor",
-  "pullrequestId": "17",
-  "message": "Added archetype parameter which provides a choice for optional including/excluding of Lombok dependency."
-}
