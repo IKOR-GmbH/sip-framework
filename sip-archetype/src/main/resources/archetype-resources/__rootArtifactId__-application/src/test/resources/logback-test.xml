@@ -9,7 +9,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoders are  by default assigned the type
              ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
-        <filter class="de.ikor.sip.testframework.workflow.reporting.resultprocessor.impl.TestKitLogbackFilter">
+        <filter class="de.ikor.sip.foundation.testkit.workflow.reporting.resultprocessor.impl.TestKitLogbackFilter">
             <loggerName>TestReportLog</loggerName>
             <OnMismatch>NEUTRAL</OnMismatch>
             <OnMatch>DENY</OnMatch>
