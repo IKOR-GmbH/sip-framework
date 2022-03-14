@@ -11,6 +11,7 @@ import org.apache.camel.ServiceStatus;
 import org.apache.camel.health.HealthCheck;
 import org.apache.camel.health.HealthCheckResultBuilder;
 import org.apache.camel.impl.health.ConsumerHealthCheck;
+import org.apache.camel.impl.health.RouteHealthCheck;
 import org.apache.camel.spi.RouteController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,4 +76,22 @@ class SIPHealthCheckTest {
     // assert
     assertThat(resultBuilder.state()).isEqualTo(HealthCheck.State.DOWN);
   }
+
+  @Test
+  void Given_RouteSuspended_When_RouteHealthCheckCall_Then_RouteDown() {
+    // arrange
+    RouteHealthCheck routeHealthCheck = mock(RouteHealthCheck.class);
+    doReturn(camelContext).when(routeHealthCheck).getCamelContext();
+    doReturn(TEST_ROUTE_NAME).when(routeHealthCheck).getId();
+    SIPHealthCheckRoute sipHealthCheckRoute = new SIPHealthCheckRoute(routeHealthCheck);
+
+    HealthCheckResultBuilder resultBuilder = HealthCheckResultBuilder.on(sipHealthCheckRoute);
+    resultBuilder.detail("route.status", ServiceStatus.Suspended.name());
+    // act
+    sipHealthCheckRoute.doCallCheck(resultBuilder, null);
+
+    // assert
+    assertThat(resultBuilder.state()).isEqualTo(HealthCheck.State.DOWN);
+  }
+
 }
