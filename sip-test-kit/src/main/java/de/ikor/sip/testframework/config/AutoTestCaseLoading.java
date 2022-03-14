@@ -22,12 +22,13 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 public class AutoTestCaseLoading {
 
   private static final String YML_TEST_CASES_PATH_PROPERTY = "sip.testkit.test-cases-path";
+  private static final String DEFAULT_TEST_CASES_LOCATION = "test-case-definition.yml";
   private static final String TEST_CASES_PROPERTIES_NAME = "TestCasesProperties";
 
   /** Adds testcases to environment */
   @Bean
   public PropertySourcesPlaceholderConfigurer testKitTests(ConfigurableEnvironment environment) {
-    String testCasePath = environment.getProperty(YML_TEST_CASES_PATH_PROPERTY);
+    String testCasePath = environment.getProperty(YML_TEST_CASES_PATH_PROPERTY, DEFAULT_TEST_CASES_LOCATION);
     Properties testCasesFromFile = loadTestsFromYMLPropertiesFile(testCasePath);
     PropertiesPropertySource testCasesPropertySource =
         new PropertiesPropertySource(TEST_CASES_PROPERTIES_NAME, testCasesFromFile);
