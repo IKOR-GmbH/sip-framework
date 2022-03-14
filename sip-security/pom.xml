@@ -7,7 +7,7 @@
         <groupId>de.ikor.sip.foundation</groupId>
         <artifactId>sip-framework</artifactId>
         <version>1.0.1-SNAPSHOT</version>
-        <relativePath>../</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>sip-security</artifactId>

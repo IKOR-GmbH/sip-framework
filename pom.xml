@@ -117,6 +117,7 @@
         <module>sip-integration-starter</module>
         <module>sip-starter-parent</module>
         <module>sip-archetype</module>
+        <module>sip-test-kit</module>
     </modules>
 
     <dependencyManagement>

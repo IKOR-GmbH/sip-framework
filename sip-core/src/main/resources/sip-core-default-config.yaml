@@ -23,8 +23,17 @@ sip.core:
         fixed-delay: 900000
         initial-delay: 5000
 
-management.endpoint.health.show-details: always
-management.endpoints.web.exposure.include: health,info,metrics,loggers,prometheus,adapter-routes
+management:
+  info:
+    camel:
+      enabled: false
+  endpoints.web.exposure.include: health,info,metrics,loggers,prometheus,adapter-routes
+  endpoint:
+    health:
+      show-details: always
+      status:
+        http-mapping:
+          down: 200
 
 springdoc:
   show-actuator: true
@@ -32,8 +41,3 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     disable-swagger-default-url: true
-
-management:
-  info:
-    camel:
-      enabled: false

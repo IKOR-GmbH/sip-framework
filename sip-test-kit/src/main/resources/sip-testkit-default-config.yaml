@@ -1,0 +1,4 @@
+sip:
+  testkit:
+    enabled: true
+    test-cases-path: test-case-definition.yml
