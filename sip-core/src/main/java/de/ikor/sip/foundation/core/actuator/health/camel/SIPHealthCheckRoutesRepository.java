@@ -17,8 +17,8 @@ public class SIPHealthCheckRoutesRepository extends RoutesHealthCheckRepository 
   public Stream<HealthCheck> stream() {
 
     return super.stream()
-        .filter(check -> check instanceof RouteHealthCheck)
-        .map(c -> (RouteHealthCheck) c)
+        .filter(RouteHealthCheck.class::isInstance)
+        .map(RouteHealthCheck.class::cast)
         .map(SIPHealthCheckRoute::new);
   }
 }

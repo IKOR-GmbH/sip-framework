@@ -16,8 +16,8 @@ public class SIPHealthCheckConsumersRepository extends ConsumersHealthCheckRepos
   @Override
   public Stream<HealthCheck> stream() {
     return super.stream()
-        .filter(check -> check instanceof ConsumerHealthCheck)
-        .map(c -> (ConsumerHealthCheck) c)
+        .filter(ConsumerHealthCheck.class::isInstance)
+        .map(ConsumerHealthCheck.class::cast)
         .map(SIPHealthCheckConsumer::new);
   }
 }
