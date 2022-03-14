@@ -81,16 +81,16 @@ test-case-definitions:
       body: "Regex expression (java) which will be compered to the reponse of the test"
       headers:
         header-key: "Regex expression (java) which will be compered to the value of this header key"
-- endpoint: "id of endpoint that is mocked" # matches endpoint with defined or default mocked behavior
-  having:
-    body: "Regex expression (java) which will be compered to the request which arrived on the endpoint"
-    headers:
-      header-key: "Regex expression (java) which will be compered to the header key value from request which arrived on the endpoint"
+  - endpoint: "id of endpoint that is mocked" # matches endpoint with defined or default mocked behavior
+    having:
+      body: "Regex expression (java) which will be compered to the request which arrived on the endpoint"
+      headers:
+        header-key: "Regex expression (java) which will be compered to the header key value from request which arrived on the endpoint"
 ```
 
 You also need to provide the location of TestCaseDefinition file to the Test Kit by setting the
 following property inside adapter configuration:
-`testCases.path: myTests.yml`
+`sip.testkit.test-cases-path: myTests.yml`
 The default value is test-case-definition.yml, so you can place your test case description under that file, 
 and skip additional setting.
 
@@ -192,9 +192,9 @@ public class SampleRestRoute extends RouteBuilder {
       with:
         body: "body of request"
     with-mocks:
-      - endpoint: "external-service" # id of endpoint that is mocked (processorId)
-        returning:
-          body: "response message from service"
+    - endpoint: "external-service" # id of endpoint that is mocked (processorId)
+      returning:
+        body: "response message from service"
     then-expect:
     - endpoint: "rest-endpoint" # matches endpoint under test
       having:
