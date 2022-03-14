@@ -57,7 +57,7 @@
     </build>
     <profiles>
         <profile>
-            <id>enforce-java-8</id>
+            <id>enforce-java-11</id>
             <build>
                 <plugins>
                     <plugin>
@@ -80,7 +80,7 @@
                                 <configuration>
                                     <rules>
                                         <enforceBytecodeVersion>
-                                            <maxJdkVersion>1.8</maxJdkVersion>
+                                            <maxJdkVersion>11</maxJdkVersion>
                                         </enforceBytecodeVersion>
                                     </rules>
                                     <fail>true</fail>
