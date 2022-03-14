@@ -3,6 +3,7 @@ de.ikor.sip.foundation.core
 de.ikor.sip.foundation.core.actuator
 de.ikor.sip.foundation.core.actuator.common
 de.ikor.sip.foundation.core.actuator.health
+de.ikor.sip.foundation.core.actuator.health.camel
 de.ikor.sip.foundation.core.actuator.health.ftp
 de.ikor.sip.foundation.core.actuator.health.http
 de.ikor.sip.foundation.core.actuator.health.jms
