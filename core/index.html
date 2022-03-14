@@ -82,6 +82,8 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#openapi-descriptor">OpenAPI Descriptor</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#sip-details-in-actuator-info-endpoint">SIP Details in actuator info endpoint</a>
+    </li>
         </ul>
     </li>
     </ul>
@@ -121,6 +123,10 @@
                 </ul>
                 <ul>
                     <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="../javadoc/2.0.0/index.html">JavaDoc 2.0.0</a>
                     </li>
                 </ul>
                 <ul>
@@ -185,6 +191,7 @@
 <li><a href="#changing-log-level-programmatically">Changing log level programmatically</a></li>
 <li><a href="#exchange-tracing">Exchange tracing</a></li>
 <li><a href="#openapi-descriptor">OpenAPI Descriptor</a></li>
+<li><a href="#sip-details-in-actuator-info-endpoint">SIP Details in actuator info endpoint</a></li>
 </ul>
 </li>
 </ul>
@@ -198,7 +205,17 @@
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
 <h3 id="actuator-health-check-and-metrics">Actuator health check and metrics<a class="headerlink" href="#actuator-health-check-and-metrics" title="Permanent link">&para;</a></h3>
 <p>SIP Core provides out-of-the-box health checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.</p>
+<p>The health check functions will be executed periodically on a set interval and will only be available if actuator's 
+HealthEndpoint is enabled.</p>
 <p>Actuator can be accessed from {base_url}/actuator</p>
+<p>To enable/disable health calculation or set its execution interval the following configuration properties are available:</p>
+<pre class="highlight"><code class="language-yaml">sip:
+  core:
+    metrics:
+      external-endpoint-health-check:
+        enabled: true
+        scheduler:
+          fixed-delay: 900000</code></pre>
 <p>To customize health checks,
 or introduce health checks for other kinds of components,
 it is as simple as implementing the EndpointHealthConfigurer interface</p>
@@ -260,8 +277,16 @@ management:
   endpoint:
     health:
       show-details: always #or when_authorized if security is in place</code></pre>
+<p><strong>Health Status Gauge</strong></p>
+<p>The calculated health status is also available as a gauge inside <code>/actuator/metrics</code>. 
+If all endpoints are healthy it returns 0, otherwise 1. 
+By default, it is named <code>sip.core.metrics.health</code>, but can be changed via configuration.</p>
+<pre class="highlight"><code class="language-yaml">sip:
+  core:
+    metrics:
+      gauge: "sip.core.metrics.health"</code></pre>
 <h3 id="dynamic-proxy-for-apache-camel-processors">Dynamic proxy for Apache Camel Processors<a class="headerlink" href="#dynamic-proxy-for-apache-camel-processors" title="Permanent link">&para;</a></h3>
-<p>Dynamic proxy is implementation of Decorator pattern on all Processors detected on all Camel routes. The base motivation
+<p>Dynamic proxy is implementation of decorator pattern on all Processors detected on all Camel routes. The base motivation
 is to gain more control over Camel dataflow, by providing placeholders for custom functionalities on different steps of
 the route. It's a mechanism for providing and applying new future features on already implemented adapters, through the
 configuration and without adapter code changes.</p>
@@ -271,9 +296,10 @@ from registry through processor's ID. ProcessorProxyRegistry can be accessed as 
 replace it with its mock. This can be achieved on any Processor on the route, including the outgoing endpoints. Mocking
 behavior with SIP can be triggered dynamically in runtime, and on single request level, leaving the original route intact and active
 all the time.</p>
-<p>To use it, header "test-mode" must be set. In that mode, proxies will try to execute preassigned mock functions.
-- <code>test-mode: "true"</code>
-While in test mode the adapter will automatically skip executing the original processor behaviour for outgoing endpoints.</p>
+<p>To use it, header "proxy-modes" must be set, which consists of a map of processorIds as keys and list of commands as value:</p>
+<ul>
+<li><code>proxy-modes: {"processorId": ["mock"]}</code></li>
+</ul>
 <p><strong>Setting mock behavior example:</strong></p>
 <pre class="highlight"><code class="language-java">@Configuration
 @AllArgsConstructor
@@ -414,6 +440,23 @@ Default limit is 100 events, but it could be changed by following configuration:
     tracing:
       enabled: true
       limit: 120 #100 by default</code></pre>
+<p>Tracing result can be checked under endpoint <code>/actuator/tracing</code>. The tracing endpoint is not included by default and 
+it can be included by extending the following list of endpoints in configuration:</p>
+<pre class="highlight"><code class="language-yaml">management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers,prometheus,adapter-routes,tracing</code></pre>
+<p>When adding tracing endpoint, please configure the entire list of endpoints listed above.</p>
+<p><strong>Selecting the traffic trace logging type:</strong></p>
+<p>When SIP tracing is enabled, by default, it will log the traffic in console on INFO level and store the messages in
+TraceHistory.
+But, through configuration only logging (LOG) or storing (MEMORY) can be selected.</p>
+<pre class="highlight"><code class="language-yaml">sip:
+  core:
+    tracing:
+      enabled: true
+      trace-type: LOG | MEMORY | "*" | LOG,MEMORY</code></pre>
 <h3 id="openapi-descriptor">OpenAPI Descriptor<a class="headerlink" href="#openapi-descriptor" title="Permanent link">&para;</a></h3>
 <p>Framework provides an Open API description of all custom or Spring provided endpoints within your adapter.
 Endpoints are created as extension of Spring's actuator.</p>
@@ -449,6 +492,31 @@ accordingly in the <code>application.yaml</code> file.</p>
     url: /adapter/api-docs #custom swagger docs set as default
     path: /swagger-ui.html</code></pre>
 <p>Based on this configuration the custom Swagger documentation is accessible by <code>/adapter/api-docs</code>.</p>
+<h3 id="sip-details-in-actuator-info-endpoint">SIP Details in actuator info endpoint<a class="headerlink" href="#sip-details-in-actuator-info-endpoint" title="Permanent link">&para;</a></h3>
+<p>Under actuator endpoint <code>/actuator/info</code> there is basic information about the adapter (<code>adapter-name</code>, <code>adapter-version</code>, 
+<code>sip-framework-version</code>).
+Additionally, there is also a list of all markdown files located in the adapter root directory, with their names and 
+content exposed.</p>
+<p>By default, a mandatory <strong>build-info</strong> maven plugin is located in the <code>pom.xml</code> of adapter's application
+module, which provides all basic information for this feature. We highly recommend using this plugin in your adapter!</p>
+<p><strong>Warning about potential issue during development:</strong></p>
+<p>There is one unpredictable problem with this feature that could happen only in your local environment and it 
+depends on IDE used for development. It is happening only after initial adapter generation and build/rebuild process
+is executed after <code>mvn clean install</code> command.</p>
+<p>Keep in mind that even if build and rebuild processes are not executed explicitly, simple running of the adapter could 
+execute them in the background, depending on IDE used.</p>
+<p>Build/rebuild processes are deleting some generated sources. In our case build-info.properties which is used for
+fetching adapter basic information is deleted.</p>
+<p>The problem itself could be resolved by doing build/rebuild explicitly before <code>mvn clean install</code>.
+Or for example in IntelliJ IDE by updating the specific settings:</p>
+<p>Uncheck "Clear Output Directory On Rebuild" field which can be found under File -&gt; Settings -&gt;
+Build, Execution, Deployment -&gt; Compiler. Keep in mind that this setup has to be done with every new adapter created
+or new IntelliJ repository used.</p>
+<p>Check the image and additional warning message by IntelliJ:</p>
+<p>"WARNING!
+If option 'Clear output directory on rebuild' is enabled, the entire contents of directories where generated sources
+are stored WILL BE CLEARED on rebuild."</p>
+<p><img alt="Image of SIP connected systems" src="./img/intellij_setting_clear_on_rebuild.png?raw=true" title="IntelliJ rebuild settings" /></p>
               
             </div>
           </div>

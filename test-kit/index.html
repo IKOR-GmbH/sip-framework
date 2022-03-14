@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="IKOR">
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>IKOR SIP Test Kit - SIP Framework Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+  <link href="../css/extra.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "IKOR SIP Test Kit";
+    var mkdocs_page_input_path = "test-kit.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> SIP Framework Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Introduction</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation Guide</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../archetype/">Archetype</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../core/">Core</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../middle-component/">Middle Component</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../integration-starter/">Integration Starter</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../starter-parent/">Starter Parent</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING/">Contribution Guidelines</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../CODE_OF_CONDUCT/">Code Of Conduct</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../changelog/">Changelog</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="../javadoc/2.0.0/index.html">JavaDoc 2.0.0</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="../javadoc/1.0.0/index.html">JavaDoc 1.0.0</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="https://ikor.one/produkt/system-integration-platform">Find out more about IKOR</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="https://ikor.one/impressum/">Impressum</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">SIP Framework Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>IKOR SIP Test Kit</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/test-kit.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="ikor-sip-test-kit">IKOR SIP Test Kit<a class="headerlink" href="#ikor-sip-test-kit" title="Permanent link">&para;</a></h1>
+<div class="toc">
+<ul>
+<li><a href="#ikor-sip-test-kit">IKOR SIP Test Kit</a></li>
+<li><a href="#description">Description</a></li>
+<li><a href="#test-kit-provides">Test Kit provides...</a><ul>
+<li><a href="#response-validation">Response validation</a></li>
+<li><a href="#external-endpoint-mocking">External endpoint mocking</a></li>
+<li><a href="#endpoint-reports">Endpoint reports</a></li>
+<li><a href="#endpoint-validation">Endpoint validation</a></li>
+<li><a href="#reports">Reports</a></li>
+</ul>
+</li>
+<li><a href="#how-to-use">How to use</a></li>
+<li><a href="#defining-a-test-case">Defining a Test Case</a><ul>
+<li><a href="#when-execute">when-execute</a></li>
+<li><a href="#with-mocks">with-mocks</a></li>
+<li><a href="#then-expect">then-expect</a></li>
+</ul>
+</li>
+<li><a href="#complete-example">Complete example</a></li>
+</ul>
+</div>
+<h1 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h1>
+<p>SIP Test Kit is a testing system designed to work with SIP integration adapters. 
+It's main purpose is to test how an adapter works internally, by mocking all external communication. 
+It executes a test workflow that is defined in a specific file format, 
+providing a possibility to create tests without code change. 
+This file format is referred to as <i><b>TestCaseDefinition</i></b>. 
+The flow itself and thus the TestCaseDefinition file is split into three phases (sections)</p>
+<li> when-execute - The test is executed by triggering one off adapter's endpoints</li>
+<li> with-mocks - All external calls are replaced with predefined mocks</li>
+<li> then-expect - The test outcome is compared with a predefined expected outcome</li>
+
+<h1 id="test-kit-provides">Test Kit provides...<a class="headerlink" href="#test-kit-provides" title="Permanent link">&para;</a></h1>
+<h2 id="response-validation">Response validation<a class="headerlink" href="#response-validation" title="Permanent link">&para;</a></h2>
+<p>Major feature of Test Kit is validation of the response from test execution.
+By adding a validation definition inside the then-expect section
+and setting that validation for the endpoint we defined in when-execute section,
+the response of the execution will be validated and a report will be displayed.</p>
+<h2 id="external-endpoint-mocking">External endpoint mocking<a class="headerlink" href="#external-endpoint-mocking" title="Permanent link">&para;</a></h2>
+<p>This feature is active whenever a test is executed via test kit.
+It will provide default behavior (forwarding the request without processing it) and mock all external endpoints.
+Adding specific behavior for each endpoint can be done in test case definition in 'with-mocks' section.</p>
+<h2 id="endpoint-reports">Endpoint reports<a class="headerlink" href="#endpoint-reports" title="Permanent link">&para;</a></h2>
+<p>Test Kit will provide reports for all mocked endpoints, both with default (set by Test Kit) and user defined behavior.
+For each test report in the 'Endpoints' section there will be an overview of request that each received.</p>
+<h2 id="endpoint-validation">Endpoint validation<a class="headerlink" href="#endpoint-validation" title="Permanent link">&para;</a></h2>
+<p>It is possible to also validate body and headers of each mocked endpoint.
+By defining desired validation inside test case definition file,
+Test Kit will validate endpoints and display reports for each.</p>
+<h2 id="reports">Reports<a class="headerlink" href="#reports" title="Permanent link">&para;</a></h2>
+<p>As mentioned each test case will be executed as its own unit test, so for each a test report will be generated
+and printed in console.
+First part of report is for the response. It will display the validated body and headers, as well as expected ones.
+The following endpoints part is for mocked endpoint reports, with similar data as in the first part.</p>
+<h1 id="how-to-use">How to use<a class="headerlink" href="#how-to-use" title="Permanent link">&para;</a></h1>
+<p>Test kit is enabled by default when the adapter is generated from archetype.</p>
+<p>A test class needs to be created inside test package of the adapter, which extends SIPBatchTest. 
+Running this class would execute the test, but also it will be executed during build time.</p>
+<pre class="highlight"><code class="language-java">public class TFWTest extends SIPBatchTest { }</code></pre>
+<p>The next step is to provide the TestCaseDefinition file in yaml format in the <code>test/resources</code> package
+(detailed description in next section):
+<pre class="highlight"><code class="language-yaml">test-case-definitions:
+- title: "Title of individual test"
+  when-execute:
+    endpoint: "id of endpoint under test"
+    with:
+      body: "Content that will be send as request body to the adapter endpoint (plain text, JSON String)"
+      headers:
+        header-key: "Value of the header"
+        another-header-key: "Another value"
+  with-mocks:
+  - endpoint: "id of endpoint that should be mocked"
+    returning:
+      body: "Response message that real endpoint is expected to return"
+  then-expect:
+  - endpoint: "id of endpoint under test" # matches endpoint under test defined in when phase
+    having:
+      body: "Regex expression (java) which will be compered to the reponse of the test"
+      headers:
+        header-key: "Regex expression (java) which will be compered to the value of this header key"
+  - endpoint: "id of endpoint that is mocked" # matches endpoint with defined or default mocked behavior
+    having:
+      body: "Regex expression (java) which will be compered to the request which arrived on the endpoint"
+      headers:
+        header-key: "Regex expression (java) which will be compered to the header key value from request which arrived on the endpoint"</code></pre></p>
+<p>You also need to provide the location of TestCaseDefinition file to the Test Kit by setting the
+following property inside adapter configuration:
+<code>sip.testkit.test-cases-path: myTests.yml</code>
+The default value is test-case-definition.yml, so you can place your test case description under that file, 
+and skip additional setting.</p>
+<p>Each test case will execute as a separate unit test with its own report displayed.</p>
+<p><img alt="alt text" src="../img/ConsoleReport.png" /></p>
+<p>To disable SIP Test Kit, the following configuration is needed:
+<pre class="highlight"><code class="language-yaml">sip:
+  testkit:
+    enabled: false</code></pre></p>
+<h1 id="defining-a-test-case">Defining a Test Case<a class="headerlink" href="#defining-a-test-case" title="Permanent link">&para;</a></h1>
+<p>The TestCaseDefinition file starts with <code>test-case-definitions</code> property, which consists of a list of test cases</p>
+<h2 id="when-execute">when-execute<a class="headerlink" href="#when-execute" title="Permanent link">&para;</a></h2>
+<p>In this section a request that should be sent to the adapter is defined.</p>
+<p>"endpoint" refers to ID (routeId in camel routes) of the endpoint to which we wish to send a test request.
+In "with" part we define content of the request we wish to send, meaning body and headers are added here.
+The body can also be defined as plain text or JSON string, which represents a POJO.</p>
+<pre class="highlight"><code class="language-yaml">    when-execute:
+      endpoint: "rest-endpoint"
+      with:
+        body: "body of request"</code></pre>
+<h2 id="with-mocks">with-mocks<a class="headerlink" href="#with-mocks" title="Permanent link">&para;</a></h2>
+<p>This section contains a list of endpoints for which we wish to have specific mocked behavior.
+"endpoint" is the endpoint ID, (processor ID in camel route) of the mocked endpoint.
+"returning" should have the body, that we expect as the response from real external call.</p>
+<pre class="highlight"><code class="language-yaml">    with-mocks:
+      - endpoint: "external-service"
+        returning:
+          body: "response message from service"</code></pre>
+<h2 id="then-expect">then-expect<a class="headerlink" href="#then-expect" title="Permanent link">&para;</a></h2>
+<p>Validation of test response is defined by setting the "endpoint" parameter to the ID of endpoint under test
+and defining the expected body or headers.</p>
+<p>Also, validation of requests, which mocks received, 
+is defined by setting the "endpoint" parameter to the ID of mocked endpoint
+and defining the expected body or headers.</p>
+<p>Body and header validation is possible by either defining regex (Java) expression or matching exact String content.</p>
+<pre class="highlight"><code class="language-yaml">    then-expect:
+      - endpoint: "rest-endpoint" # matches endpoint under test
+        having:
+          body: "response .* from service"
+          headers:
+            CamelHttpResponseCode: "200"
+      - endpoint: "external-service" # matches endpoint with mocked behavior
+        having:
+          body: "body of request"
+          headers:
+            test-mode: "true"</code></pre>
+<h1 id="complete-example">Complete example<a class="headerlink" href="#complete-example" title="Permanent link">&para;</a></h1>
+<p><strong>Sample Route</strong></p>
+<pre class="highlight"><code class="language-java">public class SampleRestRoute extends RouteBuilder {
+    public void configure() throws Exception {
+        restConfiguration().component("servlet").port("8080").host("localhost");
+
+        // Endpoint under test
+        from("rest:POST:/say/hello").routeId("rest-endpoint").to("sipmc:bridge");
+
+        from("sipmc:bridge")
+                .routeId("http-route")
+                // Mocked endpoint
+                .to("http:localhost:8081/hello?bridgeEndpoint=true") 
+                .id("external-service");
+    }
+}</code></pre>
+<p><strong>Sample test case definition</strong>
+<pre class="highlight"><code class="language-yaml">  test-case-definitions:
+  - title: "Test case 1"
+    when-execute:
+      endpoint: "rest-endpoint" # id of endpoint under test (routeId)
+      with:
+        body: "body of request"
+    with-mocks:
+    - endpoint: "external-service" # id of endpoint that is mocked (processorId)
+      returning:
+        body: "response message from service"
+    then-expect:
+    - endpoint: "rest-endpoint" # matches endpoint under test
+      having:
+        body: "response .* from service"
+        headers:
+          CamelHttpResponseCode: "200"
+    - endpoint: "external-service" # matches endpoint with mocked behavior
+      having:
+        body: "body of request"
+        headers:
+          test-mode: "true"</code></pre></p>
+<p><strong>Sample Console Report</strong></p>
+<pre class="highlight"><code>-----------------------------
+| SIP Test Execution Report |
+-----------------------------
+
+    Test "Test case 1" executed successfully.
+    Validation details:
+      Body validation successful
+      Header validation successful
+    Actual response:
+      Body: response message from service
+      Validated headers:
+      - CamelHttpResponseCode: 200
+    Expected response:
+      Body: response .* from service
+      Headers:
+      - CamelHttpResponseCode: 200
+    Endpoints:
+      Endpoint "external-service" was mocked
+      Validation successful
+      Received:
+       Body: body of request
+       Headers:
+        - test-mode: true
+      Expected:
+       Body: body of request
+       Headers:
+        - test-mode: true
+
+-----------------------------</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>© Copyright 2021, <a href="https://ikor.one">IKOR GmbH</a> & contributors</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/IKOR-GmbH/sip-framework/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../javascript/javadoc_menu_dropdown.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

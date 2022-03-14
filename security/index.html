@@ -116,6 +116,10 @@
                     </li>
                 </ul>
                 <ul>
+                    <li class="toctree-l1"><a class="" href="../javadoc/2.0.0/index.html">JavaDoc 2.0.0</a>
+                    </li>
+                </ul>
+                <ul>
                     <li class="toctree-l1"><a class="" href="../javadoc/1.0.0/index.html">JavaDoc 1.0.0</a>
                     </li>
                 </ul>
@@ -192,11 +196,12 @@ Implementing code and configuration on top of Spring Security should help you ju
     &lt;groupId&gt;de.ikor.sip.foundation&lt;/groupId&gt;
     &lt;artifactId&gt;sip-security&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+<p>SIP Security dependency is included by default when creating adapter with SIP Archetype.</p>
 <h3 id="contents">Contents<a class="headerlink" href="#contents" title="Permanent link">&para;</a></h3>
 <p>Following description shows SIP Security functionalities and configuration.</p>
 <h4 id="ssl">SSL<a class="headerlink" href="#ssl" title="Permanent link">&para;</a></h4>
-<p>SSL is by default turned off. It can be activated by setting sip.security.ssl.enabled to ture, adding server side 
-certificate and optionally setting a client certificate. If no server certificate is set, a client certificate is mandatory when turning on client SSL.</p>
+<p>SSL is by default turned off. It can be activated by setting a server side certificate or turning the client SSL explicitly 
+on and optionally setting a client certificate. If no server certificate is set a client certificate is mandatory when turning on client SSL.</p>
 <ul>
 <li>
 <p>Client (our application is consuming APIs using the provided certificate)
@@ -232,9 +237,7 @@ certificate and optionally setting a client certificate. If no server certificat
             key-store-type: pkcs12 #possible options are pkcs12, jks, jceks
             key-alias: springboot #the alias of the key to be chosen from the container
             key-password: password # we recommend to use env_vars or sealed secrets
-server:
-  ssl:
-    client-auth: want # Could be: need (client auth is mandatory), want (client auth is is wanted but not 
+            client-auth: want # Could be: need (client auth is mandatory), want (client auth is is wanted but not 
             # mandatory) and none (default)</code></pre>
   To turn the usage of the server certificate off:
   <pre class="highlight"><code class="language-yaml">sip.security:
@@ -247,7 +250,6 @@ server:
 <p>Global authentication configuration:</p>
 <pre class="highlight"><code class="language-yaml">sip.security:
     authentication:
-        enabled: true #turn on/off all authentication functionality
         disable-csrf: true
         ignored-endpoints: #a list of endpoints which are ignored by ALL authenticators based on Spring´s AntPathMatchers implementation
         - /actuator
@@ -256,7 +258,7 @@ server:
 <ul>
 <li><u>Extractors</u> (extract the relevant token from an http-requests)<ul>
 <li>BasicAuth: Extracts the BasicAuth credentials from the request</li>
-<li>X509: Extracts the X509 certificate from the request (requires server.ssl.client-auth set to need or want)</li>
+<li>X509: Extracts the X509 certificate from the request (requires sip.security.ssl.server.client-auth set to need or want)</li>
 </ul>
 </li>
 <li><u>Providers</u> (triggers a Validator to validate a given authentication)<ul>
@@ -268,7 +270,6 @@ server:
 <li>BasicAuth
   <pre class="highlight"><code class="language-yaml">sip.security:
     authentication:
-        enabled: true #turn on/off all authentication functionality
         auth-providers: #authentication functionality is enabled if valid providers are defined
             - classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationProvider
               ignored-endpoints: #a list of endpoints which are ignored by this specific authenticator based on Spring´s AntPathMatchers implementation
@@ -286,7 +287,6 @@ server:
 </li>
 <li>X509 Configuration:
     <pre class="highlight"><code class="language-yaml">sip.security:
-    enabled: true #turn on/off all authentication functionality
     authentication:
         auth-providers: #authentication functionality is enabled if valid providers are defined
             - classname: de.ikor.sip.foundation.security.authentication.x509.SIPX509AuthenticationProvider

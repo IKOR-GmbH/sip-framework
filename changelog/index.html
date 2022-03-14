@@ -96,9 +96,21 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#unreleased">[Unreleased]</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#100-2021-11-18">1.0.0 - 2021-11-18</a>
+    <li class="toctree-l2"><a class="reference internal" href="#200-2022-03-14">2.0.0 - 2022-03-14</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#major-changes">🚀 Major Changes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#features">⭐ Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#bugfixes">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#documentation">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#100-2021-11-18">1.0.0 - 2021-11-18</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#major-changes_1">🚀 Major Changes</a>
     </li>
         </ul>
     </li>
@@ -107,6 +119,10 @@
                 </ul>
                 <ul>
                     <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="../javadoc/2.0.0/index.html">JavaDoc 2.0.0</a>
                     </li>
                 </ul>
                 <ul>
@@ -161,8 +177,71 @@
 <p>All notable changes to this project will be documented in this file.</p>
 <h2 id="unreleased">[Unreleased]<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
 <p>For unreleased changelogs look into the <a href="./changelogs">changelogs</a> directory</p>
-<h2 id="100-2021-11-18">1.0.0 - 2021-11-18<a class="headerlink" href="#100-2021-11-18" title="Permanent link">&para;</a></h2>
+<h2 id="200-2022-03-14">2.0.0 - 2022-03-14<a class="headerlink" href="#200-2022-03-14" title="Permanent link">&para;</a></h2>
 <h3 id="major-changes">🚀 Major Changes<a class="headerlink" href="#major-changes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Java version updated from 8 to 11.
+Camel version updated from 3.8.0 to 3.14.0.
+Spring Boot version updated from 2.3.9.RELEASE to 2.6.1.
+Camel's configuration properties were changed. Full list can be found in <a href="https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-3x-upgrade-guide-3_10.adoc">official documentation</a>.
+When upgrading a SIP Adapter with framework version 1.0.0 the following must be changed as it had a default value inside SIP Archetype from <code>camel.component.servlet.mapping.context-path</code> to <code>camel.servlet.mapping.context-path</code>. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/55">#55</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
+</ul>
+<h3 id="features">⭐ Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Implementation for actuator info endpoint to expose the basic adapter data and markdown files <a href="https://github.com/IKOR-GmbH/sip-framework/pull/51">#51</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
+<li>Added changelog.md and adapter-description.md <a href="https://github.com/IKOR-GmbH/sip-framework/pull/41">#41</a> by <a href="https://github.com/Dzuci">Dzuci</a></li>
+<li>Implementation of packaging markdown files in jar file. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/57">#57</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
+<li>Add application.yaml with spring profile to test resources in archetype <a href="https://github.com/IKOR-GmbH/sip-framework/pull/84">#84</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>SIP Test Kit module is added supporting rest-rest adapter testing <a href="https://github.com/IKOR-GmbH/sip-framework/pull/73">#73</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
+<li>Adding SIP Security to Integration starter and its configuration template to the SIP Archetype application.yaml <a href="https://github.com/IKOR-GmbH/sip-framework/pull/70">#70</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
+<li>Refactoring of core proxy unit tests. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/67">#67</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
+<li>Added trace-type configuration parameter to handle tracing options <a href="https://github.com/IKOR-GmbH/sip-framework/pull/56">#56</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Adding sip.security.ssl.enabled switch with false default value <a href="https://github.com/IKOR-GmbH/sip-framework/pull/60">#60</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
+<li>Changing http response status to 200 by default if adapter health results with DOWN <a href="https://github.com/IKOR-GmbH/sip-framework/pull/80">#80</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
+<li>Removed health calculation from actuator health endpoint. Calculation of endpoints health is moved to health check scheduler instead. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/37">#37</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
+<li>Added archetype parameter which provides a choice for optional including/excluding of Lombok dependency. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/17">#17</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
+<li>Added default mock function (NOOP) to outgoing processors <a href="https://github.com/IKOR-GmbH/sip-framework/pull/58">#58</a> by <a href="https://github.com/LetoBukarica">LetoBukarica</a></li>
+<li>Added ProcessorProxy as parameter in ProxyExtension methods <a href="https://github.com/IKOR-GmbH/sip-framework/pull/64">#64</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Refactored actuator unit tests <a href="https://github.com/IKOR-GmbH/sip-framework/pull/36">#36</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Refactored security unit tests <a href="https://github.com/IKOR-GmbH/sip-framework/pull/43">#43</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Refactored sipmc unit tests <a href="https://github.com/IKOR-GmbH/sip-framework/pull/42">#42</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Refactored trace unit tests <a href="https://github.com/IKOR-GmbH/sip-framework/pull/35">#35</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Refactored translate unit tests <a href="https://github.com/IKOR-GmbH/sip-framework/pull/38">#38</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Refactored util unit tests <a href="https://github.com/IKOR-GmbH/sip-framework/pull/39">#39</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Removed sip.security.authentication.enabled flag, now only authentication provider list is necessary. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/30">#30</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Implementation for enhanced user experience while creating proxy mocks. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/66">#66</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
+<li>Added descriptions for operations and parameters in custom actuator endpoints <a href="https://github.com/IKOR-GmbH/sip-framework/pull/32">#32</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Updated swagger documentation, added descriptions for possible operations on routes. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/3">#3</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Updated Apache Camel version to 3.13.0 <a href="https://github.com/IKOR-GmbH/sip-framework/pull/24">#24</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+</ul>
+<h3 id="bugfixes">🐞 Bugfixes<a class="headerlink" href="#bugfixes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Changing access level of AdapterRouteDetails class to public <a href="https://github.com/IKOR-GmbH/sip-framework/pull/59">#59</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
+<li>GroupId is added to archetype generated application/pom.xml <a href="https://github.com/IKOR-GmbH/sip-framework/pull/79">#79</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
+<li>Adding sip.security.ssl.server.client-auth config key to sip-security <a href="https://github.com/IKOR-GmbH/sip-framework/pull/19">#19</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
+<li>Excluding Spring security auto-config classes to prevent default authentication <a href="https://github.com/IKOR-GmbH/sip-framework/pull/20">#20</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
+<li>Enabled adapter-routes to be present in actuator endpoint by default <a href="https://github.com/IKOR-GmbH/sip-framework/pull/25">#25</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Enabled SpringBoot AutoConfiguration for the Core package <a href="https://github.com/IKOR-GmbH/sip-framework/pull/62">#62</a> by <a href="https://github.com/MartinBuchheimIkor">MartinBuchheimIkor</a></li>
+<li>Fixed unit tests that fails while running 'mvn install' <a href="https://github.com/IKOR-GmbH/sip-framework/pull/44">#44</a> by <a href="https://github.com/Nemicore">Nemicore</a></li>
+<li>Adding relative path of adapter's parent in root pom <a href="https://github.com/IKOR-GmbH/sip-framework/pull/75">#75</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
+<li>Updated HealthCheckEnabledCondition to match when HealthEndpoint is enabled <a href="https://github.com/IKOR-GmbH/sip-framework/pull/54">#54</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Decorating Camel's RouteController in order to add missing logs when route is started and resumed. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/71">#71</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
+<li>Refactored scheduler to be active if property is set to true and HealthEndpoint is enabled <a href="https://github.com/IKOR-GmbH/sip-framework/pull/45">#45</a> by <a href="https://github.com/Nemicore">Nemicore</a></li>
+<li>Enabled SIP SecurityConfig always - removed the @ConditionalOnSIPSecurityAuthenticationEnabled <a href="https://github.com/IKOR-GmbH/sip-framework/pull/65">#65</a> by <a href="https://github.com/LetoBukarica">LetoBukarica</a></li>
+<li>/actuator/health IllegalArgumentException fix when route is suspended <a href="https://github.com/IKOR-GmbH/sip-framework/pull/83">#83</a> by <a href="https://github.com/LetoBukarica">LetoBukarica</a></li>
+<li>maven-enforcer-plugin configuration updated according to java version update <a href="https://github.com/IKOR-GmbH/sip-framework/pull/82">#82</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
+</ul>
+<h3 id="documentation">📔 Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added docs-snapshot directory for documenting unreleased features <a href="https://github.com/IKOR-GmbH/sip-framework/pull/52">#52</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Added mvn command for creating an archetype on Windows machines <a href="https://github.com/IKOR-GmbH/sip-framework/pull/23">#23</a> by <a href="https://github.com/dzuci">dzuci</a></li>
+<li>Add documentation for enabling /actuator/tracing endpoint. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/63">#63</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
+<li>Removed adapter-name from endpoint naming convention <a href="https://github.com/IKOR-GmbH/sip-framework/pull/33">#33</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Fixed missing bad html escaping within main readme file. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/22">#22</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
+<li>Removed archetype duplicates in installation.md <a href="https://github.com/IKOR-GmbH/sip-framework/pull/40">#40</a> by <a href="https://github.com/dzuci">dzuci</a></li>
+</ul>
+<h2 id="100-2021-11-18">1.0.0 - 2021-11-18<a class="headerlink" href="#100-2021-11-18" title="Permanent link">&para;</a></h2>
+<h3 id="major-changes_1">🚀 Major Changes<a class="headerlink" href="#major-changes_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li>This is the initial version of the SIP framework. For more information on how to use it and details about features, please refer to the README and to our documentation on https://ikor-gmbh.github.io/sip-framework/. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/15">#15</a> by <a href="https://github.com/dannikore">dannikore</a></li>
 </ul>

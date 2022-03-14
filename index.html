@@ -126,6 +126,10 @@
                     </li>
                 </ul>
                 <ul>
+                    <li class="toctree-l1"><a class="" href="javadoc/2.0.0/index.html">JavaDoc 2.0.0</a>
+                    </li>
+                </ul>
+                <ul>
                     <li class="toctree-l1"><a class="" href="javadoc/1.0.0/index.html">JavaDoc 1.0.0</a>
                     </li>
                 </ul>
@@ -269,6 +273,7 @@ integration tests, such as default SIPApplicationTest, provided by archetype.</p
 <li><strong><a href="integration-starter/">sip-integration-starter</a></strong> - Starter project adding necessary predefined dependencies for integration adapters.</li>
 <li><strong><a href="starter-parent/">sip-starter-parent</a></strong> - This project takes care of versions for Spring Boot and Camel dependencies.</li>
 <li><strong><a href="security/">sip-security</a></strong> - Security in SIP framework.</li>
+<li><strong><a href="test-kit/">sip-test-kit</a></strong> - Tool for integration testing.</li>
 </ul>
 <p>The following image displays how listed modules are utilized on SIP adapter where the up arrows represent inheritance,
 down arrows dependencies.</p>
@@ -287,6 +292,7 @@ documentation.</p>
 <li><strong><a href="core/#openapi-descriptor">OpenAPI Descriptor</a></strong> - Built-in OpenAPI.</li>
 <li><strong><a href="middle-component/#description">SIP Middle component publish-subscribe</a></strong> - Multiple consumers on middle component.</li>
 <li><strong><a href="security/">SIP Security</a></strong> - Includes SSL setup, base and x509 authentication</li>
+<li><strong><a href="test-kit/">SIP Test Kit</a></strong> - Provides ability to run integration tests inside SIP adapters, define mocks for endpoints and generate test reports.</li>
 </ul>
 <h2 id="getting-started">Getting started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <p>Before development, check the following <a href="installation/">Installation guide</a>.</p>
@@ -510,6 +516,24 @@ file with desired values.</p>
 <td>en</td>
 </tr>
 <tr>
+<td>sip.core.metrics.external-endpoint-health-check.enabled</td>
+<td>Enable health status calculation</td>
+<td>boolean</td>
+<td>true</td>
+</tr>
+<tr>
+<td>sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay</td>
+<td>Sets health check execution interval</td>
+<td>number</td>
+<td>900000</td>
+</tr>
+<tr>
+<td>sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay</td>
+<td>Sets health check execution initial delay</td>
+<td>number</td>
+<td>5000</td>
+</tr>
+<tr>
 <td>sip.core.tracing.enabled</td>
 <td>Enable SIP tracing and trace history</td>
 <td>boolean</td>
@@ -522,10 +546,22 @@ file with desired values.</p>
 <td>100</td>
 </tr>
 <tr>
+<td>sip.core.tracing.trace-type</td>
+<td>Sets how tracer should behave</td>
+<td>String</td>
+<td>"*"</td>
+</tr>
+<tr>
 <td>sip.core.tracing.exchange-formatter.{property-name}</td>
 <td>Sets value for specific property in ExchangeFormatter</td>
 <td>/</td>
 <td>/</td>
+</tr>
+<tr>
+<td>sip.testkit.enabled</td>
+<td>Enables SIP Test Kit</td>
+<td>boolean</td>
+<td>true</td>
 </tr>
 <tr>
 <td>management.endpoint.health.show-details</td>
@@ -644,5 +680,5 @@ file with desired values.</p>
 
 <!--
 MkDocs version : 1.2.3
-Build Date UTC : 2022-02-22 15:08:33.246323+00:00
+Build Date UTC : 2022-03-14 15:58:50.363457+00:00
 -->
