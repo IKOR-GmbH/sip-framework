@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.testkit.workflow.thenphase.validator;
 
-import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
-import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationType;
+import de.ikor.sip.testframework.workflow.TestExecutionStatus;
 
 /** Parent class for test result validators */
 public interface TestCaseValidator {
@@ -15,19 +14,12 @@ public interface TestCaseValidator {
   void validate(TestExecutionStatus testExecutionStatus);
 
   /**
-   * SIP internal interface, used to separate runtime from batch tests.
-   *
-   * @return Returns validation type this validator performs
-   */
-  ValidationType getValidationType();
-
-  /**
    * Is a validator applicable for a test case based on parameters
    *
-   * @param validationType {@link ValidationType}
-   * @return true if the validator is applicable, false otherwise
+   * @return true if the validator is applicable, false otherwise and as default. Default value
+   *     forces new implementation to think about usage of the validator.
    */
-  default boolean isApplicable(ValidationType validationType) {
-    return validationType.equals(getValidationType());
+  default boolean isApplicable() {
+    return false;
   }
 }

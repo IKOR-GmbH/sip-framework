@@ -1,19 +1,17 @@
 package de.ikor.sip.foundation.testkit.config;
 
-import static de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationType.FULL;
 import static java.util.stream.Collectors.toList;
 
-import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseBatchDefinition;
-import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
-import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
-import de.ikor.sip.foundation.testkit.exception.handler.ExceptionLogger;
-import de.ikor.sip.foundation.testkit.workflow.TestCase;
-import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
-import de.ikor.sip.foundation.testkit.workflow.givenphase.MockFactory;
-import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationType;
-import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.TestValidatorFactory;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.ExecutionWrapper;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.executor.Executor;
+import de.ikor.sip.testframework.configurationproperties.TestCaseBatchDefinition;
+import de.ikor.sip.testframework.configurationproperties.TestCaseDefinition;
+import de.ikor.sip.testframework.configurationproperties.models.EndpointProperties;
+import de.ikor.sip.testframework.exception.handler.ExceptionLogger;
+import de.ikor.sip.testframework.workflow.TestCase;
+import de.ikor.sip.testframework.workflow.givenphase.Mock;
+import de.ikor.sip.testframework.workflow.givenphase.MockFactory;
+import de.ikor.sip.testframework.workflow.thenphase.validator.TestCaseValidator;
+import de.ikor.sip.testframework.workflow.whenphase.ExecutionWrapper;
+import de.ikor.sip.testframework.workflow.whenphase.executor.Executor;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +32,7 @@ public class TestCasesConfig {
   private final Executor executor;
   private final MockFactory mockFactory;
   private final CamelContext camelContext;
-  private final TestValidatorFactory validatorFactory;
+  private final TestCaseValidator testCaseValidator;
   private final TestExecutionStatusFactory executionStatusFactory;
   private final TestCaseBatchDefinition testCaseBatchDefinition;
 
@@ -48,7 +46,7 @@ public class TestCasesConfig {
     List<TestCase> testCases = new LinkedList<>();
     for (TestCaseDefinition testCaseDefinition : testCaseBatchDefinition.getTestCaseDefinitions()) {
       try {
-        testCases.add(generateTestCase(testCaseDefinition, FULL));
+        testCases.add(generateTestCase(testCaseDefinition));
       } catch (Exception e) {
         ExceptionLogger.logTestCaseException(e, testCaseDefinition.getTitle());
       }
@@ -61,11 +59,9 @@ public class TestCasesConfig {
    * Creation and initialisation of a single test case from a definition.
    *
    * @param testCaseDefinition Definition of a single test case {@link TestCaseDefinition}
-   * @param validationType type of validation that should be used {@link ValidationType}
    * @return a new test case {@link TestCase}
    */
-  public TestCase generateTestCase(
-      TestCaseDefinition testCaseDefinition, ValidationType validationType) {
+  public TestCase generateTestCase(TestCaseDefinition testCaseDefinition) {
     validateTestDefinition(testCaseDefinition);
     String testName = testCaseDefinition.getTitle();
 
@@ -85,7 +81,7 @@ public class TestCasesConfig {
         testName,
         mocks,
         executionWrapper,
-        validatorFactory.getValidator(FULL),
+        testCaseValidator,
         executionStatusFactory.generateTestReport(testCaseDefinition));
   }
 

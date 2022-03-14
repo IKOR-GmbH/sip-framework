@@ -1,13 +1,12 @@
 package de.ikor.sip.foundation.testkit.workflow.thenphase.validator.impl;
 
-import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
-import de.ikor.sip.foundation.testkit.workflow.reporting.model.EndpointValidationOutcome;
-import de.ikor.sip.foundation.testkit.workflow.reporting.model.MockReport;
-import de.ikor.sip.foundation.testkit.workflow.reporting.model.SIPAdapterExecutionReport;
-import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
-import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationType;
-import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.ExchangeValidator;
-import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.TestCaseValidator;
+import de.ikor.sip.testframework.workflow.TestExecutionStatus;
+import de.ikor.sip.testframework.workflow.reporting.model.EndpointValidationOutcome;
+import de.ikor.sip.testframework.workflow.reporting.model.MockReport;
+import de.ikor.sip.testframework.workflow.reporting.model.SIPAdapterExecutionReport;
+import de.ikor.sip.testframework.workflow.thenphase.result.ValidationResult;
+import de.ikor.sip.testframework.workflow.thenphase.validator.ExchangeValidator;
+import de.ikor.sip.testframework.workflow.thenphase.validator.TestCaseValidator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,11 +22,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class CamelTestCaseValidator implements TestCaseValidator {
   private final List<ExchangeValidator> exchangeValidators;
-
-  @Override
-  public ValidationType getValidationType() {
-    return ValidationType.FULL;
-  }
 
   /** Validates actual of test execution and forwards it to report service */
   @Override
@@ -110,5 +104,10 @@ public class CamelTestCaseValidator implements TestCaseValidator {
     }
 
     return validationResults;
+  }
+
+  @Override
+  public boolean isApplicable() {
+    return true;
   }
 }

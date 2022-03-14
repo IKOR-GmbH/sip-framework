@@ -4,13 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
-import de.ikor.sip.foundation.testkit.workflow.reporting.model.EndpointValidationOutcome;
-import de.ikor.sip.foundation.testkit.workflow.reporting.model.MockReport;
-import de.ikor.sip.foundation.testkit.workflow.reporting.model.SIPAdapterExecutionReport;
-import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
-import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationType;
-import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.ExchangeValidator;
+import de.ikor.sip.testframework.workflow.TestExecutionStatus;
+import de.ikor.sip.testframework.workflow.reporting.model.EndpointValidationOutcome;
+import de.ikor.sip.testframework.workflow.reporting.model.MockReport;
+import de.ikor.sip.testframework.workflow.reporting.model.SIPAdapterExecutionReport;
+import de.ikor.sip.testframework.workflow.thenphase.result.ValidationResult;
+import de.ikor.sip.testframework.workflow.thenphase.validator.ExchangeValidator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,12 +51,6 @@ class CamelTestCaseValidatorTest {
     when(actualMessage.getHeaders()).thenReturn(new HashMap<>());
     when(expectedMessage.getHeaders()).thenReturn(new HashMap<>());
     when(exchangeValidator.isApplicable(actual, expected)).thenReturn(true);
-  }
-
-  @Test
-  void When_getValidationType_Expect_ValidationFULL() {
-    // act + assert
-    assertThat(subject.getValidationType()).isEqualTo(ValidationType.FULL);
   }
 
   @Test
