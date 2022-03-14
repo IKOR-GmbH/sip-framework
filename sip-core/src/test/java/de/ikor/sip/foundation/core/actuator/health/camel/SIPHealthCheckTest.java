@@ -93,5 +93,4 @@ class SIPHealthCheckTest {
     // assert
     assertThat(resultBuilder.state()).isEqualTo(HealthCheck.State.DOWN);
   }
-
 }
