@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.testkit.workflow.thenphase.validator;
 
-import de.ikor.sip.testframework.workflow.TestExecutionStatus;
+
+import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
 
 /** Parent class for test result validators */
 public interface TestCaseValidator {
