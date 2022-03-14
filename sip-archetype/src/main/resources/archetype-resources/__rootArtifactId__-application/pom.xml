@@ -10,6 +10,7 @@
         <relativePath/>
     </parent>
 
+    <groupId>${groupId}</groupId>
     <artifactId>${artifactId}</artifactId>
     <name>${projectName}</name>
     <version>${version}</version>
