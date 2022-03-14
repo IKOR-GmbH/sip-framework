@@ -1,0 +1,5 @@
+{
+  "author": "nikolag-ikor",
+  "pullrequestId": "55",
+  "message": "Java version updated from 8 to 11.\nCamel version updated from 3.8.0 to 3.14.0.\nSpring Boot version updated from 2.3.0.RELEASE to 2.6.1.\nCamel's configuration properties were changed. Full list can be found in [official documentation](https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-3x-upgrade-guide-3_10.adoc).\nThe following must be updated as it had a default value inside SIP Archetype from `camel.component.servlet.mapping.context-path` to `camel.servlet.mapping.context-path`\n"
+}
