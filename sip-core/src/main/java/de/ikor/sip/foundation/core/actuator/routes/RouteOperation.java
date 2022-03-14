@@ -3,32 +3,32 @@ package de.ikor.sip.foundation.core.actuator.routes;
 import de.ikor.sip.foundation.core.actuator.common.IntegrationManagementException;
 import java.util.Arrays;
 import java.util.Optional;
-import org.apache.camel.CamelContext;
-import org.apache.camel.spi.RouteController;
 
 enum RouteOperation {
-  START("start", RouteController::startRoute),
-  STOP("stop", RouteController::stopRoute),
-  SUSPEND("suspend", RouteController::suspendRoute),
-  RESUME("resume", RouteController::resumeRoute);
+  START("start", RouteControllerLoggingDecorator::startRoute),
+  STOP("stop", RouteControllerLoggingDecorator::stopRoute),
+  SUSPEND("suspend", RouteControllerLoggingDecorator::suspendRoute),
+  RESUME("resume", RouteControllerLoggingDecorator::resumeRoute);
 
-  RouteOperation(String operationId, CheckedBiConsumer<RouteController, String> routeIdConsumer) {
+  RouteOperation(
+      String operationId,
+      CheckedBiConsumer<RouteControllerLoggingDecorator, String> routeIdConsumer) {
     this.operationId = operationId;
     this.routeConsumer = routeIdConsumer;
   }
 
   private final String operationId;
-  private final CheckedBiConsumer<RouteController, String> routeConsumer;
+  private final CheckedBiConsumer<RouteControllerLoggingDecorator, String> routeConsumer;
 
   /**
    * Executes a route operation
    *
-   * @param ctx CamelContext
+   * @param routeController CamelContext
    * @param routeId Id of the route
    */
-  public void execute(CamelContext ctx, String routeId) {
+  public void execute(RouteControllerLoggingDecorator routeController, String routeId) {
     try {
-      routeConsumer.consume(ctx.getRouteController(), routeId);
+      routeConsumer.consume(routeController, routeId);
     } catch (Exception e) {
       throw new IntegrationManagementException(
           "Cannot execute " + name() + " for route " + routeId, e);

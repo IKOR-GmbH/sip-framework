@@ -1,18 +1,17 @@
 package de.ikor.sip.foundation.core.actuator.routes;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
-import java.util.Arrays;
+import java.util.Collections;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Route;
 import org.apache.camel.api.management.ManagedCamelContext;
 import org.apache.camel.api.management.mbean.ManagedRouteMBean;
-import org.apache.camel.spi.RouteController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -22,16 +21,21 @@ class AdapterRouteEndpointTest {
   private static final String ROUTE_ID = "test";
   private static final String SIPMC_ROUTE_URI = "sipmc:test";
 
-  private CamelContext context;
+  private CamelContext camelContext;
   private AdapterRouteEndpoint subject;
   private ManagedCamelContext managedCamelContext;
   private ManagedRouteMBean managedRoute;
 
   @BeforeEach
   void setUp() {
-    context = mock(CamelContext.class);
+    RouteControllerLoggingDecorator routeControllerLoggingDecorator;
+    routeControllerLoggingDecorator =
+        mock(RouteControllerLoggingDecorator.class, CALLS_REAL_METHODS);
+    camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
+    when(camelContext.getRoute(anyString()).getEndpoint().getEndpointUri()).thenReturn("");
     managedCamelContext = mock(ManagedCamelContext.class);
-    subject = new AdapterRouteEndpoint(context);
+    ReflectionTestUtils.setField(routeControllerLoggingDecorator, "ctx", camelContext);
+    subject = new AdapterRouteEndpoint(camelContext, routeControllerLoggingDecorator);
   }
 
   @Test
@@ -51,7 +55,7 @@ class AdapterRouteEndpointTest {
     // arrange
     mockManagedRoute();
     Route route = getMockedRoute();
-    when(context.getRoutes()).thenReturn(Arrays.asList(route));
+    when(camelContext.getRoutes()).thenReturn(Collections.singletonList(route));
     ReflectionTestUtils.setField(subject, "mbeanContext", managedCamelContext);
 
     // assert
@@ -76,7 +80,7 @@ class AdapterRouteEndpointTest {
     subject.resetSipmcRoute();
 
     // assert
-    verify(context, times(1)).getRoutes();
+    verify(camelContext, times(1)).getRoutes();
     verify(managedCamelContext, times(1)).getManagedRoute(ROUTE_ID);
     verify(managedRoute, times(1)).reset();
   }
@@ -92,9 +96,6 @@ class AdapterRouteEndpointTest {
 
   @Test
   void When_ExecutingOperationsOnRoute_Expect_getRouteControllerCalledForEachOperation() {
-    // arrange
-    when(context.getRouteController()).thenReturn(mock(RouteController.class));
-
     // act
     subject.execute(ROUTE_ID, "stop");
     subject.execute(ROUTE_ID, "start");
@@ -102,7 +103,7 @@ class AdapterRouteEndpointTest {
     subject.execute(ROUTE_ID, "resume");
 
     // assert
-    verify(context, times(4)).getRouteController();
+    verify(camelContext, times(4)).getRouteController();
   }
 
   @Test
@@ -110,13 +111,12 @@ class AdapterRouteEndpointTest {
       throws Exception {
     // arrange
     mockRoutesInContext();
-    when(context.getRouteController()).thenReturn(mock(RouteController.class));
     // act
     subject.resumeAll();
 
     // assert
-    verify(context, times(1)).getRoutes();
-    verify(context, times(1)).getRouteController();
+    verify(camelContext, times(1)).getRoutes();
+    verify(camelContext, times(1)).getRouteController();
   }
 
   @Test
@@ -124,17 +124,16 @@ class AdapterRouteEndpointTest {
       throws Exception {
     // arrange
     mockRoutesInContext();
-    when(context.getRouteController()).thenReturn(mock(RouteController.class));
 
     // act
     subject.suspendAll();
 
     // assert
-    verify(context, times(1)).getRoutes();
-    verify(context, times(1)).getRouteController();
+    verify(camelContext, times(1)).getRoutes();
+    verify(camelContext, times(1)).getRouteController();
   }
 
-  private Route getMockedRoute() throws Exception {
+  private Route getMockedRoute() {
     Route route = mock(Route.class);
     when(route.getRouteId()).thenReturn(ROUTE_ID);
     return route;
@@ -149,7 +148,7 @@ class AdapterRouteEndpointTest {
     when(managedRoute.getExchangesFailed()).thenReturn((long) 0);
     when(managedRoute.getExchangesInflight()).thenReturn((long) 0);
     when(managedCamelContext.getManagedRoute(anyString())).thenReturn(managedRoute);
-    when(context.getExtension(any())).thenReturn(managedCamelContext);
+    when(camelContext.getExtension(any())).thenReturn(managedCamelContext);
   }
 
   private void mockRoutesInContext() throws Exception {
@@ -158,7 +157,7 @@ class AdapterRouteEndpointTest {
     Endpoint mockEndpoint = mock(Endpoint.class);
     when(route.getEndpoint()).thenReturn(mockEndpoint);
     when(mockEndpoint.getEndpointUri()).thenReturn(SIPMC_ROUTE_URI);
-    when(context.getRoutes()).thenReturn(Arrays.asList(route));
+    when(camelContext.getRoutes()).thenReturn(Collections.singletonList(route));
     ReflectionTestUtils.setField(subject, "mbeanContext", managedCamelContext);
   }
 }
