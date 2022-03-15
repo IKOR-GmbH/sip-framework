@@ -19,7 +19,7 @@ public class SIPAlwaysAllowValidator<T extends SIPAuthenticationToken<T>>
 
   @Override
   public boolean isValid(T token) {
-    log.warn("Always allow validation allows request without further checks!");
+    log.warn("sip.security.alwaysvalid");
     return true;
   }
 }

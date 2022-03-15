@@ -55,7 +55,7 @@ public abstract class SIPAuthenticationProvider<T extends SIPAuthenticationToken
     if (!validatedToken.isAuthenticated()) {
       if (log.isDebugEnabled()) {
         log.debug(
-            "Authentication was not successful for authtoken of type: {}",
+            "sip.security.authtokenunsuccessful_{}",
             authentication.getClass());
       }
       throw new BadCredentialsException("Authentication was not successful");

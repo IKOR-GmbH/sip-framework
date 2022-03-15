@@ -27,7 +27,7 @@ public class TestRunner {
     try {
       testCase.run();
     } catch (Exception e) {
-      log.error("An error occurred while performing test {}.", testCase.getTestName());
+      log.error("sip.testkit.workflow.testrunerror_{}", testCase.getTestName());
       testCase.reportExecutionException(e);
     } finally {
       testCase.clearMocks();

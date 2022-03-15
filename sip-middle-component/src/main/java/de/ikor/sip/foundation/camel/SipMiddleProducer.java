@@ -39,7 +39,7 @@ public class SipMiddleProducer extends DefaultProducer {
 
   @Override
   public void process(Exchange exchange) throws Exception {
-    log.debug("Processing exchange {} sending it to the target producer", exchange);
+    log.debug("sip.mc.processexchange_{}", exchange);
     // additional logic
     producer.process(exchange);
   }

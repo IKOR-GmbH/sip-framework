@@ -25,7 +25,7 @@ public class ExceptionLogger {
    * @param testCaseName name of TestCase
    */
   public static void logTestCaseException(Exception e, String testCaseName) {
-    log.error("Error occurred during initialization of test case: {}", testCaseName);
+    log.error("sip.testkit.exception.testcaseinit_{}", testCaseName);
     log.error("Exception: {}", e.getClass().toString());
     log.error("Message: {}", e.getMessage());
   }
