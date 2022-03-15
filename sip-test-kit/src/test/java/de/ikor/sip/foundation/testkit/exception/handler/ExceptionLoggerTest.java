@@ -43,7 +43,7 @@ class ExceptionLoggerTest {
     List<ILoggingEvent> logsList = listAppender.list;
 
     assertEquals(
-        "Error occurred during initialization of test case: {}", logsList.get(0).getMessage());
+        "sip.testkit.exception.testcaseinit_{}", logsList.get(0).getMessage());
     assertEquals(Level.ERROR, logsList.get(0).getLevel());
 
     assertEquals("Exception: {}", logsList.get(1).getMessage());
