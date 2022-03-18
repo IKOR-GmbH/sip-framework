@@ -97,7 +97,7 @@ and skip additional setting.
 
 Each test case will execute as a separate unit test with its own report displayed.
 
-<img alt="Console Report" src="../img/ConsoleReport.png" width="100"/>
+![alt-text](./img/ConsoleReport.png)
 
 To disable SIP Test Kit, the following configuration is needed:
 ```yaml
