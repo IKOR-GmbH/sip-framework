@@ -11,9 +11,10 @@ providing a possibility to create tests without code change.
 This file format is referred to as <i><b>TestCaseDefinition</i></b>. 
 The flow itself and thus the TestCaseDefinition file is split into three phases (sections)
 
-<li> when-execute - The test is executed by triggering one off adapter's endpoints</li> 
-<li> with-mocks - All external calls are replaced with predefined mocks</li>
-<li> then-expect - The test outcome is compared with a predefined expected outcome</li>
+- when-execute - The test is executed by triggering one off adapter's endpoints
+- with-mocks - All external calls are replaced with predefined mocks
+- then-expect - The test outcome is compared with a predefined expected outcome
+
 
 # Test Kit provides...
 
@@ -96,7 +97,7 @@ and skip additional setting.
 
 Each test case will execute as a separate unit test with its own report displayed.
 
-![alt text](./img/ConsoleReport.png)
+<img alt="Console Report" src="../img/ConsoleReport.png" width="100"/>
 
 To disable SIP Test Kit, the following configuration is needed:
 ```yaml
