@@ -126,57 +126,6 @@ sip:
       gauge: "sip.core.metrics.health"
 ```
 
-
-### Dynamic proxy for Apache Camel Processors
-
-Dynamic proxy is implementation of decorator pattern on all Processors detected on all Camel routes. The base motivation
-is to gain more control over Camel dataflow, by providing placeholders for custom functionalities on different steps of
-the route. It's a mechanism for providing and applying new future features on already implemented adapters, through the
-configuration and without adapter code changes.
-
-During Camel route creation Processor Proxies are created and registered in ProcessorProxyRegistry. They can be accessed
-from registry through processor's ID. ProcessorProxyRegistry can be accessed as a spring bean or as an extension of CamelContext.
-
-The main feature for now is mock, which sets new behavior of a Camel processor and instead of using the real processor
-replace it with its mock. This can be achieved on any Processor on the route, including the outgoing endpoints. Mocking
-behavior with SIP can be triggered dynamically in runtime, and on single request level, leaving the original route intact and active
-all the time.
-
-To use it, header "proxy-modes" must be set, which consists of a map of processorIds as keys and list of commands as value:
-
-- `proxy-modes: {"processorId": ["mock"]}`
-
-**Setting mock behavior example:**
-
-```java
-@Configuration
-@AllArgsConstructor
-public class MockConfiguration {
-  private ProcessorProxyRegistry proxyRegistry;
-  private PropertiesComponent propsComponent;
-
-  @EventListener(ApplicationReadyEvent.class)
-  public void mockProcessorBehavior() {
-    Optional<String> prop =
-            propsComponent.resolveProperty("endpoint.out.partner.their-assurance-co.id");
-    String processorId = prop.orElseThrow(IllegalArgumentException::new/*Define your exception routine*/);
-
-    ProcessorProxy proxy =
-            proxyRegistry
-                    .getProxy(processorId)
-                    .orElseThrow(
-                            () ->
-                                    new RuntimeException(
-                                            format("There is no %s proxy in the application", processorId)));
-    proxy.mock(
-            exchange -> {
-              /*define mock behavior*/
-              return exchange;
-            });
-  }
-}
-```
-
 ### Working with routes in runtime
 
 All routes with basic info can be listed by using the following URI:

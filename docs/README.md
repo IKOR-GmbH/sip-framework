@@ -109,7 +109,6 @@ overwritten or turned off by configuration. More about how to use them you can f
 documentation.
 
 - **[Actuator health check and metrics](./core.md#actuator-health-check-and-metrics)** - Out-of-the-box health checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.
-- **[Proxy for Apache Camel Processors](./core.md#proxy-for-apache-camel-processors)** - Proxies for Apache Camel processors with process and mock functionalities.
 - **[Working with routes in runtime](./core.md#working-with-routes-in-runtime)** - Dynamical changing routes lifecycle.
 - **[Logging Translation](./core.md#logging-translation)** - Translation of logging messages.
 - **[Changing log level programmatically](./core.md#changing-log-level-programmatically)** - Dynamical changing of log level.
