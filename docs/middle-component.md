@@ -59,11 +59,11 @@ from("sipmc:foo")
 
 ## Unit testing with sipmc
 
-Middle Component should be mocked within unit tests which test and cover Camel routes.
+Middle Component, as any custom Camel component, should be mocked within unit tests which test and cover Camel routes.
 Otherwise, running the test will run the route within Camel context without Middle component and test will fail running.
 
-When doing Camel testing, Middle component can be mocked by using Camel AdwiceWith inside your test. Following code and 
-methods within Advice can be used for mocking sipmc: 
+When doing Camel testing, if you use Camel's `CamelTestSupport` class, Middle component can be mocked by using 
+AdwiceWith inside your test. Following code and methods within Advice can be used for mocking sipmc: 
 
 
 ```java
