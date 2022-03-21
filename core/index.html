@@ -365,15 +365,29 @@ open logback.xml in target directory* and edit the log levels on loggers defined
 <p>SIP Core offers usage of Camel's built-in Tracer for tracing and logging information about all processor
 an exchange when through and TraceHistory service which stores all data logged by it.
 Configuration of the Tracer is enabled by adapting ExchangeFormatter.</p>
-<p>First we need to enable the following:</p>
+<p>Tracing functionality is set to false by default. In order to enable it, the following configuration should be added to the application.yml:</p>
 <pre class="highlight"><code class="language-yaml">sip:
   core:
     tracing:
-      enabled: true</code></pre>
-<p>Configuring the ExchangeFormatter can be achieved in two ways</p>
+      enabled: true
+      trace-type: LOG | MEMORY | "*" | LOG,MEMORY</code></pre>
+<p>Additionally, trace-type must be defined. Three types of tracing can be used:</p>
+<ul>
+<li>LOG - trace messages will be shown in logs</li>
+<li>MEMORY - trace messages will be stored in trace history and can be seen on the "actuator/tracing"*</li>
+<li>"*" | LOG,MEMORY - Both values are valid to be used. In case a user set both types, then the tracing will be available as LOG and as MEMORY type at the same time.</li>
+</ul>
+<p>Note: In order to access trace records trough web API the "actuator/tracing" must be exposed:
+<pre class="highlight"><code class="language-yaml">management:
+  endpoints:
+    web:
+    exposure:
+      include: {...},tracing</code></pre></p>
+<p>When adding tracing endpoint, please configure the entire list of endpoints which you want to be exposed including the default ones.</p>
+<p>Configuring the ExchangeFormatter can be achieved in two ways:</p>
 <ul>
 <li>through configuration file
-  <pre class="highlight"><code class="language-yaml">sip:
+<pre class="highlight"><code class="language-yaml">sip:
   core:
     tracing:
       enabled: true
@@ -382,40 +396,26 @@ Configuration of the Tracer is enabled by adapting ExchangeFormatter.</p>
         showHeaders: true
         showExchangeId: true
         showProperties: true
-        maxChars: 100</code></pre></li>
-<li>by using the following POST request
-  <pre class="highlight"><code>/actuator/tracing/format/{exchangeFormatterParameterName}</code></pre></li>
+        maxChars: 100
+ ```
+
+- by using the following POST request</code></pre>
+/actuator/tracing/format/{exchangeFormatterParameterName}
+ ```</li>
 </ul>
-<p>The body of the request should include the value we want for the given parameter.</p>
+<p>The body of the request should include the value we want for the given parameter. In this case, we can change only one parameter per request.</p>
 <p>TraceHistory is enabled with previous configuration.
 Exchanges will contain the "tracingId" header, which has the original Exchange's id as value.
 To see them in TraceHistory messages just set the "showHeaders" and "showExchangeId" parameters in ExchangeFormatter to true.
 A "tracingId' header will appear and will be linked to the original Exchange's id.</p>
 <p><strong>Expanding the traffic trace limit:</strong></p>
 <p>Introduced the SipLimitedLinkedList in order to limit the number of logged events in memory.
-Default limit is 100 events, but it could be changed by following configuration:</p>
+Default limit is 100 events, but it could be changed by following configuration:
 <pre class="highlight"><code class="language-yaml">sip:
   core:
     tracing:
       enabled: true
-      limit: 120 #100 by default</code></pre>
-<p>Tracing result can be checked under endpoint <code>/actuator/tracing</code>. The tracing endpoint is not included by default and 
-it can be included by extending the following list of endpoints in configuration:</p>
-<pre class="highlight"><code class="language-yaml">management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,loggers,prometheus,adapter-routes,tracing</code></pre>
-<p>When adding tracing endpoint, please configure the entire list of endpoints listed above.</p>
-<p><strong>Selecting the traffic trace logging type:</strong></p>
-<p>When SIP tracing is enabled, by default, it will log the traffic in console on INFO level and store the messages in
-TraceHistory.
-But, through configuration only logging (LOG) or storing (MEMORY) can be selected.</p>
-<pre class="highlight"><code class="language-yaml">sip:
-  core:
-    tracing:
-      enabled: true
-      trace-type: LOG | MEMORY | "*" | LOG,MEMORY</code></pre>
+      limit: 120 #100 by default</code></pre></p>
 <h3 id="openapi-descriptor">OpenAPI Descriptor<a class="headerlink" href="#openapi-descriptor" title="Permanent link">&para;</a></h3>
 <p>Framework provides an Open API description of all custom or Spring provided endpoints within your adapter.
 Endpoints are created as extension of Spring's actuator.</p>
