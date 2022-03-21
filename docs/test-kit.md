@@ -11,12 +11,11 @@ providing a possibility to create tests without code change.
 This file format is referred to as <i><b>TestCaseDefinition</i></b>. 
 The flow itself and thus the TestCaseDefinition file is split into three phases (sections)
 
-- when-execute - The test is executed by triggering one off adapter's endpoints
-- with-mocks - All external calls are replaced with predefined mocks
-- then-expect - The test outcome is compared with a predefined expected outcome
+- when-execute - The test is executed by triggering one of adapter's endpoints
+- with-mocks - External calls which are to be replaced with predefined mock behaviour
+- then-expect - The test outcome that should be compared with a predefined expected outcome
 
-
-# Test Kit provides...
+# Features
 
 ## Response validation
 
@@ -105,6 +104,9 @@ sip:
   testkit:
     enabled: false
 ```
+
+To be able to fully utilize the Test Kit, all the endpoints used in the test case need to have a defined ID which will be referenced in the _endpoint_ parameter of the test case.
+
 
 # Defining a Test Case
 
