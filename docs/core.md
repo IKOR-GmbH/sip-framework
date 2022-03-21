@@ -276,7 +276,7 @@ Tracing functionality is set to false by default. In order to enable it, the fol
 sip:
   core:
     tracing:
-      enabled: false|true
+      enabled: true
       trace-type: LOG | MEMORY | "*" | LOG,MEMORY
 ```
 
@@ -286,7 +286,7 @@ Additionally, trace-type must be defined. Three types of tracing can be used:
 - MEMORY - trace messages will be stored in trace history and can be seen on the "actuator/tracing"*
 - "*" | LOG,MEMORY - Both values are valid to be used. In case a user set both types, then the tracing will be available as LOG and as MEMORY type at the same time.
 
-Note: If tracing is enabled and trace-Type is set to MEMORY, in order to read trace messages from history the "actuator/tracing" must be exposed:
+Note: In order to access trace records trough web API the "actuator/tracing" must be exposed:
 ```yaml
 management:
   endpoints:
