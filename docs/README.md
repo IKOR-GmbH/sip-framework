@@ -341,8 +341,8 @@ It also makes routes more descriptive and adapters much easier to maintain.
 
 As we can see each external endpoint, definition is followed by explicit setting of id. Although it's not mandatory,
 doing so is highly recommended especially in case of outgoing endpoints. This will provide a reference of the external
-endpoints, which can be used for different functionalities, like mocking, custom health check or other functionalities
-that are yet to come.
+endpoints, which can be used for different functionalities, like custom health check, testing with test-kit or other 
+functionalities that are yet to come.
 Notice that in case of incoming endpoints (those in "from" statement), following id refers to the routeId.
 
 ### Configuration properties

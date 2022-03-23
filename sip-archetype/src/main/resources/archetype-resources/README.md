@@ -2,7 +2,7 @@
 
 **Thank you for using SIP Framework!**
 
-You have successfully created ${artifactId}. We recommend you to describe the adapter you are developing within this file.
+You have successfully created ${artifactId}.
 
 This is an auto-generated project and you can find more information about developing approach, project structure and
 sip framework concept at:
