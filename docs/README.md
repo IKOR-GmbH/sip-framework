@@ -134,6 +134,11 @@ Once you have your adapter you can do the following steps:
 - Run SIPApplication found inside application module
 - After the application is up and running you can check SIP's management API under [localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 
+### Framework version upgrade
+
+If you need to upgrade your adapter to the newer SIp Framework version, please follow this 
+[guide](./framework_version_upgrade.md).
+
 ### How and why to use SIP Middle Component
 
 [SIP Middle Component](./middle-component.md) (sipmc) is a key concept of SIP Framework.
