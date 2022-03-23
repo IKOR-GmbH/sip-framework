@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.core.actuator.health.camel;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 import org.apache.camel.CamelContext;
@@ -12,7 +13,6 @@ import org.apache.camel.health.HealthCheck;
 import org.apache.camel.health.HealthCheckResultBuilder;
 import org.apache.camel.impl.health.ConsumerHealthCheck;
 import org.apache.camel.impl.health.RouteHealthCheck;
-import org.apache.camel.spi.RouteController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,20 +21,10 @@ class SIPHealthCheckTest {
   private static final String TEST_ROUTE_NAME = "TestRoute";
 
   private CamelContext camelContext;
-  private RouteController routeController;
-  private Route route;
 
   @BeforeEach
   void setup() {
     camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
-    routeController = mock(RouteController.class);
-    when(camelContext.getRouteController()).thenReturn(routeController);
-    route = mock(Route.class, RETURNS_DEEP_STUBS);
-    doReturn(TEST_ROUTE_NAME).when(route).getId();
-    doReturn(TEST_ROUTE_NAME).when(route).getRouteId();
-
-    when(route.getCamelContext()).thenReturn(camelContext);
-    when(camelContext.getRoutes()).thenReturn(List.of(route));
   }
 
   @Test
@@ -46,6 +36,11 @@ class SIPHealthCheckTest {
         new SIPHealthCheckConsumersRepository();
     sipRoutesHealthCheckRepository.setCamelContext(camelContext);
     sipHealthCheckConsumersRepository.setCamelContext(camelContext);
+
+    Route route = mock(Route.class, RETURNS_DEEP_STUBS);
+    doReturn(TEST_ROUTE_NAME).when(route).getId();
+    doReturn(TEST_ROUTE_NAME).when(route).getRouteId();
+    doReturn(List.of(route)).when(camelContext).getRoutes();
 
     // act
     Stream<HealthCheck> routeHealthChecks = sipRoutesHealthCheckRepository.stream();
@@ -68,10 +63,12 @@ class SIPHealthCheckTest {
     doReturn(TEST_ROUTE_NAME).when(consumerHealthCheck).getId();
     SIPHealthCheckConsumer sipHealthCheckConsumer = new SIPHealthCheckConsumer(consumerHealthCheck);
 
-    HealthCheckResultBuilder resultBuilder = HealthCheckResultBuilder.on(sipHealthCheckConsumer);
-    resultBuilder.detail("route.status", ServiceStatus.Suspended.name());
+    HealthCheckResultBuilder resultBuilder =
+        HealthCheckResultBuilder.on(sipHealthCheckConsumer)
+            .detail("route.status", ServiceStatus.Suspended.name());
+
     // act
-    sipHealthCheckConsumer.doCallCheck(resultBuilder, null);
+    sipHealthCheckConsumer.doCallCheck(resultBuilder, Collections.emptyMap());
 
     // assert
     assertThat(resultBuilder.state()).isEqualTo(HealthCheck.State.DOWN);
@@ -85,10 +82,12 @@ class SIPHealthCheckTest {
     doReturn(TEST_ROUTE_NAME).when(routeHealthCheck).getId();
     SIPHealthCheckRoute sipHealthCheckRoute = new SIPHealthCheckRoute(routeHealthCheck);
 
-    HealthCheckResultBuilder resultBuilder = HealthCheckResultBuilder.on(sipHealthCheckRoute);
-    resultBuilder.detail("route.status", ServiceStatus.Suspended.name());
+    HealthCheckResultBuilder resultBuilder =
+        HealthCheckResultBuilder.on(sipHealthCheckRoute)
+            .detail("route.status", ServiceStatus.Suspended.name());
+
     // act
-    sipHealthCheckRoute.doCallCheck(resultBuilder, null);
+    sipHealthCheckRoute.doCallCheck(resultBuilder, Collections.emptyMap());
 
     // assert
     assertThat(resultBuilder.state()).isEqualTo(HealthCheck.State.DOWN);
