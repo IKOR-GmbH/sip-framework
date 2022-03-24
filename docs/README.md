@@ -136,7 +136,7 @@ Once you have your adapter you can do the following steps:
 
 ### Framework version upgrade
 
-If you need to upgrade your adapter to the newer SIp Framework version, please follow this 
+If you need to upgrade your adapter to the newer SIP Framework version, please follow this 
 [guide](./framework_version_upgrade.md).
 
 ### How and why to use SIP Middle Component
