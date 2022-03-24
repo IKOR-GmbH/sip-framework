@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SIPEndpointResolver {
 
-  private static final String CONTEXT_PATH_SUFFIX = "/*";
+  private static final String CONTEXT_PATH_SUFFIX = "[/][*]$";
   private final CamelContext camelContext;
 
   @Value("${sip.adapter.camel-endpoint-context-path}")
-  private String contextPath;
+  private String contextPath = "";
 
   /**
    * Resolve entrypoint URI for the Exchange
@@ -51,6 +51,6 @@ public class SIPEndpointResolver {
   }
 
   private String resolveContextPath() {
-    return contextPath.replace(CONTEXT_PATH_SUFFIX, "");
+    return contextPath.replaceAll(CONTEXT_PATH_SUFFIX, "");
   }
 }

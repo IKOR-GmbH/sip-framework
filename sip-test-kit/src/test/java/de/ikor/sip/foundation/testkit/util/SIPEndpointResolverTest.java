@@ -11,7 +11,6 @@ import org.apache.camel.Route;
 import org.apache.camel.component.rest.RestEndpoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 class SIPEndpointResolverTest {
 
@@ -52,7 +51,6 @@ class SIPEndpointResolverTest {
     // arrange
     Route route = mock(Route.class);
     RestEndpoint endpoint = mock(RestEndpoint.class);
-    ReflectionTestUtils.setField(subject, "contextPath", "");
     when(exchange.getProperty("connectionAlias", String.class)).thenReturn(CONNECTION_ALIAS);
     when(camelContext.getRoute(CONNECTION_ALIAS)).thenReturn(route);
     when(route.getEndpoint()).thenReturn(endpoint);
