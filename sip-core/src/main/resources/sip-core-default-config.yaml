@@ -41,3 +41,9 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     disable-swagger-default-url: true
+
+#context path for adapter routes
+camel:
+  servlet:
+    mapping:
+      context-path: /adapter/*
