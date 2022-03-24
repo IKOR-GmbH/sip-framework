@@ -354,25 +354,40 @@ When using a yaml configuration file, which is already available in application 
 
 Name | Description | Value | Default |
 --- | --- | --- | --- |
+sip.core.translation | Enable SIP translation | boolean | true
 sip.core.translation.fileLocations | Sets locations of translation bundles | List | classpath:translations/translated-messages, classpath:translations/sip-core-messages |
 sip.core.translation.default-encoding | Sets default encoding | String | UTF-8 |
 sip.core.translation.fallback-to-system-locale | Use system language if none defined | boolean | false |
 sip.core.translation.use-code-as-default-message | If key is not assigned use it in message | boolean | true |
 sip.core.translation.lang | Set language of log messages | String | en |
+sip.core.tracing.enabled | Enable SIP tracing and trace history | boolean | true |
+sip.core.tracing.exchange-formatter.{property-name} | Sets value for specific property in ExchangeFormatter | / | / |
+sip.core.tracing.trace-type | Sets how tracer should behave | String | "*" |
+sip.core.actuator.enabled | Enable Spring actuator | boolean | true |
+sip.core.proxy.enabled | Enable SIP proxy | boolean | true |
 sip.core.metrics.external-endpoint-health-check.enabled | Enable health status calculation | boolean | true |
 sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay | Sets health check execution interval | number | 900000 |
 sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay | Sets health check execution initial delay | number | 5000 |
-sip.core.tracing.enabled | Enable SIP tracing and trace history | boolean | true |
-sip.core.tracing.limit | Sets storage limit in trace history | number | 100 |
-sip.core.tracing.trace-type | Sets how tracer should behave | String | "*" |
-sip.core.tracing.exchange-formatter.{property-name} | Sets value for specific property in ExchangeFormatter | / | / |
-sip.testkit.enabled | Enables SIP Test Kit | boolean | true |
+management.info.camel.enabled | Enable basic camel info under /actuator/info endpoint | boolean | false |
+management.endpoints.web.exposure.include | Set which endpoints are included | String | health,info,metrics,loggers,prometheus,adapter-routes |
 management.endpoint.health.show-details | Enable health details in actuator | String | always |
-management.endpoints.web.exposure.include | Set which endpoints are included | String | health,info,metrics,loggers,prometheus |
+management.endpoint.health.status.http-mapping.down | HTTP response code for actuator health endpoint | number | 200 |
 springdoc.show-actuator | Show actuator API in Swagger docs| boolean | true |
 springdoc.api-docs.path | Custom path to API docs | String | /api-docs |
 springdoc.swagger-ui.path | Custom path to Swagger | String | /swagger-ui.html |
 springdoc.swagger-ui.disable-swagger-default-url | Disables default petstore API in swagger | boolean | true |
-springdoc.api-docs.enabled | Enable/Disable API docs | boolean | true |
-springdoc.swagger-ui.enabled | Enable/Disable swagger | boolean | true |
-logging.level.root | Sets the default log level | String | INFO |
+sip.testkit.enabled | Enable SIP testkit | boolean | true |
+sip.testkit.test-cases-path | Define path for file with test cases | String | test-case-definition.yml
+sip.security.ssl.enabled | Enable SIP SSL security | boolean | false |
+sip.security.ssl.server.client-auth | Enable authentication type | String | none
+sip.security.ssl.server.key-store | Location of keystore | String | / |
+sip.security.ssl.server.key-store-password | Password of keystore | String | /
+sip.security.ssl.server.key-store-type | Type of keystore file | String | / |
+sip.security.ssl.server.key-alias | The alias (or name) under which the key is stored in the keystore | String | / |
+sip.security.ssl.server.key-password | Password of the key | String | / | 
+sip.security.ssl.client.enabled | Enable separate client certification | boolean | false |
+sip.security.ssl.client.key-store | Location of client keystore | String | /
+sip.security.ssl.client.key-store-password | Password of client keystore | String | /
+sip.security.ssl.client.key-store-type | Type of client keystore file | String | / |
+sip.security.ssl.client.key-alias | The alias (or name) under which the key is stored in the client keystore | String | / |
+sip.security.ssl.client.key-password | Password of the client key | String | / | 
