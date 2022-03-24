@@ -59,7 +59,7 @@ Running this class would execute the test, but also it will be executed during b
 public class TFWTest extends SIPBatchTest { }
 ```
 
-There is also configuration of profile needed. Add `application.yml` in test resources with profile configuration:
+Also, configuring spring profile is needed. Provide the following configuration property inside your test resources.
 ```yaml
 spring:
   profiles:
