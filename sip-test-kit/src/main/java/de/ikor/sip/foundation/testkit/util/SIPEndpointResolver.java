@@ -7,7 +7,7 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.Route;
 import org.apache.camel.component.rest.RestEndpoint;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /** Helper Service which resolves an entrypoint URI for a route during runtime. */
@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SIPEndpointResolver {
 
-  private static final String CONTEXT_PATH_SUFFIX = "/*";
-  private final ServletRegistrationBean<?> camelServletRegistrationBean;
+  private static final String CONTEXT_PATH_SUFFIX = "[/][*]$";
   private final CamelContext camelContext;
+
+  @Value("${sip.adapter.camel-endpoint-context-path}")
+  private String contextPath = "";
 
   /**
    * Resolve entrypoint URI for the Exchange
@@ -49,7 +51,6 @@ public class SIPEndpointResolver {
   }
 
   private String resolveContextPath() {
-    String path = camelServletRegistrationBean.getUrlMappings().stream().findFirst().orElse("");
-    return path.replace(CONTEXT_PATH_SUFFIX, "");
+    return contextPath.replaceAll(CONTEXT_PATH_SUFFIX, "");
   }
 }
