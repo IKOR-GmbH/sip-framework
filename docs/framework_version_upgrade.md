@@ -7,9 +7,11 @@
 The following text represents the complete guide how to update SIP framework version in your adapter from version 
 `1.0.0` to `2.0.0`.
 
-In case adapter is generated with archetype of `2.0.0` framework version, following steps are not necessary. In order 
-that your adapter work completely successful, the following changes has to be done manually. Please follow the guide
+In case adapter is generated with archetype of `2.0.0` framework version, following steps are not necessary. To insure
+your adapter uses all functionalities, the following changes have to be done manually. Please follow the guide
 step by step.
+
+Single lines necessary for updating are marked with `update` comment.
 
 First step is to update the parent field `version` in project root `pom.xml` file:
 
@@ -22,8 +24,7 @@ First step is to update the parent field `version` in project root `pom.xml` fil
 </parent>
 ```
 
-In the same file, profile fields `id` and `maxJdkVersion` should be updated to java version 11. Single lines necessary 
-for updating are marked with `update` comment:
+In the same file, profile fields `id` and `maxJdkVersion` should be updated to java version 11.
 
 ```xml
 <profiles>
@@ -76,7 +77,7 @@ Next step is to update `pom.xml` file in adapter's application module. Change th
 </parent>
 ```
 
-In the same file modification to `spring-boot-maven-plugin` is necessary. Add goal `build-info` and it's additional
+In the same file, `spring-boot-maven-plugin` must be modified. Add goal `build-info` and it's additional
 configuration. Simply copy the lines marked with comment `update` and add them to your code in a proper place:
 
 ```xml
@@ -103,8 +104,8 @@ configuration. Simply copy the lines marked with comment `update` and add them t
 </plugin>
 ```
 
-Newer version requires keeping your markdown files in adapter's application module under `main/resources/documents` directory.
-It is strictly required to create `documents` folder and to keep markdown files inside, so the
+Newer version requires moving your markdown files in adapter's application module under `main/resources/documents` directory.
+Furthermore, it is strictly required to create `documents` folder and to keep markdown files inside, so the
 [markdown files API](./core.md#sip-details-in-actuator-info-endpoint) can work properly.
 
 If you intend to use SIP Test Kit, you should add `application.yml` in your application module `src/test/resources`
