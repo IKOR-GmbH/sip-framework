@@ -1,10 +1,3 @@
-camel:
-  component:
-    servlet:
-      mapping:
-        context-path: /adapter/*
-
-
 # SIP Security configuration
 # This configuration represents the template to use for configuring security. If security is not needed, all
 # configuration properties below under sip.security can be deleted.

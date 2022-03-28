@@ -1,5 +1,0 @@
-{
-  "author": "vladiIkor",
-  "pullrequestId": 85,
-  "message": "Removing dynamic proxy from documentation as it is part of internal architecture, and still not intended for public usage"
-}
