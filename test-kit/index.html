@@ -149,7 +149,7 @@
 <ul>
 <li><a href="#ikor-sip-test-kit">IKOR SIP Test Kit</a></li>
 <li><a href="#description">Description</a></li>
-<li><a href="#test-kit-provides">Test Kit provides...</a><ul>
+<li><a href="#features">Features</a><ul>
 <li><a href="#response-validation">Response validation</a></li>
 <li><a href="#external-endpoint-mocking">External endpoint mocking</a></li>
 <li><a href="#endpoint-reports">Endpoint reports</a></li>
@@ -174,11 +174,12 @@ It executes a test workflow that is defined in a specific file format,
 providing a possibility to create tests without code change. 
 This file format is referred to as <i><b>TestCaseDefinition</i></b>. 
 The flow itself and thus the TestCaseDefinition file is split into three phases (sections)</p>
-<li> when-execute - The test is executed by triggering one off adapter's endpoints</li>
-<li> with-mocks - All external calls are replaced with predefined mocks</li>
-<li> then-expect - The test outcome is compared with a predefined expected outcome</li>
-
-<h1 id="test-kit-provides">Test Kit provides...<a class="headerlink" href="#test-kit-provides" title="Permanent link">&para;</a></h1>
+<ul>
+<li>when-execute - The test is executed by triggering one of adapter's endpoints</li>
+<li>with-mocks - External calls which are to be replaced with predefined mock behaviour</li>
+<li>then-expect - The test outcome that should be compared with a predefined expected outcome</li>
+</ul>
+<h1 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h1>
 <h2 id="response-validation">Response validation<a class="headerlink" href="#response-validation" title="Permanent link">&para;</a></h2>
 <p>Major feature of Test Kit is validation of the response from test execution.
 By adding a validation definition inside the then-expect section
@@ -237,11 +238,12 @@ following property inside adapter configuration:
 The default value is test-case-definition.yml, so you can place your test case description under that file, 
 and skip additional setting.</p>
 <p>Each test case will execute as a separate unit test with its own report displayed.</p>
-<p><img alt="alt text" src="../img/ConsoleReport.png" /></p>
+<p><img alt="alt-text" src="../img/ConsoleReport.png" /></p>
 <p>To disable SIP Test Kit, the following configuration is needed:
 <pre class="highlight"><code class="language-yaml">sip:
   testkit:
     enabled: false</code></pre></p>
+<p>To be able to fully utilize the Test Kit, all the endpoints used in the test case need to have a defined ID which will be referenced in the <em>endpoint</em> parameter of the test case.</p>
 <h1 id="defining-a-test-case">Defining a Test Case<a class="headerlink" href="#defining-a-test-case" title="Permanent link">&para;</a></h1>
 <p>The TestCaseDefinition file starts with <code>test-case-definitions</code> property, which consists of a list of test cases</p>
 <h2 id="when-execute">when-execute<a class="headerlink" href="#when-execute" title="Permanent link">&para;</a></h2>
