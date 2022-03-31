@@ -126,57 +126,6 @@ sip:
       gauge: "sip.core.metrics.health"
 ```
 
-
-### Dynamic proxy for Apache Camel Processors
-
-Dynamic proxy is implementation of decorator pattern on all Processors detected on all Camel routes. The base motivation
-is to gain more control over Camel dataflow, by providing placeholders for custom functionalities on different steps of
-the route. It's a mechanism for providing and applying new future features on already implemented adapters, through the
-configuration and without adapter code changes.
-
-During Camel route creation Processor Proxies are created and registered in ProcessorProxyRegistry. They can be accessed
-from registry through processor's ID. ProcessorProxyRegistry can be accessed as a spring bean or as an extension of CamelContext.
-
-The main feature for now is mock, which sets new behavior of a Camel processor and instead of using the real processor
-replace it with its mock. This can be achieved on any Processor on the route, including the outgoing endpoints. Mocking
-behavior with SIP can be triggered dynamically in runtime, and on single request level, leaving the original route intact and active
-all the time.
-
-To use it, header "proxy-modes" must be set, which consists of a map of processorIds as keys and list of commands as value:
-
-- `proxy-modes: {"processorId": ["mock"]}`
-
-**Setting mock behavior example:**
-
-```java
-@Configuration
-@AllArgsConstructor
-public class MockConfiguration {
-  private ProcessorProxyRegistry proxyRegistry;
-  private PropertiesComponent propsComponent;
-
-  @EventListener(ApplicationReadyEvent.class)
-  public void mockProcessorBehavior() {
-    Optional<String> prop =
-            propsComponent.resolveProperty("endpoint.out.partner.their-assurance-co.id");
-    String processorId = prop.orElseThrow(IllegalArgumentException::new/*Define your exception routine*/);
-
-    ProcessorProxy proxy =
-            proxyRegistry
-                    .getProxy(processorId)
-                    .orElseThrow(
-                            () ->
-                                    new RuntimeException(
-                                            format("There is no %s proxy in the application", processorId)));
-    proxy.mock(
-            exchange -> {
-              /*define mock behavior*/
-              return exchange;
-            });
-  }
-}
-```
-
 ### Working with routes in runtime
 
 All routes with basic info can be listed by using the following URI:
@@ -321,36 +270,55 @@ SIP Core offers usage of Camel's built-in Tracer for tracing and logging informa
 an exchange when through and TraceHistory service which stores all data logged by it.
 Configuration of the Tracer is enabled by adapting ExchangeFormatter.
 
-First we need to enable the following:
+Tracing functionality is set to false by default. In order to enable it, the following configuration should be added to the application.yml:
 
 ```yaml
 sip:
   core:
     tracing:
       enabled: true
+      trace-type: LOG | MEMORY | "*" | LOG,MEMORY
 ```
 
-Configuring the ExchangeFormatter can be achieved in two ways
+Additionally, trace-type must be defined. Three types of tracing can be used:
+
+- LOG - trace messages will be shown in logs
+- MEMORY - trace messages will be stored in trace history and can be seen on the "actuator/tracing"*
+- "*" | LOG,MEMORY - Both values are valid to be used. In case a user set both types, then the tracing will be available as LOG and as MEMORY type at the same time.
+
+Note: In order to access trace records trough web API the "actuator/tracing" must be exposed:
+```yaml
+management:
+  endpoints:
+    web:
+    exposure:
+      include: {...},tracing
+```
+
+When adding tracing endpoint, please configure the entire list of endpoints which you want to be exposed including the default ones.
+
+Configuring the ExchangeFormatter can be achieved in two ways:
 
 - through configuration file
-  ```yaml
-  sip:
-    core:
-      tracing:
-        enabled: true
-        exchange-formatter:
-          multiline: true
-          showHeaders: true
-          showExchangeId: true
-          showProperties: true
-          maxChars: 100
-  ```
-- by using the following POST request
-  ```
-  /actuator/tracing/format/{exchangeFormatterParameterName}
-  ```
+```yaml
+sip:
+  core:
+    tracing:
+      enabled: true
+      exchange-formatter:
+        multiline: true
+        showHeaders: true
+        showExchangeId: true
+        showProperties: true
+        maxChars: 100
+ ```
 
-The body of the request should include the value we want for the given parameter.
+- by using the following POST request
+```
+/actuator/tracing/format/{exchangeFormatterParameterName}
+ ```
+
+The body of the request should include the value we want for the given parameter. In this case, we can change only one parameter per request.
 
 TraceHistory is enabled with previous configuration.
 Exchanges will contain the "tracingId" header, which has the original Exchange's id as value.
@@ -361,40 +329,12 @@ A "tracingId' header will appear and will be linked to the original Exchange's i
 
 Introduced the SipLimitedLinkedList in order to limit the number of logged events in memory.
 Default limit is 100 events, but it could be changed by following configuration:
-
 ```yaml
 sip:
   core:
     tracing:
       enabled: true
       limit: 120 #100 by default
-```
-
-Tracing result can be checked under endpoint `/actuator/tracing`. The tracing endpoint is not included by default and 
-it can be included by extending the following list of endpoints in configuration:
-
-```yaml
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,loggers,prometheus,adapter-routes,tracing
-```
-
-When adding tracing endpoint, please configure the entire list of endpoints listed above.
-
-**Selecting the traffic trace logging type:**
-
-When SIP tracing is enabled, by default, it will log the traffic in console on INFO level and store the messages in
-TraceHistory.
-But, through configuration only logging (LOG) or storing (MEMORY) can be selected.
-
-```yaml
-sip:
-  core:
-    tracing:
-      enabled: true
-      trace-type: LOG | MEMORY | "*" | LOG,MEMORY
 ```
 
 ### OpenAPI Descriptor
