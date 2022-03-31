@@ -206,6 +206,10 @@ The following endpoints part is for mocked endpoint reports, with similar data a
 <p>A test class needs to be created inside test package of the adapter, which extends SIPBatchTest. 
 Running this class would execute the test, but also it will be executed during build time.</p>
 <pre class="highlight"><code class="language-java">public class TFWTest extends SIPBatchTest { }</code></pre>
+<p>Also, configuring spring profile is needed. Provide the following configuration property inside your test resources.
+<pre class="highlight"><code class="language-yaml">spring:
+  profiles:
+    active: test</code></pre></p>
 <p>The next step is to provide the TestCaseDefinition file in yaml format in the <code>test/resources</code> package
 (detailed description in next section):
 <pre class="highlight"><code class="language-yaml">test-case-definitions:
