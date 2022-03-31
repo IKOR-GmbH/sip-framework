@@ -15,8 +15,6 @@ if test -n "$(find changelogs/major -name '*.json' -print -quit)"; then
 elif test -n "$(find changelogs/feature -name '*.json' -print -quit)"; then
   FEATURE=$(($FEATURE+1))
   PATCH="0"
-else
-  PATCH=$(($PATCH+1))
 fi
 
 echo "$MAJOR.$FEATURE.$PATCH"
