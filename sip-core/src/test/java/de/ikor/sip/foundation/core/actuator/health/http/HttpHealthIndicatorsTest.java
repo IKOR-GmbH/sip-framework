@@ -31,6 +31,7 @@ class HttpHealthIndicatorsTest {
 
   @Test
   void When_alwaysUnknown_Expect_StatusUnknown() {
+    // arrange
     when(endpoint.getEndpointKey()).thenReturn(ENDPOINT_URI);
 
     // act
@@ -43,7 +44,7 @@ class HttpHealthIndicatorsTest {
 
   @Test
   void Given_EndpointIsConnectedAndReturnsStatus2xx_When_urlHealthIndicator_Then_StatusUp() {
-
+    // arrange
     when(endpoint.getEndpointKey()).thenReturn(ENDPOINT_URI);
 
     // act
@@ -56,43 +57,46 @@ class HttpHealthIndicatorsTest {
 
   @Test
   void Given_EndpointIsConnectedAndReturnsStatus405_When_urlHealthIndicator_Then_StatusUp() {
-    String postEndpoint = ENDPOINT_URI + "post";
-    when(endpoint.getEndpointKey()).thenReturn(postEndpoint);
+    // arrange
+    String postEndpointUrl = ENDPOINT_URI + "post";
+    when(endpoint.getEndpointKey()).thenReturn(postEndpointUrl);
 
     // act
-    Health subject = HttpHealthIndicators.urlHealthIndicator(postEndpoint, 1000).apply(endpoint);
+    Health subject = HttpHealthIndicators.urlHealthIndicator(postEndpointUrl, 1000).apply(endpoint);
 
     // assert
     assertThat(subject.getStatus()).isEqualTo(Status.UP);
-    assertThat(subject.getDetails()).containsEntry(URL_KEY, postEndpoint);
+    assertThat(subject.getDetails()).containsEntry(URL_KEY, postEndpointUrl);
     assertThat(subject.getDetails()).containsEntry(STATUS_CODE_KEY, 405);
   }
 
   @Test
   void Given_EndpointIsConnectedAndReturnsStatus500_When_urlHealthIndicator_Then_StatusDown() {
-    String postEndpoint = ENDPOINT_URI + "status/500";
-    when(endpoint.getEndpointKey()).thenReturn(postEndpoint);
+    // arrange
+    String error500EndpointUrl = ENDPOINT_URI + "status/500";
+    when(endpoint.getEndpointKey()).thenReturn(error500EndpointUrl);
 
     // act
     Health subject = HttpHealthIndicators.urlHealthIndicator(endpoint);
 
     // assert
     assertThat(subject.getStatus()).isEqualTo(Status.DOWN);
-    assertThat(subject.getDetails()).containsEntry(URL_KEY, postEndpoint);
+    assertThat(subject.getDetails()).containsEntry(URL_KEY, error500EndpointUrl);
     assertThat(subject.getDetails()).containsEntry(STATUS_CODE_KEY, 500);
   }
 
   @Test
   void Given_EndpointIsConnectedAndReturnsStatus401_When_urlHealthIndicator_Then_StatusUnknown() {
-    String postEndpoint = ENDPOINT_URI + "status/401";
-    when(endpoint.getEndpointKey()).thenReturn(postEndpoint);
+    // arrange
+    String error401EndpointUrl = ENDPOINT_URI + "status/401";
+    when(endpoint.getEndpointKey()).thenReturn(error401EndpointUrl);
 
     // act
     Health subject = HttpHealthIndicators.urlHealthIndicator(endpoint);
 
     // assert
     assertThat(subject.getStatus()).isEqualTo(Status.UNKNOWN);
-    assertThat(subject.getDetails()).containsEntry(URL_KEY, postEndpoint);
+    assertThat(subject.getDetails()).containsEntry(URL_KEY, error401EndpointUrl);
     assertThat(subject.getDetails()).containsEntry(STATUS_CODE_KEY, 401);
   }
 }
