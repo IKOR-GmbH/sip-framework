@@ -73,10 +73,7 @@ public class HttpHealthIndicators {
           Optional.ofNullable(HttpStatus.resolve(connection.getResponseCode()));
 
       httpStatus.ifPresentOrElse(
-          status -> {
-            setBuilderStateFromHTTPStatus(builder, status);
-          },
-          builder::unknown);
+          status -> setBuilderStateFromHTTPStatus(builder, status), builder::unknown);
     } catch (IOException e) {
       builder.down(e);
     }

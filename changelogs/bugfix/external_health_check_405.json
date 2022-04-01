@@ -1,0 +1,5 @@
+{
+  "author": "LetoBukarica",
+  "pullrequestId": "101",
+  "message": "Added check for 405 status code for external healthchecks"
+}
