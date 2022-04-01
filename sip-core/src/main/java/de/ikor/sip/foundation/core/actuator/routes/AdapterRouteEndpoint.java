@@ -9,11 +9,14 @@ import java.util.stream.Stream;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Route;
 import org.apache.camel.api.management.ManagedCamelContext;
+import org.apache.camel.api.management.mbean.ManagedRouteMBean;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Entry point of the HTTP-only Actuator endpoint that exposes management functions from the
@@ -98,6 +101,11 @@ public class AdapterRouteEndpoint {
   @GetMapping("/{routeId}")
   @Operation(summary = "Get route details", description = "Get route details")
   public AdapterRouteDetails route(@RouteIdParameter @PathVariable String routeId) {
+    ManagedRouteMBean routeMBean = mbeanContext.getManagedRoute(routeId);
+    if (routeMBean == null) {
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND, "Route with ID:" + routeId + " not found");
+    }
     return new AdapterRouteDetails(mbeanContext.getManagedRoute(routeId));
   }
 
@@ -133,7 +141,12 @@ public class AdapterRouteEndpoint {
   @PostMapping("/{routeId}/reset")
   @Operation(summary = "Reset route", description = "Reset route")
   public void resetStatistics(@RouteIdParameter @PathVariable String routeId) {
-    mbeanContext.getManagedRoute(routeId).reset();
+    ManagedRouteMBean routeMBean = mbeanContext.getManagedRoute(routeId);
+    if (routeMBean == null) {
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND, "Route with ID:" + routeId + " not found");
+    }
+    routeMBean.reset();
   }
 
   /**

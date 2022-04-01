@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class CamelHealthCheckRepositoryOverrideTest {
+class CamelHealthCheckRepositoryOverrideContextTest {
 
   @Autowired private MockMvc mvcBean;
 

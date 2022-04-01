@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class CoreCamelSpringBootTest {
+class CoreCamelSpringBootContextTest {
 
   @Autowired CamelContext camelContext;
 
