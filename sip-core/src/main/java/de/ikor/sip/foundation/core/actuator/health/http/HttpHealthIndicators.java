@@ -72,20 +72,30 @@ public class HttpHealthIndicators {
       Optional<HttpStatus> httpStatus =
           Optional.ofNullable(HttpStatus.resolve(connection.getResponseCode()));
 
-      httpStatus.ifPresent(
+      httpStatus.ifPresentOrElse(
           status -> {
-            if (status.is2xxSuccessful()) {
-              builder.up();
-            } else {
-              builder
-                  .unknown()
-                  .withDetail("status", status)
-                  .withDetail("statusCode", status.value());
-            }
-          });
+            setBuilderStateFromHTTPStatus(builder, status);
+          },
+          builder::unknown);
     } catch (IOException e) {
       builder.down(e);
     }
     return builder.build();
+  }
+
+  private static void setBuilderStateFromHTTPStatus(Health.Builder builder, HttpStatus status) {
+    builder.withDetail("status", status).withDetail("statusCode", status.value());
+
+    if (status.is2xxSuccessful() || status.value() == HttpStatus.METHOD_NOT_ALLOWED.value()) {
+      builder.up();
+      return;
+    }
+
+    if (status.is5xxServerError()) {
+      builder.down();
+      return;
+    }
+
+    builder.unknown();
   }
 }
