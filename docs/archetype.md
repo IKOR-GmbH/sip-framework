@@ -12,37 +12,23 @@ In order to make setting up a new integration adapter project an easy task, we h
 
 To make a long story short, you can create a SIP Adapter by using the following Maven command:
 
-
-Mac OS
-```shell
-  mvn archetype:generate \
-    -DarchetypeGroupId=de.ikor.sip.cloud \
-    -DarchetypeArtifactId=sip-archetype \
-    -DarchetypeVersion=<latest.sip-archetype.version> \
-    -DgroupId=de.ikor.sip.adapter \
-    -DartifactId=demo \
-    -DprojectName=DemoAdapter \
-    -Dversion=1.0.0-SNAPSHOT
-```
-
-Windows OS
-```shell
-  mvn archetype:generate ^
-    -DarchetypeGroupId=de.ikor.sip.cloud ^
-    -DarchetypeArtifactId=sip-archetype ^
-    -DarchetypeVersion=<latest.sip-archetype.version> ^
-    -DgroupId=de.ikor.sip.adapter ^
-    -DartifactId=demo ^
-    -DprojectName=DemoAdapter ^
-    -Dversion=1.0.0-SNAPSHOT
-```
-
-Other system versions
 ```shell
   mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=<latest.sip-archetype.version> -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT
 ```
 
 When executing the command, pay attention to use the latest archetype version for the -DarchetypeVersion parameter.
+
+**Overview of the command**
+```shell
+mvn archetype:generate
+-DarchetypeGroupId=de.ikor.sip.cloud
+-DarchetypeArtifactId=sip-archetype
+-DarchetypeVersion=<latest.sip-archetype.version>
+-DgroupId=de.ikor.sip.adapter
+-DartifactId=demo
+-DprojectName=DemoAdapter
+-Dversion=1.0.0-SNAPSHOT
+```
 
 The parameters `-DgroupId`, `-DartifactId`, `-DprojectName` and `-Dversion` should be adjusted to better match your project,
 as they set the properties for the adapter. It is recommended to follow the maven naming convention.
