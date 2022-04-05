@@ -5,7 +5,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Layout;
 import de.ikor.sip.foundation.core.translate.SIPTranslateMessageService;
-import de.ikor.sip.foundation.core.util.SIPStaticSpringContext;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -36,9 +35,8 @@ public class TranslateMessageLayout<E> extends PatternLayout implements Layout<I
 
   private SIPTranslateMessageService initMessageService() {
     if (this.messageService == null) {
-      this.messageService = SIPStaticSpringContext.getBean(SIPTranslateMessageService.class);
+      this.messageService = SIPTranslateMessageService.get();
     }
-
     return this.messageService;
   }
 }

@@ -9,13 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
 
-class SIPTranslateMessageServiceImplTest {
+class SIPTranslateMessageServiceTest {
 
   private static final String MESSAGE_KEY = "key";
   private static final String MESSAGE_CONTENT = "test";
   private static final String LANG = "en";
 
-  private SIPTranslateMessageServiceImpl subject;
+  private SIPTranslateMessageService subject;
   private MessageSource messageSource;
   private TranslateConfiguration translateConfiguration;
 
@@ -24,7 +24,7 @@ class SIPTranslateMessageServiceImplTest {
     messageSource = mock(MessageSource.class);
     translateConfiguration = mock(TranslateConfiguration.class);
     when(translateConfiguration.getLang()).thenReturn(LANG);
-    subject = new SIPTranslateMessageServiceImpl(messageSource, translateConfiguration);
+    subject = new SIPTranslateMessageService(messageSource, translateConfiguration);
   }
 
   @Test
