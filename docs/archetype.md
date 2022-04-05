@@ -10,7 +10,7 @@ This archetype creates a basic SIP Adapter project with a defined structure and 
 
 In order to make setting up a new integration adapter project an easy task, we have created a dedicated SIP (Adapter) Maven archetype, that gives the ability to quickly bootstrap a new integration adapter, along with all needed Maven dependencies and goodies, as well as the recommended, preferred organization of the project.
 
-To make a long story short, you can create a SIP Adapter by using the following Maven command:
+You can create a SIP Adapter by using the following Maven command:
 
 ```shell
   mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=<latest.sip-archetype.version> -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT
