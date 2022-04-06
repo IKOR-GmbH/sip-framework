@@ -1,0 +1,47 @@
+# Test case definition template
+# Before executing SIPBatchTest, it is necessary to add values for properties, which are needed to define a Test Case
+test-case-definitions:
+  # Title of individual test
+  - title:
+
+    # Definition of test request which should be sent to the adapter (required)
+    when-execute:
+      # Id of endpoint under test
+      endpoint:
+      with:
+        # Add content that should be send as request body to the adapter endpoint (plain text, JSON String)
+        body:
+        headers:
+          # Add request header keys and values
+          header-key:
+
+    # Definition of mocked endpoint's behavior (optional)
+    with-mocks:
+      # Id of processor with external endpoint
+      - endpoint:
+        returning:
+          # Place response message that real endpoint is expected to return
+          body:
+
+    # Validation of the response from test execution or request which an endpoint recieved (at least one is required)
+    then-expect:
+      # ------------
+      # Response validation
+      # Id of endpoint under test, matches endpoint under test defined in when phase
+      - endpoint:
+        having:
+          # Add regex expression (java) which will be compared to the response of the test
+          body:
+          headers:
+            # Add regex expression (java) which will be compared to the value of this header key
+            header-key:
+      # ------------
+      # Request validation
+      # Id of endpoint that is mocked, matches endpoint with defined or default mocked behavior
+      - endpoint:
+        having:
+          # Add regex expression (java) which will be compared to he body
+          body:
+          headers:
+            # Add regex expression (java) which will be compared to the header value
+            header-key:
