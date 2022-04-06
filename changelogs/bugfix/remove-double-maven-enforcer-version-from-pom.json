@@ -1,5 +1,0 @@
-{
-  "author": "vladiIkor",
-  "pullrequestId": 90,
-  "message": "Remove maven-enforcer-plugin.version duplicate from framework pom properties"
-}

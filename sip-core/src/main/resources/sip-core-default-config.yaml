@@ -22,7 +22,11 @@ sip.core:
       scheduler:
         fixed-delay: 900000
         initial-delay: 5000
-
+sip.adapter:
+  camel-endpoint-context-path: ${server.servlet.context-path}${camel.servlet.mapping.context-path}
+server:
+  servlet:
+    context-path:
 management:
   info:
     camel:
@@ -41,3 +45,9 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     disable-swagger-default-url: true
+
+#context path for adapter routes
+camel:
+  servlet:
+    mapping:
+      context-path: /adapter/*
