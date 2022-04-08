@@ -361,7 +361,7 @@ sip.core.translation.fallback-to-system-locale | Use system language if none def
 sip.core.translation.use-code-as-default-message | If key is not assigned use it in message | boolean | true |
 sip.core.translation.lang | Set language of log messages | String | en |
 sip.core.tracing.enabled | Enable SIP tracing and trace history | boolean | false |
-sip.core.tracing.exchange-formatter.{property-name} | Sets value for specific property in ExchangeFormatter | / | / |
+sip.core.tracing.exchange-formatter.{property-name} | Sets value for specific property in [ExchangeFormatter](https://www.javadoc.io/static/org.apache.camel/camel-support/3.0.0/org/apache/camel/support/processor/DefaultExchangeFormatter.html) | / | / |
 sip.core.tracing.trace-type | Sets how tracer should behave | String | "*" |
 sip.core.actuator.enabled | Enable Spring actuator | boolean | true |
 sip.core.proxy.enabled | Enable SIP proxy | boolean | true |
