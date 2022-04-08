@@ -379,7 +379,7 @@ springdoc.swagger-ui.disable-swagger-default-url | Disables default petstore API
 sip.testkit.enabled | Enable SIP testkit | boolean | true |
 sip.testkit.test-cases-path | Define path for file with test cases | String | test-case-definition.yml
 sip.security.ssl.enabled | Enable SIP SSL security | boolean | false |
-sip.security.ssl.server.client-auth | Enable authentication type | String | none
+sip.security.ssl.server.client-auth | Enable authentication type - Possible values: NONE, WANT or NEED | String | none
 sip.security.ssl.server.key-store | Location of keystore | String | / |
 sip.security.ssl.server.key-store-password | Password of keystore | String | /
 sip.security.ssl.server.key-store-type | Type of keystore file | String | / |
