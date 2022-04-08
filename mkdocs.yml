@@ -41,6 +41,7 @@ extra_css:
 
 extra_javascript:
     - javascript/javadoc_menu_dropdown.js
+    - javascript/copy_maven_command.js
 
 markdown_extensions:
   - toc:
