@@ -360,18 +360,18 @@ sip.core.translation.default-encoding | Sets default encoding | String | UTF-8 |
 sip.core.translation.fallback-to-system-locale | Use system language if none defined | boolean | false |
 sip.core.translation.use-code-as-default-message | If key is not assigned use it in message | boolean | true |
 sip.core.translation.lang | Set language of log messages | String | en |
-sip.core.tracing.enabled | Enable SIP tracing and trace history | boolean | true |
+sip.core.tracing.enabled | Enable SIP tracing and trace history | boolean | false |
 sip.core.tracing.exchange-formatter.{property-name} | Sets value for specific property in ExchangeFormatter | / | / |
 sip.core.tracing.trace-type | Sets how tracer should behave | String | "*" |
 sip.core.actuator.enabled | Enable Spring actuator | boolean | true |
 sip.core.proxy.enabled | Enable SIP proxy | boolean | true |
 sip.core.metrics.external-endpoint-health-check.enabled | Enable health status calculation | boolean | true |
-sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay | Sets health check execution interval | number | 900000 |
-sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay | Sets health check execution initial delay | number | 5000 |
+sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay | Sets health check execution interval | Integer | 900000 |
+sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay | Sets health check execution initial delay | Integer | 5000 |
 management.info.camel.enabled | Enable basic camel info under /actuator/info endpoint | boolean | false |
 management.endpoints.web.exposure.include | Set which endpoints are included | String | health,info,metrics,loggers,prometheus,adapter-routes |
 management.endpoint.health.show-details | Enable health details in actuator | String | always |
-management.endpoint.health.status.http-mapping.down | HTTP response code for actuator health endpoint | number | 200 |
+management.endpoint.health.status.http-mapping.down | HTTP response code for actuator health endpoint | Integer | 200 |
 springdoc.show-actuator | Show actuator API in Swagger docs| boolean | true |
 springdoc.api-docs.path | Custom path to API docs | String | /api-docs |
 springdoc.swagger-ui.path | Custom path to Swagger | String | /swagger-ui.html |
