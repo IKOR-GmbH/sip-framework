@@ -124,3 +124,43 @@ footer p {
   background: var(--ikor-blue);
   color: white;
 }
+
+
+.copy-button {
+    background-image: url(/img/copy-button.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+    padding: 5px;
+    width: 30px;
+    height: 30px;
+    background-color: #f0f0f0;
+    top: 5px;
+    position: absolute;
+    right: 5px;
+    border: 2px #d6d6d7;
+    border-radius: 3px;
+    border-style: solid;
+    visibility: hidden;
+}
+
+.copy-button:hover {
+    padding: 4px;
+    background-color: #d6d6d7;
+    border-color: #878787;
+}
+
+.copy-button:active {
+    padding: 4px;
+    background-color: #878787;
+    border-color: #595959;
+}
+
+pre.highlight {
+    position: relative;
+}
+
+
+.hljs:hover + .copy-button, .copy-button:hover {
+    visibility: visible;
+}

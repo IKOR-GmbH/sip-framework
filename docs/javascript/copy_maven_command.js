@@ -1,5 +1,5 @@
-function copyToClipboard() {
-    var textToCopy = "mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=<latest.sip-archetype.version> -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT";
+function copyToClipboard(event) {
+    const textToCopy = event.target.value;
     if (navigator.clipboard && window.isSecureContext) {
         return navigator.clipboard.writeText(textToCopy);
     } else {
@@ -18,18 +18,12 @@ function copyToClipboard() {
     }
 }
 
-function getElementByXpath(path) {
-  return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+const codeBlocks = document.getElementsByClassName('highlight');
+for (let codeBlock of codeBlocks) {
+    let codeText = codeBlock.firstChild.innerText;
+    const btn = document.createElement('button');
+    btn.setAttribute('class', 'copy-button');
+    btn.setAttribute('value', codeText);
+    btn.setAttribute('onclick', 'copyToClipboard(event)');
+    codeBlock.appendChild(btn)
 }
-
-const something = document.querySelector('body > div.wy-grid-for-nav > section > div > div > div:nth-child(2) > div > div.special_copy + pre');
-
-// creating the span element, then add a class attribute
-const btn = document.createElement('button');
-btn.setAttribute('class', 'btn');
-btn.innerHTML = 'Copy';
-btn.setAttribute('onclick', 'copyToClipboard()')
-
-
-// add the <a> element tree into the div#something
-something.appendChild(btn);
