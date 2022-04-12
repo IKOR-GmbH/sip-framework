@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import de.ikor.sip.foundation.core.CoreTestApplication;
 import org.apache.camel.CamelContext;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 class AdapterRouteEndpointContextTest {
 
-  private static final String NON_EXISTANT_ROUTE_ID = RandomStringUtils.randomAlphanumeric(10);
+  private static final String NON_EXISTENT_ROUTE_ID = "falseRouteId";
 
   @Autowired private MockMvc mvcBean;
 
@@ -40,7 +39,7 @@ class AdapterRouteEndpointContextTest {
   void When_callingAdapterRouteEndpoint_With_InvalidRoute_Then_httpNotFoundReceived()
       throws Exception {
     mvcBean
-        .perform(get("/actuator/adapter-routes/" + NON_EXISTANT_ROUTE_ID))
+        .perform(get("/actuator/adapter-routes/" + NON_EXISTENT_ROUTE_ID))
         .andExpect(status().isNotFound());
   }
 
@@ -48,7 +47,7 @@ class AdapterRouteEndpointContextTest {
   void When_callingAdapterRouteResetEndpoint_With_InvalidRoute_Then_httpNotFoundReceived()
       throws Exception {
     mvcBean
-        .perform(post("/actuator/adapter-routes/" + NON_EXISTANT_ROUTE_ID + "/reset"))
+        .perform(post("/actuator/adapter-routes/" + NON_EXISTENT_ROUTE_ID + "/reset"))
         .andExpect(status().isNotFound());
   }
 }
