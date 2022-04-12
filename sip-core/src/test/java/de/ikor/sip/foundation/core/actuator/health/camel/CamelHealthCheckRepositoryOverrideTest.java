@@ -6,20 +6,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.apache.camel.CamelContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class CamelHealthCheckRepositoryOverrideTest {
 
   @Autowired private MockMvc mvcBean;
-
-  @Autowired private CamelContext camelContext;
 
   @Test
   void When_callingHealthCheckEndpoint_Verify_httpSuccessReceived() throws Exception {
@@ -28,23 +26,25 @@ class CamelHealthCheckRepositoryOverrideTest {
 
   @Test
   void When_suspendingRoute_Verify_statusDown() throws Exception {
-    System.out.println(camelContext.getRoutes());
-    verifyTestRouteIsState("UP");
+    // arrange
     mvcBean
         .perform(post("/actuator/adapter-routes/" + TEST_ROUTE_ID + "/suspend"))
         .andExpect(status().is2xxSuccessful());
-    verifyTestRouteIsState("DOWN");
-    mvcBean.perform(post("/actuator/adapter-routes/" + TEST_ROUTE_ID + "/start"));
-    verifyTestRouteIsState("UP");
-  }
 
-  private void verifyTestRouteIsState(String state) throws Exception {
-    mvcBean
-        .perform(get("/actuator/health"))
+    // act
+    ResultActions healthEndpointResult = mvcBean.perform(get("/actuator/health"));
+
+    // assert
+    healthEndpointResult
         .andExpect(status().isOk())
         .andExpect(
-            jsonPath("$.components.camelHealth.details.consumer:" + TEST_ROUTE_ID).value(state))
+            jsonPath("$.components.camelHealth.details.consumer:" + TEST_ROUTE_ID).value("DOWN"))
         .andExpect(
-            jsonPath("$.components.camelHealth.details.route:" + TEST_ROUTE_ID).value(state));
+            jsonPath("$.components.camelHealth.details.route:" + TEST_ROUTE_ID).value("DOWN"));
+
+    // cleanup
+    mvcBean
+        .perform(post("/actuator/adapter-routes/" + TEST_ROUTE_ID + "/resume"))
+        .andExpect(status().is2xxSuccessful());
   }
 }
