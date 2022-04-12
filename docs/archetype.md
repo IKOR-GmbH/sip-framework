@@ -22,7 +22,7 @@ When executing the command, pay attention to use the latest archetype version fo
 **Overview of the command**
 ```shell
 mvn archetype:generate
--DarchetypeGroupId=de.ikor.sip.cloud
+-DarchetypeGroupId=de.ikor.sip.foundation
 -DarchetypeArtifactId=sip-archetype
 -DarchetypeVersion=<latest.sip-archetype.version>
 -DgroupId=de.ikor.sip.adapter
