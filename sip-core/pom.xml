@@ -122,6 +122,5 @@
             <artifactId>camel-jmx-starter</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 </project>
