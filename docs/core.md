@@ -167,22 +167,24 @@ This can be achieved by using following URI:
 POST /actuator/adapter-routes/{routeId}/{operation}
 ```
 
-Executing desired operation on the routes without providing route id is possible on sip middle component. By specifying operation
-on the following URI, operation will be executed for all routes which has sip middle component as a consumer:
+Executing desired operation on the routes without providing route id is possible on sip middle component. By specifying
+operation on the following URI, operation will be executed for all routes which has sip middle component as a consumer:
 
 ```
 POST /actuator/adapter-routes/sipmc/{operation}
 ```
 
 **Warning:**
-When using suspend or stop operation on route that has middle component as a consumer, default value (30 seconds) timeout will be used.
-Keep in mind that if route is not started for next 30 seconds after sending data to middle component, data could be lost.
+When using suspend or stop operation on route that has middle component as a consumer, default value (30 seconds) 
+timeout will be used. Keep in mind that if route is not started for next 30 seconds after sending data to middle 
+component, data could be lost.
 
 ### Logging Translation
 
 Adds possibility to translate log messages
 
-By default, translation service is not activated, thus in order to use it a logback.xml file should be provided in resources. In this file we can specify that the adapter uses a custom logging encoder, which provides translations.
+By default, translation service is not activated, thus in order to use it a logback.xml file should be provided in 
+resources. In this file we can specify that the adapter uses a custom logging encoder, which provides translations.
 
 ```xml
 <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -194,7 +196,8 @@ By default, translation service is not activated, thus in order to use it a logb
 </appender>
 ```
 
-Files for defining translation values, should be created inside translate directory as a bundle of .property files, under a common name, which should be extended by a suffix in following format \_{language}.
+Files for defining translation values, should be created inside translate directory as a bundle of .property files, 
+under a common name, which should be extended by a suffix in following format \_{language}.
 
 Each file consists of keys, shared in the bundle, followed by its value as a phrase in the language used.
 
@@ -270,7 +273,8 @@ SIP Core offers usage of Camel's built-in Tracer for tracing and logging informa
 an exchange when through and TraceHistory service which stores all data logged by it.
 Configuration of the Tracer is enabled by adapting ExchangeFormatter.
 
-Tracing functionality is set to false by default. In order to enable it, the following configuration should be added to the application.yml:
+Tracing functionality is set to false by default. In order to enable it, the following configuration should be added to 
+the application.yml:
 
 ```yaml
 sip:
@@ -284,22 +288,24 @@ Additionally, trace-type must be defined. Three types of tracing can be used:
 
 - LOG - trace messages will be shown in logs
 - MEMORY - trace messages will be stored in trace history and can be seen on the "actuator/tracing"*
-- "*" | LOG,MEMORY - Both values are valid to be used. In case a user set both types, then the tracing will be available as LOG and as MEMORY type at the same time.
+- "*" | LOG,MEMORY - Both values are valid to be used. In case a user set both types, then the tracing will be available 
+as LOG and as MEMORY type at the same time.
 
 Note: In order to access trace records trough web API the "actuator/tracing" must be exposed:
 ```yaml
 management:
   endpoints:
     web:
-    exposure:
-      include: {...},tracing
+      exposure:
+        include: {...},tracing
 ```
 
-When adding tracing endpoint, please configure the entire list of endpoints which you want to be exposed including the default ones.
+When adding tracing endpoint, please configure the entire list of endpoints which you want to be exposed including the 
+default ones.
 
 Configuring the ExchangeFormatter can be achieved in two ways:
 
-- through configuration file
+- through configuration file:
 ```yaml
 sip:
   core:
@@ -313,12 +319,13 @@ sip:
         maxChars: 100
  ```
 
-- by using the following POST request
+- by using the following POST request:
 ```
 /actuator/tracing/format/{exchangeFormatterParameterName}
  ```
 
-The body of the request should include the value we want for the given parameter. In this case, we can change only one parameter per request.
+The body of the request should include the value we want for the given parameter. In this case, we can change only one 
+parameter per request.
 
 TraceHistory is enabled with previous configuration.
 Exchanges will contain the "tracingId" header, which has the original Exchange's id as value.
@@ -348,12 +355,13 @@ For working with Swagger OpenAPI, check their official [documentation](https://s
 
 **Adding Custom Swagger Docs:**
 
-SIP Framework provides a Swagger documentation for the actuator endpoints out of the box. In case a custom Swagger documentation is needed
-it could be added by including the Swagger Apache Camel component. This component is only supporting the REST DSL component.
-For controller classes annotated with `@RestController` an entry is added to the default swagger docs.
-This might not be the expected behavior for which reason the `REST DSL` component is recommended.
+SIP Framework provides a Swagger documentation for the actuator endpoints out of the box. In case a custom Swagger 
+documentation is needed it could be added by including the Swagger Apache Camel component. This component is only 
+supporting the REST DSL component. For controller classes annotated with `@RestController` an entry is added to the 
+default swagger docs. This might not be the expected behavior for which reason the `REST DSL` component is recommended.
 
-The custom Swagger documentation could easily be added by defining it in the `restConfiguration` as seen in the following listing.
+The custom Swagger documentation could easily be added by defining it in the `restConfiguration` as seen in the 
+following listing.
 
 ```java
 restConfiguration()
@@ -375,9 +383,10 @@ rest("/api/v1")
     .to("direct:handleRequest");
 ```
 
-This will create a new Swagger documentation for the REST service. For further informations see the Apache Camel documentation of the [Swagger](https://camel.apache.org/components/next/others/swagger-java.html)
-and [REST DSL](https://camel.apache.org/manual/rest-dsl.html) component. In case the custom Swagger documentation should be displayed by default in the Swagger UI you can configure it
-accordingly in the `application.yaml` file.
+This will create a new Swagger documentation for the REST service. For further information see the Apache Camel 
+documentation of the [Swagger](https://camel.apache.org/components/next/others/swagger-java.html)
+and [REST DSL](https://camel.apache.org/manual/rest-dsl.html) component. In case the custom Swagger documentation 
+should be displayed by default in the Swagger UI you can configure it accordingly in the `application.yaml` file.
 
 ```yaml
 springdoc:
@@ -426,4 +435,4 @@ Check the image and additional warning message by IntelliJ:
 If option 'Clear output directory on rebuild' is enabled, the entire contents of directories where generated sources
 are stored WILL BE CLEARED on rebuild."
 
-![Image of SIP connected systems](./img/intellij_setting_clear_on_rebuild.png?raw=true "IntelliJ rebuild settings")
+![Image of SIP connected systems](./img/intellij_setting_clear_on_rebuild.png "IntelliJ rebuild settings")
