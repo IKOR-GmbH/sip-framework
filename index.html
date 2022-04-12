@@ -486,6 +486,12 @@ file with desired values.</p>
 </thead>
 <tbody>
 <tr>
+<td>sip.core.translation</td>
+<td>Enable SIP translation</td>
+<td>boolean</td>
+<td>true</td>
+</tr>
+<tr>
 <td>sip.core.translation.fileLocations</td>
 <td>Sets locations of translation bundles</td>
 <td>List</td>
@@ -516,34 +522,16 @@ file with desired values.</p>
 <td>en</td>
 </tr>
 <tr>
-<td>sip.core.metrics.external-endpoint-health-check.enabled</td>
-<td>Enable health status calculation</td>
-<td>boolean</td>
-<td>true</td>
-</tr>
-<tr>
-<td>sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay</td>
-<td>Sets health check execution interval</td>
-<td>number</td>
-<td>900000</td>
-</tr>
-<tr>
-<td>sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay</td>
-<td>Sets health check execution initial delay</td>
-<td>number</td>
-<td>5000</td>
-</tr>
-<tr>
 <td>sip.core.tracing.enabled</td>
 <td>Enable SIP tracing and trace history</td>
 <td>boolean</td>
-<td>true</td>
+<td>false</td>
 </tr>
 <tr>
-<td>sip.core.tracing.limit</td>
-<td>Sets storage limit in trace history</td>
-<td>number</td>
-<td>100</td>
+<td>sip.core.tracing.exchange-formatter.{property-name}</td>
+<td>Sets value for specific property in <a href="https://www.javadoc.io/static/org.apache.camel/camel-support/3.0.0/org/apache/camel/support/processor/DefaultExchangeFormatter.html">ExchangeFormatter</a></td>
+<td>/</td>
+<td>/</td>
 </tr>
 <tr>
 <td>sip.core.tracing.trace-type</td>
@@ -552,28 +540,40 @@ file with desired values.</p>
 <td>"*"</td>
 </tr>
 <tr>
-<td>sip.core.tracing.exchange-formatter.{property-name}</td>
-<td>Sets value for specific property in ExchangeFormatter</td>
-<td>/</td>
-<td>/</td>
-</tr>
-<tr>
-<td>sip.testkit.enabled</td>
-<td>Enables SIP Test Kit</td>
+<td>sip.core.metrics.external-endpoint-health-check.enabled</td>
+<td>Enable health status calculation</td>
 <td>boolean</td>
 <td>true</td>
+</tr>
+<tr>
+<td>sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay</td>
+<td>Sets health check execution interval</td>
+<td>Integer</td>
+<td>900000</td>
+</tr>
+<tr>
+<td>sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay</td>
+<td>Sets health check execution initial delay</td>
+<td>Integer</td>
+<td>5000</td>
+</tr>
+<tr>
+<td>management.info.camel.enabled</td>
+<td>Enable basic camel info under /actuator/info endpoint</td>
+<td>boolean</td>
+<td>false</td>
+</tr>
+<tr>
+<td>management.endpoints.web.exposure.include</td>
+<td>Set which endpoints are included</td>
+<td>String</td>
+<td>health,info,metrics,loggers,prometheus,adapter-routes</td>
 </tr>
 <tr>
 <td>management.endpoint.health.show-details</td>
 <td>Enable health details in actuator</td>
 <td>String</td>
 <td>always</td>
-</tr>
-<tr>
-<td>management.endpoints.web.exposure.include</td>
-<td>Set which endpoints are included</td>
-<td>String</td>
-<td>health,info,metrics,loggers,prometheus</td>
 </tr>
 <tr>
 <td>springdoc.show-actuator</td>
@@ -600,22 +600,94 @@ file with desired values.</p>
 <td>true</td>
 </tr>
 <tr>
-<td>springdoc.api-docs.enabled</td>
-<td>Enable/Disable API docs</td>
+<td>sip.testkit.enabled</td>
+<td>Enable SIP testkit</td>
 <td>boolean</td>
 <td>true</td>
 </tr>
 <tr>
-<td>springdoc.swagger-ui.enabled</td>
-<td>Enable/Disable swagger</td>
-<td>boolean</td>
-<td>true</td>
-</tr>
-<tr>
-<td>logging.level.root</td>
-<td>Sets the default log level</td>
+<td>sip.testkit.test-cases-path</td>
+<td>Define path for file with test cases</td>
 <td>String</td>
-<td>INFO</td>
+<td>test-case-definition.yml</td>
+</tr>
+<tr>
+<td>sip.security.ssl.enabled</td>
+<td>Enable SIP SSL security</td>
+<td>boolean</td>
+<td>false</td>
+</tr>
+<tr>
+<td>sip.security.ssl.server.client-auth</td>
+<td>Enable authentication type - Possible values: NONE, WANT or NEED</td>
+<td>String</td>
+<td>none</td>
+</tr>
+<tr>
+<td>sip.security.ssl.server.key-store</td>
+<td>Location of keystore</td>
+<td>String</td>
+<td>/</td>
+</tr>
+<tr>
+<td>sip.security.ssl.server.key-store-password</td>
+<td>Password of keystore</td>
+<td>String</td>
+<td>/</td>
+</tr>
+<tr>
+<td>sip.security.ssl.server.key-store-type</td>
+<td>Type of keystore file</td>
+<td>String</td>
+<td>/</td>
+</tr>
+<tr>
+<td>sip.security.ssl.server.key-alias</td>
+<td>The alias (or name) under which the key is stored in the keystore</td>
+<td>String</td>
+<td>/</td>
+</tr>
+<tr>
+<td>sip.security.ssl.server.key-password</td>
+<td>Password of the key</td>
+<td>String</td>
+<td>/</td>
+</tr>
+<tr>
+<td>sip.security.ssl.client.enabled</td>
+<td>Enable separate client certification</td>
+<td>boolean</td>
+<td>false</td>
+</tr>
+<tr>
+<td>sip.security.ssl.client.key-store</td>
+<td>Location of client keystore</td>
+<td>String</td>
+<td>/</td>
+</tr>
+<tr>
+<td>sip.security.ssl.client.key-store-password</td>
+<td>Password of client keystore</td>
+<td>String</td>
+<td>/</td>
+</tr>
+<tr>
+<td>sip.security.ssl.client.key-store-type</td>
+<td>Type of client keystore file</td>
+<td>String</td>
+<td>/</td>
+</tr>
+<tr>
+<td>sip.security.ssl.client.key-alias</td>
+<td>The alias (or name) under which the key is stored in the client keystore</td>
+<td>String</td>
+<td>/</td>
+</tr>
+<tr>
+<td>sip.security.ssl.client.key-password</td>
+<td>Password of the client key</td>
+<td>String</td>
+<td>/</td>
 </tr>
 </tbody>
 </table>
@@ -672,5 +744,5 @@ file with desired values.</p>
 
 <!--
 MkDocs version : 1.3.0
-Build Date UTC : 2022-04-06 14:58:29.164071+00:00
+Build Date UTC : 2022-04-12 12:51:56.280303+00:00
 -->
