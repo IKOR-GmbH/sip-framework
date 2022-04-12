@@ -36,7 +36,8 @@ Windows OS
     -Dversion=1.0.0-SNAPSHOT
 ```
 
-When executing the command, pay attention to use the latest archetype version for the -DarchetypeVersion parameter.
+When executing the command, pay attention to use the latest archetype version for the `-DarchetypeVersion` parameter.
+Check available versions [here](https://search.maven.org/search?q=de.ikor.sip.foundation).
 
 The parameters `-DgroupId`, `-DartifactId`, `-DprojectName` and `-Dversion` should be adjusted to better match your project,
 as they set the properties for the adapter. It is recommended to follow the maven naming convention.
