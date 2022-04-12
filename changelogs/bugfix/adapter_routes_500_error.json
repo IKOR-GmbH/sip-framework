@@ -1,0 +1,5 @@
+{
+  "author": "LetoBukarica",
+  "pullrequestId": "105",
+  "message": "Fixed the internal server error which occurs when adapter-routes endpoint is called with an non-existing route."
+}
