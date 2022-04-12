@@ -46,4 +46,14 @@ class SIPTranslateMessageServiceTest {
     // assert
     assertThat(subject.getTranslatedMessage(MESSAGE_KEY, array)).isEqualTo(MESSAGE_CONTENT);
   }
+
+  @Test
+  void When_InstanceIsSet_Expect_Instance() {
+    // act
+    assertThat(SIPTranslateMessageService.get()).isNull();
+    subject.afterPropertiesSet();
+
+    // assert
+    assertThat(SIPTranslateMessageService.get()).isEqualTo(subject);
+  }
 }
