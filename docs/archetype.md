@@ -17,7 +17,8 @@ You can create a SIP Adapter by using the following Maven command:
 ```
 
 
-When executing the command, pay attention to use the latest archetype version for the -DarchetypeVersion parameter.
+When executing the command, pay attention to use the latest archetype version for the `-DarchetypeVersion` parameter.
+Check available versions [here](https://search.maven.org/search?q=de.ikor.sip.foundation).
 
 **Overview of the command**
 ```shell
