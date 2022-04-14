@@ -53,7 +53,7 @@ public class AdapterRouteEndpoint {
   @Operation(summary = "Get all routes", description = "Get list of Routes from Camel Context")
   public List<AdapterRouteSummary> routes() {
     return camelContext.getRoutes().stream()
-        .map(route -> new AdapterRouteSummary(mbeanContext.getManagedRoute(route.getRouteId())))
+        .map(route -> new AdapterRouteSummary(getRouteMBean(route.getRouteId())))
         .collect(Collectors.toList());
   }
 
@@ -101,12 +101,7 @@ public class AdapterRouteEndpoint {
   @GetMapping("/{routeId}")
   @Operation(summary = "Get route details", description = "Get route details")
   public AdapterRouteDetails route(@RouteIdParameter @PathVariable String routeId) {
-    ManagedRouteMBean routeMBean = mbeanContext.getManagedRoute(routeId);
-    if (routeMBean == null) {
-      throw new ResponseStatusException(
-          HttpStatus.NOT_FOUND, "Route with ID:" + routeId + " not found");
-    }
-    return new AdapterRouteDetails(mbeanContext.getManagedRoute(routeId));
+    return new AdapterRouteDetails(getRouteMBean(routeId));
   }
 
   /**
@@ -128,9 +123,7 @@ public class AdapterRouteEndpoint {
   @PostMapping("/reset")
   @Operation(summary = "Reset all routes", description = "Resets all routes in Camel Context")
   public void resetAll() {
-    camelContext
-        .getRoutes()
-        .forEach(route -> mbeanContext.getManagedRoute(route.getRouteId()).reset());
+    camelContext.getRoutes().forEach(route -> getRouteMBean(route.getRouteId()).reset());
   }
 
   /**
@@ -141,12 +134,7 @@ public class AdapterRouteEndpoint {
   @PostMapping("/{routeId}/reset")
   @Operation(summary = "Reset route", description = "Reset route")
   public void resetStatistics(@RouteIdParameter @PathVariable String routeId) {
-    ManagedRouteMBean routeMBean = mbeanContext.getManagedRoute(routeId);
-    if (routeMBean == null) {
-      throw new ResponseStatusException(
-          HttpStatus.NOT_FOUND, "Route with ID:" + routeId + " not found");
-    }
-    routeMBean.reset();
+    getRouteMBean(routeId).reset();
   }
 
   /**
@@ -171,7 +159,7 @@ public class AdapterRouteEndpoint {
       description = "Reset all routes which use consumer from SIP Middle component (sipmc)")
   public void resetSipmcRoute() {
     Stream<Route> sipMcRoutes = filterMiddleComponentProducerRoutes(this.camelContext.getRoutes());
-    sipMcRoutes.forEach(route -> mbeanContext.getManagedRoute(route.getRouteId()).reset());
+    sipMcRoutes.forEach(route -> getRouteMBean(route.getRouteId()).reset());
   }
 
   /**
@@ -199,9 +187,16 @@ public class AdapterRouteEndpoint {
     Stream<Route> routeStream = filterMiddleComponentProducerRoutes(camelContext.getRoutes());
 
     Stream<AdapterRouteSummary> adapterRouteSummaryStream =
-        routeStream.map(
-            route -> new AdapterRouteSummary(mbeanContext.getManagedRoute(route.getRouteId())));
+        routeStream.map(route -> new AdapterRouteSummary(getRouteMBean(route.getRouteId())));
 
     return adapterRouteSummaryStream.collect(Collectors.toList());
+  }
+
+  private ManagedRouteMBean getRouteMBean(String routeId) {
+    ManagedRouteMBean routeMBean = mbeanContext.getManagedRoute(routeId);
+    if (routeMBean == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+    return routeMBean;
   }
 }
