@@ -35,15 +35,7 @@ under the License.
             <defaultValue>1.0.0-SNAPSHOT</defaultValue>
         </requiredProperty>
         <requiredProperty key="systemConnector1"/>
-        <requiredProperty key="systemConnector1Package">
-            <validationRegex>^(?!.*([._%+-])\1)[a-z0-9\._]+$
-            </validationRegex>
-        </requiredProperty>
         <requiredProperty key="systemConnector2"/>
-        <requiredProperty key="systemConnector2Package">
-            <validationRegex>^(?!.*([._%+-])\1)[a-z0-9\._]+$
-            </validationRegex>
-        </requiredProperty>
         <requiredProperty key="package">
             <defaultValue>${groupId}.${packageSuffix}</defaultValue>
         </requiredProperty>
@@ -66,132 +58,15 @@ under the License.
             <includes>
                 <include>.gitignore</include>
                 <include>README.md</include>
+                <include>**/*.xml</include>
+                <include>**/*.properties</include>
+                <include>**/*.yaml</include>
+                <include>**/*.yml</include>
+                <include>**/*.config</include>
+                <include>**/*.java</include>
+                <include>**/*.md</include>
+                <include>**/*.keep</include>
             </includes>
         </fileSet>
     </fileSets>
-
-    <modules>
-        <module id="${rootArtifactId}-application" dir="__rootArtifactId__-application"
-                name="${rootArtifactId}-application">
-            <fileSets>
-                <fileSet filtered="true" packaged="true">
-                    <directory>src/main/java</directory>
-                </fileSet>
-                <fileSet filtered="true">
-                    <directory>src/main/resources</directory>
-                    <includes>
-                        <include>**/*.xml</include>
-                        <include>**/*.properties</include>
-                        <include>**/*.yaml</include>
-                    </includes>
-                </fileSet>
-                <fileSet filtered="true">
-                    <directory>src/main/resources/documents</directory>
-                    <includes>
-                        <include>readme.md</include>
-                        <include>changelog.md</include>
-                        <include>adapter-description.md</include>
-                    </includes>
-                </fileSet>
-                <fileSet filtered="true" packaged="true">
-                    <directory>src/test/java</directory>
-                </fileSet>
-                <fileSet filtered="true" encoding="UTF-8">
-                    <directory>src/test/resources</directory>
-                    <includes>
-                        <include>**/*.xml</include>
-                        <include>**/*.properties</include>
-                        <include>**/*.yaml</include>
-                    </includes>
-                </fileSet>
-            </fileSets>
-        </module>
-        <module id="${rootArtifactId}-domain" dir="__rootArtifactId__-domain" name="${rootArtifactId}-domain">
-            <fileSets>
-                <fileSet filtered="true" packaged="true">
-                    <directory>src/main/java</directory>
-                    <excludes>
-                        <exclude>lombok.config</exclude>
-                    </excludes>
-                </fileSet>
-                <fileSet>
-                    <directory>src/main/java</directory>
-                    <includes>
-                        <include>lombok.config</include>
-                    </includes>
-                </fileSet>
-                <fileSet filtered="true">
-                    <directory>src/main/resources</directory>
-                    <includes>
-                        <include>**/*.xml</include>
-                        <include>**/*.properties</include>
-                        <include>**/*.yaml</include>
-                    </includes>
-                </fileSet>
-                <fileSet filtered="true" packaged="true">
-                    <directory>src/test/java</directory>
-                </fileSet>
-                <fileSet filtered="true" encoding="UTF-8">
-                    <directory>src/test/resources</directory>
-                    <includes>
-                        <include>**/*.xml</include>
-                        <include>**/*.properties</include>
-                        <include>**/*.yaml</include>
-                    </includes>
-                </fileSet>
-            </fileSets>
-        </module>
-        <module id="${systemConnector1}" dir="__systemConnector1__" name="${systemConnector1}">
-            <fileSets>
-                <fileSet filtered="true" packaged="true">
-                    <directory>src/main/java</directory>
-                </fileSet>
-                <fileSet filtered="true">
-                    <directory>src/main/resources</directory>
-                    <includes>
-                        <include>**/*.xml</include>
-                        <include>**/*.properties</include>
-                        <include>**/*.yaml</include>
-                    </includes>
-                </fileSet>
-                <fileSet filtered="true" packaged="true">
-                    <directory>src/test/java</directory>
-                </fileSet>
-                <fileSet filtered="true" encoding="UTF-8">
-                    <directory>src/test/resources</directory>
-                    <includes>
-                        <include>**/*.xml</include>
-                        <include>**/*.properties</include>
-                        <include>**/*.yaml</include>
-                    </includes>
-                </fileSet>
-            </fileSets>
-        </module>
-        <module id="${systemConnector2}" dir="__systemConnector2__" name="${systemConnector2}">
-            <fileSets>
-                <fileSet filtered="true" packaged="true">
-                    <directory>src/main/java</directory>
-                </fileSet>
-                <fileSet filtered="true">
-                    <directory>src/main/resources</directory>
-                    <includes>
-                        <include>**/*.xml</include>
-                        <include>**/*.properties</include>
-                        <include>**/*.yaml</include>
-                    </includes>
-                </fileSet>
-                <fileSet filtered="true" packaged="true">
-                    <directory>src/test/java</directory>
-                </fileSet>
-                <fileSet filtered="true" encoding="UTF-8">
-                    <directory>src/test/resources</directory>
-                    <includes>
-                        <include>**/*.xml</include>
-                        <include>**/*.properties</include>
-                        <include>**/*.yaml</include>
-                    </includes>
-                </fileSet>
-            </fileSets>
-        </module>
-    </modules>
 </archetype-descriptor>
