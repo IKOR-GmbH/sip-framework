@@ -58,14 +58,41 @@ under the License.
             <includes>
                 <include>.gitignore</include>
                 <include>README.md</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="true" encoding="UTF-8" packaged="true">
+            <directory>src/test/java</directory>
+            <includes>
+                <include>**/*.java</include>
+                <include>**/*.keep</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="true" encoding="UTF-8" packaged="true">
+            <directory>src/main/java</directory>
+            <includes>
+                <include>**/*.config</include>
+                <include>**/*.java</include>
+                <include>**/*.keep</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources</directory>
+            <includes>
                 <include>**/*.xml</include>
                 <include>**/*.properties</include>
                 <include>**/*.yaml</include>
                 <include>**/*.yml</include>
-                <include>**/*.config</include>
-                <include>**/*.java</include>
                 <include>**/*.md</include>
-                <include>**/*.keep</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/resources</directory>
+            <includes>
+                <include>**/*.xml</include>
+                <include>**/*.properties</include>
+                <include>**/*.yaml</include>
+                <include>**/*.yml</include>
+                <include>**/*.md</include>
             </includes>
         </fileSet>
     </fileSets>
