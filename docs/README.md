@@ -375,7 +375,7 @@ springdoc.swagger-ui.path | Custom path to Swagger | String | /swagger-ui.html |
 springdoc.swagger-ui.disable-swagger-default-url | Disables default petstore API in swagger | boolean | true |
 sip.testkit.enabled | Enable SIP testkit | boolean | true |
 sip.testkit.test-cases-path | Define path for file with test cases | String | test-case-definition.yml
-sip.security.ssl.enabled | Enable SIP SSL security | boolean | false |
+sip.security.ssl.enabled | Enable [SIP SSL security](https://ikor-gmbh.github.io/sip-framework/security/#configuration) | boolean | false |
 sip.security.ssl.server.client-auth | Enable authentication type - Possible values: NONE, WANT or NEED | String | none
 sip.security.ssl.server.key-store | Location of keystore | String | / |
 sip.security.ssl.server.key-store-password | Password of keystore | String | /
