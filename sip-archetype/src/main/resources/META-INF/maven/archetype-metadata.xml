@@ -34,8 +34,14 @@ under the License.
         <requiredProperty key="version">
             <defaultValue>1.0.0-SNAPSHOT</defaultValue>
         </requiredProperty>
-        <requiredProperty key="systemConnector1"/>
-        <requiredProperty key="systemConnector2"/>
+        <requiredProperty key="systemConnector1">
+            <validationRegex>^(?!.*([._%+-])\1)[a-z0-9\._]+$
+            </validationRegex>
+        </requiredProperty>
+        <requiredProperty key="systemConnector2">
+            <validationRegex>^(?!.*([._%+-])\1)[a-z0-9\._]+$
+            </validationRegex>
+        </requiredProperty>
         <requiredProperty key="package">
             <defaultValue>${groupId}.${packageSuffix}</defaultValue>
         </requiredProperty>
