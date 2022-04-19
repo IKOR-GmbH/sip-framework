@@ -166,27 +166,19 @@
 <p>This archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies</p>
 <h2 id="how-to-create-a-sip-adapter-using-sip-archetype">How to create a SIP Adapter using SIP Archetype<a class="headerlink" href="#how-to-create-a-sip-adapter-using-sip-archetype" title="Permanent link">&para;</a></h2>
 <p>In order to make setting up a new integration adapter project an easy task, we have created a dedicated SIP (Adapter) Maven archetype, that gives the ability to quickly bootstrap a new integration adapter, along with all needed Maven dependencies and goodies, as well as the recommended, preferred organization of the project.</p>
-<p>To make a long story short, you can create a SIP Adapter by using the following Maven command:</p>
-<p>Mac OS
-<pre class="highlight"><code class="language-shell">  mvn archetype:generate \
-    -DarchetypeGroupId=de.ikor.sip.foundation \
-    -DarchetypeArtifactId=sip-archetype \
-    -DarchetypeVersion=&lt;latest.sip-archetype.version&gt; \
-    -DgroupId=de.ikor.sip.adapter \
-    -DartifactId=demo \
-    -DprojectName=DemoAdapter \
-    -Dversion=1.0.0-SNAPSHOT</code></pre></p>
-<p>Windows OS
-<pre class="highlight"><code class="language-shell">  mvn archetype:generate ^
-    -DarchetypeGroupId=de.ikor.sip.foundation ^
-    -DarchetypeArtifactId=sip-archetype ^
-    -DarchetypeVersion=&lt;latest.sip-archetype.version&gt; ^
-    -DgroupId=de.ikor.sip.adapter ^
-    -DartifactId=demo ^
-    -DprojectName=DemoAdapter ^
-    -Dversion=1.0.0-SNAPSHOT</code></pre></p>
+<p>You can create a SIP Adapter by using the following Maven command:</p>
+<pre class="highlight"><code class="language-shell">  mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=&lt;latest.sip-archetype.version&gt; -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT</code></pre>
 <p>When executing the command, pay attention to use the latest archetype version for the <code>-DarchetypeVersion</code> parameter.
 Check available versions <a href="https://search.maven.org/search?q=de.ikor.sip.foundation">here</a>.</p>
+<p><strong>Overview of the command</strong>
+<pre class="highlight"><code class="language-shell">mvn archetype:generate
+-DarchetypeGroupId=de.ikor.sip.foundation
+-DarchetypeArtifactId=sip-archetype
+-DarchetypeVersion=&lt;latest.sip-archetype.version&gt;
+-DgroupId=de.ikor.sip.adapter
+-DartifactId=demo
+-DprojectName=DemoAdapter
+-Dversion=1.0.0-SNAPSHOT</code></pre></p>
 <p>The parameters <code>-DgroupId</code>, <code>-DartifactId</code>, <code>-DprojectName</code> and <code>-Dversion</code> should be adjusted to better match your project,
 as they set the properties for the adapter. It is recommended to follow the maven naming convention.</p>
 <p>After executing maven command, you will be requested to insert additional parameters about project structure:</p>
@@ -264,6 +256,7 @@ as they set the properties for the adapter. It is recommended to follow the mave
     <script src="../js/theme_extra.js" defer></script>
     <script src="../js/theme.js" defer></script>
       <script src="../javascript/javadoc_menu_dropdown.js" defer></script>
+      <script src="../javascript/copy_to_clipboard.js" defer></script>
       <script src="../search/main.js" defer></script>
     <script defer>
         window.onload = function () {
