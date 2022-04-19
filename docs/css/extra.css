@@ -127,7 +127,7 @@ footer p {
 
 
 .copy-button {
-    background-image: url(/img/copy-button.svg);
+    background-image: url(/sip-framework/img/copy-button.svg);
     background-position: center;
     background-repeat: no-repeat;
     background-origin: content-box;
