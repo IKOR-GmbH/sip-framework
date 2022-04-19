@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Route;
 import org.apache.camel.api.management.ManagedCamelContext;
@@ -27,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
  */
 @Component
 @RestControllerEndpoint(id = "adapter-routes")
+@Slf4j
 public class AdapterRouteEndpoint {
   private final CamelContext camelContext;
   private final RouteControllerLoggingDecorator routeController;
@@ -195,6 +197,7 @@ public class AdapterRouteEndpoint {
   private ManagedRouteMBean getRouteMBean(String routeId) {
     ManagedRouteMBean routeMBean = mbeanContext.getManagedRoute(routeId);
     if (routeMBean == null) {
+      log.warn("sip.core.actuator.routes.routenotfound_{}", routeId);
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
     return routeMBean;
