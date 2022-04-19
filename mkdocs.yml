@@ -42,6 +42,7 @@ extra_css:
 
 extra_javascript:
     - javascript/javadoc_menu_dropdown.js
+    - javascript/copy_to_clipboard.js
 
 markdown_extensions:
   - toc:
