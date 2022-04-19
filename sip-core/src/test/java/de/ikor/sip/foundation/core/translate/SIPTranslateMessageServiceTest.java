@@ -50,7 +50,6 @@ class SIPTranslateMessageServiceTest {
   @Test
   void When_InstanceIsSet_Expect_Instance() {
     // act
-    assertThat(SIPTranslateMessageService.get()).isNull();
     subject.afterPropertiesSet();
 
     // assert
