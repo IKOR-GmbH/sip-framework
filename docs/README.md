@@ -134,6 +134,11 @@ Once you have your adapter you can do the following steps:
 - Run SIPApplication found inside application module
 - After the application is up and running you can check SIP's management API under [localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 
+### Framework version upgrade
+
+If you need to upgrade your adapter to a newer SIP Framework version, please follow this 
+[guide](./framework_version_upgrade.md).
+
 ### How and why to use SIP Middle Component
 
 [SIP Middle Component](./middle-component.md) (sipmc) is a key concept of SIP Framework.
@@ -341,7 +346,7 @@ It also makes routes more descriptive and adapters much easier to maintain.
 
 As we can see each external endpoint, definition is followed by explicit setting of id. Although it's not mandatory,
 doing so is highly recommended especially in case of outgoing endpoints. This will provide a reference of the external
-endpoints, which can be used for different functionalities, like mocking, custom health check or other functionalities
+endpoints, which can be used for different functionalities, like custom health check, testing with test-kit or other 
 that are yet to come.
 Notice that in case of incoming endpoints (those in "from" statement), following id refers to the routeId.
 
