@@ -39,16 +39,15 @@ systems, but all the principles apply equally to such scenarios.
 The image below shows the modules structure of a single SIP adapter.
 To provide a level of flexibility, SIP splits the problem into two, giving the possibility to develop and/or deploy connectors
 for individual systems separately. The integration
-logic is divided into three modules: **System A - Connector**, **System B - Connector** and **Domain**. The fourth module is the **Application**
-module. Its purpose is to converge the three integration modules into one deployable and executable application.
-The blue arrows represent dependencies of the application module.
+logic is divided into three packages: **System A - Connector**, **System B - Connector** and **Common - Domain**.
 
 ![Image of SIP Adapter](./img/SIP_readme_adapter_detail.svg?raw=true "SIP Adapter")
 
 **Domain**
 
-The **Domain** module takes a central position in the image, because it provides the common data model for both systems.
-Also, it separates the system connectors from each other to allow loose coupling between them. It should not contain any
+The **Common** Package takes a central position in the image, 
+because it provides the common data model inside domain for both systems and common util functionalities.
+Also, it separates the system connectors from each other to allow loose coupling between them. Domain package should not contain any
 integration logic but only simple Java objects representing the respective domain in which the system connectors of an adapter
 operate. All connectors should adapt the data models of their systems to or from this common model, depending on data flow,
 due to their incompatibilities. The domain can be seen as a kind of contract between the different system connectors which
@@ -63,9 +62,7 @@ external systems they communicate with. In order to send a message from one syst
 to another, the local domain objects must be mapped to the shared domain object. Furthermore, this means that a message
 from system A is mapped to the shared domain object and then from the shared domain object to the model of system B and
 vice versa, due to their bidirectional nature.
-Notice the blue arrows pointing from the system connectors to the domain
-module, meaning that connectors are absolutely independent of each other. A developer can work on or deploy only one side,
-without the others being affected. This also means that changes on one of adapter's connector does not necessarily require
+This also means that changes on one of adapter's connector does not necessarily require
 changes of the other. That's especially important if the affected connector is reused across multiple adapters.
 In the picture domain A and domain B packages are shown optionally, together with corresponding mapper
 component, since integrated systems use the same communication data model sometimes.
@@ -76,14 +73,12 @@ Each connector will have the following structure:
 - `sink` here we should define Camel routes
 - `transformers` it should contain classes for adapting the connector model to common domain model.
 - `domain` (optional) it may contain the data model of the system.
+- `processors` camel processors
+- `validators` camel validators
 
 **Application**
 
-The Application module gathers all connector modules as one system and run them together.
-Starting your adapter is done by running SIPApplication class in the application module.
-Furthermore, its pom.xml must contain dependencies to all connector modules in adapter,
-in order to start them. This module should not contain any integration logic, but it's a good place for implementing Spring
-integration tests, such as default SIPApplicationTest, provided by archetype.
+Starting your adapter is done by running SIPApplication class in the project root.
 
 ## Usage
 
@@ -130,8 +125,8 @@ Once you have your adapter you can do the following steps:
 - Add RouteBuilders inside "sink" package in connectors
 - Add classes which transform system data models to or from common domain model in "transformers" package in connectors (if needed)
 - Add any configuration classes for a specific system inside "config" package in connectors
-- Add general integration configuration in application.yml found inside application module resources
-- Run SIPApplication found inside application module
+- Add general integration configuration in application.yml found inside resources
+- Run SIPApplication found inside project root
 - After the application is up and running you can check SIP's management API under [localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 
 ### Framework version upgrade
@@ -179,110 +174,31 @@ can keep their independence.
 
 By using the SIP archetype to create a new SIP adapter, by default there are two system connectors, designed to make it
 more convenient to integrate systems. In case there are more than two systems, which need to be integrated, you need to add
-additional modules to the project structure. There are a number of ways to add new system connectors to a SIP adapter.
-These possibilities are explained in detail in the following part.
+additional package to the project structure.
 
-Initially each system connector module has two dependencies.
-These are the domain module and the `sip-integration-starter`.
-Make sure to add these to your `pom.xml` dependencies list.
-Please observe this exemplary [pom.xml](#example-pom) to see how it should look like in a system connector module.
-
-The module structure usually looks like this:
+The project structure usually looks like this:
 
 ```text
 fancy-sip-adapter
-├───new-system-connector-module
-│   ├───src/main/java/<package-path>
-│   │   ├───config
-│   │   ├───sink
-│   │   └───transformer
-│   └───pom.xml
-...
+├───src/main/java/<package-path>
+│   ├───common
+│   │   ├───domain
+│   │   └───util
+│   ├───connectors
+│   │   └───connector1
+│   │       ├───config
+│   │       ├───transformer
+│   │       ├───processors
+│   │       ├───sink
+│   │       ├───validators
+│   │       └───domain
+│   └───SIPApplication.java
+└───pom.xml
 ```
 
-**Copying Existing Module**
-
-One way to add a system connector as a new module is to copy an existing module,
-that has been created by using the SIP archetype to your project structure.
-If the module was copied the `name` and `artifactId` in its `pom.xml` need to be adjusted.
-Then the module name should be added to the `modules` element of the `pom.xml` of the main project.
-
-```xml
-<modules>
-  <module>system-connector-A</module>
-  <module>system-connector-B</module>
-  <module>new-system-connector-module</module>
-</modules>
-```
-
-Additionally, the copied module must be added as a dependency to the `pom.xml` of the application module.
-
-```xml
-<dependencies>
-  <dependency>
-    <groupId>de.ikor.sip.adapter</groupId>
-    <artifactId>new-system-connector-module</artifactId>
-    <version>${project.version}</version>
-  </dependency>
-  ...
-</dependencies>
-```
-
-If necessary, refresh or rebuild the project so that the newly created module gets registered.
-
-**Using IDEs Built-In Functionality**
-
-- IntelliJ
-    - Right click on the parent project folder and select `New > Module...`.
-    - Select `Maven` in the left menu and click on the `Next` button
-    - Provide a new module name and click on `Finish`
-
-- Eclipse
-    - `File > New > Other...`
-    - Enter `maven  module` select `Maven Module` from the search result list and click on `Next`
-    - Enter a module name select the parent project and press `Next`
-    - Choose a maven archetype version from the list and click `Next` (You can use the default selection)
-    - Check the archetype parameters and press `Finish`
-
-The result is a new subdirectory of the SIP adapter project.
-Compare the `pom.xml` of the newly created module with one of the modules that were created by SIP archetype.
-There are only a few differences that need to be adjusted.
-
-Make sure the newly created module is present in the `modules` element list of the main `pom.xml`
-and that it has been added as a dependency to the application `pom.xml`.
-
-**Example POM**
-
-<a name="example-pom"/>
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>de.ikor.sip.adapter</groupId>
-    <artifactId>systemadapter</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-
-  <artifactId>outbound</artifactId>
-  <name>outbound</name>
-
-  <dependencies>
-    <dependency>
-      <groupId>de.ikor.sip.foundation</groupId>
-      <artifactId>sip-integration-starter</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>de.ikor.sip.adapter</groupId>
-      <artifactId>systemadapter-domain</artifactId>
-    </dependency>
-  </dependencies>
-</project>
-```
+Easiest way would be just copying an existing connector package which contains the pre-made structure.
+This can also be done manually by creating a new package. 
+It is important that these packages are contained in connectors package.
 
 ### Development Tips
 
