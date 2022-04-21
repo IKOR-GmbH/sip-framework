@@ -10,33 +10,27 @@ This archetype creates a basic SIP Adapter project with a defined structure and 
 
 In order to make setting up a new integration adapter project an easy task, we have created a dedicated SIP (Adapter) Maven archetype, that gives the ability to quickly bootstrap a new integration adapter, along with all needed Maven dependencies and goodies, as well as the recommended, preferred organization of the project.
 
-To make a long story short, you can create a SIP Adapter by using the following Maven command:
+You can create a SIP Adapter by using the following Maven command:
 
-Mac OS
 ```shell
-  mvn archetype:generate \
-    -DarchetypeGroupId=de.ikor.sip.foundation \
-    -DarchetypeArtifactId=sip-archetype \
-    -DarchetypeVersion=<latest.sip-archetype.version> \
-    -DgroupId=de.ikor.sip.adapter \
-    -DartifactId=demo \
-    -DprojectName=DemoAdapter \
-    -Dversion=1.0.0-SNAPSHOT
+  mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=<latest.sip-archetype.version> -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT
 ```
 
-Windows OS
-```shell
-  mvn archetype:generate ^
-    -DarchetypeGroupId=de.ikor.sip.foundation ^
-    -DarchetypeArtifactId=sip-archetype ^
-    -DarchetypeVersion=<latest.sip-archetype.version> ^
-    -DgroupId=de.ikor.sip.adapter ^
-    -DartifactId=demo ^
-    -DprojectName=DemoAdapter ^
-    -Dversion=1.0.0-SNAPSHOT
-```
 
-When executing the command, pay attention to use the latest archetype version for the -DarchetypeVersion parameter.
+When executing the command, pay attention to use the latest archetype version for the `-DarchetypeVersion` parameter.
+Check available versions [here](https://search.maven.org/search?q=de.ikor.sip.foundation).
+
+**Overview of the command**
+```shell
+mvn archetype:generate
+-DarchetypeGroupId=de.ikor.sip.foundation
+-DarchetypeArtifactId=sip-archetype
+-DarchetypeVersion=<latest.sip-archetype.version>
+-DgroupId=de.ikor.sip.adapter
+-DartifactId=demo
+-DprojectName=DemoAdapter
+-Dversion=1.0.0-SNAPSHOT
+```
 
 The parameters `-DgroupId`, `-DartifactId`, `-DprojectName` and `-Dversion` should be adjusted to better match your project,
 as they set the properties for the adapter. It is recommended to follow the maven naming convention.

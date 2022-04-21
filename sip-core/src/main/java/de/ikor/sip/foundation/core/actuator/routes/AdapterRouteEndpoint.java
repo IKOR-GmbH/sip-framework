@@ -6,14 +6,18 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Route;
 import org.apache.camel.api.management.ManagedCamelContext;
+import org.apache.camel.api.management.mbean.ManagedRouteMBean;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Entry point of the HTTP-only Actuator endpoint that exposes management functions from the
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 @Component
 @RestControllerEndpoint(id = "adapter-routes")
+@Slf4j
 public class AdapterRouteEndpoint {
   private final CamelContext camelContext;
   private final RouteControllerLoggingDecorator routeController;
@@ -50,7 +55,7 @@ public class AdapterRouteEndpoint {
   @Operation(summary = "Get all routes", description = "Get list of Routes from Camel Context")
   public List<AdapterRouteSummary> routes() {
     return camelContext.getRoutes().stream()
-        .map(route -> new AdapterRouteSummary(mbeanContext.getManagedRoute(route.getRouteId())))
+        .map(route -> new AdapterRouteSummary(getRouteMBean(route.getRouteId())))
         .collect(Collectors.toList());
   }
 
@@ -98,7 +103,7 @@ public class AdapterRouteEndpoint {
   @GetMapping("/{routeId}")
   @Operation(summary = "Get route details", description = "Get route details")
   public AdapterRouteDetails route(@RouteIdParameter @PathVariable String routeId) {
-    return new AdapterRouteDetails(mbeanContext.getManagedRoute(routeId));
+    return new AdapterRouteDetails(getRouteMBean(routeId));
   }
 
   /**
@@ -120,9 +125,7 @@ public class AdapterRouteEndpoint {
   @PostMapping("/reset")
   @Operation(summary = "Reset all routes", description = "Resets all routes in Camel Context")
   public void resetAll() {
-    camelContext
-        .getRoutes()
-        .forEach(route -> mbeanContext.getManagedRoute(route.getRouteId()).reset());
+    camelContext.getRoutes().forEach(route -> getRouteMBean(route.getRouteId()).reset());
   }
 
   /**
@@ -133,7 +136,7 @@ public class AdapterRouteEndpoint {
   @PostMapping("/{routeId}/reset")
   @Operation(summary = "Reset route", description = "Reset route")
   public void resetStatistics(@RouteIdParameter @PathVariable String routeId) {
-    mbeanContext.getManagedRoute(routeId).reset();
+    getRouteMBean(routeId).reset();
   }
 
   /**
@@ -158,7 +161,7 @@ public class AdapterRouteEndpoint {
       description = "Reset all routes which use consumer from SIP Middle component (sipmc)")
   public void resetSipmcRoute() {
     Stream<Route> sipMcRoutes = filterMiddleComponentProducerRoutes(this.camelContext.getRoutes());
-    sipMcRoutes.forEach(route -> mbeanContext.getManagedRoute(route.getRouteId()).reset());
+    sipMcRoutes.forEach(route -> getRouteMBean(route.getRouteId()).reset());
   }
 
   /**
@@ -186,9 +189,17 @@ public class AdapterRouteEndpoint {
     Stream<Route> routeStream = filterMiddleComponentProducerRoutes(camelContext.getRoutes());
 
     Stream<AdapterRouteSummary> adapterRouteSummaryStream =
-        routeStream.map(
-            route -> new AdapterRouteSummary(mbeanContext.getManagedRoute(route.getRouteId())));
+        routeStream.map(route -> new AdapterRouteSummary(getRouteMBean(route.getRouteId())));
 
     return adapterRouteSummaryStream.collect(Collectors.toList());
+  }
+
+  private ManagedRouteMBean getRouteMBean(String routeId) {
+    ManagedRouteMBean routeMBean = mbeanContext.getManagedRoute(routeId);
+    if (routeMBean == null) {
+      log.warn("sip.core.actuator.routes.routenotfound_{}", routeId);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+    return routeMBean;
   }
 }

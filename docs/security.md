@@ -1,8 +1,8 @@
-## SIP Security
+# SIP Security
 
 [TOC]
 
-### Introduction
+## Introduction
 
 **What is SIP Security?**
 SIP Security is built on top of Spring Security and is trying to ease and streamline the usage of Security related aspects,
@@ -13,8 +13,9 @@ Nowadays, security is one of the most important topics in every application.
 Implementing code and configuration on top of Spring Security should help you jump-start your adapter development
 (along with the archetype), not waste your time, and enable you to focus on your core tasks - resolving integration problems.
 
-### Dependency
+## Installation
 
+Adding the Maven dependency for SIP Security should be enough to boostrap it. For proper configuration please refer to the "Configuration" chapter.
 ```xml
 <dependency>
     <groupId>de.ikor.sip.foundation</groupId>
@@ -24,13 +25,16 @@ Implementing code and configuration on top of Spring Security should help you ju
 
 SIP Security dependency is included by default when creating adapter with SIP Archetype.
 
-### Contents
+Note: Spring Security dependency will also be added as a transitive one.
 
-Following description shows SIP Security functionalities and configuration.
+## Configuration
 
-#### SSL
-SSL is by default turned off. It can be activated by setting a server side certificate or turning the client SSL explicitly 
-on and optionally setting a client certificate. If no server certificate is set a client certificate is mandatory when turning on client SSL.
+Following description shows SIP Security functionalities and configuration. Valid configuration is needed to be able to properly utilize SIP security, no additional coding is required.
+
+### SSL
+SSL is by default turned off. It can be activated by turning it on explicitly either on a client or on a sever side.
+
+Client SSL is by default using a server certificate. If no server certificate is set a client certificate is mandatory when turning on client SSL.
 
 - Client (our application is consuming APIs using the provided certificate)
   ```yaml
@@ -44,7 +48,7 @@ on and optionally setting a client certificate. If no server certificate is set 
               key-alias: springboot #the alias of the key to be chosen from the container
               key-password: password # we recommend to use env_vars or sealed secrets
   ```
-  To turn the usage of a specific client certificate off (default):
+  To turn off the usage of client SSL check (default):
   ```yaml
   sip.security:
       ssl:
@@ -74,11 +78,10 @@ on and optionally setting a client certificate. If no server certificate is set 
   ```yaml
   sip.security:
       ssl:
-          server:
-              enabled: false
+          enabled: false
   ```
 
-#### Authentication
+### Authentication
 Global authentication configuration:
 
 ```yaml
@@ -91,51 +94,57 @@ sip.security:
         - /favicon.ico
 ```
 
-- <u>Extractors</u> (extract the relevant token from an http-requests)
-    - BasicAuth: Extracts the BasicAuth credentials from the request
-    - X509: Extracts the X509 certificate from the request (requires sip.security.ssl.server.client-auth set to need or want)
-- <u>Providers</u> (triggers a Validator to validate a given authentication)
+#### Definitions
+These are the basic building blocks of authentication mechanism:
+- <u>Extractors</u> -Extract the relevant Token from a HTTP Requests
+    - BasicAuth: Extracts the BasicAuth credentials from the request Header
+    - X509: Extracts the X509 certificate from the request (requires _sip.security.ssl.server.client-auth_ set to _need_ or _want_ - _none_ is by default)
+- <u>Providers</u> - Triggers a Validator to validate a given authentication request
     - BasicAuth: Takes the extracted basic auth token and uses the given validator from the configuration to validate the token
     - X509: Takes the extracted X509 token and uses the given validator from the configuration to validate the token
-- <u>Validators</u> (validates a given token)
-    - BasicAuth
-      ```yaml
-      sip.security:
-          authentication:
-              auth-providers: #authentication functionality is enabled if valid providers are defined
-                  - classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationProvider
-                    ignored-endpoints: #a list of endpoints which are ignored by this specific authenticator based on Spring´s AntPathMatchers implementation
-                      - /actuator/health
-                      - /actuator/env
-                    validation:
-                      classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthFileValidator #FQCN of the validator to be used
-                      file-path: classpath:basic-auth-users.json  # possible resource strings are classpath:, file:, http:, _none_
-      ```
-      Sample file `basic-auth-users.json`:
-      ```json
-      [
-          {"username": "user1", "password": "pw1"},
-          {"username": "anotherUser", "password": "anotherPassword"}
-      ]
-      ```
-  - X509 Configuration:
-    ```yaml
-    sip.security:
-        authentication:
-            auth-providers: #authentication functionality is enabled if valid providers are defined
-                - classname: de.ikor.sip.foundation.security.authentication.x509.SIPX509AuthenticationProvider
-                  ignored-endpoints: #a list of endpoints which are ignored by this specific authenticator based on Spring´s AntPathMatchers implementation
-                    - /favicon.ico
-                    - /actuator/env
-                  validation:
-                    classname: de.ikor.sip.foundation.security.authentication.x509.SIPX509FileValidator #FQCN of the validator to be used
-                    file-path: classpath:client-certs.acl  # possible resource strings are classpath:, file:, http:, _none_
-    ```
-    Sample file `client-certs.acl`:
-    ```text
-    CN=Full Name, EMAILADDRESS=name@domain.de, O=[*], C=DE
-    CN=Full Name2, EMAILADDRESS=name2@domain.de, O=[*], C=DE
-    ```
+- <u>Validators</u> - Validates a given token against a provided list of valid user credentials which are provided via configuration
+ 
+  
+#### Examples
+
+- BasicAuth
+  ```yaml
+  sip.security:
+      authentication:
+          auth-providers: #authentication functionality is enabled if valid providers are defined
+              - classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationProvider
+                ignored-endpoints: #a list of endpoints which are ignored by this specific authenticator based on Spring´s AntPathMatchers implementation
+                  - /actuator/health
+                  - /actuator/env
+                validation:
+                  classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthFileValidator #FQCN of the validator to be used
+                  file-path: classpath:basic-auth-users.json  # possible resource strings are classpath:, file:, http:, _none_
+  ```
+  Sample file `basic-auth-users.json`:
+  ```json
+  [
+      {"username": "user1", "password": "pw1"},
+      {"username": "anotherUser", "password": "anotherPassword"}
+  ]
+  ```
+- X509 Configuration:
+  ```yaml
+  sip.security:
+      authentication:
+          auth-providers: #authentication functionality is enabled if valid providers are defined
+              - classname: de.ikor.sip.foundation.security.authentication.x509.SIPX509AuthenticationProvider
+                ignored-endpoints: #a list of endpoints which are ignored by this specific authenticator based on Spring´s AntPathMatchers implementation
+                  - /favicon.ico
+                  - /actuator/env
+                validation:
+                  classname: de.ikor.sip.foundation.security.authentication.x509.SIPX509FileValidator #FQCN of the validator to be used
+                  file-path: classpath:client-certs.acl  # possible resource strings are classpath:, file:, http:, _none_
+  ```
+  Sample file `client-certs.acl`:
+  ```text
+  CN=Full Name, EMAILADDRESS=name@domain.de, O=[*], C=DE
+  CN=Full Name2, EMAILADDRESS=name2@domain.de, O=[*], C=DE
+  ```
 
 ### Additional information
 

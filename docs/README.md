@@ -134,6 +134,11 @@ Once you have your adapter you can do the following steps:
 - Run SIPApplication found inside application module
 - After the application is up and running you can check SIP's management API under [localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 
+### Framework version upgrade
+
+If you need to upgrade your adapter to a newer SIP Framework version, please follow this 
+[guide](./framework_version_upgrade.md).
+
 ### How and why to use SIP Middle Component
 
 [SIP Middle Component](./middle-component.md) (sipmc) is a key concept of SIP Framework.
@@ -341,7 +346,7 @@ It also makes routes more descriptive and adapters much easier to maintain.
 
 As we can see each external endpoint, definition is followed by explicit setting of id. Although it's not mandatory,
 doing so is highly recommended especially in case of outgoing endpoints. This will provide a reference of the external
-endpoints, which can be used for different functionalities, like mocking, custom health check or other functionalities
+endpoints, which can be used for different functionalities, like custom health check, testing with test-kit or other 
 that are yet to come.
 Notice that in case of incoming endpoints (those in "from" statement), following id refers to the routeId.
 
@@ -354,25 +359,37 @@ When using a yaml configuration file, which is already available in application 
 
 Name | Description | Value | Default |
 --- | --- | --- | --- |
+sip.core.translation.enabled | Enable SIP translation | boolean | true
 sip.core.translation.fileLocations | Sets locations of translation bundles | List | classpath:translations/translated-messages, classpath:translations/sip-core-messages |
 sip.core.translation.default-encoding | Sets default encoding | String | UTF-8 |
 sip.core.translation.fallback-to-system-locale | Use system language if none defined | boolean | false |
 sip.core.translation.use-code-as-default-message | If key is not assigned use it in message | boolean | true |
 sip.core.translation.lang | Set language of log messages | String | en |
-sip.core.metrics.external-endpoint-health-check.enabled | Enable health status calculation | boolean | true |
-sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay | Sets health check execution interval | number | 900000 |
-sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay | Sets health check execution initial delay | number | 5000 |
-sip.core.tracing.enabled | Enable SIP tracing and trace history | boolean | true |
-sip.core.tracing.limit | Sets storage limit in trace history | number | 100 |
+sip.core.tracing.enabled | Enable SIP tracing and trace history | boolean | false |
+sip.core.tracing.exchange-formatter.{property-name} | Sets value for specific property in [ExchangeFormatter](https://www.javadoc.io/static/org.apache.camel/camel-support/3.0.0/org/apache/camel/support/processor/DefaultExchangeFormatter.html) | / | / |
 sip.core.tracing.trace-type | Sets how tracer should behave | String | "*" |
-sip.core.tracing.exchange-formatter.{property-name} | Sets value for specific property in ExchangeFormatter | / | / |
-sip.testkit.enabled | Enables SIP Test Kit | boolean | true |
+sip.core.metrics.external-endpoint-health-check.enabled | Enable health status calculation | boolean | true |
+sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay | Sets health check execution interval | Integer | 900000 |
+sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay | Sets health check execution initial delay | Integer | 5000 |
+management.info.camel.enabled | Enable basic camel info under /actuator/info endpoint | boolean | false |
+management.endpoints.web.exposure.include | Set which endpoints are included | String | health,info,metrics,loggers,prometheus,adapter-routes |
 management.endpoint.health.show-details | Enable health details in actuator | String | always |
-management.endpoints.web.exposure.include | Set which endpoints are included | String | health,info,metrics,loggers,prometheus |
 springdoc.show-actuator | Show actuator API in Swagger docs| boolean | true |
 springdoc.api-docs.path | Custom path to API docs | String | /api-docs |
 springdoc.swagger-ui.path | Custom path to Swagger | String | /swagger-ui.html |
 springdoc.swagger-ui.disable-swagger-default-url | Disables default petstore API in swagger | boolean | true |
-springdoc.api-docs.enabled | Enable/Disable API docs | boolean | true |
-springdoc.swagger-ui.enabled | Enable/Disable swagger | boolean | true |
-logging.level.root | Sets the default log level | String | INFO |
+sip.testkit.enabled | Enable SIP testkit | boolean | true |
+sip.testkit.test-cases-path | Define path for file with test cases | String | test-case-definition.yml
+sip.security.ssl.enabled | Enable [SIP SSL security](https://ikor-gmbh.github.io/sip-framework/security/#configuration) | boolean | false |
+sip.security.ssl.server.client-auth | Enable authentication type - Possible values: NONE, WANT or NEED | String | none
+sip.security.ssl.server.key-store | Location of keystore | String | / |
+sip.security.ssl.server.key-store-password | Password of keystore | String | /
+sip.security.ssl.server.key-store-type | Type of keystore file | String | / |
+sip.security.ssl.server.key-alias | The alias (or name) under which the key is stored in the keystore | String | / |
+sip.security.ssl.server.key-password | Password of the key | String | / | 
+sip.security.ssl.client.enabled | Enable separate client certification | boolean | false |
+sip.security.ssl.client.key-store | Location of client keystore | String | /
+sip.security.ssl.client.key-store-password | Password of client keystore | String | /
+sip.security.ssl.client.key-store-type | Type of client keystore file | String | / |
+sip.security.ssl.client.key-alias | The alias (or name) under which the key is stored in the client keystore | String | / |
+sip.security.ssl.client.key-password | Password of the client key | String | / |
