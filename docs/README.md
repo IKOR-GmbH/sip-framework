@@ -275,7 +275,7 @@ When using a yaml configuration file, which is already available in application 
 
 Name | Description | Value | Default |
 --- | --- | --- | --- |
-sip.core.translation | Enable SIP translation | boolean | true
+sip.core.translation.enabled | Enable SIP translation | boolean | true
 sip.core.translation.fileLocations | Sets locations of translation bundles | List | classpath:translations/translated-messages, classpath:translations/sip-core-messages |
 sip.core.translation.default-encoding | Sets default encoding | String | UTF-8 |
 sip.core.translation.fallback-to-system-locale | Use system language if none defined | boolean | false |
@@ -296,7 +296,7 @@ springdoc.swagger-ui.path | Custom path to Swagger | String | /swagger-ui.html |
 springdoc.swagger-ui.disable-swagger-default-url | Disables default petstore API in swagger | boolean | true |
 sip.testkit.enabled | Enable SIP testkit | boolean | true |
 sip.testkit.test-cases-path | Define path for file with test cases | String | test-case-definition.yml
-sip.security.ssl.enabled | Enable SIP SSL security | boolean | false |
+sip.security.ssl.enabled | Enable [SIP SSL security](https://ikor-gmbh.github.io/sip-framework/security/#configuration) | boolean | false |
 sip.security.ssl.server.client-auth | Enable authentication type - Possible values: NONE, WANT or NEED | String | none
 sip.security.ssl.server.key-store | Location of keystore | String | / |
 sip.security.ssl.server.key-store-password | Password of keystore | String | /
@@ -308,4 +308,4 @@ sip.security.ssl.client.key-store | Location of client keystore | String | /
 sip.security.ssl.client.key-store-password | Password of client keystore | String | /
 sip.security.ssl.client.key-store-type | Type of client keystore file | String | / |
 sip.security.ssl.client.key-alias | The alias (or name) under which the key is stored in the client keystore | String | / |
-sip.security.ssl.client.key-password | Password of the client key | String | / | 
+sip.security.ssl.client.key-password | Password of the client key | String | / |
