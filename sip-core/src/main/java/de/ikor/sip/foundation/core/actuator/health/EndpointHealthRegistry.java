@@ -65,7 +65,7 @@ public class EndpointHealthRegistry {
   }
 
   Optional<EndpointHealthIndicator> healthIndicator(Endpoint endpoint) {
-    log.trace("Looking for healthIndicator for {}", endpoint.getEndpointUri());
+    log.trace("sip.core.health.lookforindicator_{}", endpoint.getEndpointUri());
 
     Optional<HealthIndicatorMatcher> factoryMatcher =
         healthIndicatorMatchers.stream()
@@ -80,7 +80,7 @@ public class EndpointHealthRegistry {
             .findFirst();
 
     if (!factoryMatcher.isPresent()) {
-      log.trace("No health indicator has been configured for {}", endpoint.getEndpointUri());
+      log.trace("sip.core.health.noindicator_{}", endpoint.getEndpointUri());
     }
 
     return factoryMatcher.map(m -> m.indicator(endpoint));

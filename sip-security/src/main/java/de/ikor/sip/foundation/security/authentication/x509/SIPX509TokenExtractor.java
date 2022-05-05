@@ -36,7 +36,7 @@ public class SIPX509TokenExtractor implements SIPTokenExtractor<SIPX509Authentic
 
     if (certs != null && certs.length > 0) {
       if (log.isTraceEnabled()) {
-        log.trace("X.509 client authentication certificate:" + certs[0]);
+        log.trace("sip.security.x509.clientcertificate_{}", certs[0]);
       }
 
       return certs[0];

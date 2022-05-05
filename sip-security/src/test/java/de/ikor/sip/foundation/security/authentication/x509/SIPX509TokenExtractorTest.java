@@ -74,7 +74,7 @@ class SIPX509TokenExtractorTest {
     assertThat(result.getPrincipal()).asString().isEqualTo(EXPECTED_DN);
     ILoggingEvent message = logsList.get(0);
     assertThat(message.getLevel()).isEqualTo(Level.TRACE);
-    assertThat(message.getMessage()).startsWith("X.509 client authentication certificate:");
+    assertThat(message.getMessage()).isEqualTo("sip.security.x509.clientcertificate_{}");
   }
 
   @Test
