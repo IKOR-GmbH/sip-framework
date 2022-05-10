@@ -7,8 +7,6 @@ import ch.qos.logback.core.pattern.PatternLayoutEncoderBase;
 /**
  * Extends PatternLayoutEncoderBase in order to enhance it with message translation feature by
  * featuring {@link TranslateMessageLayout} .
- *
-
  */
 public class SIPPatternLayoutEncoder extends PatternLayoutEncoderBase<ILoggingEvent> {
 

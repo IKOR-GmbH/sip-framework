@@ -40,7 +40,8 @@ class AdapterInfoContributorTest {
 
     // assert
     @SuppressWarnings("unchecked")
-    LinkedHashMap<String, Object> target = (LinkedHashMap<String, Object>) builder.build().get(BUILD_KEY, LinkedHashMap.class);
+    LinkedHashMap<String, Object> target =
+        (LinkedHashMap<String, Object>) builder.build().get(BUILD_KEY, LinkedHashMap.class);
     assertThat(target)
         .hasSize(3)
         .containsEntry(ADAPTER_NAME_DETAILS_KEY, ADAPTER_NAME_TEST)
