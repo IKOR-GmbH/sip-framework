@@ -71,6 +71,7 @@ class ProcessorProxyTest {
 
     when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
 
+    @SuppressWarnings("unchecked")
     UnaryOperator<Exchange> mockFunction = mock(UnaryOperator.class);
     when(mockFunction.apply(exchange)).thenReturn(exchange);
 
@@ -134,6 +135,7 @@ class ProcessorProxyTest {
     // arrange
     putProxyInTestMode();
     when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
+    @SuppressWarnings("unchecked")
     UnaryOperator<Exchange> mockFunction = mock(UnaryOperator.class);
     when(mockFunction.apply(exchange)).thenReturn(exchange);
 

@@ -1,16 +1,16 @@
 package de.ikor.sip.foundation.core.translate.logging;
 
-import ch.qos.logback.core.Layout;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.pattern.PatternLayoutEncoderBase;
-import org.slf4j.event.LoggingEvent;
 
 /**
  * Extends PatternLayoutEncoderBase in order to enhance it with message translation feature by
  * featuring {@link TranslateMessageLayout} .
  *
- * @param <E> event type
+
  */
-public class SIPPatternLayoutEncoder<E> extends PatternLayoutEncoderBase<E> {
+public class SIPPatternLayoutEncoder extends PatternLayoutEncoderBase<ILoggingEvent> {
 
   @Override
   public void start() {
@@ -19,7 +19,7 @@ public class SIPPatternLayoutEncoder<E> extends PatternLayoutEncoderBase<E> {
     patternLayout.setPattern(getPattern());
     patternLayout.setContext(context);
     patternLayout.start();
-    this.layout = (Layout<E>) patternLayout;
+    this.layout = patternLayout;
     super.start();
   }
 }

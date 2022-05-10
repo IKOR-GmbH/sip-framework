@@ -30,6 +30,8 @@ public class MarkdownFilesContributor implements InfoContributor {
   @SneakyThrows
   @Override
   public void contribute(Info.Builder builder) {
+
+    @SuppressWarnings("unchecked")
     Map<String, Object> buildInfo = (LinkedHashMap<String, Object>) builder.build().get(BUILD_KEY);
 
     if (buildInfo == null) {

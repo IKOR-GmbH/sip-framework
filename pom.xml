@@ -351,6 +351,14 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
                     <configuration>
+                        <compilerArgs>
+                            <arg>
+                                -Xlint:deprecation
+                            </arg>
+                            <arg>
+                                -Xlint:unchecked
+                            </arg>
+                        </compilerArgs>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
                         <annotationProcessorPaths>
