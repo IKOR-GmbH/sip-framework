@@ -61,7 +61,7 @@ class MarkdownFilesContributorTest {
     // assert
     @SuppressWarnings("unchecked")
     LinkedHashMap<String, Object> buildInfoResult =
-        (LinkedHashMap<String, Object>) builder.build().get(BUILD_KEY);
+        (LinkedHashMap<String, Object>) builder.build().get(BUILD_KEY, LinkedHashMap.class);
     @SuppressWarnings("unchecked")
     List<MarkdownObject> resultFiles = (List<MarkdownObject>) buildInfoResult.get(FILES_KEY);
 

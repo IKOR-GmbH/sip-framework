@@ -18,6 +18,7 @@ public interface EventLogCloner {
    * @return {@link LoggingEvent}
    */
   @Mapping(target = "message", ignore = true)
+  @Mapping(target = "mdc", ignore = true)
   @Mapping(
       source = "throwableProxy",
       target = "throwableProxy",
