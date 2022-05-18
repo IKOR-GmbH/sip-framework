@@ -58,7 +58,9 @@ class AdapterInfoContributorTest {
     subject.contribute(builder);
 
     // assert
-    assertThat(builder.build().get(BUILD_KEY, LinkedHashMap.class)).isNull();
+    @SuppressWarnings("unchecked")
+    LinkedHashMap<Object, Object> target = builder.build().get(BUILD_KEY, LinkedHashMap.class);
+    assertThat(target).isNull();
   }
 
   private LinkedHashMap<String, Object> createBuildInfo() {
