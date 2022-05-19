@@ -26,7 +26,7 @@ public class FtpHealthConsumers {
     try {
       noopSucceeded = fileOps.sendNoop();
     } catch (Exception e) {
-      logger.debug("Failed to sendNoop to {}: {}", endpoint, e);
+      logger.debug("Failed to sendNoop to {}: {}", endpoint, e.getMessage());
     }
 
     if (!noopSucceeded && (fileOps.connect(endpoint.getConfiguration(), null))) {
