@@ -217,7 +217,6 @@
                 <artifactId>camel-jmx-starter</artifactId>
                 <version>${camel.version}</version>
             </dependency>
-
             <!-- apache commons -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -239,6 +238,11 @@
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-ui</artifactId>
+                <version>${springdoc-openapi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-common</artifactId>
                 <version>${springdoc-openapi.version}</version>
             </dependency>
             <dependency>
