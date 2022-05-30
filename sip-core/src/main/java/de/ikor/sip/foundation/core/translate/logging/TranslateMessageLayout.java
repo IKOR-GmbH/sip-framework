@@ -14,6 +14,7 @@ import org.mapstruct.factory.Mappers;
  *
  * @param <E> event type
  */
+@SuppressWarnings("java:S2326")
 public class TranslateMessageLayout<E> extends PatternLayout implements Layout<ILoggingEvent> {
   private SIPTranslateMessageService messageService;
 

@@ -59,7 +59,7 @@ public class CompositeAuthenticationFilter extends OncePerRequestFilter {
           return;
 
         } catch (Exception e) {
-          log.info("An error occured while authenticating a request", e);
+          log.info("sip.security.requestautherror_{}", e);
           SecurityContextHolder.clearContext();
           response.setStatus(500);
           return;

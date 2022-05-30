@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 class FtpHealthConsumersTest {
 
   private ListAppender<ILoggingEvent> listAppender;
-  private RemoteFileOperations<Object> fileOps;
+  private RemoteFileOperations fileOps;
   private RemoteFileEndpoint<?> endpoint;
   private RemoteFileConfiguration configuration;
   private List<ILoggingEvent> logsList;
@@ -59,7 +59,7 @@ class FtpHealthConsumersTest {
   void Given_SendNoopThrowsException_When_noopConsumer_Then_failMessage() {
     // arrange
     when(endpoint.getConfiguration()).thenReturn(null);
-    when(fileOps.sendNoop()).thenThrow(new RuntimeException());
+    when(fileOps.sendNoop()).thenThrow(new RuntimeException("msg"));
     when(fileOps.connect(any(), any())).thenReturn(true);
 
     // act

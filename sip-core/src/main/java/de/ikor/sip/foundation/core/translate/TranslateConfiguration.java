@@ -15,6 +15,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 @ConfigurationProperties(prefix = "sip.core.translation")
 public class TranslateConfiguration {
   private List<String> fileLocations;
+  private List<String> sipFileLocations;
   private String lang = "en";
   private String defaultEncoding = "UTF-8";
   private Boolean fallbackToSystemLocale = false;
@@ -30,6 +31,7 @@ public class TranslateConfiguration {
   public MessageSource messageSource() {
     ReloadableResourceBundleMessageSource messageSource =
         new ReloadableResourceBundleMessageSource();
+    fileLocations.addAll(sipFileLocations);
     for (String baseName : this.getFileLocations()) {
       messageSource.addBasenames(baseName);
     }

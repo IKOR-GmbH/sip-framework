@@ -107,8 +107,7 @@ class SIPAuthenticationProviderTest {
         .isThrownBy(() -> subject.authenticate(token));
     ILoggingEvent message = logsList.get(0);
     assertThat(message.getLevel()).isEqualTo(Level.DEBUG);
-    assertThat(message.getMessage())
-        .isEqualTo("Authentication was not successful for authtoken of type: {}");
+    assertThat(message.getMessage()).isEqualTo("sip.security.authtokenunsuccessful_{}");
   }
 
   @Test

@@ -18,7 +18,7 @@ public class DefaultTestExecutor implements Executor {
 
   @Override
   public Exchange execute(Exchange exchange, String testName) {
-    log.info("Starting CAMEL request execution...");
+    log.info("sip.testkit.workflow.startcamelrequest");
     Map<String, Object> headers = exchange.getMessage().getHeaders();
     enrichWithTestHeaders(headers, testName);
 

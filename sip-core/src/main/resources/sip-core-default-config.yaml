@@ -1,7 +1,12 @@
 sip.core:
   translation:
     enabled: true
-    fileLocations: classpath:translations/translated-messages, classpath:translations/sip-core-messages
+    fileLocations: classpath:translations/translated-messages
+    sipFileLocations:
+      - classpath:translations/sip-core-messages
+      - classpath:translations/sip-test-kit-messages
+      - classpath:translations/sip-security-messages
+      - classpath:translations/sip-mc-messages
     default-encoding: UTF-8
     fallback-to-system-locale: false
     use-code-as-default-message: true

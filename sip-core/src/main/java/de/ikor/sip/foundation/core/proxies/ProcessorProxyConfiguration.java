@@ -20,7 +20,7 @@ public class ProcessorProxyConfiguration {
    */
   @PostConstruct
   public void addProxyRegistryToCamelContext() {
-    log.info("sip.core.camelcontext.register.proxyregistry");
+    log.info("Configuring dynamic processors as extension in the camel context");
     camelContext.setExtension(ProcessorProxyRegistry.class, proxyRegistry);
   }
 }
