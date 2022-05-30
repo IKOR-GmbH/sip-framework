@@ -136,7 +136,7 @@ Once you have your adapter you can do the following steps:
 
 ### Framework version upgrade
 
-If you need to upgrade your adapter to a newer SIP Framework version, please follow this
+If you need to upgrade your adapter to a newer SIP Framework version, please follow this 
 [guide](./framework_version_upgrade.md).
 
 ### How and why to use SIP Middle Component
@@ -302,12 +302,12 @@ endpoint:
 
 `<in/out>` corresponds to consumers and producers respectively.
 This means in case a message is received through a route using "from", then it is a consumer and "in" is used.
-On the other hand, it is a producer when a message is sent via "to". In this case, "out" is used as key in the configuration file.
+On the other hand, it is a producer when a message is sent via "to". In this case, "out" is used as key in the configuration file.  
 
-`<external-system>` should match the name of the system or client the adapter is communicating with.
+`<external-system>` should match the name of the system or client the adapter is communicating with.  
 
 `<endpoint>` in case there are multiple endpoints for an adapter that uses the same domain and external system, additional identification
-is required. For this purpose we use an additional endpoint key to provide distinction.
+is required. For this purpose we use an additional endpoint key to provide distinction.  
 
 For example:
 
@@ -338,7 +338,7 @@ from(...)
 ```
 
 If this convention is followed in the configuration, it leads to a unified structure that makes it possible
-to identify at a single glance which systems are communicating with each other and which communication technologies are
+to identify at a single glance which systems are communicating with each other and which communication technologies are 
 being used.
 It also makes routes more descriptive and adapters much easier to maintain.
 
@@ -346,7 +346,7 @@ It also makes routes more descriptive and adapters much easier to maintain.
 
 As we can see each external endpoint, definition is followed by explicit setting of id. Although it's not mandatory,
 doing so is highly recommended especially in case of outgoing endpoints. This will provide a reference of the external
-endpoints, which can be used for different functionalities, like custom health check, testing with test-kit or other
+endpoints, which can be used for different functionalities, like custom health check, testing with test-kit or other 
 that are yet to come.
 Notice that in case of incoming endpoints (those in "from" statement), following id refers to the routeId.
 
