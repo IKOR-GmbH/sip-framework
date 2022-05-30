@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.testkit.configurationproperties.models;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,6 @@ import lombok.NoArgsConstructor;
 public class EndpointProperties {
   private String endpoint;
 
-  @JsonAlias({"with", "returning", "having", "message"})
   private MessageProperties message = new MessageProperties();
 
   public void setWith(MessageProperties message) {
