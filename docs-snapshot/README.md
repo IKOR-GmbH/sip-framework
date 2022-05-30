@@ -36,27 +36,25 @@ systems, but all the principles apply equally to such scenarios.
 
 ![Image of SIP connected systems](./img/SIP_readme_adapter.svg?raw=true "SIP connected systems")
 
-The image below shows the modules structure of a single SIP adapter.
-To provide a level of flexibility, SIP splits the problem into two, giving the possibility to develop and/or deploy connectors
-for individual systems separately. The integration
-logic is divided into three packages: **System A - Connector**, **System B - Connector** and **Common - Domain**.
+The integration logic is divided into different packages: 
 
-![Image of SIP Adapter](./img/SIP_readme_adapter_detail.svg?raw=true "SIP Adapter")
+**Common**
+
+The **Common** package provides the common data model inside domain for both systems and common util functionalities.
 
 **Domain**
 
-The **Common** Package takes a central position in the image, 
-because it provides the common data model inside domain for both systems and common util functionalities.
-Also, it separates the system connectors from each other to allow loose coupling between them. Domain package should not contain any
-integration logic but only simple Java objects representing the respective domain in which the system connectors of an adapter
-operate. All connectors should adapt the data models of their systems to or from this common model, depending on data flow,
-due to their incompatibilities. The domain can be seen as a kind of contract between the different system connectors which
-ensures that they can communicate with each other. It contains common data model which uniforms the data models from all
-integration sides.
+**Domain** package should not contain any integration logic,
+but only simple Java objects representing the respective domain in which the system connectors of an adapter operate. 
+All connectors should adapt the data models of their systems to or from this common model, 
+depending on data flow, due to their incompatibilities. 
+The domain can be seen as a kind of contract between the different system connectors,
+which ensures that they can communicate with each other. 
+It contains common data model which uniforms the data models from all integration sides.
 
 **Connectors**
 
-**Connectors** are designed to communicate with the associated external systems, thus all classes found in a connector
+Each **Connector** is designed to communicate with the associated external systems, thus all classes found in a connector
 should only relate to their integration side. To enable this, their local domain objects are aligned with the API of an
 external systems they communicate with. In order to send a message from one system connector
 to another, the local domain objects must be mapped to the shared domain object. Furthermore, this means that a message
@@ -64,8 +62,8 @@ from system A is mapped to the shared domain object and then from the shared dom
 vice versa, due to their bidirectional nature.
 This also means that changes on one of adapter's connector does not necessarily require
 changes of the other. That's especially important if the affected connector is reused across multiple adapters.
-In the picture domain A and domain B packages are shown optionally, together with corresponding mapper
-component, since integrated systems use the same communication data model sometimes.
+Domain A and domain B packages in each connector are optional,
+since integrated systems use the same communication data model sometimes.
 
 Each connector will have the following structure:
 
@@ -185,7 +183,14 @@ fancy-sip-adapter
 │   │   ├───domain
 │   │   └───util
 │   ├───connectors
-│   │   └───connector1
+│   │   ├───connector1
+│   │   │   ├───config
+│   │   │   ├───transformer
+│   │   │   ├───processors
+│   │   │   ├───sink
+│   │   │   ├───validators
+│   │   │   └───domain
+│   │   └───connector2
 │   │       ├───config
 │   │       ├───transformer
 │   │       ├───processors

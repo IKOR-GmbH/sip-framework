@@ -28,12 +28,6 @@
             <groupId>de.ikor.sip.foundation</groupId>
             <artifactId>sip-integration-starter</artifactId>
         </dependency>
-        <!-- test dependencies -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
