@@ -75,7 +75,7 @@
         <spring.boot.version>2.6.1</spring.boot.version>
         <camel.version>3.14.0</camel.version>
         <jackson-jsr310.version>2.12.1</jackson-jsr310.version>
-        <springdoc-openapi-ui.version>1.5.10</springdoc-openapi-ui.version>
+        <springdoc-openapi.version>1.6.2</springdoc-openapi.version>
         <lombok.version>1.18.20</lombok.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <commons-text.version>1.9</commons-text.version>
@@ -217,7 +217,6 @@
                 <artifactId>camel-jmx-starter</artifactId>
                 <version>${camel.version}</version>
             </dependency>
-
             <!-- apache commons -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -239,7 +238,12 @@
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-ui</artifactId>
-                <version>${springdoc-openapi-ui.version}</version>
+                <version>${springdoc-openapi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-common</artifactId>
+                <version>${springdoc-openapi.version}</version>
             </dependency>
             <dependency>
                 <groupId>nl.jqno.equalsverifier</groupId>
