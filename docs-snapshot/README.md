@@ -44,8 +44,8 @@ The **Common** package provides the common data model inside domain for both sys
 
 **Domain**
 
-**Domain** package should not contain any integration logic,
-but only simple Java objects representing the respective domain in which the system connectors of an adapter operate. 
+**Domain** package should contain only simple Java objects representing the respective domain
+in which the system connectors of an adapter operate, and should not contain any integration logic.
 All connectors should adapt the data models of their systems to or from this common model, 
 depending on data flow, due to their incompatibilities. 
 The domain can be seen as a kind of contract between the different system connectors,
@@ -67,16 +67,12 @@ since integrated systems use the same communication data model sometimes.
 
 Each connector will have the following structure:
 
-- `config` a place for any configuration classes
-- `sink` here we should define Camel routes
-- `transformers` it should contain classes for adapting the connector model to common domain model.
-- `domain` (optional) it may contain the data model of the system.
-- `processors` camel processors
-- `validators` camel validators
-
-**Application**
-
-Starting your adapter is done by running SIPApplication class in the project root.
+- `config` - a place for any configuration classes
+- `sink` - here we should define Camel routes
+- `transformers` - it should contain classes for adapting the connector model to common domain model.
+- `domain` - (optional) it may contain the data model of the system.
+- `processors` - camel processors
+- `validators` - camel validators
 
 ## Usage
 
@@ -89,11 +85,6 @@ Starting your adapter is done by running SIPApplication class in the project roo
 - **[sip-starter-parent](./starter-parent.md)** - This project takes care of versions for Spring Boot and Camel dependencies.
 - **[sip-security](./security.md)** - Security in SIP framework.
 - **[sip-test-kit](./test-kit.md)** - Tool for integration testing.
-
-The following image displays how listed modules are utilized on SIP adapter where the up arrows represent inheritance,
-down arrows dependencies.
-
-![Image of SIP connected systems](./img/SIP_readme_dependencies.svg?raw=true "SIP connected systems")
 
 ### Framework features
 
@@ -118,13 +109,13 @@ Before development, check the following [Installation guide](installation.md).
 Once you have your adapter you can do the following steps:
 
 - Run `mvn clean install`
-- Crate common Data Model inside domain module
-- Add necessary dependencies to each module
+- Crate common Data Model inside domain package
+- Add necessary dependencies
 - Add RouteBuilders inside "sink" package in connectors
 - Add classes which transform system data models to or from common domain model in "transformers" package in connectors (if needed)
 - Add any configuration classes for a specific system inside "config" package in connectors
 - Add general integration configuration in application.yml found inside resources
-- Run SIPApplication found inside project root
+- Run SIPApplication found inside base package
 - After the application is up and running you can check SIP's management API under [localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 
 ### Framework version upgrade
@@ -162,11 +153,6 @@ For instance, to add ArangoDb Camel component, it is enough to add the following
 The same stands for adding Spring Boot starters - as they are managed in the parent Maven module they too can be added
 without explicitly stating version numbers. As a matter of fact, the overall dependency management performed by the
 Spring Boot is in place in integration adapters too.
-
-However, if you need to use some third-party libraries - there are chances that you will be responsible for managing
-their versions in the application.
-It is important to add the required dependency to the corresponding connector module's pom. Only that way connector modules
-can keep their independence.
 
 ### Adding new System Connectors
 
@@ -276,7 +262,7 @@ Notice that in case of incoming endpoints (those in "from" statement), following
 By default, the following properties come as a part of SIP Framework, to override them simply add them to your configuration
 file with desired values.
 
-When using a yaml configuration file, which is already available in application module, adapt the properties to its format.
+When using a yaml configuration file, which is already available in resources, adapt the properties to its format.
 
 Name | Description | Value | Default |
 --- | --- | --- | --- |
