@@ -109,7 +109,7 @@ Before development, check the following [Installation guide](installation.md).
 Once you have your adapter you can do the following steps:
 
 - Run `mvn clean install`
-- Crate common Data Model inside domain package
+- Create common Data Model inside domain package
 - Add necessary dependencies
 - Add RouteBuilders inside "sink" package in connectors
 - Add classes which transform system data models to or from common domain model in "transformers" package in connectors (if needed)
