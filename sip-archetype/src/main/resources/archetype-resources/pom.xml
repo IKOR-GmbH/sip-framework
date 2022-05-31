@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.ikor.sip.foundation</groupId>
-        <artifactId>sip-framework</artifactId>
+        <artifactId>sip-starter-parent</artifactId>
         <version>${archetypeVersion}</version>
         <relativePath/>
     </parent>
@@ -13,16 +13,9 @@
     <groupId>${groupId}</groupId>
     <artifactId>${artifactId}</artifactId>
     <version>${version}</version>
-    <packaging>pom</packaging>
 
     <name>${projectName}</name>
 
-    <modules>
-        <module>${rootArtifactId}-application</module>
-        <module>${rootArtifactId}-domain</module>
-        <module>${systemConnector1}</module>
-        <module>${systemConnector2}</module>
-    </modules>
 
     <dependencies>
 #if (${useLombok} == "y" || ${useLombok} == "Y")
@@ -31,23 +24,39 @@
             <artifactId>lombok</artifactId>
         </dependency>
 #end
+        <dependency>
+            <groupId>de.ikor.sip.foundation</groupId>
+            <artifactId>sip-integration-starter</artifactId>
+        </dependency>
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>${groupId}</groupId>
-                <artifactId>${rootArtifactId}-domain</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>false</fork>
+                    <skip>false</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                            <goal>build-info</goal>
+                        </goals>
+                        <configuration>
+                            <additionalProperties>
+                                <sipFrameworkVersion>${archetypeVersion}</sipFrameworkVersion>
+                            </additionalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

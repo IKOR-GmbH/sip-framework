@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "106",
+  "message": "Replace adapter structure with new simplified one by removing multiple module structure and introducing packages instead."
+}
