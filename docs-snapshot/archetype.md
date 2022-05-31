@@ -70,7 +70,7 @@ After a successful build, a project with the following structure will be created
     - validators
     
 
-More about modules and internal SIP structure you can find [here](./README.md).
+More about packages and internal SIP structure you can find [here](./README.md).
 
 More information about Maven archetypes is available here:
 [Maven Archetype](https://maven.apache.org/guides/introduction/introduction-to-archetypes.html)
