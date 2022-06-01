@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "113",
+  "message": "Move spring boot test dependency to sip-starter-partner. Update package name regex in archetype."
+}
