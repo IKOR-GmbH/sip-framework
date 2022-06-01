@@ -130,6 +130,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="" href="javadoc/2.1.0/index.html">JavaDoc 2.1.0</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="" href="javadoc/2.0.2/index.html">JavaDoc 2.0.2</a>
                 </li>
               </ul>
@@ -221,47 +225,37 @@ they use. SIP is designed as a standalone middleware app with a sole purpose to 
 a flexible and standardized way. Actual integration scenarios may include more than two APIs, or even more than two
 systems, but all the principles apply equally to such scenarios.</p>
 <p><img alt="Image of SIP connected systems" src="img/SIP_readme_adapter.svg?raw=true" title="SIP connected systems" /></p>
-<p>The image below shows the modules structure of a single SIP adapter.
-To provide a level of flexibility, SIP splits the problem into two, giving the possibility to develop and/or deploy connectors
-for individual systems separately. The integration
-logic is divided into three modules: <strong>System A - Connector</strong>, <strong>System B - Connector</strong> and <strong>Domain</strong>. The fourth module is the <strong>Application</strong>
-module. Its purpose is to converge the three integration modules into one deployable and executable application.
-The blue arrows represent dependencies of the application module.</p>
-<p><img alt="Image of SIP Adapter" src="img/SIP_readme_adapter_detail.svg?raw=true" title="SIP Adapter" /></p>
+<p>The integration logic is divided into different packages: </p>
+<p><strong>Common</strong></p>
+<p>The <strong>Common</strong> package provides the common data model inside domain for both systems and common util functionalities.</p>
 <p><strong>Domain</strong></p>
-<p>The <strong>Domain</strong> module takes a central position in the image, because it provides the common data model for both systems.
-Also, it separates the system connectors from each other to allow loose coupling between them. It should not contain any
-integration logic but only simple Java objects representing the respective domain in which the system connectors of an adapter
-operate. All connectors should adapt the data models of their systems to or from this common model, depending on data flow,
-due to their incompatibilities. The domain can be seen as a kind of contract between the different system connectors which
-ensures that they can communicate with each other. It contains common data model which uniforms the data models from all
-integration sides.</p>
+<p><strong>Domain</strong> package should contain only simple Java objects representing the respective domain
+in which the system connectors of an adapter operate, and should not contain any integration logic.
+All connectors should adapt the data models of their systems to or from this common model, 
+depending on data flow, due to their incompatibilities. 
+The domain can be seen as a kind of contract between the different system connectors,
+which ensures that they can communicate with each other. 
+It contains common data model which uniforms the data models from all integration sides.</p>
 <p><strong>Connectors</strong></p>
-<p><strong>Connectors</strong> are designed to communicate with the associated external systems, thus all classes found in a connector
+<p>Each <strong>Connector</strong> is designed to communicate with the associated external systems, thus all classes found in a connector
 should only relate to their integration side. To enable this, their local domain objects are aligned with the API of an
 external systems they communicate with. In order to send a message from one system connector
 to another, the local domain objects must be mapped to the shared domain object. Furthermore, this means that a message
 from system A is mapped to the shared domain object and then from the shared domain object to the model of system B and
 vice versa, due to their bidirectional nature.
-Notice the blue arrows pointing from the system connectors to the domain
-module, meaning that connectors are absolutely independent of each other. A developer can work on or deploy only one side,
-without the others being affected. This also means that changes on one of adapter's connector does not necessarily require
+This also means that changes on one of adapter's connector does not necessarily require
 changes of the other. That's especially important if the affected connector is reused across multiple adapters.
-In the picture domain A and domain B packages are shown optionally, together with corresponding mapper
-component, since integrated systems use the same communication data model sometimes.</p>
+Domain A and domain B packages in each connector are optional,
+since integrated systems use the same communication data model sometimes.</p>
 <p>Each connector will have the following structure:</p>
 <ul>
-<li><code>config</code> a place for any configuration classes</li>
-<li><code>sink</code> here we should define Camel routes</li>
-<li><code>transformers</code> it should contain classes for adapting the connector model to common domain model.</li>
-<li><code>domain</code> (optional) it may contain the data model of the system.</li>
+<li><code>config</code> - a place for any configuration classes</li>
+<li><code>sink</code> - here we should define Camel routes</li>
+<li><code>transformers</code> - it should contain classes for adapting the connector model to common domain model.</li>
+<li><code>domain</code> - (optional) it may contain the data model of the system.</li>
+<li><code>processors</code> - camel processors</li>
+<li><code>validators</code> - camel validators</li>
 </ul>
-<p><strong>Application</strong></p>
-<p>The Application module gathers all connector modules as one system and run them together.
-Starting your adapter is done by running SIPApplication class in the application module.
-Furthermore, its pom.xml must contain dependencies to all connector modules in adapter,
-in order to start them. This module should not contain any integration logic, but it's a good place for implementing Spring
-integration tests, such as default SIPApplicationTest, provided by archetype.</p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <h3 id="framework-components">Framework components<a class="headerlink" href="#framework-components" title="Permanent link">&para;</a></h3>
 <ul>
@@ -273,9 +267,6 @@ integration tests, such as default SIPApplicationTest, provided by archetype.</p
 <li><strong><a href="security/">sip-security</a></strong> - Security in SIP framework.</li>
 <li><strong><a href="test-kit/">sip-test-kit</a></strong> - Tool for integration testing.</li>
 </ul>
-<p>The following image displays how listed modules are utilized on SIP adapter where the up arrows represent inheritance,
-down arrows dependencies.</p>
-<p><img alt="Image of SIP connected systems" src="img/SIP_readme_dependencies.svg?raw=true" title="SIP connected systems" /></p>
 <h3 id="framework-features">Framework features<a class="headerlink" href="#framework-features" title="Permanent link">&para;</a></h3>
 <p>Framework provides different features some of which are enabled by default. All the features are customizable and can be
 overwritten or turned off by configuration. More about how to use them you can find under the corresponding module's
@@ -296,13 +287,13 @@ documentation.</p>
 <p>Once you have your adapter you can do the following steps:</p>
 <ul>
 <li>Run <code>mvn clean install</code></li>
-<li>Crate common Data Model inside domain module</li>
-<li>Add necessary dependencies to each module</li>
+<li>Create common Data Model inside domain package</li>
+<li>Add necessary dependencies</li>
 <li>Add RouteBuilders inside "sink" package in connectors</li>
 <li>Add classes which transform system data models to or from common domain model in "transformers" package in connectors (if needed)</li>
 <li>Add any configuration classes for a specific system inside "config" package in connectors</li>
-<li>Add general integration configuration in application.yml found inside application module resources</li>
-<li>Run SIPApplication found inside application module</li>
+<li>Add general integration configuration in application.yml found inside resources</li>
+<li>Run SIPApplication found inside base package</li>
 <li>After the application is up and running you can check SIP's management API under <a href="http://localhost:8080/swagger-ui.html">localhost:8080/swagger-ui.html</a></li>
 </ul>
 <h3 id="framework-version-upgrade">Framework version upgrade<a class="headerlink" href="#framework-version-upgrade" title="Permanent link">&para;</a></h3>
@@ -329,102 +320,36 @@ of the SIP integration adapter.</p>
 <p>The same stands for adding Spring Boot starters - as they are managed in the parent Maven module they too can be added
 without explicitly stating version numbers. As a matter of fact, the overall dependency management performed by the
 Spring Boot is in place in integration adapters too.</p>
-<p>However, if you need to use some third-party libraries - there are chances that you will be responsible for managing
-their versions in the application.
-It is important to add the required dependency to the corresponding connector module's pom. Only that way connector modules
-can keep their independence.</p>
 <h3 id="adding-new-system-connectors">Adding new System Connectors<a class="headerlink" href="#adding-new-system-connectors" title="Permanent link">&para;</a></h3>
 <p>By using the SIP archetype to create a new SIP adapter, by default there are two system connectors, designed to make it
 more convenient to integrate systems. In case there are more than two systems, which need to be integrated, you need to add
-additional modules to the project structure. There are a number of ways to add new system connectors to a SIP adapter.
-These possibilities are explained in detail in the following part.</p>
-<p>Initially each system connector module has two dependencies.
-These are the domain module and the <code>sip-integration-starter</code>.
-Make sure to add these to your <code>pom.xml</code> dependencies list.
-Please observe this exemplary <a href="#example-pom">pom.xml</a> to see how it should look like in a system connector module.</p>
-<p>The module structure usually looks like this:</p>
+additional package to the project structure.</p>
+<p>The project structure usually looks like this:</p>
 <pre class="highlight"><code class="language-text">fancy-sip-adapter
-├───new-system-connector-module
-│   ├───src/main/java/&lt;package-path&gt;
-│   │   ├───config
-│   │   ├───sink
-│   │   └───transformer
-│   └───pom.xml
-...</code></pre>
-<p><strong>Copying Existing Module</strong></p>
-<p>One way to add a system connector as a new module is to copy an existing module,
-that has been created by using the SIP archetype to your project structure.
-If the module was copied the <code>name</code> and <code>artifactId</code> in its <code>pom.xml</code> need to be adjusted.
-Then the module name should be added to the <code>modules</code> element of the <code>pom.xml</code> of the main project.</p>
-<pre class="highlight"><code class="language-xml">&lt;modules&gt;
-  &lt;module&gt;system-connector-A&lt;/module&gt;
-  &lt;module&gt;system-connector-B&lt;/module&gt;
-  &lt;module&gt;new-system-connector-module&lt;/module&gt;
-&lt;/modules&gt;</code></pre>
-<p>Additionally, the copied module must be added as a dependency to the <code>pom.xml</code> of the application module.</p>
-<pre class="highlight"><code class="language-xml">&lt;dependencies&gt;
-  &lt;dependency&gt;
-    &lt;groupId&gt;de.ikor.sip.adapter&lt;/groupId&gt;
-    &lt;artifactId&gt;new-system-connector-module&lt;/artifactId&gt;
-    &lt;version&gt;${project.version}&lt;/version&gt;
-  &lt;/dependency&gt;
-  ...
-&lt;/dependencies&gt;</code></pre>
-<p>If necessary, refresh or rebuild the project so that the newly created module gets registered.</p>
-<p><strong>Using IDEs Built-In Functionality</strong></p>
-<ul>
-<li>
-<p>IntelliJ</p>
-<ul>
-<li>Right click on the parent project folder and select <code>New &gt; Module...</code>.</li>
-<li>Select <code>Maven</code> in the left menu and click on the <code>Next</code> button</li>
-<li>Provide a new module name and click on <code>Finish</code></li>
-</ul>
-</li>
-<li>
-<p>Eclipse</p>
-<ul>
-<li><code>File &gt; New &gt; Other...</code></li>
-<li>Enter <code>maven  module</code> select <code>Maven Module</code> from the search result list and click on <code>Next</code></li>
-<li>Enter a module name select the parent project and press <code>Next</code></li>
-<li>Choose a maven archetype version from the list and click <code>Next</code> (You can use the default selection)</li>
-<li>Check the archetype parameters and press <code>Finish</code></li>
-</ul>
-</li>
-</ul>
-<p>The result is a new subdirectory of the SIP adapter project.
-Compare the <code>pom.xml</code> of the newly created module with one of the modules that were created by SIP archetype.
-There are only a few differences that need to be adjusted.</p>
-<p>Make sure the newly created module is present in the <code>modules</code> element list of the main <code>pom.xml</code>
-and that it has been added as a dependency to the application <code>pom.xml</code>.</p>
-<p><strong>Example POM</strong></p>
-<p><a name="example-pom"/></p>
-<pre class="highlight"><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-
-&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
-  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-  &lt;parent&gt;
-    &lt;groupId&gt;de.ikor.sip.adapter&lt;/groupId&gt;
-    &lt;artifactId&gt;systemadapter&lt;/artifactId&gt;
-    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-  &lt;/parent&gt;
-
-  &lt;artifactId&gt;outbound&lt;/artifactId&gt;
-  &lt;name&gt;outbound&lt;/name&gt;
-
-  &lt;dependencies&gt;
-    &lt;dependency&gt;
-      &lt;groupId&gt;de.ikor.sip.foundation&lt;/groupId&gt;
-      &lt;artifactId&gt;sip-integration-starter&lt;/artifactId&gt;
-    &lt;/dependency&gt;
-    &lt;dependency&gt;
-      &lt;groupId&gt;de.ikor.sip.adapter&lt;/groupId&gt;
-      &lt;artifactId&gt;systemadapter-domain&lt;/artifactId&gt;
-    &lt;/dependency&gt;
-  &lt;/dependencies&gt;
-&lt;/project&gt;</code></pre>
+├───src/main/java/&lt;package-path&gt;
+│   ├───common
+│   │   ├───domain
+│   │   └───util
+│   ├───connectors
+│   │   ├───connector1
+│   │   │   ├───config
+│   │   │   ├───transformer
+│   │   │   ├───processors
+│   │   │   ├───sink
+│   │   │   ├───validators
+│   │   │   └───domain
+│   │   └───connector2
+│   │       ├───config
+│   │       ├───transformer
+│   │       ├───processors
+│   │       ├───sink
+│   │       ├───validators
+│   │       └───domain
+│   └───SIPApplication.java
+└───pom.xml</code></pre>
+<p>Easiest way would be just copying an existing connector package which contains the pre-made structure.
+This can also be done manually by creating a new package. 
+It is important that these packages are contained in connectors package.</p>
 <h3 id="development-tips">Development Tips<a class="headerlink" href="#development-tips" title="Permanent link">&para;</a></h3>
 <p><strong>Endpoint Configuration</strong></p>
 <p>When it comes to working with URIs in routes, it is recommended to use property placeholders, which makes the routes configurable.
@@ -474,7 +399,7 @@ Notice that in case of incoming endpoints (those in "from" statement), following
 <h3 id="configuration-properties">Configuration properties<a class="headerlink" href="#configuration-properties" title="Permanent link">&para;</a></h3>
 <p>By default, the following properties come as a part of SIP Framework, to override them simply add them to your configuration
 file with desired values.</p>
-<p>When using a yaml configuration file, which is already available in application module, adapt the properties to its format.</p>
+<p>When using a yaml configuration file, which is already available in resources, adapt the properties to its format.</p>
 <table>
 <thead>
 <tr>
@@ -745,5 +670,5 @@ file with desired values.</p>
 
 <!--
 MkDocs version : 1.3.0
-Build Date UTC : 2022-04-20 13:41:10.813660+00:00
+Build Date UTC : 2022-06-01 08:04:37.473542+00:00
 -->

@@ -98,11 +98,21 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#unreleased">[Unreleased]</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#202-2022-03-25">2.0.2 - 2022-03-25</a>
+    <li class="toctree-l2"><a class="reference internal" href="#210-2022-06-01">2.1.0 - 2022-06-01</a>
         <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#features">⭐ Features</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#bugfixes">🐞 Bugfixes</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#documentation">📔 Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#202-2022-03-25">2.0.2 - 2022-03-25</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#bugfixes_1">🐞 Bugfixes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#documentation_1">📔 Documentation</a>
     </li>
         </ul>
     </li>
@@ -110,11 +120,11 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#major-changes">🚀 Major Changes</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#features">⭐ Features</a>
+    <li class="toctree-l3"><a class="reference internal" href="#features_1">⭐ Features</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#bugfixes_1">🐞 Bugfixes</a>
+    <li class="toctree-l3"><a class="reference internal" href="#bugfixes_2">🐞 Bugfixes</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#documentation_1">📔 Documentation</a>
+    <li class="toctree-l3"><a class="reference internal" href="#documentation_2">📔 Documentation</a>
     </li>
         </ul>
     </li>
@@ -129,6 +139,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/2.1.0/index.html">JavaDoc 2.1.0</a>
                 </li>
               </ul>
               <ul>
@@ -180,8 +194,35 @@
 <p>All notable changes to this project will be documented in this file.</p>
 <h2 id="unreleased">[Unreleased]<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
 <p>For unreleased changelogs look into the <a href="./changelogs">changelogs</a> directory</p>
-<h2 id="202-2022-03-25">2.0.2 - 2022-03-25<a class="headerlink" href="#202-2022-03-25" title="Permanent link">&para;</a></h2>
+<h2 id="210-2022-06-01">2.1.0 - 2022-06-01<a class="headerlink" href="#210-2022-06-01" title="Permanent link">&para;</a></h2>
+<h3 id="features">⭐ Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Replace adapter structure with new simplified one by removing multiple module structure and introducing packages instead. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/106">#106</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Add test-case-definition.yml to archetype with empty template and explanations <a href="https://github.com/IKOR-GmbH/sip-framework/pull/102">#102</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+</ul>
 <h3 id="bugfixes">🐞 Bugfixes<a class="headerlink" href="#bugfixes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed the internal server error which occurs when adapter-routes endpoint is called with an non-existing route. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/105">#105</a> by <a href="https://github.com/LetoBukarica">LetoBukarica</a></li>
+<li>Move spring boot test dependency to sip-starter-partner. Update package name regex in archetype. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/113">#113</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Added tests with CamelContext in the Core. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/100">#100</a> by <a href="https://github.com/LetoBukarica">LetoBukarica</a></li>
+<li>Replace log messages with key value pairs so they are able to be translated <a href="https://github.com/IKOR-GmbH/sip-framework/pull/91">#91</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Refactor SIPTranslateMessageService so that it no longer requires SIPStaticSpringContext to register itself <a href="https://github.com/IKOR-GmbH/sip-framework/pull/104">#104</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Refactor code which causes unchecked or deprecated warnings <a href="https://github.com/IKOR-GmbH/sip-framework/pull/110">#110</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Upgraded the OpenAPI versions to match corresponding SpringBoot version <a href="https://github.com/IKOR-GmbH/sip-framework/pull/112">#112</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+</ul>
+<h3 id="documentation">📔 Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add description for activating Test Kit profile <a href="https://github.com/IKOR-GmbH/sip-framework/pull/96">#96</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
+<li>Add documentation for upgrading the SIP Framework version from 1.0.0 to 2.0.0. Additional documentation enhancement. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/94">#94</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
+<li>Fix URL of copy button image <a href="https://github.com/IKOR-GmbH/sip-framework/pull/107">#107</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
+<li>Maven archetype command changed to one line format. Added copy function <a href="https://github.com/IKOR-GmbH/sip-framework/pull/103">#103</a> by <a href="https://github.com/dzuci">dzuci</a></li>
+<li>refine test kit documentation <a href="https://github.com/IKOR-GmbH/sip-framework/pull/89">#89</a> by <a href="https://github.com/dzuci">dzuci</a></li>
+<li>Update of the table with default configuration  <a href="https://github.com/IKOR-GmbH/sip-framework/pull/97">#97</a> by <a href="https://github.com/dzuci">dzuci</a></li>
+<li>Update of the table with default configuration  <a href="https://github.com/IKOR-GmbH/sip-framework/pull/108">#108</a> by <a href="https://github.com/dzuci">dzuci</a></li>
+<li>Updated SIP Security documentation. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/93">#93</a> by <a href="https://github.com/LetoBukarica">LetoBukarica</a></li>
+</ul>
+<h2 id="202-2022-03-25">2.0.2 - 2022-03-25<a class="headerlink" href="#202-2022-03-25" title="Permanent link">&para;</a></h2>
+<h3 id="bugfixes_1">🐞 Bugfixes<a class="headerlink" href="#bugfixes_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Updated test case for health check on suspended route. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/92">#92</a> by <a href="https://github.com/LetoBukarica">LetoBukarica</a></li>
 <li>Resolve context path conflicts in testkit <a href="https://github.com/IKOR-GmbH/sip-framework/pull/98">#98</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
@@ -189,7 +230,7 @@
 <li>camel.servlet.mapping.context-path configured on core level <a href="https://github.com/IKOR-GmbH/sip-framework/pull/95">#95</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
 <li>Remove maven-enforcer-plugin.version duplicate from framework pom properties <a href="https://github.com/IKOR-GmbH/sip-framework/pull/90">#90</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
 </ul>
-<h3 id="documentation">📔 Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_1">📔 Documentation<a class="headerlink" href="#documentation_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Test Kit documentation added to GitHub pages <a href="https://github.com/IKOR-GmbH/sip-framework/pull/86">#86</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
 <li>Added documentation guide about unit testing with sipmc. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/87">#87</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
@@ -205,7 +246,7 @@ Spring Boot version updated from 2.3.9.RELEASE to 2.6.1.
 Camel's configuration properties were changed. Full list can be found in <a href="https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-3x-upgrade-guide-3_10.adoc">official documentation</a>.
 When upgrading a SIP Adapter with framework version 1.0.0 the following must be changed as it had a default value inside SIP Archetype from <code>camel.component.servlet.mapping.context-path</code> to <code>camel.servlet.mapping.context-path</code>. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/55">#55</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
 </ul>
-<h3 id="features">⭐ Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h3>
+<h3 id="features_1">⭐ Features<a class="headerlink" href="#features_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Implementation for actuator info endpoint to expose the basic adapter data and markdown files <a href="https://github.com/IKOR-GmbH/sip-framework/pull/51">#51</a> by <a href="https://github.com/nikolag-ikor">nikolag-ikor</a></li>
 <li>Added changelog.md and adapter-description.md <a href="https://github.com/IKOR-GmbH/sip-framework/pull/41">#41</a> by <a href="https://github.com/Dzuci">Dzuci</a></li>
@@ -233,7 +274,7 @@ When upgrading a SIP Adapter with framework version 1.0.0 the following must be 
 <li>Updated swagger documentation, added descriptions for possible operations on routes. <a href="https://github.com/IKOR-GmbH/sip-framework/pull/3">#3</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
 <li>Updated Apache Camel version to 3.13.0 <a href="https://github.com/IKOR-GmbH/sip-framework/pull/24">#24</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
 </ul>
-<h3 id="bugfixes_1">🐞 Bugfixes<a class="headerlink" href="#bugfixes_1" title="Permanent link">&para;</a></h3>
+<h3 id="bugfixes_2">🐞 Bugfixes<a class="headerlink" href="#bugfixes_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Changing access level of AdapterRouteDetails class to public <a href="https://github.com/IKOR-GmbH/sip-framework/pull/59">#59</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
 <li>GroupId is added to archetype generated application/pom.xml <a href="https://github.com/IKOR-GmbH/sip-framework/pull/79">#79</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
@@ -250,7 +291,7 @@ When upgrading a SIP Adapter with framework version 1.0.0 the following must be 
 <li>/actuator/health IllegalArgumentException fix when route is suspended <a href="https://github.com/IKOR-GmbH/sip-framework/pull/83">#83</a> by <a href="https://github.com/LetoBukarica">LetoBukarica</a></li>
 <li>maven-enforcer-plugin configuration updated according to java version update <a href="https://github.com/IKOR-GmbH/sip-framework/pull/82">#82</a> by <a href="https://github.com/vladiIkor">vladiIkor</a></li>
 </ul>
-<h3 id="documentation_1">📔 Documentation<a class="headerlink" href="#documentation_1" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_2">📔 Documentation<a class="headerlink" href="#documentation_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Added docs-snapshot directory for documenting unreleased features <a href="https://github.com/IKOR-GmbH/sip-framework/pull/52">#52</a> by <a href="https://github.com/Nemikor">Nemikor</a></li>
 <li>Added mvn command for creating an archetype on Windows machines <a href="https://github.com/IKOR-GmbH/sip-framework/pull/23">#23</a> by <a href="https://github.com/dzuci">dzuci</a></li>

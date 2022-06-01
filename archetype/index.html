@@ -108,6 +108,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/2.1.0/index.html">JavaDoc 2.1.0</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/2.0.2/index.html">JavaDoc 2.0.2</a>
                 </li>
               </ul>
@@ -188,28 +192,38 @@ as they set the properties for the adapter. It is recommended to follow the mave
 <li><strong>package</strong> (optional) is used to override previous package naming and provide full package name. This can be skipped by leaving value empty.
   It is strongly recommended to follow package naming convention, otherwise your project will be created but it will consist
   package naming errors.</li>
-<li><strong>systemConnector1</strong>/<strong>systemConnector2</strong> are representing names of your connector modules inside the project. Naming recommendation is to use lower case letters and kebab-case.</li>
-<li><strong>systemConnector1Package</strong>/<strong>systemConnector2Package</strong> are used to define package name suffix for the connectors. Notice that
-  connector package name starts with prefix defined on <strong>package</strong> step.</li>
+<li><strong>systemConnector1</strong>/<strong>systemConnector2</strong> are representing names of your connector packages inside the project.</li>
 <li><strong>useLombokDefault</strong>/<strong>useLombok</strong> are properties used for including or excluding Lombok dependency in adapter.
   Parameter useLombokDefault is only used to include lombok by default. If you wish to exclude lombok you should set 
   useLombok to anything other than 'y' or 'Y'.</li>
 </ul>
-<p>After a successful build, a project with the 4 following modules will be created:</p>
+<p>After a successful build, a project with the following structure will be created:</p>
 <ul>
-<li>{artifactId}-application</li>
-<li>{artifactId}-domain</li>
-<li>{systemConnector1}</li>
-<li>{systemConnector2}</li>
+<li>SIPApplication.java</li>
+<li>common</li>
+<li>domain</li>
+<li>util</li>
+<li>connectors</li>
+<li>{systemConnector1}<ul>
+<li>config</li>
+<li>domain</li>
+<li>processors</li>
+<li>sink</li>
+<li>transformers</li>
+<li>validators</li>
 </ul>
-<p>Our recommendation for modules naming is shown on the following Partner Adapter example:</p>
-<ul>
-<li>partner-adapter-application</li>
-<li>partner-adapter-domain</li>
-<li>partner-connector-{arbitrary connector1 name}</li>
-<li>partner-connector-{arbitrary connector2 name}</li>
+</li>
+<li>{systemConnector2}<ul>
+<li>config</li>
+<li>domain</li>
+<li>processors</li>
+<li>sink</li>
+<li>transformers</li>
+<li>validators</li>
 </ul>
-<p>More about modules and internal SIP structure you can find <a href="..">here</a>.</p>
+</li>
+</ul>
+<p>More about packages and internal SIP structure you can find <a href="..">here</a>.</p>
 <p>More information about Maven archetypes is available here:
 <a href="https://maven.apache.org/guides/introduction/introduction-to-archetypes.html">Maven Archetype</a></p>
               
