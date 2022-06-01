@@ -42,28 +42,35 @@ After executing maven command, you will be requested to insert additional parame
 - **package** (optional) is used to override previous package naming and provide full package name. This can be skipped by leaving value empty.
   It is strongly recommended to follow package naming convention, otherwise your project will be created but it will consist
   package naming errors.
-- **systemConnector1**/**systemConnector2** are representing names of your connector modules inside the project. Naming recommendation is to use lower case letters and kebab-case.
-- **systemConnector1Package**/**systemConnector2Package** are used to define package name suffix for the connectors. Notice that
-  connector package name starts with prefix defined on **package** step.
+- **systemConnector1**/**systemConnector2** are representing names of your connector packages inside the project.
 - **useLombokDefault**/**useLombok** are properties used for including or excluding Lombok dependency in adapter.
   Parameter useLombokDefault is only used to include lombok by default. If you wish to exclude lombok you should set 
   useLombok to anything other than 'y' or 'Y'.
 
-After a successful build, a project with the 4 following modules will be created:
+After a successful build, a project with the following structure will be created:
 
-- {artifactId}-application
-- {artifactId}-domain
-- {systemConnector1}
-- {systemConnector2}
+- SIPApplication.java
+- common
+  - domain
+  - util
+- connectors
+  - {systemConnector1}
+    - config
+    - domain
+    - processors
+    - sink
+    - transformers
+    - validators
+  - {systemConnector2}
+    - config
+    - domain
+    - processors
+    - sink
+    - transformers
+    - validators
+    
 
-Our recommendation for modules naming is shown on the following Partner Adapter example:
-
-- partner-adapter-application
-- partner-adapter-domain
-- partner-connector-{arbitrary connector1 name}
-- partner-connector-{arbitrary connector2 name}
-
-More about modules and internal SIP structure you can find [here](./README.md).
+More about packages and internal SIP structure you can find [here](./README.md).
 
 More information about Maven archetypes is available here:
 [Maven Archetype](https://maven.apache.org/guides/introduction/introduction-to-archetypes.html)

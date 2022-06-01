@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "104",
-  "message": "Refactor SIPTranslateMessageService so that it no longer requires SIPStaticSpringContext to register itself"
-}
