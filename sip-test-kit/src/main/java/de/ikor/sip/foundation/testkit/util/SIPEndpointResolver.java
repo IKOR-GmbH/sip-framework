@@ -6,6 +6,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.Route;
+import org.apache.camel.component.cxf.CxfEndpoint;
 import org.apache.camel.component.rest.RestEndpoint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,18 @@ public class SIPEndpointResolver {
       RestEndpoint restEndpoint = (RestEndpoint) endpoint;
       endpointURI = extractRESTEndpointURI(restEndpoint);
     }
+
+    // WIP
+//    if (endpoint instanceof CxfEndpoint) {
+//      CxfEndpoint cxfEndpoint = (CxfEndpoint) endpoint;
+//      endpointURI = extractCXFEndpointURI(cxfEndpoint);
+//    }
     return endpointURI;
+  }
+
+  // WIP
+  public Endpoint resolveCxfEndpoint(Exchange exchange) {
+    return resolveEndpoint(exchange);
   }
 
   private Endpoint resolveEndpoint(Exchange exchange) {
