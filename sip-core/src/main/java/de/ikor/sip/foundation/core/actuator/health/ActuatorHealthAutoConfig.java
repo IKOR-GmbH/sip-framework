@@ -5,5 +5,4 @@ import org.springframework.context.annotation.ComponentScan;
 
 @ComponentScan
 @ConditionalOnProperty(value = "sip.core.actuator.health.enabled", havingValue = "true")
-public class ActuatorHealthAutoConfig {
-}
+public class ActuatorHealthAutoConfig {}
