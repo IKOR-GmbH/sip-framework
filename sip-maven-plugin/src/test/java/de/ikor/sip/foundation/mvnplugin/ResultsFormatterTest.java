@@ -13,7 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class ResultsFormatterTest {
-  private ResultsFormatter subject = new ResultsFormatter();
+  private final ResultsFormatter subject = new ResultsFormatter();
 
   @Test
   void when_ResultHasBannedImportsInSourceCode_then_FormattedMessageContainsThem() {
@@ -30,7 +30,10 @@ class ResultsFormatterTest {
     // assert
     assertThat(formattedMessage)
         .contains("in main folder")
-        .contains("in file: de\\ikor\\sips")
+        .contains("in file: ")
+        .contains("de")
+        .contains("ikor")
+        .contains("sip")
         .contains("Line: 2")
         .contains("static de.ikor.sip.AClass");
   }

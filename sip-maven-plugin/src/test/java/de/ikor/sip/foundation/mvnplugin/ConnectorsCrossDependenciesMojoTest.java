@@ -1,5 +1,8 @@
 package de.ikor.sip.foundation.mvnplugin;
 
+import static org.mockito.Mockito.*;
+
+import java.util.List;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
@@ -8,10 +11,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
-
-import java.util.List;
-
-import static org.mockito.Mockito.*;
 
 class ConnectorsCrossDependenciesMojoTest {
 
