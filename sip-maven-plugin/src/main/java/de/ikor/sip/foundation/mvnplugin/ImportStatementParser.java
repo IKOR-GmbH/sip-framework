@@ -124,8 +124,9 @@ public final class ImportStatementParser {
 
     public Collection<String> lines(Path path) throws IOException {
       final Reader fileReader = Files.newBufferedReader(path, charset);
-      final BufferedReader lineReader = new BufferedReader(fileReader);
-      return lineReader.lines().collect(Collectors.toList());
+      try (final BufferedReader lineReader = new BufferedReader(fileReader)) {
+        return lineReader.lines().collect(Collectors.toList());
+      }
     }
   }
 }
