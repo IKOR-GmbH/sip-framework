@@ -41,7 +41,7 @@ public final class ImportStatementParser {
 
     final String fileName = getFileNameWithoutExtension(sourceFilePath);
     String packageName;
-    try (final Stream<String> lines = this.lineReader.lines(sourceFilePath)) {
+    try (final Stream<String> lines = this.lineReader.lines(sourceFilePath).stream()) {
       int row = 1;
 
       JavaDocBuilder builder = new JavaDocBuilder();
@@ -122,18 +122,10 @@ public final class ImportStatementParser {
       this.charset = charset;
     }
 
-    public Stream<String> lines(Path path) throws IOException {
+    public Collection<String> lines(Path path) throws IOException {
       final Reader fileReader = Files.newBufferedReader(path, charset);
       final BufferedReader lineReader = new BufferedReader(fileReader);
-      return lineReader.lines().onClose(() -> close(lineReader)).onClose(() -> close(fileReader));
-    }
-
-    private void close(Reader reader) {
-      try {
-        reader.close();
-      } catch (final IOException e) {
-        throw new UncheckedIOException("Error while closing reader", e);
-      }
+      return lineReader.lines().collect(Collectors.toList());
     }
   }
 }
