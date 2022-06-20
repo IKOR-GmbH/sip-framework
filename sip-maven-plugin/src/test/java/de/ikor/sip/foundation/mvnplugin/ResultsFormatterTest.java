@@ -1,18 +1,17 @@
 package de.ikor.sip.foundation.mvnplugin;
 
+import static java.io.File.separator;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import de.ikor.sip.foundation.mvnplugin.model.AnalyzeResult;
 import de.ikor.sip.foundation.mvnplugin.model.BannedImportRecords;
 import de.ikor.sip.foundation.mvnplugin.model.ImportStatement;
-import org.junit.jupiter.api.Test;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import static java.io.File.separator;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import org.junit.jupiter.api.Test;
 
 class ResultsFormatterTest {
   private final ResultsFormatter subject = new ResultsFormatter();
