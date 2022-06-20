@@ -1,16 +1,18 @@
 package de.ikor.sip.foundation.mvnplugin;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
 import de.ikor.sip.foundation.mvnplugin.model.AnalyzeResult;
 import de.ikor.sip.foundation.mvnplugin.model.BannedImportRecords;
 import de.ikor.sip.foundation.mvnplugin.model.ImportStatement;
+import org.junit.jupiter.api.Test;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import org.junit.jupiter.api.Test;
+
+import static java.io.File.separator;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class ResultsFormatterTest {
   private final ResultsFormatter subject = new ResultsFormatter();
@@ -30,10 +32,7 @@ class ResultsFormatterTest {
     // assert
     assertThat(formattedMessage)
         .contains("in main folder")
-        .contains("in file: ")
-        .contains("de")
-        .contains("ikor")
-        .contains("sip")
+        .contains("in file: de" + separator + "ikor" + separator + "sips")
         .contains("Line: 2")
         .contains("static de.ikor.sip.AClass");
   }
