@@ -94,7 +94,7 @@
         <fmt-maven-plugin.version>2.13</fmt-maven-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
-        <maven-project.version>3.0-alpha-2</maven-project.version>
+        <maven-core.version>3.8.6</maven-core.version>
         <maven-project-dependecies.version>3.8.4</maven-project-dependecies.version>
         <maven-plugin-annotations.version>3.6.1</maven-plugin-annotations.version>
         <maven-plugin-plugin.version>3.6.4</maven-plugin-plugin.version>
@@ -248,8 +248,8 @@
             <!--maven dependencies-->
             <dependency>
                 <groupId>org.apache.maven</groupId>
-                <artifactId>maven-project</artifactId>
-                <version>3.0-alpha-2</version>
+                <artifactId>maven-core</artifactId>
+                <version>${maven-core.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven</groupId>
