@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.actuator.routes;
+package de.ikor.sip.foundation.core.actuator.info;
 
 import java.io.*;
 import java.util.Optional;

@@ -18,6 +18,8 @@ sip.core:
       showExchangeId: true
     traceType: "*"
   actuator:
+    info:
+      enabled: true
     routes:
       enabled: true
     health:

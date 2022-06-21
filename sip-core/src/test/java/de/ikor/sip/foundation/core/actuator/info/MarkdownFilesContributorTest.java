@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.actuator.routes;
+package de.ikor.sip.foundation.core.actuator.info;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -75,7 +75,7 @@ class MarkdownFilesContributorTest {
     Logger logger =
         (Logger)
             LoggerFactory.getLogger(
-                "de.ikor.sip.foundation.core.actuator.routes.MarkdownFilesContributor");
+                "de.ikor.sip.foundation.core.actuator.info.MarkdownFilesContributor");
     ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
     listAppender.start();
     logger.addAppender(listAppender);
