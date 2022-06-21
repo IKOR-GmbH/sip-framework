@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.actuator.routes;
 
+import de.ikor.sip.foundation.core.annotation.SIPFeature;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -8,5 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
  * based on sip.core.actuator.routes.enabled value (true by default).
  */
 @ComponentScan
+@SIPFeature(name = "routes")
 @ConditionalOnProperty(value = "sip.core.actuator.routes.enabled", havingValue = "true")
 public class ActuatorRoutesAutoConfig {}
