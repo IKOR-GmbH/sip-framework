@@ -73,9 +73,9 @@
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
         <spring.boot.version>2.6.7</spring.boot.version>
-        <camel.version>3.17.0</camel.version>
+        <camel.version>3.16.0</camel.version>
         <jackson-jsr310.version>2.12.7</jackson-jsr310.version>
-        <springdoc-openapi.version>1.6.9</springdoc-openapi.version>
+        <springdoc-openapi.version>1.6.2</springdoc-openapi.version>
         <lombok.version>1.18.22</lombok.version>
         <mapstruct.version>1.5.2.Final</mapstruct.version>
         <commons-text.version>1.9</commons-text.version>
