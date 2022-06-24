@@ -38,15 +38,15 @@ public class CustomTracer extends DefaultTracer {
   }
 
   @Override
-  protected void dumpTrace(String out) {
-    sipTraceOperations.forEach(traceOperation -> traceOperation.execute(this, out));
+  protected void dumpTrace(String out, Object node) {
+    sipTraceOperations.forEach(traceOperation -> traceOperation.execute(this, out, node));
   }
 
-  void logTrace(String out) {
-    super.dumpTrace(out);
+  void logTrace(String out, Object node) {
+    super.dumpTrace(out, node);
   }
 
-  void storeInMemory(String out) {
+  void storeInMemory(String out, Object node) {
     traceHistory.add(out);
   }
 }
