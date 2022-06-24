@@ -81,7 +81,7 @@
         <commons-text.version>1.9</commons-text.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-exec.version>1.3</commons-exec.version>
-        <equalsverifier.version>3.10</equalsverifier.version>
+        <equalsverifier.version>3.7.1</equalsverifier.version>
 
         <!-- plugin versions -->
         <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
