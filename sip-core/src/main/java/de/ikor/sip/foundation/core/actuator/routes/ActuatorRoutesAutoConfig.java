@@ -9,6 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
  * based on sip.core.actuator.routes.enabled value (true by default).
  */
 @ComponentScan
-@SIPFeature(name = "routes")
+@SIPFeature(name = "adapter_routes")
 @ConditionalOnProperty(value = "sip.core.actuator.routes.enabled", havingValue = "true")
 public class ActuatorRoutesAutoConfig {}

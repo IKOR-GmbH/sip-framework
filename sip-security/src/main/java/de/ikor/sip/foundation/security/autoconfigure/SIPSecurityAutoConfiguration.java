@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.security.autoconfigure;
 
-import de.ikor.sip.foundation.core.annotation.SIPFeature;
 import de.ikor.sip.foundation.core.util.YamlPropertSourceFactory;
 import de.ikor.sip.foundation.security.config.SecurityConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -16,7 +15,6 @@ import org.springframework.context.annotation.PropertySource;
  */
 @Configuration
 @ConditionalOnClass(SecurityConfig.class)
-@SIPFeature(name = "security")
 @ComponentScan("de.ikor.sip.foundation.security")
 @PropertySource(
     value = "classpath:sip-security-default-config.yaml",
