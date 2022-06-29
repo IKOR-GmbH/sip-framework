@@ -65,8 +65,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-cxf-starter</artifactId>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-cxf</artifactId>
             <optional>true</optional>
         </dependency>
 
