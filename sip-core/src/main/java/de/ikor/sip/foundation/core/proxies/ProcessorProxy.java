@@ -7,7 +7,10 @@ import java.util.function.UnaryOperator;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.camel.*;
+import org.apache.camel.component.cxf.CxfEndpoint;
 import org.apache.camel.processor.SendDynamicProcessor;
+import org.apache.camel.processor.SendProcessor;
+import org.apache.camel.processor.WrapProcessor;
 import org.apache.camel.support.AsyncProcessorSupport;
 import org.apache.camel.support.ExchangeHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -82,6 +85,12 @@ public class ProcessorProxy extends AsyncProcessorSupport {
       }
     }
     return originalProcessor instanceof SendDynamicProcessor;
+  }
+
+  /** @return true if this is processor with type of Producer which requires converting payload to bytes */
+  public boolean determineConvertingToBytes() {
+    SendProcessor sendProcessor = (SendProcessor)((WrapProcessor) wrappedProcessor).getWrapped();
+    return sendProcessor.getDestination() instanceof CxfEndpoint;
   }
 
   @Override

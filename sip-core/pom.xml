@@ -64,6 +64,11 @@
             <artifactId>camel-ftp</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-cxf-starter</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <!-- Other dependencies -->
         <dependency>
