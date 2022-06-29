@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.testkit.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,10 +39,10 @@ class SIPEndpointResolverTest {
     when(endpoint.getEndpointUri()).thenReturn(ENDPOINT_URI);
 
     // act
-//    String resolvedURI = subject.resolveURI(exchange);
+    //    String resolvedURI = subject.resolveURI(exchange);
 
     // assert
-//    assertThat(resolvedURI).isEqualTo(ENDPOINT_URI);
+    //    assertThat(resolvedURI).isEqualTo(ENDPOINT_URI);
   }
 
   @Test
@@ -58,10 +57,10 @@ class SIPEndpointResolverTest {
     when(endpoint.getMethod()).thenReturn(METHOD);
     String expectedURI = "rest:" + METHOD + ":" + ENDPOINT_URI;
 
-//    // act
-//    String resolvedURI = subject.resolveURI(exchange);
-//
-//    // assert
-//    assertThat(resolvedURI).isEqualTo(expectedURI);
+    //    // act
+    //    String resolvedURI = subject.resolveURI(exchange);
+    //
+    //    // assert
+    //    assertThat(resolvedURI).isEqualTo(expectedURI);
   }
 }

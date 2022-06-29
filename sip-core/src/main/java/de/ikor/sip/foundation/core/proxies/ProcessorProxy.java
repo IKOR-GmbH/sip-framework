@@ -87,9 +87,12 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     return originalProcessor instanceof SendDynamicProcessor;
   }
 
-  /** @return true if this is processor with type of Producer which requires converting payload to bytes */
+  /**
+   * @return true if this is processor with type of Producer which requires converting payload to
+   *     bytes
+   */
   public boolean determineConvertingToBytes() {
-    SendProcessor sendProcessor = (SendProcessor)((WrapProcessor) wrappedProcessor).getWrapped();
+    SendProcessor sendProcessor = (SendProcessor) ((WrapProcessor) wrappedProcessor).getWrapped();
     return sendProcessor.getDestination() instanceof CxfEndpoint;
   }
 

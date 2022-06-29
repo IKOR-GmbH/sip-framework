@@ -9,30 +9,28 @@ import org.apache.camel.component.rest.RestEndpoint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-/**
- * Class for triggering Camel REST route
- */
+/** Class for triggering Camel REST route */
 @Component
 @RequiredArgsConstructor
 public class RestRouteProducer implements RouteProducer {
 
-    private static final String CONTEXT_PATH_SUFFIX = "[/][*]$";
+  private static final String CONTEXT_PATH_SUFFIX = "[/][*]$";
 
-    private final ProducerTemplate producerTemplate;
+  private final ProducerTemplate producerTemplate;
 
-    @Value("${sip.adapter.camel-endpoint-context-path}")
-    private String contextPath = "";
+  @Value("${sip.adapter.camel-endpoint-context-path}")
+  private String contextPath = "";
 
-    @Override
-    public Exchange executeTask(Exchange exchange, Endpoint endpoint) {
-        return producerTemplate.send(extractRESTEndpointURI((RestEndpoint) endpoint), exchange);
-    }
+  @Override
+  public Exchange executeTask(Exchange exchange, Endpoint endpoint) {
+    return producerTemplate.send(extractRESTEndpointURI((RestEndpoint) endpoint), exchange);
+  }
 
-    private String extractRESTEndpointURI(RestEndpoint restEndpoint) {
-        return "rest:" + restEndpoint.getMethod() + ":" + resolveContextPath() + restEndpoint.getPath();
-    }
+  private String extractRESTEndpointURI(RestEndpoint restEndpoint) {
+    return "rest:" + restEndpoint.getMethod() + ":" + resolveContextPath() + restEndpoint.getPath();
+  }
 
-    private String resolveContextPath() {
-        return contextPath.replaceAll(CONTEXT_PATH_SUFFIX, "");
-    }
+  private String resolveContextPath() {
+    return contextPath.replaceAll(CONTEXT_PATH_SUFFIX, "");
+  }
 }

@@ -29,5 +29,4 @@ public class SIPEndpointResolver {
     }
     return route.getEndpoint();
   }
-
 }

@@ -20,7 +20,7 @@ class SIPRouteProducerTemplateTest {
     SIPEndpointResolver sipEndpointResolver = mock(SIPEndpointResolver.class);
     Exchange exchange = mock(Exchange.class);
     Exchange expected = mock(Exchange.class);
-//    when(sipEndpointResolver.resolveURI(exchange)).thenReturn(URI);
+    //    when(sipEndpointResolver.resolveURI(exchange)).thenReturn(URI);
     when(producerTemplate.send(URI, exchange)).thenReturn(expected);
     SIPRouteProducerTemplate sipRouteProducerTemplate =
         new SIPRouteProducerTemplate(routeProducerFactory, sipEndpointResolver);

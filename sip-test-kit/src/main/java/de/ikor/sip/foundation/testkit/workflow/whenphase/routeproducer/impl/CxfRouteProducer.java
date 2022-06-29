@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeproducer.impl;
 
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeproducer.RouteProducer;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
@@ -19,68 +20,74 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.stream.Collectors;
-
-/**
- * Class for triggering Camel CXF(SOAP) route
- */
+/** Class for triggering Camel CXF(SOAP) route */
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class CxfRouteProducer implements RouteProducer {
 
-    private static final String TEST_MODE_HEADER_KEY = "test-mode";
-    private static final String TEST_NAME_HEADER_KEY = "test-name";
-    private static final String CONTEXT_PATH_PREFIX = "[/]";
-    private static final String CONTEXT_PATH_SUFFIX = "[/]$";
+  private static final String TEST_MODE_HEADER_KEY = "test-mode";
+  private static final String TEST_NAME_HEADER_KEY = "test-name";
+  private static final String CONTEXT_PATH_PREFIX = "[/]";
+  private static final String CONTEXT_PATH_SUFFIX = "[/]$";
 
-    private final CamelContext camelContext;
-    private final Environment environment;
+  private final CamelContext camelContext;
+  private final Environment environment;
 
-    @Value("${sip.adapter.camel-cxf-endpoint-context-path}")
-    private String cxfContextPath = "";
+  @Value("${sip.adapter.camel-cxf-endpoint-context-path}")
+  private String cxfContextPath = "";
 
-    @Override
-    public Exchange executeTask(Exchange exchange, Endpoint endpoint) {
-        RestTemplate restTemplate = new RestTemplate();
-        MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add(TEST_MODE_HEADER_KEY, exchange.getMessage().getHeader(TEST_MODE_HEADER_KEY, String.class));
-        headers.add(TEST_NAME_HEADER_KEY, exchange.getMessage().getHeader(TEST_NAME_HEADER_KEY, String.class));
-        HttpEntity<String> request = new HttpEntity<>(exchange.getMessage().getBody(String.class), headers);
-        log.trace("SIP Test Kit send request: {}", request.toString());
+  @Override
+  public Exchange executeTask(Exchange exchange, Endpoint endpoint) {
+    RestTemplate restTemplate = new RestTemplate();
+    MultiValueMap<String, String> headers = new HttpHeaders();
+    headers.add(
+        TEST_MODE_HEADER_KEY, exchange.getMessage().getHeader(TEST_MODE_HEADER_KEY, String.class));
+    headers.add(
+        TEST_NAME_HEADER_KEY, exchange.getMessage().getHeader(TEST_NAME_HEADER_KEY, String.class));
+    HttpEntity<String> request =
+        new HttpEntity<>(exchange.getMessage().getBody(String.class), headers);
+    log.trace("SIP Test Kit send request: {}", request.toString());
 
-        ResponseEntity<String> response = restTemplate.exchange(createAddressUri((CxfEndpoint) endpoint), HttpMethod.POST, request,
-                new ParameterizedTypeReference<>(){});
-        log.trace("SIP Test Kit receives response: {}", response.toString());
+    ResponseEntity<String> response =
+        restTemplate.exchange(
+            createAddressUri((CxfEndpoint) endpoint),
+            HttpMethod.POST,
+            request,
+            new ParameterizedTypeReference<>() {});
+    log.trace("SIP Test Kit receives response: {}", response.toString());
 
-        return createExchangeResponse(response);
+    return createExchangeResponse(response);
+  }
+
+  private Exchange createExchangeResponse(ResponseEntity<String> response) {
+    ExchangeBuilder exchangeBuilder =
+        ExchangeBuilder.anExchange(camelContext).withBody(formatToOneLine(response.getBody()));
+    response.getHeaders().forEach(exchangeBuilder::withHeader);
+    return exchangeBuilder.build();
+  }
+
+  private String formatToOneLine(String multiline) {
+    if (multiline != null) {
+      return multiline.lines().map(String::strip).collect(Collectors.joining(""));
     }
+    log.trace("SIP Test Kit response has no body");
+    return null;
+  }
 
-    private Exchange createExchangeResponse(ResponseEntity<String> response) {
-        ExchangeBuilder exchangeBuilder =
-                ExchangeBuilder.anExchange(camelContext).withBody(formatToOneLine(response.getBody()));
-        response.getHeaders().forEach(exchangeBuilder::withHeader);
-        return exchangeBuilder.build();
-    }
+  private String createAddressUri(CxfEndpoint cxfEndpoint) {
+    return String.format(
+        "http://localhost:%s%s/%s",
+        environment.getProperty("local.server.port"),
+        trimAddressSuffix(cxfContextPath),
+        trimAddressPrefix(cxfEndpoint.getAddress()));
+  }
 
-    private String formatToOneLine(String multiline) {
-        if (multiline != null) {
-            return multiline.lines().map(String::strip).collect(Collectors.joining(""));
-        }
-        log.trace("SIP Test Kit response has no body");
-        return null;
-    }
+  private String trimAddressSuffix(String address) {
+    return address.replaceAll(CONTEXT_PATH_SUFFIX, "");
+  }
 
-    private String createAddressUri(CxfEndpoint cxfEndpoint) {
-        return String.format("http://localhost:%s%s/%s", environment.getProperty("local.server.port"),
-                trimAddressSuffix(cxfContextPath), trimAddressPrefix(cxfEndpoint.getAddress()));
-    }
-
-    private String trimAddressSuffix(String address) {
-        return address.replaceAll(CONTEXT_PATH_SUFFIX, "");
-    }
-
-    private String trimAddressPrefix(String address) {
-        return address.replaceFirst(CONTEXT_PATH_PREFIX, "");
-    }
+  private String trimAddressPrefix(String address) {
+    return address.replaceFirst(CONTEXT_PATH_PREFIX, "");
+  }
 }
