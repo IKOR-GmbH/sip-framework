@@ -92,8 +92,11 @@ public class ProcessorProxy extends AsyncProcessorSupport {
    *     bytes
    */
   public boolean determineConvertingToBytes() {
-    SendProcessor sendProcessor = (SendProcessor) ((WrapProcessor) wrappedProcessor).getWrapped();
-    return sendProcessor.getDestination() instanceof CxfEndpoint;
+    if (((WrapProcessor) wrappedProcessor).getWrapped() instanceof SendProcessor) {
+      SendProcessor sendProcessor = (SendProcessor) ((WrapProcessor) wrappedProcessor).getWrapped();
+      return sendProcessor.getDestination() instanceof CxfEndpoint;
+    }
+    return false;
   }
 
   @Override
