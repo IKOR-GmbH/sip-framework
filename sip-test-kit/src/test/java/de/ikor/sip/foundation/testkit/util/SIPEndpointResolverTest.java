@@ -9,6 +9,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Route;
 import org.apache.camel.component.rest.RestEndpoint;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class SIPEndpointResolverTest {
@@ -28,6 +29,7 @@ class SIPEndpointResolverTest {
     subject = new SIPEndpointResolver(camelContext);
   }
 
+  @Disabled("Work in progress")
   @Test
   void When_resolveURI_With_NoRest_Expect_resolvedURI() {
     // arrange
@@ -45,6 +47,7 @@ class SIPEndpointResolverTest {
     //    assertThat(resolvedURI).isEqualTo(ENDPOINT_URI);
   }
 
+  @Disabled("Work in progress")
   @Test
   void When_resolveURI_With_Rest_Expect_resolvedURI() {
     // arrange

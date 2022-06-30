@@ -6,12 +6,14 @@ import static org.mockito.Mockito.*;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeproducer.RouteProducerFactory;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class SIPRouteProducerTemplateTest {
 
   public static final String URI = "uri";
 
+  @Disabled("Work in progress")
   @Test
   void When_requestOnRoute_Expect_ExchangeReturned() {
     // arrange
