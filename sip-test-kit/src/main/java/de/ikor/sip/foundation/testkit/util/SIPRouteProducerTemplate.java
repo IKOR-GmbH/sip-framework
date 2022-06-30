@@ -21,9 +21,6 @@ public class SIPRouteProducerTemplate {
    */
   public Exchange requestOnRoute(Exchange exchange) {
     Endpoint endpoint = sipEndpointResolver.resolveEndpoint(exchange);
-    return routeProducerFactory
-        .resolveRouteProducer(endpoint)
-        .get()
-        .executeTask(exchange, endpoint);
+    return routeProducerFactory.resolveRouteProducer(endpoint).executeTask(exchange, endpoint);
   }
 }
