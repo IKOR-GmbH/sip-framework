@@ -45,7 +45,7 @@ class CustomTracerTest {
     List<ILoggingEvent> logsList = listAppender.list;
 
     // act
-    subject.dumpTrace(LOG_MESSAGE);
+    subject.dumpTrace(LOG_MESSAGE, null);
 
     // assert
     assertThat(logsList.get(0).getMessage()).isEqualTo(LOG_MESSAGE);
@@ -61,7 +61,7 @@ class CustomTracerTest {
     List<ILoggingEvent> logsList = listAppender.list;
 
     // act
-    subject.dumpTrace(LOG_MESSAGE);
+    subject.dumpTrace(LOG_MESSAGE, null);
 
     // assert
     assertThat(logsList.get(0).getMessage()).isEqualTo(LOG_MESSAGE);
@@ -77,7 +77,7 @@ class CustomTracerTest {
     List<ILoggingEvent> logsList = listAppender.list;
 
     // act
-    subject.dumpTrace(LOG_MESSAGE);
+    subject.dumpTrace(LOG_MESSAGE, null);
 
     // assert
     assertThat(logsList).isEmpty();
