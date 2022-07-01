@@ -68,6 +68,12 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-cxf</artifactId>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>wsdl4j</groupId>
+                    <artifactId>wsdl4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Other dependencies -->
