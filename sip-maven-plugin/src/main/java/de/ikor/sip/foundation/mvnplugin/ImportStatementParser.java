@@ -1,10 +1,11 @@
 package de.ikor.sip.foundation.mvnplugin;
 
+import static java.lang.String.format;
+
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaSource;
 import com.thoughtworks.qdox.model.impl.DefaultJavaClass;
 import de.ikor.sip.foundation.mvnplugin.model.ImportStatement;
-
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -12,8 +13,6 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.lang.String.format;
 
 /** Parses a source file into a {@link ParsedJavaFile} representation. */
 public final class ImportStatementParser {
