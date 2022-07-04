@@ -21,10 +21,13 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.thoughtworks.qdox/qdox -->
         <dependency>
-            <groupId>qdox</groupId>
+            <groupId>com.thoughtworks.qdox</groupId>
             <artifactId>qdox</artifactId>
+            <version>2.0.1</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>

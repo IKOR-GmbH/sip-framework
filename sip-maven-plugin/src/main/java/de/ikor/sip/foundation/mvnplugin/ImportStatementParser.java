@@ -1,11 +1,9 @@
 package de.ikor.sip.foundation.mvnplugin;
 
-import static java.lang.String.format;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
-import com.thoughtworks.qdox.JavaDocBuilder;
+import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaSource;
 import de.ikor.sip.foundation.mvnplugin.model.ImportStatement;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -13,6 +11,9 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /** Parses a source file into a {@link ParsedJavaFile} representation. */
 public final class ImportStatementParser {
@@ -44,12 +45,14 @@ public final class ImportStatementParser {
     try (final Stream<String> lines = this.lineReader.lines(sourceFilePath).stream()) {
       int row = 1;
 
-      JavaDocBuilder builder = new JavaDocBuilder();
+      JavaProjectBuilder builder = new JavaProjectBuilder();
       builder.addSource(new FileReader(sourceFilePath.toString()));
-      JavaSource src = builder.getSources()[0];
-      String[] importStrings = src.getImports();
+      JavaSource src =
+          builder.getSources().stream().findFirst().orElseThrow(() -> new RuntimeException(
+                  format("No sources parsed under %s folder", sourceFilePath)));
+      List<String> importStrings = src.getImports();
 
-      packageName = src.getPackage();
+      packageName = src.getPackageName();
       String fqcn = guessFQCN(packageName, fileName);
       for (final Iterator<String> it = lines.map(String::trim).iterator(); it.hasNext(); ++row) {
         final String line = it.next();
@@ -59,7 +62,7 @@ public final class ImportStatementParser {
         if (line.isEmpty()) {
           continue;
         }
-        if (Arrays.stream(importStrings).anyMatch(line::contains)) {
+        if (importStrings.stream().anyMatch(line::contains)) {
           final List<ImportStatement> importStatements = parseImport(line, row);
           imports.addAll(importStatements);
         }
