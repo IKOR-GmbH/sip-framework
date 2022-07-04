@@ -31,7 +31,7 @@ public class ProcessorProxyMock extends Mock {
   @Override
   public void setBehavior(TestExecutionStatus testExecutionStatus) {
     proxy = getMockProxy(getId());
-    proxy.mock(this.createOperation(returnExchange, proxy.determineConvertingToBytes()));
+    proxy.mock(this.createOperation(returnExchange));
   }
 
   @Override
@@ -53,16 +53,10 @@ public class ProcessorProxyMock extends Mock {
                     ExceptionType.MOCK));
   }
 
-  private UnaryOperator<Exchange> createOperation(Exchange returnExchange, boolean convertToBytes) {
+  private UnaryOperator<Exchange> createOperation(Exchange returnExchange) {
     return exchange -> {
-      if (convertToBytes) {
-        InputStream targetStream =
-            new ByteArrayInputStream(returnExchange.getMessage().getBody(String.class).getBytes());
-        exchange.getMessage().setBody(targetStream);
-      } else {
         exchange.getMessage().setBody(returnExchange.getMessage().getBody());
-      }
-      return exchange;
+        return exchange;
     };
   }
 }
