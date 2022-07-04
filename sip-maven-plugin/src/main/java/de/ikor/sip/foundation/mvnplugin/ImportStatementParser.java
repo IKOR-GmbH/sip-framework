@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.mvnplugin;
 
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaSource;
+import com.thoughtworks.qdox.model.impl.DefaultJavaClass;
 import de.ikor.sip.foundation.mvnplugin.model.ImportStatement;
 
 import java.io.*;
@@ -13,7 +14,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /** Parses a source file into a {@link ParsedJavaFile} representation. */
 public final class ImportStatementParser {
@@ -38,22 +38,23 @@ public final class ImportStatementParser {
    *     the file.
    */
   public ParsedJavaFile parse(Path sourceFilePath) {
-    final List<ImportStatement> imports = new ArrayList<>();
+    try {
+      JavaSource src = parseAsJavaSource(sourceFilePath);
+      List<ImportStatement> importStatements = parseImportLines(sourceFilePath, src.getImports());
+      String fullyQualifiedName = new DefaultJavaClass(src).getFullyQualifiedName();
+      return new ParsedJavaFile(sourceFilePath, fullyQualifiedName, importStatements);
+    } catch (IOException e) {
+      throw new UncheckedIOException(
+          format("Encountered IOException while analyzing %s for banned imports", sourceFilePath),
+          e);
+    }
+  }
 
-    final String fileName = getFileNameWithoutExtension(sourceFilePath);
-    String packageName;
+  private List<ImportStatement> parseImportLines(Path sourceFilePath, List<String> importStrings)
+      throws IOException {
+    List<ImportStatement> imports = new LinkedList<>();
     try (final Stream<String> lines = this.lineReader.lines(sourceFilePath).stream()) {
       int row = 1;
-
-      JavaProjectBuilder builder = new JavaProjectBuilder();
-      builder.addSource(new FileReader(sourceFilePath.toString()));
-      JavaSource src =
-          builder.getSources().stream().findFirst().orElseThrow(() -> new RuntimeException(
-                  format("No sources parsed under %s folder", sourceFilePath)));
-      List<String> importStrings = src.getImports();
-
-      packageName = src.getPackageName();
-      String fqcn = guessFQCN(packageName, fileName);
       for (final Iterator<String> it = lines.map(String::trim).iterator(); it.hasNext(); ++row) {
         final String line = it.next();
 
@@ -67,23 +68,17 @@ public final class ImportStatementParser {
           imports.addAll(importStatements);
         }
       }
-
-      return new ParsedJavaFile(sourceFilePath, fqcn, imports);
-    } catch (final IOException e) {
-      throw new UncheckedIOException(
-          format("Encountered IOException while analyzing %s for banned imports", sourceFilePath),
-          e);
+      return imports;
     }
   }
 
-  private String guessFQCN(String packageName, String sourceFileName) {
-    return isEmpty(packageName) ? sourceFileName : packageName + "." + sourceFileName;
-  }
-
-  private String getFileNameWithoutExtension(Path file) {
-    final String s = file.getFileName().toString();
-    final int i = s.lastIndexOf(".");
-    return s.substring(0, i);
+  private JavaSource parseAsJavaSource(Path sourceFilePath) throws FileNotFoundException {
+    JavaProjectBuilder builder = new JavaProjectBuilder();
+    builder.addSource(new FileReader(sourceFilePath.toString()));
+    return builder.getSources().stream()
+        .findFirst()
+        .orElseThrow(
+            () -> new RuntimeException(format("qdox source parsing failed: %s", sourceFilePath)));
   }
 
   public List<ImportStatement> parseImport(String line, int lineNumber) {
