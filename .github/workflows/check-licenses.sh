@@ -42,6 +42,7 @@ while read line; do
       [[ $line == *"(The MIT License)"* ]] ||
       [[ $line == *"(MIT License)"* ]] ||
       [[ $line == *"(MIT)"* ]] ||
+      [[ $line == *"(Public Domain)"* ]] ||
       [[ $line == *"(Public Domain, per Creative Commons CC0)"* ]]; then
     continue
    fi;
