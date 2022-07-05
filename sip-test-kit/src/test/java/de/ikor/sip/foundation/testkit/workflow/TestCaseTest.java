@@ -40,6 +40,7 @@ class TestCaseTest {
     // arrange
     Exchange exchange = mock(Exchange.class);
     Message message = mock(Message.class);
+    when(message.getBody()).thenReturn("message");
     when(exchange.getMessage()).thenReturn(message);
     when(executionWrapper.execute()).thenReturn(exchange);
     doNothing().when(validator).validate(testExecutionStatus);
