@@ -15,6 +15,8 @@ while read line; do
    fi
 
    if [[ $line == *"(Eclipse Public License - v 1.0)"* ]] ||
+      [[ $line == *"(Eclipse Public License 1.0)"* ]] ||
+      [[ $line == *"(Eclipse Public License, Version 1.0)"* ]] ||
       [[ $line == *"(Eclipse Distribution License - v 1.0)"* ]] ||
       [[ $line == *"(Eclipse Public License v2.0)"* ]] ||
       [[ $line == *"(The Apache Software License, Version 2.0)"* ]] ||
@@ -40,6 +42,7 @@ while read line; do
       [[ $line == *"(The MIT License)"* ]] ||
       [[ $line == *"(MIT License)"* ]] ||
       [[ $line == *"(MIT)"* ]] ||
+      [[ $line == *"(Public Domain)"* ]] ||
       [[ $line == *"(Public Domain, per Creative Commons CC0)"* ]]; then
     continue
    fi;

@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.trace;
 
-import java.util.function.BiConsumer;
 import lombok.AllArgsConstructor;
+import org.apache.camel.util.function.TriConsumer;
 
 @AllArgsConstructor
 public enum SIPTraceOperation {
@@ -9,9 +9,9 @@ public enum SIPTraceOperation {
   MEMORY("memory", CustomTracer::storeInMemory);
 
   public final String label;
-  private final BiConsumer<CustomTracer, String> consumer;
+  private final TriConsumer<CustomTracer, String, Object> consumer;
 
-  public void execute(CustomTracer customTracer, String out) {
-    consumer.accept(customTracer, out);
+  public void execute(CustomTracer customTracer, String out, Object node) {
+    consumer.accept(customTracer, out, node);
   }
 }
