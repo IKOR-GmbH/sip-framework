@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.annotation;
 
 import de.ikor.sip.foundation.core.util.FoundationFeature;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
