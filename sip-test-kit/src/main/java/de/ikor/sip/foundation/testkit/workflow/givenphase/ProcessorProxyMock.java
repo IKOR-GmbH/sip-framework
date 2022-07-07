@@ -5,8 +5,6 @@ import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
 import de.ikor.sip.foundation.testkit.exception.ExceptionType;
 import de.ikor.sip.foundation.testkit.exception.TestCaseInitializationException;
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.function.UnaryOperator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,8 +53,8 @@ public class ProcessorProxyMock extends Mock {
 
   private UnaryOperator<Exchange> createOperation(Exchange returnExchange) {
     return exchange -> {
-        exchange.getMessage().setBody(returnExchange.getMessage().getBody());
-        return exchange;
+      exchange.getMessage().setBody(returnExchange.getMessage().getBody());
+      return exchange;
     };
   }
 }
