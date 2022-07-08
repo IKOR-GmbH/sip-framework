@@ -32,6 +32,7 @@ while read line; do
       [[ $line == *"(BSD-3-Clause)"* ]] ||
       [[ $line == *"(Revised BSD)"* ]] ||
       [[ $line == *"(BSD)"* ]] ||
+      [[ $line == *"(The BSD License)"* ]] ||
       [[ $line == *"(EDL 1.0)"* ]] ||
       [[ $line == *"(EPL 2.0)"* ]] ||
       [[ $line == *"(CDDL/GPLv2+CE)"* ]] ||

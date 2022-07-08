@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.trace;
 
+import de.ikor.sip.foundation.core.annotation.SIPFeature;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -8,5 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
  * sip.core.tracing.enabled value (false by default).
  */
 @ComponentScan
+@SIPFeature(name = "tracing")
 @ConditionalOnProperty(value = "sip.core.tracing.enabled", havingValue = "true")
 public class TraceAutoConfig {}
