@@ -1,6 +1,5 @@
-package de.ikor.sip.foundation.mvnplugin;
+package de.ikor.sip.foundation.mvnplugin.model;
 
-import de.ikor.sip.foundation.mvnplugin.model.ImportStatement;
 import java.nio.file.Path;
 import java.util.Collection;
 
