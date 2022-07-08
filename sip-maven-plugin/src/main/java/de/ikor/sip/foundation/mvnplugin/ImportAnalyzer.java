@@ -1,9 +1,6 @@
 package de.ikor.sip.foundation.mvnplugin;
 
-import de.ikor.sip.foundation.mvnplugin.model.BannedImportGroup;
-import de.ikor.sip.foundation.mvnplugin.model.BannedImportGroups;
-import de.ikor.sip.foundation.mvnplugin.model.BannedImportRecords;
-import de.ikor.sip.foundation.mvnplugin.model.ImportStatement;
+import de.ikor.sip.foundation.mvnplugin.model.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

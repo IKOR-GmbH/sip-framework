@@ -6,6 +6,7 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaSource;
 import com.thoughtworks.qdox.model.impl.DefaultJavaClass;
 import de.ikor.sip.foundation.mvnplugin.model.ImportStatement;
+import de.ikor.sip.foundation.mvnplugin.model.ParsedJavaFile;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;

@@ -41,8 +41,15 @@ public class ConnectorsCrossDependenciesMojo extends AbstractMojo {
     BannedImportGroups bannedImportGroups = createBanGroups(getMainCompileSourceRoot(mavenProject));
 
     AnalyzeResult analyzeResult = analyzer.analyze(bannedImportGroups);
-    new ResultsValidator().validate(analyzeResult);
-    getLog().info("No cross dependencies detected.");
+    this.validate(analyzeResult);
+  }
+
+  private void validate(AnalyzeResult analyzeResult) throws MojoExecutionException {
+    if (analyzeResult.bannedImportsFound()) {
+      throw new MojoExecutionException(new ResultsFormatter().formatMatches(analyzeResult));
+    } else {
+      getLog().info("No cross dependencies detected.");
+    }
   }
 
   private String getMainCompileSourceRoot(MavenProject mavenProject) throws MojoFailureException {
