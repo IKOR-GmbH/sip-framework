@@ -34,10 +34,10 @@ class SIPEndpointResolverTest {
     when(camelContext.getRoute(CONNECTION_ALIAS)).thenReturn(route);
     when(route.getEndpoint()).thenReturn(expectedEndpoint);
 
-     // act
+    // act
     Endpoint actualEndpoint = subject.resolveEndpoint(exchange);
 
-     // assert
+    // assert
     assertThat(actualEndpoint).isEqualTo(expectedEndpoint);
   }
 
@@ -45,6 +45,6 @@ class SIPEndpointResolverTest {
   void GIVEN_noConnectionAlias_WHEN_resolveEndpoint_THEN_IllegalArgumentException() {
     // act & assert
     assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> subject.resolveEndpoint(exchange));
+        .isThrownBy(() -> subject.resolveEndpoint(exchange));
   }
 }

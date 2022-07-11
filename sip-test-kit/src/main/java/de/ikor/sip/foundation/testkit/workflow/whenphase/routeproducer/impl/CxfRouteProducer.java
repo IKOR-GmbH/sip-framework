@@ -67,20 +67,20 @@ public class CxfRouteProducer implements RouteProducer {
     return exchangeBuilder.build();
   }
 
-  private String formatToOneLine(String multiline) {
-    if (multiline != null) {
-      return multiline.lines().map(String::strip).collect(Collectors.joining(""));
+  private String formatToOneLine(String multilineString) {
+    if (multilineString != null) {
+      return multilineString.lines().map(String::strip).collect(Collectors.joining(""));
     }
     log.trace("SIP Test Kit response has no body");
     return null;
   }
 
   private String createAddressUri(Endpoint endpoint) {
-      return String.format(
-          "http://localhost:%s%s/%s",
-          environment.getProperty("local.server.port"),
-          trimAddressSuffix(cxfContextPath),
-          trimAddressPrefix(getCxfEndpointAddress(endpoint)));
+    return String.format(
+        "http://localhost:%s%s/%s",
+        environment.getProperty("local.server.port"),
+        trimAddressSuffix(cxfContextPath),
+        trimAddressPrefix(getCxfEndpointAddress(endpoint)));
   }
 
   private String trimAddressSuffix(String address) {

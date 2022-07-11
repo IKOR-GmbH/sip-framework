@@ -20,9 +20,11 @@ class SIPRouteProducerTemplateTest {
     SIPEndpointResolver sipEndpointResolver = mock(SIPEndpointResolver.class);
     RouteProducerFactory routeProducerFactory = mock(RouteProducerFactory.class);
     Endpoint endpoint = mock(Endpoint.class);
-    SIPRouteProducerTemplate subject = new SIPRouteProducerTemplate(routeProducerFactory, sipEndpointResolver);
+    SIPRouteProducerTemplate subject =
+        new SIPRouteProducerTemplate(routeProducerFactory, sipEndpointResolver);
     when(sipEndpointResolver.resolveEndpoint(exchange)).thenReturn(endpoint);
-    when(routeProducerFactory.resolveRouteProducer(endpoint)).thenReturn(new DefaultRouteProducer(camelContext));
+    when(routeProducerFactory.resolveRouteProducer(endpoint))
+        .thenReturn(new DefaultRouteProducer(camelContext));
 
     // act
     Exchange actualExchange = subject.requestOnRoute(exchange);
