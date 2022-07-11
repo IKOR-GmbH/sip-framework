@@ -17,7 +17,8 @@
     <version>2.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SIP Starter Parent</name>
-    <description>Parent pom providing dependency and plugin management for SIP integration adapters built with Maven</description>
+    <description>Parent pom providing dependency and plugin management for SIP integration adapters built with Maven
+    </description>
 
     <scm>
         <connection>scm:git:git://github.com/IKOR-GmbH/sip-framework.git</connection>
@@ -101,6 +102,18 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>de.ikor.sip.foundation</groupId>
+                    <artifactId>sip-maven-plugin</artifactId>
+                    <version>${sip-framework.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>connectors-cross-dependencies-check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>

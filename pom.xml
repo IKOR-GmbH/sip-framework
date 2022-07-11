@@ -94,6 +94,16 @@
         <fmt-maven-plugin.version>2.13</fmt-maven-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+        <maven-core.version>3.8.6</maven-core.version>
+        <maven-project-dependecies.version>3.8.4</maven-project-dependecies.version>
+        <maven-plugin-annotations.version>3.6.1</maven-plugin-annotations.version>
+        <maven-plugin-plugin.version>3.6.4</maven-plugin-plugin.version>
+        <qdox.version>1.6.1</qdox.version>
+        <commons-io.version>2.11.0</commons-io.version>
+        <plexus-component-annotations.version>2.1.0</plexus-component-annotations.version>
+        <plexus-container-default.version>2.1.0</plexus-container-default.version>
+        <plexus-classworlds>2.6.0</plexus-classworlds>
+        <plexus-utils>3.4.1</plexus-utils>
 
         <!-- sonar settings -->
         <sonar.organization>ikor-gmbh</sonar.organization>
@@ -105,7 +115,8 @@
         <!-- instead of aggregating coverage we reference all single coverage files for the projects
              this forces the unit-tests for specific tools to be part of the submodule, instead of
              beeing anywhere -->
-        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
         <sonar.coverage.exclusions>**/*Config*</sonar.coverage.exclusions>
     </properties>
 
@@ -117,6 +128,7 @@
         <module>sip-starter-parent</module>
         <module>sip-archetype</module>
         <module>sip-test-kit</module>
+        <module>sip-maven-plugin</module>
     </modules>
 
     <dependencyManagement>
@@ -133,6 +145,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-exec</artifactId>
                 <version>${commons-exec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -228,8 +245,55 @@
                 <artifactId>commons-collections4</artifactId>
                 <version>${commons-collections4.version}</version>
             </dependency>
+            <!--maven dependencies-->
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-core</artifactId>
+                <version>${maven-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>${maven-project-dependecies.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-model</artifactId>
+                <version>${maven-project-dependecies.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugin-tools</groupId>
+                <artifactId>maven-plugin-annotations</artifactId>
+                <version>${maven-plugin-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>qdox</groupId>
+                <artifactId>qdox</artifactId>
+                <version>${qdox.version}</version>
+            </dependency>
 
-            <!-- additional dependencies -->
+
+            <!--            additional dependencies-->
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-utils</artifactId>
+                <version>${plexus-utils}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-classworlds</artifactId>
+                <version>2.5.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-container-default</artifactId>
+                <version>${plexus-container-default.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-component-annotations</artifactId>
+                <version>${plexus-component-annotations.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jsr310</artifactId>
@@ -256,6 +320,12 @@
                 <artifactId>swagger-annotations</artifactId>
                 <version>2.1.11</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-artifact</artifactId>
+                <version>${maven-project-dependecies.version}</version>
+                <scope>provided</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -266,6 +336,11 @@
                     <groupId>org.sonarsource.scanner.maven</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
                     <version>${sonar-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>3.6.4</version>
                 </plugin>
 
                 <plugin>
@@ -292,6 +367,10 @@
                             <group>
                                 <title>SIP Security</title>
                                 <packages>de.ikor.sip.foundation.security*</packages>
+                            </group>
+                            <group>
+                                <title>SIP Maven Plugin</title>
+                                <packages>de.ikor.sip.foundation.mvnplugin*</packages>
                             </group>
                         </groups>
                     </configuration>
@@ -478,6 +557,7 @@
                         </dependency>
                     </dependencies>
                 </plugin>
+
             </plugins>
         </pluginManagement>
     </build>
