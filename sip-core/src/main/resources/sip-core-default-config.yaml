@@ -40,7 +40,7 @@ management:
   info:
     camel:
       enabled: false
-  endpoints.web.exposure.include: health,info,metrics,loggers,prometheus,adapter-routes
+  endpoints.web.exposure.include: health,info,metrics,loggers,prometheus,adapter-routes,adapterdefinition
   endpoint:
     health:
       show-details: always
