@@ -8,6 +8,8 @@ import de.ikor.sip.foundation.core.declarative.definitions.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.definitions.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.definitions.ScenarioParticipationIncomingDefinition;
 import de.ikor.sip.foundation.core.declarative.definitions.ScenarioParticipationOutgoingDefinition;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteConfigurationBuilder;
 import org.apache.camel.model.ProcessorDefinition;
@@ -15,9 +17,6 @@ import org.apache.camel.model.StepDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @Component
 class RoutesFromDeclarativeBuilder extends RouteConfigurationBuilder {

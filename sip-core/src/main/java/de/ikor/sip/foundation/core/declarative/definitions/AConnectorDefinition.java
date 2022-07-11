@@ -1,9 +1,8 @@
 package de.ikor.sip.foundation.core.declarative.definitions;
 
 import de.ikor.sip.foundation.core.declarative.annotations.Connector;
-import org.springframework.core.io.ClassPathResource;
-
 import java.io.IOException;
+import org.springframework.core.io.ClassPathResource;
 
 public class AConnectorDefinition implements ConnectorDefinition {
 
@@ -31,8 +30,7 @@ public class AConnectorDefinition implements ConnectorDefinition {
   }
 
   private Connector getAnnotation() {
-    final var annotation =
-        getClass().getAnnotation(Connector.class);
+    final var annotation = getClass().getAnnotation(Connector.class);
     if (null == annotation)
       throw new IllegalStateException(
           "@Connector annotation is missing on class " + getClass().getName());

@@ -13,8 +13,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface ScenarioParticipationOutgoing {
 
-  /**
-   * @return ID of the {@link IntegrationScenario} that this {@link Connector} participates in
-   */
+  /** @return ID of the {@link IntegrationScenario} that this {@link Connector} participates in */
   String value();
 }

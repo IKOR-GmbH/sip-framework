@@ -1,14 +1,12 @@
 package de.ikor.sip.foundation.core.declarative.annotations;
 
-
-import org.springframework.stereotype.Component;
-
+import de.ikor.sip.foundation.core.declarative.definitions.IntegrationScenarioDefinition;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.springframework.stereotype.Component;
 
-import de.ikor.sip.foundation.core.declarative.definitions.IntegrationScenarioDefinition;
 /**
  * Annotation for a bean that defines an integration scenario.
  *
@@ -19,9 +17,7 @@ import de.ikor.sip.foundation.core.declarative.definitions.IntegrationScenarioDe
 @Component
 public @interface IntegrationScenario {
 
-  /**
-   * @return The ID of this integration scenario. Must be unique within the whole adapter.
-   */
+  /** @return The ID of this integration scenario. Must be unique within the whole adapter. */
   String value();
 
   /**

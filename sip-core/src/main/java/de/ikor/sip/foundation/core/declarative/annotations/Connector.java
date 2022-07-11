@@ -1,12 +1,11 @@
 package de.ikor.sip.foundation.core.declarative.annotations;
 
 import de.ikor.sip.foundation.core.declarative.definitions.ConnectorDefinition;
-import org.springframework.stereotype.Component;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.springframework.stereotype.Component;
 
 /**
  * Annotation for beans that represent a connector that links an (external) system with one or more
@@ -22,9 +21,7 @@ import java.lang.annotation.Target;
 @Component
 public @interface Connector {
 
-  /**
-   * @return The ID of the connector. Must be unique among all connectors within the adapter.
-   */
+  /** @return The ID of the connector. Must be unique among all connectors within the adapter. */
   String value();
 
   /**

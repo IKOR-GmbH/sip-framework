@@ -1,9 +1,8 @@
 package de.ikor.sip.foundation.core.declarative.definitions;
 
 import de.ikor.sip.foundation.core.declarative.annotations.IntegrationScenario;
-import org.springframework.core.io.ClassPathResource;
-
 import java.io.IOException;
+import org.springframework.core.io.ClassPathResource;
 
 public abstract class AIntegrationScenarioDefinition<T>
     implements IntegrationScenarioDefinition<T> {
@@ -35,10 +34,7 @@ public abstract class AIntegrationScenarioDefinition<T>
   }
 
   private IntegrationScenario getAnnotation() {
-    final var annotation =
-        getClass()
-            .getAnnotation(
-                IntegrationScenario.class);
+    final var annotation = getClass().getAnnotation(IntegrationScenario.class);
     if (null == annotation)
       throw new IllegalStateException(
           "@IntegrationScenario annotation is missing on class " + getClass().getName());

@@ -6,17 +6,16 @@ import de.ikor.sip.foundation.core.declarative.annotations.ScenarioParticipation
 import de.ikor.sip.foundation.core.declarative.annotations.ScenarioParticipationOutgoing;
 import de.ikor.sip.foundation.core.declarative.definitions.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.definitions.IntegrationScenarioDefinition;
-import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Component
 @RestControllerEndpoint(id = "adapterdefinition")

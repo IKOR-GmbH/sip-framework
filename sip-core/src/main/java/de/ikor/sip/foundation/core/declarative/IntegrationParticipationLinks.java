@@ -4,9 +4,8 @@ import de.ikor.sip.foundation.core.declarative.definitions.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.definitions.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.definitions.ScenarioParticipationIncomingDefinition;
 import de.ikor.sip.foundation.core.declarative.definitions.ScenarioParticipationOutgoingDefinition;
-import lombok.Value;
-
 import java.util.Optional;
+import lombok.Value;
 
 @Value
 public class IntegrationParticipationLinks {
