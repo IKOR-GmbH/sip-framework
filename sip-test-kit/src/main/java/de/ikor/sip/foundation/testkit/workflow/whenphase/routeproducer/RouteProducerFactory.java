@@ -9,6 +9,9 @@ import org.apache.camel.component.cxf.CxfEndpoint;
 import org.apache.camel.component.rest.RestEndpoint;
 import org.springframework.stereotype.Component;
 
+/**
+ * Factory class which produces RouteProducer based on Endpoint type
+ */
 @Component
 @RequiredArgsConstructor
 public class RouteProducerFactory {
@@ -17,6 +20,12 @@ public class RouteProducerFactory {
   private final RestRouteProducer restRouteProducer;
   private final DefaultRouteProducer defaultRouteProducer;
 
+  /**
+   *
+   *
+   * @param endpoint {@link Endpoint} that is route consumer
+   * @return {@link RouteProducer} RouteProducer for task executing
+   */
   public RouteProducer resolveRouteProducer(Endpoint endpoint) {
     if (endpoint instanceof CxfEndpoint) {
       return soapRouteProducer;

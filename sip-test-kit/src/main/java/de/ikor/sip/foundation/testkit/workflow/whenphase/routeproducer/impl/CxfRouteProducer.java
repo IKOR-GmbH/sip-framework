@@ -33,13 +33,13 @@ public class CxfRouteProducer implements RouteProducer {
 
   private final CamelContext camelContext;
   private final Environment environment;
+  private final RestTemplate restTemplate;
 
   @Value("${sip.adapter.camel-cxf-endpoint-context-path}")
   private String cxfContextPath = "";
 
   @Override
   public Exchange executeTask(Exchange exchange, Endpoint endpoint) {
-    RestTemplate restTemplate = new RestTemplate();
     MultiValueMap<String, String> headers = new HttpHeaders();
     headers.add(
         TEST_MODE_HEADER_KEY, exchange.getMessage().getHeader(TEST_MODE_HEADER_KEY, String.class));
@@ -47,15 +47,15 @@ public class CxfRouteProducer implements RouteProducer {
         TEST_NAME_HEADER_KEY, exchange.getMessage().getHeader(TEST_NAME_HEADER_KEY, String.class));
     HttpEntity<String> request =
         new HttpEntity<>(exchange.getMessage().getBody(String.class), headers);
-    log.trace("SIP Test Kit send request: {}", request.toString());
+    log.trace("SIP Test Kit send request: {}", request);
 
     ResponseEntity<String> response =
         restTemplate.exchange(
-            createAddressUri((CxfEndpoint) endpoint),
+            createAddressUri(endpoint),
             HttpMethod.POST,
             request,
             new ParameterizedTypeReference<>() {});
-    log.trace("SIP Test Kit receives response: {}", response.toString());
+    log.trace("SIP Test Kit receives response: {}", response);
 
     return createExchangeResponse(response);
   }
@@ -75,12 +75,12 @@ public class CxfRouteProducer implements RouteProducer {
     return null;
   }
 
-  private String createAddressUri(CxfEndpoint cxfEndpoint) {
-    return String.format(
-        "http://localhost:%s%s/%s",
-        environment.getProperty("local.server.port"),
-        trimAddressSuffix(cxfContextPath),
-        trimAddressPrefix(cxfEndpoint.getAddress()));
+  private String createAddressUri(Endpoint endpoint) {
+      return String.format(
+          "http://localhost:%s%s/%s",
+          environment.getProperty("local.server.port"),
+          trimAddressSuffix(cxfContextPath),
+          trimAddressPrefix(getCxfEndpointAddress(endpoint)));
   }
 
   private String trimAddressSuffix(String address) {
@@ -89,5 +89,9 @@ public class CxfRouteProducer implements RouteProducer {
 
   private String trimAddressPrefix(String address) {
     return address.replaceFirst(CONTEXT_PATH_PREFIX, "");
+  }
+
+  String getCxfEndpointAddress(Endpoint endpoint) {
+    return ((CxfEndpoint) endpoint).getAddress();
   }
 }

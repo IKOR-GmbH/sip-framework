@@ -1,37 +1,34 @@
 package de.ikor.sip.foundation.testkit.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeproducer.RouteProducerFactory;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeproducer.impl.DefaultRouteProducer;
+import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
-import org.apache.camel.ProducerTemplate;
-import org.junit.jupiter.api.Disabled;
+import org.apache.camel.ExtendedCamelContext;
 import org.junit.jupiter.api.Test;
 
 class SIPRouteProducerTemplateTest {
 
-  public static final String URI = "uri";
-
-  @Disabled("Work in progress")
   @Test
-  void When_requestOnRoute_Expect_ExchangeReturned() {
+  void GIVEN_exchangeAndDefaultRouteProducer_WHEN_requestOnRoute_THEN_expectEmptyExchange() {
     // arrange
-    ProducerTemplate producerTemplate = mock(ProducerTemplate.class);
-    RouteProducerFactory routeProducerFactory = mock(RouteProducerFactory.class);
-    SIPEndpointResolver sipEndpointResolver = mock(SIPEndpointResolver.class);
+    ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
     Exchange exchange = mock(Exchange.class);
-    Exchange expected = mock(Exchange.class);
-    //    when(sipEndpointResolver.resolveURI(exchange)).thenReturn(URI);
-    when(producerTemplate.send(URI, exchange)).thenReturn(expected);
-    SIPRouteProducerTemplate sipRouteProducerTemplate =
-        new SIPRouteProducerTemplate(routeProducerFactory, sipEndpointResolver);
+    SIPEndpointResolver sipEndpointResolver = mock(SIPEndpointResolver.class);
+    RouteProducerFactory routeProducerFactory = mock(RouteProducerFactory.class);
+    Endpoint endpoint = mock(Endpoint.class);
+    SIPRouteProducerTemplate subject = new SIPRouteProducerTemplate(routeProducerFactory, sipEndpointResolver);
+    when(sipEndpointResolver.resolveEndpoint(exchange)).thenReturn(endpoint);
+    when(routeProducerFactory.resolveRouteProducer(endpoint)).thenReturn(new DefaultRouteProducer(camelContext));
 
     // act
-    Exchange result = sipRouteProducerTemplate.requestOnRoute(exchange);
+    Exchange actualExchange = subject.requestOnRoute(exchange);
 
     // assert
-    verify(producerTemplate, times(1)).send(URI, exchange);
-    assertThat(result).isEqualTo(expected);
+    assertThat(actualExchange.getMessage().getBody()).isNull();
+    assertThat(actualExchange.getMessage().getHeaders()).isEmpty();
   }
 }
