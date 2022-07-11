@@ -277,9 +277,8 @@ sip.core.tracing.trace-type | Sets how tracer should behave | String | "*" |
 sip.core.metrics.external-endpoint-health-check.enabled | Enable health status calculation | boolean | true |
 sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay | Sets health check execution interval | Integer | 900000 |
 sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay | Sets health check execution initial delay | Integer | 5000 |
-sip.core.actuator.health.enabled | Enable additional SIP Health check | boolean | true |
-sip.core.actuator.routes.enabled | Enable route manipulation through /actuator/adapter-routes | boolean | true |
-sip.core.actuator.info.enabled | Expose additional adapter information through /actuator/info | boolean | true |
+sip.core.actuator.extensions.health.enabled | Enable additional SIP Health check | boolean | true |
+sip.core.actuator.extensions.info.enabled | Expose additional adapter information through /actuator/info | boolean | true |
 management.info.camel.enabled | Enable basic camel info under /actuator/info endpoint | boolean | false |
 management.endpoints.web.exposure.include | Set which endpoints are included | String | health,info,metrics,loggers,prometheus,adapter-routes |
 management.endpoint.health.show-details | Enable health details in actuator | String | always |

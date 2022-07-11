@@ -8,7 +8,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <!-- Attention! We need to keep this in sync with the spring-boot version set in sip-framework,
              which is transitively referenced in sip-integration-starter specified in the dependencymanagement section -->
-        <version>2.6.7</version>
+        <version>2.6.9</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -17,7 +17,8 @@
     <version>2.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SIP Starter Parent</name>
-    <description>Parent pom providing dependency and plugin management for SIP integration adapters built with Maven</description>
+    <description>Parent pom providing dependency and plugin management for SIP integration adapters built with Maven
+    </description>
 
     <scm>
         <connection>scm:git:git://github.com/IKOR-GmbH/sip-framework.git</connection>
@@ -101,6 +102,18 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>de.ikor.sip.foundation</groupId>
+                    <artifactId>sip-maven-plugin</artifactId>
+                    <version>${sip-framework.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>connectors-cross-dependencies-check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
