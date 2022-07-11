@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RouteProducerFactory {
 
-  private final CxfRouteProducer soapRouteProducer;
-  private final RestRouteProducer restRouteProducer;
   private final DefaultRouteProducer defaultRouteProducer;
+  private final RestRouteProducer restRouteProducer;
+  private final CxfRouteProducer cxfRouteProducer;
 
   /**
    * Resolving appropriate RouteProducer based on Endpoint type
@@ -25,11 +25,11 @@ public class RouteProducerFactory {
    * @return {@link RouteProducer} RouteProducer for task executing
    */
   public RouteProducer resolveRouteProducer(Endpoint endpoint) {
-    if (endpoint instanceof CxfEndpoint) {
-      return soapRouteProducer;
-    }
     if (endpoint instanceof RestEndpoint) {
       return restRouteProducer;
+    }
+    if (endpoint instanceof CxfEndpoint) {
+      return cxfRouteProducer;
     }
     return defaultRouteProducer;
   }

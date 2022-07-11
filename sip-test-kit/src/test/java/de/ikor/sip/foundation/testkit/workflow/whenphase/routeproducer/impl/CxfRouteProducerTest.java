@@ -40,7 +40,7 @@ class CxfRouteProducerTest {
     when(environment.getProperty("local.server.port")).thenReturn("8081");
   }
 
-  @ParameterizedTest
+  @ParameterizedTest(name = "Using input body: {0}")
   @ValueSource(strings = {RESPONSE_BODY})
   @NullSource
   void GIVEN_emptyRequest_WHEN_executeTask_THEN_validateGoodResponse(String inputBody) {
