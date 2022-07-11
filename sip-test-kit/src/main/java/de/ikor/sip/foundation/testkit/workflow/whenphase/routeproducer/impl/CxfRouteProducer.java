@@ -28,8 +28,6 @@ public class CxfRouteProducer implements RouteProducer {
 
   private static final String TEST_MODE_HEADER_KEY = "test-mode";
   private static final String TEST_NAME_HEADER_KEY = "test-name";
-  private static final String CONTEXT_PATH_PREFIX = "[/]";
-  private static final String CONTEXT_PATH_SUFFIX = "[/]$";
 
   private final CamelContext camelContext;
   private final Environment environment;
@@ -84,11 +82,11 @@ public class CxfRouteProducer implements RouteProducer {
   }
 
   private String trimAddressSuffix(String address) {
-    return address.replaceAll(CONTEXT_PATH_SUFFIX, "");
+    return address.replaceAll("/$", "");
   }
 
   private String trimAddressPrefix(String address) {
-    return address.replaceFirst(CONTEXT_PATH_PREFIX, "");
+    return address.replaceFirst("/", "");
   }
 
   String getCxfEndpointAddress(Endpoint endpoint) {
