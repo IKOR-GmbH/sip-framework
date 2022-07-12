@@ -23,6 +23,7 @@ public interface EventLogCloner {
       source = "throwableProxy",
       target = "throwableProxy",
       qualifiedByName = "castIThrowableProxy")
+  @Mapping(target = "level", ignore = true)
   LoggingEvent mapWithNoMessage(ILoggingEvent e);
 
   /**
