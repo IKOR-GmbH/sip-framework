@@ -64,4 +64,4 @@ camel:
 cxf:
   servlet:
     enabled: true
-  path: /
+  path: /services

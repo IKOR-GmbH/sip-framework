@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeproducer.impl;
 
+import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.executor.Executor;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeproducer.RouteProducer;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +28,6 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class CxfRouteProducer implements RouteProducer {
 
-  private static final String TEST_MODE_HEADER_KEY = "test-mode";
-  private static final String TEST_NAME_HEADER_KEY = "test-name";
-
   private final CamelContext camelContext;
   private final Environment environment;
   private final RestTemplate restTemplate;
@@ -40,9 +39,11 @@ public class CxfRouteProducer implements RouteProducer {
   public Exchange executeTask(Exchange exchange, Endpoint endpoint) {
     MultiValueMap<String, String> headers = new HttpHeaders();
     headers.add(
-        TEST_MODE_HEADER_KEY, exchange.getMessage().getHeader(TEST_MODE_HEADER_KEY, String.class));
+        Executor.TEST_NAME_HEADER,
+        exchange.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class));
     headers.add(
-        TEST_NAME_HEADER_KEY, exchange.getMessage().getHeader(TEST_NAME_HEADER_KEY, String.class));
+        ProcessorProxy.TEST_MODE_HEADER,
+        exchange.getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class));
     HttpEntity<String> request =
         new HttpEntity<>(exchange.getMessage().getBody(String.class), headers);
     log.trace("SIP Test Kit send request: {}", request);

@@ -64,8 +64,8 @@
             <artifactId>assertj-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-cxf</artifactId>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-cxf-starter</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>wsdl4j</groupId>
