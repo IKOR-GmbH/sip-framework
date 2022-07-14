@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RestRouteProducer implements RouteProducer {
 
-  private static final String CONTEXT_PATH_SUFFIX = "[/][*]$";
-
   private final ProducerTemplate producerTemplate;
 
   @Value("${sip.adapter.camel-endpoint-context-path}")
@@ -31,6 +29,6 @@ public class RestRouteProducer implements RouteProducer {
   }
 
   private String resolveContextPath() {
-    return contextPath.replaceAll(CONTEXT_PATH_SUFFIX, "");
+    return contextPath.replaceAll("/[*]$", "");
   }
 }
