@@ -43,7 +43,7 @@ public class SIPExchangeHelper extends DefaultExchangeHolder {
     try {
       objectMapper.writeValue(new ByteArrayOutputStream(), value);
     } catch (IOException e) {
-      log.warn("Value for header {} could not be serialized", headerName);
+      log.warn("sip.testkit.util.nonserializablevalue_{}", headerName);
       return SERIALIZABLE_DEFAULT_VALUE;
     }
     return value;

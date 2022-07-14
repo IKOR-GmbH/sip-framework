@@ -46,7 +46,7 @@ public class CxfRouteProducer implements RouteProducer {
         exchange.getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class));
     HttpEntity<String> request =
         new HttpEntity<>(exchange.getMessage().getBody(String.class), headers);
-    log.trace("SIP Test Kit send request: {}", request);
+    log.trace("sip.testkit.workflow.whenphase.routeproducer.soap.request_{}", request);
 
     ResponseEntity<String> response =
         restTemplate.exchange(
@@ -54,7 +54,7 @@ public class CxfRouteProducer implements RouteProducer {
             HttpMethod.POST,
             request,
             new ParameterizedTypeReference<>() {});
-    log.trace("SIP Test Kit receives response: {}", response);
+    log.trace("sip.testkit.workflow.whenphase.routeproducer.soap.response_{}", response);
 
     return createExchangeResponse(response);
   }
@@ -70,7 +70,7 @@ public class CxfRouteProducer implements RouteProducer {
     if (multilineString != null) {
       return multilineString.lines().map(String::strip).collect(Collectors.joining(""));
     }
-    log.trace("SIP Test Kit response has no body");
+    log.trace("sip.testkit.workflow.whenphase.routeproducer.soap.responseformating");
     return null;
   }
 
