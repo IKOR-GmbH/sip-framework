@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.testkit.util;
 
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeproducer.RouteProducerFactory;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvokerFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.*;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SIPRouteProducerTemplate {
 
-  private final RouteProducerFactory routeProducerFactory;
+  private final RouteInvokerFactory routeInvokerFactory;
   private final SIPEndpointResolver sipEndpointResolver;
 
   /**
@@ -21,6 +21,6 @@ public class SIPRouteProducerTemplate {
    */
   public Exchange requestOnRoute(Exchange exchange) {
     Endpoint endpoint = sipEndpointResolver.resolveEndpoint(exchange);
-    return routeProducerFactory.resolveRouteProducer(endpoint).executeTask(exchange, endpoint);
+    return routeInvokerFactory.resolveAndInvoke(exchange, endpoint);
   }
 }

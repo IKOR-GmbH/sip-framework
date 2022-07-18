@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.testkit.workflow.whenphase.routeproducer.impl;
+package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -19,12 +19,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
-class CxfRouteProducerTest {
+class CxfRouteInvokerTest {
 
   private static final String RESPONSE_BODY =
       "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><ns2:AddBookResponse xmlns:ns2=\"http://www.cleverbuilder.com/BookService/\"><ns2:Book><ID>1</ID><Title>Camel in Action</Title><Author>Claus Ibsen</Author></ns2:Book></ns2:AddBookResponse></soap:Body></soap:Envelope>";
 
-  private CxfRouteProducer subject;
+  private CxfRouteInvoker subject;
   private RestTemplate restTemplate;
   private ExtendedCamelContext camelContext;
   private Endpoint endpoint;
@@ -34,7 +34,7 @@ class CxfRouteProducerTest {
     camelContext = mock(ExtendedCamelContext.class);
     restTemplate = mock(RestTemplate.class);
     Environment environment = mock(Environment.class);
-    subject = new CxfRouteProducer(camelContext, environment, restTemplate);
+    subject = new CxfRouteInvoker(camelContext, environment, restTemplate);
     endpoint = mock(Endpoint.class);
 
     when(environment.getProperty("local.server.port")).thenReturn("8081");
@@ -46,7 +46,7 @@ class CxfRouteProducerTest {
   void GIVEN_emptyRequest_WHEN_executeTask_THEN_validateGoodResponse(String inputBody) {
     // arrange
     Exchange exchange = createExchange("", new HashMap<>());
-    CxfRouteProducer spySubject = spy(subject);
+    CxfRouteInvoker spySubject = spy(subject);
     doReturn("test").when(spySubject).getCxfEndpointAddress(any());
     ResponseEntity<String> routeExpectedResponse = new ResponseEntity<>(inputBody, HttpStatus.OK);
     when(restTemplate.exchange(
@@ -57,7 +57,7 @@ class CxfRouteProducerTest {
         .thenReturn(routeExpectedResponse);
 
     // act
-    Exchange actualExchange = spySubject.executeTask(exchange, endpoint);
+    Exchange actualExchange = spySubject.invoke(exchange, endpoint);
 
     // assert
     assertThat(actualExchange.getMessage().getBody()).isEqualTo(inputBody);

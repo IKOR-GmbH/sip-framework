@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.testkit.workflow.whenphase.routeproducer.impl;
+package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
 import static org.mockito.Mockito.*;
 
@@ -7,13 +7,13 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.rest.RestEndpoint;
 import org.junit.jupiter.api.Test;
 
-class RestRouteProducerTest {
+class RestRouteInvokerTest {
 
   @Test
   void GIVEN_mockedExchangeAndEndpoint_WHEN_executeTask_THEN_verifySendingToGoodEndpointUri() {
     // arrange
     ProducerTemplate producerTemplate = mock(ProducerTemplate.class);
-    RestRouteProducer subject = new RestRouteProducer(producerTemplate);
+    RestRouteInvoker subject = new RestRouteInvoker(producerTemplate);
     RestEndpoint restEndpoint = mock(RestEndpoint.class);
     Exchange exchange = mock(Exchange.class);
     when(restEndpoint.getMethod()).thenReturn("post");
@@ -21,7 +21,7 @@ class RestRouteProducerTest {
     when(producerTemplate.send("rest:post:test", exchange)).thenReturn(exchange);
 
     // act
-    subject.executeTask(exchange, restEndpoint);
+    subject.invoke(exchange, restEndpoint);
 
     // assert
     verify(producerTemplate, times(1)).send("rest:post:test", exchange);

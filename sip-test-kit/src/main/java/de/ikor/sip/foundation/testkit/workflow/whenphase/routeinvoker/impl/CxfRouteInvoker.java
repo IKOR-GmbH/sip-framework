@@ -1,8 +1,8 @@
-package de.ikor.sip.foundation.testkit.workflow.whenphase.routeproducer.impl;
+package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.executor.Executor;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeproducer.RouteProducer;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CxfRouteProducer implements RouteProducer {
+public class CxfRouteInvoker implements RouteInvoker {
 
   private final CamelContext camelContext;
   private final Environment environment;
@@ -36,17 +36,11 @@ public class CxfRouteProducer implements RouteProducer {
   private String cxfContextPath = "";
 
   @Override
-  public Exchange executeTask(Exchange exchange, Endpoint endpoint) {
-    MultiValueMap<String, String> headers = new HttpHeaders();
-    headers.add(
-        Executor.TEST_NAME_HEADER,
-        exchange.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class));
-    headers.add(
-        ProcessorProxy.TEST_MODE_HEADER,
-        exchange.getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class));
+  public Exchange invoke(Exchange inputExchange, Endpoint endpoint) {
     HttpEntity<String> request =
-        new HttpEntity<>(exchange.getMessage().getBody(String.class), headers);
-    log.trace("sip.testkit.workflow.whenphase.routeproducer.soap.request_{}", request);
+        new HttpEntity<>(
+            inputExchange.getMessage().getBody(String.class), prepareHeaders(inputExchange));
+    log.trace("sip.testkit.workflow.whenphase.routeinvoker.soap.request_{}", request);
 
     ResponseEntity<String> response =
         restTemplate.exchange(
@@ -54,9 +48,14 @@ public class CxfRouteProducer implements RouteProducer {
             HttpMethod.POST,
             request,
             new ParameterizedTypeReference<>() {});
-    log.trace("sip.testkit.workflow.whenphase.routeproducer.soap.response_{}", response);
+    log.trace("sip.testkit.workflow.whenphase.routeinvoker.soap.response_{}", response);
 
     return createExchangeResponse(response);
+  }
+
+  @Override
+  public boolean matchEndpoint(Endpoint endpoint) {
+    return endpoint instanceof CxfEndpoint;
   }
 
   private Exchange createExchangeResponse(ResponseEntity<String> response) {
@@ -66,11 +65,22 @@ public class CxfRouteProducer implements RouteProducer {
     return exchangeBuilder.build();
   }
 
+  private MultiValueMap<String, String> prepareHeaders(Exchange exchange) {
+    MultiValueMap<String, String> headers = new HttpHeaders();
+    headers.add(
+        Executor.TEST_NAME_HEADER,
+        exchange.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class));
+    headers.add(
+        ProcessorProxy.TEST_MODE_HEADER,
+        exchange.getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class));
+    return headers;
+  }
+
   private String formatToOneLine(String multilineString) {
     if (multilineString != null) {
       return multilineString.lines().map(String::strip).collect(Collectors.joining(""));
     }
-    log.trace("sip.testkit.workflow.whenphase.routeproducer.soap.responseformating");
+    log.trace("sip.testkit.workflow.whenphase.routeinvoker.soap.responseformating");
     return null;
   }
 

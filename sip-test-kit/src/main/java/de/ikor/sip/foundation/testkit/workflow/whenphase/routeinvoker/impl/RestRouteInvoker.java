@@ -1,6 +1,6 @@
-package de.ikor.sip.foundation.testkit.workflow.whenphase.routeproducer.impl;
+package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeproducer.RouteProducer;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 /** Class for triggering Camel REST route */
 @Component
 @RequiredArgsConstructor
-public class RestRouteProducer implements RouteProducer {
+public class RestRouteInvoker implements RouteInvoker {
 
   private final ProducerTemplate producerTemplate;
 
@@ -20,8 +20,13 @@ public class RestRouteProducer implements RouteProducer {
   private String contextPath = "";
 
   @Override
-  public Exchange executeTask(Exchange exchange, Endpoint endpoint) {
+  public Exchange invoke(Exchange exchange, Endpoint endpoint) {
     return producerTemplate.send(extractRESTEndpointURI((RestEndpoint) endpoint), exchange);
+  }
+
+  @Override
+  public boolean matchEndpoint(Endpoint endpoint) {
+    return endpoint instanceof RestEndpoint;
   }
 
   private String extractRESTEndpointURI(RestEndpoint restEndpoint) {
