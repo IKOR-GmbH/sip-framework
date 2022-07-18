@@ -17,7 +17,7 @@ public abstract class AIntegrationScenarioDefinition<T>
     final var annotationPath = getAnnotation().pathToDocumentationResource();
     final var resourcePath =
         annotationPath.isEmpty()
-            ? String.format("docs/integration-scenarios/%s.md", getID())
+            ? String.format("documents/integration-scenarios/%s.md", getID())
             : annotationPath;
     final var resource = new ClassPathResource(resourcePath);
 

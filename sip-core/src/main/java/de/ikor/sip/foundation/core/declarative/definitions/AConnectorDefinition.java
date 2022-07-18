@@ -15,7 +15,7 @@ public class AConnectorDefinition implements ConnectorDefinition {
   public String getDocumentation() {
     final var annotationPath = getAnnotation().pathToDocumentationResource();
     final var resourcePath =
-        annotationPath.isEmpty() ? String.format("docs/connectors/%s.md", getID()) : annotationPath;
+        annotationPath.isEmpty() ? String.format("documents/connectors/%s.md", getID()) : annotationPath;
     final var resource = new ClassPathResource(resourcePath);
 
     if (!resource.isReadable()) {

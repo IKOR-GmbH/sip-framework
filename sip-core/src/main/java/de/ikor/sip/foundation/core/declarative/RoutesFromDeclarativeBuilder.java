@@ -119,7 +119,7 @@ class RoutesFromDeclarativeBuilder extends RouteConfigurationBuilder {
     route.log("Insert validation for common domain model here...");
 
     // Pass to MC
-    route.to(String.format("seda:%s", scenario.getID()));
+    route.to(String.format("sipmc:%s", scenario.getID()));
   }
 
   private void buildOutgoingRoute(
@@ -135,7 +135,7 @@ class RoutesFromDeclarativeBuilder extends RouteConfigurationBuilder {
 
     // Prepare route with standard SIP structure
     ProcessorDefinition<?> route =
-        from(String.format("seda:%s?multipleConsumers=true", scenario.getID()))
+        from(String.format("sipmc:%s", scenario.getID()))
             .routeConfigurationId(DEFAULT_ROUTE_CONFIG_ID)
             .routeId(routeId);
 
