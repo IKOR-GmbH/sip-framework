@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
  * based on management.endpoints.web.exposure.include containing value "adapter-routes".
  */
 @ComponentScan
-@SIPFeature(type = FoundationFeature.ADAPTER_ROUTES, versions = 1)
+@SIPFeature(name = FoundationFeature.ADAPTER_ROUTES, versions = 1)
 @ConditionalOnExpression(
     value = "'${management.endpoints.web.exposure.include}'.contains('adapter-routes')")
 public class ActuatorRoutesAutoConfig {}
