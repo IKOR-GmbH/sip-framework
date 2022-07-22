@@ -9,7 +9,7 @@ import static org.mockito.Mockito.*;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.testkit.workflow.TestCase;
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.executor.Executor;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +47,7 @@ class ReportActivityProxyExtensionTest {
     // arrange
     TestExecutionStatus testExecutionStatus = new TestExecutionStatus();
     when(original.getMessage()).thenReturn(message);
-    when(message.getHeader(Executor.TEST_NAME_HEADER, String.class)).thenReturn(TEST_NAME);
+    when(message.getHeader(RouteInvoker.TEST_NAME_HEADER, String.class)).thenReturn(TEST_NAME);
     String ORIGINAL_BODY = "originalbody";
     when(message.getBody()).thenReturn(ORIGINAL_BODY);
     String PROXY_ID = "proxy id";
@@ -65,7 +65,7 @@ class ReportActivityProxyExtensionTest {
   void When_run_With_NoTestCases_Then_exception() {
     // arrange
     subject.setTestCases(new ArrayList<>());
-    when(original.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class))
+    when(original.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER, String.class))
         .thenReturn(TEST_NAME);
 
     // act + assert
@@ -77,7 +77,7 @@ class ReportActivityProxyExtensionTest {
   @Test
   void When_isApplicable_With_AllConditionsMatch_Then_true() {
     when(proxy.isEndpointProcessor()).thenReturn(true);
-    when(original.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class))
+    when(original.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER, String.class))
         .thenReturn(TEST_NAME);
     when(original.getIn().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class))
         .thenReturn("true");
@@ -87,7 +87,7 @@ class ReportActivityProxyExtensionTest {
   @Test
   void When_isApplicable_With_NonEndpointProcessor_Then_false() {
     when(proxy.isEndpointProcessor()).thenReturn(false);
-    when(original.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class))
+    when(original.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER, String.class))
         .thenReturn(TEST_NAME);
     when(original.getIn().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class))
         .thenReturn("true");
@@ -97,7 +97,7 @@ class ReportActivityProxyExtensionTest {
   @Test
   void When_isApplicable_With_NoTestCases_Then_false() {
     subject.setTestCases(null);
-    when(original.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class))
+    when(original.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER, String.class))
         .thenReturn(TEST_NAME);
     when(proxy.isEndpointProcessor()).thenReturn(true);
     when(original.getIn().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class))
@@ -108,7 +108,7 @@ class ReportActivityProxyExtensionTest {
   @Test
   void When_isApplicable_With_TestModeFalse_Then_false() {
     when(proxy.isEndpointProcessor()).thenReturn(true);
-    when(original.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class))
+    when(original.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER, String.class))
         .thenReturn(TEST_NAME);
     when(original.getIn().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class))
         .thenReturn("false");

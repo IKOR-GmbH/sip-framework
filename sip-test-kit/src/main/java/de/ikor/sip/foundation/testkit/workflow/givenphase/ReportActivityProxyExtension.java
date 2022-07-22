@@ -7,7 +7,7 @@ import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.TestCase;
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.executor.Executor;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import java.util.List;
 import java.util.Optional;
 import lombok.Setter;
@@ -30,7 +30,7 @@ public class ReportActivityProxyExtension implements ProxyExtension {
   }
 
   private String getTestName(Exchange original) {
-    return original.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class);
+    return original.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER, String.class);
   }
 
   @Override

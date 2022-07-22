@@ -7,11 +7,13 @@ import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import de.ikor.sip.foundation.testkit.exception.handler.ExceptionLogger;
 import de.ikor.sip.foundation.testkit.workflow.TestCase;
+import de.ikor.sip.foundation.testkit.workflow.TestCaseCollector;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.MockFactory;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.TestCaseValidator;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.ExecutionWrapper;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.executor.Executor;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvokerFactory;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,8 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /** Configuration class used for creation of batch test cases based on test definitions. */
@@ -29,20 +32,17 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TestCasesConfig {
 
-  private final Executor executor;
+  private final RouteInvokerFactory routeInvokerFactory;
   private final MockFactory mockFactory;
   private final CamelContext camelContext;
   private final TestCaseValidator testCaseValidator;
   private final TestExecutionStatusFactory executionStatusFactory;
   private final TestCaseBatchDefinition testCaseBatchDefinition;
+  private final TestCaseCollector testCaseCollector;
 
-  /**
-   * Creates test cases based on batch test cases definition.
-   *
-   * @return list of {@link TestCase}
-   */
-  @Bean
-  public List<TestCase> generateTestCases() {
+  /** Creates test cases based on batch test cases definition. */
+  @EventListener(ApplicationReadyEvent.class)
+  public void generateTestCases() {
     List<TestCase> testCases = new LinkedList<>();
     for (TestCaseDefinition testCaseDefinition : testCaseBatchDefinition.getTestCaseDefinitions()) {
       try {
@@ -52,7 +52,7 @@ public class TestCasesConfig {
       }
     }
     validateTestCaseInitializations(testCases);
-    return testCases;
+    testCaseCollector.setTestCases(testCases);
   }
 
   /**
@@ -65,17 +65,13 @@ public class TestCasesConfig {
     validateTestDefinition(testCaseDefinition);
     String testName = testCaseDefinition.getTitle();
 
-    List<Mock> mocks =
-        testCaseDefinition.getWithMocks().stream()
-            .map(
-                connectionProperties ->
-                    mockFactory.newMockInstance(
-                        testName, parseExchangeProperties(connectionProperties)))
-            .collect(toList());
+    List<Mock> mocks = getMocks(testName, testCaseDefinition);
 
-    ExecutionWrapper executionWrapper =
-        new ExecutionWrapper(
-            testName, executor, parseExchangeProperties(testCaseDefinition.getWhenExecute()));
+    Exchange exchange = parseExchangeProperties(testCaseDefinition.getWhenExecute());
+
+    RouteInvoker invoker = routeInvokerFactory.getInstance(exchange);
+
+    ExecutionWrapper executionWrapper = new ExecutionWrapper(testName, exchange, invoker);
 
     return new TestCase(
         testName,
@@ -83,6 +79,15 @@ public class TestCasesConfig {
         executionWrapper,
         testCaseValidator,
         executionStatusFactory.generateTestReport(testCaseDefinition));
+  }
+
+  private List<Mock> getMocks(String testName, TestCaseDefinition testCaseDefinition) {
+    return testCaseDefinition.getWithMocks().stream()
+        .map(
+            connectionProperties ->
+                mockFactory.newMockInstance(
+                    testName, parseExchangeProperties(connectionProperties)))
+        .collect(toList());
   }
 
   private void validateTestDefinition(TestCaseDefinition testCaseDefinition) {

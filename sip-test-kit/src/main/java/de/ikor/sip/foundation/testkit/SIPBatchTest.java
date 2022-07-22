@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 
 import de.ikor.sip.foundation.testkit.util.SIPBatchTestArgumentSource;
 import de.ikor.sip.foundation.testkit.workflow.TestCase;
+import de.ikor.sip.foundation.testkit.workflow.TestCaseCollector;
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
 import de.ikor.sip.foundation.testkit.workflow.TestRunner;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.ReportActivityProxyExtension;
-import java.util.List;
 import lombok.Getter;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -24,12 +24,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 public abstract class SIPBatchTest {
 
   @Autowired private TestRunner testRunner;
-  @Getter @Autowired private List<TestCase> testCases;
+  @Getter @Autowired private TestCaseCollector testCaseCollector;
   @Autowired private ReportActivityProxyExtension reportActivityProxyExtension;
 
   @BeforeAll
   void setup() {
-    reportActivityProxyExtension.setTestCases(testCases);
+    reportActivityProxyExtension.setTestCases(testCaseCollector.getTestCases());
   }
 
   @ArgumentsSource(SIPBatchTestArgumentSource.class)
