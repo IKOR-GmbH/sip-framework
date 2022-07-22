@@ -30,7 +30,7 @@ class ExecutionWrapperTest {
 
     // assert
     assertThat(actual.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER)).isEqualTo(TEST_NAME);
-    assertThat(actual.getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER));
+    assertThat(actual.getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, Boolean.class)).isTrue();
     assertThat(actual.getMessage().getBody()).isNull();
   }
 
