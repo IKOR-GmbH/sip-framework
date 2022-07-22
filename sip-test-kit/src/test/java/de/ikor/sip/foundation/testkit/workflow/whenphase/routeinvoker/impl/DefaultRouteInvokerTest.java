@@ -23,10 +23,10 @@ class DefaultRouteInvokerTest {
   @Test
   void GIVEN_mockExchange_WHEN_invoke_THEN_returnEmptyExchange() {
     // arrange
-    Exchange inputeExchange = mock(Exchange.class);
+    Exchange inputExchange = mock(Exchange.class);
 
     // act
-    Exchange actual = subject.invoke(inputeExchange);
+    Exchange actual = subject.invoke(inputExchange);
 
     // assert
     assertThat(actual.getMessage().getBody()).isNull();
