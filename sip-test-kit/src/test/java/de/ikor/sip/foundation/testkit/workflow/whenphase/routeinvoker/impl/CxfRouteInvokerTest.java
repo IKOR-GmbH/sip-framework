@@ -36,6 +36,7 @@ class CxfRouteInvokerTest {
     Environment environment = mock(Environment.class);
     subject = new CxfRouteInvoker(camelContext, environment, restTemplate);
     endpoint = mock(Endpoint.class);
+    subject.setEndpoint(endpoint);
 
     when(environment.getProperty("local.server.port")).thenReturn("8081");
   }
@@ -57,7 +58,7 @@ class CxfRouteInvokerTest {
         .thenReturn(routeExpectedResponse);
 
     // act
-    Exchange actualExchange = spySubject.invoke(exchange, endpoint);
+    Exchange actualExchange = spySubject.invoke(exchange);
 
     // assert
     assertThat(actualExchange.getMessage().getBody()).isEqualTo(inputBody);

@@ -15,13 +15,14 @@ class RestRouteInvokerTest {
     ProducerTemplate producerTemplate = mock(ProducerTemplate.class);
     RestRouteInvoker subject = new RestRouteInvoker(producerTemplate);
     RestEndpoint restEndpoint = mock(RestEndpoint.class);
+    subject.setEndpoint(restEndpoint);
     Exchange exchange = mock(Exchange.class);
     when(restEndpoint.getMethod()).thenReturn("post");
     when(restEndpoint.getPath()).thenReturn("test");
     when(producerTemplate.send("rest:post:test", exchange)).thenReturn(exchange);
 
     // act
-    subject.invoke(exchange, restEndpoint);
+    subject.invoke(exchange);
 
     // assert
     verify(producerTemplate, times(1)).send("rest:post:test", exchange);

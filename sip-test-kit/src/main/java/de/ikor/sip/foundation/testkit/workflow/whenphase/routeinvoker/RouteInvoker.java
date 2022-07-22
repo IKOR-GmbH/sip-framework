@@ -6,14 +6,15 @@ import org.apache.camel.Exchange;
 /** Route invoker interface */
 public interface RouteInvoker {
 
+  String TEST_NAME_HEADER = "test-name";
+
   /**
    * Sends request to route
    *
    * @param exchange {@link Exchange}
-   * @param endpoint {@link Endpoint}
    * @return {@link Exchange} result of route execution
    */
-  Exchange invoke(Exchange exchange, Endpoint endpoint);
+  Exchange invoke(Exchange exchange);
 
   /**
    * Matching Endpoint with proper RouteInvoker
@@ -22,4 +23,12 @@ public interface RouteInvoker {
    * @return boolean true when matching
    */
   boolean matchEndpoint(Endpoint endpoint);
+
+  /**
+   * Set endpoint to proper RouteInvoker
+   *
+   * @param endpoint {@link Endpoint}
+   * @return {@link RouteInvoker} result of route execution
+   */
+  RouteInvoker setEndpoint(Endpoint endpoint);
 }

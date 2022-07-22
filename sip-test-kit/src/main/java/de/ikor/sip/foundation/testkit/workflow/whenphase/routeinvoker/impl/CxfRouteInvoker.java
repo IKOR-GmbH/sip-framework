@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.executor.Executor;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +31,13 @@ public class CxfRouteInvoker implements RouteInvoker {
   private final Environment environment;
   private final RestTemplate restTemplate;
 
+  private Endpoint endpoint;
+
   @Value("${sip.adapter.camel-cxf-endpoint-context-path}")
   private String cxfContextPath = "";
 
   @Override
-  public Exchange invoke(Exchange inputExchange, Endpoint endpoint) {
+  public Exchange invoke(Exchange inputExchange) {
     HttpEntity<String> request =
         new HttpEntity<>(
             inputExchange.getMessage().getBody(String.class), prepareHeaders(inputExchange));
@@ -58,6 +59,12 @@ public class CxfRouteInvoker implements RouteInvoker {
     return endpoint instanceof CxfEndpoint;
   }
 
+  @Override
+  public RouteInvoker setEndpoint(Endpoint endpoint) {
+    this.endpoint = endpoint;
+    return this;
+  }
+
   private Exchange createExchangeResponse(ResponseEntity<String> response) {
     ExchangeBuilder exchangeBuilder =
         ExchangeBuilder.anExchange(camelContext).withBody(formatToOneLine(response.getBody()));
@@ -68,8 +75,8 @@ public class CxfRouteInvoker implements RouteInvoker {
   private MultiValueMap<String, String> prepareHeaders(Exchange exchange) {
     MultiValueMap<String, String> headers = new HttpHeaders();
     headers.add(
-        Executor.TEST_NAME_HEADER,
-        exchange.getMessage().getHeader(Executor.TEST_NAME_HEADER, String.class));
+        RouteInvoker.TEST_NAME_HEADER,
+        exchange.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER, String.class));
     headers.add(
         ProcessorProxy.TEST_MODE_HEADER,
         exchange.getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class));
