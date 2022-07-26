@@ -9,6 +9,7 @@ import de.ikor.sip.foundation.core.declarative.definitions.IntegrationScenarioDe
 import de.ikor.sip.foundation.core.declarative.definitions.ScenarioParticipationIncomingDefinition;
 import de.ikor.sip.foundation.core.declarative.definitions.ScenarioParticipationOutgoingDefinition;
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteConfigurationBuilder;
@@ -106,9 +107,13 @@ class RoutesFromDeclarativeBuilder extends RouteConfigurationBuilder {
             String.format(
                 "START: Connector-specified incoming route-definition for connector '%s', integration-scenario '%s'",
                 connector.getID(), scenario.getID()));
-    StepDefinition customStep = route.step(customDefStepId);
-    definition.buildIncomingConnectorHook(customStep);
-    route = customStep.end();
+    route =
+        weaveStepInRoute(
+            step -> {
+              definition.buildIncomingConnectorHook(step);
+            },
+            customDefStepId,
+            route);
     route =
         route.log(
             String.format(
@@ -120,6 +125,14 @@ class RoutesFromDeclarativeBuilder extends RouteConfigurationBuilder {
 
     // Pass to MC
     route.to(String.format("sipmc:%s", scenario.getID()));
+
+    // after
+    weaveStepInRoute(
+        step -> {
+          definition.buildIncomingConnectorAfterHook(step);
+        },
+        customDefStepId + "-after-step-in",
+        route);
   }
 
   private void buildOutgoingRoute(
@@ -161,17 +174,29 @@ class RoutesFromDeclarativeBuilder extends RouteConfigurationBuilder {
             String.format(
                 "START: Connector-specified outgoing route-definition for connector '%s', integration-scenario '%s'",
                 connector.getID(), scenario.getID()));
-    StepDefinition step = route.step(customDefStepId);
-    definition.buildOutgoingConnectorHook(step);
     route =
-        step.end()
-            .log(
-                String.format(
-                    "END: Connector-specified outgoing route-definition for connector '%s', integration-scenario '%s'",
-                    connector.getID(), scenario.getID()));
+        weaveStepInRoute(
+            step -> {
+              definition.buildOutgoingConnectorHook(step);
+            },
+            customDefStepId,
+            route);
+    route =
+        route.log(
+            String.format(
+                "END: Connector-specified outgoing route-definition for connector '%s', integration-scenario '%s'",
+                connector.getID(), scenario.getID()));
 
     // Send to external system
     route.to(definition.getOutgoingEndpointUri()).end();
+
+    // after
+    weaveStepInRoute(
+        step -> {
+          definition.buildOutgoingConnectorAfterHook(step);
+        },
+        customDefStepId + "-after-step-out",
+        route);
   }
 
   @Override
@@ -181,5 +206,21 @@ class RoutesFromDeclarativeBuilder extends RouteConfigurationBuilder {
         .log(
             LoggingLevel.ERROR,
             "An unrecoverable error occured on integration scenario '${exchangeProperty.SipIntegrationScenario}', incoming connector '${exchangeProperty.SipCallerSourceConnector}'");
+  }
+
+  private ProcessorDefinition<?> weaveStepInRoute(
+      Consumer<StepDefinition> function, String customDefStepId, ProcessorDefinition<?> route) {
+    StepDefinition customStep = new StepDefinition();
+    customStep.setId(customDefStepId);
+    function.accept(customStep);
+    if (isStepDefined(customStep)) {
+      route.addOutput(customStep);
+      route = route.end();
+    }
+    return route;
+  }
+
+  private boolean isStepDefined(StepDefinition customStep) {
+    return !customStep.getOutputs().isEmpty();
   }
 }

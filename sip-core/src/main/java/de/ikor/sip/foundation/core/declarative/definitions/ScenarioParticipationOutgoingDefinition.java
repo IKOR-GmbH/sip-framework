@@ -6,5 +6,7 @@ public interface ScenarioParticipationOutgoingDefinition {
 
   String getOutgoingEndpointUri();
 
-  void buildOutgoingConnectorHook(final StepDefinition definition);
+  default void buildOutgoingConnectorHook(final StepDefinition definition) {}
+
+  default void buildOutgoingConnectorAfterHook(final StepDefinition definition) {}
 }
