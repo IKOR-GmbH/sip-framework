@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
  * based on sip.core.actuator.extensions.health.enabled value (true by default).
  */
 @ComponentScan
-@SIPFeature(type = FoundationFeature.HEALTH, versions = 1)
+@SIPFeature(name = FoundationFeature.HEALTH, versions = 1)
 @ConditionalOnAvailableEndpoint(endpoint = HealthEndpoint.class)
 @ConditionalOnProperty(value = "sip.core.actuator.extensions.health.enabled", havingValue = "true")
 public class ActuatorHealthAutoConfig {}

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
  * based on sip.core.actuator.extensions.info.enabled value (true by default).
  */
 @ComponentScan
-@SIPFeature(type = FoundationFeature.INFO, versions = 1)
+@SIPFeature(name = FoundationFeature.INFO, versions = 1)
 @ConditionalOnAvailableEndpoint(endpoint = InfoEndpoint.class)
 @ConditionalOnProperty(value = "sip.core.actuator.extensions.info.enabled", havingValue = "true")
 public class ActuatorInfoAutoConfig {}
