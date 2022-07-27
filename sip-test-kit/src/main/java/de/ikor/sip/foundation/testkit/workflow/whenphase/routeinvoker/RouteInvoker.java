@@ -22,7 +22,7 @@ public interface RouteInvoker {
    * @param endpoint {@link Endpoint}
    * @return boolean true when matching
    */
-  boolean isEndpoint(Endpoint endpoint);
+  boolean isApplicable(Endpoint endpoint);
 
   /**
    * Set endpoint to proper RouteInvoker

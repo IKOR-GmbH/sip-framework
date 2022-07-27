@@ -16,7 +16,7 @@ class DefaultRouteInvokerTest {
   @BeforeEach
   void setup() {
     ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
-    subject = new DefaultRouteInvoker(camelContext, mock(Endpoint.class));
+    subject = new DefaultRouteInvoker(camelContext);
   }
 
   @Test
@@ -33,12 +33,12 @@ class DefaultRouteInvokerTest {
   }
 
   @Test
-  void GIVEN_mockEndpoint_WHEN_isEndpoint_THEN_returnEmptyExchange() {
+  void GIVEN_mockEndpoint_WHEN_isApplicable_THEN_returnEmptyExchange() {
     // arrange
     Endpoint endpoint = mock(Endpoint.class);
 
     // act
-    boolean actual = subject.isEndpoint(endpoint);
+    boolean actual = subject.isApplicable(endpoint);
 
     // assert
     assertThat(actual).isFalse();

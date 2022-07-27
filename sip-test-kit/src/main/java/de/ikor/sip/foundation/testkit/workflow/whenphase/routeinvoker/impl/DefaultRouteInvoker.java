@@ -7,11 +7,11 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
 
+/** Default Invoker class for default behaviour when specific RouteInvoker is missing */
 @RequiredArgsConstructor
 public class DefaultRouteInvoker implements RouteInvoker {
 
   private final CamelContext camelContext;
-  private final Endpoint endpoint;
 
   @Override
   public Exchange invoke(Exchange exchange) {
@@ -20,7 +20,7 @@ public class DefaultRouteInvoker implements RouteInvoker {
   }
 
   @Override
-  public boolean isEndpoint(Endpoint endpoint) {
+  public boolean isApplicable(Endpoint endpoint) {
     return false;
   }
 

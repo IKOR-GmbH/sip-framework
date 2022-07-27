@@ -33,10 +33,10 @@ public class RouteInvokerFactory {
   public RouteInvoker getInstance(Exchange exchange) {
     Endpoint endpoint = resolveEndpoint(exchange);
     return invokers.stream()
-        .filter(routeInvoker -> routeInvoker.isEndpoint(endpoint))
+        .filter(routeInvoker -> routeInvoker.isApplicable(endpoint))
         .findFirst()
         .map(routeInvoker -> routeInvoker.setEndpoint(endpoint))
-        .orElse(new DefaultRouteInvoker(camelContext, endpoint));
+        .orElse(new DefaultRouteInvoker(camelContext));
   }
 
   /**

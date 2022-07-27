@@ -27,7 +27,7 @@ public class RestRouteInvoker implements RouteInvoker {
   }
 
   @Override
-  public boolean isEndpoint(Endpoint endpoint) {
+  public boolean isApplicable(Endpoint endpoint) {
     return endpoint instanceof RestEndpoint;
   }
 
