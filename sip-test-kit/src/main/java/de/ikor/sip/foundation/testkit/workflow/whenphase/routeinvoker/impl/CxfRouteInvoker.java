@@ -11,6 +11,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.apache.camel.component.cxf.CxfEndpoint;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -19,7 +20,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 /** Class for triggering Camel CXF(SOAP) route */
 @Component
@@ -29,7 +29,7 @@ public class CxfRouteInvoker implements RouteInvoker {
 
   private final CamelContext camelContext;
   private final Environment environment;
-  private final RestTemplate restTemplate;
+  private final RestTemplateBuilder restTemplateBuilder;
 
   private Endpoint endpoint;
 
@@ -44,18 +44,20 @@ public class CxfRouteInvoker implements RouteInvoker {
     log.trace("sip.testkit.workflow.whenphase.routeinvoker.soap.request_{}", request);
 
     ResponseEntity<String> response =
-        restTemplate.exchange(
-            createAddressUri(endpoint),
-            HttpMethod.POST,
-            request,
-            new ParameterizedTypeReference<>() {});
+        restTemplateBuilder
+            .build()
+            .exchange(
+                createAddressUri(endpoint),
+                HttpMethod.POST,
+                request,
+                new ParameterizedTypeReference<>() {});
     log.trace("sip.testkit.workflow.whenphase.routeinvoker.soap.response_{}", response);
 
     return createExchangeResponse(response);
   }
 
   @Override
-  public boolean matchEndpoint(Endpoint endpoint) {
+  public boolean isEndpoint(Endpoint endpoint) {
     return endpoint instanceof CxfEndpoint;
   }
 

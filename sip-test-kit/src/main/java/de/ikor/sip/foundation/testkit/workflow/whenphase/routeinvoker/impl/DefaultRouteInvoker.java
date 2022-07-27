@@ -20,7 +20,7 @@ public class DefaultRouteInvoker implements RouteInvoker {
   }
 
   @Override
-  public boolean matchEndpoint(Endpoint endpoint) {
+  public boolean isEndpoint(Endpoint endpoint) {
     return false;
   }
 

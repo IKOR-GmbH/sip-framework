@@ -38,7 +38,7 @@ public class SIPExchangeHelper extends DefaultExchangeHolder {
     return filteredHeaders;
   }
 
-  private static Object reassignNonSerializableValue(String headerName, Object value) {
+  protected static Object reassignNonSerializableValue(String headerName, Object value) {
     ObjectMapper objectMapper = new ObjectMapper();
     try {
       objectMapper.writeValue(new ByteArrayOutputStream(), value);

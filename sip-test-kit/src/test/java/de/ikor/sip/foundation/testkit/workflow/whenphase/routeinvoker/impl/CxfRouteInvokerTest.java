@@ -14,6 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentMatchers;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
@@ -27,18 +28,19 @@ class CxfRouteInvokerTest {
   private CxfRouteInvoker subject;
   private RestTemplate restTemplate;
   private ExtendedCamelContext camelContext;
-  private Endpoint endpoint;
 
   @BeforeEach
   void setup() {
     camelContext = mock(ExtendedCamelContext.class);
+    RestTemplateBuilder restTemplateBuilder = mock(RestTemplateBuilder.class);
     restTemplate = mock(RestTemplate.class);
     Environment environment = mock(Environment.class);
-    subject = new CxfRouteInvoker(camelContext, environment, restTemplate);
-    endpoint = mock(Endpoint.class);
+    subject = new CxfRouteInvoker(camelContext, environment, restTemplateBuilder);
+    Endpoint endpoint = mock(Endpoint.class);
     subject.setEndpoint(endpoint);
 
     when(environment.getProperty("local.server.port")).thenReturn("8081");
+    when(restTemplateBuilder.build()).thenReturn(restTemplate);
   }
 
   @ParameterizedTest(name = "Using input body: {0}")
@@ -46,7 +48,7 @@ class CxfRouteInvokerTest {
   @NullSource
   void GIVEN_emptyRequest_WHEN_executeTask_THEN_validateGoodResponse(String inputBody) {
     // arrange
-    Exchange exchange = createExchange("", new HashMap<>());
+    Exchange exchange = createExchange(new HashMap<>());
     CxfRouteInvoker spySubject = spy(subject);
     doReturn("test").when(spySubject).getCxfEndpointAddress(any());
     ResponseEntity<String> routeExpectedResponse = new ResponseEntity<>(inputBody, HttpStatus.OK);
@@ -64,8 +66,8 @@ class CxfRouteInvokerTest {
     assertThat(actualExchange.getMessage().getBody()).isEqualTo(inputBody);
   }
 
-  private Exchange createExchange(String body, Map<String, Object> headers) {
-    ExchangeBuilder exchangeBuilder = ExchangeBuilder.anExchange(camelContext).withBody(body);
+  private Exchange createExchange(Map<String, Object> headers) {
+    ExchangeBuilder exchangeBuilder = ExchangeBuilder.anExchange(camelContext).withBody("");
     headers.forEach(exchangeBuilder::withHeader);
     return exchangeBuilder.build();
   }

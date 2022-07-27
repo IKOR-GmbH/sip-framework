@@ -327,6 +327,8 @@
                 <version>${maven-project-dependecies.version}</version>
                 <scope>provided</scope>
             </dependency>
+            <!-- Spring is using 9.1, Cxf is using 9.2 -->
+            <!-- When Spring upgrades to 9.2, then explicit dependency can be removed -->
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm</artifactId>
