@@ -5,6 +5,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Layout;
 import de.ikor.sip.foundation.core.translate.SIPTranslateMessageService;
+import org.apache.logging.log4j.ThreadContext;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -29,9 +30,16 @@ public class TranslateMessageLayout<E> extends PatternLayout implements Layout<I
       translatedMessage =
           messageService.getTranslatedMessage(event.getMessage(), event.getArgumentArray());
     }
+    if (isTestMode()) {
+      translatedMessage = "[SIP TEST] " + translatedMessage;
+    }
 
     cloneEvent.setMessage(translatedMessage);
     return super.doLayout(cloneEvent);
+  }
+
+  private boolean isTestMode() {
+    return Boolean.parseBoolean(ThreadContext.get("test-mode"));
   }
 
   private SIPTranslateMessageService initMessageService() {
