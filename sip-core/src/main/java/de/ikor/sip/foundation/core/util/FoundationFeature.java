@@ -1,14 +1,12 @@
 package de.ikor.sip.foundation.core.util;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+/** Contains names of all SIP Foundation Features */
+public class FoundationFeature {
 
-@AllArgsConstructor
-public enum FoundationFeature {
-  TRACING("tracing"),
-  INFO("info"),
-  ADAPTER_ROUTES("adapter-routes"),
-  HEALTH("health");
+  private FoundationFeature() {}
 
-  @Getter private String value;
+  public static final String TRACING = "tracing";
+  public static final String INFO = "info";
+  public static final String ADAPTER_ROUTES = "adapter-routes";
+  public static final String HEALTH = "health";
 }

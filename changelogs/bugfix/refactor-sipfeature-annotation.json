@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "122",
+  "message": "Remove the enum from @SIPFeature used to define name of feature and replace it with string constants."
+}
