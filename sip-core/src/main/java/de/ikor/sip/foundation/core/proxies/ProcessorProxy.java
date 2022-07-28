@@ -1,13 +1,16 @@
 package de.ikor.sip.foundation.core.proxies;
 
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.camel.*;
+import org.apache.camel.processor.Resequencer;
 import org.apache.camel.processor.SendDynamicProcessor;
+import org.apache.camel.processor.aggregate.AggregateProcessor;
 import org.apache.camel.support.AsyncProcessorSupport;
 import org.apache.camel.support.ExchangeHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +30,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   private final List<ProxyExtension> extensions;
   private Function<Exchange, Exchange> mockFunction;
   @Getter private boolean endpointProcessor;
+  private boolean forbiddenProcessor;
 
   /**
    * Creates new instance of ProcessorProxy
@@ -46,6 +50,12 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     this.extensions = new ArrayList<>(extensions);
     this.mockFunction = null;
     this.endpointProcessor = determineEndpointProcessor();
+    this.forbiddenProcessor = isProcessorForbidden();
+  }
+
+  private boolean isProcessorForbidden() {
+    return originalProcessor instanceof AggregateProcessor
+        || originalProcessor instanceof Resequencer;
   }
 
   /** Resets the state of the proxy to default. */
@@ -91,7 +101,11 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     }
     Exchange originalExchange = exchange.copy();
 
-    if (isTestMode(exchange) && hasMockFunction()) {
+    if (isTestMode(exchange) && forbiddenProcessor) {
+      exchange.setException(
+          new ProcessorNotAllowedException(
+              "Aggregator and resequencer are not allowed in SIP Tests"));
+    } else if (isTestMode(exchange) && hasMockFunction()) {
       mockProcessing(exchange);
     } else {
       processExchange(exchange);
