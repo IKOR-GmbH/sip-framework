@@ -33,6 +33,7 @@ sip.core:
         initial-delay: 5000
 sip.adapter:
   camel-endpoint-context-path: ${server.servlet.context-path}${camel.servlet.mapping.context-path}
+  camel-cxf-endpoint-context-path: ${server.servlet.context-path}${cxf.path}
 server:
   servlet:
     context-path:
@@ -60,3 +61,7 @@ camel:
   servlet:
     mapping:
       context-path: /adapter/*
+cxf:
+  servlet:
+    enabled: true
+  path: /services
