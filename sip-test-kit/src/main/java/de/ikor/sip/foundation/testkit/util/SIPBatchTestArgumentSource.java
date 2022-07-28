@@ -15,7 +15,7 @@ public class SIPBatchTestArgumentSource implements ArgumentsProvider {
   public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext)
       throws Exception {
     SIPBatchTest executedBatchTest = (SIPBatchTest) extensionContext.getRequiredTestInstance();
-    return executedBatchTest.getTestCases().stream()
+    return executedBatchTest.getTestCaseCollector().getTestCases().stream()
         .map(testCase -> arguments(named(testCase.getTestName(), testCase)));
   }
 }

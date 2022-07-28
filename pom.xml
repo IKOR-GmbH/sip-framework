@@ -82,6 +82,7 @@
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-exec.version>1.3</commons-exec.version>
         <equalsverifier.version>3.7.1</equalsverifier.version>
+        <asm.version>9.2</asm.version>
 
         <!-- plugin versions -->
         <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
@@ -325,6 +326,13 @@
                 <artifactId>maven-artifact</artifactId>
                 <version>${maven-project-dependecies.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <!-- Spring is using 9.1, Cxf is using 9.2 -->
+            <!-- When Spring upgrades to 9.2, then explicit dependency can be removed -->
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>${asm.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
