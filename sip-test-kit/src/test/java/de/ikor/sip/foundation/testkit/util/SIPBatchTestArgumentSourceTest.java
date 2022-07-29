@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import de.ikor.sip.foundation.testkit.SIPBatchTest;
 import de.ikor.sip.foundation.testkit.workflow.TestCase;
+import de.ikor.sip.foundation.testkit.workflow.TestCaseCollector;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,12 +23,15 @@ class SIPBatchTestArgumentSourceTest {
     ExtensionContext extensionContext = mock(ExtensionContext.class);
     SIPBatchTest sipBatchTest = mock(SIPBatchTest.class);
     TestCase testCase = mock(TestCase.class);
+    TestCaseCollector testCaseCollector = mock(TestCaseCollector.class);
     SIPBatchTestArgumentSource subject = new SIPBatchTestArgumentSource();
 
     when(extensionContext.getRequiredTestInstance()).thenReturn(sipBatchTest);
+    when(testCaseCollector.getTestCases())
+        .thenReturn(Stream.of(testCase).collect(Collectors.toList()));
     String testName = "name";
     when(testCase.getTestName()).thenReturn(testName);
-    when(sipBatchTest.getTestCases()).thenReturn(Stream.of(testCase).collect(Collectors.toList()));
+    when(sipBatchTest.getTestCaseCollector()).thenReturn(testCaseCollector);
 
     // act
     List<Arguments> testCases =

@@ -46,7 +46,7 @@ public class TrafficTracerController {
       description = "Sets the value of a parameter in ExchangeFormatter for Trace logs")
   public boolean changeParameter(
       @Parameter(name = "parameter", description = "Parameter name") @PathVariable String parameter,
-      @Parameter(name = "value", description = "Parameter value") @RequestBody Object value) {
+      @Parameter(name = "value", description = "Parameter value") @RequestBody String value) {
     DefaultExchangeFormatterConfigurer configurer = new DefaultExchangeFormatterConfigurer();
     return configurer.configure(
         camelContext, camelContext.getTracer().getExchangeFormatter(), parameter, value, true);
