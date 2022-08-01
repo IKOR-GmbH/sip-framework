@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.support.processor.DefaultExchangeFormatterConfigurer;
-import org.apache.camel.util.StringHelper;
+import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +48,7 @@ public class TrafficTracerController {
   public boolean changeParameter(
       @Parameter(name = "parameter", description = "Parameter name") @PathVariable String parameter,
       @Parameter(name = "value", description = "Parameter value") @RequestBody String value) {
-    String configParamValue = StringHelper.sanitize(value);
+    String configParamValue = StringEscapeUtils.escapeJava(value);
     DefaultExchangeFormatterConfigurer configurer = new DefaultExchangeFormatterConfigurer();
     return configurer.configure(
         camelContext,
