@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "127",
-  "message": "Fixed security issue on the tracing configuration controller for logging user input."
-}
