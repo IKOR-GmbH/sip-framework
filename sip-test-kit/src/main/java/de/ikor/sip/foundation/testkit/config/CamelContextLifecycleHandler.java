@@ -23,7 +23,9 @@ public class CamelContextLifecycleHandler implements CamelContextConfiguration {
   private final List<RouteInvoker> routeInvokers;
 
   @Override
-  public void beforeApplicationStart(CamelContext camelContext) {}
+  public void beforeApplicationStart(CamelContext camelContext) {
+    // Do nothing before starting camel context
+  }
 
   @Override
   public void afterApplicationStart(CamelContext camelContext) {
