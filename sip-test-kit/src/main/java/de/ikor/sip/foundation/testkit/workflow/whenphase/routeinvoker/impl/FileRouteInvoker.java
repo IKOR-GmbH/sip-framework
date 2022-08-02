@@ -38,7 +38,8 @@ public class FileRouteInvoker implements RouteInvoker {
     GenericFileConsumer<File> fileConsumer = (GenericFileConsumer<File>) route.getConsumer();
 
     try {
-      GenericFile<File> genericFile = FileConsumer.asGenericFile(
+      GenericFile<File> genericFile =
+          FileConsumer.asGenericFile(
               fileEndpoint.getConfiguration().getDirectory(),
               createFile((String) inputExchange.getMessage().getBody()),
               fileEndpoint.getCharset(),

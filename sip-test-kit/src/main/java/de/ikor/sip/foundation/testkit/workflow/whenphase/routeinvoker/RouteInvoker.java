@@ -32,10 +32,8 @@ public interface RouteInvoker {
    */
   RouteInvoker setEndpoint(Endpoint endpoint);
 
-
   /**
-   * Method which classifies which camel components should
-   * be suspended during sip batch tests.
+   * Method which classifies which camel components should be suspended during sip batch tests.
    *
    * @return boolean
    */

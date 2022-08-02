@@ -27,7 +27,8 @@ public class AutoTestCaseLoading {
   private static final String DEFAULT_TEST_CASES_LOCATION = "test-case-definition.yml";
   private static final String TEST_CASES_PROPERTIES_NAME = "TestCasesProperties";
   private static final String SIP_BATCH_TEST = "sip.testkit.batchTest";
-  private static final String ROUTE_CONTROLLER_SUPERVISE = "camel.springboot.routeControllerSuperviseEnabled";
+  private static final String ROUTE_CONTROLLER_SUPERVISE =
+      "camel.springboot.routeControllerSuperviseEnabled";
 
   /** Adds testcases to environment */
   @Bean
@@ -71,6 +72,4 @@ public class AutoTestCaseLoading {
       addProperty(environment, ROUTE_CONTROLLER_SUPERVISE, true);
     }
   }
-
-
 }
