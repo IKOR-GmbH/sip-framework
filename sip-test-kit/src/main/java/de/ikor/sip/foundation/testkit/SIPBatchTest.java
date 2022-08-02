@@ -20,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 /** SIP batch test run */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(properties = "sip.testkit.batchTest=true", webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public abstract class SIPBatchTest {
 
   @Autowired private TestRunner testRunner;

@@ -9,7 +9,7 @@ import org.apache.camel.component.rest.RestEndpoint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-/** Class for triggering Camel REST route */
+/** Invoker class for triggering Camel REST route */
 @Component
 @RequiredArgsConstructor
 public class RestRouteInvoker implements RouteInvoker {

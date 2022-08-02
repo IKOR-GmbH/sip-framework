@@ -21,7 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
-/** Class for triggering Camel CXF(SOAP) route */
+/** Invoker class for triggering Camel CXF(SOAP) route */
 @Component
 @RequiredArgsConstructor
 @Slf4j
