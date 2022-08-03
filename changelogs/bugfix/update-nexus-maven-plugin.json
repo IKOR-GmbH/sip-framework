@@ -1,5 +1,0 @@
-{
-  "author": "LetoBukarica",
-  "pullrequestId": "130",
-  "message": "Updated nexus-staging-maven-plugin and removed hardcoded XStream dependency management.."
-}
