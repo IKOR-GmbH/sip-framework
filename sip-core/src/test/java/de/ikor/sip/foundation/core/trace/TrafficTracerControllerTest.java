@@ -33,7 +33,7 @@ class TrafficTracerControllerTest {
     when(camelContext.getTypeConverter().mandatoryConvertTo(any(), any())).thenReturn(true);
 
     // assert
-    assertThat(endpointSubject.changeParameter("showexchangeid", true)).isTrue();
+    assertThat(endpointSubject.changeParameter("showexchangeid", "true")).isTrue();
   }
 
   @Test
@@ -43,7 +43,7 @@ class TrafficTracerControllerTest {
     when(camelContext.getTracer().getExchangeFormatter()).thenReturn(new SIPExchangeFormatter());
 
     // assert
-    assertThat(endpointSubject.changeParameter("doesnotexist", true)).isFalse();
+    assertThat(endpointSubject.changeParameter("doesnotexist", "true")).isFalse();
   }
 
   @Test
