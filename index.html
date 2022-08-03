@@ -130,6 +130,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="" href="javadoc/2.2.0/index.html">JavaDoc 2.2.0</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="" href="javadoc/2.1.0/index.html">JavaDoc 2.1.0</a>
                 </li>
               </ul>
@@ -166,7 +170,8 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Introduction</li>
+    <li><a href="." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Introduction</li>
     <li class="wy-breadcrumbs-aside">
         <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/README.md"
           class="icon icon-github"> Edit on GitHub</a>
@@ -174,7 +179,6 @@
   </ul>
   <hr/>
 </div>
-
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
@@ -399,223 +403,45 @@ Notice that in case of incoming endpoints (those in "from" statement), following
 <h3 id="configuration-properties">Configuration properties<a class="headerlink" href="#configuration-properties" title="Permanent link">&para;</a></h3>
 <p>By default, the following properties come as a part of SIP Framework, to override them simply add them to your configuration
 file with desired values.</p>
-<p>When using a yaml configuration file, which is already available in resources, adapt the properties to its format.</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Description</th>
-<th>Value</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>sip.core.translation.enabled</td>
-<td>Enable SIP translation</td>
-<td>boolean</td>
-<td>true</td>
-</tr>
-<tr>
-<td>sip.core.translation.fileLocations</td>
-<td>Sets locations of translation bundles</td>
-<td>List</td>
-<td>classpath:translations/translated-messages, classpath:translations/sip-core-messages</td>
-</tr>
-<tr>
-<td>sip.core.translation.default-encoding</td>
-<td>Sets default encoding</td>
-<td>String</td>
-<td>UTF-8</td>
-</tr>
-<tr>
-<td>sip.core.translation.fallback-to-system-locale</td>
-<td>Use system language if none defined</td>
-<td>boolean</td>
-<td>false</td>
-</tr>
-<tr>
-<td>sip.core.translation.use-code-as-default-message</td>
-<td>If key is not assigned use it in message</td>
-<td>boolean</td>
-<td>true</td>
-</tr>
-<tr>
-<td>sip.core.translation.lang</td>
-<td>Set language of log messages</td>
-<td>String</td>
-<td>en</td>
-</tr>
-<tr>
-<td>sip.core.tracing.enabled</td>
-<td>Enable SIP tracing and trace history</td>
-<td>boolean</td>
-<td>false</td>
-</tr>
-<tr>
-<td>sip.core.tracing.exchange-formatter.{property-name}</td>
-<td>Sets value for specific property in <a href="https://www.javadoc.io/static/org.apache.camel/camel-support/3.0.0/org/apache/camel/support/processor/DefaultExchangeFormatter.html">ExchangeFormatter</a></td>
-<td>/</td>
-<td>/</td>
-</tr>
-<tr>
-<td>sip.core.tracing.trace-type</td>
-<td>Sets how tracer should behave</td>
-<td>String</td>
-<td>"*"</td>
-</tr>
-<tr>
-<td>sip.core.metrics.external-endpoint-health-check.enabled</td>
-<td>Enable health status calculation</td>
-<td>boolean</td>
-<td>true</td>
-</tr>
-<tr>
-<td>sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay</td>
-<td>Sets health check execution interval</td>
-<td>Integer</td>
-<td>900000</td>
-</tr>
-<tr>
-<td>sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay</td>
-<td>Sets health check execution initial delay</td>
-<td>Integer</td>
-<td>5000</td>
-</tr>
-<tr>
-<td>management.info.camel.enabled</td>
-<td>Enable basic camel info under /actuator/info endpoint</td>
-<td>boolean</td>
-<td>false</td>
-</tr>
-<tr>
-<td>management.endpoints.web.exposure.include</td>
-<td>Set which endpoints are included</td>
-<td>String</td>
-<td>health,info,metrics,loggers,prometheus,adapter-routes</td>
-</tr>
-<tr>
-<td>management.endpoint.health.show-details</td>
-<td>Enable health details in actuator</td>
-<td>String</td>
-<td>always</td>
-</tr>
-<tr>
-<td>springdoc.show-actuator</td>
-<td>Show actuator API in Swagger docs</td>
-<td>boolean</td>
-<td>true</td>
-</tr>
-<tr>
-<td>springdoc.api-docs.path</td>
-<td>Custom path to API docs</td>
-<td>String</td>
-<td>/api-docs</td>
-</tr>
-<tr>
-<td>springdoc.swagger-ui.path</td>
-<td>Custom path to Swagger</td>
-<td>String</td>
-<td>/swagger-ui.html</td>
-</tr>
-<tr>
-<td>springdoc.swagger-ui.disable-swagger-default-url</td>
-<td>Disables default petstore API in swagger</td>
-<td>boolean</td>
-<td>true</td>
-</tr>
-<tr>
-<td>sip.testkit.enabled</td>
-<td>Enable SIP testkit</td>
-<td>boolean</td>
-<td>true</td>
-</tr>
-<tr>
-<td>sip.testkit.test-cases-path</td>
-<td>Define path for file with test cases</td>
-<td>String</td>
-<td>test-case-definition.yml</td>
-</tr>
-<tr>
-<td>sip.security.ssl.enabled</td>
-<td>Enable <a href="https://ikor-gmbh.github.io/sip-framework/security/#configuration">SIP SSL security</a></td>
-<td>boolean</td>
-<td>false</td>
-</tr>
-<tr>
-<td>sip.security.ssl.server.client-auth</td>
-<td>Enable authentication type - Possible values: NONE, WANT or NEED</td>
-<td>String</td>
-<td>none</td>
-</tr>
-<tr>
-<td>sip.security.ssl.server.key-store</td>
-<td>Location of keystore</td>
-<td>String</td>
-<td>/</td>
-</tr>
-<tr>
-<td>sip.security.ssl.server.key-store-password</td>
-<td>Password of keystore</td>
-<td>String</td>
-<td>/</td>
-</tr>
-<tr>
-<td>sip.security.ssl.server.key-store-type</td>
-<td>Type of keystore file</td>
-<td>String</td>
-<td>/</td>
-</tr>
-<tr>
-<td>sip.security.ssl.server.key-alias</td>
-<td>The alias (or name) under which the key is stored in the keystore</td>
-<td>String</td>
-<td>/</td>
-</tr>
-<tr>
-<td>sip.security.ssl.server.key-password</td>
-<td>Password of the key</td>
-<td>String</td>
-<td>/</td>
-</tr>
-<tr>
-<td>sip.security.ssl.client.enabled</td>
-<td>Enable separate client certification</td>
-<td>boolean</td>
-<td>false</td>
-</tr>
-<tr>
-<td>sip.security.ssl.client.key-store</td>
-<td>Location of client keystore</td>
-<td>String</td>
-<td>/</td>
-</tr>
-<tr>
-<td>sip.security.ssl.client.key-store-password</td>
-<td>Password of client keystore</td>
-<td>String</td>
-<td>/</td>
-</tr>
-<tr>
-<td>sip.security.ssl.client.key-store-type</td>
-<td>Type of client keystore file</td>
-<td>String</td>
-<td>/</td>
-</tr>
-<tr>
-<td>sip.security.ssl.client.key-alias</td>
-<td>The alias (or name) under which the key is stored in the client keystore</td>
-<td>String</td>
-<td>/</td>
-</tr>
-<tr>
-<td>sip.security.ssl.client.key-password</td>
-<td>Password of the client key</td>
-<td>String</td>
-<td>/</td>
-</tr>
-</tbody>
-</table>
+<p>When using a yaml configuration file, which is already available in resources, adapt the properties to its format.
+Name | Description | Value | Default |
+--- | --- | --- | --- |
+sip.core.translation.enabled | Enable SIP translation | boolean | true |
+sip.core.translation.fileLocations | Sets locations of translation bundles | List | classpath:translations/translated-messages, classpath:translations/sip-core-messages |
+sip.core.translation.default-encoding | Sets default encoding | String | UTF-8 |
+sip.core.translation.fallback-to-system-locale | Use system language if none defined | boolean | false |
+sip.core.translation.use-code-as-default-message | If key is not assigned use it in message | boolean | true |
+sip.core.translation.lang | Set language of log messages | String | en |
+sip.core.tracing.enabled | Enable SIP tracing and trace history | boolean | false |
+sip.core.tracing.exchange-formatter.{property-name} | Sets value for specific property in <a href="https://www.javadoc.io/static/org.apache.camel/camel-support/3.0.0/org/apache/camel/support/processor/DefaultExchangeFormatter.html">ExchangeFormatter</a> | / | / |
+sip.core.tracing.trace-type | Sets how tracer should behave | String | "*" |
+sip.core.metrics.external-endpoint-health-check.enabled | Enable health status calculation | boolean | true |
+sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay | Sets health check execution interval | Integer | 900000 |
+sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay | Sets health check execution initial delay | Integer | 5000 |
+sip.core.actuator.extensions.health.enabled | Enable additional SIP Health check | boolean | true |
+sip.core.actuator.extensions.info.enabled | Expose additional adapter information through /actuator/info | boolean | true |
+management.info.camel.enabled | Enable basic camel info under /actuator/info endpoint | boolean | false |
+management.endpoints.web.exposure.include | Set which endpoints are included | String | health,info,metrics,loggers,prometheus,adapter-routes |
+management.endpoint.health.show-details | Enable health details in actuator | String | always |
+springdoc.show-actuator | Show actuator API in Swagger docs| boolean | true |
+springdoc.api-docs.path | Custom path to API docs | String | /api-docs |
+springdoc.swagger-ui.path | Custom path to Swagger | String | /swagger-ui.html |
+springdoc.swagger-ui.disable-swagger-default-url | Disables default petstore API in swagger | boolean | true |
+sip.testkit.enabled | Enable SIP testkit | boolean | true |
+sip.testkit.test-cases-path | Define path for file with test cases | String | test-case-definition.yml
+sip.security.ssl.enabled | Enable <a href="https://ikor-gmbh.github.io/sip-framework/security/#configuration">SIP SSL security</a> | boolean | false |
+sip.security.ssl.server.client-auth | Enable authentication type - Possible values: NONE, WANT or NEED | String | none
+sip.security.ssl.server.key-store | Location of keystore | String | / |
+sip.security.ssl.server.key-store-password | Password of keystore | String | /
+sip.security.ssl.server.key-store-type | Type of keystore file | String | / |
+sip.security.ssl.server.key-alias | The alias (or name) under which the key is stored in the keystore | String | / |
+sip.security.ssl.server.key-password | Password of the key | String | / | 
+sip.security.ssl.client.enabled | Enable separate client certification | boolean | false |
+sip.security.ssl.client.key-store | Location of client keystore | String | /
+sip.security.ssl.client.key-store-password | Password of client keystore | String | /
+sip.security.ssl.client.key-store-type | Type of client keystore file | String | / |
+sip.security.ssl.client.key-alias | The alias (or name) under which the key is stored in the client keystore | String | / |
+sip.security.ssl.client.key-password | Password of the client key | String | / |</p>
               
             </div>
           </div><footer>
@@ -669,6 +495,6 @@ file with desired values.</p>
 </html>
 
 <!--
-MkDocs version : 1.3.0
-Build Date UTC : 2022-06-01 08:04:37.473542+00:00
+MkDocs version : 1.3.1
+Build Date UTC : 2022-08-03 13:21:39.505687+00:00
 -->
