@@ -69,7 +69,7 @@
     <properties>
         <sip-framework.version>2.1.1-SNAPSHOT</sip-framework.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -145,18 +145,6 @@
                         <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
                         <autoReleaseAfterClose>true</autoReleaseAfterClose>
                     </configuration>
-                    <dependencies>
-                        <!--
-                        TODO:
-                            Remove after OSSRH-66257, NEXUS-26993 are fixed,
-                            possibly via https://github.com/sonatype/nexus-maven-plugins/pull/91
-                        -->
-                        <dependency>
-                            <groupId>com.thoughtworks.xstream</groupId>
-                            <artifactId>xstream</artifactId>
-                            <version>1.4.19</version>
-                        </dependency>
-                    </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>
