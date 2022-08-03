@@ -6,6 +6,7 @@ import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvok
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -85,7 +86,7 @@ public class FileRouteInvoker implements RouteInvoker {
   }
 
   private File createFile(String body) throws IOException {
-    File file = File.createTempFile("testing", ".txt");
+    File file = Files.createTempFile("testing", ".txt").toFile();
     writeToFile(file, body);
     file.deleteOnExit();
     return file;
