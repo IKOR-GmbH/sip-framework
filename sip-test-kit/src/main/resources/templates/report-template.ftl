@@ -51,7 +51,7 @@
       Validation ${report.mockReports[key].validated}
       <#if report.mockReports[key].actualMessage?has_content>
       Received:
-       Body: ${report.mockReports[key].actualMessage.body}
+       Body: <#if report.mockReports[key].actualMessage.body??>${report.mockReports[key].actualMessage.body}</#if>
       </#if>
        <#if report.mockReports[key].validatedHeaders?has_content>
        Headers:
@@ -61,7 +61,7 @@
        </#if>
       <#if report.mockReports[key].expectedMessage?has_content>
       Expected:
-       Body: ${report.mockReports[key].expectedMessage.body}
+       Body: <#if report.mockReports[key].expectedMessage.body??>${report.mockReports[key].expectedMessage.body}</#if>
       <#if report.mockReports[key].expectedMessage.headers?has_content>
        Headers:
         <#list report.mockReports[key].expectedMessage.headers?keys as mkey>
