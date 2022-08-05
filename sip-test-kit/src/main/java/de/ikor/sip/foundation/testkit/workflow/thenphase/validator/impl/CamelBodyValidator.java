@@ -1,14 +1,14 @@
 package de.ikor.sip.foundation.testkit.workflow.thenphase.validator.impl;
 
+import static org.apache.camel.support.MessageHelper.extractBodyAsString;
+import static org.apache.camel.support.MessageHelper.resetStreamCache;
+
 import de.ikor.sip.foundation.testkit.util.RegexUtil;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.ExchangeValidator;
 import lombok.AllArgsConstructor;
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Component;
-
-import static org.apache.camel.support.MessageHelper.extractBodyAsString;
-import static org.apache.camel.support.MessageHelper.resetStreamCache;
 
 /** Validator for body of a request in Camel */
 @Component
@@ -28,9 +28,10 @@ public class CamelBodyValidator implements ExchangeValidator {
     String actual = extractBodyAsString(actualResult.getMessage());
     String expected = extractBodyAsString(expectedResponse.getMessage());
     boolean result = false;
-    if (actual == null && "".equals(expected)) {
+    if (actual == null && expected.isEmpty()) {
       result = true;
-    } else if (actual != null && !"".equals(expected)) { // avoid NPE in regex compare and any match empty string
+    } else if (actual != null
+        && !expected.isEmpty()) { // avoid NPE in regex compare and matching any empty string
       result = RegexUtil.compare(expected, actual);
     }
     return new ValidationResult(

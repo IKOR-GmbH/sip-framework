@@ -16,9 +16,7 @@
   </#if>
   <#if report.adapterReport.responseMessage?has_content>
     Actual response:
-    <#if report.adapterReport.responseMessage.body??>
-      Body: ${report.adapterReport.responseMessage.body}
-    </#if>
+      Body: <#if report.adapterReport.responseMessage.body??>${report.adapterReport.responseMessage.body}</#if>
     <#if report.adapterReport.validatedHeaders?has_content>
       Validated headers:
       <#list report.adapterReport.validatedHeaders?keys as key>
@@ -49,6 +47,12 @@
       <#list report.mockReports?keys as key>
       Endpoint "${key}" was mocked
       Validation ${report.mockReports[key].validated}
+      <#if report.mockReports[key].validationResults?has_content>
+      Validation details:
+        <#list report.mockReports[key].validationResults as validationResult>
+        ${validationResult.message}
+        </#list>
+      </#if>
       <#if report.mockReports[key].actualMessage?has_content>
       Received:
        Body: <#if report.mockReports[key].actualMessage.body??>${report.mockReports[key].actualMessage.body}</#if>
