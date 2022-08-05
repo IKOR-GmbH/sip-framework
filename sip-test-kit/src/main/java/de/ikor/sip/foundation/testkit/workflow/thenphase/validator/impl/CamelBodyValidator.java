@@ -28,14 +28,24 @@ public class CamelBodyValidator implements ExchangeValidator {
     String actual = extractBodyAsString(actualResult.getMessage());
     String expected = extractBodyAsString(expectedResponse.getMessage());
     boolean result = false;
-    if (actual == null && expected.isEmpty()) {
+    if (isNoBodyExpected(actual, expected)) {
       result = true;
-    } else if (actual != null
-        && !expected.isEmpty()) { // avoid NPE in regex compare and matching any empty string
+    } else if (isBodyExpected(actual, expected)) {
       result = RegexUtil.compare(expected, actual);
     }
     return new ValidationResult(
         result, result ? "Body validation successful" : "Body validation unsuccessful");
+  }
+
+  private boolean isBodyExpected(String actual, String expected) {
+    // avoid NPE in regex compare and matching any empty string
+    return actual != null && !expected.isEmpty();
+  }
+
+  private boolean isNoBodyExpected(String actual, String expected) {
+    // match if actual body is empty or null when expected is defined as empty
+    return (actual == null && expected.isEmpty())
+        || (actual != null && actual.isEmpty() && expected.isEmpty());
   }
 
   @Override
