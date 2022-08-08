@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "119",
-  "message": "Added versions to @SIPFeature annotation and additional conditions on auto configuration classes for actuator extensions."
-}

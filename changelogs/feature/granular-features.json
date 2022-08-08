@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "114",
-  "message": "All SIP features are now separated and independent. Actuator features can also be turned on and off separately."
-}
