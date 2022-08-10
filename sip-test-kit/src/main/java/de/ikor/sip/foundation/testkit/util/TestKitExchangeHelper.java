@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.support.MessageHelper;
 
-
 /** Utility class that changes the {@link Exchange} */
 @Slf4j
 public class TestKitExchangeHelper extends SIPExchangeHelper {

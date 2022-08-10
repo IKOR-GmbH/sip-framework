@@ -1,10 +1,9 @@
 package de.ikor.sip.foundation.core.trace;
 
+import de.ikor.sip.foundation.core.trace.model.TraceUnit;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import de.ikor.sip.foundation.core.trace.model.TraceUnit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Synchronized;

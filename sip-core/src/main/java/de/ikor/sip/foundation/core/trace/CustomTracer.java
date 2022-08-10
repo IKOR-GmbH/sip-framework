@@ -3,6 +3,8 @@ package de.ikor.sip.foundation.core.trace;
 import de.ikor.sip.foundation.core.trace.model.ExchangeTracePoint;
 import de.ikor.sip.foundation.core.trace.model.TraceUnit;
 import de.ikor.sip.foundation.core.util.SIPExchangeHelper;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.*;
 import org.apache.camel.impl.engine.DefaultTracer;
@@ -12,9 +14,6 @@ import org.apache.camel.util.URISupport;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 /**
  * Implementation of Apache Camel's {@link DefaultTracer} Requires sip.core.tracing.enabled=true to
  * be registered as component
@@ -22,9 +21,10 @@ import java.io.StringWriter;
 @Slf4j
 @Component
 public class CustomTracer extends DefaultTracer {
-  
+
   private final TraceHistory traceHistory;
-  @Value("${sip.core.tracing.store-in-memory}")
+
+  @Value("${sip.core.tracing.store-in-memory:false}")
   private boolean shouldStore;
 
   /**
@@ -45,35 +45,36 @@ public class CustomTracer extends DefaultTracer {
 
   @Override
   public void traceBeforeRoute(NamedRoute route, Exchange exchange) {
-      super.traceBeforeRoute(route, exchange);
+    super.traceBeforeRoute(route, exchange);
     if (shouldStore) {
       String label = URISupport.sanitizeUri(route.getEndpointUrl());
       boolean original = route.getRouteId().equals(exchange.getFromRouteId());
-      ExchangeTracePoint tracePoint = original ? ExchangeTracePoint.START : ExchangeTracePoint.INCOMING;
+      ExchangeTracePoint tracePoint =
+          original ? ExchangeTracePoint.START : ExchangeTracePoint.INCOMING;
       storeInMemory(exchange, tracePoint, route.getRouteId(), label);
     }
   }
 
   @Override
   public void traceAfterRoute(NamedRoute route, Exchange exchange) {
-      super.traceAfterRoute(route, exchange);
+    super.traceAfterRoute(route, exchange);
     if (shouldStore) {
       String label = URISupport.sanitizeUri(route.getEndpointUrl());
       boolean original = route.getRouteId().equals(exchange.getFromRouteId());
-      ExchangeTracePoint tracePoint = original ? ExchangeTracePoint.DONE : ExchangeTracePoint.RETURNING;
+      ExchangeTracePoint tracePoint =
+          original ? ExchangeTracePoint.DONE : ExchangeTracePoint.RETURNING;
       storeInMemory(exchange, tracePoint, route.getRouteId(), label);
     }
   }
 
   @Override
   public void traceBeforeNode(NamedNode node, Exchange exchange) {
-      super.traceBeforeNode(node, exchange);
+    super.traceBeforeNode(node, exchange);
     if (shouldStore) {
       String label = URISupport.sanitizeUri(node.getLabel());
       storeInMemory(exchange, ExchangeTracePoint.ONGOING, node.getId(), label);
     }
   }
-
 
   private void storeInMemory(Exchange out, ExchangeTracePoint tracePoint, String id, String uri) {
     TraceUnit traceUnit = new TraceUnit();
@@ -89,8 +90,8 @@ public class CustomTracer extends DefaultTracer {
     traceUnit.setExchangeId(exchange.getExchangeId());
     traceUnit.setExchangePattern(exchange.getPattern());
     traceUnit.setProperties(exchange.getProperties());
-    try{
-      traceUnit.setInternalProperties(((ExtendedExchange)exchange).getInternalProperties());
+    try {
+      traceUnit.setInternalProperties(((ExtendedExchange) exchange).getInternalProperties());
     } catch (Exception e) {
       log.error("Exchange is not an instance of ExtendedExchange");
     }
