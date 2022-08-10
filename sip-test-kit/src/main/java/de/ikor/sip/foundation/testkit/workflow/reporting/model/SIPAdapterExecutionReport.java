@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.testkit.workflow.reporting.model;
 
 import de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties;
-import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
+import de.ikor.sip.foundation.testkit.util.TestKitExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class SIPAdapterExecutionReport {
 
   public void setActualResponse(Exchange actualResponse) {
     this.actualResponse = actualResponse;
-    this.setResponseMessage(SIPExchangeHelper.mapToMessageProperties(actualResponse));
+    this.setResponseMessage(TestKitExchangeHelper.mapToMessageProperties(actualResponse));
   }
 
   public SIPAdapterExecutionReport setAdapterExceptionMessage(Exception exception) {

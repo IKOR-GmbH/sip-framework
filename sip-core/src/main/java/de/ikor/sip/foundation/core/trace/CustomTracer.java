@@ -1,10 +1,19 @@
 package de.ikor.sip.foundation.core.trace;
 
-import java.util.Set;
+import de.ikor.sip.foundation.core.trace.model.ExchangeTracePoint;
+import de.ikor.sip.foundation.core.trace.model.TraceUnit;
+import de.ikor.sip.foundation.core.util.SIPExchangeHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.CamelContext;
+import org.apache.camel.*;
 import org.apache.camel.impl.engine.DefaultTracer;
+import org.apache.camel.support.MessageHelper;
+import org.apache.camel.util.ObjectHelper;
+import org.apache.camel.util.URISupport;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Implementation of Apache Camel's {@link DefaultTracer} Requires sip.core.tracing.enabled=true to
@@ -13,10 +22,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class CustomTracer extends DefaultTracer {
-
-  private final Set<SIPTraceOperation> sipTraceOperations;
-
+  
   private final TraceHistory traceHistory;
+  @Value("${sip.core.tracing.store-in-memory}")
+  private boolean shouldStore;
 
   /**
    * Creates new instance of CustomTracer Enables tracing in CamelContext
@@ -24,29 +33,87 @@ public class CustomTracer extends DefaultTracer {
    * @param traceHistory {@link TraceHistory}
    * @param exchangeFormatter {@link SIPExchangeFormatter}
    * @param camelContext {@link CamelContext}
-   * @param sipTraceOperations set of {@link SIPTraceOperation}
    */
   public CustomTracer(
       TraceHistory traceHistory,
       SIPExchangeFormatter exchangeFormatter,
-      CamelContext camelContext,
-      Set<SIPTraceOperation> sipTraceOperations) {
+      CamelContext camelContext) {
     setExchangeFormatter(exchangeFormatter);
     camelContext.setTracing(true);
     this.traceHistory = traceHistory;
-    this.sipTraceOperations = sipTraceOperations;
   }
 
   @Override
-  protected void dumpTrace(String out, Object node) {
-    sipTraceOperations.forEach(traceOperation -> traceOperation.execute(this, out, node));
+  public void traceBeforeRoute(NamedRoute route, Exchange exchange) {
+      super.traceBeforeRoute(route, exchange);
+    if (shouldStore) {
+      String label = URISupport.sanitizeUri(route.getEndpointUrl());
+      boolean original = route.getRouteId().equals(exchange.getFromRouteId());
+      ExchangeTracePoint tracePoint = original ? ExchangeTracePoint.START : ExchangeTracePoint.INCOMING;
+      storeInMemory(exchange, tracePoint, route.getRouteId(), label);
+    }
   }
 
-  void logTrace(String out, Object node) {
-    super.dumpTrace(out, node);
+  @Override
+  public void traceAfterRoute(NamedRoute route, Exchange exchange) {
+      super.traceAfterRoute(route, exchange);
+    if (shouldStore) {
+      String label = URISupport.sanitizeUri(route.getEndpointUrl());
+      boolean original = route.getRouteId().equals(exchange.getFromRouteId());
+      ExchangeTracePoint tracePoint = original ? ExchangeTracePoint.DONE : ExchangeTracePoint.RETURNING;
+      storeInMemory(exchange, tracePoint, route.getRouteId(), label);
+    }
   }
 
-  void storeInMemory(String out, Object node) {
-    traceHistory.add(out);
+  @Override
+  public void traceBeforeNode(NamedNode node, Exchange exchange) {
+      super.traceBeforeNode(node, exchange);
+    if (shouldStore) {
+      String label = URISupport.sanitizeUri(node.getLabel());
+      storeInMemory(exchange, ExchangeTracePoint.ONGOING, node.getId(), label);
+    }
+  }
+
+
+  private void storeInMemory(Exchange out, ExchangeTracePoint tracePoint, String id, String uri) {
+    TraceUnit traceUnit = new TraceUnit();
+    enrichTraceUnit(traceUnit, out);
+    traceUnit.setTracePoint(tracePoint);
+    traceUnit.setNodeId(id);
+    traceUnit.setUri(uri);
+    traceHistory.add(traceUnit);
+  }
+
+  public void enrichTraceUnit(TraceUnit traceUnit, Exchange exchange) {
+    Message in = exchange.getIn();
+    traceUnit.setExchangeId(exchange.getExchangeId());
+    traceUnit.setExchangePattern(exchange.getPattern());
+    traceUnit.setProperties(exchange.getProperties());
+    try{
+      traceUnit.setInternalProperties(((ExtendedExchange)exchange).getInternalProperties());
+    } catch (Exception e) {
+      log.error("Exchange is not an instance of ExtendedExchange");
+    }
+    traceUnit.setHeaders(SIPExchangeHelper.filterNonSerializableHeaders(exchange));
+    traceUnit.setBodyType(ObjectHelper.classCanonicalName(in.getBody()));
+    traceUnit.setBody(MessageHelper.extractBodyAsString(in));
+    Exception exception = exchange.getException();
+    boolean caught = false;
+    if (exception == null) {
+      exception = exchange.getProperty(ExchangePropertyKey.EXCEPTION_CAUGHT, Exception.class);
+      caught = true;
+    }
+    if (exception != null) {
+      if (caught) {
+        traceUnit.setCaughtExceptionType(exception.getClass().getCanonicalName());
+        traceUnit.setCaughtExceptionMessage(exception.getMessage());
+      } else {
+        traceUnit.setExceptionType(exception.getClass().getCanonicalName());
+        traceUnit.setExceptionMessage(exception.getMessage());
+      }
+      StringWriter sw = new StringWriter();
+      exception.printStackTrace(new PrintWriter(sw));
+      traceUnit.setStackTrace(sw.toString());
+    }
   }
 }

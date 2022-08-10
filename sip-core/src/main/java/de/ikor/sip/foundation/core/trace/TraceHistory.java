@@ -3,6 +3,8 @@ package de.ikor.sip.foundation.core.trace;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import de.ikor.sip.foundation.core.trace.model.TraceUnit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Synchronized;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class TraceHistory {
 
   /** List of trace history entries */
-  private final LinkedList<String> list = new LinkedList<>();
+  private final LinkedList<TraceUnit> list = new LinkedList<>();
 
   @Value("${sip.core.tracing.limit:100}")
   private final int limit;
@@ -27,7 +29,7 @@ public class TraceHistory {
    * @param message information about traced exchange
    */
   @Synchronized
-  public void add(String message) {
+  public void add(TraceUnit message) {
     if (list.size() >= limit) {
       list.removeFirst();
     }
@@ -39,8 +41,8 @@ public class TraceHistory {
    *
    * @return the current tracing history
    */
-  public List<String> getAndClearHistory() {
-    List<String> retVal = new ArrayList<>(list);
+  public List<TraceUnit> getAndClearHistory() {
+    List<TraceUnit> retVal = new ArrayList<>(list);
     list.clear();
     return retVal;
   }
