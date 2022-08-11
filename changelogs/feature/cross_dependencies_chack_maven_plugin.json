@@ -1,5 +1,0 @@
-{
-  "author": "vladiIkor",
-  "pullrequestId": "115",
-  "message": "Introducing sip-maven-plugin with cross-dependencies-check goal. It will crash the build if classes are cross referenced between connectors packages."
-}

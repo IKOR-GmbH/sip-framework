@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "127",
-  "message": "Fixed security issue in TrafficTracerController, caused by possible unsafe user input."
-}
