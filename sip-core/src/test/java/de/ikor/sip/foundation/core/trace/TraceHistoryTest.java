@@ -45,8 +45,7 @@ class TraceHistoryTest {
     List<TraceUnit> target = subject.getAndClearHistory();
 
     // assert
-    assertThat(target).doesNotContain(traceUnitFirst);
-    assertThat(target).isNotEmpty();
+    assertThat(target).doesNotContain(traceUnitFirst).isNotEmpty();
   }
 
   @Test

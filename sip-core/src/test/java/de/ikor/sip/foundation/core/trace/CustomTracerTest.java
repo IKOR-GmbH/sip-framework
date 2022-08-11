@@ -73,6 +73,37 @@ class CustomTracerTest {
   }
 
   @Test
+  void When_traceBeforeNode_With_WithException_Expect_messageInLogAndHistory() {
+    // arrange
+    String exception_message = "exception message";
+    NamedNode node = mock(NamedNode.class);
+    Exception exception = mock(Exception.class);
+    Message message = mock(Message.class);
+    when(exchange.getContext()).thenReturn(context);
+    when(exchange.getMessage()).thenReturn(message);
+    when(exchange.getIn()).thenReturn(message);
+    when(exchange.getException()).thenReturn(exception);
+    when(exception.getMessage()).thenReturn(exception_message);
+    when(context.getTypeConverter().convertTo(any(), any(), any())).thenReturn(FROM_ID);
+    subject = new CustomTracer(traceHistory, exchangeFormatter, context);
+    ReflectionTestUtils.setField(subject, "shouldStore", true);
+    List<ILoggingEvent> logsList = listAppender.list;
+    TraceUnit traceUnit = new TraceUnit();
+    traceUnit.setExchangeId(EXCHANGE_ID);
+    traceUnit.setExceptionMessage(exception_message);
+    traceUnit.setExceptionType(exception.getClass().getCanonicalName());
+    traceUnit.setStackTrace("");
+
+    // act
+    subject.traceBeforeNode(node, exchange);
+
+    // assert
+    assertThat(logsList.get(0).getMessage()).contains(FROM_ID);
+    assertThat(logsList.get(0).getLevel()).isEqualTo(Level.INFO);
+    assertThat(traceHistory.getAndClearHistory()).containsExactly(traceUnit);
+  }
+
+  @Test
   void When_traceBeforeRoute_With_StoreInMemory_Expect_messageInLogAndHistory() {
     // arrange
     NamedRoute node = mock(NamedRoute.class);
