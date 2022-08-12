@@ -20,7 +20,6 @@ class SIPExchangeHelperTest {
   private static final String BODY = "body";
 
   private Exchange exchange;
-  private Message message;
   private Map<String, Object> headers;
   private ExtendedCamelContext camelContext;
 
@@ -29,7 +28,7 @@ class SIPExchangeHelperTest {
     camelContext = mock(ExtendedCamelContext.class);
     exchange = mock(Exchange.class);
     headers = new HashMap<>();
-    message = mock(Message.class);
+    Message message = mock(Message.class);
     when(exchange.getMessage()).thenReturn(message);
     when(message.getBody()).thenReturn(BODY);
     when(message.getHeaders()).thenReturn(headers);

@@ -2,13 +2,13 @@ package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
 import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.headers.FileExchangeHeaders.*;
 
+import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.*;
-import org.apache.camel.builder.ExchangeBuilder;
 import org.apache.camel.component.file.FileConsumer;
 import org.apache.camel.component.file.FileEndpoint;
 import org.apache.camel.support.EmptyAsyncCallback;
@@ -33,7 +33,7 @@ public class FileRouteInvoker implements RouteInvoker {
 
     fileConsumer.getAsyncProcessor().process(fileExchange, EmptyAsyncCallback.get());
 
-    return createEmptyExchange();
+    return SIPExchangeHelper.createEmptyExchange(camelContext);
   }
 
   @Override
@@ -88,10 +88,5 @@ public class FileRouteInvoker implements RouteInvoker {
         headers.put(CAMEL_MESSAGE_TIMESTAMP.getValue(), lastModifiedTimestamp);
       }
     }
-  }
-
-  private Exchange createEmptyExchange() {
-    ExchangeBuilder exchangeBuilder = ExchangeBuilder.anExchange(camelContext);
-    return exchangeBuilder.build();
   }
 }

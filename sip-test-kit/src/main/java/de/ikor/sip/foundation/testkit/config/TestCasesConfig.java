@@ -6,6 +6,7 @@ import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseBatchDefin
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import de.ikor.sip.foundation.testkit.exception.handler.ExceptionLogger;
+import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.TestCase;
 import de.ikor.sip.foundation.testkit.workflow.TestCaseCollector;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
@@ -108,7 +109,7 @@ public class TestCasesConfig {
 
   private Exchange parseExchangeProperties(EndpointProperties properties) {
     if (properties == null) {
-      return null;
+      return SIPExchangeHelper.createEmptyExchange(camelContext);
     }
     ExchangeBuilder exchangeBuilder =
         ExchangeBuilder.anExchange(camelContext).withBody(properties.getMessage().getBody());

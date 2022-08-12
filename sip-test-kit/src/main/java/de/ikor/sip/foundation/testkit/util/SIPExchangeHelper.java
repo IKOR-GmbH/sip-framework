@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.builder.ExchangeBuilder;
 import org.apache.camel.support.DefaultExchangeHolder;
 import org.apache.camel.support.MessageHelper;
 
@@ -50,7 +52,7 @@ public class SIPExchangeHelper extends DefaultExchangeHolder {
   }
 
   /**
-   * Creates a {@link MessageProperties} from the {@link Exchange}.
+   * Creates a {@link MessageProperties} from the {@link Exchange}
    *
    * @param exchange that should be mapped
    * @return serializable message properties
@@ -60,5 +62,16 @@ public class SIPExchangeHelper extends DefaultExchangeHolder {
     messageProperties.setBody(MessageHelper.extractBodyAsString(exchange.getMessage()));
     messageProperties.setHeaders(filterNonSerializableHeaders(exchange));
     return messageProperties;
+  }
+
+  /**
+   * Creates an empty {@link Exchange}
+   *
+   * @param camelContext is necessary for creation
+   * @return exchange
+   */
+  public static Exchange createEmptyExchange(CamelContext camelContext) {
+    ExchangeBuilder exchangeBuilder = ExchangeBuilder.anExchange(camelContext);
+    return exchangeBuilder.build();
   }
 }
