@@ -31,13 +31,11 @@ public class CxfRouteInvoker implements RouteInvoker {
   private final Environment environment;
   private final RestTemplateBuilder restTemplateBuilder;
 
-  private Endpoint endpoint;
-
   @Value("${sip.adapter.camel-cxf-endpoint-context-path}")
   private String cxfContextPath = "";
 
   @Override
-  public Exchange invoke(Exchange inputExchange) {
+  public Exchange invoke(Exchange inputExchange, Endpoint endpoint) {
     HttpEntity<String> request =
         new HttpEntity<>(
             inputExchange.getMessage().getBody(String.class), prepareHeaders(inputExchange));
@@ -59,12 +57,6 @@ public class CxfRouteInvoker implements RouteInvoker {
   @Override
   public boolean isApplicable(Endpoint endpoint) {
     return endpoint instanceof CxfEndpoint;
-  }
-
-  @Override
-  public RouteInvoker setEndpoint(Endpoint endpoint) {
-    this.endpoint = endpoint;
-    return this;
   }
 
   private Exchange createExchangeResponse(ResponseEntity<String> response) {

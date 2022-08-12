@@ -6,6 +6,7 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 
 /** Executes WhenPhaseDefinition */
@@ -17,6 +18,7 @@ public class ExecutionWrapper {
   private String testName;
   private Exchange whenDefinitionExchange;
   private final RouteInvoker invoker;
+  private final Endpoint endpoint;
 
   /**
    * WhenPhaseDefinition
@@ -26,7 +28,7 @@ public class ExecutionWrapper {
   public Exchange execute() {
     log.info("sip.testkit.workflow.startcamelrequest");
     enrichWithTestHeaders();
-    return invoker.invoke(whenDefinitionExchange);
+    return invoker.invoke(whenDefinitionExchange, endpoint);
   }
 
   private void enrichWithTestHeaders() {

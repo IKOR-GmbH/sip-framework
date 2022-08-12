@@ -23,9 +23,10 @@ class DefaultRouteInvokerTest {
   void GIVEN_mockExchange_WHEN_invoke_THEN_returnEmptyExchange() {
     // arrange
     Exchange inputExchange = mock(Exchange.class);
+    Endpoint endpoint = mock(Endpoint.class);
 
     // act
-    Exchange actual = subject.invoke(inputExchange);
+    Exchange actual = subject.invoke(inputExchange, endpoint);
 
     // assert
     assertThat(actual.getMessage().getBody()).isNull();
@@ -42,14 +43,5 @@ class DefaultRouteInvokerTest {
 
     // assert
     assertThat(actual).isFalse();
-  }
-
-  @Test
-  void GIVEN_mockEndpoint_WHEN_setEndpoint_THEN_returnEmptyExchange() {
-    // arrange
-    Endpoint endpoint = mock(Endpoint.class);
-
-    // act & assert
-    assertThat(subject.setEndpoint(endpoint)).isInstanceOf(DefaultRouteInvoker.class);
   }
 }

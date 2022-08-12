@@ -16,25 +16,17 @@ public class RestRouteInvoker implements RouteInvoker {
 
   private final ProducerTemplate producerTemplate;
 
-  private Endpoint endpoint;
-
   @Value("${sip.adapter.camel-endpoint-context-path}")
   private String contextPath = "";
 
   @Override
-  public Exchange invoke(Exchange exchange) {
+  public Exchange invoke(Exchange exchange, Endpoint endpoint) {
     return producerTemplate.send(extractRESTEndpointURI((RestEndpoint) endpoint), exchange);
   }
 
   @Override
   public boolean isApplicable(Endpoint endpoint) {
     return endpoint instanceof RestEndpoint;
-  }
-
-  @Override
-  public RouteInvoker setEndpoint(Endpoint endpoint) {
-    this.endpoint = endpoint;
-    return this;
   }
 
   private String extractRESTEndpointURI(RestEndpoint restEndpoint) {

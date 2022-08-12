@@ -12,9 +12,10 @@ public interface RouteInvoker {
    * Sends request to route
    *
    * @param exchange {@link Exchange}
+   * @param endpoint {@link Endpoint}
    * @return {@link Exchange} result of route execution
    */
-  Exchange invoke(Exchange exchange);
+  Exchange invoke(Exchange exchange, Endpoint endpoint);
 
   /**
    * Matching Endpoint with proper RouteInvoker
@@ -23,14 +24,6 @@ public interface RouteInvoker {
    * @return boolean true when matching
    */
   boolean isApplicable(Endpoint endpoint);
-
-  /**
-   * Set endpoint to proper RouteInvoker
-   *
-   * @param endpoint {@link Endpoint}
-   * @return {@link RouteInvoker} result of route execution
-   */
-  RouteInvoker setEndpoint(Endpoint endpoint);
 
   /**
    * Method which classifies which camel components should be suspended during sip batch tests.

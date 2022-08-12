@@ -14,7 +14,7 @@ public class DefaultRouteInvoker implements RouteInvoker {
   private final CamelContext camelContext;
 
   @Override
-  public Exchange invoke(Exchange exchange) {
+  public Exchange invoke(Exchange exchange, Endpoint endpoint) {
     ExchangeBuilder exchangeBuilder = ExchangeBuilder.anExchange(camelContext);
     return exchangeBuilder.build();
   }
@@ -22,10 +22,5 @@ public class DefaultRouteInvoker implements RouteInvoker {
   @Override
   public boolean isApplicable(Endpoint endpoint) {
     return false;
-  }
-
-  @Override
-  public RouteInvoker setEndpoint(Endpoint endpoint) {
-    return this;
   }
 }

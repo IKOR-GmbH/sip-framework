@@ -19,7 +19,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
+import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
+import org.apache.camel.Route;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -69,9 +71,11 @@ public class TestCasesConfig {
 
     Exchange exchange = parseExchangeProperties(testCaseDefinition.getWhenExecute());
 
-    RouteInvoker invoker = routeInvokerFactory.getInstance(exchange);
+    Endpoint endpoint = resolveEndpoint(exchange);
 
-    ExecutionWrapper executionWrapper = new ExecutionWrapper(testName, exchange, invoker);
+    RouteInvoker invoker = routeInvokerFactory.getInstance(exchange, endpoint);
+
+    ExecutionWrapper executionWrapper = new ExecutionWrapper(testName, exchange, invoker, endpoint);
 
     return new TestCase(
         testName,
@@ -111,5 +115,14 @@ public class TestCasesConfig {
     properties.getMessage().getHeaders().forEach(exchangeBuilder::withHeader);
     exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpoint());
     return exchangeBuilder.build();
+  }
+
+  private Endpoint resolveEndpoint(Exchange exchange) {
+    String routeId = exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class);
+    Route route = camelContext.getRoute(routeId);
+    if (route == null) {
+      throw new IllegalArgumentException("Route with id " + routeId + " was not found");
+    }
+    return route.getEndpoint();
   }
 }

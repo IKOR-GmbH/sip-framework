@@ -1,24 +1,17 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
-import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
+import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.headers.FileExchangeHeaders.*;
+
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.*;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.apache.camel.component.file.FileConsumer;
 import org.apache.camel.component.file.FileEndpoint;
-import org.apache.camel.component.file.GenericFile;
-import org.apache.camel.component.file.GenericFileConsumer;
-import org.apache.camel.util.CastUtils;
+import org.apache.camel.support.EmptyAsyncCallback;
 import org.springframework.stereotype.Component;
 
 /** Invoker class for triggering routes with File consumer */
@@ -28,36 +21,17 @@ import org.springframework.stereotype.Component;
 public class FileRouteInvoker implements RouteInvoker {
 
   private final CamelContext camelContext;
-  private Endpoint endpoint;
 
   @Override
-  public Exchange invoke(Exchange inputExchange) {
-    FileEndpoint fileEndpoint = (FileEndpoint) endpoint;
+  public Exchange invoke(Exchange inputExchange, Endpoint endpoint) {
     Route route =
         camelContext.getRoute(
             (String) inputExchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY));
-    GenericFileConsumer<File> fileConsumer = (GenericFileConsumer<File>) route.getConsumer();
+    FileConsumer fileConsumer = (FileConsumer) route.getConsumer();
 
-    try {
-      GenericFile<File> genericFile =
-          FileConsumer.asGenericFile(
-              fileEndpoint.getConfiguration().getDirectory(),
-              createFile((String) inputExchange.getMessage().getBody()),
-              fileEndpoint.getCharset(),
-              fileEndpoint.isProbeContentType());
+    Exchange fileExchange = createFileExchange(fileConsumer, inputExchange);
 
-      Exchange fileExchange = fileConsumer.createExchange(true);
-      genericFile.bindToExchange(fileExchange, fileEndpoint.isProbeContentType());
-      prepareHeaders(fileExchange, inputExchange.getMessage().getHeaders());
-      fileEndpoint.configureExchange(fileExchange);
-      fileEndpoint.configureMessage(genericFile, fileExchange.getIn());
-
-      LinkedList<Exchange> exchanges = new LinkedList<>();
-      exchanges.add(fileExchange);
-      fileConsumer.processBatch(CastUtils.cast((Queue<?>) exchanges));
-    } catch (IOException e) {
-      log.error("sip.testkit.workflow.whenphase.routeinvoker.file.notempfile");
-    }
+    fileConsumer.getAsyncProcessor().process(fileExchange, EmptyAsyncCallback.get());
 
     return createEmptyExchange();
   }
@@ -68,36 +42,51 @@ public class FileRouteInvoker implements RouteInvoker {
   }
 
   @Override
-  public RouteInvoker setEndpoint(Endpoint endpoint) {
-    this.endpoint = endpoint;
-    return this;
-  }
-
-  @Override
   public boolean isSuspendable() {
     return true;
   }
 
-  private void prepareHeaders(Exchange exchange, Map<String, Object> testKitHeaders) {
-    Map<String, Object> headers = exchange.getMessage().getHeaders();
-    headers.put(RouteInvoker.TEST_NAME_HEADER, testKitHeaders.get(RouteInvoker.TEST_NAME_HEADER));
-    headers.put(
-        ProcessorProxy.TEST_MODE_HEADER, testKitHeaders.get(ProcessorProxy.TEST_MODE_HEADER));
+  private Exchange createFileExchange(FileConsumer fileConsumer, Exchange inputExchange) {
+    Exchange fileExchange = fileConsumer.createExchange(true);
+    fileExchange.getMessage().setBody(inputExchange.getMessage().getBody());
+    fileExchange.getMessage().setHeaders(prepareFileHeaders(inputExchange));
+    return fileExchange;
   }
 
-  private File createFile(String body) throws IOException {
-    File file = Files.createTempFile("testing", ".txt").toFile();
-    writeToFile(file, body);
-    file.deleteOnExit();
-    return file;
+  private Map<String, Object> prepareFileHeaders(Exchange inputExchange) {
+    Map<String, Object> headers = inputExchange.getMessage().getHeaders();
+
+    prepareDefaultHeaders(headers, inputExchange.getMessage().getBody(String.class));
+    if (headers.containsKey(CAMEL_FILE_NAME.getValue())) {
+      prepareHeadersWithFilename(headers);
+    }
+    prepareOtherHeaders(headers);
+
+    return headers;
   }
 
-  private void writeToFile(File file, String body) {
-    try (FileWriter writer = new FileWriter(file)) {
-      writer.write(body);
-      writer.flush();
-    } catch (IOException e) {
-      log.error("sip.testkit.workflow.whenphase.routeinvoker.file.nowritting");
+  private void prepareDefaultHeaders(Map<String, Object> headers, String bodyPayload) {
+    if (!headers.containsKey(CAMEL_FILE_LENGTH.getValue())) {
+      headers.put(CAMEL_FILE_LENGTH.getValue(), (long) bodyPayload.length());
+    }
+  }
+
+  private void prepareHeadersWithFilename(Map<String, Object> headers) {
+    String filename = (String) headers.get(CAMEL_FILE_NAME.getValue());
+    if (!headers.containsKey(CAMEL_FILE_NAME_CONSUMED.getValue())) {
+      headers.put(CAMEL_FILE_NAME_CONSUMED.getValue(), filename);
+    }
+    if (!headers.containsKey(CAMEL_FILE_NAME_ONLY.getValue())) {
+      headers.put(CAMEL_FILE_NAME_ONLY.getValue(), filename);
+    }
+  }
+
+  private void prepareOtherHeaders(Map<String, Object> headers) {
+    if (headers.containsKey(CAMEL_FILE_LAST_MODIFIED.getValue())) {
+      Long lastModifiedTimestamp = (Long) headers.get(CAMEL_FILE_LAST_MODIFIED.getValue());
+      if (!headers.containsKey(CAMEL_MESSAGE_TIMESTAMP.getValue())) {
+        headers.put(CAMEL_MESSAGE_TIMESTAMP.getValue(), lastModifiedTimestamp);
+      }
     }
   }
 

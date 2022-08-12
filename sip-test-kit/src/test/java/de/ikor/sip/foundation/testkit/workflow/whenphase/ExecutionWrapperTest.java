@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
+import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.builder.ExchangeBuilder;
@@ -22,8 +23,10 @@ class ExecutionWrapperTest {
     camelContext = mock(ExtendedCamelContext.class);
     Exchange inputExchange = createEmptyExchange();
     RouteInvoker routeInvoker = mock(RouteInvoker.class);
-    ExecutionWrapper subject = new ExecutionWrapper(TEST_NAME, inputExchange, routeInvoker);
-    when(routeInvoker.invoke(any(Exchange.class))).thenReturn(inputExchange);
+    Endpoint endpoint = mock(Endpoint.class);
+    ExecutionWrapper subject =
+        new ExecutionWrapper(TEST_NAME, inputExchange, routeInvoker, endpoint);
+    when(routeInvoker.invoke(any(Exchange.class), any(Endpoint.class))).thenReturn(inputExchange);
 
     // act
     Exchange actual = subject.execute();

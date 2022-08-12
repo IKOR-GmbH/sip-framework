@@ -28,6 +28,7 @@ class CxfRouteInvokerTest {
   private CxfRouteInvoker subject;
   private RestTemplate restTemplate;
   private ExtendedCamelContext camelContext;
+  private Endpoint endpoint;
 
   @BeforeEach
   void setup() {
@@ -36,8 +37,7 @@ class CxfRouteInvokerTest {
     restTemplate = mock(RestTemplate.class);
     Environment environment = mock(Environment.class);
     subject = new CxfRouteInvoker(camelContext, environment, restTemplateBuilder);
-    Endpoint endpoint = mock(Endpoint.class);
-    subject.setEndpoint(endpoint);
+    endpoint = mock(Endpoint.class);
 
     when(environment.getProperty("local.server.port")).thenReturn("8081");
     when(restTemplateBuilder.build()).thenReturn(restTemplate);
@@ -60,7 +60,7 @@ class CxfRouteInvokerTest {
         .thenReturn(routeExpectedResponse);
 
     // act
-    Exchange actualExchange = spySubject.invoke(exchange);
+    Exchange actualExchange = spySubject.invoke(exchange, endpoint);
 
     // assert
     assertThat(actualExchange.getMessage().getBody()).isEqualTo(inputBody);
