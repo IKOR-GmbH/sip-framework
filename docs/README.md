@@ -263,10 +263,9 @@ By default, the following properties come as a part of SIP Framework, to overrid
 file with desired values.
 
 When using a yaml configuration file, which is already available in resources, adapt the properties to its format.
-
 Name | Description | Value | Default |
 --- | --- | --- | --- |
-sip.core.translation.enabled | Enable SIP translation | boolean | true
+sip.core.translation.enabled | Enable SIP translation | boolean | true |
 sip.core.translation.fileLocations | Sets locations of translation bundles | List | classpath:translations/translated-messages, classpath:translations/sip-core-messages |
 sip.core.translation.default-encoding | Sets default encoding | String | UTF-8 |
 sip.core.translation.fallback-to-system-locale | Use system language if none defined | boolean | false |
@@ -278,6 +277,8 @@ sip.core.tracing.trace-type | Sets how tracer should behave | String | "*" |
 sip.core.metrics.external-endpoint-health-check.enabled | Enable health status calculation | boolean | true |
 sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay | Sets health check execution interval | Integer | 900000 |
 sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay | Sets health check execution initial delay | Integer | 5000 |
+sip.core.actuator.extensions.health.enabled | Enable additional SIP Health check | boolean | true |
+sip.core.actuator.extensions.info.enabled | Expose additional adapter information through /actuator/info | boolean | true |
 management.info.camel.enabled | Enable basic camel info under /actuator/info endpoint | boolean | false |
 management.endpoints.web.exposure.include | Set which endpoints are included | String | health,info,metrics,loggers,prometheus,adapter-routes |
 management.endpoint.health.show-details | Enable health details in actuator | String | always |
