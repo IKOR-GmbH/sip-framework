@@ -64,6 +64,12 @@
             <artifactId>camel-ftp</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-openapi-java-starter</artifactId>
+            <optional>true</optional>
+        </dependency>
+
 
         <!-- Other dependencies -->
         <dependency>
