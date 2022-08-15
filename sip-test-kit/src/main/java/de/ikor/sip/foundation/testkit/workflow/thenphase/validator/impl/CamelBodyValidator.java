@@ -25,27 +25,12 @@ public class CamelBodyValidator implements ExchangeValidator {
   @Override
   public ValidationResult execute(Exchange actualResult, Exchange expectedResponse) {
     resetStreamCache(actualResult.getMessage());
-    String actual = extractBodyAsString(actualResult.getMessage());
-    String expected = extractBodyAsString(expectedResponse.getMessage());
-    boolean result = false;
-    if (isNoBodyExpected(actual, expected)) {
-      result = true;
-    } else if (isBodyExpected(actual, expected)) {
-      result = RegexUtil.compare(expected, actual);
-    }
+    boolean result =
+        RegexUtil.compare(
+            extractBodyAsString(expectedResponse.getMessage()),
+            extractBodyAsString(actualResult.getMessage()));
     return new ValidationResult(
         result, result ? "Body validation successful" : "Body validation unsuccessful");
-  }
-
-  private boolean isBodyExpected(String actual, String expected) {
-    // avoid NPE in regex compare and matching any empty string
-    return actual != null && !expected.isEmpty();
-  }
-
-  private boolean isNoBodyExpected(String actual, String expected) {
-    // match if actual body is empty or null when expected is defined as empty
-    return (actual == null && expected.isEmpty())
-        || (actual != null && actual.isEmpty() && expected.isEmpty());
   }
 
   @Override

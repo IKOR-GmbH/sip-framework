@@ -1,5 +1,8 @@
 package de.ikor.sip.foundation.testkit.util;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -23,8 +26,14 @@ public class RegexUtil {
    * @return true if string matches the pattern, otherwise false
    */
   public static boolean compare(String expected, String actual) {
-    String expectedPattern = reformatEscapeCharacter(expected);
-    return Pattern.compile(expectedPattern).matcher(Objects.requireNonNull(actual)).find();
+    boolean result = false;
+    if (areExpectedAndActualEmpty(actual, expected)) {
+      result = true;
+    } else if (shouldDoComparison(actual, expected)) {
+      String expectedPattern = reformatEscapeCharacter(expected);
+      result = Pattern.compile(expectedPattern).matcher(Objects.requireNonNull(actual)).find();
+    }
+    return result;
   }
 
   /**
@@ -46,5 +55,15 @@ public class RegexUtil {
               escCharacter.equals("\\$") ? "\\\\" + escCharacter : "\\" + escCharacter);
     }
     return pattern;
+  }
+
+  private static boolean shouldDoComparison(String actual, String expected) {
+    // avoid NPE in regex compare and matching any empty string
+    return actual != null && isNotEmpty(expected);
+  }
+
+  private static boolean areExpectedAndActualEmpty(String actual, String expected) {
+    // match if actual body is empty or null when expected is defined as empty
+    return isEmpty(expected) && isEmpty(actual);
   }
 }
