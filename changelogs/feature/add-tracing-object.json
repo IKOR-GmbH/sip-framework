@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "133",
+  "message": "Add tracing object which is later stored in memory instead of a string. Refactor tracing API and remove changing exchange format in runtime."
+}

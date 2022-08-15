@@ -9,10 +9,11 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
-import java.util.LinkedHashSet;
+import de.ikor.sip.foundation.core.trace.model.ExchangeTracePoint;
+import de.ikor.sip.foundation.core.trace.model.TraceUnit;
 import java.util.List;
-import java.util.Set;
-import org.apache.camel.CamelContext;
+import org.apache.camel.*;
+import org.apache.camel.support.DefaultMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
@@ -187,7 +188,7 @@ class CustomTracerTest {
   }
 
   private void initTracingIDTest() {
-    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), sipTraceOperationSet);
+    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class));
     subject.setEnabled(false);
     ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
     when(camelContext.getHeadersMapFactory()).thenReturn(null);

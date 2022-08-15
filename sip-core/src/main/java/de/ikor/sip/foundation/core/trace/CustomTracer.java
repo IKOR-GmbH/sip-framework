@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomTracer extends DefaultTracer {
   public static final String TRACING_ID = "tracingId";
-  private final Set<SIPTraceOperation> sipTraceOperations;
 
   private final TraceHistory traceHistory;
 
@@ -47,6 +46,7 @@ public class CustomTracer extends DefaultTracer {
 
   @Override
   public void traceBeforeRoute(NamedRoute route, Exchange exchange) {
+    addTracingId(exchange);
     super.traceBeforeRoute(route, exchange);
     if (shouldStore) {
       String label = URISupport.sanitizeUri(route.getEndpointUrl());
@@ -58,24 +58,8 @@ public class CustomTracer extends DefaultTracer {
   }
 
   @Override
-  public void traceBeforeNode(NamedNode node, Exchange exchange) {
-    exchange.getIn().setHeader(TRACING_ID, tracingList(exchange));
-    super.traceBeforeNode(node, exchange);
-  }
-
-  private String tracingList(Exchange exchange) {
-    String list = exchange.getIn().getHeader(TRACING_ID, String.class);
-    if (list == null) {
-      list = exchange.getExchangeId();
-    }
-    if (!list.contains(exchange.getExchangeId())) {
-      list = list.concat("," + exchange.getExchangeId());
-    }
-    return list;
-  }
-
-  @Override
   public void traceAfterRoute(NamedRoute route, Exchange exchange) {
+    addTracingId(exchange);
     super.traceAfterRoute(route, exchange);
     if (shouldStore) {
       String label = URISupport.sanitizeUri(route.getEndpointUrl());
@@ -88,11 +72,23 @@ public class CustomTracer extends DefaultTracer {
 
   @Override
   public void traceBeforeNode(NamedNode node, Exchange exchange) {
+    addTracingId(exchange);
     super.traceBeforeNode(node, exchange);
     if (shouldStore) {
       String label = URISupport.sanitizeUri(node.getLabel());
       storeInMemory(exchange, ExchangeTracePoint.ONGOING, node.getId(), label);
     }
+  }
+
+  private void addTracingId(Exchange exchange) {
+    String list = exchange.getIn().getHeader(TRACING_ID, String.class);
+    if (list == null) {
+      list = exchange.getExchangeId();
+    }
+    if (!list.contains(exchange.getExchangeId())) {
+      list = list.concat("," + exchange.getExchangeId());
+    }
+    exchange.getIn().setHeader(TRACING_ID, list);
   }
 
   private void storeInMemory(Exchange out, ExchangeTracePoint tracePoint, String id, String uri) {
