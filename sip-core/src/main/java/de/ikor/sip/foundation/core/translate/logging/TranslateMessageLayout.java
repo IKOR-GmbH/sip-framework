@@ -31,7 +31,7 @@ public class TranslateMessageLayout<E> extends PatternLayout implements Layout<I
           messageService.getTranslatedMessage(event.getMessage(), event.getArgumentArray());
     }
     if (isTestMode()) {
-      translatedMessage = "[SIP TEST] " + translatedMessage;
+      translatedMessage = String.format("[SIP TEST] %s", translatedMessage);
     }
 
     cloneEvent.setMessage(translatedMessage);
