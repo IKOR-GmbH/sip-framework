@@ -11,7 +11,6 @@ import org.apache.camel.impl.engine.DefaultTracer;
 import org.apache.camel.support.MessageHelper;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.URISupport;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,8 +23,6 @@ public class CustomTracer extends DefaultTracer {
   public static final String TRACING_ID = "tracingId";
 
   private final TraceHistory traceHistory;
-
-  @Value("${sip.core.tracing.store-in-memory:false}")
   private boolean shouldStore;
 
   /**
@@ -38,10 +35,12 @@ public class CustomTracer extends DefaultTracer {
   public CustomTracer(
       TraceHistory traceHistory,
       SIPExchangeFormatter exchangeFormatter,
-      CamelContext camelContext) {
+      CamelContext camelContext,
+      SIPTraceConfig sipTraceConfig) {
     setExchangeFormatter(exchangeFormatter);
     camelContext.setTracing(true);
     this.traceHistory = traceHistory;
+    this.shouldStore = sipTraceConfig.isStoreInMemory();
   }
 
   @Override

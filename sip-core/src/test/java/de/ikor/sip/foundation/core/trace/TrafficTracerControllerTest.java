@@ -18,7 +18,9 @@ class TrafficTracerControllerTest {
   @BeforeEach
   public void setUp() throws Exception {
     CamelContext camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
-    traceHistory = new TraceHistory(5);
+    SIPTraceConfig traceConfig = new SIPTraceConfig();
+    traceConfig.setLimit(5);
+    traceHistory = new TraceHistory(traceConfig);
     endpointSubject = new TrafficTracerController(traceHistory, camelContext);
   }
 

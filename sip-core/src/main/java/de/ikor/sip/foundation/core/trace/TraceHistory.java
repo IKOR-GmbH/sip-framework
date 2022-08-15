@@ -7,7 +7,6 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Synchronized;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /** Contains history as list of traced exchanges */
@@ -19,8 +18,7 @@ public class TraceHistory {
   /** List of trace history entries */
   private final LinkedList<TraceUnit> list = new LinkedList<>();
 
-  @Value("${sip.core.tracing.limit:100}")
-  private final int limit;
+  private final SIPTraceConfig traceConfig;
 
   /**
    * Add tracing message to trace history list
@@ -29,7 +27,7 @@ public class TraceHistory {
    */
   @Synchronized
   public void add(TraceUnit message) {
-    if (list.size() >= limit) {
+    if (list.size() >= traceConfig.getLimit()) {
       list.removeFirst();
     }
     list.addLast(message);

@@ -13,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @TestPropertySource(properties = "sip.core.tracing.limit=5")
-@ContextConfiguration(classes = {TraceHistory.class})
+@ContextConfiguration(classes = {TraceHistory.class, SIPTraceConfig.class})
 class TraceHistoryTest {
 
   @Autowired private TraceHistory subject;

@@ -17,7 +17,6 @@ import org.apache.camel.support.DefaultMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.util.ReflectionTestUtils;
 
 class CustomTracerTest {
 
@@ -40,9 +39,9 @@ class CustomTracerTest {
     context = mock(CamelContext.class, RETURNS_DEEP_STUBS);
     when(exchange.getExchangeId()).thenReturn(EXCHANGE_ID);
     when(exchange.getFromRouteId()).thenReturn(FROM_ID);
-    traceHistory = new TraceHistory(5);
     traceConfig = new SIPTraceConfig();
-
+    traceHistory = new TraceHistory(traceConfig);
+    traceConfig.setLimit(5);
     Logger logger = (Logger) LoggerFactory.getLogger("org.apache.camel.Tracing");
     listAppender = new ListAppender<>();
     listAppender.start();
@@ -59,8 +58,8 @@ class CustomTracerTest {
     when(exchange.getMessage()).thenReturn(message);
     when(exchange.getIn()).thenReturn(message);
     when(context.getTypeConverter().convertTo(any(), any(), any())).thenReturn(FROM_ID);
-    subject = new CustomTracer(traceHistory, exchangeFormatter, context);
-    ReflectionTestUtils.setField(subject, "shouldStore", true);
+    traceConfig.setStoreInMemory(true);
+    subject = new CustomTracer(traceHistory, exchangeFormatter, context, traceConfig);
     List<ILoggingEvent> logsList = listAppender.list;
     TraceUnit traceUnit = new TraceUnit();
     traceUnit.setExchangeId(EXCHANGE_ID);
@@ -87,8 +86,8 @@ class CustomTracerTest {
     when(exchange.getException()).thenReturn(exception);
     when(exception.getMessage()).thenReturn(exception_message);
     when(context.getTypeConverter().convertTo(any(), any(), any())).thenReturn(FROM_ID);
-    subject = new CustomTracer(traceHistory, exchangeFormatter, context);
-    ReflectionTestUtils.setField(subject, "shouldStore", true);
+    traceConfig.setStoreInMemory(true);
+    subject = new CustomTracer(traceHistory, exchangeFormatter, context, traceConfig);
     List<ILoggingEvent> logsList = listAppender.list;
     TraceUnit traceUnit = new TraceUnit();
     traceUnit.setExchangeId(EXCHANGE_ID);
@@ -115,9 +114,9 @@ class CustomTracerTest {
     when(exchange.getMessage()).thenReturn(message);
     when(exchange.getIn()).thenReturn(message);
     when(node.getRouteId()).thenReturn(FROM_ID);
-    subject = new CustomTracer(traceHistory, exchangeFormatter, context);
+    traceConfig.setStoreInMemory(true);
+    subject = new CustomTracer(traceHistory, exchangeFormatter, context, traceConfig);
     subject.setCamelContext(context);
-    ReflectionTestUtils.setField(subject, "shouldStore", true);
     List<ILoggingEvent> logsList = listAppender.list;
     TraceUnit traceUnit = new TraceUnit();
     traceUnit.setExchangeId(EXCHANGE_ID);
@@ -143,9 +142,9 @@ class CustomTracerTest {
     when(exchange.getMessage()).thenReturn(message);
     when(exchange.getIn()).thenReturn(message);
     when(node.getRouteId()).thenReturn(FROM_ID);
-    subject = new CustomTracer(traceHistory, exchangeFormatter, context);
+    traceConfig.setStoreInMemory(true);
+    subject = new CustomTracer(traceHistory, exchangeFormatter, context, traceConfig);
     subject.setCamelContext(context);
-    ReflectionTestUtils.setField(subject, "shouldStore", true);
     List<ILoggingEvent> logsList = listAppender.list;
     TraceUnit traceUnit = new TraceUnit();
     traceUnit.setExchangeId(EXCHANGE_ID);
@@ -188,7 +187,7 @@ class CustomTracerTest {
   }
 
   private void initTracingIDTest() {
-    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class));
+    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), traceConfig);
     subject.setEnabled(false);
     ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
     when(camelContext.getHeadersMapFactory()).thenReturn(null);
