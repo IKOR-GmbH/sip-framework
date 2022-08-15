@@ -1,12 +1,7 @@
 package de.ikor.sip.foundation.testkit.config;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DefaultRouteInvoker;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.FileRouteInvoker;
@@ -18,7 +13,6 @@ import org.apache.camel.component.file.FileEndpoint;
 import org.apache.camel.impl.engine.DefaultRouteController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.LoggerFactory;
 
 class CamelContextLifecycleHandlerTest {
 
@@ -60,25 +54,5 @@ class CamelContextLifecycleHandlerTest {
 
     // assert
     verify(defaultRouteController, times(1)).suspendRoute(ROUTE_ID);
-  }
-
-  @Test
-  void GIVEN_noRouteAndRouteInvokers_WHEN_afterApplicationStart_THEN_verifyLogsAndSuspendingRoute()
-      throws Exception {
-    // arrange
-    ListAppender<ILoggingEvent> listAppender;
-    Logger logger = (Logger) LoggerFactory.getLogger(CamelContextLifecycleHandler.class);
-    listAppender = new ListAppender<>();
-    listAppender.start();
-    logger.addAppender(listAppender);
-    List<ILoggingEvent> logsList = listAppender.list;
-
-    // act
-    subject.afterApplicationStart(camelContext);
-
-    // assert
-    verify(defaultRouteController, times(0)).suspendRoute(ROUTE_ID);
-    assertThat(logsList.get(0).getMessage()).isEqualTo("sip.testkit.config.nosuspendingroute_{}");
-    assertThat(logsList.get(0).getLevel()).isEqualTo(Level.DEBUG);
   }
 }
