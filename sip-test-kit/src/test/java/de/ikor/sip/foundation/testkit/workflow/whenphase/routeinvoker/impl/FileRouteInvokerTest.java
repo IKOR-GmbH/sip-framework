@@ -10,12 +10,15 @@ import org.apache.camel.*;
 import org.apache.camel.component.file.FileConsumer;
 import org.apache.camel.support.EmptyAsyncCallback;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class FileRouteInvokerTest {
 
   private static final String ROUTE_ID = "routeId";
   private static final String BODY_PAYLOAD = "Testing body";
+  private static final String NO_HEADER = "no header";
+  private static final String TESTING_FILE_NAME = "testingFile.txt";
 
   private FileRouteInvoker subject;
   private Exchange inputExchange;
@@ -42,48 +45,99 @@ class FileRouteInvokerTest {
     when(fileConsumer.createExchange(true)).thenReturn(actualFileExchange);
   }
 
-  @Test
+  @ParameterizedTest(name = "Using input header CamelFileLength: {0}")
+  @ValueSource(strings = {NO_HEADER, "15"})
   void
-      GIVEN_onlyTestKitPreparedExchangeByDefault_WHEN_invoke_THEN_verifyProcessorCallAndDefaultHeadersAndBody() {
+      GIVEN_onlyTestKitPreparedExchangeByDefault_WHEN_invoke_THEN_verifyProcessorCallAndDefaultHeadersAndBody(
+          String lengthValue) {
+    // arrange
+    if (isHeaderProvidedInConfiguration(lengthValue)) {
+      inputExchange.getMessage().setHeader(CAMEL_FILE_LENGTH.getValue(), Long.valueOf(lengthValue));
+    }
+
     // act
     subject.invoke(inputExchange, mock(Endpoint.class));
 
     // assert
     verify(asyncProcessor, times(1)).process(actualFileExchange, EmptyAsyncCallback.get());
-    assertThat(actualFileExchange.getMessage().getHeader(CAMEL_FILE_LENGTH.getValue()))
-        .isEqualTo((long) BODY_PAYLOAD.length());
     assertThat(actualFileExchange.getMessage().getBody()).isEqualTo(BODY_PAYLOAD);
+    assertThat(actualFileExchange.getMessage().getHeader(CAMEL_FILE_LENGTH.getValue()))
+        .isEqualTo(
+            isHeaderProvidedInConfiguration(lengthValue)
+                ? Long.parseLong(lengthValue)
+                : (long) BODY_PAYLOAD.length());
   }
 
-  @Test
-  void GIVEN_filenameHeader_WHEN_invoke_THEN_getFilenameRelatedHeaders() {
+  @ParameterizedTest(name = "Using input header CamelFileNameConsumed: {0}")
+  @ValueSource(strings = {NO_HEADER, "inputFile.txt"})
+  void GIVEN_filenameHeader_WHEN_invoke_THEN_getCamelFileNameConsumedHeader(
+      String camelFileNameConsumed) {
     // arrange
-    String filename = "testingFile.txt";
-    inputExchange.getMessage().setHeader(CAMEL_FILE_NAME.getValue(), filename);
+    inputExchange.getMessage().setHeader(CAMEL_FILE_NAME.getValue(), TESTING_FILE_NAME);
+    if (isHeaderProvidedInConfiguration(camelFileNameConsumed)) {
+      inputExchange
+          .getMessage()
+          .setHeader(CAMEL_FILE_NAME_CONSUMED.getValue(), camelFileNameConsumed);
+    }
 
     // act
     subject.invoke(inputExchange, mock(Endpoint.class));
 
     // assert
     assertThat(actualFileExchange.getMessage().getHeader(CAMEL_FILE_NAME_CONSUMED.getValue()))
-        .isEqualTo(filename);
-    assertThat(actualFileExchange.getMessage().getHeader(CAMEL_FILE_NAME_ONLY.getValue()))
-        .isEqualTo(filename);
+        .isEqualTo(
+            isHeaderProvidedInConfiguration(camelFileNameConsumed)
+                ? camelFileNameConsumed
+                : TESTING_FILE_NAME);
   }
 
-  @Test
-  void GIVEN_lastModifiedHeader_WHEN_invoke_THEN_getLastModifiedRelatedHeaders() {
+  @ParameterizedTest(name = "Using input header CamelFileNameOnly: {0}")
+  @ValueSource(strings = {NO_HEADER, "inputFile.txt"})
+  void GIVEN_filenameHeader_WHEN_invoke_THEN_getCamelFileNameOnlyHeader(String camelFileNameOnly) {
+    // arrange
+    inputExchange.getMessage().setHeader(CAMEL_FILE_NAME.getValue(), TESTING_FILE_NAME);
+    if (isHeaderProvidedInConfiguration(camelFileNameOnly)) {
+      inputExchange.getMessage().setHeader(CAMEL_FILE_NAME_ONLY.getValue(), camelFileNameOnly);
+    }
+
+    // act
+    subject.invoke(inputExchange, mock(Endpoint.class));
+
+    // assert
+    assertThat(actualFileExchange.getMessage().getHeader(CAMEL_FILE_NAME_ONLY.getValue()))
+        .isEqualTo(
+            isHeaderProvidedInConfiguration(camelFileNameOnly)
+                ? camelFileNameOnly
+                : TESTING_FILE_NAME);
+  }
+
+  @ParameterizedTest(name = "Using input header CamelMessageTimestamp: {0}")
+  @ValueSource(strings = {NO_HEADER, "16589146810000"})
+  void GIVEN_lastModifiedHeader_WHEN_invoke_THEN_getCamelMessageTimestampHeader(
+      String camelMessageTimestamp) {
     // arrange
     Long lastModifiedTimestamp = Long.valueOf("1658914689700");
     inputExchange
         .getMessage()
         .setHeader(CAMEL_FILE_LAST_MODIFIED.getValue(), lastModifiedTimestamp);
+    if (isHeaderProvidedInConfiguration(camelMessageTimestamp)) {
+      inputExchange
+          .getMessage()
+          .setHeader(CAMEL_MESSAGE_TIMESTAMP.getValue(), camelMessageTimestamp);
+    }
 
     // act
     subject.invoke(inputExchange, mock(Endpoint.class));
 
     // assert
     assertThat(actualFileExchange.getMessage().getHeader(CAMEL_MESSAGE_TIMESTAMP.getValue()))
-        .isEqualTo(lastModifiedTimestamp);
+        .isEqualTo(
+            isHeaderProvidedInConfiguration(camelMessageTimestamp)
+                ? camelMessageTimestamp
+                : lastModifiedTimestamp);
+  }
+
+  private boolean isHeaderProvidedInConfiguration(String headerValue) {
+    return !headerValue.equals(NO_HEADER);
   }
 }

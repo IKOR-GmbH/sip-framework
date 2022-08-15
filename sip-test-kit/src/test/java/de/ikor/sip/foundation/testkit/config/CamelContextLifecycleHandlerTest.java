@@ -7,6 +7,7 @@ import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.Defau
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.FileRouteInvoker;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.camel.Endpoint;
 import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Route;
 import org.apache.camel.component.file.FileEndpoint;
@@ -21,15 +22,15 @@ class CamelContextLifecycleHandlerTest {
   private CamelContextLifecycleHandler subject;
   private ExtendedCamelContext camelContext;
   private DefaultRouteController defaultRouteController;
+  private Route route;
 
   @BeforeEach
   void setup() {
     camelContext = mock(ExtendedCamelContext.class);
     defaultRouteController = mock(DefaultRouteController.class);
     List<Route> routes = new ArrayList<>();
-    Route route = mock(Route.class);
+    route = mock(Route.class);
     routes.add(route);
-    FileEndpoint fileEndpoint = mock(FileEndpoint.class);
 
     List<RouteInvoker> routeInvokers = new ArrayList<>();
     FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);
@@ -39,7 +40,7 @@ class CamelContextLifecycleHandlerTest {
     subject = new CamelContextLifecycleHandler(routeInvokers);
 
     when(camelContext.getRoutes()).thenReturn(routes);
-    when(route.getEndpoint()).thenReturn(fileEndpoint);
+
     when(route.getRouteId()).thenReturn(ROUTE_ID);
   }
 
@@ -47,6 +48,8 @@ class CamelContextLifecycleHandlerTest {
   void GIVEN_routeAndRouteInvokers_WHEN_afterApplicationStart_THEN_verifySuspendingRoute()
       throws Exception {
     // arrange
+    FileEndpoint fileEndpoint = mock(FileEndpoint.class);
+    when(route.getEndpoint()).thenReturn(fileEndpoint);
     when(camelContext.getRouteController()).thenReturn(defaultRouteController);
 
     // act
@@ -54,5 +57,21 @@ class CamelContextLifecycleHandlerTest {
 
     // assert
     verify(defaultRouteController, times(1)).suspendRoute(ROUTE_ID);
+  }
+
+  @Test
+  void
+      GIVEN_routeWithDifferentEndpoint_WHEN_afterApplicationStart_THEN_verifyNoMatchingConditionForSuspending()
+          throws Exception {
+    // arrange
+    Endpoint endpoint = mock(Endpoint.class);
+    when(route.getEndpoint()).thenReturn(endpoint);
+    when(camelContext.getRouteController()).thenReturn(defaultRouteController);
+
+    // act
+    subject.afterApplicationStart(camelContext);
+
+    // assert
+    verify(defaultRouteController, times(0)).suspendRoute(ROUTE_ID);
   }
 }
