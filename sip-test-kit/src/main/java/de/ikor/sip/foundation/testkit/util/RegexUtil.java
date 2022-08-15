@@ -26,12 +26,14 @@ public class RegexUtil {
    * @return true if string matches the pattern, otherwise false
    */
   public static boolean compare(String expected, String actual) {
-    boolean result = false;
-    if (areExpectedAndActualEmpty(actual, expected)) {
+    boolean result;
+    if (areBothEmpty(actual, expected)) {
       result = true;
-    } else if (shouldDoComparison(actual, expected)) {
+    } else if (areBothDefined(actual, expected)) {
       String expectedPattern = reformatEscapeCharacter(expected);
       result = Pattern.compile(expectedPattern).matcher(Objects.requireNonNull(actual)).find();
+    } else {
+      result = false;
     }
     return result;
   }
@@ -57,13 +59,11 @@ public class RegexUtil {
     return pattern;
   }
 
-  private static boolean shouldDoComparison(String actual, String expected) {
-    // avoid NPE in regex compare and matching any empty string
-    return actual != null && isNotEmpty(expected);
+  private static boolean areBothDefined(String actual, String expected) {
+    return isNotEmpty(actual) && isNotEmpty(expected);
   }
 
-  private static boolean areExpectedAndActualEmpty(String actual, String expected) {
-    // match if actual body is empty or null when expected is defined as empty
+  private static boolean areBothEmpty(String actual, String expected) {
     return isEmpty(expected) && isEmpty(actual);
   }
 }
