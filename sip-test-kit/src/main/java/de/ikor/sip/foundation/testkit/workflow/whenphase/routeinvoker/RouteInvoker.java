@@ -26,7 +26,7 @@ public interface RouteInvoker {
   boolean isApplicable(Endpoint endpoint);
 
   /**
-   * Method which classifies which camel components should be suspended during sip batch tests.
+   * Method which classifies which camel components could be suspended during sip batch tests.
    *
    * @return boolean
    */
