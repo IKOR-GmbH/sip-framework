@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 class ProcessorProxyTest {
 
   private static final String PROXY_ID = "proxy";
-  private static final String TRACING_ID = "tracingId";
 
   ProcessorProxy processorProxySubject;
   ProcessorProxy processorProxySubjectOutgoing;
@@ -98,19 +97,6 @@ class ProcessorProxyTest {
 
     // assert
     verify(processor, times(1)).process(exchange);
-  }
-
-  @Test
-  void WHEN_processWithTracingId_THEN_setTracingId() {
-    // arrange
-    when(exchange.getIn().getHeader(TRACING_ID, String.class)).thenReturn("id");
-
-    // act
-    assertThatCode(() -> processorProxySubject.process(exchange, callback))
-        .doesNotThrowAnyException();
-
-    // assert
-    verify(exchange.getIn(), times(1)).setHeader(TRACING_ID, exchange.getExchangeId());
   }
 
   @Test

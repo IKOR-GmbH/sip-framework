@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class CustomTracer extends DefaultTracer {
+  public static final String TRACING_ID = "tracingId";
+  private final Set<SIPTraceOperation> sipTraceOperations;
 
   private final TraceHistory traceHistory;
 
@@ -53,6 +55,23 @@ public class CustomTracer extends DefaultTracer {
           original ? ExchangeTracePoint.START : ExchangeTracePoint.INCOMING;
       storeInMemory(exchange, tracePoint, route.getRouteId(), label);
     }
+  }
+
+  @Override
+  public void traceBeforeNode(NamedNode node, Exchange exchange) {
+    exchange.getIn().setHeader(TRACING_ID, tracingList(exchange));
+    super.traceBeforeNode(node, exchange);
+  }
+
+  private String tracingList(Exchange exchange) {
+    String list = exchange.getIn().getHeader(TRACING_ID, String.class);
+    if (list == null) {
+      list = exchange.getExchangeId();
+    }
+    if (!list.contains(exchange.getExchangeId())) {
+      list = list.concat("," + exchange.getExchangeId());
+    }
+    return list;
   }
 
   @Override
