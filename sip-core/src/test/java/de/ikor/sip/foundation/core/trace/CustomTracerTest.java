@@ -20,18 +20,15 @@ class CustomTracerTest {
   private static final String LOG_MESSAGE = "log message";
   private static final String EXCHANGE_ID = "id";
   CustomTracer subject;
-  TraceHistory traceHistory;
   ListAppender<ILoggingEvent> listAppender;
   SIPTraceConfig traceConfig;
-  Set<SIPTraceOperation> sipTraceOperationSet;
   Exchange exchange;
 
   @BeforeEach
   void setUp() {
     exchange = mock(Exchange.class);
-    sipTraceOperationSet = new LinkedHashSet<>();
-    traceHistory = new TraceHistory(5);
     traceConfig = new SIPTraceConfig();
+    traceConfig.setLimit(5);
 
     Logger logger = (Logger) LoggerFactory.getLogger("org.apache.camel.Tracing");
     listAppender = new ListAppender<>();
@@ -40,11 +37,10 @@ class CustomTracerTest {
   }
 
   @Test
-  void When_dumpTrace_With_LogAndMemory_Expect_messageInLogAndHistory() {
+  void When_dumpTrace_With_Log_Expect_messageInLog() {
     // arrange
-    sipTraceOperationSet.add(SIPTraceOperation.LOG);
-    sipTraceOperationSet.add(SIPTraceOperation.MEMORY);
-    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), sipTraceOperationSet);
+    traceConfig.setLog(true);
+    subject = new CustomTracer(null, mock(CamelContext.class), traceConfig);
     List<ILoggingEvent> logsList = listAppender.list;
 
     // act
@@ -53,30 +49,13 @@ class CustomTracerTest {
     // assert
     assertThat(logsList.get(0).getMessage()).isEqualTo(LOG_MESSAGE);
     assertThat(logsList.get(0).getLevel()).isEqualTo(Level.INFO);
-    assertThat(traceHistory.getAndClearHistory()).containsExactly(LOG_MESSAGE);
-  }
-
-  @Test
-  void When_dumpTrace_With_LOG_Expect_messageInLog() {
-    // arrange
-    sipTraceOperationSet.add(SIPTraceOperation.LOG);
-    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), sipTraceOperationSet);
-    List<ILoggingEvent> logsList = listAppender.list;
-
-    // act
-    subject.dumpTrace(LOG_MESSAGE, null);
-
-    // assert
-    assertThat(logsList.get(0).getMessage()).isEqualTo(LOG_MESSAGE);
-    assertThat(logsList.get(0).getLevel()).isEqualTo(Level.INFO);
-    assertThat(traceHistory.getList()).isEmpty();
   }
 
   @Test
   void When_dumpTrace_With_MEMORY_Expect_messageInLog() {
     // arrange
-    sipTraceOperationSet.add(SIPTraceOperation.MEMORY);
-    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), sipTraceOperationSet);
+    traceConfig.setLog(false);
+    subject = new CustomTracer(null, mock(CamelContext.class), traceConfig);
     List<ILoggingEvent> logsList = listAppender.list;
 
     // act
@@ -84,7 +63,6 @@ class CustomTracerTest {
 
     // assert
     assertThat(logsList).isEmpty();
-    assertThat(traceHistory.getAndClearHistory()).containsExactly(LOG_MESSAGE);
   }
 
   @Test
@@ -114,7 +92,7 @@ class CustomTracerTest {
   }
 
   private void initTracingIDTest() {
-    subject = new CustomTracer(traceHistory, null, mock(CamelContext.class), sipTraceOperationSet);
+    subject = new CustomTracer(null, mock(CamelContext.class), traceConfig);
     subject.setEnabled(false);
     ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
     when(camelContext.getHeadersMapFactory()).thenReturn(null);
