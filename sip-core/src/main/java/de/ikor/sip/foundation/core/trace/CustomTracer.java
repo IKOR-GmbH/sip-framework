@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.NamedNode;
+import org.apache.camel.NamedRoute;
 import org.apache.camel.impl.engine.DefaultTracer;
 import org.springframework.stereotype.Component;
 
@@ -36,9 +37,19 @@ public class CustomTracer extends DefaultTracer {
   }
 
   @Override
+  public void traceBeforeRoute(NamedRoute route, Exchange exchange) {
+    setTracingID(exchange);
+    super.traceBeforeRoute(route, exchange);
+  }
+
+  @Override
   public void traceBeforeNode(NamedNode node, Exchange exchange) {
-    exchange.getIn().setHeader(TRACING_ID, tracingList(exchange));
+    setTracingID(exchange);
     super.traceBeforeNode(node, exchange);
+  }
+
+  private void setTracingID(Exchange exchange) {
+    exchange.getIn().setHeader(TRACING_ID, tracingList(exchange));
   }
 
   private String tracingList(Exchange exchange) {
@@ -54,7 +65,7 @@ public class CustomTracer extends DefaultTracer {
 
   @Override
   protected void dumpTrace(String out, Object node) {
-    if(sipTraceConfig.isLog()){
+    if (sipTraceConfig.isLog()) {
       super.dumpTrace(out, node);
     }
   }

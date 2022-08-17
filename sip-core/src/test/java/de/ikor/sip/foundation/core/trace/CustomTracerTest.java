@@ -28,7 +28,6 @@ class CustomTracerTest {
   void setUp() {
     exchange = mock(Exchange.class);
     traceConfig = new SIPTraceConfig();
-    traceConfig.setLimit(5);
 
     Logger logger = (Logger) LoggerFactory.getLogger("org.apache.camel.Tracing");
     listAppender = new ListAppender<>();
@@ -37,7 +36,7 @@ class CustomTracerTest {
   }
 
   @Test
-  void When_dumpTrace_With_Log_Expect_messageInLog() {
+  void When_dumpTrace_With_LogsEnabled_Then_messageInLog() {
     // arrange
     traceConfig.setLog(true);
     subject = new CustomTracer(null, mock(CamelContext.class), traceConfig);
@@ -52,7 +51,7 @@ class CustomTracerTest {
   }
 
   @Test
-  void When_dumpTrace_With_MEMORY_Expect_messageInLog() {
+  void When_dumpTrace_With_DisabledLogs_Then_emptyLogs() {
     // arrange
     traceConfig.setLog(false);
     subject = new CustomTracer(null, mock(CamelContext.class), traceConfig);
@@ -66,7 +65,7 @@ class CustomTracerTest {
   }
 
   @Test
-  void When_traceBeforeNode_Then_setTracingId() {
+  void When_traceBeforeNode_With_NoIdInHeaders_Then_OneTracingId() {
     // arrange
     initTracingIDTest();
 
