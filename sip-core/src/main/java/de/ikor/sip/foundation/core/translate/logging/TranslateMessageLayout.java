@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.core.translate.logging;
 
+import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_HEADER;
+
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
@@ -39,7 +41,7 @@ public class TranslateMessageLayout<E> extends PatternLayout implements Layout<I
   }
 
   private boolean isTestMode() {
-    return Boolean.parseBoolean(ThreadContext.get("test-mode"));
+    return Boolean.parseBoolean(ThreadContext.get(TEST_MODE_HEADER));
   }
 
   private SIPTranslateMessageService initMessageService() {
