@@ -1,34 +1,43 @@
 package de.ikor.sip.foundation.core.openapi;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.Paths;
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.ProducerTemplate;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(
+    properties = {
+      "camel.servlet.mapping.context-path=/adapter/*",
+      "springdoc.api-docs.path=/api-docs",
+      "springdoc.swagger-ui.path=/swagger-ui.html",
+      "springdoc.show-actuator=false"
+    })
+@AutoConfigureMockMvc
 class OpenApiContextPathResolverTest {
 
+  @Autowired OpenAPI camelRestDSLOpenApi;
+  @Autowired CamelContext camelContext;
+  @Autowired ProducerTemplate producerTemplate;
+
   @Test
-  void When_resolveCamelContextPathInOpenApi_Expect_ContextPathAdded() {
+  void When_resolveCamelContextPathInOpenApi_Expect_ContextPathAdded() throws Exception {
     // arrange
-    OpenAPI openAPI = new OpenAPI();
-    CamelContext camelContext = mock(CamelContext.class, RETURNS_DEEP_STUBS);
-    Paths paths = new Paths();
-    String endpointPath = "path";
-    String contextPath = "context";
-    paths.addPathItem(endpointPath, new PathItem());
-    openAPI.setPaths(paths);
-    when(camelContext.getRestConfiguration().getContextPath()).thenReturn(contextPath);
-    OpenApiContextPathResolver subject = new OpenApiContextPathResolver(openAPI, camelContext);
+    String endpointPath = "/getter";
+    String contextPath = camelContext.getRestConfiguration().getContextPath();
 
     // act
-    subject.resolveCamelContextPathInOpenApi();
+    Exchange target =
+        producerTemplate.send("rest-api://api-doc", exchange -> exchange.getMessage());
+    String body = target.getMessage().getBody(String.class);
 
     // assert
-    assertThat(openAPI.getPaths()).containsKey(contextPath + endpointPath);
+    assertThat(body).contains("/getter").doesNotContain("/adapter/getter");
+    assertThat(camelRestDSLOpenApi.getPaths()).containsKey(contextPath + endpointPath);
   }
 }

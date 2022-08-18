@@ -23,7 +23,7 @@ class CoreCamelSpringBootTest {
   @Test
   void WHEN_appIsStarted_VERIFY_onlyTestRouteExists() {
     assertThat(camelContext).isNotNull();
-    assertThat(camelContext.getRoutes()).hasSize(1);
+    assertThat(camelContext.getRoutes()).isNotEmpty();
     assertThat(camelContext.getRoute(CoreTestApplication.TEST_ROUTE_ID)).isNotNull();
   }
 
