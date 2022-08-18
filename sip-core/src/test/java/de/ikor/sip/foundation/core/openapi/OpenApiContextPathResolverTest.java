@@ -8,17 +8,9 @@ import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(
-    properties = {
-      "camel.servlet.mapping.context-path=/adapter/*",
-      "springdoc.api-docs.path=/api-docs",
-      "springdoc.swagger-ui.path=/swagger-ui.html",
-      "springdoc.show-actuator=false"
-    })
-@AutoConfigureMockMvc
+@SpringBootTest(properties = {"camel.servlet.mapping.context-path=/adapter/*"})
 class OpenApiContextPathResolverTest {
 
   @Autowired OpenAPI camelRestDSLOpenApi;
