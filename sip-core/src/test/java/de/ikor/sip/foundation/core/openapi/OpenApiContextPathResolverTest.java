@@ -24,8 +24,7 @@ class OpenApiContextPathResolverTest {
     String contextPath = camelContext.getRestConfiguration().getContextPath();
 
     // act
-    Exchange target =
-        producerTemplate.send("rest-api://api-doc", Exchange::getMessage);
+    Exchange target = producerTemplate.send("rest-api://api-doc", Exchange::getMessage);
     String body = target.getMessage().getBody(String.class);
 
     // assert
