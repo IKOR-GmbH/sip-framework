@@ -74,7 +74,7 @@ public class TestCasesConfig {
 
     Endpoint endpoint = resolveEndpoint(exchange);
 
-    RouteInvoker invoker = routeInvokerFactory.getInstance(exchange, endpoint);
+    RouteInvoker invoker = routeInvokerFactory.getInstance(endpoint);
 
     ExecutionWrapper executionWrapper = new ExecutionWrapper(testName, exchange, invoker, endpoint);
 

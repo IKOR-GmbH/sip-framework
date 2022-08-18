@@ -29,7 +29,8 @@ public class FileRouteInvoker implements RouteInvoker {
             (String) inputExchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY));
     FileConsumer fileConsumer = (FileConsumer) route.getConsumer();
 
-    Exchange fileExchange = createFileExchange(fileConsumer, inputExchange);
+    Exchange fileExchange = fileConsumer.createExchange(true);
+    prepareFileExchange(fileExchange, inputExchange);
 
     fileConsumer.getAsyncProcessor().process(fileExchange, EmptyAsyncCallback.get());
 
@@ -46,11 +47,9 @@ public class FileRouteInvoker implements RouteInvoker {
     return true;
   }
 
-  private Exchange createFileExchange(FileConsumer fileConsumer, Exchange inputExchange) {
-    Exchange fileExchange = fileConsumer.createExchange(true);
+  private void prepareFileExchange(Exchange fileExchange, Exchange inputExchange) {
     fileExchange.getMessage().setBody(inputExchange.getMessage().getBody());
     fileExchange.getMessage().setHeaders(prepareFileHeaders(inputExchange));
-    return fileExchange;
   }
 
   private Map<String, Object> prepareFileHeaders(Exchange inputExchange) {
@@ -66,27 +65,19 @@ public class FileRouteInvoker implements RouteInvoker {
   }
 
   private void prepareDefaultHeaders(Map<String, Object> headers, String bodyPayload) {
-    if (!headers.containsKey(CAMEL_FILE_LENGTH.getValue())) {
-      headers.put(CAMEL_FILE_LENGTH.getValue(), (long) bodyPayload.length());
-    }
+    headers.putIfAbsent(CAMEL_FILE_LENGTH.getValue(), (long) bodyPayload.length());
   }
 
   private void prepareHeadersWithFilename(Map<String, Object> headers) {
     String filename = (String) headers.get(CAMEL_FILE_NAME.getValue());
-    if (!headers.containsKey(CAMEL_FILE_NAME_CONSUMED.getValue())) {
-      headers.put(CAMEL_FILE_NAME_CONSUMED.getValue(), filename);
-    }
-    if (!headers.containsKey(CAMEL_FILE_NAME_ONLY.getValue())) {
-      headers.put(CAMEL_FILE_NAME_ONLY.getValue(), filename);
-    }
+    headers.putIfAbsent(CAMEL_FILE_NAME_CONSUMED.getValue(), filename);
+    headers.putIfAbsent(CAMEL_FILE_NAME_ONLY.getValue(), filename);
   }
 
   private void prepareOtherHeaders(Map<String, Object> headers) {
     if (headers.containsKey(CAMEL_FILE_LAST_MODIFIED.getValue())) {
       Long lastModifiedTimestamp = (Long) headers.get(CAMEL_FILE_LAST_MODIFIED.getValue());
-      if (!headers.containsKey(CAMEL_MESSAGE_TIMESTAMP.getValue())) {
-        headers.put(CAMEL_MESSAGE_TIMESTAMP.getValue(), lastModifiedTimestamp);
-      }
+      headers.putIfAbsent(CAMEL_MESSAGE_TIMESTAMP.getValue(), lastModifiedTimestamp);
     }
   }
 }

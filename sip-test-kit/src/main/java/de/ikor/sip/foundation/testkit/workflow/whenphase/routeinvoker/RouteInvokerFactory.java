@@ -4,7 +4,6 @@ import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.Defau
 import java.util.*;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
-import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,10 +24,10 @@ public class RouteInvokerFactory {
   /**
    * Factory method which resolves RouteInvoker for proper camel Endpoint/Component
    *
-   * @param exchange Exchange with route id
+   * @param endpoint Route endpoint
    * @return proper instance of RouteInvoker
    */
-  public RouteInvoker getInstance(Exchange exchange, Endpoint endpoint) {
+  public RouteInvoker getInstance(Endpoint endpoint) {
     return invokers.stream()
         .filter(routeInvoker -> routeInvoker.isApplicable(endpoint))
         .findFirst()
