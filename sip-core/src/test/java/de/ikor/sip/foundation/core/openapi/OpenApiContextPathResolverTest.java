@@ -18,14 +18,14 @@ class OpenApiContextPathResolverTest {
   @Autowired ProducerTemplate producerTemplate;
 
   @Test
-  void When_resolveCamelContextPathInOpenApi_Expect_ContextPathAdded() throws Exception {
+  void When_resolveCamelContextPathInOpenApi_Expect_ContextPathAdded() {
     // arrange
     String endpointPath = "/getter";
     String contextPath = camelContext.getRestConfiguration().getContextPath();
 
     // act
     Exchange target =
-        producerTemplate.send("rest-api://api-doc", exchange -> exchange.getMessage());
+        producerTemplate.send("rest-api://api-doc", Exchange::getMessage);
     String body = target.getMessage().getBody(String.class);
 
     // assert
