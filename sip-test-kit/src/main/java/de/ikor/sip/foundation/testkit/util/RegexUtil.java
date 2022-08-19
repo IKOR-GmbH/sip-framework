@@ -22,7 +22,7 @@ public class RegexUtil {
    *
    * @param expected used to create a regex pattern
    * @param actual string that should be matched
-   * @return true if string matches the pattern, otherwise false
+   * @return true if string matches the pattern or if both are blank, otherwise false
    */
   public static boolean compare(String expected, String actual) {
     if (areBothBlank(actual, expected)) {
