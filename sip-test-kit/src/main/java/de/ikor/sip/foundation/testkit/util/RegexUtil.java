@@ -25,21 +25,20 @@ public class RegexUtil {
    * @return true if string matches the pattern, otherwise false
    */
   public static boolean compare(String expected, String actual) {
-    if (areBothEmpty(actual, expected)) {
+    if (areBothBlank(actual, expected)) {
       return true;
-    } else if (areBothDefined(actual, expected)) {
-      String expectedPattern = reformatEscapeCharacter(expected);
-      return Pattern.compile(expectedPattern).matcher(Objects.requireNonNull(actual)).find();
-    } else {
+    } else if (isOneBlank(actual, expected)) {
       return false;
     }
+    String expectedPattern = reformatEscapeCharacter(expected);
+    return Pattern.compile(expectedPattern).matcher(Objects.requireNonNull(actual)).find();
   }
 
   /**
    * Replaces escape characters
    *
    * @param str - String to be reformated
-   * @return String - either null if param null or reformated param string
+   * @return String - either null if param null or reformatted param string
    */
   public static String reformatEscapeCharacter(String str) {
     if (str == null) {
@@ -56,11 +55,11 @@ public class RegexUtil {
     return pattern;
   }
 
-  private static boolean areBothDefined(String actual, String expected) {
-    return isNotEmpty(actual) && isNotEmpty(expected);
+  private static boolean isOneBlank(String actual, String expected) {
+    return isBlank(actual) || isBlank(expected);
   }
 
-  private static boolean areBothEmpty(String actual, String expected) {
+  private static boolean areBothBlank(String actual, String expected) {
     return isBlank(expected) && isBlank(actual);
   }
 }
