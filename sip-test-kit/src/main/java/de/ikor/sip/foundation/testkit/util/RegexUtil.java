@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.testkit.util;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,16 +25,14 @@ public class RegexUtil {
    * @return true if string matches the pattern, otherwise false
    */
   public static boolean compare(String expected, String actual) {
-    boolean result;
     if (areBothEmpty(actual, expected)) {
-      result = true;
+      return true;
     } else if (areBothDefined(actual, expected)) {
       String expectedPattern = reformatEscapeCharacter(expected);
-      result = Pattern.compile(expectedPattern).matcher(Objects.requireNonNull(actual)).find();
+      return Pattern.compile(expectedPattern).matcher(Objects.requireNonNull(actual)).find();
     } else {
-      result = false;
+      return false;
     }
-    return result;
   }
 
   /**
@@ -64,6 +61,6 @@ public class RegexUtil {
   }
 
   private static boolean areBothEmpty(String actual, String expected) {
-    return isEmpty(expected) && isEmpty(actual);
+    return isBlank(expected) && isBlank(actual);
   }
 }
