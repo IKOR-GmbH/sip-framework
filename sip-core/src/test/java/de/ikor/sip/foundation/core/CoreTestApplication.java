@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 @SIPIntegrationAdapter
 public class CoreTestApplication {
   public static final String TEST_ROUTE_ID = "testRoute";
+  public static final String REST_ENDPOINT = "/getter";
 
   @Configuration
   static class TestConfig {
@@ -30,7 +31,7 @@ public class CoreTestApplication {
               .apiContextPath("/api-doc")
               .apiProperty("api.title", "User API")
               .apiProperty("api.version", "1.0.0");
-          rest().get("/getter").id(TEST_ROUTE_ID).to("mock:rest");
+          rest().get(REST_ENDPOINT).id(TEST_ROUTE_ID).to("mock:rest");
           ;
         }
       };

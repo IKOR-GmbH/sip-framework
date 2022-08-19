@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.openapi;
 
+import static de.ikor.sip.foundation.core.CoreTestApplication.REST_ENDPOINT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.swagger.v3.oas.models.OpenAPI;
@@ -20,7 +21,6 @@ class OpenApiContextPathResolverTest {
   @Test
   void When_resolveCamelContextPathInOpenApi_Expect_ContextPathAdded() {
     // arrange
-    String endpointPath = "/getter";
     String contextPath = camelContext.getRestConfiguration().getContextPath();
 
     // act
@@ -28,7 +28,7 @@ class OpenApiContextPathResolverTest {
     String body = target.getMessage().getBody(String.class);
 
     // assert
-    assertThat(body).contains("/getter").doesNotContain("/adapter/getter");
-    assertThat(camelRestDSLOpenApi.getPaths()).containsKey(contextPath + endpointPath);
+    assertThat(body).contains(REST_ENDPOINT).doesNotContain(contextPath + REST_ENDPOINT);
+    assertThat(camelRestDSLOpenApi.getPaths()).containsKey(contextPath + REST_ENDPOINT);
   }
 }
