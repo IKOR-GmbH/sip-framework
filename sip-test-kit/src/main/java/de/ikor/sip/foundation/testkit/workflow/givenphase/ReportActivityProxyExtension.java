@@ -4,7 +4,7 @@ import static javax.xml.bind.DatatypeConverter.parseBoolean;
 
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
-import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
+import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.TestCase;
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
@@ -26,7 +26,7 @@ public class ReportActivityProxyExtension implements ProxyExtension {
     findTestReport(original)
         .getMockReport(proxy.getId())
         .setActual(original)
-        .setActualMessage(SIPExchangeHelper.mapToMessageProperties(original));
+        .setActualMessage(TestKitHelper.mapToMessageProperties(original));
   }
 
   private String getTestName(Exchange original) {

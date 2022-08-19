@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.testkit.workflow.reporting.model;
 
-import static de.ikor.sip.foundation.testkit.util.SIPExchangeHelper.mapToMessageProperties;
+import static de.ikor.sip.foundation.testkit.util.TestKitHelper.mapToMessageProperties;
 
 import de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties;
 import java.util.Map;

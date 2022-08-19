@@ -14,7 +14,7 @@ import org.apache.camel.builder.ExchangeBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class SIPExchangeHelperTest {
+class TestKitHelperTest {
 
   private static final String SERIALIZABLE_DEFAULT_VALUE = "This is non serializable value";
   private static final String BODY = "body";
@@ -41,7 +41,7 @@ class SIPExchangeHelperTest {
     headers.put("empty", null);
     headers.put("nonempty", "sth");
 
-    Map<String, Object> result = SIPExchangeHelper.filterNonSerializableHeaders(exchange);
+    Map<String, Object> result = TestKitHelper.filterNonSerializableHeaders(exchange);
 
     assertThat(result.get("empty")).isNull();
     assertThat(result.get("nonempty")).isNotNull();
@@ -56,7 +56,7 @@ class SIPExchangeHelperTest {
 
     // act
     String actual =
-        (String) SIPExchangeHelper.reassignNonSerializableValue("test", nonserializableValue);
+        (String) TestKitHelper.reassignNonSerializableValue("test", nonserializableValue);
 
     // assert
     assertThat(actual).isEqualTo(SERIALIZABLE_DEFAULT_VALUE);
@@ -71,7 +71,7 @@ class SIPExchangeHelperTest {
     when(message.getBody()).thenReturn(BODY);
     when(message.getHeaders()).thenReturn(headers);
 
-    MessageProperties actual = SIPExchangeHelper.mapToMessageProperties(exchange);
+    MessageProperties actual = TestKitHelper.mapToMessageProperties(exchange);
 
     assertThat(actual.getBody()).isEqualTo(BODY);
     assertThat(actual.getHeaders()).isEqualTo(headers);
