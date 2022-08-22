@@ -270,7 +270,7 @@ This works for all loggers except the ones on Camel routes.
 ### Exchange tracing
 
 SIP Core offers usage of Camel's built-in Tracer for tracing and logging information about all processor
-an exchange when through and TraceHistory service which stores all data logged by it.
+an exchange went through.
 Configuration of the Tracer is enabled by adapting ExchangeFormatter.
 
 Tracing functionality is set to false by default. In order to enable it, the following configuration should be added to
@@ -281,36 +281,18 @@ sip:
   core:
     tracing:
       enabled: true
-      trace-type: LOG | MEMORY | "*" | LOG,MEMORY
 ```
 
-Additionally, trace-type must be defined. Three types of tracing can be used:
+Logging in console is enabled by default, but it can be turned off with `sip.core.tracing.log` property.
 
-- LOG - trace messages will be shown in logs
-- MEMORY - trace messages will be stored in trace history and can be seen on the "actuator/tracing"*
-- "*" | LOG,MEMORY - Both values are valid to be used. In case a user set both types, then the tracing will be available
-  as LOG and as MEMORY type at the same time.
+Configuring the ExchangeFormatter can be achieved through configuration file:
 
-Note: In order to access trace records trough web API the "actuator/tracing" must be exposed:
-```yaml
-management:
-  endpoints:
-    web:
-      exposure:
-        include: {...},tracing
-```
-
-When adding tracing endpoint, please configure the entire list of endpoints which you want to be exposed including the
-default ones.
-
-Configuring the ExchangeFormatter can be achieved in two ways:
-
-- through configuration file:
 ```yaml
 sip:
   core:
     tracing:
       enabled: true
+      log: true
       exchange-formatter:
         multiline: true
         showHeaders: true
@@ -319,31 +301,9 @@ sip:
         maxChars: 100
  ```
 
-- by using the following POST request:
-```
-/actuator/tracing/format/{exchangeFormatterParameterName}
- ```
-
-The body of the request should include the value we want for the given parameter. In this case, we can change only one
-parameter per request.
-
-TraceHistory is enabled with previous configuration.
 Exchanges will contain the "tracingId" header, which has the original Exchange's Id as value,
 and based on EIP used in a route, it may append other exchange Ids which were used in a request.
-To see them in TraceHistory messages just set the "showHeaders" and "showExchangeId" parameters in ExchangeFormatter to true.
-A "tracingId" header will appear as a list of exchanges separated by a coma.
-
-**Expanding the traffic trace limit:**
-
-Introduced the SipLimitedLinkedList in order to limit the number of logged events in memory.
-Default limit is 100 events, but it could be changed by following configuration:
-```yaml
-sip:
-  core:
-    tracing:
-      enabled: true
-      limit: 120 #100 by default
-```
+"tracingId" header will appear as a list of ordered exchanges separated by a coma.
 
 ### OpenAPI Descriptor
 
