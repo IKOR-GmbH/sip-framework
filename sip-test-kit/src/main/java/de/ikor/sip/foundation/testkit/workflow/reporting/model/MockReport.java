@@ -3,6 +3,8 @@ package de.ikor.sip.foundation.testkit.workflow.reporting.model;
 import static de.ikor.sip.foundation.testkit.util.SIPExchangeHelper.mapToMessageProperties;
 
 import de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties;
+import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
+import java.util.List;
 import java.util.Map;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -18,6 +20,7 @@ public class MockReport {
   private Exchange actual;
   private MessageProperties actualMessage;
   private Map<String, Object> validatedHeaders;
+  private List<ValidationResult> validationResults;
 
   public MockReport setExpected(Exchange expected) {
     this.expected = expected;
