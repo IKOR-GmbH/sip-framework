@@ -1,14 +1,13 @@
 package de.ikor.sip.foundation.core.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.Exchange;
-import org.apache.camel.support.DefaultExchangeHolder;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.Exchange;
+import org.apache.camel.support.DefaultExchangeHolder;
 
 /** Utility class that changes the {@link Exchange} */
 @Slf4j

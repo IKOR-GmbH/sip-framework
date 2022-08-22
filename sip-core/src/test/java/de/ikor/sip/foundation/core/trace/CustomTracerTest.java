@@ -19,16 +19,21 @@ class CustomTracerTest {
 
   private static final String LOG_MESSAGE = "log message";
   private static final String EXCHANGE_ID = "id";
+  private static final String ROUTE_ID = "routeId";
+  SIPExchangeFormatter exchangeFormatter;
   CustomTracer subject;
+  CamelContext camelContext;
   ListAppender<ILoggingEvent> listAppender;
   SIPTraceConfig traceConfig;
   Exchange exchange;
 
   @BeforeEach
   void setUp() {
+    camelContext = mock(CamelContext.class);
     exchange = mock(Exchange.class);
     traceConfig = new SIPTraceConfig();
-
+    exchangeFormatter = mock(SIPExchangeFormatter.class);
+    subject = new CustomTracer(exchangeFormatter, camelContext, traceConfig);
     Logger logger = (Logger) LoggerFactory.getLogger("org.apache.camel.Tracing");
     listAppender = new ListAppender<>();
     listAppender.start();
@@ -39,7 +44,6 @@ class CustomTracerTest {
   void When_dumpTrace_With_LogsEnabled_Then_messageInLog() {
     // arrange
     traceConfig.setLog(true);
-    subject = new CustomTracer(null, mock(CamelContext.class), traceConfig);
     List<ILoggingEvent> logsList = listAppender.list;
 
     // act
@@ -54,7 +58,6 @@ class CustomTracerTest {
   void When_dumpTrace_With_DisabledLogs_Then_emptyLogs() {
     // arrange
     traceConfig.setLog(false);
-    subject = new CustomTracer(null, mock(CamelContext.class), traceConfig);
     List<ILoggingEvent> logsList = listAppender.list;
 
     // act
@@ -90,8 +93,25 @@ class CustomTracerTest {
     assertThat(exchange.getIn().getHeader(TRACING_ID)).isEqualTo(oldId + "," + EXCHANGE_ID);
   }
 
+  @Test
+  void When_traceBeforeRoute_With_NoIdInHeaders_Then_OneTracingId() {
+    // arrange
+    NamedRoute namedRoute = mock(NamedRoute.class);
+    initTracingIDTest();
+    when(exchange.getFromRouteId()).thenReturn(ROUTE_ID);
+    when(namedRoute.getRouteId()).thenReturn(ROUTE_ID);
+    when(camelContext.isDebugging()).thenReturn(false);
+    when(exchangeFormatter.format(exchange)).thenReturn("formatted");
+    subject.setCamelContext(camelContext);
+
+    // act
+    subject.traceBeforeRoute(namedRoute, exchange);
+
+    // assert
+    assertThat(exchange.getIn().getHeader(TRACING_ID)).isEqualTo(EXCHANGE_ID);
+  }
+
   private void initTracingIDTest() {
-    subject = new CustomTracer(null, mock(CamelContext.class), traceConfig);
     subject.setEnabled(false);
     ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
     when(camelContext.getHeadersMapFactory()).thenReturn(null);
