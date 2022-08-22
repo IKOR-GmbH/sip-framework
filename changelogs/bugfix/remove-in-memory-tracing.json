@@ -1,5 +1,5 @@
 {
   "author": "Nemikor",
-  "pullrequestId": "131",
-  "message": "Move tracing id to CustomTracer and make it into a list of exchange ids from which a request consisted of."
+  "pullrequestId": "139",
+  "message": "Remove in memory tracing functionality and api. Add possibility to turn off console logs through configuration while tracing is active."
 }
