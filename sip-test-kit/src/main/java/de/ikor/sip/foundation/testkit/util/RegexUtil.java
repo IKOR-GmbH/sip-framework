@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.testkit.util;
 
+import static org.apache.commons.lang3.StringUtils.*;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -20,9 +22,14 @@ public class RegexUtil {
    *
    * @param expected used to create a regex pattern
    * @param actual string that should be matched
-   * @return true if string matches the pattern, otherwise false
+   * @return true if string matches the pattern or if both are blank, otherwise false
    */
   public static boolean compare(String expected, String actual) {
+    if (areBothBlank(actual, expected)) {
+      return true;
+    } else if (isOneBlank(actual, expected)) {
+      return false;
+    }
     String expectedPattern = reformatEscapeCharacter(expected);
     return Pattern.compile(expectedPattern).matcher(Objects.requireNonNull(actual)).find();
   }
@@ -31,7 +38,7 @@ public class RegexUtil {
    * Replaces escape characters
    *
    * @param str - String to be reformated
-   * @return String - either null if param null or reformated param string
+   * @return String - either null if param null or reformatted param string
    */
   public static String reformatEscapeCharacter(String str) {
     if (str == null) {
@@ -46,5 +53,13 @@ public class RegexUtil {
               escCharacter.equals("\\$") ? "\\\\" + escCharacter : "\\" + escCharacter);
     }
     return pattern;
+  }
+
+  private static boolean isOneBlank(String actual, String expected) {
+    return isBlank(actual) || isBlank(expected);
+  }
+
+  private static boolean areBothBlank(String actual, String expected) {
+    return isBlank(expected) && isBlank(actual);
   }
 }
