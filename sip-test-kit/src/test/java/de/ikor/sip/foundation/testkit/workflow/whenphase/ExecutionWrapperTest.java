@@ -11,6 +11,8 @@ import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 class ExecutionWrapperTest {
 
   private static final String TEST_NAME = "test";
@@ -23,19 +25,22 @@ class ExecutionWrapperTest {
     camelContext = mock(ExtendedCamelContext.class);
     Exchange inputExchange = createEmptyExchange();
     RouteInvoker routeInvoker = mock(RouteInvoker.class);
-    Endpoint endpoint = mock(Endpoint.class);
     ExecutionWrapper subject =
-        new ExecutionWrapper(TEST_NAME, inputExchange, routeInvoker, endpoint);
-    when(routeInvoker.invoke(any(Exchange.class), any(Endpoint.class))).thenReturn(inputExchange);
+        new ExecutionWrapper(TEST_NAME, inputExchange, routeInvoker);
+    when(routeInvoker.invoke(any(Exchange.class))).thenReturn(Optional.of(inputExchange));
 
     // act
-    Exchange actual = subject.execute();
+    Optional<Exchange> actual = subject.execute();
 
     // assert
-    assertThat(actual.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER)).isEqualTo(TEST_NAME);
-    assertThat(actual.getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, Boolean.class))
-        .isTrue();
-    assertThat(actual.getMessage().getBody()).isNull();
+    if (actual.isPresent()) {
+      assertThat(actual.get().getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER))
+          .isEqualTo(TEST_NAME);
+      assertThat(
+              actual.get().getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, Boolean.class))
+          .isTrue();
+      assertThat(actual.get().getMessage().getBody()).isNull();
+    }
   }
 
   private Exchange createEmptyExchange() {

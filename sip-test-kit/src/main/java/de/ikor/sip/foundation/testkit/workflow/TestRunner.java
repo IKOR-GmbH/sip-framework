@@ -25,13 +25,21 @@ public class TestRunner {
 
   public TestExecutionStatus executeTest(TestCase testCase) {
     try {
-      testCase.run();
+      if (testCase.getTestExecutionStatus().getWorkflowException() == null) {
+        testCase.run();
+      } else {
+        handleTestException(testCase, testCase.getTestExecutionStatus().getWorkflowException());
+      }
     } catch (Exception e) {
-      log.error("sip.testkit.workflow.testrunerror_{}", testCase.getTestName());
-      testCase.reportExecutionException(e);
+      handleTestException(testCase, e);
     } finally {
       testCase.clearMocks();
     }
     return testCase.getTestExecutionStatus();
+  }
+
+  private void handleTestException(TestCase testCase, Exception e) {
+    log.error("sip.testkit.workflow.testrunerror_{}", testCase.getTestName());
+    testCase.reportExecutionException(e);
   }
 }

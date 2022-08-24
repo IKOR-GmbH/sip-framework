@@ -29,7 +29,9 @@ public class CamelTestCaseValidator implements TestCaseValidator {
     SIPAdapterExecutionReport adapterReport = testExecutionStatus.getAdapterReport();
     Map<String, MockReport> mockReports = testExecutionStatus.getMockReports();
 
-    this.validateAdapterResponse(adapterReport);
+    if (adapterReport.getActualResponse() != null) {
+      this.validateAdapterResponse(adapterReport);
+    }
     this.validateMockReports(mockReports);
 
     boolean isAdapterResultExpected =

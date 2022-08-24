@@ -2,9 +2,12 @@ package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
+import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
+import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
+import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.CxfRouteInvoker;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DefaultRouteInvoker;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.FileRouteInvoker;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.RestRouteInvoker;
 import java.util.Set;
@@ -16,53 +19,60 @@ import org.junit.jupiter.api.Test;
 
 class RouteInvokerFactoryTest {
 
+  protected static final String ROUTE_ID = "routeId";
+
   private RouteInvokerFactory subject;
   private Endpoint endpoint;
+  private Exchange exchange;
+  private Route route;
 
   @BeforeEach
   void setup() {
-    ExtendedCamelContext camelContext1 = mock(ExtendedCamelContext.class);
-    RestRouteInvoker restRouteInvoker = new RestRouteInvoker(mock(ProducerTemplate.class));
-    FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext1);
+    ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
+    RestRouteInvoker restRouteInvoker = new RestRouteInvoker(mock(ProducerTemplate.class), camelContext);
+    FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);
     Set<RouteInvoker> invokers =
         Set.of(restRouteInvoker, mock(CxfRouteInvoker.class), fileRouteInvoker);
-    ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
     subject = new RouteInvokerFactory(invokers, camelContext);
+    exchange = SIPExchangeHelper.createEmptyExchange(camelContext);
+    exchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
+    route = mock(Route.class);
+    when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
   }
 
   @Test
-  void GIVEN_baseEndpoint_WHEN_resolveAndInvoke_THEN_DefaultRouteInvoker() {
-    // arrange
-    endpoint = mock(Endpoint.class);
-
-    // act
-    RouteInvoker actual = subject.getInstance(endpoint);
-
-    // assert
-    assertThat(actual).isInstanceOf(DefaultRouteInvoker.class);
-  }
-
-  @Test
-  void GIVEN_restEndpoint_WHEN_resolveAndInvoke_THEN_RestRouteInvoker() {
+  void GIVEN_restEndpoint_WHEN_resolveAndInvoke_THEN_RestRouteInvoker() throws NoRouteInvokerException {
     // arrange
     endpoint = mock(RestEndpoint.class);
+    when(route.getEndpoint()).thenReturn(endpoint);
 
     // act
-    RouteInvoker actual = subject.getInstance(endpoint);
+    RouteInvoker actual = subject.getInstance(exchange);
 
     // assert
     assertThat(actual).isInstanceOf(RestRouteInvoker.class);
   }
 
   @Test
-  void GIVEN_fileEndpoint_WHEN_resolveAndInvoke_THEN_FileRouteInvoker() {
+  void GIVEN_fileEndpoint_WHEN_resolveAndInvoke_THEN_FileRouteInvoker() throws NoRouteInvokerException {
     // arrange
     endpoint = mock(FileEndpoint.class);
+    when(route.getEndpoint()).thenReturn(endpoint);
 
     // act
-    RouteInvoker actual = subject.getInstance(endpoint);
+    RouteInvoker actual = subject.getInstance(exchange);
 
     // assert
     assertThat(actual).isInstanceOf(FileRouteInvoker.class);
+  }
+
+  @Test
+  void GIVEN_endpointWithoutRouteInvoker_WHEN_resolveAndInvoke_THEN_expectNoRouteInvokerException() throws NoRouteInvokerException {
+    // arrange
+    endpoint = mock(Endpoint.class);
+    when(route.getEndpoint()).thenReturn(endpoint);
+
+    // act & assert
+    assertThrows(NoRouteInvokerException.class, () -> subject.getInstance(exchange));
   }
 }

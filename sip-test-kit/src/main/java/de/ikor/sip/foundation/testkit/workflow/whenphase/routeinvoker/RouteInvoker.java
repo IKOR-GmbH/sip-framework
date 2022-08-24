@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker;
 
+import java.util.Optional;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 
@@ -12,10 +13,10 @@ public interface RouteInvoker {
    * Sends request to route
    *
    * @param exchange {@link Exchange}
-   * @param endpoint {@link Endpoint}
-   * @return {@link Exchange} result of route execution
+   * @return {@link Optional<Exchange>} result of route execution, empty when invoking no reply
+   *     components.
    */
-  Exchange invoke(Exchange exchange, Endpoint endpoint);
+  Optional<Exchange> invoke(Exchange exchange);
 
   /**
    * Matching Endpoint with proper RouteInvoker
@@ -24,13 +25,4 @@ public interface RouteInvoker {
    * @return boolean true when matching
    */
   boolean isApplicable(Endpoint endpoint);
-
-  /**
-   * Method which classifies which camel components could be suspended during sip batch tests.
-   *
-   * @return boolean
-   */
-  default boolean isSuspendable() {
-    return false;
-  }
 }

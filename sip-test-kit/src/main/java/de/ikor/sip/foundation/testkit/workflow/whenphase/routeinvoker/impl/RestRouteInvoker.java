@@ -1,7 +1,11 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
+import de.ikor.sip.foundation.testkit.util.SIPEndpointResolver;
+import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
@@ -15,13 +19,19 @@ import org.springframework.stereotype.Component;
 public class RestRouteInvoker implements RouteInvoker {
 
   private final ProducerTemplate producerTemplate;
+  private final CamelContext camelContext;
 
   @Value("${sip.adapter.camel-endpoint-context-path}")
   private String contextPath = "";
 
   @Override
-  public Exchange invoke(Exchange exchange, Endpoint endpoint) {
-    return producerTemplate.send(extractRESTEndpointURI((RestEndpoint) endpoint), exchange);
+  public Optional<Exchange> invoke(Exchange inputExchange) {
+    Endpoint endpoint =
+        SIPEndpointResolver.resolveEndpoint(
+            SIPExchangeHelper.getRouteId(inputExchange), camelContext);
+    Exchange exchange =
+        producerTemplate.send(extractRESTEndpointURI((RestEndpoint) endpoint), inputExchange);
+    return Optional.of(exchange);
   }
 
   @Override

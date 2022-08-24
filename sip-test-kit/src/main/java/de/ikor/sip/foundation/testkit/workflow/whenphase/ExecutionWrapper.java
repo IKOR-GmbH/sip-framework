@@ -3,10 +3,10 @@ package de.ikor.sip.foundation.testkit.workflow.whenphase;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import java.util.Map;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 
 /** Executes WhenPhaseDefinition */
@@ -18,17 +18,16 @@ public class ExecutionWrapper {
   private String testName;
   private Exchange whenDefinitionExchange;
   private final RouteInvoker invoker;
-  private final Endpoint endpoint;
 
   /**
    * WhenPhaseDefinition
    *
    * @return {@link Exchange}
    */
-  public Exchange execute() {
+  public Optional<Exchange> execute() {
     log.info("sip.testkit.workflow.startcamelrequest");
     enrichWithTestHeaders();
-    return invoker.invoke(whenDefinitionExchange, endpoint);
+    return invoker.invoke(whenDefinitionExchange);
   }
 
   private void enrichWithTestHeaders() {

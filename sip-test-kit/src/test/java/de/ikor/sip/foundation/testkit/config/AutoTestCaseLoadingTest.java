@@ -18,12 +18,12 @@ class AutoTestCaseLoadingTest {
   @Autowired private ConfigurableEnvironment environment;
 
   @Test
-  void GIVEN_necessaryInputProperties_WHEN_testKitTests_THEN_getExpectedProperties() {
+  void GIVEN_necessaryInputProperties_WHEN_prepareTestingEnvironment_THEN_getExpectedProperties() {
     // arrange
     AutoTestCaseLoading subject = new AutoTestCaseLoading();
 
     // act
-    subject.testKitTests(environment);
+    subject.prepareTestingEnvironment(environment);
 
     // assert
     assertThat(environment.getProperty("test-case-definitions[0].title")).isEqualTo("test");

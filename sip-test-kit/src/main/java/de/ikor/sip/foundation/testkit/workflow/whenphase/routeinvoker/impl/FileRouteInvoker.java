@@ -2,10 +2,10 @@ package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
 import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.headers.FileExchangeHeaders.*;
 
-import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.*;
@@ -23,7 +23,7 @@ public class FileRouteInvoker implements RouteInvoker {
   private final CamelContext camelContext;
 
   @Override
-  public Exchange invoke(Exchange inputExchange, Endpoint endpoint) {
+  public Optional<Exchange> invoke(Exchange inputExchange) {
     Route route =
         camelContext.getRoute(
             (String) inputExchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY));
@@ -33,18 +33,12 @@ public class FileRouteInvoker implements RouteInvoker {
     prepareFileExchange(fileExchange, inputExchange);
 
     fileConsumer.getAsyncProcessor().process(fileExchange, EmptyAsyncCallback.get());
-
-    return SIPExchangeHelper.createEmptyExchange(camelContext);
+    return Optional.empty();
   }
 
   @Override
   public boolean isApplicable(Endpoint endpoint) {
     return endpoint instanceof FileEndpoint;
-  }
-
-  @Override
-  public boolean isSuspendable() {
-    return true;
   }
 
   private void prepareFileExchange(Exchange fileExchange, Exchange inputExchange) {

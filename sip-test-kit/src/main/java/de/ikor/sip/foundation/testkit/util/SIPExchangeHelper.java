@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.testkit.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties;
+import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -62,6 +63,16 @@ public class SIPExchangeHelper extends DefaultExchangeHolder {
     messageProperties.setBody(MessageHelper.extractBodyAsString(exchange.getMessage()));
     messageProperties.setHeaders(filterNonSerializableHeaders(exchange));
     return messageProperties;
+  }
+
+  /**
+   * Get route id from the {@link Exchange}
+   *
+   * @param exchange that should be mapped
+   * @return route id
+   */
+  public static String getRouteId(Exchange exchange) {
+    return exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class);
   }
 
   /**

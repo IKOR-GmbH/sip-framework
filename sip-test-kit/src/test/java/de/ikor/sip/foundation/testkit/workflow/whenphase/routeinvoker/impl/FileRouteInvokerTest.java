@@ -56,7 +56,7 @@ class FileRouteInvokerTest {
     }
 
     // act
-    subject.invoke(inputExchange, mock(Endpoint.class));
+    subject.invoke(inputExchange);
 
     // assert
     verify(asyncProcessor, times(1)).process(actualFileExchange, EmptyAsyncCallback.get());
@@ -81,7 +81,7 @@ class FileRouteInvokerTest {
     }
 
     // act
-    subject.invoke(inputExchange, mock(Endpoint.class));
+    subject.invoke(inputExchange);
 
     // assert
     assertThat(actualFileExchange.getMessage().getHeader(CAMEL_FILE_NAME_CONSUMED.getValue()))
@@ -101,7 +101,7 @@ class FileRouteInvokerTest {
     }
 
     // act
-    subject.invoke(inputExchange, mock(Endpoint.class));
+    subject.invoke(inputExchange);
 
     // assert
     assertThat(actualFileExchange.getMessage().getHeader(CAMEL_FILE_NAME_ONLY.getValue()))
@@ -127,7 +127,7 @@ class FileRouteInvokerTest {
     }
 
     // act
-    subject.invoke(inputExchange, mock(Endpoint.class));
+    subject.invoke(inputExchange);
 
     // assert
     assertThat(actualFileExchange.getMessage().getHeader(CAMEL_MESSAGE_TIMESTAMP.getValue()))

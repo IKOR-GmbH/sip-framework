@@ -1,9 +1,12 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker;
 
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DefaultRouteInvoker;
+import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
+import de.ikor.sip.foundation.testkit.util.SIPEndpointResolver;
+import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import java.util.*;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
+import org.apache.camel.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,13 +27,15 @@ public class RouteInvokerFactory {
   /**
    * Factory method which resolves RouteInvoker for proper camel Endpoint/Component
    *
-   * @param endpoint Route endpoint
+   * @param exchange Exchange with route id
    * @return proper instance of RouteInvoker
    */
-  public RouteInvoker getInstance(Endpoint endpoint) {
+  public RouteInvoker getInstance(Exchange exchange) throws NoRouteInvokerException {
+    String routeId = exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class);
+    Endpoint endpoint = SIPEndpointResolver.resolveEndpoint(routeId, camelContext);
     return invokers.stream()
         .filter(routeInvoker -> routeInvoker.isApplicable(endpoint))
         .findFirst()
-        .orElse(new DefaultRouteInvoker(camelContext));
+        .orElseThrow(() -> new NoRouteInvokerException(routeId));
   }
 }

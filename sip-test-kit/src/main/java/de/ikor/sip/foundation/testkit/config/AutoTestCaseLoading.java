@@ -31,8 +31,9 @@ public class AutoTestCaseLoading {
       "camel.springboot.routeControllerSuperviseEnabled";
 
   /** Adds testcases to environment */
-  @Bean
-  public PropertySourcesPlaceholderConfigurer testKitTests(ConfigurableEnvironment environment) {
+  @Bean("testKitBatchTests")
+  public PropertySourcesPlaceholderConfigurer prepareTestingEnvironment(
+      ConfigurableEnvironment environment) {
     String testCasePath =
         environment.getProperty(YML_TEST_CASES_PATH_PROPERTY, DEFAULT_TEST_CASES_LOCATION);
     addRouteControllerSuperviseProperty(environment);

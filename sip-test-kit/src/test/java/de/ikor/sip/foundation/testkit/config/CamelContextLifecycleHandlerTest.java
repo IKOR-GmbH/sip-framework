@@ -2,25 +2,27 @@ package de.ikor.sip.foundation.testkit.config;
 
 import static org.mockito.Mockito.*;
 
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DefaultRouteInvoker;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.FileRouteInvoker;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Route;
+import org.apache.camel.component.file.FileConsumer;
 import org.apache.camel.component.file.FileEndpoint;
 import org.apache.camel.impl.engine.DefaultRouteController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 class CamelContextLifecycleHandlerTest {
 
   private static final String ROUTE_ID = "routeId";
 
   private CamelContextLifecycleHandler subject;
-  private ExtendedCamelContext camelContext;
+  private CamelContext camelContext;
   private DefaultRouteController defaultRouteController;
   private Route route;
 
@@ -32,15 +34,9 @@ class CamelContextLifecycleHandlerTest {
     route = mock(Route.class);
     routes.add(route);
 
-    List<RouteInvoker> routeInvokers = new ArrayList<>();
-    FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);
-    DefaultRouteInvoker defaultRouteInvoker = new DefaultRouteInvoker(camelContext);
-    routeInvokers.add(fileRouteInvoker);
-    routeInvokers.add(defaultRouteInvoker);
-    subject = new CamelContextLifecycleHandler(routeInvokers);
+    subject = new CamelContextLifecycleHandler();
 
     when(camelContext.getRoutes()).thenReturn(routes);
-
     when(route.getRouteId()).thenReturn(ROUTE_ID);
   }
 
@@ -48,8 +44,8 @@ class CamelContextLifecycleHandlerTest {
   void GIVEN_routeAndRouteInvokers_WHEN_afterApplicationStart_THEN_verifySuspendingRoute()
       throws Exception {
     // arrange
-    FileEndpoint fileEndpoint = mock(FileEndpoint.class);
-    when(route.getEndpoint()).thenReturn(fileEndpoint);
+    FileConsumer fileConsumer = mock(FileConsumer.class);
+    when(route.getConsumer()).thenReturn(fileConsumer);
     when(camelContext.getRouteController()).thenReturn(defaultRouteController);
 
     // act

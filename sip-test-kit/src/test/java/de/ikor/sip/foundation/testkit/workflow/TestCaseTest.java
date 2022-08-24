@@ -8,6 +8,8 @@ import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.TestCaseValid
 import de.ikor.sip.foundation.testkit.workflow.whenphase.ExecutionWrapper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +34,8 @@ class TestCaseTest {
     executionWrapper = mock(ExecutionWrapper.class);
     validator = mock(TestCaseValidator.class);
     testExecutionStatus = new TestExecutionStatus(TEST_NAME);
-    subject = new TestCase(TEST_NAME, mocks, executionWrapper, validator, testExecutionStatus);
+    subject = new TestCase(TEST_NAME, mocks, validator, testExecutionStatus);
+    subject.setExecutionWrapper(executionWrapper);
   }
 
   @Test
@@ -42,7 +45,7 @@ class TestCaseTest {
     Message message = mock(Message.class);
     when(message.getBody()).thenReturn("message");
     when(exchange.getMessage()).thenReturn(message);
-    when(executionWrapper.execute()).thenReturn(exchange);
+    when(executionWrapper.execute()).thenReturn(Optional.of(exchange));
     doNothing().when(validator).validate(testExecutionStatus);
 
     // act
