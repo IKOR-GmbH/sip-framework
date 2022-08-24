@@ -13,8 +13,7 @@ public interface RouteInvoker {
    * Sends request to route
    *
    * @param exchange {@link Exchange}
-   * @return {@link Optional} result of route execution, empty when invoking no reply
-   *     components.
+   * @return {@link Optional} result of route execution, empty when invoking no reply components.
    */
   Optional<Exchange> invoke(Exchange exchange);
 
