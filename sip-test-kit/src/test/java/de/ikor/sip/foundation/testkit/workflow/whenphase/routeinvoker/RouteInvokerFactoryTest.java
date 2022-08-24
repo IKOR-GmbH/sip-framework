@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 class RouteInvokerFactoryTest {
 
-  protected static final String ROUTE_ID = "routeId";
+  private static final String ROUTE_ID = "routeId";
 
   private RouteInvokerFactory subject;
   private Endpoint endpoint;
@@ -70,8 +70,8 @@ class RouteInvokerFactoryTest {
   }
 
   @Test
-  void GIVEN_endpointWithoutRouteInvoker_WHEN_resolveAndInvoke_THEN_expectNoRouteInvokerException()
-      throws NoRouteInvokerException {
+  void
+      GIVEN_endpointWithoutRouteInvoker_WHEN_resolveAndInvoke_THEN_expectNoRouteInvokerException() {
     // arrange
     endpoint = mock(Endpoint.class);
     when(route.getEndpoint()).thenReturn(endpoint);

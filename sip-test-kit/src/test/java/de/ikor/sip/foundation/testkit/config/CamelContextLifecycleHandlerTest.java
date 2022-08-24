@@ -1,13 +1,12 @@
 package de.ikor.sip.foundation.testkit.config;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+import de.ikor.sip.foundation.testkit.exception.UnsuspendedRouteException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Endpoint;
-import org.apache.camel.ExtendedCamelContext;
-import org.apache.camel.Route;
+import org.apache.camel.*;
 import org.apache.camel.component.file.FileConsumer;
 import org.apache.camel.impl.engine.DefaultRouteController;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +36,7 @@ class CamelContextLifecycleHandlerTest {
   }
 
   @Test
-  void GIVEN_routeAndRouteInvokers_WHEN_afterApplicationStart_THEN_verifySuspendingRoute()
+  void GIVEN_routeWithSuspendingConsumer_WHEN_afterApplicationStart_THEN_verifySuspendingRoute()
       throws Exception {
     // arrange
     FileConsumer fileConsumer = mock(FileConsumer.class);
@@ -53,11 +52,11 @@ class CamelContextLifecycleHandlerTest {
 
   @Test
   void
-      GIVEN_routeWithDifferentEndpoint_WHEN_afterApplicationStart_THEN_verifyNoMatchingConditionForSuspending()
+      GIVEN_routeWithNoSuspendingConsumer_WHEN_afterApplicationStart_THEN_verifyNoMatchingConditionForSuspending()
           throws Exception {
     // arrange
-    Endpoint endpoint = mock(Endpoint.class);
-    when(route.getEndpoint()).thenReturn(endpoint);
+    Consumer consumer = mock(Consumer.class);
+    when(route.getConsumer()).thenReturn(consumer);
     when(camelContext.getRouteController()).thenReturn(defaultRouteController);
 
     // act
@@ -65,5 +64,20 @@ class CamelContextLifecycleHandlerTest {
 
     // assert
     verify(defaultRouteController, times(0)).suspendRoute(ROUTE_ID);
+  }
+
+  @Test
+  void
+      GIVEN_routeWithSuspendingException_WHEN_afterApplicationStart_THEN_expectUnsuspendedRouteException()
+          throws Exception {
+    // arrange
+    FileConsumer fileConsumer = mock(FileConsumer.class);
+    when(route.getConsumer()).thenReturn(fileConsumer);
+    when(camelContext.getRouteController()).thenReturn(defaultRouteController);
+    doThrow(new Exception()).when(defaultRouteController).suspendRoute(ROUTE_ID);
+
+    // act & assert
+    assertThrows(
+        UnsuspendedRouteException.class, () -> subject.afterApplicationStart(camelContext));
   }
 }
