@@ -9,7 +9,6 @@ import de.ikor.sip.foundation.testkit.workflow.whenphase.ExecutionWrapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.jupiter.api.BeforeEach;

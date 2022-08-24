@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
 import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
@@ -29,7 +29,8 @@ class RouteInvokerFactoryTest {
   @BeforeEach
   void setup() {
     ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
-    RestRouteInvoker restRouteInvoker = new RestRouteInvoker(mock(ProducerTemplate.class), camelContext);
+    RestRouteInvoker restRouteInvoker =
+        new RestRouteInvoker(mock(ProducerTemplate.class), camelContext);
     FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);
     Set<RouteInvoker> invokers =
         Set.of(restRouteInvoker, mock(CxfRouteInvoker.class), fileRouteInvoker);
@@ -41,7 +42,8 @@ class RouteInvokerFactoryTest {
   }
 
   @Test
-  void GIVEN_restEndpoint_WHEN_resolveAndInvoke_THEN_RestRouteInvoker() throws NoRouteInvokerException {
+  void GIVEN_restEndpoint_WHEN_resolveAndInvoke_THEN_RestRouteInvoker()
+      throws NoRouteInvokerException {
     // arrange
     endpoint = mock(RestEndpoint.class);
     when(route.getEndpoint()).thenReturn(endpoint);
@@ -54,7 +56,8 @@ class RouteInvokerFactoryTest {
   }
 
   @Test
-  void GIVEN_fileEndpoint_WHEN_resolveAndInvoke_THEN_FileRouteInvoker() throws NoRouteInvokerException {
+  void GIVEN_fileEndpoint_WHEN_resolveAndInvoke_THEN_FileRouteInvoker()
+      throws NoRouteInvokerException {
     // arrange
     endpoint = mock(FileEndpoint.class);
     when(route.getEndpoint()).thenReturn(endpoint);
@@ -67,7 +70,8 @@ class RouteInvokerFactoryTest {
   }
 
   @Test
-  void GIVEN_endpointWithoutRouteInvoker_WHEN_resolveAndInvoke_THEN_expectNoRouteInvokerException() throws NoRouteInvokerException {
+  void GIVEN_endpointWithoutRouteInvoker_WHEN_resolveAndInvoke_THEN_expectNoRouteInvokerException()
+      throws NoRouteInvokerException {
     // arrange
     endpoint = mock(Endpoint.class);
     when(route.getEndpoint()).thenReturn(endpoint);

@@ -3,11 +3,10 @@ package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExtendedCamelContext;
@@ -70,7 +69,8 @@ class CxfRouteInvokerTest {
     Optional<Exchange> actualExchange = spySubject.invoke(exchange);
 
     // assert
-    actualExchange.ifPresent(value -> assertThat(value.getMessage().getBody()).isEqualTo(inputBody));
+    actualExchange.ifPresent(
+        value -> assertThat(value.getMessage().getBody()).isEqualTo(inputBody));
   }
 
   private Exchange createExchange(Map<String, Object> headers) {
