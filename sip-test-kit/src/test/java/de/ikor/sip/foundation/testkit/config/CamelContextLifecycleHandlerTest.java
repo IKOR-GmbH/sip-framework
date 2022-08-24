@@ -36,11 +36,27 @@ class CamelContextLifecycleHandlerTest {
   }
 
   @Test
-  void GIVEN_routeWithSuspendingConsumer_WHEN_afterApplicationStart_THEN_verifySuspendingRoute()
+  void GIVEN_routeWithSuspendingFileConsumer_WHEN_afterApplicationStart_THEN_verifySuspendingRoute()
       throws Exception {
     // arrange
     FileConsumer fileConsumer = mock(FileConsumer.class);
     when(route.getConsumer()).thenReturn(fileConsumer);
+    when(camelContext.getRouteController()).thenReturn(defaultRouteController);
+
+    // act
+    subject.afterApplicationStart(camelContext);
+
+    // assert
+    verify(defaultRouteController, times(1)).suspendRoute(ROUTE_ID);
+  }
+
+  @Test
+  void
+      GIVEN_routeWithSuspendingPollingConsumer_WHEN_afterApplicationStart_THEN_verifySuspendingRoute()
+          throws Exception {
+    // arrange
+    PollingConsumer pollingConsumer = mock(PollingConsumer.class);
+    when(route.getConsumer()).thenReturn(pollingConsumer);
     when(camelContext.getRouteController()).thenReturn(defaultRouteController);
 
     // act
