@@ -1,15 +1,15 @@
 package de.ikor.sip.foundation.testkit.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties;
+import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.camel.Exchange;
-import org.apache.camel.ExtendedCamelContext;
-import org.apache.camel.Message;
+import org.apache.camel.*;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +18,7 @@ class SIPExchangeHelperTest {
 
   private static final String SERIALIZABLE_DEFAULT_VALUE = "This is non serializable value";
   private static final String BODY = "body";
+  private static final String ROUTE_ID = "routeId";
 
   private Exchange exchange;
   private Map<String, Object> headers;
@@ -74,5 +75,30 @@ class SIPExchangeHelperTest {
 
     assertThat(actual.getBody()).isEqualTo(BODY);
     assertThat(actual.getHeaders()).isEqualTo(headers);
+  }
+
+  @Test
+  void GIVEN_route_WHEN_resolveEndpoint_THEN_expectEndpoint() {
+    // assert
+    Route route = mock(Route.class);
+    Endpoint expectedEndpoint = mock(Endpoint.class);
+    when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
+    when(route.getEndpoint()).thenReturn(expectedEndpoint);
+    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class))
+        .thenReturn(ROUTE_ID);
+
+    // act
+    Endpoint actualEndpoint = SIPExchangeHelper.resolveEndpoint(exchange, camelContext);
+
+    // arrange
+    assertThat(actualEndpoint).isEqualTo(expectedEndpoint);
+  }
+
+  @Test
+  void GIVEN_noRoute_WHEN_resolveEndpoint_THEN_expectIllegalArgumentException() {
+    // act & arrange
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> SIPExchangeHelper.resolveEndpoint(exchange, camelContext));
   }
 }

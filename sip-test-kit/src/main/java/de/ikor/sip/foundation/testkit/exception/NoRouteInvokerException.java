@@ -10,6 +10,11 @@ public class NoRouteInvokerException extends Exception {
     super(String.format("No Route Invoker could be found for route id: %s", routeId));
   }
 
+  /**
+   * Method for hiding stack trace in console
+   *
+   * @return Throwable
+   */
   @Override
   public synchronized Throwable fillInStackTrace() {
     return this;

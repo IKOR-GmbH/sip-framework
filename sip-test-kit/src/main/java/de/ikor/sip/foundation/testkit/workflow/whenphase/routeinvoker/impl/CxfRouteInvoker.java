@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
-import de.ikor.sip.foundation.testkit.util.SIPEndpointResolver;
 import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import java.util.Optional;
@@ -39,9 +38,7 @@ public class CxfRouteInvoker implements RouteInvoker {
 
   @Override
   public Optional<Exchange> invoke(Exchange inputExchange) {
-    Endpoint endpoint =
-        SIPEndpointResolver.resolveEndpoint(
-            SIPExchangeHelper.getRouteId(inputExchange), camelContext);
+    Endpoint endpoint = SIPExchangeHelper.resolveEndpoint(inputExchange, camelContext);
     HttpEntity<String> request =
         new HttpEntity<>(
             inputExchange.getMessage().getBody(String.class), prepareHeaders(inputExchange));

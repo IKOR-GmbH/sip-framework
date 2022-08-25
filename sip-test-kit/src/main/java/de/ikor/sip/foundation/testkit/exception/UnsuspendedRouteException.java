@@ -11,6 +11,11 @@ public class UnsuspendedRouteException extends RuntimeException {
             "Route with route id %s can't be suspended. Shutting down the system.", routeId));
   }
 
+  /**
+   * Method for hiding stack trace in console
+   *
+   * @return Throwable
+   */
   @Override
   public synchronized Throwable fillInStackTrace() {
     return this;

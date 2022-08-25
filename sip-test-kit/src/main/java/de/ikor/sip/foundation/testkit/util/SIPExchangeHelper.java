@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
+import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
+import org.apache.camel.Route;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.apache.camel.support.DefaultExchangeHolder;
 import org.apache.camel.support.MessageHelper;
@@ -84,5 +86,21 @@ public class SIPExchangeHelper extends DefaultExchangeHolder {
   public static Exchange createEmptyExchange(CamelContext camelContext) {
     ExchangeBuilder exchangeBuilder = ExchangeBuilder.anExchange(camelContext);
     return exchangeBuilder.build();
+  }
+
+  /**
+   * Get camel endpoint based on route id
+   *
+   * @param exchange for fetching the route id
+   * @param camelContext in which routes are defined
+   * @return {@link Endpoint}
+   */
+  public static Endpoint resolveEndpoint(Exchange exchange, CamelContext camelContext) {
+    Route route = camelContext.getRoute(getRouteId(exchange));
+    if (route == null) {
+      throw new IllegalArgumentException(
+          "Route with id " + getRouteId(exchange) + " was not found");
+    }
+    return route.getEndpoint();
   }
 }
