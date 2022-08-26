@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
-import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.headers.FtpExchangeHeaders.*;
+import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.headers.FileExchangeHeaders.*;
 
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
@@ -37,14 +37,14 @@ public class FtpRouteInvoker implements RouteInvoker {
             (String) inputExchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY));
     RemoteFileConsumer<FTPFile> fileConsumer = (RemoteFileConsumer<FTPFile>) route.getConsumer();
 
-    Exchange fileExchange = createFtpExchange(fileConsumer, ftpEndpoint, inputExchange);
+    Exchange ftpExchange = fileConsumer.createExchange(true);
+    createFtpExchange(ftpExchange, ftpEndpoint.getConfiguration(), inputExchange);
 
     try {
-      fileConsumer.getProcessor().process(fileExchange);
+      fileConsumer.getProcessor().process(ftpExchange);
     } catch (Exception e) {
       log.error("sip.testkit.workflow.whenphase.routeinvoker.ftp.badrequest");
     }
-
     return createEmptyExchange();
   }
 
@@ -59,25 +59,21 @@ public class FtpRouteInvoker implements RouteInvoker {
     return this;
   }
 
-  private Exchange createFtpExchange(
-      RemoteFileConsumer<FTPFile> fileConsumer,
-      RemoteFileEndpoint<FTPFile> ftpEndpoint,
-      Exchange inputExchange) {
-    Exchange ftpExchange = fileConsumer.createExchange(true);
+  private void createFtpExchange(
+      Exchange ftpExchange, RemoteFileConfiguration endpointConfiguration, Exchange inputExchange) {
     ftpExchange.getMessage().setBody(inputExchange.getMessage().getBody());
-    ftpExchange.getMessage().setHeaders(prepareFtpHeaders(ftpEndpoint, inputExchange));
-    return ftpExchange;
+    ftpExchange.getMessage().setHeaders(prepareFtpHeaders(endpointConfiguration, inputExchange));
   }
 
   private Map<String, Object> prepareFtpHeaders(
-      RemoteFileEndpoint<FTPFile> ftpEndpoint, Exchange inputExchange) {
+      RemoteFileConfiguration endpointConfiguration, Exchange inputExchange) {
     Map<String, Object> headers = inputExchange.getMessage().getHeaders();
     String endpointAbsolutePath =
-        FileUtil.stripTrailingSeparator(ftpEndpoint.getConfiguration().getDirectory());
+        FileUtil.stripTrailingSeparator(endpointConfiguration.getDirectory());
 
     prepareDefaultHeaders(
         headers,
-        ftpEndpoint,
+        endpointConfiguration,
         inputExchange.getMessage().getBody(String.class),
         endpointAbsolutePath);
 
@@ -90,29 +86,18 @@ public class FtpRouteInvoker implements RouteInvoker {
 
   private void prepareDefaultHeaders(
       Map<String, Object> headers,
-      RemoteFileEndpoint<FTPFile> ftpEndpoint,
+      RemoteFileConfiguration endpointConfiguration,
       String bodyPayload,
       String endpointAbsolutePath) {
-    if (!headers.containsKey(CAMEL_FILE_ABSOLUTE.getValue())) {
-      headers.put(
-          CAMEL_FILE_ABSOLUTE.getValue(), FileUtil.hasLeadingSeparator(endpointAbsolutePath));
-    }
-    if (!headers.containsKey(CAMEL_FILE_HOST.getValue())) {
-      headers.put(
-          CAMEL_FILE_HOST.getValue(),
-          ((RemoteFileConfiguration) ftpEndpoint.getConfiguration()).getHost());
-    }
-    if (!headers.containsKey(CAMEL_FILE_LENGTH.getValue())) {
-      headers.put(CAMEL_FILE_LENGTH.getValue(), (long) bodyPayload.length());
-    }
-    if (!headers.containsKey(CAMEL_FILE_PARENT.getValue())) {
-      headers.put(
-          CAMEL_FILE_PARENT.getValue(), FileUtil.stripLeadingSeparator(endpointAbsolutePath));
-    }
-    if (ftpEndpoint.getConfiguration().isStreamDownload()
-        && !headers.containsKey(CAMEL_REMOTE_FILE_INPUT_STREAM.getValue())) {
+    headers.putIfAbsent(
+        CAMEL_FILE_ABSOLUTE.getValue(), FileUtil.hasLeadingSeparator(endpointAbsolutePath));
+    headers.putIfAbsent(CAMEL_FILE_HOST.getValue(), endpointConfiguration.getHost());
+    headers.putIfAbsent(CAMEL_FILE_LENGTH.getValue(), (long) bodyPayload.length());
+    headers.putIfAbsent(
+        CAMEL_FILE_PARENT.getValue(), FileUtil.stripLeadingSeparator(endpointAbsolutePath));
+    if (endpointConfiguration.isStreamDownload()) {
       InputStream is = new ByteArrayInputStream(bodyPayload.getBytes());
-      headers.put(CAMEL_REMOTE_FILE_INPUT_STREAM.getValue(), is);
+      headers.putIfAbsent(CAMEL_REMOTE_FILE_INPUT_STREAM.getValue(), is);
     }
   }
 
@@ -122,34 +107,21 @@ public class FtpRouteInvoker implements RouteInvoker {
         normalizePathToProtocol(
             FileUtil.stripLeadingSeparator((String) headers.get(CAMEL_FILE_NAME.getValue())));
     headers.put(CAMEL_FILE_NAME.getValue(), filename);
-    if (!headers.containsKey(CAMEL_FILE_NAME_CONSUMED.getValue())) {
-      headers.put(CAMEL_FILE_NAME_CONSUMED.getValue(), filename);
-    }
-    if (!headers.containsKey(CAMEL_FILE_NAME_ONLY.getValue())) {
-      headers.put(CAMEL_FILE_NAME_ONLY.getValue(), filename);
-    }
-    if (!headers.containsKey(CAMEL_FILE_RELATIVE_PATH.getValue())) {
-      headers.put(CAMEL_FILE_RELATIVE_PATH.getValue(), filename);
-    }
-
-    if (!headers.containsKey(CAMEL_FILE_ABSOLUTE_PATH.getValue())) {
-      headers.put(
-          CAMEL_FILE_ABSOLUTE_PATH.getValue(),
-          FileUtil.stripLeadingSeparator(endpointAbsolutePath + "/" + filename));
-    }
-    if (!headers.containsKey(CAMEL_FILE_PATH.getValue())) {
-      headers.put(
-          CAMEL_FILE_PATH.getValue(),
-          FileUtil.stripLeadingSeparator(endpointAbsolutePath) + "/" + filename);
-    }
+    headers.putIfAbsent(CAMEL_FILE_NAME_CONSUMED.getValue(), filename);
+    headers.putIfAbsent(CAMEL_FILE_NAME_ONLY.getValue(), filename);
+    headers.putIfAbsent(CAMEL_FILE_RELATIVE_PATH.getValue(), filename);
+    headers.putIfAbsent(
+        CAMEL_FILE_ABSOLUTE_PATH.getValue(),
+        FileUtil.stripLeadingSeparator(endpointAbsolutePath + "/" + filename));
+    headers.putIfAbsent(
+        CAMEL_FILE_PATH.getValue(),
+        FileUtil.stripLeadingSeparator(endpointAbsolutePath) + "/" + filename);
   }
 
   private void prepareOtherHeaders(Map<String, Object> headers) {
     if (headers.containsKey(CAMEL_FILE_LAST_MODIFIED.getValue())) {
       Long lastModifiedTimestamp = (Long) headers.get(CAMEL_FILE_LAST_MODIFIED.getValue());
-      if (!headers.containsKey(CAMEL_MESSAGE_TIMESTAMP.getValue())) {
-        headers.put(CAMEL_MESSAGE_TIMESTAMP.getValue(), lastModifiedTimestamp);
-      }
+      headers.putIfAbsent(CAMEL_MESSAGE_TIMESTAMP.getValue(), lastModifiedTimestamp);
     }
   }
 
