@@ -27,7 +27,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   private final List<ProxyExtension> extensions;
   private Function<Exchange, Exchange> mockFunction;
   @Getter private boolean endpointProcessor;
-  @Getter private String type;
+  @Getter private Class type;
 
   /**
    * Creates new instance of ProcessorProxy
@@ -47,7 +47,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     this.extensions = new ArrayList<>(extensions);
     this.mockFunction = null;
     this.endpointProcessor = determineEndpointProcessor();
-    this.type = originalProcessor.getClass().getName();
+    this.type = originalProcessor.getClass();
   }
 
   /** Resets the state of the proxy to default. */
