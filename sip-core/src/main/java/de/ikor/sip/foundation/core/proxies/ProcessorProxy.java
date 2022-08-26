@@ -27,7 +27,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   private final List<ProxyExtension> extensions;
   private Function<Exchange, Exchange> mockFunction;
   @Getter private boolean endpointProcessor;
-  @Getter private Class type;
+  @Getter private Class<? extends Processor> type;
 
   /**
    * Creates new instance of ProcessorProxy
