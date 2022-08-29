@@ -66,6 +66,7 @@ public class CamelTestCaseValidator implements TestCaseValidator {
             : EndpointValidationOutcome.UNSUCCESSFUL);
     mockReport.setValidatedHeaders(
         extractValidatedHeaders(mockReport.getActual(), mockReport.getExpected()));
+    mockReport.setValidationResults(endpointValidationResultList);
   }
 
   private boolean isNotSuccess(MockReport mockReport) {
