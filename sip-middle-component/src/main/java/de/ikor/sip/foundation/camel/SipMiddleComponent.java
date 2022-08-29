@@ -32,6 +32,7 @@ public class SipMiddleComponent extends DefaultComponent {
             .append(remaining)
             .append("?multipleConsumers=")
             .append(hasMultipleSipmcConsumers(uri))
+            .append("&waitForTaskToComplete=always")
             .toString();
 
     return new SipMiddleEndpoint(uri, this, targetEndpointUri);
