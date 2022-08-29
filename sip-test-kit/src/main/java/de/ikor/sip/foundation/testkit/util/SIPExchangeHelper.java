@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.testkit.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import java.io.ByteArrayOutputStream;
@@ -102,5 +103,24 @@ public class SIPExchangeHelper extends DefaultExchangeHolder {
           "Route with id " + getRouteId(exchange) + " was not found");
     }
     return route.getEndpoint();
+  }
+
+  /**
+   * Create exchange from test definition
+   *
+   * @param properties with route id and payload for exchange body
+   * @param camelContext camel context
+   * @return {@link Exchange}
+   */
+  public static Exchange parseExchangeProperties(
+      EndpointProperties properties, CamelContext camelContext) {
+    if (properties == null) {
+      return createEmptyExchange(camelContext);
+    }
+    ExchangeBuilder exchangeBuilder =
+        ExchangeBuilder.anExchange(camelContext).withBody(properties.getMessage().getBody());
+    properties.getMessage().getHeaders().forEach(exchangeBuilder::withHeader);
+    exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpoint());
+    return exchangeBuilder.build();
   }
 }

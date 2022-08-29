@@ -38,7 +38,7 @@ class TestCaseTest {
   }
 
   @Test
-  void When_run_Expect_AllPhasesExecuted() {
+  void WHEN_run_THEN_allPhasesExecuted() {
     // arrange
     Exchange exchange = mock(Exchange.class);
     Message message = mock(Message.class);
@@ -57,7 +57,7 @@ class TestCaseTest {
   }
 
   @Test
-  void When_clearMocks_Expect_MockClearCalled() {
+  void WHEN_clearMocks_THEN_MockClearCalled() {
     // act
     subject.clearMocks();
 
@@ -66,7 +66,7 @@ class TestCaseTest {
   }
 
   @Test
-  void reportExecutionException() {
+  void GIVEN_runtimeException_WHEN_reportExecutionException_THEN_validateFailedTestExecution() {
     // arrange
     RuntimeException ex = new RuntimeException(EXCEPTION_MESSAGE);
 
@@ -75,7 +75,8 @@ class TestCaseTest {
 
     // assert
     assertThat(testExecutionStatus.isSuccessfulExecution()).isFalse();
-    assertThat(testExecutionStatus.getWorkflowException()).isEqualTo(ex);
+    assertThat(testExecutionStatus.getWorkflowException()).isPresent();
+    assertThat(testExecutionStatus.getWorkflowException()).contains(ex);
     assertThat(testExecutionStatus.getWorkflowExceptionMessage()).contains(EXCEPTION_MESSAGE);
   }
 }

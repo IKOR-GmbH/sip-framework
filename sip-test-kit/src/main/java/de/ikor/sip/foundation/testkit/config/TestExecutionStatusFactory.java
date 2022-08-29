@@ -1,11 +1,11 @@
 package de.ikor.sip.foundation.testkit.config;
 
+import static de.ikor.sip.foundation.testkit.util.SIPExchangeHelper.parseExchangeProperties;
 import static java.util.stream.Collectors.toList;
 
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
-import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.reporting.model.MockReport;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,6 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
-import org.apache.camel.builder.ExchangeBuilder;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +38,8 @@ public class TestExecutionStatusFactory {
         endpointProperty ->
             reportMap.put(
                 endpointProperty.getEndpoint(),
-                new MockReport().setExpected(parseExchangeProperties(endpointProperty))));
+                new MockReport()
+                    .setExpected(parseExchangeProperties(endpointProperty, camelContext))));
     return reportMap;
   }
 
@@ -49,7 +49,7 @@ public class TestExecutionStatusFactory {
         IterableUtils.find(
             testCaseDefinition.getThenExpect(),
             endpoint -> endpoint.getEndpoint().equals(startingEndpoint));
-    return parseExchangeProperties(endpointProperties);
+    return parseExchangeProperties(endpointProperties, camelContext);
   }
 
   private List<EndpointProperties> expectedEndpointResponses(
@@ -62,16 +62,5 @@ public class TestExecutionStatusFactory {
                 endpointProperties ->
                     !endpointProperties.getEndpoint().equals(expectedAdapterResponseId))
             .collect(toList());
-  }
-
-  private Exchange parseExchangeProperties(EndpointProperties properties) {
-    if (properties == null) {
-      return null;
-    }
-    ExchangeBuilder exchangeBuilder =
-        ExchangeBuilder.anExchange(camelContext).withBody(properties.getMessage().getBody());
-    properties.getMessage().getHeaders().forEach(exchangeBuilder::withHeader);
-    exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpoint());
-    return exchangeBuilder.build();
   }
 }

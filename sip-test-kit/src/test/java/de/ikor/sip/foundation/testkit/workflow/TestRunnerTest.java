@@ -72,6 +72,6 @@ class TestRunnerTest {
     assertThat(testRunner.run(testCase)).isFalse();
     verify(testCase).run();
     verify(testCase).clearMocks();
-    assertThat(testCase.getTestExecutionStatus().getWorkflowException()).isNotNull();
+    assertThat(testCase.getTestExecutionStatus().getWorkflowException()).isPresent();
   }
 }

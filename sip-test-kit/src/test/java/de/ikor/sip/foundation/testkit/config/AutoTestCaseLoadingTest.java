@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 @SpringBootTest(
-    properties = {"sip.testkit.test-cases-path:test-tcd.yml", "sip.testkit.batchTest:true"},
+    properties = {"sip.testkit.test-cases-path:test-tcd.yml", "sip.testkit.batch-test:true"},
     classes = ConfigurableEnvironment.class)
 class AutoTestCaseLoadingTest {
 

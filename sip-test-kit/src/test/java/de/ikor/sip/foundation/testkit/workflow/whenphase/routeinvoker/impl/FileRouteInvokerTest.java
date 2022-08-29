@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
-import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.headers.FileExchangeHeaders.*;
+import static org.apache.camel.Exchange.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -52,7 +52,7 @@ class FileRouteInvokerTest {
           String lengthValue) {
     // arrange
     if (isHeaderProvidedInConfiguration(lengthValue)) {
-      inputExchange.getMessage().setHeader(CAMEL_FILE_LENGTH.getValue(), Long.valueOf(lengthValue));
+      inputExchange.getMessage().setHeader(FILE_LENGTH, Long.valueOf(lengthValue));
     }
 
     // act
@@ -61,7 +61,7 @@ class FileRouteInvokerTest {
     // assert
     verify(asyncProcessor, times(1)).process(actualFileExchange, EmptyAsyncCallback.get());
     assertThat(actualFileExchange.getMessage().getBody()).isEqualTo(BODY_PAYLOAD);
-    assertThat(actualFileExchange.getMessage().getHeader(CAMEL_FILE_LENGTH.getValue()))
+    assertThat(actualFileExchange.getMessage().getHeader(FILE_LENGTH))
         .isEqualTo(
             isHeaderProvidedInConfiguration(lengthValue)
                 ? Long.parseLong(lengthValue)
@@ -73,18 +73,16 @@ class FileRouteInvokerTest {
   void GIVEN_filenameHeader_WHEN_invoke_THEN_getCamelFileNameConsumedHeader(
       String camelFileNameConsumed) {
     // arrange
-    inputExchange.getMessage().setHeader(CAMEL_FILE_NAME.getValue(), TESTING_FILE_NAME);
+    inputExchange.getMessage().setHeader(FILE_NAME, TESTING_FILE_NAME);
     if (isHeaderProvidedInConfiguration(camelFileNameConsumed)) {
-      inputExchange
-          .getMessage()
-          .setHeader(CAMEL_FILE_NAME_CONSUMED.getValue(), camelFileNameConsumed);
+      inputExchange.getMessage().setHeader(FILE_NAME_CONSUMED, camelFileNameConsumed);
     }
 
     // act
     subject.invoke(inputExchange);
 
     // assert
-    assertThat(actualFileExchange.getMessage().getHeader(CAMEL_FILE_NAME_CONSUMED.getValue()))
+    assertThat(actualFileExchange.getMessage().getHeader(FILE_NAME_CONSUMED))
         .isEqualTo(
             isHeaderProvidedInConfiguration(camelFileNameConsumed)
                 ? camelFileNameConsumed
@@ -95,16 +93,16 @@ class FileRouteInvokerTest {
   @ValueSource(strings = {NO_HEADER, "inputFile.txt"})
   void GIVEN_filenameHeader_WHEN_invoke_THEN_getCamelFileNameOnlyHeader(String camelFileNameOnly) {
     // arrange
-    inputExchange.getMessage().setHeader(CAMEL_FILE_NAME.getValue(), TESTING_FILE_NAME);
+    inputExchange.getMessage().setHeader(FILE_NAME, TESTING_FILE_NAME);
     if (isHeaderProvidedInConfiguration(camelFileNameOnly)) {
-      inputExchange.getMessage().setHeader(CAMEL_FILE_NAME_ONLY.getValue(), camelFileNameOnly);
+      inputExchange.getMessage().setHeader(FILE_NAME_ONLY, camelFileNameOnly);
     }
 
     // act
     subject.invoke(inputExchange);
 
     // assert
-    assertThat(actualFileExchange.getMessage().getHeader(CAMEL_FILE_NAME_ONLY.getValue()))
+    assertThat(actualFileExchange.getMessage().getHeader(FILE_NAME_ONLY))
         .isEqualTo(
             isHeaderProvidedInConfiguration(camelFileNameOnly)
                 ? camelFileNameOnly
@@ -117,20 +115,16 @@ class FileRouteInvokerTest {
       String camelMessageTimestamp) {
     // arrange
     Long lastModifiedTimestamp = Long.valueOf("1658914689700");
-    inputExchange
-        .getMessage()
-        .setHeader(CAMEL_FILE_LAST_MODIFIED.getValue(), lastModifiedTimestamp);
+    inputExchange.getMessage().setHeader(FILE_LAST_MODIFIED, lastModifiedTimestamp);
     if (isHeaderProvidedInConfiguration(camelMessageTimestamp)) {
-      inputExchange
-          .getMessage()
-          .setHeader(CAMEL_MESSAGE_TIMESTAMP.getValue(), camelMessageTimestamp);
+      inputExchange.getMessage().setHeader(MESSAGE_TIMESTAMP, camelMessageTimestamp);
     }
 
     // act
     subject.invoke(inputExchange);
 
     // assert
-    assertThat(actualFileExchange.getMessage().getHeader(CAMEL_MESSAGE_TIMESTAMP.getValue()))
+    assertThat(actualFileExchange.getMessage().getHeader(MESSAGE_TIMESTAMP))
         .isEqualTo(
             isHeaderProvidedInConfiguration(camelMessageTimestamp)
                 ? camelMessageTimestamp

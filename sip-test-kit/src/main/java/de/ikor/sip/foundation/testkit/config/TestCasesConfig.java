@@ -1,13 +1,12 @@
 package de.ikor.sip.foundation.testkit.config;
 
+import static de.ikor.sip.foundation.testkit.util.SIPExchangeHelper.parseExchangeProperties;
 import static java.util.stream.Collectors.toList;
 
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseBatchDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
-import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
 import de.ikor.sip.foundation.testkit.exception.handler.ExceptionLogger;
-import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.TestCase;
 import de.ikor.sip.foundation.testkit.workflow.TestCaseCollector;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
@@ -22,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
-import org.apache.camel.builder.ExchangeBuilder;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -69,14 +67,14 @@ public class TestCasesConfig {
 
     List<Mock> mocks = getMocks(testName, testCaseDefinition);
 
-    Exchange exchange = parseExchangeProperties(testCaseDefinition.getWhenExecute());
-
     TestCase testCase =
         new TestCase(
             testName,
             mocks,
             testCaseValidator,
             executionStatusFactory.generateTestReport(testCaseDefinition));
+
+    Exchange exchange = parseExchangeProperties(testCaseDefinition.getWhenExecute(), camelContext);
 
     try {
       RouteInvoker invoker = routeInvokerFactory.getInstance(exchange);
@@ -92,7 +90,7 @@ public class TestCasesConfig {
         .map(
             connectionProperties ->
                 mockFactory.newMockInstance(
-                    testName, parseExchangeProperties(connectionProperties)))
+                    testName, parseExchangeProperties(connectionProperties, camelContext)))
         .collect(toList());
   }
 
@@ -106,16 +104,5 @@ public class TestCasesConfig {
     if (testCases.size() != testCaseBatchDefinition.getTestCaseDefinitions().size()) {
       throw new BeanCreationException("Some test cases were not created.");
     }
-  }
-
-  private Exchange parseExchangeProperties(EndpointProperties properties) {
-    if (properties == null) {
-      return SIPExchangeHelper.createEmptyExchange(camelContext);
-    }
-    ExchangeBuilder exchangeBuilder =
-        ExchangeBuilder.anExchange(camelContext).withBody(properties.getMessage().getBody());
-    properties.getMessage().getHeaders().forEach(exchangeBuilder::withHeader);
-    exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpoint());
-    return exchangeBuilder.build();
   }
 }

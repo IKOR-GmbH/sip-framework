@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.testkit.config;
 
 import de.ikor.sip.foundation.testkit.exception.UnsuspendedRouteException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Consumer;
@@ -17,9 +16,8 @@ import org.springframework.stereotype.Component;
  * tests.
  */
 @Slf4j
-@ConditionalOnProperty(name = "sip.testkit.batchTest", havingValue = "true")
+@ConditionalOnProperty(name = "sip.testkit.batch-test", havingValue = "true")
 @Component
-@RequiredArgsConstructor
 public class CamelContextLifecycleHandler implements CamelContextConfiguration {
 
   @Override
@@ -29,10 +27,10 @@ public class CamelContextLifecycleHandler implements CamelContextConfiguration {
 
   @Override
   public void afterApplicationStart(CamelContext camelContext) {
-    suspendRoutes(camelContext);
+    suspendPollingConsumerRoutes(camelContext);
   }
 
-  private void suspendRoutes(CamelContext camelContext) {
+  private void suspendPollingConsumerRoutes(CamelContext camelContext) {
     camelContext.getRoutes().forEach(route -> checkAndSuspend(route, camelContext));
   }
 

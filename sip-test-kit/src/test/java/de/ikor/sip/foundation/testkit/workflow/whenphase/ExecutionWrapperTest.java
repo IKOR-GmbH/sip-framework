@@ -30,14 +30,12 @@ class ExecutionWrapperTest {
     Optional<Exchange> actual = subject.execute();
 
     // assert
-    if (actual.isPresent()) {
-      assertThat(actual.get().getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER))
-          .isEqualTo(TEST_NAME);
-      assertThat(
-              actual.get().getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, Boolean.class))
-          .isTrue();
-      assertThat(actual.get().getMessage().getBody()).isNull();
-    }
+    assertThat(actual).isPresent();
+    assertThat(actual.get().getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER))
+        .isEqualTo(TEST_NAME);
+    assertThat(actual.get().getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, Boolean.class))
+        .isTrue();
+    assertThat(actual.get().getMessage().getBody()).isNull();
   }
 
   private Exchange createEmptyExchange() {

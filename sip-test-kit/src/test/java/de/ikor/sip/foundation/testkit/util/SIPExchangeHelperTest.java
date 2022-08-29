@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import java.util.HashMap;
@@ -100,5 +101,33 @@ class SIPExchangeHelperTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> SIPExchangeHelper.resolveEndpoint(exchange, camelContext));
+  }
+
+  @Test
+  void GIVEN_properties_WHEN_parseExchangeProperties_THEN_expectExchangeWithValues() {
+    // assert
+    EndpointProperties properties = new EndpointProperties();
+    properties.setEndpoint("routeId");
+    MessageProperties messageProperties = new MessageProperties();
+    messageProperties.setBody("body");
+    messageProperties.setHeaders(Map.of("headerKey", "value"));
+    properties.setMessage(messageProperties);
+
+    // act
+    Exchange actual = SIPExchangeHelper.parseExchangeProperties(properties, camelContext);
+
+    // arrange
+    assertThat(actual.getMessage().getBody()).isEqualTo("body");
+    assertThat(actual.getMessage().getHeaders()).containsEntry("headerKey", "value");
+  }
+
+  @Test
+  void GIVEN_noProperties_WHEN_parseExchangeProperties_THEN_expectExchangeWithValues() {
+    // act
+    Exchange actual = SIPExchangeHelper.parseExchangeProperties(null, camelContext);
+
+    // arrange
+    assertThat(actual.getMessage().getBody()).isNull();
+    assertThat(actual.getMessage().getHeaders()).isEmpty();
   }
 }
