@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
+import java.util.Optional;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.builder.ExchangeBuilder;
@@ -23,16 +24,18 @@ class ExecutionWrapperTest {
     Exchange inputExchange = createEmptyExchange();
     RouteInvoker routeInvoker = mock(RouteInvoker.class);
     ExecutionWrapper subject = new ExecutionWrapper(TEST_NAME, inputExchange, routeInvoker);
-    when(routeInvoker.invoke(any(Exchange.class))).thenReturn(inputExchange);
+    when(routeInvoker.invoke(any(Exchange.class))).thenReturn(Optional.of(inputExchange));
 
     // act
-    Exchange actual = subject.execute();
+    Optional<Exchange> actual = subject.execute();
 
     // assert
-    assertThat(actual.getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER)).isEqualTo(TEST_NAME);
-    assertThat(actual.getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, Boolean.class))
+    assertThat(actual).isPresent();
+    assertThat(actual.get().getMessage().getHeader(RouteInvoker.TEST_NAME_HEADER))
+        .isEqualTo(TEST_NAME);
+    assertThat(actual.get().getMessage().getHeader(ProcessorProxy.TEST_MODE_HEADER, Boolean.class))
         .isTrue();
-    assertThat(actual.getMessage().getBody()).isNull();
+    assertThat(actual.get().getMessage().getBody()).isNull();
   }
 
   private Exchange createEmptyExchange() {
