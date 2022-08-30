@@ -64,6 +64,12 @@
             <artifactId>camel-ftp</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-openapi-java-starter</artifactId>
+            <optional>true</optional>
+        </dependency>
+
 
         <!-- Other dependencies -->
         <dependency>
@@ -122,5 +128,21 @@
             <artifactId>camel-jmx-starter</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-servlet-starter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-rest-starter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-http-starter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 </project>
