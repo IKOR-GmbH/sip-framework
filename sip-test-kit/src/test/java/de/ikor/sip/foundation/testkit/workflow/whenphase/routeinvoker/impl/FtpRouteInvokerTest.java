@@ -2,20 +2,19 @@ package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
 import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.headers.FtpExchangeHeaders.*;
 import static org.apache.camel.Exchange.*;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
-import org.apache.camel.Exchange;
-import org.apache.camel.ExtendedCamelContext;
-import org.apache.camel.Processor;
-import org.apache.camel.Route;
+import org.apache.camel.*;
 import org.apache.camel.component.file.remote.RemoteFileConfiguration;
 import org.apache.camel.component.file.remote.RemoteFileConsumer;
 import org.apache.camel.component.file.remote.RemoteFileEndpoint;
 import org.apache.commons.net.ftp.FTPFile;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -31,6 +30,8 @@ class FtpRouteInvokerTest {
   private Exchange inputExchange;
   private Processor processor;
   private Exchange actualFileExchange;
+  private RemoteFileEndpoint<FTPFile> ftpEndpoint;
+  private RemoteFileConfiguration endpointConfiguration;
 
   @BeforeEach
   void setup() {
@@ -43,7 +44,7 @@ class FtpRouteInvokerTest {
     Route route = mock(Route.class);
     RemoteFileConsumer<FTPFile> ftpConsumer = mock(RemoteFileConsumer.class);
     processor = mock(Processor.class);
-    RemoteFileEndpoint<FTPFile> ftpEndpoint = mock(RemoteFileEndpoint.class);
+    ftpEndpoint = mock(RemoteFileEndpoint.class);
 
     when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
     when(route.getEndpoint()).thenReturn(ftpEndpoint);
@@ -53,7 +54,7 @@ class FtpRouteInvokerTest {
     actualFileExchange = SIPExchangeHelper.createEmptyExchange(camelContext);
     when(ftpConsumer.createExchange(true)).thenReturn(actualFileExchange);
 
-    RemoteFileConfiguration endpointConfiguration = mock(RemoteFileConfiguration.class);
+    endpointConfiguration = mock(RemoteFileConfiguration.class);
     when(ftpEndpoint.getConfiguration()).thenReturn(endpointConfiguration);
     when(endpointConfiguration.getDirectory()).thenReturn(TESTING_DIRECTORY);
     when(endpointConfiguration.getHost()).thenReturn("localhost");
@@ -217,6 +218,36 @@ class FtpRouteInvokerTest {
             isHeaderProvidedInConfiguration(camelMessageTimestamp)
                 ? camelMessageTimestamp
                 : lastModifiedTimestamp);
+  }
+
+  @DisplayName("Using input header CamelRemoteFileInputStream")
+  @Test
+  void GIVEN_streamDownloadTrue_WHEN_invoke_THEN_getCamelRemoteFileInputStreamHeader() {
+    // arrange
+    when(endpointConfiguration.isStreamDownload()).thenReturn(true);
+    inputExchange.getMessage().setHeader(CAMEL_REMOTE_FILE_INPUT_STREAM.getValue(), "stream value");
+
+    // act
+    subject.invoke(inputExchange);
+
+    // assert
+    assertThat(actualFileExchange.getMessage().getHeader(CAMEL_REMOTE_FILE_INPUT_STREAM.getValue()))
+        .isEqualTo("stream value");
+  }
+
+  @Test
+  void GIVEN_remoteFileEndpoint_WHEN_isApplicable_THEN_returnTrue() {
+    // act & assert
+    assertThat(subject.isApplicable(ftpEndpoint)).isTrue();
+  }
+
+  @Test
+  void GIVEN_noRemoteFileEndpoint_WHEN_isApplicable_THEN_returnTrue() {
+    // arrange
+    Endpoint endpoint = mock(Endpoint.class);
+
+    // act & assert
+    assertThat(subject.isApplicable(endpoint)).isFalse();
   }
 
   private boolean isHeaderProvidedInConfiguration(String headerValue) {
