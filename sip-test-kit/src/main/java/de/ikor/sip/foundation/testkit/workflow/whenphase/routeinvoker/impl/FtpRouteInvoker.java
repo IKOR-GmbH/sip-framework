@@ -1,20 +1,22 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
-import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.headers.FileExchangeHeaders.*;
+import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.headers.FtpExchangeHeaders.*;
+import static org.apache.camel.Exchange.*;
 
+import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.Route;
-import org.apache.camel.builder.ExchangeBuilder;
 import org.apache.camel.component.file.remote.*;
 import org.apache.camel.util.FileUtil;
 import org.apache.camel.util.ObjectHelper;
@@ -27,36 +29,31 @@ import org.springframework.stereotype.Component;
 public class FtpRouteInvoker implements RouteInvoker {
 
   private final CamelContext camelContext;
-  private Endpoint endpoint;
 
   @Override
-  public Exchange invoke(Exchange inputExchange) {
-    RemoteFileEndpoint<FTPFile> ftpEndpoint = (RemoteFileEndpoint<FTPFile>) endpoint;
+  public Optional<Exchange> invoke(Exchange inputExchange) {
+    RemoteFileEndpoint<FTPFile> ftpEndpoint =
+        (RemoteFileEndpoint<FTPFile>)
+            SIPExchangeHelper.resolveEndpoint(inputExchange, camelContext);
     Route route =
         camelContext.getRoute(
             (String) inputExchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY));
-    RemoteFileConsumer<FTPFile> fileConsumer = (RemoteFileConsumer<FTPFile>) route.getConsumer();
+    RemoteFileConsumer<FTPFile> ftpConsumer = (RemoteFileConsumer<FTPFile>) route.getConsumer();
 
-    Exchange ftpExchange = fileConsumer.createExchange(true);
+    Exchange ftpExchange = ftpConsumer.createExchange(true);
     createFtpExchange(ftpExchange, ftpEndpoint.getConfiguration(), inputExchange);
 
     try {
-      fileConsumer.getProcessor().process(ftpExchange);
+      ftpConsumer.getProcessor().process(ftpExchange);
     } catch (Exception e) {
       log.error("sip.testkit.workflow.whenphase.routeinvoker.ftp.badrequest");
     }
-    return createEmptyExchange();
+    return Optional.empty();
   }
 
   @Override
   public boolean isApplicable(Endpoint endpoint) {
     return endpoint instanceof RemoteFileEndpoint;
-  }
-
-  @Override
-  public RouteInvoker setEndpoint(Endpoint endpoint) {
-    this.endpoint = endpoint;
-    return this;
   }
 
   private void createFtpExchange(
@@ -77,8 +74,8 @@ public class FtpRouteInvoker implements RouteInvoker {
         inputExchange.getMessage().getBody(String.class),
         endpointAbsolutePath);
 
-    if (headers.containsKey(CAMEL_FILE_NAME.getValue())) {
-      prepareHeadersWithFilename(headers, endpointAbsolutePath);
+    if (headers.containsKey(FILE_NAME)) {
+      prepareFilenameHeaders(headers, endpointAbsolutePath);
     }
     prepareOtherHeaders(headers);
     return headers;
@@ -92,36 +89,33 @@ public class FtpRouteInvoker implements RouteInvoker {
     headers.putIfAbsent(
         CAMEL_FILE_ABSOLUTE.getValue(), FileUtil.hasLeadingSeparator(endpointAbsolutePath));
     headers.putIfAbsent(CAMEL_FILE_HOST.getValue(), endpointConfiguration.getHost());
-    headers.putIfAbsent(CAMEL_FILE_LENGTH.getValue(), (long) bodyPayload.length());
-    headers.putIfAbsent(
-        CAMEL_FILE_PARENT.getValue(), FileUtil.stripLeadingSeparator(endpointAbsolutePath));
+    headers.putIfAbsent(FILE_LENGTH, (long) bodyPayload.length());
+    headers.putIfAbsent(FILE_PARENT, FileUtil.stripLeadingSeparator(endpointAbsolutePath));
     if (endpointConfiguration.isStreamDownload()) {
       InputStream is = new ByteArrayInputStream(bodyPayload.getBytes());
       headers.putIfAbsent(CAMEL_REMOTE_FILE_INPUT_STREAM.getValue(), is);
     }
   }
 
-  private void prepareHeadersWithFilename(
+  private void prepareFilenameHeaders(
       Map<String, Object> headers, String endpointAbsolutePath) {
     String filename =
-        normalizePathToProtocol(
-            FileUtil.stripLeadingSeparator((String) headers.get(CAMEL_FILE_NAME.getValue())));
-    headers.put(CAMEL_FILE_NAME.getValue(), filename);
-    headers.putIfAbsent(CAMEL_FILE_NAME_CONSUMED.getValue(), filename);
-    headers.putIfAbsent(CAMEL_FILE_NAME_ONLY.getValue(), filename);
+        normalizePathToProtocol(FileUtil.stripLeadingSeparator((String) headers.get(FILE_NAME)));
+    headers.put(FILE_NAME, filename);
+    headers.putIfAbsent(FILE_NAME_CONSUMED, filename);
+    headers.putIfAbsent(FILE_NAME_ONLY, filename);
     headers.putIfAbsent(CAMEL_FILE_RELATIVE_PATH.getValue(), filename);
     headers.putIfAbsent(
         CAMEL_FILE_ABSOLUTE_PATH.getValue(),
         FileUtil.stripLeadingSeparator(endpointAbsolutePath + "/" + filename));
     headers.putIfAbsent(
-        CAMEL_FILE_PATH.getValue(),
-        FileUtil.stripLeadingSeparator(endpointAbsolutePath) + "/" + filename);
+        FILE_PATH, FileUtil.stripLeadingSeparator(endpointAbsolutePath) + "/" + filename);
   }
 
   private void prepareOtherHeaders(Map<String, Object> headers) {
-    if (headers.containsKey(CAMEL_FILE_LAST_MODIFIED.getValue())) {
-      Long lastModifiedTimestamp = (Long) headers.get(CAMEL_FILE_LAST_MODIFIED.getValue());
-      headers.putIfAbsent(CAMEL_MESSAGE_TIMESTAMP.getValue(), lastModifiedTimestamp);
+    if (headers.containsKey(FILE_LAST_MODIFIED)) {
+      Long lastModifiedTimestamp = (Long) headers.get(FILE_LAST_MODIFIED);
+      headers.putIfAbsent(MESSAGE_TIMESTAMP, lastModifiedTimestamp);
     }
   }
 
@@ -131,10 +125,5 @@ public class FtpRouteInvoker implements RouteInvoker {
       path = path.replace('\\', File.separatorChar);
     }
     return path;
-  }
-
-  private Exchange createEmptyExchange() {
-    ExchangeBuilder exchangeBuilder = ExchangeBuilder.anExchange(camelContext);
-    return exchangeBuilder.build();
   }
 }
