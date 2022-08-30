@@ -97,8 +97,7 @@ public class FtpRouteInvoker implements RouteInvoker {
     }
   }
 
-  private void prepareFilenameHeaders(
-      Map<String, Object> headers, String endpointAbsolutePath) {
+  private void prepareFilenameHeaders(Map<String, Object> headers, String endpointAbsolutePath) {
     String filename =
         normalizePathToProtocol(FileUtil.stripLeadingSeparator((String) headers.get(FILE_NAME)));
     headers.put(FILE_NAME, filename);
