@@ -19,7 +19,7 @@ class TestExecutionStatusTest {
   }
 
   @Test
-  void When_setExpectedAdapterResponse_Expect_AdapterReportUpdated() {
+  void GIVEN_exchange_WHEN_setExpectedAdapterResponse_THEN_adapterReportUpdated() {
     // arrange
     Exchange exchange = mock(Exchange.class);
 
@@ -31,7 +31,7 @@ class TestExecutionStatusTest {
   }
 
   @Test
-  void When_setWorkflowException_Expect_WorkflowExceptionAndMessageSet() {
+  void GIVEN_runtimeException_WHEN_setWorkflowException_THEN_workflowExceptionAndMessageSet() {
     // arrange
     Exception ex = new RuntimeException(EXCEPTION_MESSAGE);
 
@@ -39,13 +39,14 @@ class TestExecutionStatusTest {
     subject.setWorkflowException(ex);
 
     // assert
-    assertThat(subject.getWorkflowException()).isEqualTo(ex);
+    assertThat(subject.getWorkflowException()).isPresent();
+    assertThat(subject.getWorkflowException()).contains(ex);
     assertThat(subject.getWorkflowExceptionMessage())
         .startsWith("Error occurred during workflow of the test: " + EXCEPTION_MESSAGE);
   }
 
   @Test
-  void When_getMockReport_With_NoMockReport_Then_AddNewMockReport() {
+  void GIVEN_noMockReport_WHEN_getMockReport_THEN_addNewMockReport() {
     // act + assert
     assertThat(subject.getMockReports().get(MOCK_REPORT_KEY)).isNull();
     assertThat(subject.getMockReport(MOCK_REPORT_KEY)).isNotNull();

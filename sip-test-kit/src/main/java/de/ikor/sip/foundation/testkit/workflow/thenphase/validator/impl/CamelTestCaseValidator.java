@@ -29,7 +29,9 @@ public class CamelTestCaseValidator implements TestCaseValidator {
     SIPAdapterExecutionReport adapterReport = testExecutionStatus.getAdapterReport();
     Map<String, MockReport> mockReports = testExecutionStatus.getMockReports();
 
-    this.validateAdapterResponse(adapterReport);
+    if (adapterReport.getActualResponse() != null) {
+      this.validateAdapterResponse(adapterReport);
+    }
     this.validateMockReports(mockReports);
 
     boolean isAdapterResultExpected =
@@ -64,6 +66,7 @@ public class CamelTestCaseValidator implements TestCaseValidator {
             : EndpointValidationOutcome.UNSUCCESSFUL);
     mockReport.setValidatedHeaders(
         extractValidatedHeaders(mockReport.getActual(), mockReport.getExpected()));
+    mockReport.setValidationResults(endpointValidationResultList);
   }
 
   private boolean isNotSuccess(MockReport mockReport) {

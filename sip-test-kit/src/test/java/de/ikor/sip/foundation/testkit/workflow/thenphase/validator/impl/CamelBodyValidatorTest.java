@@ -15,64 +15,107 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class CamelBodyValidatorTest {
 
-  CamelBodyValidator bodyValidator;
+  private static final ValidationResult VALIDATION_RESULT_SUCCESSFUL =
+      new ValidationResult(true, "Body validation successful");
+  private static final ValidationResult VALIDATION_RESULT_UNSUCCESSFUL =
+      new ValidationResult(false, "Body validation unsuccessful");
+
+  CamelBodyValidator bodyValidatorSubject;
   Exchange result;
   Exchange expected;
   private static final String RESULT = "test";
 
   @BeforeEach
   public void setUp() {
-    bodyValidator = new CamelBodyValidator();
+    bodyValidatorSubject = new CamelBodyValidator();
     result = mock(Exchange.class, RETURNS_DEEP_STUBS);
     expected = mock(Exchange.class, RETURNS_DEEP_STUBS);
   }
 
   @Test
-  void execute_Success() {
+  void When_execute_Expect_Success() {
     Message resultMessage = mock(Message.class);
     Message expectedMessage = mock(Message.class);
     when(result.getMessage()).thenReturn(resultMessage);
     when(expected.getMessage()).thenReturn(expectedMessage);
     when(resultMessage.getBody()).thenReturn(RESULT);
     when(expectedMessage.getBody()).thenReturn(RESULT);
-    ValidationResult validationResultSuccessful =
-        new ValidationResult(true, "Body validation successful");
 
-    ValidationResult validationResult = bodyValidator.execute(result, expected);
+    ValidationResult validationResult = bodyValidatorSubject.execute(result, expected);
 
-    assertEquals(validationResultSuccessful, validationResult);
+    assertEquals(VALIDATION_RESULT_SUCCESSFUL, validationResult);
   }
 
   @Test
-  void execute_Fail() {
+  void When_execute_With_DifferentActualAndExpected_Then_Fail() {
     Message resultMessage = mock(Message.class);
     Message expectedMessage = mock(Message.class);
     when(result.getMessage()).thenReturn(resultMessage);
     when(expected.getMessage()).thenReturn(expectedMessage);
     when(resultMessage.getBody()).thenReturn(RESULT);
     when(expectedMessage.getBody()).thenReturn("null");
-    ValidationResult validationResultUnsuccessful =
-        new ValidationResult(false, "Body validation unsuccessful");
 
-    ValidationResult validationResult = bodyValidator.execute(result, expected);
+    ValidationResult validationResult = bodyValidatorSubject.execute(result, expected);
 
-    assertThat(validationResult).isEqualTo(validationResultUnsuccessful);
+    assertThat(validationResult).isEqualTo(VALIDATION_RESULT_UNSUCCESSFUL);
   }
 
   @Test
-  void isApplicable_Success() {
+  void When_execute_With_NullActual_Then_Fail() {
+    Message resultMessage = mock(Message.class);
+    Message expectedMessage = mock(Message.class);
+    when(result.getMessage()).thenReturn(resultMessage);
+    when(expected.getMessage()).thenReturn(expectedMessage);
+    when(resultMessage.getBody()).thenReturn(null);
+    when(expectedMessage.getBody()).thenReturn("null");
+
+    ValidationResult validationResult = bodyValidatorSubject.execute(result, expected);
+
+    assertThat(validationResult).isEqualTo(VALIDATION_RESULT_UNSUCCESSFUL);
+  }
+
+  @Test
+  void When_execute_With_NullActualAndEmptyExpected_Then_Success() {
+    Message resultMessage = mock(Message.class);
+    Message expectedMessage = mock(Message.class);
+    when(result.getMessage()).thenReturn(resultMessage);
+    when(expected.getMessage()).thenReturn(expectedMessage);
+    when(resultMessage.getBody()).thenReturn(null);
+    when(expectedMessage.getBody()).thenReturn("");
+
+    ValidationResult validationResult = bodyValidatorSubject.execute(result, expected);
+
+    assertThat(validationResult).isEqualTo(VALIDATION_RESULT_SUCCESSFUL);
+  }
+
+  @Test
+  void When_execute_With_EmptyActualAndExpected_Then_Success() {
+    Message resultMessage = mock(Message.class);
+    Message expectedMessage = mock(Message.class);
+    when(result.getMessage()).thenReturn(resultMessage);
+    when(expected.getMessage()).thenReturn(expectedMessage);
+    when(resultMessage.getBody()).thenReturn("");
+    when(expectedMessage.getBody()).thenReturn("");
+
+    ValidationResult validationResult = bodyValidatorSubject.execute(result, expected);
+
+    assertThat(validationResult).isEqualTo(VALIDATION_RESULT_SUCCESSFUL);
+  }
+
+  @Test
+  void When_isApplicable_Expect_Success() {
     when(expected.getMessage().getBody()).thenReturn(RESULT);
 
-    boolean isApplicable = bodyValidator.isApplicable(result, expected);
+    boolean isApplicable = bodyValidatorSubject.isApplicable(result, expected);
 
     assertThat(isApplicable).isTrue();
   }
 
   @Test
-  void isApplicable_MissingBody() {
+  void When_isApplicable_With_MissingBody_Then_Fail() {
     when(expected.getMessage().getBody()).thenReturn(null);
 
-    boolean isApplicable = bodyValidator.isApplicable(result, expected);
+    boolean isApplicable = bodyValidatorSubject.isApplicable(result, expected);
 
     assertThat(isApplicable).isFalse();
   }

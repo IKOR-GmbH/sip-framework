@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker;
 
+import java.util.Optional;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 
@@ -12,9 +13,9 @@ public interface RouteInvoker {
    * Sends request to route
    *
    * @param exchange {@link Exchange}
-   * @return {@link Exchange} result of route execution
+   * @return {@link Optional} result of route execution, empty when invoking no reply components.
    */
-  Exchange invoke(Exchange exchange);
+  Optional<Exchange> invoke(Exchange exchange);
 
   /**
    * Matching Endpoint with proper RouteInvoker
@@ -23,12 +24,4 @@ public interface RouteInvoker {
    * @return boolean true when matching
    */
   boolean isApplicable(Endpoint endpoint);
-
-  /**
-   * Set endpoint to proper RouteInvoker
-   *
-   * @param endpoint {@link Endpoint}
-   * @return {@link RouteInvoker} result of route execution
-   */
-  RouteInvoker setEndpoint(Endpoint endpoint);
 }
