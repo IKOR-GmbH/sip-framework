@@ -23,6 +23,7 @@ import org.apache.camel.util.ObjectHelper;
 import org.apache.commons.net.ftp.FTPFile;
 import org.springframework.stereotype.Component;
 
+/** Invoker class for triggering routes with Ftp, Ftps, Sftp consumers */
 @Component
 @RequiredArgsConstructor
 @Slf4j
