@@ -170,7 +170,7 @@ Body and header validation is possible by either defining regex (Java) expressio
         having:
           body: "body of request"
           headers:
-            test-mode: "true"
+            CustomHeaderKey: "some value"
 ```
 
 # Supported Camel components
@@ -283,7 +283,7 @@ public class SampleRestRoute extends RouteBuilder {
       having:
         body: "body of request"
         headers:
-          test-mode: "true"
+          CustomHeaderKey: "some value"
 ```
 
 **Sample Console Report**
@@ -311,11 +311,11 @@ public class SampleRestRoute extends RouteBuilder {
       Received:
        Body: body of request
        Headers:
-        - test-mode: true
+        - CustomHeaderKey: some value
       Expected:
        Body: body of request
        Headers:
-        - test-mode: true
+        - CustomHeaderKey: some value
 
 -----------------------------
 ```
