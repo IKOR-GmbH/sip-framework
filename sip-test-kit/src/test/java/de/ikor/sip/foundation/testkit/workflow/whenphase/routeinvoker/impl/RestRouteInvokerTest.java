@@ -23,8 +23,7 @@ class RestRouteInvokerTest {
     when(restEndpoint.getPath()).thenReturn("test");
     when(producerTemplate.send("rest:post:test", exchange)).thenReturn(exchange);
 
-    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class))
-        .thenReturn(ROUTE_ID);
+    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
     Route route = mock(Route.class);
     when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
     when(route.getEndpoint()).thenReturn(restEndpoint);

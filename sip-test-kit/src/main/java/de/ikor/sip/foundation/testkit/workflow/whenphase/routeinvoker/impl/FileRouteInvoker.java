@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
-import static de.ikor.sip.foundation.testkit.util.SIPExchangeHelper.getRouteId;
+import static de.ikor.sip.foundation.testkit.util.SIPExchangeHelper.*;
 import static org.apache.camel.Exchange.*;
 
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
@@ -24,11 +24,11 @@ public class FileRouteInvoker implements RouteInvoker {
 
   @Override
   public Optional<Exchange> invoke(Exchange inputExchange) {
-    Route route = camelContext.getRoute(getRouteId(inputExchange));
-    FileConsumer fileConsumer = (FileConsumer) route.getConsumer();
+    FileConsumer fileConsumer = (FileConsumer) resolveConsumer(inputExchange, camelContext);
 
     Exchange fileExchange = fileConsumer.createExchange(true);
-    prepareFileExchange(fileExchange, inputExchange);
+    fileExchange.getMessage().setBody(inputExchange.getMessage().getBody());
+    fileExchange.getMessage().setHeaders(prepareFileHeaders(inputExchange));
 
     fileConsumer.getAsyncProcessor().process(fileExchange, EmptyAsyncCallback.get());
     return Optional.empty();
@@ -37,11 +37,6 @@ public class FileRouteInvoker implements RouteInvoker {
   @Override
   public boolean isApplicable(Endpoint endpoint) {
     return endpoint instanceof FileEndpoint;
-  }
-
-  private void prepareFileExchange(Exchange fileExchange, Exchange inputExchange) {
-    fileExchange.getMessage().setBody(inputExchange.getMessage().getBody());
-    fileExchange.getMessage().setHeaders(prepareFileHeaders(inputExchange));
   }
 
   private Map<String, Object> prepareFileHeaders(Exchange inputExchange) {

@@ -85,8 +85,7 @@ class SIPExchangeHelperTest {
     Endpoint expectedEndpoint = mock(Endpoint.class);
     when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
     when(route.getEndpoint()).thenReturn(expectedEndpoint);
-    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class))
-        .thenReturn(ROUTE_ID);
+    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
 
     // act
     Endpoint actualEndpoint = SIPExchangeHelper.resolveEndpoint(exchange, camelContext);
@@ -101,6 +100,22 @@ class SIPExchangeHelperTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> SIPExchangeHelper.resolveEndpoint(exchange, camelContext));
+  }
+
+  @Test
+  void GIVEN_routeId_WHEN_resolveConsumer_THEN_expectConsumer() {
+    // assert
+    Route route = mock(Route.class);
+    Consumer expectedConsumer = mock(Consumer.class);
+    when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
+    when(route.getConsumer()).thenReturn(expectedConsumer);
+    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
+
+    // act
+    Consumer actualConsumer = SIPExchangeHelper.resolveConsumer(exchange, camelContext);
+
+    // arrange
+    assertThat(actualConsumer).isEqualTo(expectedConsumer);
   }
 
   @Test
