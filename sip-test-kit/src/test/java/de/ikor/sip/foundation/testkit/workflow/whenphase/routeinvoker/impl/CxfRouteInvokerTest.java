@@ -1,13 +1,16 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExtendedCamelContext;
+import org.apache.camel.Route;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 class CxfRouteInvokerTest {
 
+  private static final String ROUTE_ID = "routeId";
   private static final String RESPONSE_BODY =
       "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><ns2:AddBookResponse xmlns:ns2=\"http://www.cleverbuilder.com/BookService/\"><ns2:Book><ID>1</ID><Title>Camel in Action</Title><Author>Claus Ibsen</Author></ns2:Book></ns2:AddBookResponse></soap:Body></soap:Envelope>";
 
@@ -36,8 +40,10 @@ class CxfRouteInvokerTest {
     restTemplate = mock(RestTemplate.class);
     Environment environment = mock(Environment.class);
     subject = new CxfRouteInvoker(camelContext, environment, restTemplateBuilder);
-    Endpoint endpoint = mock(Endpoint.class);
-    subject.setEndpoint(endpoint);
+
+    Route route = mock(Route.class);
+    when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
+    when(route.getEndpoint()).thenReturn(mock(Endpoint.class));
 
     when(environment.getProperty("local.server.port")).thenReturn("8081");
     when(restTemplateBuilder.build()).thenReturn(restTemplate);
@@ -60,15 +66,17 @@ class CxfRouteInvokerTest {
         .thenReturn(routeExpectedResponse);
 
     // act
-    Exchange actualExchange = spySubject.invoke(exchange);
+    Optional<Exchange> actualExchange = spySubject.invoke(exchange);
 
     // assert
-    assertThat(actualExchange.getMessage().getBody()).isEqualTo(inputBody);
+    actualExchange.ifPresent(
+        value -> assertThat(value.getMessage().getBody()).isEqualTo(inputBody));
   }
 
   private Exchange createExchange(Map<String, Object> headers) {
     ExchangeBuilder exchangeBuilder = ExchangeBuilder.anExchange(camelContext).withBody("");
     headers.forEach(exchangeBuilder::withHeader);
+    exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
     return exchangeBuilder.build();
   }
 }

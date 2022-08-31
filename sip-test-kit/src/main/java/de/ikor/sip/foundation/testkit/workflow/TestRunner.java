@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.testkit.workflow;
 
 import de.ikor.sip.foundation.testkit.workflow.reporting.resultprocessor.ResultProcessor;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,14 +25,23 @@ public class TestRunner {
   }
 
   public TestExecutionStatus executeTest(TestCase testCase) {
+    Optional<Exception> exception = testCase.getTestExecutionStatus().getWorkflowException();
     try {
-      testCase.run();
+      if (exception.isEmpty()) {
+        testCase.run();
+      } else {
+        handleTestException(testCase, exception.get());
+      }
     } catch (Exception e) {
-      log.error("sip.testkit.workflow.testrunerror_{}", testCase.getTestName());
-      testCase.reportExecutionException(e);
+      handleTestException(testCase, e);
     } finally {
       testCase.clearMocks();
     }
     return testCase.getTestExecutionStatus();
+  }
+
+  private void handleTestException(TestCase testCase, Exception e) {
+    log.error("sip.testkit.workflow.testrunerror_{}", testCase.getTestName());
+    testCase.reportExecutionException(e);
   }
 }

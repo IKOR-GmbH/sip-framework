@@ -4,13 +4,12 @@ import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.TestCaseValidator;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.ExecutionWrapper;
 import java.util.List;
-import lombok.AllArgsConstructor;
+import java.util.Optional;
 import lombok.Data;
 import org.apache.camel.Exchange;
 
 /** Class containing everything necessary for test execution. */
 @Data
-@AllArgsConstructor
 public class TestCase {
   private String testName;
   private List<Mock> mocks;
@@ -18,11 +17,23 @@ public class TestCase {
   private TestCaseValidator validator;
   private TestExecutionStatus testExecutionStatus;
 
+  public TestCase(
+      String testName,
+      List<Mock> mocks,
+      TestCaseValidator validator,
+      TestExecutionStatus testExecutionStatus) {
+    this.testName = testName;
+    this.mocks = mocks;
+    this.validator = validator;
+    this.testExecutionStatus = testExecutionStatus;
+  }
+
   /** Start Test execution */
   public void run() {
     executeGivenPhase();
-    Exchange exchange = executeWhenPhase();
-    testExecutionStatus.getAdapterReport().setActualResponse(exchange);
+    Optional<Exchange> optionalExchange = executeWhenPhase();
+    optionalExchange.ifPresent(
+        value -> testExecutionStatus.getAdapterReport().setActualResponse(value));
     executeThenPhase(testExecutionStatus);
   }
 
@@ -36,7 +47,7 @@ public class TestCase {
    *
    * @param exception that happened
    */
-  void reportExecutionException(Exception exception) {
+  public void reportExecutionException(Exception exception) {
     testExecutionStatus.setSuccessfulExecution(false).setWorkflowException(exception);
   }
 
@@ -47,7 +58,7 @@ public class TestCase {
     }
   }
 
-  private Exchange executeWhenPhase() {
+  private Optional<Exchange> executeWhenPhase() {
     return executionWrapper.execute();
   }
 
