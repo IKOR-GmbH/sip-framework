@@ -1,10 +1,9 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
+import static de.ikor.sip.foundation.testkit.util.SIPExchangeHelper.*;
 import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.headers.FtpExchangeHeaders.*;
 import static org.apache.camel.Exchange.*;
 
-import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
-import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -16,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
-import org.apache.camel.Route;
 import org.apache.camel.component.file.remote.*;
 import org.apache.camel.util.FileUtil;
 import org.apache.camel.util.ObjectHelper;
@@ -34,15 +32,15 @@ public class FtpRouteInvoker implements RouteInvoker {
   @Override
   public Optional<Exchange> invoke(Exchange inputExchange) {
     RemoteFileEndpoint<FTPFile> ftpEndpoint =
-        (RemoteFileEndpoint<FTPFile>)
-            SIPExchangeHelper.resolveEndpoint(inputExchange, camelContext);
-    Route route =
-        camelContext.getRoute(
-            (String) inputExchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY));
-    RemoteFileConsumer<FTPFile> ftpConsumer = (RemoteFileConsumer<FTPFile>) route.getConsumer();
+        (RemoteFileEndpoint<FTPFile>) resolveEndpoint(inputExchange, camelContext);
+    RemoteFileConsumer<FTPFile> ftpConsumer =
+        (RemoteFileConsumer<FTPFile>) resolveConsumer(inputExchange, camelContext);
 
     Exchange ftpExchange = ftpConsumer.createExchange(true);
-    createFtpExchange(ftpExchange, ftpEndpoint.getConfiguration(), inputExchange);
+    ftpExchange.getMessage().setBody(inputExchange.getMessage().getBody());
+    ftpExchange
+        .getMessage()
+        .setHeaders(prepareFtpHeaders(ftpEndpoint.getConfiguration(), inputExchange));
 
     try {
       ftpConsumer.getProcessor().process(ftpExchange);
@@ -55,12 +53,6 @@ public class FtpRouteInvoker implements RouteInvoker {
   @Override
   public boolean isApplicable(Endpoint endpoint) {
     return endpoint instanceof RemoteFileEndpoint;
-  }
-
-  private void createFtpExchange(
-      Exchange ftpExchange, RemoteFileConfiguration endpointConfiguration, Exchange inputExchange) {
-    ftpExchange.getMessage().setBody(inputExchange.getMessage().getBody());
-    ftpExchange.getMessage().setHeaders(prepareFtpHeaders(endpointConfiguration, inputExchange));
   }
 
   private Map<String, Object> prepareFtpHeaders(
@@ -94,7 +86,7 @@ public class FtpRouteInvoker implements RouteInvoker {
     headers.putIfAbsent(FILE_PARENT, FileUtil.stripLeadingSeparator(endpointAbsolutePath));
     if (endpointConfiguration.isStreamDownload()) {
       InputStream is = new ByteArrayInputStream(bodyPayload.getBytes());
-      headers.putIfAbsent(CAMEL_REMOTE_FILE_INPUT_STREAM.getValue(), is);
+      headers.putIfAbsent(RemoteFileComponent.REMOTE_FILE_INPUT_STREAM, is);
     }
   }
 

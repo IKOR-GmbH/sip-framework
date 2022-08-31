@@ -5,8 +5,7 @@ public enum FtpExchangeHeaders {
   CAMEL_FILE_ABSOLUTE("CamelFileAbsolute"),
   CAMEL_FILE_HOST("CamelFileHost"),
   CAMEL_FILE_RELATIVE_PATH("CamelFileRelativePath"),
-  CAMEL_FILE_ABSOLUTE_PATH("CamelFileAbsolutePath"),
-  CAMEL_REMOTE_FILE_INPUT_STREAM("CamelRemoteFileInputStream");
+  CAMEL_FILE_ABSOLUTE_PATH("CamelFileAbsolutePath");
 
   FtpExchangeHeaders(String headerKey) {
     this.headerKey = headerKey;

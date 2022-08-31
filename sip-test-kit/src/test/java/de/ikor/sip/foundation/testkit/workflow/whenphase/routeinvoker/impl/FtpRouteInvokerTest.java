@@ -8,6 +8,7 @@ import static org.mockito.Mockito.*;
 import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import org.apache.camel.*;
+import org.apache.camel.component.file.remote.RemoteFileComponent;
 import org.apache.camel.component.file.remote.RemoteFileConfiguration;
 import org.apache.camel.component.file.remote.RemoteFileConsumer;
 import org.apache.camel.component.file.remote.RemoteFileEndpoint;
@@ -225,13 +226,16 @@ class FtpRouteInvokerTest {
   void GIVEN_streamDownloadTrue_WHEN_invoke_THEN_getCamelRemoteFileInputStreamHeader() {
     // arrange
     when(endpointConfiguration.isStreamDownload()).thenReturn(true);
-    inputExchange.getMessage().setHeader(CAMEL_REMOTE_FILE_INPUT_STREAM.getValue(), "stream value");
+    inputExchange
+        .getMessage()
+        .setHeader(RemoteFileComponent.REMOTE_FILE_INPUT_STREAM, "stream value");
 
     // act
     subject.invoke(inputExchange);
 
     // assert
-    assertThat(actualFileExchange.getMessage().getHeader(CAMEL_REMOTE_FILE_INPUT_STREAM.getValue()))
+    assertThat(
+            actualFileExchange.getMessage().getHeader(RemoteFileComponent.REMOTE_FILE_INPUT_STREAM))
         .isEqualTo("stream value");
   }
 
