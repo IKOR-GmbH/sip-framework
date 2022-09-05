@@ -17,29 +17,19 @@ The flow itself and thus the TestCaseDefinition file is split into three phases 
 
 # Features
 
-## Response validation
+## Validation
 
-Major feature of Test Kit is validation of the response from test execution.
-By adding a validation definition inside the then-expect section
-and setting that validation for the endpoint we defined in when-execute section,
-the response of the execution will be validated and a report will be displayed.
+Validation is one of key properties to any testing system. SIP Test Kit supports validation for batch testing.
+Validation is configured trough than-expect section of test case definition, by setting expected properties of endpoint
+we want to validate. It could be the entering endpoint of the adapter, for example we want to validate HTTP response of the
+adapter, or it could be any external system (mocked) endpoint, where we can validate the input that mocked endpoint has received;
+this way we could validate, for instance, if a properly transformed file reached the outgoing FTP endpoint.  
+Validation is performed on two levels, body - where the data is validated and headers - where metadata is validated. Body 
+validation is performed as plain text comparison, binary payload is not yet supported. Headers comparison is comparing 
+textual key value maps. Both body and header validation support regex pattern as expected value.
+Given that all SIP mocks are internal, meaning that the actual endpoint is replaced with the mock, any URI options defined 
+on the mock will not apply and behavior produced by them is not possible to verify. 
 
-## External endpoint mocking
-
-This feature is active whenever a test is executed via Test Kit.
-It will provide default behavior (forwarding the request without processing it) and mock all external endpoints.
-Adding specific behavior for each endpoint can be done in test case definition in 'with-mocks' section.
-
-## Endpoint reports
-
-Reports for all mocked endpoints will be provided, both with default (set by Test Kit) and user defined behavior.
-For each test report in the 'Endpoints' section there will be an overview of request that each received.
-
-## Endpoint validation
-
-It is possible to also validate body and headers of each mocked endpoint.
-By defining desired validation inside test case definition file,
-Test Kit will validate endpoints and display reports for each.
 
 ## Reports
 
@@ -47,6 +37,11 @@ Each test case will be executed as its own unit test, so for each a test report 
 and printed in console.
 First part of report is for the response. It will display the validated body and headers, as well as expected ones.
 The following endpoints part is for mocked endpoint reports, with similar data as in the first part.
+
+## Endpoint reports
+
+Reports for all mocked endpoints will be provided, both with default (set by Test Kit) and user defined behavior.
+For each test report in the 'Endpoints' section there will be an overview of request that each received.
 
 # How to use
 
@@ -70,19 +65,19 @@ The next step is to provide the TestCaseDefinition file in yaml format in the `t
 (detailed description in next section):
 ``` yaml
 test-case-definitions:
-- title: "Title of individual test"
-  when-execute:
+- TITLE: "Title of individual test"
+  WHEN-execute:
     endpoint: "id of endpoint under test"
     with:
       body: "Content that will be send as request body to the adapter endpoint (plain text, JSON String)"
       headers:
         header-key: "Value of the header"
         another-header-key: "Another value"
-  with-mocks:
+  WITH-mocks:
   - endpoint: "id of endpoint that should be mocked"
     returning:
       body: "Response message that real endpoint is expected to return"
-  then-expect:
+  THEN-expect:
   - endpoint: "id of endpoint under test" # matches endpoint under test defined in when phase
     having:
       body: "Regex expression (java) which will be compered to the reponse of the test"
@@ -120,7 +115,7 @@ _To be able to fully utilize the Test Kit, all the endpoints used in the test ca
 
 The TestCaseDefinition file starts with `test-case-definitions` property, which consists of a list of test cases
 
-## when-execute
+## WHEN-execute
 
 In this section a payload that should be sent to the adapter is defined.
 
@@ -129,38 +124,37 @@ In "with" part we define content of the request we wish to send, meaning body an
 The body can also be defined as plain text or JSON string, which represents a POJO.
 
 ```yaml
-    when-execute:
+    WHEN-execute:
       endpoint: "rest-endpoint"
       with:
         body: "body of request"
 ```
 
-## with-mocks
+## WITH-mocks
 
 This section contains a list of endpoints for which we wish to have specific mocked response.
 "endpoint" is the endpoint ID, (processor ID in Camel route) of the mocked endpoint.
 "returning" should have the body, that we expect as the response from real external call.
 
 ```yaml
-    with-mocks:
+    WITH-mocks:
       - endpoint: "external-service"
         returning:
           body: "response message from service"
 ```
 
-## then-expect
+## THEN-expect
 
 Validation of adapter response is defined by setting the "endpoint" parameter to the ID of endpoint under test
 and defining the expected body or headers.
 
-Validation of requests which other endpoints received  
-is defined by setting the "endpoint" parameter to the ID of mocked endpoint
-and defining the expected body or headers.
+Validation of requests which outgoing endpoints received from the adapter is defined by setting the "endpoint" parameter to 
+the ID of mocked endpoint and defining the expected body or headers.
 
 Body and header validation is possible by either defining regex (Java) expression or matching exact String content.
 
 ```yaml
-    then-expect:
+    THEN-expect:
       - endpoint: "rest-endpoint" # matches endpoint under test
         having:
           body: "response .* from service"
@@ -170,7 +164,7 @@ Body and header validation is possible by either defining regex (Java) expressio
         having:
           body: "body of request"
           headers:
-            test-mode: "true"
+            Authorization: "Basic .*"
 ```
 
 # Supported Camel components
@@ -202,7 +196,7 @@ could fail.
 
 File content should be provided as body in <i>when-execute</i> phase. 
 
-Outside of testing the File component will read the actual file from a specified location. 
+Outside of testing, the File component will read the actual file from a specified location. 
 In that case Exchange within the route will have File component specific exchange headers (for example `CamelFileName`, `CamelFileLength`, 
 `CamelFileLastModified`... ). These headers are listed and explained in Camel File component docs.
 If these headers are needed in tests for route processing, they can be provided in <i>when-execute</i> configuration 
@@ -254,8 +248,10 @@ public class SampleRestRoute extends RouteBuilder {
 
         from("sipmc:bridge")
                 .routeId("http-route")
+                .setHeader("Authorization", constant("Basic am9obkBleGFtcGxlLmNvbTphYmMxMjM="))
+                .transform(body().append(" now looks better"))
                 // Mocked endpoint
-                .to("http:localhost:8081/hello?bridgeEndpoint=true") 
+                .to("http:localhost:8081/hello?bridgeEndpoint=true")
                 .id("external-service");
     }
 }
@@ -263,27 +259,26 @@ public class SampleRestRoute extends RouteBuilder {
 
 **Sample test case definition**
 ``` yaml
-  test-case-definitions:
-  - title: "Test case 1"
-    when-execute:
-      endpoint: "rest-endpoint" # id of endpoint under test (routeId)
+  - TITLE: "Test case 1"
+    WHEN-execute:
+      endpoint: "rest-endpoint"
       with:
         body: "body of request"
-    with-mocks:
-    - endpoint: "external-service" # id of endpoint that is mocked (processorId)
-      returning:
-        body: "response message from service"
-    then-expect:
-    - endpoint: "rest-endpoint" # matches endpoint under test
-      having:
-        body: "response .* from service"
-        headers:
-          CamelHttpResponseCode: "200"
-    - endpoint: "external-service" # matches endpoint with mocked behavior
-      having:
-        body: "body of request"
-        headers:
-          test-mode: "true"
+    WITH-mocks:
+      - endpoint: "external-service"
+        returning:
+          body: "response message from service"
+    THEN-expect:
+      - endpoint: "rest-endpoint" # matches endpoint under test
+        having:
+          body: "response .* from service"
+          headers:
+            CamelHttpResponseCode: "200"
+      - endpoint: "external-service"
+        having:
+          body: "body of request now looks better"
+          headers:
+            Authorization: "Basic .*"
 ```
 
 **Sample Console Report**
@@ -308,14 +303,17 @@ public class SampleRestRoute extends RouteBuilder {
     Endpoints:
       Endpoint "external-service" was mocked
       Validation successful
+      Validation details:
+        Body validation successful
+        Header validation successful
       Received:
-       Body: body of request
+       Body: body of request now looks better
        Headers:
-        - test-mode: true
+        - Authorization: Basic am9obkBleGFtcGxlLmNvbTphYmMxMjM=
       Expected:
-       Body: body of request
+       Body: body of request now looks better
        Headers:
-        - test-mode: true
+        - Authorization: Basic .*
 
 -----------------------------
 ```
