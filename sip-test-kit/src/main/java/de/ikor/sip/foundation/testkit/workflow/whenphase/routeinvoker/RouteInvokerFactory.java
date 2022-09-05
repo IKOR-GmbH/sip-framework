@@ -1,12 +1,11 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker;
 
-import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DefaultRouteInvoker;
+import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
+import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import java.util.*;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
-import org.apache.camel.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,27 +29,11 @@ public class RouteInvokerFactory {
    * @param exchange Exchange with route id
    * @return proper instance of RouteInvoker
    */
-  public RouteInvoker getInstance(Exchange exchange) {
-    Endpoint endpoint = resolveEndpoint(exchange);
+  public RouteInvoker getInstance(Exchange exchange) throws NoRouteInvokerException {
+    Endpoint endpoint = SIPExchangeHelper.resolveEndpoint(exchange, camelContext);
     return invokers.stream()
         .filter(routeInvoker -> routeInvoker.isApplicable(endpoint))
         .findFirst()
-        .map(routeInvoker -> routeInvoker.setEndpoint(endpoint))
-        .orElse(new DefaultRouteInvoker(camelContext));
-  }
-
-  /**
-   * Resolve Endpoint for the Exchange
-   *
-   * @param exchange for which the first Endpoint needs to be returned
-   * @return Endpoint
-   */
-  public Endpoint resolveEndpoint(Exchange exchange) {
-    String routeId = exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class);
-    Route route = camelContext.getRoute(routeId);
-    if (route == null) {
-      throw new IllegalArgumentException("Route with id " + routeId + " was not found");
-    }
-    return route.getEndpoint();
+        .orElseThrow(() -> new NoRouteInvokerException(SIPExchangeHelper.getRouteId(exchange)));
   }
 }

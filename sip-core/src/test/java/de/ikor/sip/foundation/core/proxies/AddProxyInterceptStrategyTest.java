@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.apache.camel.NamedNode;
+import org.apache.camel.Processor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +22,7 @@ class AddProxyInterceptStrategyTest {
   private ProcessorProxyRegistry proxyRegistry = new ProcessorProxyRegistry();
   private List<ProxyExtension> extensions = new ArrayList<>();
   @Mock private NamedNode definition;
+  @Mock private Processor original;
 
   @BeforeEach
   public void setup() {
@@ -33,7 +35,7 @@ class AddProxyInterceptStrategyTest {
     // arrange
 
     // act
-    addProxyInterceptStrategy.wrapProcessorInInterceptors(null, definition, null, null);
+    addProxyInterceptStrategy.wrapProcessorInInterceptors(null, definition, null, original);
 
     // assert
     Optional<ProcessorProxy> proxy = proxyRegistry.getProxy(PROCESSOR_ID);

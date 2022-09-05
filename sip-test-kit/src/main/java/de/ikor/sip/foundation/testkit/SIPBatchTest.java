@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.testkit;
 
+import static de.ikor.sip.foundation.testkit.SIPBatchTest.SIP_BATCH_TEST;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
 
@@ -20,8 +21,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 /** SIP batch test run */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(
+    properties = SIP_BATCH_TEST + "=true",
+    webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public abstract class SIPBatchTest {
+
+  public static final String SIP_BATCH_TEST = "sip.testkit.batch-test";
 
   @Autowired private TestRunner testRunner;
   @Getter @Autowired private TestCaseCollector testCaseCollector;

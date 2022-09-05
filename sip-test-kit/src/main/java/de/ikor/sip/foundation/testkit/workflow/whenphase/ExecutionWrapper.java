@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.testkit.workflow.whenphase;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import java.util.Map;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ public class ExecutionWrapper {
    *
    * @return {@link Exchange}
    */
-  public Exchange execute() {
+  public Optional<Exchange> execute() {
     log.info("sip.testkit.workflow.startcamelrequest");
     enrichWithTestHeaders();
     return invoker.invoke(whenDefinitionExchange);
