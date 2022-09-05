@@ -19,10 +19,12 @@ import org.apache.camel.component.file.remote.*;
 import org.apache.camel.util.FileUtil;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.commons.net.ftp.FTPFile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 
 /** Invoker class for triggering routes with Ftp, Ftps, Sftp consumers */
 @Component
+@ConditionalOnClass(FtpComponent.class)
 @RequiredArgsConstructor
 @Slf4j
 public class FtpRouteInvoker implements RouteInvoker {
