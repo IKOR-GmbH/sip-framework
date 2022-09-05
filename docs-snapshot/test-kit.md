@@ -17,6 +17,12 @@ The flow itself and thus the TestCaseDefinition file is split into three phases 
 
 # Features
 
+## External endpoint mocking
+
+This feature is active whenever a test is executed via Test Kit.
+It will provide default behavior (forwarding the request without processing it) and mock all external endpoints.
+Adding specific behavior for each endpoint can be done in test case definition in 'with-mocks' section.
+
 ## Validation
 
 Validation is one of key properties to any testing system. SIP Test Kit supports validation for batch testing.
@@ -24,7 +30,7 @@ Validation is configured trough than-expect section of test case definition, by 
 we want to validate. It could be the entering endpoint of the adapter, for example we want to validate HTTP response of the
 adapter, or it could be any external system (mocked) endpoint, where we can validate the input that mocked endpoint has received;
 this way we could validate, for instance, if a properly transformed file reached the outgoing FTP endpoint.  
-Validation is performed on two levels, body - where the data is validated and headers - where metadata is validated. Body 
+Validation is performed on two levels, _*body*_ - where the data is validated and _*headers*_ - where metadata is validated. Body 
 validation is performed as plain text comparison, binary payload is not yet supported. Headers comparison is comparing 
 textual key value maps. Both body and header validation support regex pattern as expected value.
 Given that all SIP mocks are internal, meaning that the actual endpoint is replaced with the mock, any URI options defined 
