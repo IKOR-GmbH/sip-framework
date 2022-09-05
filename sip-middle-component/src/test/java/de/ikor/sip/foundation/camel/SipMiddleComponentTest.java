@@ -22,9 +22,9 @@ class SipMiddleComponentTest {
   private static final String REMAINING_URI_PART = "foo";
   private static final String CONSUMER_URI = "sipmc:" + REMAINING_URI_PART;
   private static final String SEDA_URI_NO_MULTIPLE_CONSUMERS =
-      "seda:" + REMAINING_URI_PART + "?multipleConsumers=false";
+      "seda:" + REMAINING_URI_PART + "?multipleConsumers=false" + "&waitForTaskToComplete=always";
   private static final String SEDA_URI_WITH_MULTIPLE_CONSUMERS =
-      "seda:" + REMAINING_URI_PART + "?multipleConsumers=true";
+      "seda:" + REMAINING_URI_PART + "?multipleConsumers=true" + "&waitForTaskToComplete=always";
 
   @Mock private SpringBootCamelContext context;
   private SipMiddleComponent subject;
