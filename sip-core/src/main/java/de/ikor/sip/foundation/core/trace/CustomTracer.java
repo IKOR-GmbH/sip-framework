@@ -38,17 +38,17 @@ public class CustomTracer extends DefaultTracer {
 
   @Override
   public void traceBeforeRoute(NamedRoute route, Exchange exchange) {
-    addTracingID(exchange);
+    addIdToTracingList(exchange);
     super.traceBeforeRoute(route, exchange);
   }
 
   @Override
   public void traceBeforeNode(NamedNode node, Exchange exchange) {
-    addTracingID(exchange);
+    addIdToTracingList(exchange);
     super.traceBeforeNode(node, exchange);
   }
 
-  private void addTracingID(Exchange exchange) {
+  private void addIdToTracingList(Exchange exchange) {
     exchange.getIn().setHeader(TRACING_ID, tracingList(exchange));
   }
 
