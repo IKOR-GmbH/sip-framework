@@ -47,7 +47,7 @@ public class TestKitHelper extends SIPExchangeHelper {
     Route route = resolveRoute(exchange, camelContext);
     if (route == null) {
       throw new IllegalArgumentException(
-              "Route with id " + getRouteId(exchange) + " was not found");
+          "Route with id " + getRouteId(exchange) + " was not found");
     }
     return route.getEndpoint();
   }
@@ -93,12 +93,12 @@ public class TestKitHelper extends SIPExchangeHelper {
    * @return {@link Exchange}
    */
   public static Exchange parseExchangeProperties(
-          EndpointProperties properties, CamelContext camelContext) {
+      EndpointProperties properties, CamelContext camelContext) {
     if (properties == null) {
       return createEmptyExchange(camelContext);
     }
     ExchangeBuilder exchangeBuilder =
-            ExchangeBuilder.anExchange(camelContext).withBody(properties.getMessage().getBody());
+        ExchangeBuilder.anExchange(camelContext).withBody(properties.getMessage().getBody());
     properties.getMessage().getHeaders().forEach(exchangeBuilder::withHeader);
     exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpoint());
     return exchangeBuilder.build();

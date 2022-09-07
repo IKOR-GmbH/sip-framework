@@ -11,7 +11,6 @@ import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.camel.*;
-import org.apache.camel.builder.ExchangeBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -71,8 +70,8 @@ class TestKitHelperTest {
   void GIVEN_noRoute_WHEN_resolveEndpoint_THEN_expectIllegalArgumentException() {
     // act & arrange
     assertThrows(
-            IllegalArgumentException.class,
-            () -> TestKitHelper.resolveEndpoint(exchange, camelContext));
+        IllegalArgumentException.class,
+        () -> TestKitHelper.resolveEndpoint(exchange, camelContext));
   }
 
   @Test
