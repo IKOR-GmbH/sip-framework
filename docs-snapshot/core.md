@@ -301,9 +301,8 @@ sip:
         maxChars: 100
  ```
 
-Exchanges will contain the "tracingId" header, which has the original Exchange's Id as value,
-and based on EIP used in a route, it may append other exchange Ids which were used in a request.
-"tracingId" header will appear as a list of ordered exchanges separated by a coma.
+Exchanges will contain the "tracingId" header, which appears as a list of ordered exchanges,
+appended based on EIP used in a route and separated by a coma.
 
 ### OpenAPI Descriptor
 

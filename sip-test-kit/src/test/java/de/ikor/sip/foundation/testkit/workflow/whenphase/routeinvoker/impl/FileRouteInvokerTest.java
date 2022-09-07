@@ -4,7 +4,7 @@ import static org.apache.camel.Exchange.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
+import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import org.apache.camel.*;
 import org.apache.camel.component.file.FileConsumer;
@@ -29,7 +29,7 @@ class FileRouteInvokerTest {
   void setup() {
     ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
     subject = new FileRouteInvoker(camelContext);
-    inputExchange = SIPExchangeHelper.createEmptyExchange(camelContext);
+    inputExchange = TestKitHelper.createEmptyExchange(camelContext);
     inputExchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
     inputExchange.getMessage().setBody(BODY_PAYLOAD);
 
@@ -41,7 +41,7 @@ class FileRouteInvokerTest {
     when(route.getConsumer()).thenReturn(fileConsumer);
     when(fileConsumer.getAsyncProcessor()).thenReturn(asyncProcessor);
 
-    actualFileExchange = SIPExchangeHelper.createEmptyExchange(camelContext);
+    actualFileExchange = TestKitHelper.createEmptyExchange(camelContext);
     when(fileConsumer.createExchange(true)).thenReturn(actualFileExchange);
   }
 
