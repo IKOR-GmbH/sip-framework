@@ -32,6 +32,10 @@ public class SipMiddleComponent extends DefaultComponent {
             .append(remaining)
             .append("?multipleConsumers=")
             .append(hasMultipleSipmcConsumers(uri))
+            .append(
+                "&waitForTaskToComplete=always") // required by SIP Test Kit. Otherwise, route could
+            // proceed till the end while mock reports are
+            // still collected asynchronously
             .toString();
 
     return new SipMiddleEndpoint(uri, this, targetEndpointUri);
