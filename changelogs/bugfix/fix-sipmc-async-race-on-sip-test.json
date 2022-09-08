@@ -1,5 +1,0 @@
-{
-  "author": "VladiIkor",
-  "pullrequestId": "141",
-  "message": "Fixing SIP testing bug - mock reports not available during SIP test verification."
-}

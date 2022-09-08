@@ -16,7 +16,7 @@ To enable SIP Core features use @SIPIntegrationAdapter to annotate the Spring Bo
 
 SIP Core provides out-of-the-box health checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.
 
-The health check functions will be executed periodically on a set interval and will only be available if actuator's 
+The health check functions will be executed periodically on a set interval and will only be available if actuator's
 HealthEndpoint is enabled.
 
 Actuator can be accessed from {base_url}/actuator
@@ -115,8 +115,8 @@ management:
 
 **Health Status Gauge**
 
-The calculated health status is also available as a gauge inside `/actuator/metrics`. 
-If all endpoints are healthy it returns 0, otherwise 1. 
+The calculated health status is also available as a gauge inside `/actuator/metrics`.
+If all endpoints are healthy it returns 0, otherwise 1.
 By default, it is named `sip.core.metrics.health`, but can be changed via configuration.
 
 ```yaml
@@ -175,15 +175,15 @@ POST /actuator/adapter-routes/sipmc/{operation}
 ```
 
 **Warning:**
-When using suspend or stop operation on route that has middle component as a consumer, default value (30 seconds) 
-timeout will be used. Keep in mind that if route is not started for next 30 seconds after sending data to middle 
+When using suspend or stop operation on route that has middle component as a consumer, default value (30 seconds)
+timeout will be used. Keep in mind that if route is not started for next 30 seconds after sending data to middle
 component, data could be lost.
 
 ### Logging Translation
 
 Adds possibility to translate log messages
 
-By default, translation service is not activated, thus in order to use it a logback.xml file should be provided in 
+By default, translation service is not activated, thus in order to use it a logback.xml file should be provided in
 resources. In this file we can specify that the adapter uses a custom logging encoder, which provides translations.
 
 ```xml
@@ -196,7 +196,7 @@ resources. In this file we can specify that the adapter uses a custom logging en
 </appender>
 ```
 
-Files for defining translation values, should be created inside translate directory as a bundle of .property files, 
+Files for defining translation values, should be created inside translate directory as a bundle of .property files,
 under a common name, which should be extended by a suffix in following format \_{language}.
 
 Each file consists of keys, shared in the bundle, followed by its value as a phrase in the language used.
@@ -273,7 +273,7 @@ SIP Core offers usage of Camel's built-in Tracer for tracing and logging informa
 an exchange when through and TraceHistory service which stores all data logged by it.
 Configuration of the Tracer is enabled by adapting ExchangeFormatter.
 
-Tracing functionality is set to false by default. In order to enable it, the following configuration should be added to 
+Tracing functionality is set to false by default. In order to enable it, the following configuration should be added to
 the application.yml:
 
 ```yaml
@@ -288,8 +288,8 @@ Additionally, trace-type must be defined. Three types of tracing can be used:
 
 - LOG - trace messages will be shown in logs
 - MEMORY - trace messages will be stored in trace history and can be seen on the "actuator/tracing"*
-- "*" | LOG,MEMORY - Both values are valid to be used. In case a user set both types, then the tracing will be available 
-as LOG and as MEMORY type at the same time.
+- "*" | LOG,MEMORY - Both values are valid to be used. In case a user set both types, then the tracing will be available
+  as LOG and as MEMORY type at the same time.
 
 Note: In order to access trace records trough web API the "actuator/tracing" must be exposed:
 ```yaml
@@ -300,7 +300,7 @@ management:
         include: {...},tracing
 ```
 
-When adding tracing endpoint, please configure the entire list of endpoints which you want to be exposed including the 
+When adding tracing endpoint, please configure the entire list of endpoints which you want to be exposed including the
 default ones.
 
 Configuring the ExchangeFormatter can be achieved in two ways:
@@ -324,13 +324,14 @@ sip:
 /actuator/tracing/format/{exchangeFormatterParameterName}
  ```
 
-The body of the request should include the value we want for the given parameter. In this case, we can change only one 
+The body of the request should include the value we want for the given parameter. In this case, we can change only one
 parameter per request.
 
 TraceHistory is enabled with previous configuration.
-Exchanges will contain the "tracingId" header, which has the original Exchange's id as value.
+Exchanges will contain the "tracingId" header, which has the original Exchange's Id as value,
+and based on EIP used in a route, it may append other exchange Ids which were used in a request.
 To see them in TraceHistory messages just set the "showHeaders" and "showExchangeId" parameters in ExchangeFormatter to true.
-A "tracingId' header will appear and will be linked to the original Exchange's id.
+A "tracingId" header will appear as a list of exchanges separated by a coma.
 
 **Expanding the traffic trace limit:**
 
@@ -355,12 +356,12 @@ For working with Swagger OpenAPI, check their official [documentation](https://s
 
 **Adding Custom Swagger Docs:**
 
-SIP Framework provides a Swagger documentation for the actuator endpoints out of the box. In case a custom Swagger 
-documentation is needed it could be added by including the Swagger Apache Camel component. This component is only 
-supporting the REST DSL component. For controller classes annotated with `@RestController` an entry is added to the 
+SIP Framework provides a Swagger documentation for the actuator endpoints out of the box. In case a custom Swagger
+documentation is needed it could be added by including the Swagger Apache Camel component. This component is only
+supporting the REST DSL component. For controller classes annotated with `@RestController` an entry is added to the
 default swagger docs. This might not be the expected behavior for which reason the `REST DSL` component is recommended.
 
-The custom Swagger documentation could easily be added by defining it in the `restConfiguration` as seen in the 
+The custom Swagger documentation could easily be added by defining it in the `restConfiguration` as seen in the
 following listing.
 
 ```java
@@ -383,9 +384,9 @@ rest("/api/v1")
     .to("direct:handleRequest");
 ```
 
-This will create a new Swagger documentation for the REST service. For further information see the Apache Camel 
+This will create a new Swagger documentation for the REST service. For further information see the Apache Camel
 documentation of the [Swagger](https://camel.apache.org/components/next/others/swagger-java.html)
-and [REST DSL](https://camel.apache.org/manual/rest-dsl.html) component. In case the custom Swagger documentation 
+and [REST DSL](https://camel.apache.org/manual/rest-dsl.html) component. In case the custom Swagger documentation
 should be displayed by default in the Swagger UI you can configure it accordingly in the `application.yaml` file.
 
 ```yaml
@@ -402,9 +403,9 @@ Based on this configuration the custom Swagger documentation is accessible by `/
 
 ### SIP Details in actuator info endpoint
 
-Under actuator endpoint `/actuator/info` there is basic information about the adapter (`adapter-name`, `adapter-version`, 
+Under actuator endpoint `/actuator/info` there is basic information about the adapter (`adapter-name`, `adapter-version`,
 `sip-framework-version`).
-Additionally, there is also a list of all markdown files located in the adapter root directory, with their names and 
+Additionally, there is also a list of all markdown files located in the adapter root directory, with their names and
 content exposed.
 
 By default, a mandatory **build-info** maven plugin is located in the `pom.xml` of adapter's application
@@ -412,11 +413,11 @@ module, which provides all basic information for this feature. We highly recomme
 
 **Warning about potential issue during development:**
 
-There is one unpredictable problem with this feature that could happen only in your local environment and it 
+There is one unpredictable problem with this feature that could happen only in your local environment and it
 depends on IDE used for development. It is happening only after initial adapter generation and build/rebuild process
 is executed after `mvn clean install` command.
 
-Keep in mind that even if build and rebuild processes are not executed explicitly, simple running of the adapter could 
+Keep in mind that even if build and rebuild processes are not executed explicitly, simple running of the adapter could
 execute them in the background, depending on IDE used.
 
 Build/rebuild processes are deleting some generated sources. In our case build-info.properties which is used for
