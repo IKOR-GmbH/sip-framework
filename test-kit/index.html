@@ -104,6 +104,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/2.3.0/index.html">JavaDoc 2.3.0</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/2.2.0/index.html">JavaDoc 2.2.0</a>
                 </li>
               </ul>
@@ -162,18 +166,24 @@
 <li><a href="#ikor-sip-test-kit">IKOR SIP Test Kit</a></li>
 <li><a href="#description">Description</a></li>
 <li><a href="#features">Features</a><ul>
-<li><a href="#response-validation">Response validation</a></li>
 <li><a href="#external-endpoint-mocking">External endpoint mocking</a></li>
-<li><a href="#endpoint-reports">Endpoint reports</a></li>
-<li><a href="#endpoint-validation">Endpoint validation</a></li>
+<li><a href="#validation">Validation</a></li>
 <li><a href="#reports">Reports</a></li>
+<li><a href="#endpoint-reports">Endpoint reports</a></li>
 </ul>
 </li>
 <li><a href="#how-to-use">How to use</a></li>
 <li><a href="#defining-a-test-case">Defining a Test Case</a><ul>
-<li><a href="#when-execute">when-execute</a></li>
-<li><a href="#with-mocks">with-mocks</a></li>
-<li><a href="#then-expect">then-expect</a></li>
+<li><a href="#when-execute">WHEN-execute</a></li>
+<li><a href="#with-mocks">WITH-mocks</a></li>
+<li><a href="#then-expect">THEN-expect</a></li>
+</ul>
+</li>
+<li><a href="#supported-camel-components">Supported Camel components</a><ul>
+<li><a href="#rest">REST</a></li>
+<li><a href="#soap">SOAP</a></li>
+<li><a href="#file">File</a></li>
+<li><a href="#ftp-ftps-sftp">FTP, FTPS, SFTP</a></li>
 </ul>
 </li>
 <li><a href="#complete-example">Complete example</a></li>
@@ -188,56 +198,58 @@ This file format is referred to as <i><b>TestCaseDefinition</i></b>.
 The flow itself and thus the TestCaseDefinition file is split into three phases (sections)</p>
 <ul>
 <li>when-execute - The test is executed by triggering one of adapter's endpoints</li>
-<li>with-mocks - External calls which are to be replaced with predefined mock behaviour</li>
-<li>then-expect - The test outcome that should be compared with a predefined expected outcome</li>
+<li>with-mocks - External calls which are to be replaced with defined mock behaviour</li>
+<li>then-expect - The test outcome that should be compared with a defined expected outcome</li>
 </ul>
 <h1 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h1>
-<h2 id="response-validation">Response validation<a class="headerlink" href="#response-validation" title="Permanent link">&para;</a></h2>
-<p>Major feature of Test Kit is validation of the response from test execution.
-By adding a validation definition inside the then-expect section
-and setting that validation for the endpoint we defined in when-execute section,
-the response of the execution will be validated and a report will be displayed.</p>
 <h2 id="external-endpoint-mocking">External endpoint mocking<a class="headerlink" href="#external-endpoint-mocking" title="Permanent link">&para;</a></h2>
-<p>This feature is active whenever a test is executed via test kit.
+<p>This feature is active whenever a test is executed via Test Kit.
 It will provide default behavior (forwarding the request without processing it) and mock all external endpoints.
 Adding specific behavior for each endpoint can be done in test case definition in 'with-mocks' section.</p>
-<h2 id="endpoint-reports">Endpoint reports<a class="headerlink" href="#endpoint-reports" title="Permanent link">&para;</a></h2>
-<p>Test Kit will provide reports for all mocked endpoints, both with default (set by Test Kit) and user defined behavior.
-For each test report in the 'Endpoints' section there will be an overview of request that each received.</p>
-<h2 id="endpoint-validation">Endpoint validation<a class="headerlink" href="#endpoint-validation" title="Permanent link">&para;</a></h2>
-<p>It is possible to also validate body and headers of each mocked endpoint.
-By defining desired validation inside test case definition file,
-Test Kit will validate endpoints and display reports for each.</p>
+<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
+<p>Validation is one of key properties to any testing system. SIP Test Kit supports validation for batch testing.
+Validation is configured trough than-expect section of test case definition, by setting expected properties of endpoint
+we want to validate. It could be the entering endpoint of the adapter, for example we want to validate HTTP response of the
+adapter, or it could be any external system (mocked) endpoint, where we can validate the input that mocked endpoint has received;
+this way we could validate, for instance, if a properly transformed file reached the outgoing FTP endpoint.<br />
+Validation is performed on two levels, <em><em>body</em></em> - where the data is validated and <em><em>headers</em></em> - where metadata is validated. Body 
+validation is performed as plain text comparison, binary payload is not yet supported. Headers comparison is comparing 
+textual key value maps. Both body and header validation support regex pattern as expected value.
+Given that all SIP mocks are internal, meaning that the actual endpoint is replaced with the mock, any URI options defined 
+on the mock will not apply and behavior produced by them is not possible to verify. </p>
 <h2 id="reports">Reports<a class="headerlink" href="#reports" title="Permanent link">&para;</a></h2>
-<p>As mentioned each test case will be executed as its own unit test, so for each a test report will be generated
+<p>Each test case will be executed as its own unit test, so for each a test report will be generated
 and printed in console.
 First part of report is for the response. It will display the validated body and headers, as well as expected ones.
 The following endpoints part is for mocked endpoint reports, with similar data as in the first part.</p>
+<h2 id="endpoint-reports">Endpoint reports<a class="headerlink" href="#endpoint-reports" title="Permanent link">&para;</a></h2>
+<p>Reports for all mocked endpoints will be provided, both with default (set by Test Kit) and user defined behavior.
+For each test report in the 'Endpoints' section there will be an overview of request that each received.</p>
 <h1 id="how-to-use">How to use<a class="headerlink" href="#how-to-use" title="Permanent link">&para;</a></h1>
 <p>Test kit is enabled by default when the adapter is generated from archetype.</p>
 <p>A test class needs to be created inside test package of the adapter, which extends SIPBatchTest. 
-Running this class would execute the test, but also it will be executed during build time.</p>
+Running this class would execute the test, but also it will be executed in the testing step during build time.</p>
 <pre class="highlight"><code class="language-java">public class TFWTest extends SIPBatchTest { }</code></pre>
-<p>Also, configuring spring profile is needed. Provide the following configuration property inside your test resources.
+<p>Configuring Spring profile is needed. Make sure that the following configuration property inside your test resources is defined:
 <pre class="highlight"><code class="language-yaml">spring:
   profiles:
     active: test</code></pre></p>
 <p>The next step is to provide the TestCaseDefinition file in yaml format in the <code>test/resources</code> package
 (detailed description in next section):
 <pre class="highlight"><code class="language-yaml">test-case-definitions:
-- title: "Title of individual test"
-  when-execute:
+- TITLE: "Title of individual test"
+  WHEN-execute:
     endpoint: "id of endpoint under test"
     with:
       body: "Content that will be send as request body to the adapter endpoint (plain text, JSON String)"
       headers:
         header-key: "Value of the header"
         another-header-key: "Another value"
-  with-mocks:
+  WITH-mocks:
   - endpoint: "id of endpoint that should be mocked"
     returning:
       body: "Response message that real endpoint is expected to return"
-  then-expect:
+  THEN-expect:
   - endpoint: "id of endpoint under test" # matches endpoint under test defined in when phase
     having:
       body: "Regex expression (java) which will be compered to the reponse of the test"
@@ -248,45 +260,45 @@ Running this class would execute the test, but also it will be executed during b
       body: "Regex expression (java) which will be compered to the request which arrived on the endpoint"
       headers:
         header-key: "Regex expression (java) which will be compered to the header key value from request which arrived on the endpoint"</code></pre></p>
-<p>You also need to provide the location of TestCaseDefinition file to the Test Kit by setting the
+<p>Location of the TestCaseDefinition file can be provided to the Test Kit by setting the
 following property inside adapter configuration:
 <code>sip.testkit.test-cases-path: myTests.yml</code>
-The default value is test-case-definition.yml, so you can place your test case description under that file, 
-and skip additional setting.</p>
+The default value is <em>test-case-definition.yml</em>, so you can place your test case description using that filename, 
+and avoid additional setting.</p>
 <p>Each test case will execute as a separate unit test with its own report displayed.</p>
 <p><img alt="alt-text" src="../img/ConsoleReport.png" /></p>
-<p>To disable SIP Test Kit, the following configuration is needed:
+<p>To disable SIP Test Kit, use the following configuration:
 <pre class="highlight"><code class="language-yaml">sip:
   testkit:
     enabled: false</code></pre></p>
-<p>To be able to fully utilize the Test Kit, all the endpoints used in the test case need to have a defined ID which will be referenced in the <em>endpoint</em> parameter of the test case.</p>
+<p>Development note:
+<em>To be able to fully utilize the Test Kit, all the endpoints used in the test case need to have a defined ID which will be referenced in the _endpoint</em> parameter of the test case._</p>
 <h1 id="defining-a-test-case">Defining a Test Case<a class="headerlink" href="#defining-a-test-case" title="Permanent link">&para;</a></h1>
 <p>The TestCaseDefinition file starts with <code>test-case-definitions</code> property, which consists of a list of test cases</p>
-<h2 id="when-execute">when-execute<a class="headerlink" href="#when-execute" title="Permanent link">&para;</a></h2>
-<p>In this section a request that should be sent to the adapter is defined.</p>
-<p>"endpoint" refers to ID (routeId in camel routes) of the endpoint to which we wish to send a test request.
+<h2 id="when-execute">WHEN-execute<a class="headerlink" href="#when-execute" title="Permanent link">&para;</a></h2>
+<p>In this section a payload that should be sent to the adapter is defined.</p>
+<p>"endpoint" refers to ID (routeId in Camel routes) of the endpoint to which we wish to send a test request.
 In "with" part we define content of the request we wish to send, meaning body and headers are added here.
 The body can also be defined as plain text or JSON string, which represents a POJO.</p>
-<pre class="highlight"><code class="language-yaml">    when-execute:
+<pre class="highlight"><code class="language-yaml">    WHEN-execute:
       endpoint: "rest-endpoint"
       with:
         body: "body of request"</code></pre>
-<h2 id="with-mocks">with-mocks<a class="headerlink" href="#with-mocks" title="Permanent link">&para;</a></h2>
-<p>This section contains a list of endpoints for which we wish to have specific mocked behavior.
-"endpoint" is the endpoint ID, (processor ID in camel route) of the mocked endpoint.
+<h2 id="with-mocks">WITH-mocks<a class="headerlink" href="#with-mocks" title="Permanent link">&para;</a></h2>
+<p>This section contains a list of endpoints for which we wish to have specific mocked response.
+"endpoint" is the endpoint ID, (processor ID in Camel route) of the mocked endpoint.
 "returning" should have the body, that we expect as the response from real external call.</p>
-<pre class="highlight"><code class="language-yaml">    with-mocks:
+<pre class="highlight"><code class="language-yaml">    WITH-mocks:
       - endpoint: "external-service"
         returning:
           body: "response message from service"</code></pre>
-<h2 id="then-expect">then-expect<a class="headerlink" href="#then-expect" title="Permanent link">&para;</a></h2>
-<p>Validation of test response is defined by setting the "endpoint" parameter to the ID of endpoint under test
+<h2 id="then-expect">THEN-expect<a class="headerlink" href="#then-expect" title="Permanent link">&para;</a></h2>
+<p>Validation of adapter response is defined by setting the "endpoint" parameter to the ID of endpoint under test
 and defining the expected body or headers.</p>
-<p>Also, validation of requests, which mocks received, 
-is defined by setting the "endpoint" parameter to the ID of mocked endpoint
-and defining the expected body or headers.</p>
+<p>Validation of requests which outgoing endpoints received from the adapter is defined by setting the "endpoint" parameter to 
+the ID of mocked endpoint and defining the expected body or headers.</p>
 <p>Body and header validation is possible by either defining regex (Java) expression or matching exact String content.</p>
-<pre class="highlight"><code class="language-yaml">    then-expect:
+<pre class="highlight"><code class="language-yaml">    THEN-expect:
       - endpoint: "rest-endpoint" # matches endpoint under test
         having:
           body: "response .* from service"
@@ -296,7 +308,56 @@ and defining the expected body or headers.</p>
         having:
           body: "body of request"
           headers:
-            test-mode: "true"</code></pre>
+            Authorization: "Basic .*"</code></pre>
+<h1 id="supported-camel-components">Supported Camel components<a class="headerlink" href="#supported-camel-components" title="Permanent link">&para;</a></h1>
+<p>Following Camel components support testing with Test Kit:</p>
+<ul>
+<li>REST</li>
+<li>SOAP (by using CXF)</li>
+<li>File</li>
+<li>FTP, FTPS, SFTP</li>
+</ul>
+<p>Please check the special conditions for these components in following chapters. since there are some special conditions
+which must be met.</p>
+<h3 id="rest">REST<a class="headerlink" href="#rest" title="Permanent link">&para;</a></h3>
+<p>Running Test Kit tests with REST component is straightforward. Keep in mind that REST headers could be provided in 
+<i>when-execute</i> phase. There are no special considerations and our general <a href="#complete-example">example</a> is shown 
+with REST component. </p>
+<h3 id="soap">SOAP<a class="headerlink" href="#soap" title="Permanent link">&para;</a></h3>
+<p>Testing SOAP requests is possible if the adapter is using Camel CXF component. When writing body payloads within TestCaseDefinition file,
+it is required for all three phases (<i>when-execute</i>, <i>with-mocks</i>, <i>then-expect</i>) to provide soap xml
+content as a String in one line and to do String escape. Be sure that you meet these requirements, otherwise tests 
+could fail.</p>
+<h3 id="file">File<a class="headerlink" href="#file" title="Permanent link">&para;</a></h3>
+<p>File content should be provided as body in <i>when-execute</i> phase. </p>
+<p>Outside of testing, the File component will read the actual file from a specified location. 
+In that case Exchange within the route will have File component specific exchange headers (for example <code>CamelFileName</code>, <code>CamelFileLength</code>, 
+<code>CamelFileLastModified</code>... ). These headers are listed and explained in Camel File component docs.
+If these headers are needed in tests for route processing, they can be provided in <i>when-execute</i> configuration 
+part, under <i>headers</i> field. Header keys must be specified exactly the same as they are specified in Camel docs.</p>
+<p>When specifying some File headers, Test Kit will automatically set a few other headers which are populated under same conditions and 
+calculations as it is done in Camel File component:</p>
+<p>1) <code>CamelFileLength</code> - calculated and set automatically according to body length.
+2) <code>CamelFileName</code> - you can provide this header, and we will set <code>CamelFileNameConsumed</code> and <code>CamelFileNameOnly</code> 
+additionally.
+3) <code>CamelFileLastModified</code> - by providing this header, <code>CamelMessageTimestamp</code> will be set additionally.</p>
+<p>Any of these automatically set headers can be overridden by setting the header explicitly.
+All other File component headers, which are not mentioned here, can be provided by setting them explicitly.</p>
+<h3 id="ftp-ftps-sftp">FTP, FTPS, SFTP<a class="headerlink" href="#ftp-ftps-sftp" title="Permanent link">&para;</a></h3>
+<p>FTP, FTPS and SFTP have same behavior and testing approach in Test Kit. Security differences between them are not
+relevant for testing and all three components are equally supported.</p>
+<p>FTP component behaves mostly the same as File component. For better understanding, check the File component chapter.</p>
+<p>On top of File component headers, FTP components have few more. However, benefits that we provide in setting 
+headers automatically are different, and they are not the same as for File headers:</p>
+<p>1) <code>CamelFileLength</code> - calculated and set automatically according to body length.
+2) <code>CamelFileAbsolute</code> - calculated automatically based on component <code>directoryName</code> endpoint option.
+3) <code>CamelFileParent</code> - calculated automatically based on component <code>directoryName</code> endpoint option.
+4) <code>CamelFileHost</code> - calculated automatically based on component <code>host</code> endpoint option.
+5) <code>CamelRemoteFileInputStream</code> - calculated automatically if endpoint option <code>streamDownload</code> is set.
+6) <code>CamelFileName</code> - by providing this header, we set automatically headers <code>CamelFileNameConsumed</code>,
+<code>CamelFileNameOnly</code>, <code>CamelFileRelativePath</code>, <code>CamelFileAbsolutePath</code> and <code>CamelFilePath</code>.
+7) <code>CamelFileLastModified</code> - by providing this header, <code>CamelMessageTimestamp</code> will be set additionally.</p>
+<p>Same rules as in File chapter for overriding and providing other headers apply here as well.</p>
 <h1 id="complete-example">Complete example<a class="headerlink" href="#complete-example" title="Permanent link">&para;</a></h1>
 <p><strong>Sample Route</strong></p>
 <pre class="highlight"><code class="language-java">public class SampleRestRoute extends RouteBuilder {
@@ -308,33 +369,34 @@ and defining the expected body or headers.</p>
 
         from("sipmc:bridge")
                 .routeId("http-route")
+                .setHeader("Authorization", constant("Basic am9obkBleGFtcGxlLmNvbTphYmMxMjM="))
+                .transform(body().append(" now looks better"))
                 // Mocked endpoint
-                .to("http:localhost:8081/hello?bridgeEndpoint=true") 
+                .to("http:localhost:8081/hello?bridgeEndpoint=true")
                 .id("external-service");
     }
 }</code></pre>
 <p><strong>Sample test case definition</strong>
-<pre class="highlight"><code class="language-yaml">  test-case-definitions:
-  - title: "Test case 1"
-    when-execute:
-      endpoint: "rest-endpoint" # id of endpoint under test (routeId)
+<pre class="highlight"><code class="language-yaml">  - TITLE: "Test case 1"
+    WHEN-execute:
+      endpoint: "rest-endpoint"
       with:
         body: "body of request"
-    with-mocks:
-    - endpoint: "external-service" # id of endpoint that is mocked (processorId)
-      returning:
-        body: "response message from service"
-    then-expect:
-    - endpoint: "rest-endpoint" # matches endpoint under test
-      having:
-        body: "response .* from service"
-        headers:
-          CamelHttpResponseCode: "200"
-    - endpoint: "external-service" # matches endpoint with mocked behavior
-      having:
-        body: "body of request"
-        headers:
-          test-mode: "true"</code></pre></p>
+    WITH-mocks:
+      - endpoint: "external-service"
+        returning:
+          body: "response message from service"
+    THEN-expect:
+      - endpoint: "rest-endpoint" # matches endpoint under test
+        having:
+          body: "response .* from service"
+          headers:
+            CamelHttpResponseCode: "200"
+      - endpoint: "external-service"
+        having:
+          body: "body of request now looks better"
+          headers:
+            Authorization: "Basic .*"</code></pre></p>
 <p><strong>Sample Console Report</strong></p>
 <pre class="highlight"><code>-----------------------------
 | SIP Test Execution Report |
@@ -355,14 +417,17 @@ and defining the expected body or headers.</p>
     Endpoints:
       Endpoint "external-service" was mocked
       Validation successful
+      Validation details:
+        Body validation successful
+        Header validation successful
       Received:
-       Body: body of request
+       Body: body of request now looks better
        Headers:
-        - test-mode: true
+        - Authorization: Basic am9obkBleGFtcGxlLmNvbTphYmMxMjM=
       Expected:
-       Body: body of request
+       Body: body of request now looks better
        Headers:
-        - test-mode: true
+        - Authorization: Basic .*
 
 -----------------------------</code></pre>
               
