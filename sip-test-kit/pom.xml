@@ -7,13 +7,13 @@
     <parent>
         <groupId>de.ikor.sip.foundation</groupId>
         <artifactId>sip-framework</artifactId>
-        <version>2.3.0</version>
+        <version>2.3.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>sip-test-kit</artifactId>
     <name>SIP Test Kit</name>
-    <version>2.3.0</version>
+    <version>2.3.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
