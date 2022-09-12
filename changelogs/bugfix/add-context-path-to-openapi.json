@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "136",
-  "message": "Add missing context path to rest endpoints from Camel DSL in generated openapi."
-}

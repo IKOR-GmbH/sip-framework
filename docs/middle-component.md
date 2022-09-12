@@ -16,7 +16,9 @@ which will make it easier to bridge connectors in different ways, e.g. by using 
 Middle component hides connecting technology and makes connection of two sub-systems abstract and simple. Current version
 supports only in-memory connection channel implemented on top of Camel's SEDA component. It provides 1 to 1 and
 publish-subscribe patterns and can support many channels in single adapter. Middle component can automatically determine
-the number of consumers for a specific channel and auto-configure itself accordingly, as a 1 to 1 or publish-subscribe connector.
+the number of consumers for a specific channel and autoconfigure itself accordingly, as a 1 to 1 or publish-subscribe connector.
+In any case it will be autoconfigured with waitForTaskToComplete=always, meaning that it will wait for all asynchronous   
+processors to finish before it continues route execution. 
 
 ## How to use
 
