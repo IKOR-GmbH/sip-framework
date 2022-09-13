@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomTracer extends DefaultTracer {
 
-  public static final String TRACING_ID = "tracingId";
+  public static final String TRACE_LIST = "traceList";
 
   private final SIPTraceConfig sipTraceConfig;
 
@@ -49,11 +49,11 @@ public class CustomTracer extends DefaultTracer {
   }
 
   private void addIdToTracingList(Exchange exchange) {
-    exchange.getIn().setHeader(TRACING_ID, tracingList(exchange));
+    exchange.getIn().setHeader(TRACE_LIST, updateTracingList(exchange));
   }
 
-  private String tracingList(Exchange exchange) {
-    String list = exchange.getIn().getHeader(TRACING_ID, String.class);
+  private String updateTracingList(Exchange exchange) {
+    String list = exchange.getIn().getHeader(TRACE_LIST, String.class);
     if (list == null) {
       list = exchange.getExchangeId();
     }

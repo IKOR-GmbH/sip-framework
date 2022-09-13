@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.trace;
 
-import static de.ikor.sip.foundation.core.trace.CustomTracer.TRACING_ID;
+import static de.ikor.sip.foundation.core.trace.CustomTracer.TRACE_LIST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -76,7 +76,7 @@ class CustomTracerTest {
     subject.traceBeforeNode(mock(NamedNode.class), exchange);
 
     // assert
-    assertThat(exchange.getIn().getHeader(TRACING_ID)).isEqualTo(EXCHANGE_ID);
+    assertThat(exchange.getIn().getHeader(TRACE_LIST)).isEqualTo(EXCHANGE_ID);
   }
 
   @Test
@@ -84,13 +84,13 @@ class CustomTracerTest {
     // arrange
     String oldId = "old";
     initTracingIDTest();
-    exchange.getIn().setHeader(TRACING_ID, oldId);
+    exchange.getIn().setHeader(TRACE_LIST, oldId);
 
     // act
     subject.traceBeforeNode(mock(NamedNode.class), exchange);
 
     // assert
-    assertThat(exchange.getIn().getHeader(TRACING_ID)).isEqualTo(oldId + "," + EXCHANGE_ID);
+    assertThat(exchange.getIn().getHeader(TRACE_LIST)).isEqualTo(oldId + "," + EXCHANGE_ID);
   }
 
   @Test
@@ -108,7 +108,7 @@ class CustomTracerTest {
     subject.traceBeforeRoute(namedRoute, exchange);
 
     // assert
-    assertThat(exchange.getIn().getHeader(TRACING_ID)).isEqualTo(EXCHANGE_ID);
+    assertThat(exchange.getIn().getHeader(TRACE_LIST)).isEqualTo(EXCHANGE_ID);
   }
 
   private void initTracingIDTest() {
