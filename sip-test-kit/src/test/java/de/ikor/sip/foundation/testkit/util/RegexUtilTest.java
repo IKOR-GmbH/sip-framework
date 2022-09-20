@@ -13,6 +13,11 @@ class RegexUtilTest {
   }
 
   @Test
+  void compare_SuccessWithCarriageReturn() {
+    assertThat(RegexUtil.compare("\r\nsth.sth", "\nsthasth")).isTrue();
+  }
+
+  @Test
   void compare_Fail() {
     assertThat(RegexUtil.compare("sth.sth", "sthsth")).isFalse();
   }
