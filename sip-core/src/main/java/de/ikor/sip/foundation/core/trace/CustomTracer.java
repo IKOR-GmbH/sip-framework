@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomTracer extends DefaultTracer {
 
-  public static final String TRACE_LIST = "traceList";
+  public static final String TRACE_SET = "traceSet";
 
   private final SIPTraceConfig sipTraceConfig;
 
@@ -38,29 +38,24 @@ public class CustomTracer extends DefaultTracer {
 
   @Override
   public void traceBeforeRoute(NamedRoute route, Exchange exchange) {
-    addIdToTracingList(exchange);
+    addIdToTraceSet(exchange);
     super.traceBeforeRoute(route, exchange);
   }
 
   @Override
   public void traceBeforeNode(NamedNode node, Exchange exchange) {
-    addIdToTracingList(exchange);
+    addIdToTraceSet(exchange);
     super.traceBeforeNode(node, exchange);
   }
 
-  private void addIdToTracingList(Exchange exchange) {
-    exchange.getIn().setHeader(TRACE_LIST, updateTracingList(exchange));
+  private void addIdToTraceSet(Exchange exchange) {
+    exchange.getIn().setHeader(TRACE_SET, updateTraceSet(exchange));
   }
 
-  private String updateTracingList(Exchange exchange) {
-    String list = exchange.getIn().getHeader(TRACE_LIST, String.class);
-    if (list == null) {
-      list = exchange.getExchangeId();
-    }
-    if (!list.contains(exchange.getExchangeId())) {
-      list = list.concat("," + exchange.getExchangeId());
-    }
-    return list;
+  private TraceSet updateTraceSet(Exchange exchange) {
+    TraceSet traceSet = exchange.getIn().getHeader(TRACE_SET, TraceSet.class);
+    if (traceSet == null) traceSet = new TraceSet();
+    return traceSet.cloneAndAdd(exchange.getExchangeId());
   }
 
   @Override
