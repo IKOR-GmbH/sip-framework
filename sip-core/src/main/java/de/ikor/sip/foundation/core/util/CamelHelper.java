@@ -5,6 +5,10 @@ import org.apache.camel.processor.WrapProcessor;
 
 public class CamelHelper {
 
+  private CamelHelper() {
+    throw new IllegalStateException("Utility class");
+  }
+
   public static Processor unwrapProcessor(Processor wrappedProcessor) {
     Processor originalProcessor = wrappedProcessor;
     while (originalProcessor instanceof WrapProcessor) {
