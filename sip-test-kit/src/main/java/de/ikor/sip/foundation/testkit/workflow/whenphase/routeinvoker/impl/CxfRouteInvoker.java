@@ -1,7 +1,9 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
+import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
-/** Class for triggering Camel CXF(SOAP) route */
+/** Invoker class for triggering Camel CXF(SOAP) route */
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -31,13 +33,12 @@ public class CxfRouteInvoker implements RouteInvoker {
   private final Environment environment;
   private final RestTemplateBuilder restTemplateBuilder;
 
-  private Endpoint endpoint;
-
   @Value("${sip.adapter.camel-cxf-endpoint-context-path}")
   private String cxfContextPath = "";
 
   @Override
-  public Exchange invoke(Exchange inputExchange) {
+  public Optional<Exchange> invoke(Exchange inputExchange) {
+    Endpoint endpoint = SIPExchangeHelper.resolveEndpoint(inputExchange, camelContext);
     HttpEntity<String> request =
         new HttpEntity<>(
             inputExchange.getMessage().getBody(String.class), prepareHeaders(inputExchange));
@@ -53,18 +54,12 @@ public class CxfRouteInvoker implements RouteInvoker {
                 new ParameterizedTypeReference<>() {});
     log.trace("sip.testkit.workflow.whenphase.routeinvoker.soap.response_{}", response);
 
-    return createExchangeResponse(response);
+    return Optional.of(createExchangeResponse(response));
   }
 
   @Override
   public boolean isApplicable(Endpoint endpoint) {
     return endpoint instanceof CxfEndpoint;
-  }
-
-  @Override
-  public RouteInvoker setEndpoint(Endpoint endpoint) {
-    this.endpoint = endpoint;
-    return this;
   }
 
   private Exchange createExchangeResponse(ResponseEntity<String> response) {

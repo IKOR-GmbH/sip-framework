@@ -8,6 +8,7 @@ import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.TestCaseValid
 import de.ikor.sip.foundation.testkit.workflow.whenphase.ExecutionWrapper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,17 +33,18 @@ class TestCaseTest {
     executionWrapper = mock(ExecutionWrapper.class);
     validator = mock(TestCaseValidator.class);
     testExecutionStatus = new TestExecutionStatus(TEST_NAME);
-    subject = new TestCase(TEST_NAME, mocks, executionWrapper, validator, testExecutionStatus);
+    subject = new TestCase(TEST_NAME, mocks, validator, testExecutionStatus);
+    subject.setExecutionWrapper(executionWrapper);
   }
 
   @Test
-  void When_run_Expect_AllPhasesExecuted() {
+  void WHEN_run_THEN_allPhasesExecuted() {
     // arrange
     Exchange exchange = mock(Exchange.class);
     Message message = mock(Message.class);
     when(message.getBody()).thenReturn("message");
     when(exchange.getMessage()).thenReturn(message);
-    when(executionWrapper.execute()).thenReturn(exchange);
+    when(executionWrapper.execute()).thenReturn(Optional.of(exchange));
     doNothing().when(validator).validate(testExecutionStatus);
 
     // act
@@ -55,7 +57,7 @@ class TestCaseTest {
   }
 
   @Test
-  void When_clearMocks_Expect_MockClearCalled() {
+  void WHEN_clearMocks_THEN_MockClearCalled() {
     // act
     subject.clearMocks();
 
@@ -64,7 +66,7 @@ class TestCaseTest {
   }
 
   @Test
-  void reportExecutionException() {
+  void GIVEN_runtimeException_WHEN_reportExecutionException_THEN_validateFailedTestExecution() {
     // arrange
     RuntimeException ex = new RuntimeException(EXCEPTION_MESSAGE);
 
@@ -73,7 +75,8 @@ class TestCaseTest {
 
     // assert
     assertThat(testExecutionStatus.isSuccessfulExecution()).isFalse();
-    assertThat(testExecutionStatus.getWorkflowException()).isEqualTo(ex);
+    assertThat(testExecutionStatus.getWorkflowException()).isPresent();
+    assertThat(testExecutionStatus.getWorkflowException()).contains(ex);
     assertThat(testExecutionStatus.getWorkflowExceptionMessage()).contains(EXCEPTION_MESSAGE);
   }
 }

@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class ProcessorProxy extends AsyncProcessorSupport {
   private static final Logger logger = LoggerFactory.getLogger(ProcessorProxy.class);
   public static final String TEST_MODE_HEADER = "test-mode";
-  private static final String TRACING_ID = "tracingId";
+
   private static final String[] NON_OUTGOING_PROCESSOR_PREFIXES = {"seda", "direct", "sipmc"};
 
   private final NamedNode nodeDefinition;
@@ -27,6 +27,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   private final List<ProxyExtension> extensions;
   private Function<Exchange, Exchange> mockFunction;
   @Getter private boolean endpointProcessor;
+  @Getter private Class<? extends Processor> type;
 
   /**
    * Creates new instance of ProcessorProxy
@@ -46,6 +47,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     this.extensions = new ArrayList<>(extensions);
     this.mockFunction = null;
     this.endpointProcessor = determineEndpointProcessor();
+    this.type = originalProcessor.getClass();
   }
 
   /** Resets the state of the proxy to default. */
@@ -86,9 +88,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
 
   @Override
   public boolean process(Exchange exchange, AsyncCallback callback) {
-    if (exchange.getIn().getHeader(TRACING_ID) == null) {
-      exchange.getIn().setHeader(TRACING_ID, exchange.getExchangeId());
-    }
+
     Exchange originalExchange = exchange.copy();
 
     if (isTestMode(exchange) && hasMockFunction()) {

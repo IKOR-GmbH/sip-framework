@@ -5,6 +5,7 @@ import de.ikor.sip.foundation.testkit.workflow.reporting.model.SIPAdapterExecuti
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -19,7 +20,7 @@ public class TestExecutionStatus {
   private boolean successfulExecution;
   private SIPAdapterExecutionReport adapterReport = new SIPAdapterExecutionReport();
 
-  private Exception workflowException;
+  private Optional<Exception> workflowException = Optional.empty();
   private String workflowExceptionMessage;
   private Map<String, MockReport> mockReports = new HashMap<>();
 
@@ -52,7 +53,7 @@ public class TestExecutionStatus {
    * @param workflowException exception thrown by SIP test kit
    */
   public void setWorkflowException(Exception workflowException) {
-    this.workflowException = workflowException;
+    this.workflowException = Optional.of(workflowException);
     this.workflowExceptionMessage = errorMessage(workflowException);
   }
 

@@ -1,10 +1,13 @@
 package de.ikor.sip.foundation.core.translate.logging;
 
+import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_HEADER;
+
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Layout;
 import de.ikor.sip.foundation.core.translate.SIPTranslateMessageService;
+import org.apache.logging.log4j.ThreadContext;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -29,9 +32,16 @@ public class TranslateMessageLayout<E> extends PatternLayout implements Layout<I
       translatedMessage =
           messageService.getTranslatedMessage(event.getMessage(), event.getArgumentArray());
     }
+    if (isTestMode()) {
+      translatedMessage = String.format("[SIP TEST] %s", translatedMessage);
+    }
 
     cloneEvent.setMessage(translatedMessage);
     return super.doLayout(cloneEvent);
+  }
+
+  private boolean isTestMode() {
+    return Boolean.parseBoolean(ThreadContext.get(TEST_MODE_HEADER));
   }
 
   private SIPTranslateMessageService initMessageService() {

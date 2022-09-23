@@ -4,6 +4,8 @@ de.ikor.sip.foundation.core.trace.TraceAutoConfig,\
 de.ikor.sip.foundation.core.proxies.ProxyAutoConfig,\
 de.ikor.sip.foundation.core.actuator.routes.ActuatorRoutesAutoConfig,\
 de.ikor.sip.foundation.core.actuator.health.ActuatorHealthAutoConfig,\
+de.ikor.sip.foundation.core.actuator.info.ActuatorInfoAutoConfig,\
+de.ikor.sip.foundation.core.openapi.OpenApiResolverAutoConfig
 de.ikor.sip.foundation.core.actuator.info.ActuatorInfoAutoConfig, \
 de.ikor.sip.foundation.core.actuator.declarative.ActuatorDefinitionAutoConfig, \
 de.ikor.sip.foundation.core.declarative.RoutesFromDeclarativeBuilder

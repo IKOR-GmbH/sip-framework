@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.testkit.workflow;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
+import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
 import de.ikor.sip.foundation.testkit.workflow.reporting.resultprocessor.ResultProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,12 +18,12 @@ class TestRunnerTest {
   @Mock private ResultProcessor resultProcessor;
 
   @BeforeEach
-  private void setUp() {
+  private void setup() {
     testRunner = new TestRunner(resultProcessor);
   }
 
   @Test
-  void When_runBuildTest_WithSuccessfulVerification_Then_Success() {
+  void When_runBuildTest_With_SuccessfulVerification_Then_Success() {
     // arrange
     TestCase testCase = mock(TestCase.class);
     when(testCase.getTestExecutionStatus())
@@ -34,7 +35,7 @@ class TestRunnerTest {
   }
 
   @Test
-  void When_runBuildTest_WithoutSuccessfulVerification_Then_Fail() {
+  void When_runBuildTest_Without_SuccessfulVerification_Then_Fail() {
     // arrange
     TestCase testCase = mock(TestCase.class);
     when(testCase.getTestExecutionStatus())
@@ -43,6 +44,19 @@ class TestRunnerTest {
     // act + assert
     assertThat(testRunner.run(testCase)).isFalse();
     verify(testCase).run();
+  }
+
+  @Test
+  void When_runBuildTest_With_WorkflowException_Then_Fail() {
+    // arrange
+    TestCase testCase = mock(TestCase.class);
+    TestExecutionStatus testExecutionStatus = new TestExecutionStatus("test");
+    testExecutionStatus.setWorkflowException(new NoRouteInvokerException("routeId"));
+    when(testCase.getTestExecutionStatus()).thenReturn(testExecutionStatus);
+
+    // act + assert
+    assertThat(testRunner.run(testCase)).isFalse();
+    verify(testCase, times(0)).run();
   }
 
   @Test
@@ -58,6 +72,6 @@ class TestRunnerTest {
     assertThat(testRunner.run(testCase)).isFalse();
     verify(testCase).run();
     verify(testCase).clearMocks();
-    assertThat(testCase.getTestExecutionStatus().getWorkflowException()).isNotNull();
+    assertThat(testCase.getTestExecutionStatus().getWorkflowException()).isPresent();
   }
 }

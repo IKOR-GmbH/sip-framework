@@ -3,6 +3,8 @@ package de.ikor.sip.foundation.testkit.workflow.reporting.model;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties;
 import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.AccessLevel;
@@ -14,8 +16,8 @@ import org.apache.camel.Exchange;
 public class SIPAdapterExecutionReport {
   private Exchange actualResponse;
   private Exchange expectedResponse;
-  private Map<String, Object> validatedHeaders;
-  private List<ValidationResult> validationResults;
+  private Map<String, Object> validatedHeaders = new HashMap<>();
+  private List<ValidationResult> validationResults = new ArrayList<>();
   private String adapterExceptionMessage;
 
   @Setter(AccessLevel.PRIVATE)
