@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.proxies;
 
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
+import de.ikor.sip.foundation.core.util.CamelHelper;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -8,7 +9,6 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.camel.*;
 import org.apache.camel.processor.SendDynamicProcessor;
-import org.apache.camel.processor.WrapProcessor;
 import org.apache.camel.support.AsyncProcessorSupport;
 import org.apache.camel.support.ExchangeHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -42,8 +42,8 @@ public class ProcessorProxy extends AsyncProcessorSupport {
       NamedNode nodeDefinition, Processor wrappedProcessor, List<ProxyExtension> extensions) {
     this.nodeDefinition = nodeDefinition;
     this.wrappedProcessor = wrappedProcessor;
-    this.originalProcessor = unwrapProcessor(wrappedProcessor);
-    this.type = this.originalProcessor.getClass();
+    this.originalProcessor = CamelHelper.unwrapProcessor(wrappedProcessor);
+    this.type = this.originalProcessor != null ? this.originalProcessor.getClass() : null;
     this.extensions = new ArrayList<>(extensions);
     this.mockFunction = null;
     this.endpointProcessor = determineEndpointProcessor();
@@ -127,13 +127,5 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   private void mockProcessing(Exchange exchange) {
     logger.trace("Processor: {}, Executing mocking logic for the {} ", getId(), exchange);
     ExchangeHelper.copyResults(exchange, mockFunction.apply(exchange));
-  }
-
-  private Processor unwrapProcessor(Processor wrappedProcessor) {
-    Processor originalProcessor = wrappedProcessor;
-    while (originalProcessor instanceof WrapProcessor) {
-      originalProcessor = ((WrapProcessor) originalProcessor).getWrapped();
-    }
-    return originalProcessor;
   }
 }
