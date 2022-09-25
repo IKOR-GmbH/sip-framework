@@ -144,5 +144,10 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>de.ikor.sip.foundation</groupId>
+            <artifactId>sip-middle-component</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

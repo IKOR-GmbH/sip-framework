@@ -1,11 +1,12 @@
 package de.ikor.sip.foundation.core.actuator.health.camel;
 
-import static de.ikor.sip.foundation.core.CoreTestApplication.TEST_ROUTE_ID;
+import static de.ikor.sip.foundation.core.apps.core.CoreTestApplication.TEST_ROUTE_ID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import de.ikor.sip.foundation.core.apps.core.CoreTestApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-@SpringBootTest
+@SpringBootTest(classes = CoreTestApplication.class)
 @AutoConfigureMockMvc
 class CamelHealthCheckRepositoryOverrideTest {
 
