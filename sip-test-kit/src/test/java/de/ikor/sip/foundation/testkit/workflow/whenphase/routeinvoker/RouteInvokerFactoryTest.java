@@ -35,7 +35,7 @@ class RouteInvokerFactoryTest {
     Set<RouteInvoker> invokers =
         Set.of(restRouteInvoker, mock(CxfRouteInvoker.class), fileRouteInvoker);
     subject = new RouteInvokerFactory(invokers, camelContext);
-    exchange = TestKitHelper.createEmptyExchange(camelContext);
+    exchange = TestKitHelper.parseExchangeProperties(null, camelContext);
     exchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
     route = mock(Route.class);
     when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);

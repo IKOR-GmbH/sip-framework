@@ -44,7 +44,7 @@ class TestKitHelperTest {
     when(message.getBody()).thenReturn(BODY);
     when(message.getHeaders()).thenReturn(headers);
 
-    MessageProperties actual = TestKitHelper.mapToMessageProperties(exchange);
+    MessageProperties actual = MessageProperties.mapToMessageProperties(exchange);
 
     assertThat(actual.getBody()).isEqualTo(BODY);
     assertThat(actual.getHeaders()).isEqualTo(headers);

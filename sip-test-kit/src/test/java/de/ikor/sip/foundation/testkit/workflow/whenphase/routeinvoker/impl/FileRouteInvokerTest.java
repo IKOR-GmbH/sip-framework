@@ -29,7 +29,7 @@ class FileRouteInvokerTest {
   void setup() {
     ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
     subject = new FileRouteInvoker(camelContext);
-    inputExchange = TestKitHelper.createEmptyExchange(camelContext);
+    inputExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
     inputExchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
     inputExchange.getMessage().setBody(BODY_PAYLOAD);
 
@@ -41,7 +41,7 @@ class FileRouteInvokerTest {
     when(route.getConsumer()).thenReturn(fileConsumer);
     when(fileConsumer.getAsyncProcessor()).thenReturn(asyncProcessor);
 
-    actualFileExchange = TestKitHelper.createEmptyExchange(camelContext);
+    actualFileExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
     when(fileConsumer.createExchange(true)).thenReturn(actualFileExchange);
   }
 

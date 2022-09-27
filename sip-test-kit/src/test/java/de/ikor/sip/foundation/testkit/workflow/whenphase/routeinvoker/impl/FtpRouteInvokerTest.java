@@ -38,7 +38,7 @@ class FtpRouteInvokerTest {
   void setup() {
     ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
     subject = new FtpRouteInvoker(camelContext);
-    inputExchange = TestKitHelper.createEmptyExchange(camelContext);
+    inputExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
     inputExchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
     inputExchange.getMessage().setBody(BODY_PAYLOAD);
 
@@ -52,7 +52,7 @@ class FtpRouteInvokerTest {
     when(route.getConsumer()).thenReturn(ftpConsumer);
     when(ftpConsumer.getProcessor()).thenReturn(processor);
 
-    actualFileExchange = TestKitHelper.createEmptyExchange(camelContext);
+    actualFileExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
     when(ftpConsumer.createExchange(true)).thenReturn(actualFileExchange);
 
     endpointConfiguration = mock(RemoteFileConfiguration.class);
