@@ -5,20 +5,37 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 class RegexUtilTest {
-  RegexUtil regexUtil;
 
   @Test
-  void compare_Success() {
-    assertThat(RegexUtil.compare("sth.sth", "sthasth")).isTrue();
+  void GIVEN_compliantActual_WHEN_compare_THEN_resultTrue() {
+    // arrange
+    String expected = "sth.sth";
+    String actual = "sthasth";
+    // act
+    Boolean result = RegexUtil.compare(expected, actual);
+    // assert
+    assertThat(result).isTrue();
   }
 
   @Test
-  void compare_SuccessWithCarriageReturn() {
-    assertThat(RegexUtil.compare("\r\nsth.sth", "\nsthasth")).isTrue();
+  void GIVEN_actualWithCarriageReturn_WHEN_compare_THEN_resultTrue() {
+    // arrange
+    String expected = "\r\nsth.sth";
+    String actual = "\nsthasth";
+    // act
+    Boolean result = RegexUtil.compare(expected, actual);
+    // assert
+    assertThat(result).isTrue();
   }
 
   @Test
-  void compare_Fail() {
-    assertThat(RegexUtil.compare("sth.sth", "sthsth")).isFalse();
+  void GIVEN_nonCompliantActual_WHEN_compare_THEN_resultFalse() {
+    // arrange
+    String expected = "sth.sth";
+    String actual = "sthsth";
+    // act
+    Boolean result = RegexUtil.compare(expected, actual);
+    // assert
+    assertThat(result).isFalse();
   }
 }
