@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker;
 
 import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
-import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
+import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import java.util.*;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
@@ -30,10 +30,10 @@ public class RouteInvokerFactory {
    * @return proper instance of RouteInvoker
    */
   public RouteInvoker getInstance(Exchange exchange) throws NoRouteInvokerException {
-    Endpoint endpoint = SIPExchangeHelper.resolveEndpoint(exchange, camelContext);
+    Endpoint endpoint = TestKitHelper.resolveEndpoint(exchange, camelContext);
     return invokers.stream()
         .filter(routeInvoker -> routeInvoker.isApplicable(endpoint))
         .findFirst()
-        .orElseThrow(() -> new NoRouteInvokerException(SIPExchangeHelper.getRouteId(exchange)));
+        .orElseThrow(() -> new NoRouteInvokerException(TestKitHelper.getRouteId(exchange)));
   }
 }
