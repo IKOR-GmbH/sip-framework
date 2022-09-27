@@ -11,11 +11,10 @@ import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.camel.*;
-import org.apache.camel.builder.ExchangeBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class SIPExchangeHelperTest {
+class TestKitHelperTest {
 
   private static final String SERIALIZABLE_DEFAULT_VALUE = "This is non serializable value";
   private static final String BODY = "body";
@@ -37,33 +36,6 @@ class SIPExchangeHelperTest {
   }
 
   @Test
-  void GIVEN_differentHeaderValues_WHEN_filterNonSerializableHeaders_THEN_getOnlyFilteredHeaders() {
-
-    headers.put("empty", null);
-    headers.put("nonempty", "sth");
-
-    Map<String, Object> result = SIPExchangeHelper.filterNonSerializableHeaders(exchange);
-
-    assertThat(result.get("empty")).isNull();
-    assertThat(result.get("nonempty")).isNotNull();
-  }
-
-  @Test
-  void
-      GIVEN_nonSerializableValue_WHEN_reassignNonSerializableValue_THEN_expectSerializableDefaultValue() {
-    // arrange
-    ExchangeBuilder exchangeBuilder = ExchangeBuilder.anExchange(camelContext);
-    Exchange nonserializableValue = exchangeBuilder.build();
-
-    // act
-    String actual =
-        (String) SIPExchangeHelper.reassignNonSerializableValue("test", nonserializableValue);
-
-    // assert
-    assertThat(actual).isEqualTo(SERIALIZABLE_DEFAULT_VALUE);
-  }
-
-  @Test
   void GIVEN_simpleBody_WHEN_mapToMessageProperties_THEN_expectValidBody() {
     Exchange exchange = mock(Exchange.class);
     Map<String, Object> headers = new HashMap<>();
@@ -72,7 +44,7 @@ class SIPExchangeHelperTest {
     when(message.getBody()).thenReturn(BODY);
     when(message.getHeaders()).thenReturn(headers);
 
-    MessageProperties actual = SIPExchangeHelper.mapToMessageProperties(exchange);
+    MessageProperties actual = MessageProperties.mapToMessageProperties(exchange);
 
     assertThat(actual.getBody()).isEqualTo(BODY);
     assertThat(actual.getHeaders()).isEqualTo(headers);
@@ -88,7 +60,7 @@ class SIPExchangeHelperTest {
     when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
 
     // act
-    Endpoint actualEndpoint = SIPExchangeHelper.resolveEndpoint(exchange, camelContext);
+    Endpoint actualEndpoint = TestKitHelper.resolveEndpoint(exchange, camelContext);
 
     // arrange
     assertThat(actualEndpoint).isEqualTo(expectedEndpoint);
@@ -99,7 +71,7 @@ class SIPExchangeHelperTest {
     // act & arrange
     assertThrows(
         IllegalArgumentException.class,
-        () -> SIPExchangeHelper.resolveEndpoint(exchange, camelContext));
+        () -> TestKitHelper.resolveEndpoint(exchange, camelContext));
   }
 
   @Test
@@ -112,7 +84,7 @@ class SIPExchangeHelperTest {
     when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
 
     // act
-    Consumer actualConsumer = SIPExchangeHelper.resolveConsumer(exchange, camelContext);
+    Consumer actualConsumer = TestKitHelper.resolveConsumer(exchange, camelContext);
 
     // arrange
     assertThat(actualConsumer).isEqualTo(expectedConsumer);
@@ -129,7 +101,7 @@ class SIPExchangeHelperTest {
     properties.setMessage(messageProperties);
 
     // act
-    Exchange actual = SIPExchangeHelper.parseExchangeProperties(properties, camelContext);
+    Exchange actual = TestKitHelper.parseExchangeProperties(properties, camelContext);
 
     // arrange
     assertThat(actual.getMessage().getBody()).isEqualTo("body");
@@ -139,7 +111,7 @@ class SIPExchangeHelperTest {
   @Test
   void GIVEN_noProperties_WHEN_parseExchangeProperties_THEN_expectExchangeWithValues() {
     // act
-    Exchange actual = SIPExchangeHelper.parseExchangeProperties(null, camelContext);
+    Exchange actual = TestKitHelper.parseExchangeProperties(null, camelContext);
 
     // arrange
     assertThat(actual.getMessage().getBody()).isNull();
