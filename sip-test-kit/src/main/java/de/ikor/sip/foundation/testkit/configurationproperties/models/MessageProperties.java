@@ -1,12 +1,12 @@
 package de.ikor.sip.foundation.testkit.configurationproperties.models;
 
+import static de.ikor.sip.foundation.core.util.SIPExchangeHelper.filterNonSerializableHeaders;
+
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Data;
 import org.apache.camel.Exchange;
 import org.apache.camel.support.MessageHelper;
-
-import static de.ikor.sip.foundation.core.util.SIPExchangeHelper.filterNonSerializableHeaders;
 
 /** Class that holds a single message used in test cases */
 @Data

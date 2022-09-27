@@ -1,13 +1,13 @@
 package de.ikor.sip.foundation.testkit.util;
 
+import static org.apache.camel.builder.ExchangeBuilder.anExchange;
+
 import de.ikor.sip.foundation.core.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.*;
 import org.apache.camel.builder.ExchangeBuilder;
-
-import static org.apache.camel.builder.ExchangeBuilder.anExchange;
 
 /** Utility class that changes the {@link Exchange} */
 @Slf4j
