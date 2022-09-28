@@ -4,6 +4,7 @@ import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.SIP
 import static org.apache.camel.component.jms.JmsConstants.JMS_X_GROUP_ID;
 import static org.assertj.core.api.Assertions.*;
 
+import java.nio.charset.StandardCharsets;
 import javax.jms.Message;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.Test;
 class SIPJmsTextMessageTest {
 
   private static final String TEST = "test";
-  private static final Object NULL = null;
 
   private SIPJmsTextMessage subject;
 
@@ -43,8 +43,9 @@ class SIPJmsTextMessageTest {
   void GIVEN_overridingInputs_WHEN_callingGetters_THEN_expectInputValues() {
     // arrange
     subject.setText("text value");
-    subject.setJMSCorrelationID("123");
-    subject.setJMSMessageID("123435");
+    String jmsCorrelationID = "123";
+    subject.setJMSCorrelationID(jmsCorrelationID);
+    subject.setJMSMessageID("12345");
     subject.setJMSRedelivered(true);
     subject.setJMSType("message");
     subject.setObjectProperty(JMS_X_GROUP_ID, "10");
@@ -58,9 +59,10 @@ class SIPJmsTextMessageTest {
 
     // act & assert
     assertThat(subject.getText()).isEqualTo("text value");
-    assertThat(subject.getJMSCorrelationID()).isEqualTo("123");
-    assertThat(subject.getJMSCorrelationIDAsBytes()).isEqualTo("123");
-    assertThat(subject.getJMSMessageID()).isEqualTo("123435");
+    assertThat(subject.getJMSCorrelationID()).isEqualTo(jmsCorrelationID);
+    assertThat(subject.getJMSCorrelationIDAsBytes())
+        .isEqualTo(jmsCorrelationID.getBytes(StandardCharsets.UTF_8));
+    assertThat(subject.getJMSMessageID()).isEqualTo("12345");
     assertThat(subject.getJMSRedelivered()).isTrue();
     assertThat(subject.getJMSType()).isEqualTo("message");
     assertThat(subject.getObjectProperty(JMS_X_GROUP_ID)).isEqualTo("10");

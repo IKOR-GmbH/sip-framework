@@ -84,7 +84,7 @@ public class SIPJmsTextMessage implements TextMessage {
 
   @Override
   public void setJMSTimestamp(long jmsTimestamp) {
-    jmsProperties.put(JMS_MESSAGE_ID, jmsTimestamp);
+    jmsProperties.put(JMS_TIMESTAMP, jmsTimestamp);
   }
 
   @Override
