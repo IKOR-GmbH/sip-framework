@@ -6,6 +6,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Consumer;
 import org.apache.camel.PollingConsumer;
 import org.apache.camel.Route;
+import org.apache.camel.component.jms.JmsConsumer;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
 import org.apache.camel.support.ScheduledPollConsumer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -36,7 +37,9 @@ public class CamelContextLifecycleHandler implements CamelContextConfiguration {
 
   private void checkAndSuspend(Route route, CamelContext camelContext) {
     Consumer consumer = route.getConsumer();
-    if (consumer instanceof PollingConsumer || consumer instanceof ScheduledPollConsumer) {
+    if (consumer instanceof PollingConsumer
+        || consumer instanceof ScheduledPollConsumer
+        || consumer instanceof JmsConsumer) {
       suspendRoute(route.getRouteId(), camelContext);
     }
   }
