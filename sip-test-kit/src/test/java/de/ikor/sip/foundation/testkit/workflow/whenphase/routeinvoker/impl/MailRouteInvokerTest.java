@@ -15,11 +15,11 @@ class MailRouteInvokerTest {
 
   private static final String NODE_ID = "nodeId";
   MailRouteInvoker subject;
-  CamelContext camelContext;
+  ExtendedCamelContext camelContext;
 
   @BeforeEach
   void setup() {
-    camelContext = mock(CamelContext.class);
+    camelContext = mock(ExtendedCamelContext.class);
     subject = new MailRouteInvoker(camelContext);
   }
 
@@ -27,6 +27,8 @@ class MailRouteInvokerTest {
   void When_invoke_Expect_ExchangeProcessingInvoked() {
     // arrange
     Exchange exchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
+    Exchange mailExchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
+    when(exchange.getContext()).thenReturn(camelContext);
     Route route = mock(Route.class);
     MailConsumer mailConsumer = mock(MailConsumer.class);
     AsyncProcessor asyncProcessor = mock(AsyncProcessor.class);
@@ -34,12 +36,14 @@ class MailRouteInvokerTest {
     when(camelContext.getRoute(NODE_ID)).thenReturn(route);
     when(route.getConsumer()).thenReturn(mailConsumer);
     when(mailConsumer.getAsyncProcessor()).thenReturn(asyncProcessor);
+    when(mailConsumer.createExchange(true)).thenReturn(mailExchange);
+    when(exchange.getMessage().getBody(String.class)).thenReturn("body");
 
     // act
     subject.invoke(exchange);
 
     // assert
-    verify(asyncProcessor, times(1)).process(exchange, EmptyAsyncCallback.get());
+    verify(asyncProcessor, times(1)).process(mailExchange, EmptyAsyncCallback.get());
   }
 
   @Test
