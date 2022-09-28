@@ -5,6 +5,9 @@ import static org.apache.camel.component.jms.JmsConstants.JMS_X_GROUP_ID;
 import static org.assertj.core.api.Assertions.*;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import javax.jms.Message;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +48,7 @@ class SIPJmsTextMessageTest {
     subject.setText("text value");
     String jmsCorrelationID = "123";
     subject.setJMSCorrelationID(jmsCorrelationID);
+    subject.setJMSCorrelationIDAsBytes(null);
     subject.setJMSMessageID("12345");
     subject.setJMSRedelivered(true);
     subject.setJMSType("message");
@@ -92,6 +96,26 @@ class SIPJmsTextMessageTest {
   }
 
   @Test
+  void GIVEN_customHeaders_WHEN_getPropertyNames_THEN_expectCustomHeadersOnly() {
+    // arrange
+    subject.setObjectProperty("testKey1", TEST);
+    subject.setObjectProperty("testKey2", TEST);
+    subject.setObjectProperty("testKey3", TEST);
+
+    // act
+    Enumeration<String> names = subject.getPropertyNames();
+    List<String> actualKeys = new ArrayList<>();
+    while (names.hasMoreElements()) {
+      actualKeys.add(names.nextElement());
+    }
+
+    // assert
+    assertThat(actualKeys).contains("testKey1");
+    assertThat(actualKeys).contains("testKey2");
+    assertThat(actualKeys).contains("testKey3");
+  }
+
+  @Test
   void GIVEN_keyWithNullValue_WHEN_getStringProperty_THEN_expectNullValue() {
     // act & assert
     assertThat(subject.getStringProperty(JMS_MESSAGE_ID)).isNull();
@@ -101,6 +125,7 @@ class SIPJmsTextMessageTest {
   void GIVEN_keyWithStringValue_WHEN_getStringProperty_THEN_expectStringValue() {
     // arrange
     subject.setObjectProperty("testKey", TEST);
+
     // act & assert
     assertThat(subject.getStringProperty("testKey")).isEqualTo(TEST);
   }
