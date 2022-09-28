@@ -47,6 +47,7 @@ class SIPJmsTextMessageTest {
     // arrange
     subject.setText("text value");
     String jmsCorrelationID = "123";
+    subject.setJMSCorrelationIDAsBytes(null);
     subject.setJMSCorrelationID(jmsCorrelationID);
     subject.setJMSMessageID("12345");
     subject.setJMSRedelivered(true);
