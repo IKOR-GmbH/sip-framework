@@ -49,21 +49,28 @@ class SIPJmsTextMessageTest {
     subject.setJMSType("message");
     subject.setObjectProperty(JMS_X_GROUP_ID, "10");
     subject.setObjectProperty(JMS_X_USER_ID, "10");
+    subject.setJMSDestination(null);
+    subject.setJMSReplyTo(null);
     subject.setJMSDeliveryMode(1);
     subject.setJMSExpiration(200);
     subject.setJMSPriority(6);
+    subject.setJMSTimestamp(200);
 
     // act & assert
     assertThat(subject.getText()).isEqualTo("text value");
     assertThat(subject.getJMSCorrelationID()).isEqualTo("123");
+    assertThat(subject.getJMSCorrelationIDAsBytes()).isEqualTo("123");
     assertThat(subject.getJMSMessageID()).isEqualTo("123435");
     assertThat(subject.getJMSRedelivered()).isTrue();
     assertThat(subject.getJMSType()).isEqualTo("message");
     assertThat(subject.getObjectProperty(JMS_X_GROUP_ID)).isEqualTo("10");
     assertThat(subject.getObjectProperty(JMS_X_USER_ID)).isEqualTo("10");
+    assertThat(subject.getJMSDestination()).isNull();
+    assertThat(subject.getJMSReplyTo()).isNull();
     assertThat(subject.getJMSDeliveryMode()).isEqualTo(1);
     assertThat(subject.getJMSExpiration()).isEqualTo(200);
     assertThat(subject.getJMSPriority()).isEqualTo(6);
+    assertThat(subject.getJMSTimestamp()).isEqualTo(200);
   }
 
   @Test
