@@ -255,62 +255,62 @@ public class SIPJmsTextMessage implements TextMessage {
 
   @Override
   public void clearProperties() {
-    // TODO implementation is not necessary
+    // Do nothing, implementation is not necessary
   }
 
   @Override
   public void setBooleanProperty(String s, boolean b) {
-    // TODO implementation is not necessary
+    // Do nothing, implementation is not necessary
   }
 
   @Override
   public void setByteProperty(String s, byte b) {
-    // TODO implementation is not necessary
+    // Do nothing, implementation is not necessary
   }
 
   @Override
   public void setShortProperty(String s, short i) {
-    // TODO implementation is not necessary
+    // Do nothing, implementation is not necessary
   }
 
   @Override
   public void setIntProperty(String s, int i) {
-    // TODO implementation is not necessary
+    // Do nothing, implementation is not necessary
   }
 
   @Override
   public void setLongProperty(String s, long l) {
-    // TODO implementation is not necessary
+    // Do nothing, implementation is not necessary
   }
 
   @Override
   public void setFloatProperty(String s, float v) {
-    // TODO implementation is not necessary
+    // Do nothing, implementation is not necessary
   }
 
   @Override
   public void setDoubleProperty(String s, double v) {
-    // TODO implementation is not necessary
+    // Do nothing, implementation is not necessary
   }
 
   @Override
   public void setStringProperty(String s, String s1) {
-    // TODO implementation is not necessary
+    // Do nothing, implementation is not necessary
   }
 
   @Override
   public void acknowledge() {
-    // TODO implementation is not necessary
+    // Do nothing, implementation is not necessary
   }
 
   @Override
   public void clearBody() {
-    // TODO implementation is not necessary
+    // Do nothing, implementation is not necessary
   }
 
   @Override
   public void setJMSDeliveryTime(long l) {
-    // TODO implementation is not necessary
+    // Do nothing, implementation is not necessary
   }
 
   @Override

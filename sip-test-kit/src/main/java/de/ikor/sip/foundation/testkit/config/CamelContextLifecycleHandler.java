@@ -37,11 +37,15 @@ public class CamelContextLifecycleHandler implements CamelContextConfiguration {
 
   private void checkAndSuspend(Route route, CamelContext camelContext) {
     Consumer consumer = route.getConsumer();
-    if (consumer instanceof PollingConsumer
-        || consumer instanceof ScheduledPollConsumer
-        || consumer instanceof JmsConsumer) {
+    if (isSuspendingConsumer(consumer)) {
       suspendRoute(route.getRouteId(), camelContext);
     }
+  }
+
+  private boolean isSuspendingConsumer(Consumer consumer) {
+    return consumer instanceof PollingConsumer
+        || consumer instanceof ScheduledPollConsumer
+        || consumer instanceof JmsConsumer;
   }
 
   private void suspendRoute(String routeId, CamelContext camelContext) {
