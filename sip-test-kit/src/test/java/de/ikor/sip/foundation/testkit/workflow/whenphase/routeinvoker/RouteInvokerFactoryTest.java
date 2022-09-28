@@ -8,7 +8,6 @@ import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
 import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.*;
-
 import java.util.Set;
 import org.apache.camel.*;
 import org.apache.camel.component.file.FileEndpoint;
@@ -36,7 +35,12 @@ class RouteInvokerFactoryTest {
     FtpRouteInvoker ftpRouteInvoker = new FtpRouteInvoker(camelContext);
     JmsRouteInvoker jmsRouteInvoker = new JmsRouteInvoker(camelContext);
     Set<RouteInvoker> invokers =
-        Set.of(restRouteInvoker, mock(CxfRouteInvoker.class), fileRouteInvoker, ftpRouteInvoker, jmsRouteInvoker);
+        Set.of(
+            restRouteInvoker,
+            mock(CxfRouteInvoker.class),
+            fileRouteInvoker,
+            ftpRouteInvoker,
+            jmsRouteInvoker);
     subject = new RouteInvokerFactory(invokers, camelContext);
     exchange = TestKitHelper.parseExchangeProperties(null, camelContext);
     exchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
@@ -74,7 +78,7 @@ class RouteInvokerFactoryTest {
 
   @Test
   void GIVEN_ftpEndpoint_WHEN_resolveAndInvoke_THEN_getFtpRouteInvoker()
-          throws NoRouteInvokerException {
+      throws NoRouteInvokerException {
     // arrange
     endpoint = mock(RemoteFileEndpoint.class);
     when(route.getEndpoint()).thenReturn(endpoint);
@@ -88,7 +92,7 @@ class RouteInvokerFactoryTest {
 
   @Test
   void GIVEN_jmsEndpoint_WHEN_resolveAndInvoke_THEN_getJmsRouteInvoker()
-          throws NoRouteInvokerException {
+      throws NoRouteInvokerException {
     // arrange
     endpoint = mock(JmsEndpoint.class);
     when(route.getEndpoint()).thenReturn(endpoint);
