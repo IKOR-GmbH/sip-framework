@@ -109,9 +109,11 @@ class SIPJmsTextMessageTest {
     }
 
     // assert
-    assertThat(actualKeys).contains("testKey1");
-    assertThat(actualKeys).contains("testKey2");
-    assertThat(actualKeys).contains("testKey3");
+    assertThat(actualKeys)
+        .hasSize(3)
+        .contains("testKey1")
+        .contains("testKey2")
+        .contains("testKey3");
   }
 
   @Test
