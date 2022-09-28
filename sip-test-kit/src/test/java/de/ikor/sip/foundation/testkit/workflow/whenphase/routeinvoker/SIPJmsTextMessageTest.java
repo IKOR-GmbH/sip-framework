@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 
 class SIPJmsTextMessageTest {
 
+  private static final String TEST = "test";
+  private static final Object NULL = null;
+
   private SIPJmsTextMessage subject;
 
   @BeforeEach
@@ -61,5 +64,35 @@ class SIPJmsTextMessageTest {
     assertThat(subject.getJMSDeliveryMode()).isEqualTo(1);
     assertThat(subject.getJMSExpiration()).isEqualTo(200);
     assertThat(subject.getJMSPriority()).isEqualTo(6);
+  }
+
+  @Test
+  void GIVEN_noInputs_WHEN_callingNonUsableGettersAndSetters_THEN_expectDefaultValues() {
+    // act & assert
+    assertThat(subject.propertyExists(TEST)).isFalse();
+    assertThat(subject.getBooleanProperty(TEST)).isFalse();
+    assertThat(subject.getByteProperty(TEST)).isZero();
+    assertThat(subject.getShortProperty(TEST)).isZero();
+    assertThat(subject.getIntProperty(TEST)).isZero();
+    assertThat(subject.getLongProperty(TEST)).isZero();
+    assertThat(subject.getFloatProperty(TEST)).isZero();
+    assertThat(subject.getDoubleProperty(TEST)).isZero();
+    assertThat(subject.getJMSDeliveryTime()).isZero();
+    assertThat(subject.getBody(Object.class)).isNull();
+    assertThat(subject.isBodyAssignableTo(null)).isFalse();
+  }
+
+  @Test
+  void GIVEN_keyWithNullValue_WHEN_getStringProperty_THEN_expectNullValue() {
+    // act & assert
+    assertThat(subject.getStringProperty(JMS_MESSAGE_ID)).isNull();
+  }
+
+  @Test
+  void GIVEN_keyWithStringValue_WHEN_getStringProperty_THEN_expectStringValue() {
+    // arrange
+    subject.setObjectProperty("testKey", TEST);
+    // act & assert
+    assertThat(subject.getStringProperty("testKey")).isEqualTo(TEST);
   }
 }
