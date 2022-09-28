@@ -17,10 +17,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-mail-starter</artifactId>
-        </dependency>
-        <dependency>
             <groupId>de.ikor.sip.foundation</groupId>
             <artifactId>sip-core</artifactId>
         </dependency>
@@ -80,6 +76,11 @@
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-ftp-starter</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-mail-starter</artifactId>
             <optional>true</optional>
         </dependency>
     </dependencies>

@@ -12,16 +12,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
+import org.apache.camel.component.mail.MailComponent;
 import org.apache.camel.component.mail.MailConsumer;
 import org.apache.camel.component.mail.MailEndpoint;
 import org.apache.camel.component.mail.MailMessage;
 import org.apache.camel.support.EmptyAsyncCallback;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 
 /** Invoker of exchange processing for {@link MailConsumer} */
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@ConditionalOnClass(MailComponent.class)
 public class MailRouteInvoker implements RouteInvoker {
 
   private final CamelContext camelContext;

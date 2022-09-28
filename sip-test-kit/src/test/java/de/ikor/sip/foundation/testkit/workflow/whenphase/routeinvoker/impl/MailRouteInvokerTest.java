@@ -4,9 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.camel.*;
 import org.apache.camel.component.mail.MailConsumer;
 import org.apache.camel.component.mail.MailEndpoint;
+import org.apache.camel.component.mail.MailMessage;
 import org.apache.camel.support.EmptyAsyncCallback;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +30,7 @@ class MailRouteInvokerTest {
   void When_invoke_Expect_ExchangeProcessingInvoked() {
     // arrange
     Exchange exchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
-    Exchange mailExchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
+    Exchange mailExchange = mock(Exchange.class);
     when(exchange.getContext()).thenReturn(camelContext);
     Route route = mock(Route.class);
     MailConsumer mailConsumer = mock(MailConsumer.class);
@@ -38,12 +41,16 @@ class MailRouteInvokerTest {
     when(mailConsumer.getAsyncProcessor()).thenReturn(asyncProcessor);
     when(mailConsumer.createExchange(true)).thenReturn(mailExchange);
     when(exchange.getMessage().getBody(String.class)).thenReturn("body");
+    Map<String, Object> headers = new HashMap<>();
+    headers.put("header 1", "Header value");
+    when(exchange.getMessage().getHeaders()).thenReturn(headers);
 
     // act
     subject.invoke(exchange);
 
     // assert
     verify(asyncProcessor, times(1)).process(mailExchange, EmptyAsyncCallback.get());
+    verify(mailExchange, times(1)).setMessage(any(MailMessage.class));
   }
 
   @Test
