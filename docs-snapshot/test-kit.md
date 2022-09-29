@@ -245,7 +245,6 @@ Same rules as in File chapter for overriding and providing other headers apply h
 
 When testing JMS component, there are some stuff which we do not support.
 
-
 Original jms `Message` and jms `Session` are not provided within the exchange. That means if there is some logic within 
 the route which is based on these elements, tests for that kind of route could not be created. Instead of original jms
 Message, we provide our custom implementation `SIPJmsTextMessage` which is there to support Test Kit testing purpose.
