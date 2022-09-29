@@ -13,10 +13,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.*;
 import org.apache.camel.component.jms.*;
 import org.apache.camel.support.AsyncProcessorConverterHelper;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 
 /** Invoker class for triggering routes with Jms consumer */
 @Component
+@ConditionalOnClass(JmsComponent.class)
 @RequiredArgsConstructor
 @Slf4j
 public class JmsRouteInvoker implements RouteInvoker {
