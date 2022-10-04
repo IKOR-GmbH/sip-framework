@@ -96,7 +96,6 @@ class CentralRouterIntegrationTest {
     // assert
     assertThat(CentralRouter.getCamelContext().getRoutes())
         .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", subject.getUseCase())))
-        .as("No OutConnectors registered.")
         .hasSize(2);
   }
 

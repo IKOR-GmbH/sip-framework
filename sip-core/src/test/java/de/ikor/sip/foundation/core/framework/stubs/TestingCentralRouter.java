@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.core.framework.stubs;
 import de.ikor.sip.foundation.core.framework.CentralRouter;
 
 public class TestingCentralRouter extends CentralRouter {
-    private int useCaseCounter;
+    private static int useCaseCounter;
     public boolean isConfigured;
 
     @Override
