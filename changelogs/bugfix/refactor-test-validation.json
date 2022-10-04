@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "132",
-  "message": "Prevent NPE when actual response is null, allow validation for empty body and add validation details for mocks."
-}

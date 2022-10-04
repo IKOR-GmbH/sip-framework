@@ -8,6 +8,7 @@ import java.util.Locale;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class SIPTranslateMessageServiceTest {
 
@@ -54,5 +55,8 @@ class SIPTranslateMessageServiceTest {
 
     // assert
     assertThat(SIPTranslateMessageService.get()).isEqualTo(subject);
+
+    // clear static instance to prevent issues with other tests
+    ReflectionTestUtils.setField(subject, "instance", null);
   }
 }
