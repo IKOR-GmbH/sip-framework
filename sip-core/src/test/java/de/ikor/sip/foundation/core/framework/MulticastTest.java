@@ -84,6 +84,9 @@ class MulticastTest {
     SimpleOutConnector outConnector1 = new SimpleOutConnector("log:message-2", "ep-2");
     SimpleOutConnector outConnector2 = new SimpleOutConnector("log:message-3", "ep-3");
 
+    mockLogMessage2.reset();
+    mockLogMessage3.reset();
+
     mockLogMessage2.expectedBodiesReceived("Hello dude!-[ep-2]");
     mockLogMessage2.expectedMessageCount(1);
     mockLogMessage3.expectedBodiesReceived("Hello dude!-[ep-3]");
