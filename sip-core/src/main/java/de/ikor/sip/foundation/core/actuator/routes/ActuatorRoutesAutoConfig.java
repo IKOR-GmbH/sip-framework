@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.actuator.routes;
 
 import de.ikor.sip.foundation.core.annotation.SIPFeature;
 import de.ikor.sip.foundation.core.util.FoundationFeature;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -11,6 +11,5 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @ComponentScan
 @SIPFeature(name = FoundationFeature.ADAPTER_ROUTES, versions = 1)
-@ConditionalOnExpression(
-    value = "'${management.endpoints.web.exposure.include}'.contains('adapter-routes')")
+@ConditionalOnProperty(value = "sip.core.actuator.adapter-routes.enabled", havingValue = "true")
 public class ActuatorRoutesAutoConfig {}

@@ -18,6 +18,8 @@ sip.core:
       showExchangeId: true
     traceType: "*"
   actuator:
+    adapter-routes:
+      enabled: true
     extensions:
       info:
         enabled: true
