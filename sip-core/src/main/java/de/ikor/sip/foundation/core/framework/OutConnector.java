@@ -4,6 +4,8 @@ import org.apache.camel.model.RouteDefinition;
 
 public abstract class OutConnector {
 
-  public abstract String getName();
-  public abstract RouteDefinition configure(RouteDefinition route);
+  public String getName() {
+    return this.getClass().getSimpleName();
+  }
+  public abstract void configure(RouteDefinition route);
 }

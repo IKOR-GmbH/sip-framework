@@ -20,10 +20,10 @@ class EndpointsIntegrationTests {
   @Test
   void when_OutEndpointIsOnTheRoute_then_OutEndpointHasProperId() throws Exception {
     // arrange
-    SimpleOutConnector outConnector = new SimpleOutConnector("cool-id");
+    SimpleOutConnector outConnector = new SimpleOutConnector().outEndpointId("cool-id");
 
     // act
-    subject.from(new SimpleInConnector("direct:hey")).to(outConnector);
+    subject.from(SimpleInConnector.withUri("direct:hey")).to(outConnector);
     // assert
 
     Endpoint registeredEndpoint = CentralOutEndpointsRegister.getEndpoint("cool-id");

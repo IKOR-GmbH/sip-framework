@@ -1,9 +1,11 @@
 package de.ikor.sip.foundation.core.framework;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.MulticastDefinition;
 
 import java.util.stream.Stream;
 
@@ -12,36 +14,45 @@ public class UseCaseTopologyDefinition {
   private final CamelContext camelContext;
   private final String useCase;
 
-  public UseCaseTopologyDefinition to(OutConnector outConnector)
-      throws Exception { // todo lose exception
-    RouteBuilder routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
-    outConnector.configure(routeBuilder.from("sipmc:" + useCase));
-    camelContext.addRoutes(routeBuilder);
+  private MulticastDefinition multicastDefinition = null;
+  @Getter private final RouteBuilder routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
 
-    return this;
-  }
+  public UseCaseTopologyDefinition to(OutConnector... outConnectors) throws Exception {
+    multicastDefinition =
+        initMulticastRoute(routeBuilder);
+    multicastDefinition = appendParallelProcessingIfMultipleConnectors(outConnectors);
 
-  public MulticastDefinition to(OutConnector... outConnectors) throws Exception {
-    RouteBuilder routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
-    org.apache.camel.model.MulticastDefinition multicastDefinition =
-        routeBuilder.from("sipmc:" + useCase).multicast().parallelProcessing();
     Stream.of(outConnectors)
         .forEach(
             outConnector -> {
               multicastDefinition.to("direct:" + outConnector.getName());
-              this.to(outConnector, "direct:" + outConnector.getName());
+              this.from(outConnector, "direct:" + outConnector.getName());
             });
-    multicastDefinition.end();
-    camelContext.addRoutes(routeBuilder);
+    return this;
+  }
 
-    return new MulticastDefinition(useCase, multicastDefinition, camelContext);
+  private MulticastDefinition appendParallelProcessingIfMultipleConnectors(OutConnector[] outConnectors) {
+    if(outConnectors.length > 1) {
+      multicastDefinition = multicastDefinition.parallelProcessing();
+    }
+    return multicastDefinition;
+  }
+
+  public void build() throws Exception {
+    camelContext.addRoutes(this.routeBuilder);
+  }
+
+  private MulticastDefinition initMulticastRoute(RouteBuilder routeBuilder) {
+    return multicastDefinition == null
+        ? multicastDefinition = routeBuilder.from("sipmc:" + useCase).multicast()
+        : multicastDefinition;
   }
 
   @SneakyThrows
-  private UseCaseTopologyDefinition to(OutConnector outConnector, String uri) {
-    RouteBuilder routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
-    outConnector.configure(routeBuilder.from(uri));
-    camelContext.addRoutes(routeBuilder);
+  private UseCaseTopologyDefinition from(OutConnector outConnector, String uri) {
+    RouteBuilder rb = CentralRouter.anonymousDummyRouteBuilder();
+    outConnector.configure(rb.from(uri));
+    camelContext.addRoutes(rb);
 
     return this;
   }

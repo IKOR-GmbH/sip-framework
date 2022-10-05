@@ -41,7 +41,7 @@ class CentralRouterIntegrationTest {
   void when_SingleInConnectorIsRegistered_then_OneRouteStartingWithProperEndpointIsAvailable()
       throws Exception {
     // arrange
-    SimpleInConnector simpleInConnector = new SimpleInConnector("direct:singleInConnector");
+    SimpleInConnector simpleInConnector = SimpleInConnector.withUri("direct:singleInConnector");
     // act
     subject.from(simpleInConnector);
     // assert
@@ -57,8 +57,8 @@ class CentralRouterIntegrationTest {
   void when_MultipleInConnectorsAreRegistered_then_OneRoutePerConnectorIsAvailable()
       throws Exception {
     // arrange
-    SimpleInConnector firstInConnector = new SimpleInConnector("direct:sip");
-    SimpleInConnector secondInConnector = new SimpleInConnector("direct:sipie");
+    SimpleInConnector firstInConnector = SimpleInConnector.withUri("direct:sip");
+    SimpleInConnector secondInConnector = SimpleInConnector.withUri("direct:sipie");
     // act
     subject.from(firstInConnector, secondInConnector);
     // assert
@@ -72,10 +72,10 @@ class CentralRouterIntegrationTest {
   void when_OneOutConnectorIsRegistered_then_OneRouteWithSIPMCEndpointIsAvailable()
       throws Exception {
     // arrange
-    SimpleInConnector inConnector = new SimpleInConnector("direct:OneOutConnector");
+    SimpleInConnector inConnector = SimpleInConnector.withUri("direct:OneOutConnector");
     SimpleOutConnector outConnector = new SimpleOutConnector();
     // act
-    subject.from(inConnector).to(outConnector);
+    subject.from(inConnector).to(outConnector).build();
 
     // assert
     assertThat(CentralRouter.getCamelContext().getRoutes())
@@ -85,25 +85,10 @@ class CentralRouterIntegrationTest {
   }
 
   @Test
-  void when_MultipleOutConnectorsAreRegistered() throws Exception {
-    // arrange
-    SimpleInConnector inConnector = new SimpleInConnector("direct:multipleOutConnectors");
-    SimpleOutConnector outConnector1 = new SimpleOutConnector();
-    SimpleOutConnector outConnector2 = new SimpleOutConnector();
-    // act
-    subject.from(inConnector).to(outConnector1).to(outConnector2);
-
-    // assert
-    assertThat(CentralRouter.getCamelContext().getRoutes())
-        .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", subject.getUseCase())))
-        .hasSize(2);
-  }
-
-  @Test
   void
       given_OneInConnectorWithOneRoute_when_ConnectorIsRegistered_then_RouteIdIsUseCasePlusConnectorName()
           throws Exception {
-    SimpleInConnector inConnector = new SimpleInConnector("direct:routeIdTest");
+    SimpleInConnector inConnector = SimpleInConnector.withUri("direct:routeIdTest");
     subject.from(inConnector);
     Route route = CentralRouter.getCamelContext()
             .getRoute(format("%s-%s", subject.getUseCase(), inConnector.getName()));

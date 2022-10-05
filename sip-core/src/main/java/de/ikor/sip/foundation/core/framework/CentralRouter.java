@@ -11,6 +11,7 @@ public abstract class CentralRouter {
   @Getter @Setter private static CamelContext camelContext;
 
   public abstract String getUseCase();
+  private UseCaseTopologyDefinition definition;
 
   public abstract void configure() throws Exception;
 
@@ -23,8 +24,8 @@ public abstract class CentralRouter {
           .routeId(format("%s-%s", this.getUseCase(), connector.getName()));
       camelContext.addRoutes(connector.getRouteBuilder());
     }
-
-    return new UseCaseTopologyDefinition(camelContext, this.getUseCase());
+    definition = new UseCaseTopologyDefinition(camelContext, this.getUseCase());
+    return definition;
   }
 
   public static CamelContext getCamelContext() {
