@@ -46,7 +46,8 @@ public class MailRouteInvoker implements RouteInvoker {
   }
 
   private MailMessage createMailMessage(Exchange whenDefinition) {
-    MailMessage mailMessage = new MailMessage(whenDefinition, createMimeMessage(whenDefinition), true);
+    MailMessage mailMessage =
+        new MailMessage(whenDefinition, createMimeMessage(whenDefinition), true);
     mailMessage.setBody(whenDefinition.getMessage().getBody());
     mailMessage.setHeaders(whenDefinition.getMessage().getHeaders());
     return mailMessage;
