@@ -245,19 +245,19 @@ Same rules as in File chapter for overriding and providing other headers apply h
 
 ### JMS
 
-When testing JMS component, there are some stuff which we do not support.
+When testing JMS component, there are a few limitations.
 
-Original jms `Message` and jms `Session` are not provided within the exchange. That means if there is some logic within 
-the route which is based on these elements, tests for that kind of route could not be created. Instead of original jms
+Original JMS `Message` and JMS `Session` are not provided within the exchange. That means if there is some logic within 
+the route which is based on these elements, tests for that kind of route could not be created. Instead of original JMS
 Message, we provide our custom implementation `SIPJmsTextMessage` which is there to support Test Kit testing purpose.
 
 When providing camel JMS specified headers within test case definition, there are 3 following headers which could not 
 be provided with simple String value, hence we skip adding these values and keep default ones (`JMSDestination`, 
 `JMSReplyTo`, `JMSCorrelationIDAsBytes`).
 
-If logic of the route lean on jms component type converters or custom type converter option, tests could not be created.
-Currently, type converters are not supported and only possible values to provide are simple String or Json. But in case 
-of json, type conversion should be done somewhere in the route and outside jms component.
+If the logic of a route leans on JMS component type converters or custom type converter option, tests can not be 
+created. Currently, type converters are not supported and only possible values are simple String or JSON. 
+But in case of json, type conversion should be done somewhere in the route and outside JMS component.
 
 # Complete example
 
