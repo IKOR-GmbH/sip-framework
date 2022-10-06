@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
-import static de.ikor.sip.foundation.testkit.util.SIPExchangeHelper.*;
+import static de.ikor.sip.foundation.testkit.util.TestKitHelper.*;
 import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.headers.FtpExchangeHeaders.*;
 import static org.apache.camel.Exchange.*;
 

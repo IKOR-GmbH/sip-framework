@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "139",
+  "message": "Remove in memory tracing functionality and api. Add possibility to turn off console logs through configuration while tracing is active."
+}

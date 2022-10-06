@@ -53,6 +53,7 @@ public class ProcessorProxyMock extends Mock {
 
   private UnaryOperator<Exchange> createOperation(Exchange returnExchange) {
     return exchange -> {
+      returnExchange.getMessage().getHeaders().forEach(exchange.getMessage()::setHeader);
       exchange.getMessage().setBody(returnExchange.getMessage().getBody());
       return exchange;
     };
