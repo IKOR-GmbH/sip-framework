@@ -8,6 +8,7 @@ import org.apache.camel.Expression;
 import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.processor.LogProcessor;
+import org.apache.camel.processor.WrapProcessor;
 import org.apache.camel.spi.CamelLogger;
 import org.apache.camel.spi.MaskingFormatter;
 import org.junit.jupiter.api.BeforeAll;
@@ -74,6 +75,42 @@ class LogProcessorInterceptStrategyTest {
     // act
     Processor processor =
         subject.wrapProcessorInInterceptors(camelContext, null, logProcessor, null);
+
+    // assert
+    assertThat(((LogProcessor) processor).getExpression().toString())
+        .hasToString(TRANSLATED_MESSAGE);
+  }
+
+  @Test
+  void When_ProcessorIsWrappedNotLogProcessor_Expect_ProcessorIsNotChanged() {
+    // arrange
+    Processor notLogProcessor = mock(WrapProcessor.class);
+
+    // act
+    Processor processor =
+        subject.wrapProcessorInInterceptors(camelContext, null, notLogProcessor, null);
+
+    // assert
+    assertThat(processor).isEqualTo(notLogProcessor);
+  }
+
+  @Test
+  void When_ProcessorIsWrappedLogProcessor_Expect_ProcessorExpressionIsChanged() {
+    // arrange
+    when(translateMessageService.getTranslatedMessage("translation.key", new Object[0]))
+        .thenReturn(TRANSLATED_MESSAGE);
+    Expression translatedExpression = expression(TRANSLATED_MESSAGE);
+    when(camelContext.resolveLanguage("simple").createExpression(TRANSLATED_MESSAGE))
+        .thenReturn(translatedExpression);
+
+    this.initLogProcessor();
+    when(camelContext.adapt(any())).thenReturn(camelContext);
+
+    WrapProcessor wrappedProcessor = mock(WrapProcessor.class);
+    when(wrappedProcessor.getWrapped()).thenReturn(logProcessor);
+    // act
+    Processor processor =
+        subject.wrapProcessorInInterceptors(camelContext, null, wrappedProcessor, null);
 
     // assert
     assertThat(((LogProcessor) processor).getExpression().toString())
