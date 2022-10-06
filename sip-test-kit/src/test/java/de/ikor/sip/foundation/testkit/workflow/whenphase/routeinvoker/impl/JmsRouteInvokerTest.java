@@ -2,10 +2,12 @@ package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
 import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.SIPJmsTextMessage.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.UnsupportedJmsHeaderException;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Processor;
@@ -91,25 +93,12 @@ class JmsRouteInvokerTest {
   }
 
   @Test
-  void GIVEN_forbiddenHeaderInputs_WHEN_invoke_THEN_missingForbiddenHeaderValues()
+  void GIVEN_forbiddenHeaderInputs_WHEN_invoke_THEN_expectUnsupportedJmsHeaderException()
       throws Exception {
     // arrange
     inputExchange.getMessage().setHeader(JMS_DESTINATION, "test destination");
-    inputExchange.getMessage().setHeader(JMS_REPLY_TO, "test queue");
-    inputExchange.getMessage().setHeader(JMS_CORRELATION_ID_AS_BYTES, "test bytes");
 
-    // act
-    subject.invoke(inputExchange);
-
-    // assert
-    assertThat(((JmsMessage) actualJmsExchange.getMessage()).getJmsMessage().getJMSDestination())
-        .isNull();
-    assertThat(((JmsMessage) actualJmsExchange.getMessage()).getJmsMessage().getJMSReplyTo())
-        .isNull();
-    assertThat(
-            ((JmsMessage) actualJmsExchange.getMessage())
-                .getJmsMessage()
-                .getJMSCorrelationIDAsBytes())
-        .isNull();
+    // act & assert
+    assertThrows(UnsupportedJmsHeaderException.class, () -> subject.invoke(inputExchange));
   }
 }
