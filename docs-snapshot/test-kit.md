@@ -245,10 +245,10 @@ Same rules as in File chapter for overriding and providing other headers apply h
 
 All mail protocols are supported in Test Kit as well as their security variants.
 
-Its usage is similar to other components, the content of an email is set as body of the `when-execute` phase,
+Its usage is quite straightforward, the content of an email is set as body of the `when-execute` phase,
 while `To`, `From`, `Subject`, etc. are defined as headers.
 
-Unfortunately, attachments are not yet supported.
+Attachments are not supported.
 
 # Complete example
 

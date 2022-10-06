@@ -32,7 +32,10 @@ public class MailRouteInvoker implements RouteInvoker {
   @Override
   public Optional<Exchange> invoke(Exchange exchange) {
     MailConsumer mailConsumer = (MailConsumer) resolveConsumer(exchange, camelContext);
-    Exchange mailExchange = createAndPopulateExchangeWithMailMessage(exchange, mailConsumer);
+
+    Exchange mailExchange = mailConsumer.createExchange(true);
+    mailExchange.setMessage(createMailMessage(exchange));
+
     mailConsumer.getAsyncProcessor().process(mailExchange, EmptyAsyncCallback.get());
     return Optional.empty();
   }
@@ -40,13 +43,6 @@ public class MailRouteInvoker implements RouteInvoker {
   @Override
   public boolean isApplicable(Endpoint endpoint) {
     return endpoint instanceof MailEndpoint;
-  }
-
-  private Exchange createAndPopulateExchangeWithMailMessage(
-      Exchange exchange, MailConsumer mailConsumer) {
-    Exchange mailExchange = mailConsumer.createExchange(true);
-    mailExchange.setMessage(createMailMessage(exchange));
-    return mailExchange;
   }
 
   private MailMessage createMailMessage(Exchange exchange) {
