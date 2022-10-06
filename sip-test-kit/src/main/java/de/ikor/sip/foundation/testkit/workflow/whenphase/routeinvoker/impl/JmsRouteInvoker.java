@@ -5,6 +5,7 @@ import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.SIP
 
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.SIPJmsTextMessage;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.UnsupportedJmsHeaderException;
 import java.util.Map;
 import java.util.Optional;
 import javax.jms.*;
@@ -63,6 +64,8 @@ public class JmsRouteInvoker implements RouteInvoker {
           try {
             if (!shouldAvoidSpecificHeader(key)) {
               textMessage.setObjectProperty(key, value);
+            } else {
+              throw new UnsupportedJmsHeaderException(key);
             }
           } catch (JMSException e) {
             log.error("sip.testkit.workflow.whenphase.routeinvoker.jms.badheader_{}", key);
