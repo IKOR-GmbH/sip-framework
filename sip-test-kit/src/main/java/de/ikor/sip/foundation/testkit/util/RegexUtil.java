@@ -1,11 +1,14 @@
 package de.ikor.sip.foundation.testkit.util;
 
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.CR;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /** Util class for comparing a string to a pattern */
@@ -30,8 +33,9 @@ public class RegexUtil {
     } else if (isOneBlank(actual, expected)) {
       return false;
     }
-    String expectedPattern = reformatEscapeCharacter(expected);
-    return Pattern.compile(expectedPattern).matcher(Objects.requireNonNull(actual)).find();
+    String expectedPattern = reformatEscapeCharacter(removeCarriageReturns(expected));
+    String actualFormatted = removeCarriageReturns(Objects.requireNonNull(actual));
+    return Pattern.compile(expectedPattern).matcher(actualFormatted).find();
   }
 
   /**
@@ -61,5 +65,9 @@ public class RegexUtil {
 
   private static boolean areBothBlank(String actual, String expected) {
     return isBlank(expected) && isBlank(actual);
+  }
+
+  private static String removeCarriageReturns(String input) {
+    return StringUtils.replace(input, CR, EMPTY);
   }
 }

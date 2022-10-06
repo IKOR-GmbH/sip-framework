@@ -83,6 +83,8 @@ test-case-definitions:
   - endpoint: "id of endpoint that should be mocked"
     returning:
       body: "Response message that real endpoint is expected to return"
+      headers:
+        header-key: "Value of the header"
   THEN-expect:
   - endpoint: "id of endpoint under test" # matches endpoint under test defined in when phase
     having:
@@ -140,7 +142,7 @@ The body can also be defined as plain text or JSON string, which represents a PO
 
 This section contains a list of endpoints for which we wish to have specific mocked response.
 "endpoint" is the endpoint ID, (processor ID in Camel route) of the mocked endpoint.
-"returning" should have the body, that we expect as the response from real external call.
+"returning" should have body and headers, that we expect as the response from real external call.
 
 ```yaml
     WITH-mocks:
