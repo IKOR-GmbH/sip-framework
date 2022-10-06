@@ -9,7 +9,7 @@ test-case-definitions:
       # Id of endpoint under test
       endpoint:
       with:
-        # Add content that should be send as request body to the adapter endpoint (plain text, JSON String)
+        # Add content that should be sent as request body to the adapter endpoint (plain text, JSON String)
         body:
         headers:
           # Add request header keys and values
@@ -22,6 +22,9 @@ test-case-definitions:
         returning:
           # Place response message that real endpoint is expected to return
           body:
+          headers:
+            # Place response headers that real endpoint is expected to return
+            header-key:
 
     # Validation of the response from test execution or request which an endpoint recieved (at least one is required)
     then-expect:
