@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 import org.apache.camel.*;
 import org.apache.camel.processor.SendProcessor;
+import org.apache.camel.processor.WrapProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,12 +36,12 @@ class ProcessorProxyTest {
     proxyExtensions = List.of(proxyExtension);
     callback = mock(AsyncCallback.class);
     exchange = mock(ExtendedExchange.class, RETURNS_DEEP_STUBS);
-    processorProxySubject = new ProcessorProxy(namedNode, processor, processor, proxyExtensions);
+    processorProxySubject = new ProcessorProxy(namedNode, processor, proxyExtensions);
     outgoingProcessor = mock(SendProcessor.class);
     outgoingEndpoint = mock(Endpoint.class);
     when(outgoingProcessor.getEndpoint()).thenReturn(outgoingEndpoint);
     processorProxySubjectOutgoing =
-        new ProcessorProxy(namedNode, outgoingProcessor, outgoingProcessor, proxyExtensions);
+        new ProcessorProxy(namedNode, outgoingProcessor, proxyExtensions);
   }
 
   private void putProxyInTestMode() {
@@ -138,30 +139,41 @@ class ProcessorProxyTest {
   }
 
   @Test
-  void WHEN_isEndpointProcessor_THEN_expectRegularProcessor() throws Exception {
+  void WHEN_regularProcessor_THEN_expectIsEndpointProcessorFalse() throws Exception {
     // assert
     assertThat(processorProxySubject.isEndpointProcessor()).isFalse();
   }
 
   @Test
-  void WHEN_isEndpointProcessor_THEN_expectRegularEndpointProcessor() throws Exception {
+  void WHEN_regularEndpointProcessor_THEN_expectIsEndpointProcessorTrue() throws Exception {
     // arrange
     when(outgoingEndpoint.getEndpointUri()).thenReturn("file://test.txt");
     processorProxySubjectOutgoing =
-        new ProcessorProxy(namedNode, outgoingProcessor, outgoingProcessor, proxyExtensions);
+        new ProcessorProxy(namedNode, outgoingProcessor, proxyExtensions);
 
     // assert
     assertThat(processorProxySubjectOutgoing.isEndpointProcessor()).isTrue();
   }
 
   @Test
-  void WHEN_isEndpointProcessor_THEN_expectIgnoredEndpointProcessor() throws Exception {
+  void WHEN_igoredEndpointProcessor_THEN_expectIsEndpointProcessorFalse() throws Exception {
     // arrange
     when(outgoingEndpoint.getEndpointUri()).thenReturn("sipmc:middleComponent");
     processorProxySubjectOutgoing =
-        new ProcessorProxy(namedNode, outgoingProcessor, outgoingProcessor, proxyExtensions);
+        new ProcessorProxy(namedNode, outgoingProcessor, proxyExtensions);
 
     // assert
     assertThat(processorProxySubjectOutgoing.isEndpointProcessor()).isFalse();
+  }
+
+  @Test
+  void WHEN_wrappedRegularEndpointProcessor_THEN_expectIsEndpointProcessorTrue() throws Exception {
+    // arrange
+    when(outgoingEndpoint.getEndpointUri()).thenReturn("file://test.txt");
+    WrapProcessor wrapProcessor = new WrapProcessor(outgoingProcessor, outgoingProcessor);
+    processorProxySubjectOutgoing = new ProcessorProxy(namedNode, wrapProcessor, proxyExtensions);
+
+    // assert
+    assertThat(processorProxySubjectOutgoing.isEndpointProcessor()).isTrue();
   }
 }

@@ -184,6 +184,7 @@ Following Camel components support testing with Test Kit:
 - File
 - FTP, FTPS, SFTP
 - JMS
+- Mail (imap, imaps, pop3, pop3s, smtp, smtps)
 
 Please check the special conditions for these components in following chapters. since there are some special conditions
 which must be met.
@@ -258,6 +259,15 @@ be provided with simple String value, hence we skip adding these values and keep
 If the logic of a route leans on JMS component type converters or custom type converter option, tests can not be 
 created. Currently, type converters are not supported and only possible values are simple String or JSON. 
 But in case of json, type conversion should be done somewhere in the route and outside JMS component.
+
+### Mail
+
+All mail protocols are supported in Test Kit as well as their security variants.
+
+Its usage is quite straightforward, the content of an email is set as body of the `when-execute` phase,
+while `To`, `From`, `Subject`, etc. are defined as headers.
+
+Attachments are not supported.
 
 # Complete example
 

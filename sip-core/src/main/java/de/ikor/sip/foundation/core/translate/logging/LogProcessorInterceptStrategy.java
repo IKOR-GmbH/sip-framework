@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.core.translate.logging;
 
 import de.ikor.sip.foundation.core.proxies.AddProxyInterceptStrategy;
 import de.ikor.sip.foundation.core.translate.SIPTranslateMessageService;
+import de.ikor.sip.foundation.core.util.CamelHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,8 +30,10 @@ public class LogProcessorInterceptStrategy implements InterceptStrategy, Ordered
   @Override
   public Processor wrapProcessorInInterceptors(
       CamelContext context, NamedNode definition, Processor target, Processor nextTarget) {
-    if (target instanceof LogProcessor) {
-      LogProcessor logProcessor = (LogProcessor) target;
+    // Target can be a Camel's wrapped processor (WrapProcessor)
+    Processor originalProcessor = CamelHelper.unwrapProcessor(target);
+    if (originalProcessor instanceof LogProcessor) {
+      LogProcessor logProcessor = (LogProcessor) originalProcessor;
       target =
           (logProcessor.getExpression() == null)
               ? target

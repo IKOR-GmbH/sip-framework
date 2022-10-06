@@ -23,8 +23,7 @@ public class AddProxyInterceptStrategy implements InterceptStrategy {
     String processorId = definition.getId();
     log.info("sip.core.proxy.register.info_{}", processorId);
 
-    // nextTarget is the original processor, target is Camel's wrapped WrapProcessor
-    ProcessorProxy processorProxy = new ProcessorProxy(definition, target, nextTarget, extensions);
+    ProcessorProxy processorProxy = new ProcessorProxy(definition, target, extensions);
     proxyRegistry.register(processorId, processorProxy);
     return processorProxy;
   }
