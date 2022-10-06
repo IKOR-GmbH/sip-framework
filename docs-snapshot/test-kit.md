@@ -183,6 +183,7 @@ Following Camel components support testing with Test Kit:
 - SOAP (by using CXF)
 - File
 - FTP, FTPS, SFTP
+- JMS
 - Mail (imap, imaps, pop3, pop3s, smtp, smtps)
 
 Please check the special conditions for these components in following chapters. since there are some special conditions
@@ -242,6 +243,22 @@ headers automatically are different, and they are not the same as for File heade
 7) `CamelFileLastModified` - by providing this header, `CamelMessageTimestamp` will be set additionally.
 
 Same rules as in File chapter for overriding and providing other headers apply here as well.
+
+### JMS
+
+When testing JMS component, there are a few limitations.
+
+Original JMS `Message` and JMS `Session` are not provided within the exchange. That means if there is some logic within 
+the route which is based on these elements, tests for that kind of route could not be created. Instead of original JMS
+Message, we provide our custom implementation `SIPJmsTextMessage` which is there to support Test Kit testing purpose.
+
+When providing camel JMS specified headers within test case definition, there are 3 following headers which could not 
+be provided with simple String value, hence we skip adding these values and keep default ones (`JMSDestination`, 
+`JMSReplyTo`, `JMSCorrelationIDAsBytes`).
+
+If the logic of a route leans on JMS component type converters or custom type converter option, tests can not be 
+created. Currently, type converters are not supported and only possible values are simple String or JSON. 
+But in case of json, type conversion should be done somewhere in the route and outside JMS component.
 
 ### Mail
 
