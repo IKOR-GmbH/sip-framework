@@ -5,7 +5,7 @@ import static org.apache.camel.Exchange.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
-import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
+import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import org.apache.camel.*;
 import org.apache.camel.component.file.remote.RemoteFileComponent;
@@ -38,7 +38,7 @@ class FtpRouteInvokerTest {
   void setup() {
     ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
     subject = new FtpRouteInvoker(camelContext);
-    inputExchange = SIPExchangeHelper.createEmptyExchange(camelContext);
+    inputExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
     inputExchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
     inputExchange.getMessage().setBody(BODY_PAYLOAD);
 
@@ -52,7 +52,7 @@ class FtpRouteInvokerTest {
     when(route.getConsumer()).thenReturn(ftpConsumer);
     when(ftpConsumer.getProcessor()).thenReturn(processor);
 
-    actualFileExchange = SIPExchangeHelper.createEmptyExchange(camelContext);
+    actualFileExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
     when(ftpConsumer.createExchange(true)).thenReturn(actualFileExchange);
 
     endpointConfiguration = mock(RemoteFileConfiguration.class);

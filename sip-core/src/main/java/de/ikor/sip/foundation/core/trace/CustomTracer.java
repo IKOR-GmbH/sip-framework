@@ -1,10 +1,10 @@
 package de.ikor.sip.foundation.core.trace;
 
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.NamedNode;
+import org.apache.camel.NamedRoute;
 import org.apache.camel.impl.engine.DefaultTracer;
 import org.springframework.stereotype.Component;
 
@@ -16,58 +16,52 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomTracer extends DefaultTracer {
 
-  public static final String TRACING_ID = "tracingId";
+  public static final String TRACE_SET = "traceSet";
 
-  private final Set<SIPTraceOperation> sipTraceOperations;
-
-  private final TraceHistory traceHistory;
+  private final SIPTraceConfig sipTraceConfig;
 
   /**
    * Creates new instance of CustomTracer Enables tracing in CamelContext
    *
-   * @param traceHistory {@link TraceHistory}
    * @param exchangeFormatter {@link SIPExchangeFormatter}
    * @param camelContext {@link CamelContext}
-   * @param sipTraceOperations set of {@link SIPTraceOperation}
+   * @param sipTraceConfig set of {@link SIPTraceConfig}
    */
   public CustomTracer(
-      TraceHistory traceHistory,
       SIPExchangeFormatter exchangeFormatter,
       CamelContext camelContext,
-      Set<SIPTraceOperation> sipTraceOperations) {
+      SIPTraceConfig sipTraceConfig) {
     setExchangeFormatter(exchangeFormatter);
     camelContext.setTracing(true);
-    this.traceHistory = traceHistory;
-    this.sipTraceOperations = sipTraceOperations;
+    this.sipTraceConfig = sipTraceConfig;
+  }
+
+  @Override
+  public void traceBeforeRoute(NamedRoute route, Exchange exchange) {
+    addIdToTraceSet(exchange);
+    super.traceBeforeRoute(route, exchange);
   }
 
   @Override
   public void traceBeforeNode(NamedNode node, Exchange exchange) {
-    exchange.getIn().setHeader(TRACING_ID, tracingList(exchange));
+    addIdToTraceSet(exchange);
     super.traceBeforeNode(node, exchange);
   }
 
-  private String tracingList(Exchange exchange) {
-    String list = exchange.getIn().getHeader(TRACING_ID, String.class);
-    if (list == null) {
-      list = exchange.getExchangeId();
-    }
-    if (!list.contains(exchange.getExchangeId())) {
-      list = list.concat("," + exchange.getExchangeId());
-    }
-    return list;
+  private void addIdToTraceSet(Exchange exchange) {
+    exchange.getIn().setHeader(TRACE_SET, updateTraceSet(exchange));
+  }
+
+  private TraceSet updateTraceSet(Exchange exchange) {
+    TraceSet traceSet = exchange.getIn().getHeader(TRACE_SET, TraceSet.class);
+    if (traceSet == null) traceSet = new TraceSet();
+    return traceSet.cloneAndAdd(exchange.getExchangeId());
   }
 
   @Override
   protected void dumpTrace(String out, Object node) {
-    sipTraceOperations.forEach(traceOperation -> traceOperation.execute(this, out, node));
-  }
-
-  void logTrace(String out, Object node) {
-    super.dumpTrace(out, node);
-  }
-
-  void storeInMemory(String out, Object node) {
-    traceHistory.add(out);
+    if (sipTraceConfig.isLog()) {
+      super.dumpTrace(out, node);
+    }
   }
 }

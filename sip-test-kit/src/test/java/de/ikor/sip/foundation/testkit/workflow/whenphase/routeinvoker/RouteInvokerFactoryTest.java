@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
-import de.ikor.sip.foundation.testkit.util.SIPExchangeHelper;
+import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.CxfRouteInvoker;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.FileRouteInvoker;
@@ -35,7 +35,7 @@ class RouteInvokerFactoryTest {
     Set<RouteInvoker> invokers =
         Set.of(restRouteInvoker, mock(CxfRouteInvoker.class), fileRouteInvoker);
     subject = new RouteInvokerFactory(invokers, camelContext);
-    exchange = SIPExchangeHelper.createEmptyExchange(camelContext);
+    exchange = TestKitHelper.parseExchangeProperties(null, camelContext);
     exchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
     route = mock(Route.class);
     when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
