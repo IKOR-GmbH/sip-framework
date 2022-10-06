@@ -7,6 +7,8 @@ import de.ikor.sip.foundation.core.framework.stubs.SleepingOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouter;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
+import org.apache.camel.RoutesBuilder;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.DisableJmx;
@@ -97,17 +99,16 @@ class MulticastTest {
     mock.assertIsSatisfied();
   }
 
-
-  void
-  given_RouteWithParallelAndSequencedMulticast_when_FirstOutConnectorIsSlow_then_SecondConnectorExecutesFirstAndThirdLast()
+  void //toDO make it work
+      given_RouteWithParallelAndSequencedMulticast_when_FirstOutConnectorIsSlow_then_SecondConnectorExecutesFirstAndThirdLast()
           throws Exception {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-5");
     SleepingOutConnector outConnector1 =
-            new SleepingOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
+        new SleepingOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
     SimpleOutConnector outConnector2 =
-            new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-2");
+        new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-2");
     SimpleOutConnector outConnector3 =
-            new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-3");
+        new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-3");
 
     mock.expectedBodiesReceived("Hello dude!-[ep-2]", "Hello dude!-[ep-1]", "Hello dude!-[ep-3]");
     mock.expectedMessageCount(3);
@@ -116,5 +117,27 @@ class MulticastTest {
     template.sendBody("direct:multicast-5", "Hello dude!");
 
     mock.assertIsSatisfied();
+  }
+
+  @Test
+  void when_RouteUsesEnrich_then_SIPMetadataIsSupported() throws Exception {
+    CentralRouter.getCamelContext().addRoutes(routeBuilder());
+    mock.expectedBodiesReceived("yes, enrich works");
+    template.sendBody("direct:withEnrich", "enrichWorks?");
+
+    mock.assertIsSatisfied();
+  }
+
+  private RoutesBuilder routeBuilder() {
+    return new RouteBuilder() {
+      @Override
+      public void configure() throws Exception {
+        from("direct:withEnrich")
+            .enrich(OutEndpointBuilder.instance("direct:test-enrich", ""))
+            .to("log:message");
+
+        from("direct:test-enrich").setBody(simple("yes, enrich works"));
+      }
+    };
   }
 }
