@@ -30,11 +30,11 @@ public class MailRouteInvoker implements RouteInvoker {
   private final CamelContext camelContext;
 
   @Override
-  public Optional<Exchange> invoke(Exchange exchange) {
-    MailConsumer mailConsumer = (MailConsumer) resolveConsumer(exchange, camelContext);
+  public Optional<Exchange> invoke(Exchange whenDefinition) {
+    MailConsumer mailConsumer = (MailConsumer) resolveConsumer(whenDefinition, camelContext);
 
     Exchange mailExchange = mailConsumer.createExchange(true);
-    mailExchange.setMessage(createMailMessage(exchange));
+    mailExchange.setMessage(createMailMessage(whenDefinition));
 
     mailConsumer.getAsyncProcessor().process(mailExchange, EmptyAsyncCallback.get());
     return Optional.empty();
@@ -45,17 +45,17 @@ public class MailRouteInvoker implements RouteInvoker {
     return endpoint instanceof MailEndpoint;
   }
 
-  private MailMessage createMailMessage(Exchange exchange) {
-    MailMessage mailMessage = new MailMessage(exchange, createMimeMessage(exchange), true);
-    mailMessage.setBody(exchange.getMessage().getBody());
-    mailMessage.setHeaders(exchange.getMessage().getHeaders());
+  private MailMessage createMailMessage(Exchange whenDefinition) {
+    MailMessage mailMessage = new MailMessage(whenDefinition, createMimeMessage(whenDefinition), true);
+    mailMessage.setBody(whenDefinition.getMessage().getBody());
+    mailMessage.setHeaders(whenDefinition.getMessage().getHeaders());
     return mailMessage;
   }
 
-  private MimeMessage createMimeMessage(Exchange exchange) {
+  private MimeMessage createMimeMessage(Exchange whenDefinition) {
     MimeMessage message = new MimeMessage((Session) null);
-    setMimeMessageHeaders(message, exchange.getMessage().getHeaders());
-    setMimeMessageBody(message, exchange.getMessage().getBody(String.class));
+    setMimeMessageHeaders(message, whenDefinition.getMessage().getHeaders());
+    setMimeMessageBody(message, whenDefinition.getMessage().getBody(String.class));
     return message;
   }
 
