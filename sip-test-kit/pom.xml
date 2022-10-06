@@ -78,5 +78,10 @@
             <artifactId>camel-ftp-starter</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-mail-starter</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>

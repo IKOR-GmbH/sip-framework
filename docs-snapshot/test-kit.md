@@ -183,6 +183,7 @@ Following Camel components support testing with Test Kit:
 - SOAP (by using CXF)
 - File
 - FTP, FTPS, SFTP
+- Mail (imap, imaps, pop3, pop3s, smtp, smtps)
 
 Please check the special conditions for these components in following chapters. since there are some special conditions
 which must be met.
@@ -241,6 +242,15 @@ headers automatically are different, and they are not the same as for File heade
 7) `CamelFileLastModified` - by providing this header, `CamelMessageTimestamp` will be set additionally.
 
 Same rules as in File chapter for overriding and providing other headers apply here as well.
+
+### Mail
+
+All mail protocols are supported in Test Kit as well as their security variants.
+
+Its usage is quite straightforward, the content of an email is set as body of the `when-execute` phase,
+while `To`, `From`, `Subject`, etc. are defined as headers.
+
+Attachments are not supported.
 
 # Complete example
 
