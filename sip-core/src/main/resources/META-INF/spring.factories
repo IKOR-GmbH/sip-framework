@@ -5,5 +5,7 @@ de.ikor.sip.foundation.core.proxies.ProxyAutoConfig,\
 de.ikor.sip.foundation.core.actuator.routes.ActuatorRoutesAutoConfig,\
 de.ikor.sip.foundation.core.actuator.health.ActuatorHealthAutoConfig,\
 de.ikor.sip.foundation.core.actuator.info.ActuatorInfoAutoConfig,\
-de.ikor.sip.foundation.core.openapi.OpenApiResolverAutoConfig,\
-de.ikor.sip.foundation.core.actuator.config.EndpointExposureAutoConfiguration
+de.ikor.sip.foundation.core.openapi.OpenApiResolverAutoConfig
+
+org.springframework.context.ApplicationListener=\
+de.ikor.sip.foundation.core.actuator.config.EndpointExposureConfiguration
