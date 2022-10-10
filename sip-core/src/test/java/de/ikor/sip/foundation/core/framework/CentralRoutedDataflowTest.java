@@ -1,11 +1,9 @@
 package de.ikor.sip.foundation.core.framework;
 
 import de.ikor.sip.foundation.core.apps.framework.CentralRouterTestingApplication;
-import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
-import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
-import de.ikor.sip.foundation.core.framework.stubs.SleepingOutConnector;
-import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouter;
+import de.ikor.sip.foundation.core.framework.stubs.*;
 import org.apache.camel.EndpointInject;
+import org.apache.camel.ExchangePattern;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.builder.RouteBuilder;
@@ -14,21 +12,24 @@ import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.DisableJmx;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static de.ikor.sip.foundation.core.framework.CentralRouterIntegrationTest.matchRoutesBasedOnUri;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+import static org.mockito.ArgumentMatchers.any;
 
 @CamelSpringBootTest
 @SpringBootTest(classes = {CentralRouterTestingApplication.class})
 @DisableJmx(false)
 @MockEndpoints("log:message*")
-class MulticastTest {
+class CentralRoutedDataflowTest {
   @Autowired(required = false)
-  private TestingCentralRouter subject;
+  private TestingCentralRouter routerSubject;
 
   @Autowired(required = false)
   private RouteStarter routeStarter;
@@ -40,7 +41,7 @@ class MulticastTest {
 
   @BeforeEach
   void setup() {
-    subject.setupTestingState();
+    routerSubject.setupTestingState();
     mock.reset();
   }
 
@@ -53,7 +54,7 @@ class MulticastTest {
 
     mock.expectedMessageCount(1);
     mock.expectedBodiesReceived("Hello dude!-[ep-1]");
-    subject.from(inConnector).to(outConnector1).build();
+    routerSubject.from(inConnector).to(outConnector1).build();
 
     template.sendBody("direct:multicast-1", "Hello dude!");
 
@@ -73,7 +74,7 @@ class MulticastTest {
     mock.expectedBodiesReceived("Hello dude!-[ep-2]", "Hello dude!-[ep-1]");
     mock.expectedMessageCount(2);
 
-    subject.from(inConnector).to(outConnector1, outConnector2).build();
+    routerSubject.from(inConnector).to(outConnector1, outConnector2).build();
 
     template.sendBody("direct:multicast-3", "Hello dude!");
 
@@ -92,16 +93,16 @@ class MulticastTest {
 
     mock.expectedBodiesReceived("Hello dude!-[ep-1]", "Hello dude!-[ep-2]");
     mock.expectedMessageCount(2);
-    subject.from(inConnector).to(outConnector1).to(outConnector2).build();
+    routerSubject.from(inConnector).to(outConnector1).to(outConnector2).build();
 
     template.sendBody("direct:multicast-4", "Hello dude!");
 
     mock.assertIsSatisfied();
   }
 
-  void //toDO make it work
+  void // toDO make it work
       given_RouteWithParallelAndSequencedMulticast_when_FirstOutConnectorIsSlow_then_SecondConnectorExecutesFirstAndThirdLast()
-          throws Exception {
+      throws Exception {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-5");
     SleepingOutConnector outConnector1 =
         new SleepingOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
@@ -112,7 +113,8 @@ class MulticastTest {
 
     mock.expectedBodiesReceived("Hello dude!-[ep-2]", "Hello dude!-[ep-1]", "Hello dude!-[ep-3]");
     mock.expectedMessageCount(3);
-    subject.from(inConnector).to(outConnector1, outConnector2).to(outConnector3).build();
+
+    routerSubject.from(inConnector).to(outConnector1, outConnector2).to(outConnector3).build();
 
     template.sendBody("direct:multicast-5", "Hello dude!");
 
@@ -128,15 +130,30 @@ class MulticastTest {
     mock.assertIsSatisfied();
   }
 
+  @Test
+  void when_InConnectorImplementsResponseProcessing_then_ConnectorReturnsProcessedResponse()
+      throws Exception {
+    CentralRouter.getCamelContext().addRoutes(ComplexOutConnector.helperRouteBuilder);
+
+    routerSubject.from(new ComplexInConnector()).to(new ComplexOutConnector()).build();
+
+    // act
+    String response =
+        (String) template.sendBody("direct:complex-connector", ExchangePattern.InOut, "input body");
+
+    assertThat(response).endsWith("voila").contains("body 1").contains("body 2");
+    mock.assertIsSatisfied();
+  }
+
   private RoutesBuilder routeBuilder() {
     return new RouteBuilder() {
       @Override
       public void configure() throws Exception {
         from("direct:withEnrich")
-            .enrich(OutEndpointBuilder.instance("direct:test-enrich", ""))
+            .enrich(OutEndpointBuilder.outEndpointBuilder("direct:test-enrich", ""))
             .to("log:message");
 
-        from("direct:test-enrich").setBody(simple("yes, enrich works"));
+        from("direct:oho").process();
       }
     };
   }

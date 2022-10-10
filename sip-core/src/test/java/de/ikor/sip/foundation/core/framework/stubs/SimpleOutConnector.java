@@ -7,8 +7,8 @@ import static java.lang.String.format;
 
 public class SimpleOutConnector extends TestingOutConnector {
 
-  // Constructor for testing purposes only
   public SimpleOutConnector() {
+  // Constructor for testing purposes only
     super("just-a-testing-connector" + System.nanoTime());
   }
 

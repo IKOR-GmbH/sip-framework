@@ -40,17 +40,4 @@ class HttpHealthIndicatorsTest {
     assertThat(subject.getStatus()).isEqualTo(Status.UNKNOWN);
     assertThat(subject.getDetails()).containsEntry(URL_KEY, ENDPOINT_URI);
   }
-
-  @Test
-  void Given_EndpointIsConnectedAndReturnsStatus2xx_When_urlHealthIndicator_Then_StatusUp() {
-    // arrange
-    when(endpoint.getEndpointKey()).thenReturn(ENDPOINT_URI);
-
-    // act
-    Health subject = HttpHealthIndicators.urlHealthIndicator(endpoint);
-
-    // assert
-    assertThat(subject.getStatus()).isEqualTo(Status.UP);
-    assertThat(subject.getDetails()).containsEntry(URL_KEY, ENDPOINT_URI);
-  }
 }

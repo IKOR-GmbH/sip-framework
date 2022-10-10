@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class OutEndpointBuilder implements EndpointProducerBuilder {
     private final String uri;
-    public static OutEndpointBuilder instance(String uri, String s1) {
+    public static OutEndpointBuilder outEndpointBuilder(String uri, String s1) {
         return new OutEndpointBuilder(uri);
     }
 

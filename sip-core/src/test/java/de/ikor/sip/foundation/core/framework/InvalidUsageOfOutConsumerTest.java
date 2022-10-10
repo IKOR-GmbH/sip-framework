@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.framework;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
-import de.ikor.sip.foundation.core.framework.stubs.SpyCentralRouter;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.jupiter.api.Test;
@@ -40,18 +39,31 @@ class InvalidUsageOfOutConsumerTest {
   void when_MultipleCentralRoutersAreRegistered_then_ApplicationStartsSuccessfully(){
     assertThat(centralRouters)
             .asList().hasSize(2);
-
   }
   @SIPIntegrationAdapter
   public static class CoreTestApplication {
     @Bean
-    CentralRouter spyCentralRouter() {
+    CentralRouter firstSpyCentralRouter() {
       return new SpyCentralRouter();
     }
 
     @Bean
-    CentralRouter simpleCentralRouter() {
+    CentralRouter secondSpyCentralRouter() {
       return new SpyCentralRouter();
+    }
+  }
+
+  private static class SpyCentralRouter extends CentralRouter {
+    public static boolean isConfigured = false;
+
+    @Override
+    public String getScenario() {
+      return "null";
+    }
+
+    @Override
+    public void configure() throws Exception {
+      isConfigured = true;
     }
   }
 }

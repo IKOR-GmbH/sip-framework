@@ -6,21 +6,23 @@ import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouter;
 import org.apache.camel.Route;
 import org.assertj.core.api.Assertions;
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {CentralRouterTestingApplication.class})
-class CentralRouterIntegrationTest {
+class CentralRouterStructureTest {
   @Autowired(required = false)
   private TestingCentralRouter subject;
+
   @Autowired(required = false)
   private RouteStarter routeStarter;
 
@@ -45,7 +47,7 @@ class CentralRouterIntegrationTest {
     // act
     subject.from(simpleInConnector);
     // assert
-    assertThat(CentralRouter.getCamelContext().getRoutes())
+    assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri("direct.*singleInConnector"))
         .as(
             "Test connector is not registered. Expected %s endpoint",
@@ -62,10 +64,21 @@ class CentralRouterIntegrationTest {
     // act
     subject.from(firstInConnector, secondInConnector);
     // assert
-    assertThat(CentralRouter.getCamelContext().getRoutes())
-        .filteredOn(matchRoutesBasedOnUri("direct.*sip.*"))
-        .as("One or more connectors is not registered.")
-        .hasSize(2);
+    assertThat(getRoutesFromContext())
+        .filteredOn(matchRoutesBasedOnUri("direct.*sip"))
+        .hasSize(1);
+
+    assertThat(getRoutesFromContext())
+        .filteredOn(matchRoutesBasedOnUri("direct.*sipie"))
+        .hasSize(1);
+
+    assertThat(getRoutesFromContext())
+        .filteredOn(matchRoutesBasedOnUri("direct.*sip-test"))
+        .hasSize(1);
+
+    assertThat(getRoutesFromContext())
+        .filteredOn(matchRoutesBasedOnUri("direct.*sip-test"))
+        .hasSize(1);
   }
 
   @Test
@@ -78,8 +91,8 @@ class CentralRouterIntegrationTest {
     subject.from(inConnector).to(outConnector).build();
 
     // assert
-    assertThat(CentralRouter.getCamelContext().getRoutes())
-        .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", subject.getUseCase())))
+    assertThat(getRoutesFromContext())
+        .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", subject.getScenario())))
         .as("No OutConnectors registered.")
         .hasSize(1);
   }
@@ -90,32 +103,38 @@ class CentralRouterIntegrationTest {
           throws Exception {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:routeIdTest");
     subject.from(inConnector);
-    Route route = CentralRouter.getCamelContext()
-            .getRoute(format("%s-%s", subject.getUseCase(), inConnector.getName()));
+    String expectedRouteId = format("%s-%s", subject.getScenario(), inConnector.getName());
+    Route route = getRouteFromContextById(expectedRouteId);
 
-    assertThat(route).isNotNull();
+    assertThat(route).as("Expected route with Id: %s %s Detected: %s", expectedRouteId, System.lineSeparator(),
+                    getRoutesFromContext().stream().map(Route::getId).collect(Collectors.joining(", ")))
+            .isNotNull();
+  }
+
+  private Route getRouteFromContextById(String routeId) {
+    return CentralRouter.getCamelContext().getRoute(routeId);
   }
 
   @Test
   void when_ApplicationStarts_then_CentralRouterBeanIsConfigured() throws Exception {
-    AssertionsForClassTypes.assertThat(subject.isConfigured)
-            .isTrue();
+    assertThat(subject.isConfigured).isTrue();
   }
 
   @Test
   void when_AppStarts_then_RouteStarterIsInitialized() {
-    assertThat(routeStarter).
-        as("RouteStarter bean is not initialized")
-            .isNotNull();
+    assertThat(routeStarter).as("RouteStarter bean is not initialized").isNotNull();
   }
 
   @Test
   void given_CentralRouterBeansArePresent_when_AppStarts_then_RoutStarterHasRouters() {
-    assertThat(routeStarter.availableRouters)
-            .isNotEmpty();
+    assertThat(routeStarter.availableRouters).isNotEmpty();
   }
 
   public static Predicate<Route> matchRoutesBasedOnUri(String regex) {
     return route -> route.getEndpoint().getEndpointUri().matches(regex);
+  }
+
+  private List<Route> getRoutesFromContext() {
+    return CentralRouter.getCamelContext().getRoutes();
   }
 }

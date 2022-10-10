@@ -7,18 +7,16 @@ public class TestingCentralRouter extends CentralRouter {
     public boolean isConfigured;
 
     @Override
-    public String getUseCase() {
+    public String getScenario() {
         return "testing-use-case-" + useCaseCounter;
     }
 
     @Override
     public void configure() throws Exception {
         isConfigured = true;
-        //TODO don't do this
     }
 
     public void setupTestingState() {
-//        isConfigured = false;
         // only for testing purpose, to simulate multiple use
         ++useCaseCounter;
     }

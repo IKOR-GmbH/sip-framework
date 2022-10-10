@@ -4,20 +4,24 @@ import lombok.Getter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 
+import static de.ikor.sip.foundation.core.framework.CentralOutEndpointsRegister.getInEndpointUri;
 import static de.ikor.sip.foundation.core.framework.CentralRouter.anonymousDummyRouteBuilder;
 
 public abstract class InConnector extends Connector {
     @Getter
-    private RouteDefinition connectorDefinition;
-    @Getter
-    private final RouteBuilder routeBuilder = anonymousDummyRouteBuilder();
+    private RouteBuilder routeBuilder;
     public abstract void configure();
 
     protected RouteDefinition from(InEndpoint inEndpoint) {
-        return connectorDefinition = routeBuilder.from(inEndpoint.getUri());
+        routeBuilder = anonymousDummyRouteBuilder();
+        return routeBuilder.from(getInEndpointUri(inEndpoint.getId()));
     }
 
     public String getEndpointUri() {
-        return connectorDefinition.getEndpointUrl();
+        return getConnectorDefinition().getEndpointUrl();
+    }
+
+    public RouteDefinition getConnectorDefinition() {
+        return routeBuilder.getRouteCollection().getRoutes().get(0);
     }
 }

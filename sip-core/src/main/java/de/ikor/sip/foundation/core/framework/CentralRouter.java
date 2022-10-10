@@ -10,7 +10,8 @@ import static java.lang.String.format;
 public abstract class CentralRouter {
   @Getter @Setter private static CamelContext camelContext;
 
-  public abstract String getUseCase();
+  public abstract String getScenario();
+
   private UseCaseTopologyDefinition definition;
 
   public abstract void configure() throws Exception;
@@ -18,14 +19,33 @@ public abstract class CentralRouter {
   public UseCaseTopologyDefinition from(InConnector... inConnectors) throws Exception {
     for (InConnector connector : inConnectors) {
       connector.configure();
-      connector
-          .getConnectorDefinition()
-          .to("sipmc:" + this.getUseCase())
-          .routeId(format("%s-%s", this.getUseCase(), connector.getName()));
+      appendToSIPmcAndRouteId(connector);
+      connector.handleResponse(connector.getConnectorDefinition());
       camelContext.addRoutes(connector.getRouteBuilder());
+      generateTestingConnectorRoute(connector);
     }
-    definition = new UseCaseTopologyDefinition(camelContext, this.getUseCase());
+    definition = new UseCaseTopologyDefinition(camelContext, this.getScenario());
     return definition;
+  }
+
+  private void generateTestingConnectorRoute(InConnector connector) throws Exception {
+    CentralOutEndpointsRegister.setState("testing");
+    connector.configure();
+    appendToSIPmcAndRouteId(connector, "-testing");
+    connector.handleResponse(connector.getConnectorDefinition());
+    camelContext.addRoutes(connector.getRouteBuilder());
+    CentralOutEndpointsRegister.setState("actual");
+  }
+
+  private void appendToSIPmcAndRouteId(InConnector connector, String routeSuffix) {
+    connector
+        .getConnectorDefinition()
+        .to("sipmc:" + this.getScenario() + routeSuffix)
+        .routeId(format("%s-%s%s", this.getScenario(), connector.getName(), routeSuffix));
+  }
+
+  private void appendToSIPmcAndRouteId(InConnector connector) {
+    appendToSIPmcAndRouteId(connector, "");
   }
 
   public static CamelContext getCamelContext() {
