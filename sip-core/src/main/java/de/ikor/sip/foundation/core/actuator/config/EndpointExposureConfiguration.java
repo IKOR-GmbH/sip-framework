@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.core.actuator.config;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Properties;
+import lombok.Setter;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.context.ApplicationListener;
@@ -12,12 +13,24 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-/** Collects all endpoint that should be exposed in actuator */
+/**
+ * Collects all SIP endpoint that should be exposed in actuator and adds them to
+ * "management.endpoints.web.exposure.include"
+ */
 public class EndpointExposureConfiguration
     implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
 
   private static final String EXPOSURE_INCLUDE = "management.endpoints.web.exposure.include";
   private static final String SIP_DEFAULTS = "sip.core.actuator.endpoints";
+  @Setter private String path;
+
+  /**
+   * Creates new instance of EndpointExposureConfiguration and sets default path to configuration
+   * file
+   */
+  public EndpointExposureConfiguration() {
+    setPath("sip-core-default-config.yaml");
+  }
 
   @Override
   public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
@@ -33,10 +46,10 @@ public class EndpointExposureConfiguration
 
   private String resolveEndpoints(
       ConfigurableEnvironment environment, Properties loadedProperties) {
-    String endpoints = environment.getProperty(EXPOSURE_INCLUDE);
-    if (endpoints == null) {
-      endpoints = loadedProperties.getProperty(EXPOSURE_INCLUDE);
-    }
+    String endpoints =
+        Objects.requireNonNullElse(
+            environment.getProperty(EXPOSURE_INCLUDE),
+            loadedProperties.getProperty(EXPOSURE_INCLUDE));
     if (!"*".equals(endpoints)) {
       String sipEndpoints = loadedProperties.getProperty(SIP_DEFAULTS);
       endpoints = endpoints.concat("," + sipEndpoints);
@@ -55,13 +68,9 @@ public class EndpointExposureConfiguration
     ResourcePatternResolver resourcePatternResolver =
         new PathMatchingResourcePatternResolver(classLoader);
     try {
-      return resourcePatternResolver.getResources(getPath());
+      return resourcePatternResolver.getResources(path);
     } catch (IOException e) {
-      throw new IllegalArgumentException("File not found for path " + getPath());
+      throw new IllegalArgumentException(String.format("File not found for path %s", path));
     }
-  }
-
-  protected String getPath() {
-    return "sip-core-default-config.yaml";
   }
 }
