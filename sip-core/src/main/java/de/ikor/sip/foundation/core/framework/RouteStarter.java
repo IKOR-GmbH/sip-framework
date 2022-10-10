@@ -15,7 +15,6 @@ public class RouteStarter extends EventNotifierSupport {
     @Override
     public void notify(CamelEvent event) throws Exception {
         CentralRouter.setCamelContext(((CamelEvent.CamelContextInitializingEvent) event).getContext());
-        callConfigureMethodOnEach(availableRouters);
         availableRouters.forEach(this::invokeConfigureMethod);
     }
 

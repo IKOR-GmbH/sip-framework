@@ -22,19 +22,21 @@ public abstract class CentralRouter {
       appendToSIPmcAndRouteId(connector);
       connector.handleResponse(connector.getConnectorDefinition());
       camelContext.addRoutes(connector.getRouteBuilder());
+
+      CentralEndpointsRegister.setState("testing");
       generateTestingConnectorRoute(connector);
+      CentralEndpointsRegister.setState("actual");
     }
+
     definition = new UseCaseTopologyDefinition(camelContext, this.getScenario());
     return definition;
   }
 
   private void generateTestingConnectorRoute(InConnector connector) throws Exception {
-    CentralOutEndpointsRegister.setState("testing");
     connector.configure();
     appendToSIPmcAndRouteId(connector, "-testing");
     connector.handleResponse(connector.getConnectorDefinition());
     camelContext.addRoutes(connector.getRouteBuilder());
-    CentralOutEndpointsRegister.setState("actual");
   }
 
   private void appendToSIPmcAndRouteId(InConnector connector, String routeSuffix) {

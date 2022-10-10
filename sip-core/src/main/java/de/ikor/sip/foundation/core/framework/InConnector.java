@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 
-import static de.ikor.sip.foundation.core.framework.CentralOutEndpointsRegister.getInEndpointUri;
+import static de.ikor.sip.foundation.core.framework.CentralEndpointsRegister.getInEndpointUri;
 import static de.ikor.sip.foundation.core.framework.CentralRouter.anonymousDummyRouteBuilder;
 
 public abstract class InConnector extends Connector {

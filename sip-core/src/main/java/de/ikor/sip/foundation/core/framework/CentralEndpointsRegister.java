@@ -6,13 +6,13 @@ import org.apache.camel.Endpoint;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CentralOutEndpointsRegister {
+public class CentralEndpointsRegister {
   private static Map<String, Endpoint> registry = new HashMap<>();
   private static Map<String, InEndpoint> inEndpointRegistry = new HashMap<>();
   private static Map<String, InEndpoint> testingInEndpointRegistry = new HashMap<>();
   @Setter private static String state = "actual";
 
-  private CentralOutEndpointsRegister() {}
+  private CentralEndpointsRegister() {}
 
   public static Endpoint getEndpoint(String endpointId) {
     return registry.get(endpointId);

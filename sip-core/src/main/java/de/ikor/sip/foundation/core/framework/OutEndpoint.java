@@ -14,7 +14,7 @@ public class OutEndpoint implements Endpoint {
         this.targetEndpoint = CentralRouter.getCamelContext().getEndpoint(uri);
         this.setCamelContext(CentralRouter.getCamelContext());
 
-        CentralOutEndpointsRegister.put(endpointId, targetEndpoint);
+        CentralEndpointsRegister.put(endpointId, targetEndpoint);
     }
     @Override
     public Producer createProducer() throws Exception {

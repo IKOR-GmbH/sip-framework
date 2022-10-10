@@ -21,19 +21,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = {CentralRouterTestingApplication.class})
 class CentralRouterStructureTest {
   @Autowired(required = false)
-  private TestingCentralRouter subject;
+  private TestingCentralRouter routerSubject;
 
   @Autowired(required = false)
   private RouteStarter routeStarter;
 
   @BeforeEach
   void setup() {
-    subject.setupTestingState();
+    routerSubject.setupTestingState();
   }
 
   @Test
   void when_ApplicationStarts_then_CentralRouterBeanIsLoaded() {
-    assertThat(subject).as("CentralRouter bean not initialized").isNotNull();
+    assertThat(routerSubject).as("CentralRouter bean not initialized").isNotNull();
     Assertions.assertThat(CentralRouter.getCamelContext())
         .as("Camel context not set on CentralRouter")
         .isNotNull();
@@ -45,7 +45,7 @@ class CentralRouterStructureTest {
     // arrange
     SimpleInConnector simpleInConnector = SimpleInConnector.withUri("direct:singleInConnector");
     // act
-    subject.from(simpleInConnector);
+    routerSubject.from(simpleInConnector);
     // assert
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri("direct.*singleInConnector"))
@@ -62,7 +62,7 @@ class CentralRouterStructureTest {
     SimpleInConnector firstInConnector = SimpleInConnector.withUri("direct:sip");
     SimpleInConnector secondInConnector = SimpleInConnector.withUri("direct:sipie");
     // act
-    subject.from(firstInConnector, secondInConnector);
+    routerSubject.from(firstInConnector, secondInConnector);
     // assert
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri("direct.*sip"))
@@ -88,11 +88,11 @@ class CentralRouterStructureTest {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:OneOutConnector");
     SimpleOutConnector outConnector = new SimpleOutConnector();
     // act
-    subject.from(inConnector).to(outConnector).build();
+    routerSubject.from(inConnector).to(outConnector).build();
 
     // assert
     assertThat(getRoutesFromContext())
-        .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", subject.getScenario())))
+        .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", routerSubject.getScenario())))
         .as("No OutConnectors registered.")
         .hasSize(1);
   }
@@ -102,8 +102,9 @@ class CentralRouterStructureTest {
       given_OneInConnectorWithOneRoute_when_ConnectorIsRegistered_then_RouteIdIsUseCasePlusConnectorName()
           throws Exception {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:routeIdTest");
-    subject.from(inConnector);
-    String expectedRouteId = format("%s-%s", subject.getScenario(), inConnector.getName());
+    routerSubject.from(inConnector);
+
+    String expectedRouteId = format("%s-%s", routerSubject.getScenario(), inConnector.getName());
     Route route = getRouteFromContextById(expectedRouteId);
 
     assertThat(route).as("Expected route with Id: %s %s Detected: %s", expectedRouteId, System.lineSeparator(),
@@ -117,7 +118,7 @@ class CentralRouterStructureTest {
 
   @Test
   void when_ApplicationStarts_then_CentralRouterBeanIsConfigured() throws Exception {
-    assertThat(subject.isConfigured).isTrue();
+    assertThat(routerSubject.isConfigured).isTrue();
   }
 
   @Test
