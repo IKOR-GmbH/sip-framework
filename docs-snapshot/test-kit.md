@@ -185,6 +185,7 @@ Following Camel components support testing with Test Kit:
 - FTP, FTPS, SFTP
 - JMS
 - Mail (imap, imaps, pop3, pop3s, smtp, smtps)
+- Kafka
 
 Please check the special conditions for these components in following chapters. since there are some special conditions
 which must be met.
@@ -257,7 +258,7 @@ be provided with simple String value, hence we skip adding these values and keep
 `JMSReplyTo`, `JMSCorrelationIDAsBytes`).
 
 If the logic of a route leans on JMS component type converters or custom type converter option, tests can not be 
-created. Currently, type converters are not supported and only possible values are simple String or JSON. 
+created. Currently, type converters are not supported and only possible values are simple String or JSON String. 
 But in case of json, type conversion should be done somewhere in the route and outside JMS component.
 
 ### Mail
@@ -268,6 +269,25 @@ Its usage is quite straightforward, the content of an email is set as body of th
 while `To`, `From`, `Subject`, etc. are defined as headers.
 
 Attachments are not supported.
+
+### Kafka
+
+As for some of previous components, our support of Test Kit Camel Kafka component provides automatically setting Camel 
+Kafka specific headers. Few automatically configured headers for each test are listed here:
+
+1) `kafka.TOPIC` - has the same value as topic name in URI endpoint format
+2) `kafka.TIMESTAMP` - generated current timestamp
+3) `CamelMessageTimestamp` - generated current timestamp
+
+Keep in mind that other specific headers from Camel Kafka API should be provided under double quotes and squared 
+parenthesis. This is necessary because of Camel Kafka headers API which is using header keys with dot in between and
+yaml format for <i><b>TestCaseDefinition</i></b> file will process dots as complex object with subfields. If you want 
+this to be ignored, you need to specify these headers by using mentioned special format.
+
+Examples: `"[kafka.TOPIC]"`, `"[kafka.OFFSET]"`, etc.
+
+Another limitation is in data type conversions which same as for JMS component. Only String and JSON String are 
+supported.
 
 # Complete example
 
