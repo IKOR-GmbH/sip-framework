@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.camel.*;
 import org.apache.camel.component.file.FileConsumer;
+import org.apache.camel.component.jms.JmsConsumer;
+import org.apache.camel.component.jms.JmsEndpoint;
 import org.apache.camel.impl.engine.DefaultRouteController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,6 +74,22 @@ class CamelContextLifecycleHandlerTest {
     // arrange
     PollingConsumer pollingConsumer = mock(PollingConsumer.class);
     when(route.getConsumer()).thenReturn(pollingConsumer);
+    when(camelContext.getRouteController()).thenReturn(defaultRouteController);
+
+    // act
+    subject.afterApplicationStart(camelContext);
+
+    // assert
+    verify(defaultRouteController, times(1)).suspendRoute(ROUTE_ID);
+  }
+
+  @Test
+  void GIVEN_routeWithSuspendingJmsConsumer_WHEN_afterApplicationStart_THEN_verifySuspendingRoute()
+      throws Exception {
+    // arrange
+    JmsConsumer jmsConsumer = mock(JmsConsumer.class);
+    when(route.getConsumer()).thenReturn(jmsConsumer);
+    when(jmsConsumer.getEndpoint()).thenReturn(mock(JmsEndpoint.class));
     when(camelContext.getRouteController()).thenReturn(defaultRouteController);
 
     // act

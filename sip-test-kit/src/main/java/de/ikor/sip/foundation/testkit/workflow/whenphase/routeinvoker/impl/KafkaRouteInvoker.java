@@ -60,7 +60,7 @@ public class KafkaRouteInvoker implements RouteInvoker {
     try {
       kafkaConsumer.getProcessor().process(kafkaExchange);
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("sip.testkit.workflow.whenphase.routeinvoker.kafka.badrequest");
     }
 
     return Optional.empty();
