@@ -1,12 +1,10 @@
 package de.ikor.sip.foundation.testkit.config;
 
 import de.ikor.sip.foundation.testkit.exception.UnsuspendedRouteException;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Consumer;
-import org.apache.camel.PollingConsumer;
-import org.apache.camel.Route;
-import org.apache.camel.component.jms.JmsConsumer;
+import org.apache.camel.*;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
 import org.apache.camel.support.ScheduledPollConsumer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -20,6 +18,12 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "sip.testkit.batch-test", havingValue = "true")
 @Component
 public class CamelContextLifecycleHandler implements CamelContextConfiguration {
+
+  private final List<RouteInvoker> invokers;
+
+  public CamelContextLifecycleHandler(List<RouteInvoker> invokers) {
+    this.invokers = invokers;
+  }
 
   @Override
   public void beforeApplicationStart(CamelContext camelContext) {
@@ -42,10 +46,18 @@ public class CamelContextLifecycleHandler implements CamelContextConfiguration {
     }
   }
 
-  private boolean isSuspendingConsumer(Consumer consumer) {
+  private boolean isSuspendingConsumer(Consumer consumer) throws NoClassDefFoundError {
     return consumer instanceof PollingConsumer
         || consumer instanceof ScheduledPollConsumer
-        || consumer instanceof JmsConsumer;
+        || checkRouteInvoker(consumer.getEndpoint());
+  }
+
+  private boolean checkRouteInvoker(Endpoint endpoint) {
+    return invokers.stream()
+        .filter(invoker -> invoker.isApplicable(endpoint))
+        .map(invoker -> invoker.shouldSuspend(endpoint))
+        .findFirst()
+        .orElse(false);
   }
 
   private void suspendRoute(String routeId, CamelContext camelContext) {

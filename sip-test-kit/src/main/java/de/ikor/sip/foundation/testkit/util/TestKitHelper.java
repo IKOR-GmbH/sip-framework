@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.testkit.util;
 
+import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_HEADER;
+import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker.TEST_NAME_HEADER;
 import static org.apache.camel.builder.ExchangeBuilder.anExchange;
 
 import de.ikor.sip.foundation.core.util.SIPExchangeHelper;
@@ -78,5 +80,15 @@ public class TestKitHelper extends SIPExchangeHelper {
     properties.getMessage().getHeaders().forEach(exchangeBuilder::withHeader);
     exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpoint());
     return exchangeBuilder.build();
+  }
+
+  /**
+   * Checks if header is Test Kit specific header
+   *
+   * @param key of header for checking
+   * @return boolean
+   */
+  public static boolean isTestKitHeader(String key) {
+    return key.equals(TEST_NAME_HEADER) || key.equals(TEST_MODE_HEADER);
   }
 }

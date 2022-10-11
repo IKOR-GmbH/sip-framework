@@ -4,11 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.testkit.exception.UnsuspendedRouteException;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.camel.*;
 import org.apache.camel.component.file.FileConsumer;
-import org.apache.camel.component.jms.JmsConsumer;
 import org.apache.camel.impl.engine.DefaultRouteController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,20 @@ class CamelContextLifecycleHandlerTest {
     route = mock(Route.class);
     routes.add(route);
 
-    subject = new CamelContextLifecycleHandler();
+    RestRouteInvoker restRouteInvoker =
+        new RestRouteInvoker(mock(ProducerTemplate.class), camelContext);
+    FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);
+    FtpRouteInvoker ftpRouteInvoker = new FtpRouteInvoker(camelContext);
+    JmsRouteInvoker jmsRouteInvoker = new JmsRouteInvoker(camelContext);
+    List<RouteInvoker> invokers =
+        List.of(
+            restRouteInvoker,
+            mock(CxfRouteInvoker.class),
+            fileRouteInvoker,
+            ftpRouteInvoker,
+            jmsRouteInvoker);
+
+    subject = new CamelContextLifecycleHandler(invokers);
 
     when(camelContext.getRoutes()).thenReturn(routes);
     when(route.getRouteId()).thenReturn(ROUTE_ID);
@@ -58,21 +72,6 @@ class CamelContextLifecycleHandlerTest {
     // arrange
     PollingConsumer pollingConsumer = mock(PollingConsumer.class);
     when(route.getConsumer()).thenReturn(pollingConsumer);
-    when(camelContext.getRouteController()).thenReturn(defaultRouteController);
-
-    // act
-    subject.afterApplicationStart(camelContext);
-
-    // assert
-    verify(defaultRouteController, times(1)).suspendRoute(ROUTE_ID);
-  }
-
-  @Test
-  void GIVEN_routeWithSuspendingJmsConsumer_WHEN_afterApplicationStart_THEN_verifySuspendingRoute()
-      throws Exception {
-    // arrange
-    JmsConsumer jmsConsumer = mock(JmsConsumer.class);
-    when(route.getConsumer()).thenReturn(jmsConsumer);
     when(camelContext.getRouteController()).thenReturn(defaultRouteController);
 
     // act
