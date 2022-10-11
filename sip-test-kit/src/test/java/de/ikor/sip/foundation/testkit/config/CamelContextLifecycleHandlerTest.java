@@ -12,6 +12,8 @@ import org.apache.camel.*;
 import org.apache.camel.component.file.FileConsumer;
 import org.apache.camel.component.jms.JmsConsumer;
 import org.apache.camel.component.jms.JmsEndpoint;
+import org.apache.camel.component.kafka.KafkaConsumer;
+import org.apache.camel.component.kafka.KafkaEndpoint;
 import org.apache.camel.impl.engine.DefaultRouteController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,13 +40,15 @@ class CamelContextLifecycleHandlerTest {
     FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);
     FtpRouteInvoker ftpRouteInvoker = new FtpRouteInvoker(camelContext);
     JmsRouteInvoker jmsRouteInvoker = new JmsRouteInvoker(camelContext);
+    KafkaRouteInvoker kafkaRouteInvoker = new KafkaRouteInvoker(camelContext);
     List<RouteInvoker> invokers =
         List.of(
             restRouteInvoker,
             mock(CxfRouteInvoker.class),
             fileRouteInvoker,
             ftpRouteInvoker,
-            jmsRouteInvoker);
+            jmsRouteInvoker,
+            kafkaRouteInvoker);
 
     subject = new CamelContextLifecycleHandler(invokers);
 
@@ -101,11 +105,29 @@ class CamelContextLifecycleHandlerTest {
 
   @Test
   void
+      GIVEN_routeWithSuspendingKafkaConsumer_WHEN_afterApplicationStart_THEN_verifySuspendingRoute()
+          throws Exception {
+    // arrange
+    KafkaConsumer kafkaConsumer = mock(KafkaConsumer.class);
+    when(route.getConsumer()).thenReturn(kafkaConsumer);
+    when(kafkaConsumer.getEndpoint()).thenReturn(mock(KafkaEndpoint.class));
+    when(camelContext.getRouteController()).thenReturn(defaultRouteController);
+
+    // act
+    subject.afterApplicationStart(camelContext);
+
+    // assert
+    verify(defaultRouteController, times(1)).suspendRoute(ROUTE_ID);
+  }
+
+  @Test
+  void
       GIVEN_routeWithNoSuspendingConsumer_WHEN_afterApplicationStart_THEN_verifyNoMatchingConditionForSuspending()
           throws Exception {
     // arrange
     Consumer consumer = mock(Consumer.class);
     when(route.getConsumer()).thenReturn(consumer);
+    when(consumer.getEndpoint()).thenReturn(mock(Endpoint.class));
     when(camelContext.getRouteController()).thenReturn(defaultRouteController);
 
     // act
