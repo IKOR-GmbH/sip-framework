@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
+import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_HEADER;
+import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker.TEST_NAME_HEADER;
 import static org.apache.camel.Exchange.MESSAGE_TIMESTAMP;
 import static org.apache.camel.component.kafka.KafkaConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -96,6 +98,20 @@ class KafkaRouteInvokerTest {
     // assert
     assertThat(actualKafkaExchange.getMessage().getHeader("customHeader"))
         .isEqualTo(kafkaHeaderSerializer.serialize("customHeader", customHeaderValue));
+  }
+
+  @Test
+  void GIVEN_testKitHeadersAsCustomHeaders_WHEN_invoke_THEN_verifyHeaderValues() throws Exception {
+    // arrange
+    inputExchange.getMessage().setHeader(TEST_NAME_HEADER, "test1");
+    inputExchange.getMessage().setHeader(TEST_MODE_HEADER, "true");
+
+    // act
+    subject.invoke(inputExchange);
+
+    // assert
+    assertThat(actualKafkaExchange.getMessage().getHeader(TEST_NAME_HEADER)).isEqualTo("test1");
+    assertThat(actualKafkaExchange.getMessage().getHeader(TEST_MODE_HEADER)).isEqualTo("true");
   }
 
   @Test
