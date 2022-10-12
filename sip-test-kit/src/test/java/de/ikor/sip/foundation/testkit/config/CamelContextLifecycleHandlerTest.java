@@ -31,6 +31,7 @@ class CamelContextLifecycleHandlerTest {
   void setup() {
     camelContext = mock(ExtendedCamelContext.class);
     defaultRouteController = mock(DefaultRouteController.class);
+    when(camelContext.getRouteController()).thenReturn(defaultRouteController);
     List<Route> routes = new ArrayList<>();
     route = mock(Route.class);
     routes.add(route);
@@ -62,7 +63,6 @@ class CamelContextLifecycleHandlerTest {
     // arrange
     FileConsumer fileConsumer = mock(FileConsumer.class);
     when(route.getConsumer()).thenReturn(fileConsumer);
-    when(camelContext.getRouteController()).thenReturn(defaultRouteController);
 
     // act
     subject.afterApplicationStart(camelContext);
@@ -78,7 +78,6 @@ class CamelContextLifecycleHandlerTest {
     // arrange
     PollingConsumer pollingConsumer = mock(PollingConsumer.class);
     when(route.getConsumer()).thenReturn(pollingConsumer);
-    when(camelContext.getRouteController()).thenReturn(defaultRouteController);
 
     // act
     subject.afterApplicationStart(camelContext);
@@ -94,7 +93,6 @@ class CamelContextLifecycleHandlerTest {
     JmsConsumer jmsConsumer = mock(JmsConsumer.class);
     when(route.getConsumer()).thenReturn(jmsConsumer);
     when(jmsConsumer.getEndpoint()).thenReturn(mock(JmsEndpoint.class));
-    when(camelContext.getRouteController()).thenReturn(defaultRouteController);
 
     // act
     subject.afterApplicationStart(camelContext);
@@ -111,7 +109,6 @@ class CamelContextLifecycleHandlerTest {
     KafkaConsumer kafkaConsumer = mock(KafkaConsumer.class);
     when(route.getConsumer()).thenReturn(kafkaConsumer);
     when(kafkaConsumer.getEndpoint()).thenReturn(mock(KafkaEndpoint.class));
-    when(camelContext.getRouteController()).thenReturn(defaultRouteController);
 
     // act
     subject.afterApplicationStart(camelContext);
@@ -128,7 +125,6 @@ class CamelContextLifecycleHandlerTest {
     Consumer consumer = mock(Consumer.class);
     when(route.getConsumer()).thenReturn(consumer);
     when(consumer.getEndpoint()).thenReturn(mock(Endpoint.class));
-    when(camelContext.getRouteController()).thenReturn(defaultRouteController);
 
     // act
     subject.afterApplicationStart(camelContext);
@@ -144,7 +140,6 @@ class CamelContextLifecycleHandlerTest {
     // arrange
     FileConsumer fileConsumer = mock(FileConsumer.class);
     when(route.getConsumer()).thenReturn(fileConsumer);
-    when(camelContext.getRouteController()).thenReturn(defaultRouteController);
     doThrow(new Exception()).when(defaultRouteController).suspendRoute(ROUTE_ID);
 
     // act & assert

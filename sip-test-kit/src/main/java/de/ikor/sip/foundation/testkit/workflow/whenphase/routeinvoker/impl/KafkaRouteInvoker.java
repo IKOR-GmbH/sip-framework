@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
 import static de.ikor.sip.foundation.testkit.util.TestKitHelper.*;
+import static java.lang.System.currentTimeMillis;
 import static org.apache.camel.Exchange.*;
 import static org.apache.camel.component.kafka.KafkaConstants.*;
 
@@ -30,7 +31,7 @@ import org.springframework.stereotype.Component;
 public class KafkaRouteInvoker implements RouteInvoker {
 
   private final CamelContext camelContext;
-  private final List<String> kafkaSpecificHeaderKeys =
+  private static final List<String> kafkaSpecificHeaderKeys =
       List.of(
           PARTITION_KEY,
           PARTITION,
@@ -92,9 +93,8 @@ public class KafkaRouteInvoker implements RouteInvoker {
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
     kafkaSpecificHeaders.putIfAbsent(TOPIC, kafkaTopic);
-    long currentTimeMillis = System.currentTimeMillis();
-    kafkaSpecificHeaders.putIfAbsent(TIMESTAMP, currentTimeMillis);
-    kafkaSpecificHeaders.putIfAbsent(MESSAGE_TIMESTAMP, currentTimeMillis);
+    kafkaSpecificHeaders.putIfAbsent(TIMESTAMP, currentTimeMillis());
+    kafkaSpecificHeaders.putIfAbsent(MESSAGE_TIMESTAMP, kafkaSpecificHeaders.get(TIMESTAMP));
     return kafkaSpecificHeaders;
   }
 
@@ -112,12 +112,12 @@ public class KafkaRouteInvoker implements RouteInvoker {
   }
 
   private Map<String, Object> serializeValuesAndAddKafkaSpecificHeader(
-      Map<String, Object> inputCustomHeaders) {
+      Map<String, Object> customHeaders) {
     Map<String, Object> customHeadersResult = new HashMap<>();
     RecordHeaders recordHeaders = new RecordHeaders(new ArrayList<>());
     KafkaHeaderSerializer kafkaHeaderSerializer = new DefaultKafkaHeaderSerializer();
 
-    inputCustomHeaders.forEach(
+    customHeaders.forEach(
         (key, value) -> {
           if (!isTestKitHeader(key)) {
             byte[] serializedValue = kafkaHeaderSerializer.serialize(key, value);
