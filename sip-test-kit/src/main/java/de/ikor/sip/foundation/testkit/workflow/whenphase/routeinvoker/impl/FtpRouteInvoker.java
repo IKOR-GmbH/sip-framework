@@ -5,6 +5,7 @@ import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.hea
 import static org.apache.camel.Exchange.*;
 
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.RouteInvokerRuntimeException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -47,7 +48,7 @@ public class FtpRouteInvoker implements RouteInvoker {
     try {
       ftpConsumer.getProcessor().process(ftpExchange);
     } catch (Exception e) {
-      log.error("sip.testkit.workflow.whenphase.routeinvoker.ftp.badrequest");
+      throw new RouteInvokerRuntimeException(this.getClass().getName());
     }
     return Optional.empty();
   }

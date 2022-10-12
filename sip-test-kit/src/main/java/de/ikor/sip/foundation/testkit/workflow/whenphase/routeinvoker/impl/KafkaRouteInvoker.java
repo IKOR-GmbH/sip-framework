@@ -6,6 +6,7 @@ import static org.apache.camel.Exchange.*;
 import static org.apache.camel.component.kafka.KafkaConstants.*;
 
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.RouteInvokerRuntimeException;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +62,7 @@ public class KafkaRouteInvoker implements RouteInvoker {
     try {
       kafkaConsumer.getProcessor().process(kafkaExchange);
     } catch (Exception e) {
-      log.error("sip.testkit.workflow.whenphase.routeinvoker.kafka.badrequest");
+      throw new RouteInvokerRuntimeException(this.getClass().getName());
     }
 
     return Optional.empty();

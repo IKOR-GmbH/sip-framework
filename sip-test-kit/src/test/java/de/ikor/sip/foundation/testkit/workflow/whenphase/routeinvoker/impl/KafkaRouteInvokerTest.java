@@ -5,10 +5,12 @@ import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.Rou
 import static org.apache.camel.Exchange.MESSAGE_TIMESTAMP;
 import static org.apache.camel.component.kafka.KafkaConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.RouteInvokerRuntimeException;
 import org.apache.camel.*;
 import org.apache.camel.component.kafka.KafkaConfiguration;
 import org.apache.camel.component.kafka.KafkaConsumer;
@@ -112,6 +114,16 @@ class KafkaRouteInvokerTest {
     // assert
     assertThat(actualKafkaExchange.getMessage().getHeader(TEST_NAME_HEADER)).isEqualTo("test1");
     assertThat(actualKafkaExchange.getMessage().getHeader(TEST_MODE_HEADER)).isEqualTo("true");
+  }
+
+  @Test
+  void GIVEN_simulatedException_WHEN_invoke_THEN_expectRouteInvokerRuntimeException()
+      throws Exception {
+    // arrange
+    doThrow(Exception.class).when(processor).process(any());
+
+    // act & assert
+    assertThrows(RouteInvokerRuntimeException.class, () -> subject.invoke(inputExchange));
   }
 
   @Test
