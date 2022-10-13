@@ -3,10 +3,12 @@ package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.headers.FtpExchangeHeaders.*;
 import static org.apache.camel.Exchange.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.RouteInvokerRuntimeException;
 import org.apache.camel.*;
 import org.apache.camel.component.file.remote.RemoteFileComponent;
 import org.apache.camel.component.file.remote.RemoteFileConfiguration;
@@ -237,6 +239,16 @@ class FtpRouteInvokerTest {
     assertThat(
             actualFileExchange.getMessage().getHeader(RemoteFileComponent.REMOTE_FILE_INPUT_STREAM))
         .isEqualTo("stream value");
+  }
+
+  @Test
+  void GIVEN_simulatedException_WHEN_invoke_THEN_expectRouteInvokerRuntimeException()
+      throws Exception {
+    // arrange
+    doThrow(Exception.class).when(processor).process(any());
+
+    // act & assert
+    assertThrows(RouteInvokerRuntimeException.class, () -> subject.invoke(inputExchange));
   }
 
   @Test

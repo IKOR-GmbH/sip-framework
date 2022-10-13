@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.RouteInvokerRuntimeException;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.UnsupportedJmsHeaderException;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExtendedCamelContext;
@@ -100,5 +101,15 @@ class JmsRouteInvokerTest {
 
     // act & assert
     assertThrows(UnsupportedJmsHeaderException.class, () -> subject.invoke(inputExchange));
+  }
+
+  @Test
+  void GIVEN_simulatedException_WHEN_invoke_THEN_expectRouteInvokerRuntimeException()
+      throws Exception {
+    // arrange
+    doThrow(Exception.class).when(processor).process(any());
+
+    // act & assert
+    assertThrows(RouteInvokerRuntimeException.class, () -> subject.invoke(inputExchange));
   }
 }
