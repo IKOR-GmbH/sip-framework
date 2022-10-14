@@ -23,9 +23,29 @@ class EndpointsIntegrationTests {
     SimpleOutConnector outConnector = new SimpleOutConnector().outEndpointId("cool-id");
 
     // act
-    subject.from(SimpleInConnector.withUri("direct:hey")).to(outConnector);
+    subject.from(SimpleInConnector.withUri("direct:hey-test")).to(outConnector);
     // assert
 
+    Endpoint registeredEndpoint = CentralEndpointsRegister.getEndpoint("cool-id");
+    Endpoint endpointFromCamelContext = null;
+    try {
+      endpointFromCamelContext = CentralRouter.getCamelContext().getEndpoint(registeredEndpoint.getEndpointUri());
+    } catch (NoSuchEndpointException e) {
+      // just ignore
+    }
+    assertThat(endpointFromCamelContext).isNotNull();
+  }
+
+  @Test
+  void when_OutEndpointIsOnTheRoute_then_TestingOutEndpointHasProperId() throws Exception {
+    // arrange
+    SimpleOutConnector outConnector = new SimpleOutConnector().outEndpointId("cool-id");
+
+    // act
+    subject.from(SimpleInConnector.withUri("direct:hey-test")).to(outConnector);
+    // assert
+
+    CentralEndpointsRegister.setState("testing");
     Endpoint registeredEndpoint = CentralEndpointsRegister.getEndpoint("cool-id");
     Endpoint endpointFromCamelContext = null;
     try {

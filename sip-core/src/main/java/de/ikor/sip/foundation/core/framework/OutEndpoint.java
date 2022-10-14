@@ -1,20 +1,23 @@
 package de.ikor.sip.foundation.core.framework;
 
+import lombok.Getter;
 import org.apache.camel.*;
 import java.util.Map;
 import static java.lang.String.format;
 
 public class OutEndpoint implements Endpoint {
     private final Endpoint targetEndpoint;
+    @Getter private final String endpointId;
 
     public static OutEndpoint instance(String uri, String endpointId) {
-        return new OutEndpoint(uri, endpointId);
+        CentralEndpointsRegister.put(endpointId, new OutEndpoint(uri, endpointId));
+        return (OutEndpoint) CentralEndpointsRegister.getEndpoint(endpointId);
     }
-    private OutEndpoint(String uri, String endpointId) {
+
+    OutEndpoint(String uri, String endpointId) {
         this.targetEndpoint = CentralRouter.getCamelContext().getEndpoint(uri);
         this.setCamelContext(CentralRouter.getCamelContext());
-
-        CentralEndpointsRegister.put(endpointId, targetEndpoint);
+        this.endpointId = endpointId;
     }
     @Override
     public Producer createProducer() throws Exception {
