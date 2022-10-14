@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.proxies;
 
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
+import de.ikor.sip.foundation.core.util.CamelHelper;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -23,11 +24,12 @@ public class ProcessorProxy extends AsyncProcessorSupport {
 
   private final NamedNode nodeDefinition;
   private final Processor wrappedProcessor;
+  // Processor can already be wrapped by Camel so we unwrap it and store it here
   private final Processor originalProcessor;
   private final List<ProxyExtension> extensions;
   private Function<Exchange, Exchange> mockFunction;
-  @Getter private boolean endpointProcessor;
-  @Getter private Class<? extends Processor> type;
+  @Getter private final boolean endpointProcessor;
+  @Getter private final Class<? extends Processor> type;
 
   /**
    * Creates new instance of ProcessorProxy
@@ -37,17 +39,14 @@ public class ProcessorProxy extends AsyncProcessorSupport {
    * @param extensions List of {@link ProxyExtension}
    */
   public ProcessorProxy(
-      NamedNode nodeDefinition,
-      Processor wrappedProcessor,
-      Processor originalProcessor,
-      List<ProxyExtension> extensions) {
+      NamedNode nodeDefinition, Processor wrappedProcessor, List<ProxyExtension> extensions) {
     this.nodeDefinition = nodeDefinition;
     this.wrappedProcessor = wrappedProcessor;
-    this.originalProcessor = originalProcessor;
+    this.originalProcessor = CamelHelper.unwrapProcessor(wrappedProcessor);
+    this.type = this.originalProcessor != null ? this.originalProcessor.getClass() : null;
     this.extensions = new ArrayList<>(extensions);
     this.mockFunction = null;
     this.endpointProcessor = determineEndpointProcessor();
-    this.type = originalProcessor.getClass();
   }
 
   /** Resets the state of the proxy to default. */
@@ -107,6 +106,10 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     return true;
   }
 
+  public String getId() {
+    return this.nodeDefinition.getId();
+  }
+
   private boolean isTestMode(Exchange exchange) {
     return "true".equals(exchange.getIn().getHeader(TEST_MODE_HEADER, String.class));
   }
@@ -124,9 +127,5 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   private void mockProcessing(Exchange exchange) {
     logger.trace("Processor: {}, Executing mocking logic for the {} ", getId(), exchange);
     ExchangeHelper.copyResults(exchange, mockFunction.apply(exchange));
-  }
-
-  public String getId() {
-    return this.nodeDefinition.getId();
   }
 }
