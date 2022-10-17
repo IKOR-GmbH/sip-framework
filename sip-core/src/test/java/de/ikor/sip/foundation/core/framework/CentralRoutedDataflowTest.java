@@ -1,27 +1,19 @@
 package de.ikor.sip.foundation.core.framework;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import de.ikor.sip.foundation.core.apps.framework.CentralRouterTestingApplication;
 import de.ikor.sip.foundation.core.framework.stubs.*;
-import org.apache.camel.EndpointInject;
-import org.apache.camel.ExchangePattern;
-import org.apache.camel.ProducerTemplate;
-import org.apache.camel.RoutesBuilder;
+import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.DisableJmx;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static java.lang.String.format;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
-import static org.mockito.ArgumentMatchers.any;
 
 @CamelSpringBootTest
 @SpringBootTest(classes = {CentralRouterTestingApplication.class})
@@ -38,6 +30,9 @@ class CentralRoutedDataflowTest {
 
   @EndpointInject("mock:log:message")
   private MockEndpoint mock;
+
+  @EndpointInject("mock:log:message-test")
+  private MockEndpoint mockTest;
 
   @BeforeEach
   void setup() {
@@ -143,6 +138,25 @@ class CentralRoutedDataflowTest {
 
     assertThat(response).endsWith("voila").contains("body 1").contains("body 2");
     mock.assertIsSatisfied();
+  }
+
+  @Test
+  void given_TestingStateIsActive_when_TriggerTestingRoute_then_TestEndpointInvoked()
+      throws Exception {
+    SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-6");
+    SleepingOutConnector outConnector =
+        new SleepingOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
+
+    mockTest.expectedBodiesReceived("Hello dude!-[ep-1]");
+    mockTest.expectedMessageCount(1);
+
+    routerSubject.from(inConnector).to(outConnector).build();
+
+    CentralEndpointsRegister.setState("testing");
+    template.sendBody("direct:multicast-6-test", "Hello dude!");
+
+    mockTest.assertIsSatisfied();
+    CentralEndpointsRegister.setState("actual");
   }
 
   private RoutesBuilder routeBuilder() {
