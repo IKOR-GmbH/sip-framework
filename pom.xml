@@ -78,7 +78,7 @@
         <springdoc-openapi.version>1.6.2</springdoc-openapi.version>
         <lombok.version>1.18.22</lombok.version>
         <mapstruct.version>1.5.2.Final</mapstruct.version>
-        <commons-text.version>1.9</commons-text.version>
+        <commons-text.version>1.10.0</commons-text.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-exec.version>1.3</commons-exec.version>
         <equalsverifier.version>3.7.1</equalsverifier.version>
