@@ -7,5 +7,6 @@ public abstract class OutConnector {
   public String getName() {
     return this.getClass().getSimpleName();
   }
+
   public abstract void configure(RouteDefinition route);
 }

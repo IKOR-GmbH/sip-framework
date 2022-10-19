@@ -1,11 +1,11 @@
 package de.ikor.sip.foundation.core.framework;
 
+import static java.lang.String.format;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
-
-import static java.lang.String.format;
 
 public abstract class CentralRouter {
   @Getter @Setter private static CamelContext camelContext;
@@ -32,6 +32,15 @@ public abstract class CentralRouter {
     return definition;
   }
 
+  public static String generateRouteId(
+      String scenarioName, String connectorName, String routeSuffix) {
+    return format("%s-%s%s", scenarioName, connectorName, routeSuffix);
+  }
+
+  void buildOutgoingConnector() throws Exception {
+    this.definition.build();
+  }
+
   private void generateTestingConnectorRoute(InConnector connector) throws Exception {
     connector.configure();
     appendToSIPmcAndRouteId(connector, "-testing");
@@ -43,7 +52,7 @@ public abstract class CentralRouter {
     connector
         .getConnectorDefinition()
         .to("sipmc:" + this.getScenario() + routeSuffix)
-        .routeId(format("%s-%s%s", this.getScenario(), connector.getName(), routeSuffix));
+        .routeId(generateRouteId(this.getScenario(), connector.getName(), routeSuffix));
   }
 
   private void appendToSIPmcAndRouteId(InConnector connector) {

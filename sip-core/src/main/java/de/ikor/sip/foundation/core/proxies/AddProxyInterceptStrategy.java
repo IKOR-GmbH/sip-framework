@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.*;
-import org.apache.camel.model.ToDefinition;
 import org.apache.camel.spi.InterceptStrategy;
 import org.springframework.stereotype.Component;
 

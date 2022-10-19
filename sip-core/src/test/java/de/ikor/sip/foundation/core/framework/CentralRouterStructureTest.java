@@ -1,22 +1,21 @@
 package de.ikor.sip.foundation.core.framework;
 
+import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import de.ikor.sip.foundation.core.apps.framework.CentralRouterTestingApplication;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouter;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import org.apache.camel.Route;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import static java.lang.String.format;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {CentralRouterTestingApplication.class})
 class CentralRouterStructureTest {
@@ -64,9 +63,7 @@ class CentralRouterStructureTest {
     // act
     routerSubject.from(firstInConnector, secondInConnector);
     // assert
-    assertThat(getRoutesFromContext())
-        .filteredOn(matchRoutesBasedOnUri("direct.*sip"))
-        .hasSize(1);
+    assertThat(getRoutesFromContext()).filteredOn(matchRoutesBasedOnUri("direct.*sip")).hasSize(1);
 
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri("direct.*sipie"))
@@ -107,9 +104,13 @@ class CentralRouterStructureTest {
     String expectedRouteId = format("%s-%s", routerSubject.getScenario(), inConnector.getName());
     Route route = getRouteFromContextById(expectedRouteId);
 
-    assertThat(route).as("Expected route with Id: %s %s Detected: %s", expectedRouteId, System.lineSeparator(),
-                    getRoutesFromContext().stream().map(Route::getId).collect(Collectors.joining(", ")))
-            .isNotNull();
+    assertThat(route)
+        .as(
+            "Expected route with Id: %s %s Detected: %s",
+            expectedRouteId,
+            System.lineSeparator(),
+            getRoutesFromContext().stream().map(Route::getId).collect(Collectors.joining(", ")))
+        .isNotNull();
   }
 
   private Route getRouteFromContextById(String routeId) {

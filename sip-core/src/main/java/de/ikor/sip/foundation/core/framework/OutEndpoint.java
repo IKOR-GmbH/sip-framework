@@ -1,106 +1,110 @@
 package de.ikor.sip.foundation.core.framework;
 
-import lombok.Getter;
-import org.apache.camel.*;
-import java.util.Map;
 import static java.lang.String.format;
 
+import java.util.Map;
+import lombok.Getter;
+import org.apache.camel.*;
+
 public class OutEndpoint implements Endpoint {
-    private final Endpoint targetEndpoint;
-    @Getter private final String endpointId;
+  private final Endpoint targetEndpoint;
+  @Getter private final String endpointId;
 
-    public static OutEndpoint instance(String uri, String endpointId) {
-        CentralEndpointsRegister.put(endpointId, new OutEndpoint(uri, endpointId));
-        return (OutEndpoint) CentralEndpointsRegister.getEndpoint(endpointId);
-    }
+  public static OutEndpoint instance(String uri, String endpointId) {
+    CentralEndpointsRegister.put(endpointId, new OutEndpoint(uri, endpointId));
+    return (OutEndpoint) CentralEndpointsRegister.getEndpoint(endpointId);
+  }
 
-    OutEndpoint(String uri, String endpointId) {
-        this.targetEndpoint = CentralRouter.getCamelContext().getEndpoint(uri);
-        this.setCamelContext(CentralRouter.getCamelContext());
-        this.endpointId = endpointId;
-    }
-    @Override
-    public Producer createProducer() throws Exception {
-        return targetEndpoint.createProducer();
-    }
+  OutEndpoint(String uri, String endpointId) {
+    this.targetEndpoint = CentralRouter.getCamelContext().getEndpoint(uri);
+    this.setCamelContext(CentralRouter.getCamelContext());
+    this.endpointId = endpointId;
+  }
 
-    @Override
-    public AsyncProducer createAsyncProducer() throws Exception {
-        return targetEndpoint.createAsyncProducer();
-    }
+  @Override
+  public Producer createProducer() throws Exception {
+    return targetEndpoint.createProducer();
+  }
 
-    @Override
-    public Consumer createConsumer(Processor processor) throws Exception {
-        throw new IllegalAccessException(format("%s should not utilize consumer", this.getClass().getName()));
-    }
+  @Override
+  public AsyncProducer createAsyncProducer() throws Exception {
+    return targetEndpoint.createAsyncProducer();
+  }
 
-    @Override
-    public PollingConsumer createPollingConsumer() throws Exception {
-        throw new IllegalAccessException(format("%s should not utilize consumer", this.getClass().getName()));
-    }
+  @Override
+  public Consumer createConsumer(Processor processor) throws Exception {
+    throw new IllegalAccessException(
+        format("%s should not utilize consumer", this.getClass().getName()));
+  }
 
-    @Override
-    public void configureProperties(Map<String, Object> options) {
-        targetEndpoint.configureProperties(options);
-    }
+  @Override
+  public PollingConsumer createPollingConsumer() throws Exception {
+    throw new IllegalAccessException(
+        format("%s should not utilize consumer", this.getClass().getName()));
+  }
 
-    @Override
-    public void setCamelContext(CamelContext context) {
-        targetEndpoint.setCamelContext(context);
-    }
+  @Override
+  public void configureProperties(Map<String, Object> options) {
+    targetEndpoint.configureProperties(options);
+  }
 
-    @Override
-    public boolean isLenientProperties() {
-        return false;
-    }
+  @Override
+  public void setCamelContext(CamelContext context) {
+    targetEndpoint.setCamelContext(context);
+  }
 
-    @Override
-    public String getEndpointUri() {
-        return targetEndpoint.getEndpointUri();
-    }
+  @Override
+  public boolean isLenientProperties() {
+    return false;
+  }
 
-    @Override
-    public ExchangePattern getExchangePattern() {
-        return targetEndpoint.getExchangePattern();
-    }
+  @Override
+  public String getEndpointUri() {
+    return targetEndpoint.getEndpointUri();
+  }
 
-    @Override
-    public String getEndpointKey() {
-        return targetEndpoint.getEndpointKey();
-    }
+  @Override
+  public ExchangePattern getExchangePattern() {
+    return targetEndpoint.getExchangePattern();
+  }
 
-    @Override
-    public Exchange createExchange() {
-        return null;
-    }
+  @Override
+  public String getEndpointKey() {
+    return targetEndpoint.getEndpointKey();
+  }
 
-    @Override
-    public Exchange createExchange(ExchangePattern pattern) {
-        return targetEndpoint.createExchange(pattern);
-    }
+  @Override
+  public Exchange createExchange() {
+    return null;
+  }
 
-    @Override
-    public void configureExchange(Exchange exchange) {
-        targetEndpoint.configureExchange(exchange);
-    }
+  @Override
+  public Exchange createExchange(ExchangePattern pattern) {
+    return targetEndpoint.createExchange(pattern);
+  }
 
-    @Override
-    public CamelContext getCamelContext() {
-        return targetEndpoint.getCamelContext();
-    }
+  @Override
+  public void configureExchange(Exchange exchange) {
+    targetEndpoint.configureExchange(exchange);
+  }
 
-    @Override
-    public boolean isSingleton() {
-        return targetEndpoint.isSingleton();
-    }
+  @Override
+  public CamelContext getCamelContext() {
+    return targetEndpoint.getCamelContext();
+  }
 
-    @Override
-    public void start() {
-        targetEndpoint.start();
-    }
+  @Override
+  public boolean isSingleton() {
+    return targetEndpoint.isSingleton();
+  }
 
-    @Override
-    public void stop() {
-        targetEndpoint.stop();
-    }
+  @Override
+  public void start() {
+    targetEndpoint.start();
+  }
+
+  @Override
+  public void stop() {
+    targetEndpoint.stop();
+  }
 }

@@ -1,14 +1,14 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
+import static java.lang.String.format;
+
 import de.ikor.sip.foundation.core.framework.OutEndpoint;
 import org.apache.camel.model.RouteDefinition;
-
-import static java.lang.String.format;
 
 public class SimpleOutConnector extends TestingOutConnector {
 
   public SimpleOutConnector() {
-  // Constructor for testing purposes only
+    // Constructor for testing purposes only
     super("just-a-testing-connector" + System.nanoTime());
   }
 

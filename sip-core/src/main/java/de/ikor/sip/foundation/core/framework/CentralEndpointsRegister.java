@@ -1,10 +1,9 @@
 package de.ikor.sip.foundation.core.framework;
 
-import lombok.Setter;
-import org.apache.camel.Endpoint;
-
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Setter;
+import org.apache.camel.Endpoint;
 
 public class CentralEndpointsRegister {
   private static Map<String, Endpoint> registry = new HashMap<>();
@@ -46,11 +45,12 @@ public class CentralEndpointsRegister {
   }
 
   private static OutEndpoint toTestEndpoint(OutEndpoint outEndpoint) {
-    return new OutEndpoint(modifyUriForTestRoute(outEndpoint.getEndpointUri()), outEndpoint.getEndpointId());
+    return new OutEndpoint(
+        modifyUriForTestRoute(outEndpoint.getEndpointUri()), outEndpoint.getEndpointId());
   }
 
   private static String modifyUriForTestRoute(String uri) {
-    if(uri.startsWith("rest")){
+    if (uri.startsWith("rest")) {
       return uri.split(":")[0] + ":" + uri.split(":")[1] + ":" + uri.split(":")[2] + "-test";
     }
     return uri.split(":")[0] + ":" + uri.split(":")[1] + "-test";
