@@ -87,16 +87,16 @@ public class UseCaseTopologyDefinition {
   }
 
   private void handleTestIDAppending(ProcessorDefinition<?> processorDefinition) {
-    String id = processorDefinition.getId();
-    if (id != null) {
-      appendTestIdToProcessor(processorDefinition, id);
+    if (processorDefinition.getId() != null) {
+      appendTestIdToProcessor(processorDefinition);
     }
     if (CollectionUtils.isNotEmpty(processorDefinition.getOutputs())) {
       processorDefinition.getOutputs().forEach(this::handleTestIDAppending);
     }
   }
 
-  private void appendTestIdToProcessor(ProcessorDefinition<?> processorDefinition, String id) {
+  private void appendTestIdToProcessor(ProcessorDefinition<?> processorDefinition) {
+    String id = processorDefinition.getId();
     if (processorDefinition instanceof ChoiceDefinition) {
       // handler for setId of ChoiceDefinition due to its custom implementation
       handleChoiceDefinitionID((ChoiceDefinition) processorDefinition, id);
