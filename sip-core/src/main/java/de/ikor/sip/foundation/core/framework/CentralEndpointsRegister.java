@@ -4,8 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.Setter;
 import org.apache.camel.Endpoint;
+import org.apache.commons.lang3.StringUtils;
 
 public class CentralEndpointsRegister {
+
+  private static final String COLON = ":";
+  private static final String QUESTION = "?";
+
   private static Map<String, Endpoint> registry = new HashMap<>();
   private static Map<String, InEndpoint> inEndpointRegistry = new HashMap<>();
   private static Map<String, InEndpoint> testingInEndpointRegistry = new HashMap<>();
@@ -50,10 +55,29 @@ public class CentralEndpointsRegister {
   }
 
   private static String modifyUriForTestRoute(String uri) {
-    if (uri.startsWith("rest")) {
-      return uri.split(":")[0] + ":" + uri.split(":")[1] + ":" + uri.split(":")[2] + "-test";
+    StringBuilder sb = new StringBuilder();
+    String uriEndpoint = uri;
+    String uriOptions = "";
+    String componentName = uriEndpoint.split(COLON)[0];
+
+    if (uri.contains(QUESTION)) {
+      uriEndpoint = uri.split("\\?")[0];
+      uriOptions = QUESTION + uri.split("\\?")[1];
     }
-    return uri.split(":")[0] + ":" + uri.split(":")[1] + "-test";
+
+    sb.append(componentName);
+
+    addMoreUriEndpointParts(sb, uriEndpoint);
+
+    sb.append("-testkit").append(uriOptions);
+    return sb.toString();
+  }
+
+  private static void addMoreUriEndpointParts(StringBuilder sb, String uriEndpoint) {
+    int numberOfColons = StringUtils.countMatches(uriEndpoint, COLON);
+    for (int i = 1; i <= numberOfColons; i++) {
+      sb.append(COLON).append(uriEndpoint.split(COLON)[i]);
+    }
   }
 
   public static String getInEndpointUri(String id) {
