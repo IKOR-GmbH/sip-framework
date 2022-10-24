@@ -27,7 +27,7 @@ public class RouteStarter extends EventNotifierSupport {
       router.configure();
       router.buildOutgoingConnector();
     } catch (Exception e) {
-      throw new RuntimeException(e); // TODO implement or reuse existing exception
+      e.printStackTrace();
     }
   }
 
