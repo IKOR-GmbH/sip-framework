@@ -21,6 +21,9 @@ public abstract class CentralRouter {
       connector.configure();
       appendToSIPmcAndRouteId(connector);
       connector.handleResponse(connector.getConnectorDefinition());
+      if (connector.getRestBuilder() != null) {
+        camelContext.addRoutes(connector.getRestBuilder());
+      }
       camelContext.addRoutes(connector.getRouteBuilder());
 
       CentralEndpointsRegister.setState("testing");
@@ -45,6 +48,9 @@ public abstract class CentralRouter {
     connector.configure();
     appendToSIPmcAndRouteId(connector, "-testing");
     connector.handleResponse(connector.getConnectorDefinition());
+    if (connector.getRestBuilder() != null) {
+      camelContext.addRoutes(connector.getRestBuilder());
+    }
     camelContext.addRoutes(connector.getRouteBuilder());
   }
 

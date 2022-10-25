@@ -10,10 +10,13 @@ public class CentralEndpointsRegister {
 
   private static final String COLON = ":";
   private static final String QUESTION = "?";
+  private static final String TESTKIT_SUFFIX = "-testkit";
 
   private static Map<String, Endpoint> registry = new HashMap<>();
   private static Map<String, InEndpoint> inEndpointRegistry = new HashMap<>();
+  private static Map<String, RestInEndpoint> restInEndpointRegistry = new HashMap<>();
   private static Map<String, InEndpoint> testingInEndpointRegistry = new HashMap<>();
+  private static Map<String, RestInEndpoint> testingRestInEndpointRegistry = new HashMap<>();
   private static Map<String, Endpoint> testingOutEndpointRegistry = new HashMap<>();
   @Setter private static String state = "actual";
 
@@ -33,6 +36,13 @@ public class CentralEndpointsRegister {
     return testingInEndpointRegistry.get(endpointId);
   }
 
+  public static RestInEndpoint getRestInEndpoint(String endpointId) {
+    if ("actual".equals(state)) {
+      return restInEndpointRegistry.get(endpointId);
+    }
+    return testingRestInEndpointRegistry.get(endpointId);
+  }
+
   public static void put(String endpointId, Endpoint endpoint) {
     registry.put(endpointId, endpoint);
     if (endpoint instanceof OutEndpoint) {
@@ -45,6 +55,11 @@ public class CentralEndpointsRegister {
     testingInEndpointRegistry.put(id, toTestEndpoint(inEndpoint));
   }
 
+  public static void put(String id, RestInEndpoint inEndpoint) {
+    restInEndpointRegistry.put(id, inEndpoint);
+    testingRestInEndpointRegistry.put(id, toTestEndpoint(inEndpoint));
+  }
+
   private static InEndpoint toTestEndpoint(InEndpoint inEndpoint) {
     return new InEndpoint(modifyUriForTestRoute(inEndpoint.getUri()), inEndpoint.getId());
   }
@@ -52,6 +67,13 @@ public class CentralEndpointsRegister {
   private static OutEndpoint toTestEndpoint(OutEndpoint outEndpoint) {
     return new OutEndpoint(
         modifyUriForTestRoute(outEndpoint.getEndpointUri()), outEndpoint.getEndpointId());
+  }
+
+  private static RestInEndpoint toTestEndpoint(RestInEndpoint restInEndpoint) {
+    return new RestInEndpoint(
+        restInEndpoint.getUri() + TESTKIT_SUFFIX,
+        restInEndpoint.getId(),
+        restInEndpoint.getRouteBuilder());
   }
 
   private static String modifyUriForTestRoute(String uri) {
@@ -69,7 +91,7 @@ public class CentralEndpointsRegister {
 
     addMoreUriEndpointParts(sb, uriEndpoint);
 
-    sb.append("-testkit").append(uriOptions);
+    sb.append(TESTKIT_SUFFIX).append(uriOptions);
     return sb.toString();
   }
 
