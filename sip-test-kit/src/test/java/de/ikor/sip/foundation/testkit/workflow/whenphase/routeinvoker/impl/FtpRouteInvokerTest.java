@@ -36,6 +36,7 @@ class FtpRouteInvokerTest {
   private RemoteFileEndpoint<FTPFile> ftpEndpoint;
   private RemoteFileConfiguration endpointConfiguration;
 
+  @SuppressWarnings("unchecked")
   @BeforeEach
   void setup() {
     ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
