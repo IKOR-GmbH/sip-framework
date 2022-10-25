@@ -41,7 +41,11 @@ public abstract class CentralRouter {
   }
 
   void buildOutgoingConnector() throws Exception {
-    this.definition.build();
+    if (definition != null) {
+      this.definition.build();
+    } else {
+     throw new EmptyCentralRouterException(this.getScenario());
+    }
   }
 
   private void generateTestingConnectorRoute(InConnector connector) throws Exception {
