@@ -16,6 +16,11 @@ public class TestingCentralRouter extends CentralRouter {
     isConfigured = true;
   }
 
+  @Override
+  public void configureOnCentralRouterLevel() {
+
+  }
+
   public void setupTestingState() {
     // only for testing purpose, to simulate multiple use
     ++useCaseCounter;

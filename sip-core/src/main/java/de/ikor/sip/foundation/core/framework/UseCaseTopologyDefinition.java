@@ -11,6 +11,8 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.*;
 import org.apache.commons.collections4.CollectionUtils;
 
+import static de.ikor.sip.foundation.core.framework.CentralRouter.anonymousDummyRouteBuilder;
+
 @RequiredArgsConstructor
 public class UseCaseTopologyDefinition {
   private static final String TESTING_SUFFIX = "-testing";
@@ -20,16 +22,18 @@ public class UseCaseTopologyDefinition {
 
   private MulticastDefinition multicastDefinition = null;
   private MulticastDefinition testingDefinition = null;
-  @Getter private final RouteBuilder routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
-  private final RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
+  @Getter private RouteBuilder routeBuilder;
+//  private final RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
 
   public UseCaseTopologyDefinition to(OutConnector... outConnectors) throws Exception {
+    routeBuilder = getRouteBuilderInstance();
     multicastDefinition = initMulticastRoute(routeBuilder, multicastDefinition, "");
     multicastDefinition =
         appendParallelProcessingIfMultipleConnectors(multicastDefinition, outConnectors);
     Stream.of(outConnectors)
         .forEach(
             outConnector -> {
+              outConnector.configureOnConnectorLevel();
               multicastDefinition.to(URI_PREFIX + outConnector.getName());
               this.from(outConnector, URI_PREFIX + outConnector.getName(), "");
             });
@@ -38,13 +42,15 @@ public class UseCaseTopologyDefinition {
   }
 
   private void generateTestRoutes(OutConnector... outConnectors) {
-    testingDefinition = initMulticastRoute(testingRouteBuilder, testingDefinition, TESTING_SUFFIX);
+    createNewRouteBuilder();
+    testingDefinition = initMulticastRoute(routeBuilder, testingDefinition, TESTING_SUFFIX);      // bio je testingRouteBuilder
     testingDefinition =
         appendParallelProcessingIfMultipleConnectors(testingDefinition, outConnectors);
     CentralEndpointsRegister.setState("testing");
     Stream.of(outConnectors)
         .forEach(
             outConnector -> {
+              outConnector.configureOnConnectorLevel();
               testingDefinition.to(URI_PREFIX + outConnector.getName() + TESTING_SUFFIX);
               this.from(outConnector, URI_PREFIX + outConnector.getName(), TESTING_SUFFIX);
             });
@@ -59,9 +65,13 @@ public class UseCaseTopologyDefinition {
     return multicastDefinition;
   }
 
-  public void build() throws Exception {
-    camelContext.addRoutes(this.routeBuilder);
-    camelContext.addRoutes(this.testingRouteBuilder);
+  public void build() throws Exception {      // verovatno se moze obrisati uz onaj definition.build
+//    camelContext.addRoutes(this.routeBuilder);
+//    camelContext.addRoutes(this.testingRouteBuilder);
+  }
+
+  private void createNewRouteBuilder() {
+    routeBuilder = anonymousDummyRouteBuilder();
   }
 
   private MulticastDefinition initMulticastRoute(
@@ -73,7 +83,7 @@ public class UseCaseTopologyDefinition {
   @SneakyThrows
   private UseCaseTopologyDefinition from(
       OutConnector outConnector, String uri, String routeSuffix) {
-    RouteBuilder rb = CentralRouter.anonymousDummyRouteBuilder();
+    RouteBuilder rb = routeBuilder;                 // routeSuffix.equals(TESTING_SUFFIX) ? testingRouteBuilder : routeBuilder;
     String routeId = CentralRouter.generateRouteId(useCase, outConnector.getName(), routeSuffix);
     RouteDefinition routeDefinition = rb.from(uri + routeSuffix).routeId(routeId);
     outConnector.configure(routeDefinition);
@@ -117,4 +127,12 @@ public class UseCaseTopologyDefinition {
     choiceDefinition.setWhenClauses(whenDefinitions);
     choiceDefinition.setOtherwise(otherwiseDefinition);
   }
+
+  private RouteBuilder getRouteBuilderInstance() {
+    if (routeBuilder == null) {
+      return anonymousDummyRouteBuilder();
+    }
+    return routeBuilder;
+  }
+
 }

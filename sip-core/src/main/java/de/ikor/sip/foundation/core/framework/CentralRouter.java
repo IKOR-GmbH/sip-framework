@@ -16,12 +16,16 @@ public abstract class CentralRouter {
 
   public abstract void configure() throws Exception;
 
+  public abstract void configureOnCentralRouterLevel();
+
   public UseCaseTopologyDefinition from(InConnector... inConnectors) throws Exception {
     for (InConnector connector : inConnectors) {
+      connector.configureOnConnectorLevel();
       connector.configure();
       appendToSIPmcAndRouteId(connector);
       connector.handleResponse(connector.getConnectorDefinition());
       camelContext.addRoutes(connector.getRouteBuilder());
+//      camelContext.addRoutesConfigurations();
 
       CentralEndpointsRegister.setState("testing");
       generateTestingConnectorRoute(connector);
@@ -46,6 +50,8 @@ public abstract class CentralRouter {
   }
 
   private void generateTestingConnectorRoute(InConnector connector) throws Exception {
+    connector.createNewRouteBuilder();
+    connector.configureOnConnectorLevel();
     connector.configure();
     appendToSIPmcAndRouteId(connector, "-testing");
     connector.handleResponse(connector.getConnectorDefinition());

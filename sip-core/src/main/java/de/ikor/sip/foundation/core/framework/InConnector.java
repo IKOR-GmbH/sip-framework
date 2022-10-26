@@ -5,6 +5,7 @@ import static de.ikor.sip.foundation.core.framework.CentralRouter.anonymousDummy
 
 import lombok.Getter;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
 
 public abstract class InConnector extends Connector {
@@ -12,9 +13,32 @@ public abstract class InConnector extends Connector {
 
   public abstract void configure();
 
+  public abstract void configureOnConnectorLevel();
+
   protected RouteDefinition from(InEndpoint inEndpoint) {
-    routeBuilder = anonymousDummyRouteBuilder();
+    routeBuilder = getRouteBuilderInstance();
     return routeBuilder.from(getInEndpointUri(inEndpoint.getId()));
+  }
+
+  protected OnExceptionDefinition onException(Class<? extends Throwable>... exceptions) {
+    routeBuilder = getRouteBuilderInstance();
+    OnExceptionDefinition last = null;
+
+    for (Class<? extends Throwable> ex : exceptions) {
+      last = (last == null ? this.routeBuilder.onException(ex) : last.onException(ex));
+    }
+    return last;
+  }
+
+  protected void createNewRouteBuilder() {
+    routeBuilder = anonymousDummyRouteBuilder();
+  }
+
+  private RouteBuilder getRouteBuilderInstance() {
+    if (routeBuilder == null) {
+      return anonymousDummyRouteBuilder();
+    }
+    return routeBuilder;
   }
 
   public String getEndpointUri() {

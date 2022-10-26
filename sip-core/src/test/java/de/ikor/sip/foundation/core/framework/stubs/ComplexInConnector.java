@@ -24,7 +24,10 @@ public class ComplexInConnector extends InConnector {
             });
   }
 
-  @Override
+    @Override
+    public void configureOnConnectorLevel() {}
+
+    @Override
   public void handleResponse(RouteDefinition route) {
     route.transform(body().append(" voila"));
   }

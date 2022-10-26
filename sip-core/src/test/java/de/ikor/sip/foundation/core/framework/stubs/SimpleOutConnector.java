@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.core.framework.stubs;
 import static java.lang.String.format;
 
 import de.ikor.sip.foundation.core.framework.OutEndpoint;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 
 public class SimpleOutConnector extends TestingOutConnector {
@@ -24,5 +25,10 @@ public class SimpleOutConnector extends TestingOutConnector {
         .multicast()
         .to(OutEndpoint.instance(uri, endpointId))
         .id("log-message-endpoint");
+  }
+
+  @Override
+  public void configureOnConnectorLevel() {
+
   }
 }

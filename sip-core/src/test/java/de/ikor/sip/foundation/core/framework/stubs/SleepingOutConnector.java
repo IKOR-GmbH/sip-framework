@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.core.framework.stubs;
 import static java.lang.String.format;
 
 import de.ikor.sip.foundation.core.framework.OutEndpoint;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 
 public class SleepingOutConnector extends TestingOutConnector {
@@ -23,5 +24,10 @@ public class SleepingOutConnector extends TestingOutConnector {
         .setBody(exchange -> exchange.getIn().getBody() + format("-[%s]", endpointId))
         .to(OutEndpoint.instance(uri, endpointId))
         .id("log-message-endpoint");
+  }
+
+  @Override
+  public void configureOnConnectorLevel() {
+
   }
 }
