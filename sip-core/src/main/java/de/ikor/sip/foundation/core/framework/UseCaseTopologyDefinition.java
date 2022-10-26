@@ -18,45 +18,49 @@ public class UseCaseTopologyDefinition {
   private final CamelContext camelContext;
   private final String useCase;
 
-  private MulticastDefinition multicastDefinition = null;
-  private MulticastDefinition testingDefinition = null;
+  private ProcessorDefinition routeDefinition = null;
+  private ProcessorDefinition testRouteDefinition = null;
   @Getter private final RouteBuilder routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
   private final RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
 
   public UseCaseTopologyDefinition to(OutConnector... outConnectors) throws Exception {
-    multicastDefinition = initMulticastRoute(routeBuilder, multicastDefinition, "");
-    multicastDefinition =
-        appendParallelProcessingIfMultipleConnectors(multicastDefinition, outConnectors);
-    Stream.of(outConnectors)
-        .forEach(
-            outConnector -> {
-              multicastDefinition.to(URI_PREFIX + outConnector.getName());
-              this.from(outConnector, URI_PREFIX + outConnector.getName(), "");
-            });
+    routeDefinition = initBaseRoute(routeBuilder, routeDefinition, "");
+    if (outConnectors.length > 1) {
+      routeDefinition = appendMulticastDefinition(outConnectors, routeDefinition, "");
+    } else {
+      OutConnector outConnector = outConnectors[0];
+      routeDefinition.to(URI_PREFIX + outConnector.getName());
+      this.from(outConnector, URI_PREFIX + outConnector.getName(), "");
+    }
     generateTestRoutes(outConnectors);
     return this;
   }
 
   private void generateTestRoutes(OutConnector... outConnectors) {
-    testingDefinition = initMulticastRoute(testingRouteBuilder, testingDefinition, TESTING_SUFFIX);
-    testingDefinition =
-        appendParallelProcessingIfMultipleConnectors(testingDefinition, outConnectors);
+    testRouteDefinition = initBaseRoute(testingRouteBuilder, testRouteDefinition, TESTING_SUFFIX);
     CentralEndpointsRegister.setState("testing");
-    Stream.of(outConnectors)
-        .forEach(
-            outConnector -> {
-              testingDefinition.to(URI_PREFIX + outConnector.getName() + TESTING_SUFFIX);
-              this.from(outConnector, URI_PREFIX + outConnector.getName(), TESTING_SUFFIX);
-            });
+    if (outConnectors.length > 1) {
+      testRouteDefinition =
+          appendMulticastDefinition(outConnectors, testRouteDefinition, TESTING_SUFFIX);
+    } else {
+      OutConnector outConnector = outConnectors[0];
+      testRouteDefinition =
+          testRouteDefinition.to(URI_PREFIX + outConnector.getName() + TESTING_SUFFIX);
+      this.from(outConnector, URI_PREFIX + outConnector.getName(), TESTING_SUFFIX);
+    }
     CentralEndpointsRegister.setState("actual");
   }
 
-  private MulticastDefinition appendParallelProcessingIfMultipleConnectors(
-      MulticastDefinition multicastDefinition, OutConnector[] outConnectors) {
-    if (outConnectors.length > 1) {
-      return multicastDefinition.parallelProcessing();
-    }
-    return multicastDefinition;
+  private ProcessorDefinition appendMulticastDefinition(
+      OutConnector[] outConnectors, ProcessorDefinition processorDefinition, String suffix) {
+    MulticastDefinition multicastDefinition = processorDefinition.multicast().parallelProcessing();
+    Stream.of(outConnectors)
+        .forEach(
+            outConnector -> {
+              multicastDefinition.to(URI_PREFIX + outConnector.getName() + suffix);
+              this.from(outConnector, URI_PREFIX + outConnector.getName(), suffix);
+            });
+    return multicastDefinition.end();
   }
 
   public void build() throws Exception {
@@ -64,10 +68,12 @@ public class UseCaseTopologyDefinition {
     camelContext.addRoutes(this.testingRouteBuilder);
   }
 
-  private MulticastDefinition initMulticastRoute(
-      RouteBuilder routeBuilder, MulticastDefinition multicastDefinition, String suffix) {
+  private ProcessorDefinition initBaseRoute(
+      RouteBuilder routeBuilder, ProcessorDefinition processorDefinition, String suffix) {
     String uri = "sipmc:" + useCase + suffix;
-    return multicastDefinition == null ? routeBuilder.from(uri).multicast() : multicastDefinition;
+    return processorDefinition == null
+        ? routeBuilder.from(uri).routeId("sipmc-bridge-" + useCase + suffix)
+        : processorDefinition;
   }
 
   @SneakyThrows
