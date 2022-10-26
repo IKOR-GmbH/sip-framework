@@ -3,7 +3,6 @@ package de.ikor.sip.foundation.core.framework;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.stereotype.Component;

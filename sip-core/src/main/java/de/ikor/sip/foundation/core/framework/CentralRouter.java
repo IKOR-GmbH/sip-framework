@@ -44,7 +44,7 @@ public abstract class CentralRouter {
     if (definition != null) {
       this.definition.build();
     } else {
-     throw new EmptyCentralRouterException(this.getScenario());
+      throw new EmptyCentralRouterException(this.getScenario());
     }
   }
 
