@@ -18,6 +18,9 @@ sip.core:
       showExchangeId: true
     traceType: "*"
   actuator:
+    endpoints: adapter-routes,tracing
+    adapter-routes:
+      enabled: true
     extensions:
       info:
         enabled: true
@@ -41,7 +44,7 @@ management:
   info:
     camel:
       enabled: false
-  endpoints.web.exposure.include: health,info,metrics,loggers,prometheus,adapter-routes
+  endpoints.web.exposure.include: health,info,metrics,loggers,prometheus
   endpoint:
     health:
       show-details: always
