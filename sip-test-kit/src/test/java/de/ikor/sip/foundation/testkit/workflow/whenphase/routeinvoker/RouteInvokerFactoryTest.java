@@ -7,12 +7,12 @@ import static org.mockito.Mockito.*;
 import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
 import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.CxfRouteInvoker;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.FileRouteInvoker;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.RestRouteInvoker;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.*;
 import java.util.Set;
 import org.apache.camel.*;
 import org.apache.camel.component.file.FileEndpoint;
+import org.apache.camel.component.file.remote.RemoteFileEndpoint;
+import org.apache.camel.component.jms.JmsEndpoint;
 import org.apache.camel.component.rest.RestEndpoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,8 +32,15 @@ class RouteInvokerFactoryTest {
     RestRouteInvoker restRouteInvoker =
         new RestRouteInvoker(mock(ProducerTemplate.class), camelContext);
     FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);
+    FtpRouteInvoker ftpRouteInvoker = new FtpRouteInvoker(camelContext);
+    JmsRouteInvoker jmsRouteInvoker = new JmsRouteInvoker(camelContext);
     Set<RouteInvoker> invokers =
-        Set.of(restRouteInvoker, mock(CxfRouteInvoker.class), fileRouteInvoker);
+        Set.of(
+            restRouteInvoker,
+            mock(CxfRouteInvoker.class),
+            fileRouteInvoker,
+            ftpRouteInvoker,
+            jmsRouteInvoker);
     subject = new RouteInvokerFactory(invokers, camelContext);
     exchange = TestKitHelper.parseExchangeProperties(null, camelContext);
     exchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
@@ -42,7 +49,7 @@ class RouteInvokerFactoryTest {
   }
 
   @Test
-  void GIVEN_restEndpoint_WHEN_resolveAndInvoke_THEN_RestRouteInvoker()
+  void GIVEN_restEndpoint_WHEN_resolveAndInvoke_THEN_getRestRouteInvoker()
       throws NoRouteInvokerException {
     // arrange
     endpoint = mock(RestEndpoint.class);
@@ -56,7 +63,7 @@ class RouteInvokerFactoryTest {
   }
 
   @Test
-  void GIVEN_fileEndpoint_WHEN_resolveAndInvoke_THEN_FileRouteInvoker()
+  void GIVEN_fileEndpoint_WHEN_resolveAndInvoke_THEN_getFileRouteInvoker()
       throws NoRouteInvokerException {
     // arrange
     endpoint = mock(FileEndpoint.class);
@@ -67,6 +74,34 @@ class RouteInvokerFactoryTest {
 
     // assert
     assertThat(actual).isInstanceOf(FileRouteInvoker.class);
+  }
+
+  @Test
+  void GIVEN_ftpEndpoint_WHEN_resolveAndInvoke_THEN_getFtpRouteInvoker()
+      throws NoRouteInvokerException {
+    // arrange
+    endpoint = mock(RemoteFileEndpoint.class);
+    when(route.getEndpoint()).thenReturn(endpoint);
+
+    // act
+    RouteInvoker actual = subject.getInstance(exchange);
+
+    // assert
+    assertThat(actual).isInstanceOf(FtpRouteInvoker.class);
+  }
+
+  @Test
+  void GIVEN_jmsEndpoint_WHEN_resolveAndInvoke_THEN_getJmsRouteInvoker()
+      throws NoRouteInvokerException {
+    // arrange
+    endpoint = mock(JmsEndpoint.class);
+    when(route.getEndpoint()).thenReturn(endpoint);
+
+    // act
+    RouteInvoker actual = subject.getInstance(exchange);
+
+    // assert
+    assertThat(actual).isInstanceOf(JmsRouteInvoker.class);
   }
 
   @Test
