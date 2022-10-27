@@ -11,8 +11,6 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.*;
 import org.apache.commons.collections4.CollectionUtils;
 
-import static de.ikor.sip.foundation.core.framework.CentralRouter.anonymousDummyRouteBuilder;
-
 @RequiredArgsConstructor
 public class UseCaseTopologyDefinition {
   private static final String TESTING_SUFFIX = "-testing";
@@ -20,70 +18,83 @@ public class UseCaseTopologyDefinition {
   private final CamelContext camelContext;
   private final String useCase;
 
-  private MulticastDefinition multicastDefinition = null;
-  private MulticastDefinition testingDefinition = null;
-  @Getter private RouteBuilder routeBuilder;
-//  private final RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
+  private ProcessorDefinition routeDefinition = null;
+  private ProcessorDefinition testRouteDefinition = null;
+  @Getter private RouteBuilder routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
+  private RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
 
   public UseCaseTopologyDefinition to(OutConnector... outConnectors) throws Exception {
-    routeBuilder = getRouteBuilderInstance();
-    multicastDefinition = initMulticastRoute(routeBuilder, multicastDefinition, "");
-    multicastDefinition =
-        appendParallelProcessingIfMultipleConnectors(multicastDefinition, outConnectors);
-    Stream.of(outConnectors)
-        .forEach(
-            outConnector -> {
-              outConnector.configureOnConnectorLevel();
-              multicastDefinition.to(URI_PREFIX + outConnector.getName());
-              this.from(outConnector, URI_PREFIX + outConnector.getName(), "");
-            });
+    routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
+    routeDefinition = initBaseRoute(routeBuilder, routeDefinition, "");
+    if (outConnectors.length > 1) {
+      routeDefinition = appendMulticastDefinition(outConnectors, routeDefinition, "");
+    } else {
+      OutConnector outConnector = outConnectors[0];
+      routeDefinition.to(URI_PREFIX + outConnector.getName());
+      outConnector.setRouteBuilder(routeBuilder);
+      outConnector.configureOnConnectorLevel();
+      this.from(outConnector, URI_PREFIX + outConnector.getName(), "");
+    }
+    routeBuilder.getRouteCollection().getRoutes().add((RouteDefinition) routeDefinition);
     generateTestRoutes(outConnectors);
     return this;
   }
 
   private void generateTestRoutes(OutConnector... outConnectors) {
-    createNewRouteBuilder();
-    testingDefinition = initMulticastRoute(routeBuilder, testingDefinition, TESTING_SUFFIX);      // bio je testingRouteBuilder
-    testingDefinition =
-        appendParallelProcessingIfMultipleConnectors(testingDefinition, outConnectors);
+    testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
+    testRouteDefinition = initBaseRoute(testingRouteBuilder, testRouteDefinition, TESTING_SUFFIX);
     CentralEndpointsRegister.setState("testing");
-    Stream.of(outConnectors)
-        .forEach(
-            outConnector -> {
-              outConnector.configureOnConnectorLevel();
-              testingDefinition.to(URI_PREFIX + outConnector.getName() + TESTING_SUFFIX);
-              this.from(outConnector, URI_PREFIX + outConnector.getName(), TESTING_SUFFIX);
-            });
+    if (outConnectors.length > 1) {
+      testRouteDefinition =
+          appendMulticastDefinition(outConnectors, testRouteDefinition, TESTING_SUFFIX);
+    } else {
+      OutConnector outConnector = outConnectors[0];
+      testRouteDefinition =
+          testRouteDefinition.to(URI_PREFIX + outConnector.getName() + TESTING_SUFFIX);
+      outConnector.setRouteBuilder(testingRouteBuilder);
+      outConnector.configureOnConnectorLevel();
+      this.from(outConnector, URI_PREFIX + outConnector.getName(), TESTING_SUFFIX);
+    }
+    testingRouteBuilder.getRouteCollection().getRoutes().add((RouteDefinition) testRouteDefinition);
     CentralEndpointsRegister.setState("actual");
   }
 
-  private MulticastDefinition appendParallelProcessingIfMultipleConnectors(
-      MulticastDefinition multicastDefinition, OutConnector[] outConnectors) {
-    if (outConnectors.length > 1) {
-      return multicastDefinition.parallelProcessing();
-    }
-    return multicastDefinition;
+  private ProcessorDefinition appendMulticastDefinition(
+      OutConnector[] outConnectors, ProcessorDefinition processorDefinition, String suffix) {
+    MulticastDefinition multicastDefinition = processorDefinition.multicast().parallelProcessing();
+    Stream.of(outConnectors)
+        .forEach(
+            outConnector -> {
+              multicastDefinition.to(URI_PREFIX + outConnector.getName() + suffix);
+              outConnector.setRouteBuilder(
+                  suffix.equals(TESTING_SUFFIX) ? testingRouteBuilder : routeBuilder);
+              outConnector.configureOnConnectorLevel();
+              this.from(outConnector, URI_PREFIX + outConnector.getName(), suffix);
+            });
+    return multicastDefinition.end();
   }
 
-  public void build() throws Exception {      // verovatno se moze obrisati uz onaj definition.build
-//    camelContext.addRoutes(this.routeBuilder);
-//    camelContext.addRoutes(this.testingRouteBuilder);
+  public void build() throws Exception {
+    camelContext.addRoutes(this.routeBuilder);
+    camelContext.addRoutes(this.testingRouteBuilder);
   }
 
-  private void createNewRouteBuilder() {
-    routeBuilder = anonymousDummyRouteBuilder();
-  }
-
-  private MulticastDefinition initMulticastRoute(
-      RouteBuilder routeBuilder, MulticastDefinition multicastDefinition, String suffix) {
+  private ProcessorDefinition initBaseRoute(
+      RouteBuilder routeBuilder, ProcessorDefinition processorDefinition, String suffix) {
     String uri = "sipmc:" + useCase + suffix;
-    return multicastDefinition == null ? routeBuilder.from(uri).multicast() : multicastDefinition;
+    RouteDefinition rd = new RouteDefinition();
+
+    return processorDefinition == null
+        ? rd.from(uri).routeId("sipmc-bridge-" + useCase + suffix)
+        : processorDefinition;
   }
 
   @SneakyThrows
   private UseCaseTopologyDefinition from(
       OutConnector outConnector, String uri, String routeSuffix) {
-    RouteBuilder rb = routeBuilder;                 // routeSuffix.equals(TESTING_SUFFIX) ? testingRouteBuilder : routeBuilder;
+    RouteBuilder rb = CentralRouter.anonymousDummyRouteBuilder();
+    outConnector.setRouteBuilder(rb);
+    outConnector.configureOnConnectorLevel();
     String routeId = CentralRouter.generateRouteId(useCase, outConnector.getName(), routeSuffix);
     RouteDefinition routeDefinition = rb.from(uri + routeSuffix).routeId(routeId);
     outConnector.configure(routeDefinition);
@@ -127,12 +138,4 @@ public class UseCaseTopologyDefinition {
     choiceDefinition.setWhenClauses(whenDefinitions);
     choiceDefinition.setOtherwise(otherwiseDefinition);
   }
-
-  private RouteBuilder getRouteBuilderInstance() {
-    if (routeBuilder == null) {
-      return anonymousDummyRouteBuilder();
-    }
-    return routeBuilder;
-  }
-
 }

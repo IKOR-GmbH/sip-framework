@@ -64,8 +64,6 @@ class InvalidUsageOfOutConsumerTest {
     }
 
     @Override
-    public void configureOnCentralRouterLevel() {
-
-    }
+    public void configureOnCentralRouterLevel() {}
   }
 }

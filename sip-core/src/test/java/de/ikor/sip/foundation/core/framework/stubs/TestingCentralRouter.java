@@ -17,9 +17,7 @@ public class TestingCentralRouter extends CentralRouter {
   }
 
   @Override
-  public void configureOnCentralRouterLevel() {
-
-  }
+  public void configureOnCentralRouterLevel() {}
 
   public void setupTestingState() {
     // only for testing purpose, to simulate multiple use

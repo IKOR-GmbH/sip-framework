@@ -3,7 +3,6 @@ package de.ikor.sip.foundation.core.framework;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.stereotype.Component;
@@ -26,7 +25,7 @@ public class RouteStarter extends EventNotifierSupport {
     try {
       router.configureOnCentralRouterLevel();
       router.configure();
-      router.buildOutgoingConnector();    // moguce da se ovo moze izbaciti
+      router.buildOutgoingConnector(); // moguce da se ovo moze izbaciti
     } catch (Exception e) {
       e.printStackTrace();
     }
