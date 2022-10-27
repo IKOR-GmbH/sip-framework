@@ -57,7 +57,7 @@ class EndpointsIntegrationTests {
     } catch (NoSuchEndpointException e) {
       // just ignore
     }
-    assertThat(registeredEndpoint.getEndpointUri()).endsWith("-test");
+    assertThat(registeredEndpoint.getEndpointUri()).endsWith("-testkit");
     assertThat(endpointFromCamelContext).isNotNull();
     CentralEndpointsRegister.setState("actual");
   }

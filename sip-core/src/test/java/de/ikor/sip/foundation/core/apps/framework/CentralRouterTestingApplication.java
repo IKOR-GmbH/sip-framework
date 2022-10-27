@@ -14,6 +14,11 @@ public class CentralRouterTestingApplication {
   }
 
   @Bean
+  CentralRouter restCentralRouter() {
+    return new RestCentralRouter();
+  }
+
+  @Bean
   RouteBuilder setUpHelperRoutes() {
     return new RouteBuilder() {
       @Override

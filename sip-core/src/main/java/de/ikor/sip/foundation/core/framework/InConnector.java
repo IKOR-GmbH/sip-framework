@@ -7,9 +7,12 @@ import lombok.Getter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.rest.RestDefinition;
 
 public abstract class InConnector extends Connector {
   @Getter private RouteBuilder routeBuilder;
+  @Getter private RouteBuilder restBuilder;
+  private RestInEndpoint restInEndpoint;
 
   public abstract void configure();
 
@@ -18,6 +21,18 @@ public abstract class InConnector extends Connector {
   protected RouteDefinition from(InEndpoint inEndpoint) {
     routeBuilder = getRouteBuilderInstance();
     return routeBuilder.from(getInEndpointUri(inEndpoint.getId()));
+  }
+
+  protected RouteDefinition from(RestDefinition restDefinition) {
+    restDefinition.to("direct:rest-" + restInEndpoint.getUri());
+    routeBuilder = anonymousDummyRouteBuilder();
+    return routeBuilder.from("direct:rest-" + restInEndpoint.getUri());
+  }
+
+  protected RestDefinition rest(String uri, String id) {
+    restBuilder = getRouteBuilderInstance();
+    restInEndpoint = RestInEndpoint.instance(uri, id, restBuilder);
+    return restInEndpoint.rest();
   }
 
   protected OnExceptionDefinition onException(Class<? extends Throwable>... exceptions) {

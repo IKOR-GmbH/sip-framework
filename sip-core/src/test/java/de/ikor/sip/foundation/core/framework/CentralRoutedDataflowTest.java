@@ -31,7 +31,7 @@ class CentralRoutedDataflowTest {
   @EndpointInject("mock:log:message")
   private MockEndpoint mock;
 
-  @EndpointInject("mock:log:message-test")
+  @EndpointInject("mock:log:message-testkit")
   private MockEndpoint mockTest;
 
   @BeforeEach
@@ -153,7 +153,7 @@ class CentralRoutedDataflowTest {
     routerSubject.from(inConnector).to(outConnector).build();
 
     CentralEndpointsRegister.setState("testing");
-    template.sendBody("direct:multicast-6-test", "Hello dude!");
+    template.sendBody("direct:multicast-6-testkit", "Hello dude!");
 
     mockTest.assertIsSatisfied();
     CentralEndpointsRegister.setState("actual");
