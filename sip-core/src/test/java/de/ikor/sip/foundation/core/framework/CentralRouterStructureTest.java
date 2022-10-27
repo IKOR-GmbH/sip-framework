@@ -70,11 +70,11 @@ class CentralRouterStructureTest {
         .hasSize(1);
 
     assertThat(getRoutesFromContext())
-        .filteredOn(matchRoutesBasedOnUri("direct.*sip-test"))
+        .filteredOn(matchRoutesBasedOnUri("direct.*sip-testkit"))
         .hasSize(1);
 
     assertThat(getRoutesFromContext())
-        .filteredOn(matchRoutesBasedOnUri("direct.*sip-test"))
+        .filteredOn(matchRoutesBasedOnUri("direct.*sip-testkit"))
         .hasSize(1);
   }
 
