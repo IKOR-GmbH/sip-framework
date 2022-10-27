@@ -22,6 +22,9 @@ public class SimpleInConnector extends InConnector {
     from(ep);
   }
 
+  @Override
+  public void configureOnConnectorLevel() {}
+
   public String getName() {
     return name;
   }

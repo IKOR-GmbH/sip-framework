@@ -13,4 +13,9 @@ public class RestInConnector extends InConnector {
     from(rest("/hello-append", "get-rest").get())
         .process(exchange -> exchange.getMessage().setBody("hello rest"));
   }
+
+  @Override
+  public void configureOnConnectorLevel() {
+
+  }
 }

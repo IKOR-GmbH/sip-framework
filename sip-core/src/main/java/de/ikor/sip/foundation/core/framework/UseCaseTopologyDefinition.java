@@ -20,23 +20,28 @@ public class UseCaseTopologyDefinition {
 
   private ProcessorDefinition routeDefinition = null;
   private ProcessorDefinition testRouteDefinition = null;
-  @Getter private final RouteBuilder routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
-  private final RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
+  @Getter private RouteBuilder routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
+  private RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
 
   public UseCaseTopologyDefinition to(OutConnector... outConnectors) throws Exception {
+    routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
     routeDefinition = initBaseRoute(routeBuilder, routeDefinition, "");
     if (outConnectors.length > 1) {
       routeDefinition = appendMulticastDefinition(outConnectors, routeDefinition, "");
     } else {
       OutConnector outConnector = outConnectors[0];
       routeDefinition.to(URI_PREFIX + outConnector.getName());
+      outConnector.setRouteBuilder(routeBuilder);
+      outConnector.configureOnConnectorLevel();
       this.from(outConnector, URI_PREFIX + outConnector.getName(), "");
     }
+    routeBuilder.getRouteCollection().getRoutes().add((RouteDefinition) routeDefinition);
     generateTestRoutes(outConnectors);
     return this;
   }
 
   private void generateTestRoutes(OutConnector... outConnectors) {
+    testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
     testRouteDefinition = initBaseRoute(testingRouteBuilder, testRouteDefinition, TESTING_SUFFIX);
     CentralEndpointsRegister.setState("testing");
     if (outConnectors.length > 1) {
@@ -46,8 +51,11 @@ public class UseCaseTopologyDefinition {
       OutConnector outConnector = outConnectors[0];
       testRouteDefinition =
           testRouteDefinition.to(URI_PREFIX + outConnector.getName() + TESTING_SUFFIX);
+      outConnector.setRouteBuilder(testingRouteBuilder);
+      outConnector.configureOnConnectorLevel();
       this.from(outConnector, URI_PREFIX + outConnector.getName(), TESTING_SUFFIX);
     }
+    testingRouteBuilder.getRouteCollection().getRoutes().add((RouteDefinition) testRouteDefinition);
     CentralEndpointsRegister.setState("actual");
   }
 
@@ -58,6 +66,9 @@ public class UseCaseTopologyDefinition {
         .forEach(
             outConnector -> {
               multicastDefinition.to(URI_PREFIX + outConnector.getName() + suffix);
+              outConnector.setRouteBuilder(
+                  suffix.equals(TESTING_SUFFIX) ? testingRouteBuilder : routeBuilder);
+              outConnector.configureOnConnectorLevel();
               this.from(outConnector, URI_PREFIX + outConnector.getName(), suffix);
             });
     return multicastDefinition.end();
@@ -71,8 +82,10 @@ public class UseCaseTopologyDefinition {
   private ProcessorDefinition initBaseRoute(
       RouteBuilder routeBuilder, ProcessorDefinition processorDefinition, String suffix) {
     String uri = "sipmc:" + useCase + suffix;
+    RouteDefinition rd = new RouteDefinition();
+
     return processorDefinition == null
-        ? routeBuilder.from(uri).routeId("sipmc-bridge-" + useCase + suffix)
+        ? rd.from(uri).routeId("sipmc-bridge-" + useCase + suffix)
         : processorDefinition;
   }
 
@@ -80,6 +93,8 @@ public class UseCaseTopologyDefinition {
   private UseCaseTopologyDefinition from(
       OutConnector outConnector, String uri, String routeSuffix) {
     RouteBuilder rb = CentralRouter.anonymousDummyRouteBuilder();
+    outConnector.setRouteBuilder(rb);
+    outConnector.configureOnConnectorLevel();
     String routeId = CentralRouter.generateRouteId(useCase, outConnector.getName(), routeSuffix);
     RouteDefinition routeDefinition = rb.from(uri + routeSuffix).routeId(routeId);
     outConnector.configure(routeDefinition);

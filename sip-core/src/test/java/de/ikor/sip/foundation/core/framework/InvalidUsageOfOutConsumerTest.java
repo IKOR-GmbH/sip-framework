@@ -62,5 +62,8 @@ class InvalidUsageOfOutConsumerTest {
     public void configure() throws Exception {
       isConfigured = true;
     }
+
+    @Override
+    public void configureOnCentralRouterLevel() {}
   }
 }

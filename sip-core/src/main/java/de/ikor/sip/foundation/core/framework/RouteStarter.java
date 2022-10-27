@@ -23,8 +23,9 @@ public class RouteStarter extends EventNotifierSupport {
 
   private void buildRoutes(CentralRouter router) {
     try {
+      router.configureOnCentralRouterLevel();
       router.configure();
-      router.buildOutgoingConnector();
+      router.buildOutgoingConnector(); // moguce da se ovo moze izbaciti
     } catch (Exception e) {
       e.printStackTrace();
     }

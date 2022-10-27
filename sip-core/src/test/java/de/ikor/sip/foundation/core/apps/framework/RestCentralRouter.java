@@ -14,4 +14,9 @@ public class RestCentralRouter extends CentralRouter {
   public void configure() throws Exception {
     from(new RestInConnector()).to(new AppendStringOutConnector());
   }
+
+  @Override
+  public void configureOnCentralRouterLevel() {
+
+  }
 }

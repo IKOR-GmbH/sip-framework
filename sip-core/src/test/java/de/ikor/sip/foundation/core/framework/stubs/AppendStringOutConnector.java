@@ -10,4 +10,9 @@ public class AppendStringOutConnector extends OutConnector {
         exchange ->
             exchange.getMessage().setBody(exchange.getMessage().getBody(String.class) + "-append"));
   }
+
+  @Override
+  public void configureOnConnectorLevel() {
+
+  }
 }
