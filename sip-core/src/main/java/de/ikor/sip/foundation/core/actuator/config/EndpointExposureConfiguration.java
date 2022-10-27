@@ -36,6 +36,8 @@ public class EndpointExposureConfiguration
   public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
     ConfigurableEnvironment environment = event.getEnvironment();
     Properties exposedEndpoints = new Properties();
+    // get properties from SIP configuration files that are not yet loaded when the event is
+    // triggered
     Properties loadedProperties = loadDefaultProperties();
     String endpoints = resolveEndpoints(environment, loadedProperties);
     exposedEndpoints.put(EXPOSURE_INCLUDE, endpoints);
