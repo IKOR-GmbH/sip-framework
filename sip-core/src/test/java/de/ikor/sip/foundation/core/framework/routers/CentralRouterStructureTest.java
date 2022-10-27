@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.framework;
+package de.ikor.sip.foundation.core.framework.routers;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,8 +16,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(classes = {CentralRouterTestingApplication.class})
+@DirtiesContext
 class CentralRouterStructureTest {
   @Autowired(required = false)
   private TestingCentralRouter routerSubject;
@@ -45,6 +47,7 @@ class CentralRouterStructureTest {
     SimpleInConnector simpleInConnector = SimpleInConnector.withUri("direct:singleInConnector");
     // act
     routerSubject.from(simpleInConnector);
+    routeStarter.buildRoutes(routerSubject);
     // assert
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri("direct.*singleInConnector"))
@@ -62,15 +65,12 @@ class CentralRouterStructureTest {
     SimpleInConnector secondInConnector = SimpleInConnector.withUri("direct:sipie");
     // act
     routerSubject.from(firstInConnector, secondInConnector);
+    routeStarter.buildRoutes(routerSubject);
     // assert
     assertThat(getRoutesFromContext()).filteredOn(matchRoutesBasedOnUri("direct.*sip")).hasSize(1);
 
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri("direct.*sipie"))
-        .hasSize(1);
-
-    assertThat(getRoutesFromContext())
-        .filteredOn(matchRoutesBasedOnUri("direct.*sip-testkit"))
         .hasSize(1);
 
     assertThat(getRoutesFromContext())
@@ -86,7 +86,7 @@ class CentralRouterStructureTest {
     SimpleOutConnector outConnector = new SimpleOutConnector();
     // act
     routerSubject.from(inConnector).to(outConnector).build();
-
+    routeStarter.buildRoutes(routerSubject);
     // assert
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", routerSubject.getScenario())))
@@ -100,6 +100,7 @@ class CentralRouterStructureTest {
           throws Exception {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:routeIdTest");
     routerSubject.from(inConnector);
+    routeStarter.buildRoutes(routerSubject);
 
     String expectedRouteId = format("%s-%s", routerSubject.getScenario(), inConnector.getName());
     Route route = getRouteFromContextById(expectedRouteId);

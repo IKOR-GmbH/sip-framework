@@ -1,7 +1,8 @@
-package de.ikor.sip.foundation.core.framework;
+package de.ikor.sip.foundation.core.framework.endpoints;
 
 import static java.lang.String.format;
 
+import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
 import java.util.Map;
 import lombok.Getter;
 import org.apache.camel.*;

@@ -1,5 +1,7 @@
-package de.ikor.sip.foundation.core.framework;
+package de.ikor.sip.foundation.core.framework.routers;
 
+import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
+import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -23,7 +25,7 @@ public class UseCaseTopologyDefinition {
   @Getter private RouteBuilder routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
   private RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
 
-  public UseCaseTopologyDefinition to(OutConnector... outConnectors) throws Exception {
+  public UseCaseTopologyDefinition to(OutConnector... outConnectors) {
     routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
     routeDefinition = initBaseRoute(routeBuilder, routeDefinition, "");
     if (outConnectors.length > 1) {

@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.framework.stubs;
 
 import static java.lang.String.format;
 
-import de.ikor.sip.foundation.core.framework.OutEndpoint;
+import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
 import org.apache.camel.model.RouteDefinition;
 
 public class SimpleOutConnector extends TestingOutConnector {

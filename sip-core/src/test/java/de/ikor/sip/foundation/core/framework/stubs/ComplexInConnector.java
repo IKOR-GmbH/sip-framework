@@ -1,10 +1,10 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import static de.ikor.sip.foundation.core.framework.OutEndpointBuilder.outEndpointBuilder;
+import static de.ikor.sip.foundation.core.framework.endpoints.OutEndpointBuilder.outEndpointBuilder;
 import static org.apache.camel.builder.Builder.body;
 
-import de.ikor.sip.foundation.core.framework.InConnector;
-import de.ikor.sip.foundation.core.framework.InEndpoint;
+import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import org.apache.camel.model.RouteDefinition;
 
 public class ComplexInConnector extends InConnector {
@@ -25,7 +25,7 @@ public class ComplexInConnector extends InConnector {
   }
 
   @Override
-  public void configureOnConnectorLevel() {}
+  public void configureOnException() {}
 
   @Override
   public void handleResponse(RouteDefinition route) {

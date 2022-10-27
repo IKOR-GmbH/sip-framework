@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.OutConnector;
-import de.ikor.sip.foundation.core.framework.OutEndpoint;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
+import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
 import org.apache.camel.AggregationStrategy;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.builder.RouteBuilder;

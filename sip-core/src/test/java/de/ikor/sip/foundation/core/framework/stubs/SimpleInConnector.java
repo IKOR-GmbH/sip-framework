@@ -2,8 +2,8 @@ package de.ikor.sip.foundation.core.framework.stubs;
 
 import static java.lang.String.format;
 
-import de.ikor.sip.foundation.core.framework.InConnector;
-import de.ikor.sip.foundation.core.framework.InEndpoint;
+import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 
 public class SimpleInConnector extends InConnector {
   private InEndpoint ep;
@@ -23,7 +23,7 @@ public class SimpleInConnector extends InConnector {
   }
 
   @Override
-  public void configureOnConnectorLevel() {}
+  public void configureOnException() {}
 
   public String getName() {
     return name;

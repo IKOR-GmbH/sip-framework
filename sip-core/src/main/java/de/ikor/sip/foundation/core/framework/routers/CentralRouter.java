@@ -1,7 +1,11 @@
-package de.ikor.sip.foundation.core.framework;
+package de.ikor.sip.foundation.core.framework.routers;
 
 import static java.lang.String.format;
 
+import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.CamelContext;
@@ -10,31 +14,24 @@ import org.apache.camel.builder.RouteBuilder;
 public abstract class CentralRouter {
   @Getter @Setter private static CamelContext camelContext;
 
-  public abstract String getScenario();
+  private final List<InConnector> inConnectors = new ArrayList<>();
 
   private UseCaseTopologyDefinition definition;
 
+  public abstract String getScenario();
+
   public abstract void configure() throws Exception;
 
-  public abstract void configureOnCentralRouterLevel();
+  public void configureOnException() {}
 
-  public UseCaseTopologyDefinition from(InConnector... inConnectors) throws Exception {
+  public UseCaseTopologyDefinition from(InConnector... inConnectors) {
     for (InConnector connector : inConnectors) {
-      connector.configureOnConnectorLevel();
+      connector.configureOnException();
       connector.configure();
       appendToSIPmcAndRouteId(connector);
       connector.handleResponse(connector.getConnectorDefinition());
-      if (connector.getRestBuilder() != null) {
-        camelContext.addRoutes(connector.getRestBuilder());
-      }
-      camelContext.addRoutes(connector.getRouteBuilder());
-      //      camelContext.addRoutesConfigurations();
-
-      CentralEndpointsRegister.setState("testing");
-      generateTestingConnectorRoute(connector);
-      CentralEndpointsRegister.setState("actual");
     }
-
+    this.inConnectors.addAll(Arrays.asList(inConnectors));
     definition = new UseCaseTopologyDefinition(camelContext, this.getScenario());
     return definition;
   }
@@ -44,24 +41,20 @@ public abstract class CentralRouter {
     return format("%s-%s%s", scenarioName, connectorName, routeSuffix);
   }
 
-  void buildOutgoingConnector() throws Exception {
-    if (definition != null) {
-      this.definition.build();
-    } else {
-      throw new EmptyCentralRouterException(this.getScenario());
-    }
-  }
-
-  private void generateTestingConnectorRoute(InConnector connector) throws Exception {
+  void switchToTestingDefinitionMode(InConnector connector) {
     connector.createNewRouteBuilder();
-    connector.configureOnConnectorLevel();
+    connector.configureOnException();
     connector.configure();
     appendToSIPmcAndRouteId(connector, "-testing");
     connector.handleResponse(connector.getConnectorDefinition());
-    if (connector.getRestBuilder() != null) {
-      camelContext.addRoutes(connector.getRestBuilder());
-    }
-    camelContext.addRoutes(connector.getRouteBuilder());
+  }
+
+  List<InConnector> getInConnectors() {
+    return inConnectors;
+  }
+
+  UseCaseTopologyDefinition getUseCaseDefinition() {
+    return definition;
   }
 
   private void appendToSIPmcAndRouteId(InConnector connector, String routeSuffix) {
@@ -75,14 +68,10 @@ public abstract class CentralRouter {
     appendToSIPmcAndRouteId(connector, "");
   }
 
-  public static CamelContext getCamelContext() {
-    return camelContext;
-  }
-
   public static RouteBuilder anonymousDummyRouteBuilder() {
     return new RouteBuilder() {
       @Override
-      public void configure() throws Exception {
+      public void configure() {
         // no need for implementation; used for building routes
       }
     };

@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.framework;
 
-import org.springframework.context.annotation.ComponentScan;
+import de.ikor.sip.foundation.core.framework.routers.RouteStarter;
+import org.springframework.context.annotation.Import;
 
-@ComponentScan
+@Import(RouteStarter.class)
 public class FrameworkAutoConfig {}

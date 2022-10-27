@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.OutConnector;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 
 public abstract class TestingOutConnector extends OutConnector {
   protected final String name;

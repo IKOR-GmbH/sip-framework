@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.CentralRouter;
+import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
 
 public class TestingCentralRouter extends CentralRouter {
   private static int useCaseCounter;
@@ -15,9 +15,6 @@ public class TestingCentralRouter extends CentralRouter {
   public void configure() throws Exception {
     isConfigured = true;
   }
-
-  @Override
-  public void configureOnCentralRouterLevel() {}
 
   public void setupTestingState() {
     // only for testing purpose, to simulate multiple use

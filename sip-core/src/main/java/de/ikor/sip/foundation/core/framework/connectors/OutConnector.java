@@ -1,11 +1,11 @@
-package de.ikor.sip.foundation.core.framework;
+package de.ikor.sip.foundation.core.framework.connectors;
 
 import lombok.Setter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
 
-public abstract class OutConnector {
+public abstract class OutConnector implements Connector {
 
   @Setter private RouteBuilder routeBuilder;
 

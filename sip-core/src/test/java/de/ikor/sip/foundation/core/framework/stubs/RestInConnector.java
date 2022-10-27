@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.InConnector;
+import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 
 public class RestInConnector extends InConnector {
   @Override
@@ -15,7 +15,5 @@ public class RestInConnector extends InConnector {
   }
 
   @Override
-  public void configureOnConnectorLevel() {
-
-  }
+  public void configureOnException() {}
 }

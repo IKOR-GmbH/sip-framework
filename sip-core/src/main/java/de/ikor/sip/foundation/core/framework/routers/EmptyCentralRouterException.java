@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.framework;
+package de.ikor.sip.foundation.core.framework.routers;
 
 /** Exception thrown when there is Central router {@link CentralRouter} without from definition. */
 public class EmptyCentralRouterException extends Exception {

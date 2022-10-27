@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.framework;
+package de.ikor.sip.foundation.core.framework.endpoints;
 
 import java.util.Map;
 import org.apache.camel.CamelContext;

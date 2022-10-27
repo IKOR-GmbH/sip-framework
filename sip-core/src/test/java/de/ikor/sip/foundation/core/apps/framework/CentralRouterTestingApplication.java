@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.apps.framework;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
-import de.ikor.sip.foundation.core.framework.CentralRouter;
+import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
 import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouter;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.context.annotation.Bean;

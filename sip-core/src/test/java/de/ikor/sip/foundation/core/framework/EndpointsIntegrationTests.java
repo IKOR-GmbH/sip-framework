@@ -3,6 +3,8 @@ package de.ikor.sip.foundation.core.framework;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.ikor.sip.foundation.core.apps.framework.CentralRouterTestingApplication;
+import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
+import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouter;
@@ -12,8 +14,10 @@ import org.apache.camel.NoSuchEndpointException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(classes = CentralRouterTestingApplication.class)
+@DirtiesContext
 class EndpointsIntegrationTests {
   @Autowired(required = false)
   private TestingCentralRouter subject;

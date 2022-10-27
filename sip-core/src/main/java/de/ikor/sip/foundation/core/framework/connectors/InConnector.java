@@ -1,22 +1,29 @@
-package de.ikor.sip.foundation.core.framework;
+package de.ikor.sip.foundation.core.framework.connectors;
 
-import static de.ikor.sip.foundation.core.framework.CentralEndpointsRegister.getInEndpointUri;
-import static de.ikor.sip.foundation.core.framework.CentralRouter.anonymousDummyRouteBuilder;
+import static de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister.getInEndpointUri;
+import static de.ikor.sip.foundation.core.framework.routers.CentralRouter.anonymousDummyRouteBuilder;
 
+import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
+import de.ikor.sip.foundation.core.framework.endpoints.RestInEndpoint;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 
-public abstract class InConnector extends Connector {
+public abstract class InConnector implements Connector {
   @Getter private RouteBuilder routeBuilder;
   @Getter private RouteBuilder restBuilder;
   private RestInEndpoint restInEndpoint;
+  // TODO: Use different mechanism to detect this
+  @Getter @Setter private Boolean registeredInCamel = false;
 
   public abstract void configure();
 
-  public abstract void configureOnConnectorLevel();
+  public void configureOnException() {}
+
+  public void handleResponse(RouteDefinition route) {}
 
   protected RouteDefinition from(InEndpoint inEndpoint) {
     routeBuilder = getRouteBuilderInstance();
@@ -45,7 +52,7 @@ public abstract class InConnector extends Connector {
     return last;
   }
 
-  protected void createNewRouteBuilder() {
+  public void createNewRouteBuilder() {
     routeBuilder = anonymousDummyRouteBuilder();
   }
 

@@ -1,8 +1,10 @@
-package de.ikor.sip.foundation.core.framework;
+package de.ikor.sip.foundation.core.framework.routers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.ikor.sip.foundation.core.apps.framework.CentralRouterTestingApplication;
+import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
+import de.ikor.sip.foundation.core.framework.endpoints.OutEndpointBuilder;
 import de.ikor.sip.foundation.core.framework.stubs.*;
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
@@ -14,11 +16,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
 @SpringBootTest(classes = {CentralRouterTestingApplication.class})
 @DisableJmx(false)
 @MockEndpoints("log:message*")
+@DirtiesContext
 class CentralRoutedDataflowTest {
   @Autowired(required = false)
   private TestingCentralRouter routerSubject;
@@ -50,9 +54,9 @@ class CentralRoutedDataflowTest {
     mock.expectedMessageCount(1);
     mock.expectedBodiesReceived("Hello dude!-[ep-1]");
     routerSubject.from(inConnector).to(outConnector1).build();
+    routeStarter.buildRoutes(routerSubject);
 
     template.sendBody("direct:multicast-1", "Hello dude!");
-
     mock.assertIsSatisfied();
   }
 
@@ -70,6 +74,7 @@ class CentralRoutedDataflowTest {
     mock.expectedMessageCount(2);
 
     routerSubject.from(inConnector).to(outConnector1, outConnector2).build();
+    routeStarter.buildRoutes(routerSubject);
 
     template.sendBody("direct:multicast-3", "Hello dude!");
 
@@ -78,7 +83,7 @@ class CentralRoutedDataflowTest {
 
   @Test
   void
-      given_RouteWithSequencedMulticast_when_FirstOutConnectorIsSlow_then_FirstConnectorExecutesFirst()
+      given_RouteWithSequencedExecution_when_FirstOutConnectorIsSlow_then_FirstConnectorExecutesFirst()
           throws Exception {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-4");
     SleepingOutConnector outConnector1 =
@@ -86,9 +91,11 @@ class CentralRoutedDataflowTest {
     SimpleOutConnector outConnector2 =
         new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-2");
 
-    mock.expectedBodiesReceived("Hello dude!-[ep-1]", "Hello dude!-[ep-2]");
+    mock.expectedBodiesReceived("Hello dude!-[ep-1]", "Hello dude!-[ep-1]-[ep-2]");
     mock.expectedMessageCount(2);
+
     routerSubject.from(inConnector).to(outConnector1).to(outConnector2).build();
+    routeStarter.buildRoutes(routerSubject);
 
     template.sendBody("direct:multicast-4", "Hello dude!");
 
@@ -133,6 +140,7 @@ class CentralRoutedDataflowTest {
     routerSubject.from(new ComplexInConnector()).to(new ComplexOutConnector()).build();
 
     // act
+    routeStarter.buildRoutes(routerSubject);
     String response =
         (String) template.sendBody("direct:complex-connector", ExchangePattern.InOut, "input body");
 
@@ -151,6 +159,7 @@ class CentralRoutedDataflowTest {
     mockTest.expectedMessageCount(1);
 
     routerSubject.from(inConnector).to(outConnector).build();
+    routeStarter.buildRoutes(routerSubject);
 
     CentralEndpointsRegister.setState("testing");
     template.sendBody("direct:multicast-6-testkit", "Hello dude!");
