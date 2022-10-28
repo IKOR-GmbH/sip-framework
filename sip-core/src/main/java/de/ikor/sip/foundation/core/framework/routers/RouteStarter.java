@@ -1,8 +1,10 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
+import de.ikor.sip.foundation.core.framework.AdapterRouteConfiguration;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
 import java.util.List;
+import java.util.Optional;
 import org.apache.camel.CamelContext;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
@@ -11,10 +13,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class RouteStarter extends EventNotifierSupport {
   List<CentralRouter> availableRouters;
+  Optional<AdapterRouteConfiguration> routeConfiguration;
   CamelContext camelContext;
 
-  public RouteStarter(List<CentralRouter> availableRouters) {
+  public RouteStarter(
+      List<CentralRouter> availableRouters,
+      Optional<AdapterRouteConfiguration> routeConfiguration) {
     this.availableRouters = availableRouters;
+    this.routeConfiguration = routeConfiguration;
   }
 
   @Override
@@ -27,6 +33,9 @@ public class RouteStarter extends EventNotifierSupport {
   void buildRoutes(CentralRouter router) {
     CentralEndpointsRegister.setState("actual");
     try {
+      routeConfiguration.ifPresent(AdapterRouteConfiguration::globalConfiguration);
+      routeConfiguration.ifPresent(router::addConfigToRouteBuilder);
+      router.scenarioConfiguration();
       router.configureOnException();
       router.configure();
       for (InConnector connector : router.getInConnectors()) {

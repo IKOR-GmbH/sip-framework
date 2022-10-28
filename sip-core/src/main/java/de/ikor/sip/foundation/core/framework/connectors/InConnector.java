@@ -8,8 +8,8 @@ import de.ikor.sip.foundation.core.framework.endpoints.RestInEndpoint;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.OnExceptionDefinition;
-import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.builder.RouteConfigurationBuilder;
+import org.apache.camel.model.*;
 import org.apache.camel.model.rest.RestDefinition;
 
 public abstract class InConnector implements Connector {
@@ -19,6 +19,8 @@ public abstract class InConnector implements Connector {
   // TODO: Use different mechanism to detect this
   @Getter @Setter private Boolean registeredInCamel = false;
 
+  @Setter RouteConfigurationBuilder configuration;
+
   public abstract void configure();
 
   public void configureOnException() {}
@@ -27,6 +29,7 @@ public abstract class InConnector implements Connector {
 
   protected RouteDefinition from(InEndpoint inEndpoint) {
     routeBuilder = getRouteBuilderInstance();
+    appendConfig();
     return routeBuilder.from(getInEndpointUri(inEndpoint.getId()));
   }
 
@@ -69,5 +72,54 @@ public abstract class InConnector implements Connector {
 
   public RouteDefinition getConnectorDefinition() {
     return routeBuilder.getRouteCollection().getRoutes().get(0);
+  }
+
+  private void appendConfig() {
+    configuration
+        .getRouteConfigurationCollection()
+        .getRouteConfigurations()
+        .forEach(
+            routeConfigurationDefinition -> {
+              routeConfigurationDefinition
+                  .getIntercepts()
+                  .forEach(
+                      interceptDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
+                              .getIntercepts()
+                              .add(interceptDefinition));
+              routeConfigurationDefinition
+                  .getInterceptFroms()
+                  .forEach(
+                      interceptDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
+                              .getInterceptFroms()
+                              .add(interceptDefinition));
+              routeConfigurationDefinition
+                  .getOnCompletions()
+                  .forEach(
+                      onCompletionDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
+                              .getOnCompletions()
+                              .add(onCompletionDefinition));
+              routeConfigurationDefinition
+                  .getInterceptSendTos()
+                  .forEach(
+                      interceptDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
+                              .getInterceptSendTos()
+                              .add(interceptDefinition));
+              routeConfigurationDefinition
+                  .getOnExceptions()
+                  .forEach(
+                      onExceptionDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
+                              .getOnExceptions()
+                              .add(onExceptionDefinition));
+            });
   }
 }
