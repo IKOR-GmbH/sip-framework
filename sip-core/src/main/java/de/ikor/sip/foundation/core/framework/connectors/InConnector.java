@@ -29,13 +29,12 @@ public abstract class InConnector implements Connector {
 
   protected RouteDefinition from(InEndpoint inEndpoint) {
     routeBuilder = getRouteBuilderInstance();
-    appendConfig();
     return routeBuilder.from(getInEndpointUri(inEndpoint.getId()));
   }
 
   protected RouteDefinition from(RestDefinition restDefinition) {
     restDefinition.to("direct:rest-" + restInEndpoint.getUri());
-    routeBuilder = anonymousDummyRouteBuilder();
+    routeBuilder = anonymousDummyRouteBuilder(configuration);
     return routeBuilder.from("direct:rest-" + restInEndpoint.getUri());
   }
 
@@ -56,12 +55,12 @@ public abstract class InConnector implements Connector {
   }
 
   public void createNewRouteBuilder() {
-    routeBuilder = anonymousDummyRouteBuilder();
+    routeBuilder = anonymousDummyRouteBuilder(configuration);
   }
 
   private RouteBuilder getRouteBuilderInstance() {
     if (routeBuilder == null) {
-      return anonymousDummyRouteBuilder();
+      return anonymousDummyRouteBuilder(configuration);
     }
     return routeBuilder;
   }
@@ -72,54 +71,5 @@ public abstract class InConnector implements Connector {
 
   public RouteDefinition getConnectorDefinition() {
     return routeBuilder.getRouteCollection().getRoutes().get(0);
-  }
-
-  private void appendConfig() {
-    configuration
-        .getRouteConfigurationCollection()
-        .getRouteConfigurations()
-        .forEach(
-            routeConfigurationDefinition -> {
-              routeConfigurationDefinition
-                  .getIntercepts()
-                  .forEach(
-                      interceptDefinition ->
-                          routeBuilder
-                              .getRouteCollection()
-                              .getIntercepts()
-                              .add(interceptDefinition));
-              routeConfigurationDefinition
-                  .getInterceptFroms()
-                  .forEach(
-                      interceptDefinition ->
-                          routeBuilder
-                              .getRouteCollection()
-                              .getInterceptFroms()
-                              .add(interceptDefinition));
-              routeConfigurationDefinition
-                  .getOnCompletions()
-                  .forEach(
-                      onCompletionDefinition ->
-                          routeBuilder
-                              .getRouteCollection()
-                              .getOnCompletions()
-                              .add(onCompletionDefinition));
-              routeConfigurationDefinition
-                  .getInterceptSendTos()
-                  .forEach(
-                      interceptDefinition ->
-                          routeBuilder
-                              .getRouteCollection()
-                              .getInterceptSendTos()
-                              .add(interceptDefinition));
-              routeConfigurationDefinition
-                  .getOnExceptions()
-                  .forEach(
-                      onExceptionDefinition ->
-                          routeBuilder
-                              .getRouteCollection()
-                              .getOnExceptions()
-                              .add(onExceptionDefinition));
-            });
   }
 }

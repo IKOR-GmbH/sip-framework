@@ -32,14 +32,14 @@ public abstract class CentralRouter {
 
   public UseCaseTopologyDefinition from(InConnector... inConnectors) {
     for (InConnector connector : inConnectors) {
-      connector.setConfiguration(configuration);
+      connector.setConfiguration(getBuilder());
       connector.configureOnException();
       connector.configure();
       appendToSIPmcAndRouteId(connector);
       connector.handleResponse(connector.getConnectorDefinition());
     }
     this.inConnectors.addAll(Arrays.asList(inConnectors));
-    definition = new UseCaseTopologyDefinition(camelContext, this.getScenario());
+    definition = new UseCaseTopologyDefinition(camelContext, this.getScenario(), getBuilder());
     return definition;
   }
 
@@ -54,7 +54,7 @@ public abstract class CentralRouter {
 
   void switchToTestingDefinitionMode(InConnector connector) {
     connector.createNewRouteBuilder();
-    connector.setConfiguration(configuration);
+    connector.setConfiguration(getBuilder());
     connector.configureOnException();
     connector.configure();
     appendToSIPmcAndRouteId(connector, "-testing");
@@ -80,13 +80,16 @@ public abstract class CentralRouter {
     appendToSIPmcAndRouteId(connector, "");
   }
 
-  public static RouteBuilder anonymousDummyRouteBuilder() {
-    return new RouteBuilder() {
-      @Override
-      public void configure() {
-        // no need for implementation; used for building routes
-      }
-    };
+  public static RouteBuilder anonymousDummyRouteBuilder(RouteConfigurationBuilder configuration) {
+    RouteBuilder routeBuilder =
+        new RouteBuilder() {
+          @Override
+          public void configure() {
+            // no need for implementation; used for building routes
+          }
+        };
+    appendConfig(routeBuilder, configuration);
+    return routeBuilder;
   }
 
   public static RouteConfigurationBuilder anonymousDummyRouteConfigurationBuilder() {
@@ -107,5 +110,55 @@ public abstract class CentralRouter {
     configuration =
         configuration == null ? anonymousDummyRouteConfigurationBuilder() : configuration;
     return configuration;
+  }
+
+  private static void appendConfig(
+      RouteBuilder routeBuilder, RouteConfigurationBuilder configuration) {
+    configuration
+        .getRouteConfigurationCollection()
+        .getRouteConfigurations()
+        .forEach(
+            routeConfigurationDefinition -> {
+              routeConfigurationDefinition
+                  .getIntercepts()
+                  .forEach(
+                      interceptDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
+                              .getIntercepts()
+                              .add(interceptDefinition));
+              routeConfigurationDefinition
+                  .getInterceptFroms()
+                  .forEach(
+                      interceptDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
+                              .getInterceptFroms()
+                              .add(interceptDefinition));
+              routeConfigurationDefinition
+                  .getOnCompletions()
+                  .forEach(
+                      onCompletionDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
+                              .getOnCompletions()
+                              .add(onCompletionDefinition));
+              routeConfigurationDefinition
+                  .getInterceptSendTos()
+                  .forEach(
+                      interceptDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
+                              .getInterceptSendTos()
+                              .add(interceptDefinition));
+              routeConfigurationDefinition
+                  .getOnExceptions()
+                  .forEach(
+                      onExceptionDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
+                              .getOnExceptions()
+                              .add(onExceptionDefinition));
+            });
   }
 }

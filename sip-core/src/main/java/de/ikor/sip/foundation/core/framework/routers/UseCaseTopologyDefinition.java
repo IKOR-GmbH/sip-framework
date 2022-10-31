@@ -6,27 +6,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.builder.RouteConfigurationBuilder;
 import org.apache.camel.model.*;
 import org.apache.commons.collections4.CollectionUtils;
 
-@RequiredArgsConstructor
 public class UseCaseTopologyDefinition {
   private static final String TESTING_SUFFIX = "-testing";
   private static final String URI_PREFIX = "direct:";
   private final CamelContext camelContext;
   private final String useCase;
+  private final RouteConfigurationBuilder configurationBuilder;
 
   private ProcessorDefinition routeDefinition = null;
   private ProcessorDefinition testRouteDefinition = null;
-  @Getter private RouteBuilder routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
-  private RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
+  @Getter private RouteBuilder routeBuilder;
+  private RouteBuilder testingRouteBuilder;
+
+  public UseCaseTopologyDefinition(
+      CamelContext camelContext, String useCase, RouteConfigurationBuilder configurationBuilder) {
+    this.camelContext = camelContext;
+    this.useCase = useCase;
+    this.configurationBuilder = configurationBuilder;
+    routeBuilder = CentralRouter.anonymousDummyRouteBuilder(configurationBuilder);
+    testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder(configurationBuilder);
+  }
 
   public UseCaseTopologyDefinition to(OutConnector... outConnectors) {
-    routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
+    routeBuilder = CentralRouter.anonymousDummyRouteBuilder(configurationBuilder);
     routeDefinition = initBaseRoute(routeBuilder, routeDefinition, "");
     if (outConnectors.length > 1) {
       routeDefinition = appendMulticastDefinition(outConnectors, routeDefinition, "");
@@ -43,7 +52,7 @@ public class UseCaseTopologyDefinition {
   }
 
   private void generateTestRoutes(OutConnector... outConnectors) {
-    testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
+    testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder(configurationBuilder);
     testRouteDefinition = initBaseRoute(testingRouteBuilder, testRouteDefinition, TESTING_SUFFIX);
     CentralEndpointsRegister.setState("testing");
     if (outConnectors.length > 1) {
@@ -94,7 +103,7 @@ public class UseCaseTopologyDefinition {
   @SneakyThrows
   private UseCaseTopologyDefinition from(
       OutConnector outConnector, String uri, String routeSuffix) {
-    RouteBuilder rb = CentralRouter.anonymousDummyRouteBuilder();
+    RouteBuilder rb = CentralRouter.anonymousDummyRouteBuilder(configurationBuilder);
     outConnector.setRouteBuilder(rb);
     outConnector.configureOnConnectorLevel();
     String routeId = CentralRouter.generateRouteId(useCase, outConnector.getName(), routeSuffix);

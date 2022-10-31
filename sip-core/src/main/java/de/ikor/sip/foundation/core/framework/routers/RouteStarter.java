@@ -21,6 +21,7 @@ public class RouteStarter extends EventNotifierSupport {
       Optional<AdapterRouteConfiguration> routeConfiguration) {
     this.availableRouters = availableRouters;
     this.routeConfiguration = routeConfiguration;
+    this.routeConfiguration.ifPresent(AdapterRouteConfiguration::globalConfiguration);
   }
 
   @Override
@@ -33,7 +34,6 @@ public class RouteStarter extends EventNotifierSupport {
   void buildRoutes(CentralRouter router) {
     CentralEndpointsRegister.setState("actual");
     try {
-      routeConfiguration.ifPresent(AdapterRouteConfiguration::globalConfiguration);
       routeConfiguration.ifPresent(router::addConfigToRouteBuilder);
       router.scenarioConfiguration();
       router.configureOnException();
