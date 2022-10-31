@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.core.framework.routers;
 import static java.lang.String.format;
 
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +46,11 @@ public abstract class CentralRouter {
     connector.createNewRouteBuilder();
     connector.configureOnException();
     connector.configure();
-    appendToSIPmcAndRouteId(connector, "-testing");
+    appendToSIPmcAndRouteId(connector, TestingRoutesUtil.TESTING_SUFFIX);
+    connector
+        .getConnectorDefinition()
+        .getOutputs()
+        .forEach(TestingRoutesUtil::handleTestIDAppending);
     connector.handleResponse(connector.getConnectorDefinition());
   }
 
