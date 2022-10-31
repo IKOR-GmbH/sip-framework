@@ -33,9 +33,6 @@ public class ComplexOutConnector extends OutConnector {
         .to(OutEndpoint.instance(DIRECT_COMPLEX_MCAST_2_URI, "complex-mcast-2"));
   }
 
-  @Override
-  public void configureOnConnectorLevel() {}
-
   private AggregationStrategy aggregationStrategy() {
     return new GroupedBodyAggregationStrategy();
   }
