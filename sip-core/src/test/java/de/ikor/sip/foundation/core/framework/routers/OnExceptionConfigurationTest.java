@@ -6,7 +6,6 @@ import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
 import de.ikor.sip.foundation.core.framework.stubs.*;
-import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Description;
 import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
@@ -48,7 +46,7 @@ class OnExceptionConfigurationTest {
     void when_OnExceptionConfiguredOnInConnector_then_ValidateInConnectorOnExceptionExecution() throws Exception {
         // arrange
         InConnector inConnector = new OnExceptionInConnector(InEndpoint.instance("direct:inDirect-1", "inDirect-1"));
-        routerSubject.from(inConnector);
+        routerSubject.input(inConnector);
         routeStarter.buildRoutes(routerSubject);
 
         mock.expectedBodiesReceived("InConnectorException");
@@ -66,7 +64,7 @@ class OnExceptionConfigurationTest {
         // arrange
         InConnector inConnector = SimpleInConnector.withUri("direct:inDirect-2");
         OutConnector outConnector = new OnExceptionOutConnector(OutEndpoint.instance("direct:outDirect", "outDirect-2"));
-        routerSubject.from(inConnector).to(outConnector).build();
+        routerSubject.input(inConnector).output(outConnector).build();
         routeStarter.buildRoutes(routerSubject);
 
         mock.expectedBodiesReceived("OutConnectorException");

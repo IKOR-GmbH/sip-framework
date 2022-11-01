@@ -24,7 +24,7 @@ public abstract class CentralRouter {
 
   public void configureOnException() {}
 
-  public UseCaseTopologyDefinition from(InConnector... inConnectors) {
+  public UseCaseTopologyDefinition input(InConnector... inConnectors) {
     for (InConnector connector : inConnectors) {
       connector.configureOnException();
       connector.configure();

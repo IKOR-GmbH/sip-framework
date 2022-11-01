@@ -28,7 +28,7 @@ class EndpointsIntegrationTests {
     SimpleOutConnector outConnector = new SimpleOutConnector().outEndpointId("cool-id");
 
     // act
-    subject.from(SimpleInConnector.withUri("direct:hey-test")).to(outConnector);
+    subject.input(SimpleInConnector.withUri("direct:hey-test")).output(outConnector);
     // assert
 
     Endpoint registeredEndpoint = CentralEndpointsRegister.getEndpoint("cool-id");
@@ -49,7 +49,7 @@ class EndpointsIntegrationTests {
     TestingOutConnector outConnector = new SimpleOutConnector().outEndpointId("cool-id");
 
     // act
-    subject.from(SimpleInConnector.withUri("sipmc:hey-test")).to(outConnector);
+    subject.input(SimpleInConnector.withUri("sipmc:hey-test")).output(outConnector);
     // assert
 
     CentralEndpointsRegister.setState("testing");

@@ -53,7 +53,7 @@ class CentralRoutedDataflowTest {
 
     mock.expectedMessageCount(1);
     mock.expectedBodiesReceived("Hello dude!-[ep-1]");
-    routerSubject.from(inConnector).to(outConnector1).build();
+    routerSubject.input(inConnector).output(outConnector1).build();
     routeStarter.buildRoutes(routerSubject);
 
     template.sendBody("direct:multicast-1", "Hello dude!");
@@ -73,7 +73,7 @@ class CentralRoutedDataflowTest {
     mock.expectedBodiesReceived("Hello dude!-[ep-2]", "Hello dude!-[ep-1]");
     mock.expectedMessageCount(2);
 
-    routerSubject.from(inConnector).to(outConnector1, outConnector2).build();
+    routerSubject.input(inConnector).output(outConnector1, outConnector2).build();
     routeStarter.buildRoutes(routerSubject);
 
     template.sendBody("direct:multicast-3", "Hello dude!");
@@ -94,7 +94,7 @@ class CentralRoutedDataflowTest {
     mock.expectedBodiesReceived("Hello dude!-[ep-1]", "Hello dude!-[ep-1]-[ep-2]");
     mock.expectedMessageCount(2);
 
-    routerSubject.from(inConnector).to(outConnector1).to(outConnector2).build();
+    routerSubject.input(inConnector).output(outConnector1).output(outConnector2).build();
     routeStarter.buildRoutes(routerSubject);
 
     template.sendBody("direct:multicast-4", "Hello dude!");
@@ -116,7 +116,7 @@ class CentralRoutedDataflowTest {
     mock.expectedBodiesReceived("Hello dude!-[ep-2]", "Hello dude!-[ep-1]", "Hello dude!-[ep-3]");
     mock.expectedMessageCount(3);
 
-    routerSubject.from(inConnector).to(outConnector1, outConnector2).to(outConnector3).build();
+    routerSubject.input(inConnector).output(outConnector1, outConnector2).output(outConnector3).build();
 
     template.sendBody("direct:multicast-5", "Hello dude!");
 
@@ -137,7 +137,7 @@ class CentralRoutedDataflowTest {
       throws Exception {
     CentralRouter.getCamelContext().addRoutes(ComplexOutConnector.helperRouteBuilder);
 
-    routerSubject.from(new ComplexInConnector()).to(new ComplexOutConnector()).build();
+    routerSubject.input(new ComplexInConnector()).output(new ComplexOutConnector()).build();
 
     // act
     routeStarter.buildRoutes(routerSubject);
@@ -158,7 +158,7 @@ class CentralRoutedDataflowTest {
     mockTest.expectedBodiesReceived("Hello dude!-[ep-1]");
     mockTest.expectedMessageCount(1);
 
-    routerSubject.from(inConnector).to(outConnector).build();
+    routerSubject.input(inConnector).output(outConnector).build();
     routeStarter.buildRoutes(routerSubject);
 
     CentralEndpointsRegister.setState("testing");

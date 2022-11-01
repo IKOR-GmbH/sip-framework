@@ -12,7 +12,7 @@ public class RestCentralRouter extends CentralRouter {
 
   @Override
   public void configure() throws Exception {
-    from(new RestInConnector()).to(new AppendStringOutConnector());
+    input(new RestInConnector()).output(new AppendStringOutConnector());
   }
 
   @Override
