@@ -6,30 +6,32 @@ import org.apache.camel.model.RouteDefinition;
 
 public class OnExceptionOutConnector extends OutConnector {
 
-    private final OutEndpoint outEndpoint;
+  private final OutEndpoint outEndpoint;
 
-    public OnExceptionOutConnector(OutEndpoint outEndpoint) {
-        this.outEndpoint = outEndpoint;
-    }
+  public OnExceptionOutConnector(OutEndpoint outEndpoint) {
+    this.outEndpoint = outEndpoint;
+  }
 
-    @Override
-    public void configure(RouteDefinition route) {
-        route
-            .log("lets cause DummyException in OutConnector")
-            .process(exchange -> {
-                throw new TestingDummyException("fake exception");
+  @Override
+  public void configure(RouteDefinition route) {
+    route
+        .log("lets cause DummyException in OutConnector")
+        .process(
+            exchange -> {
+              throw new TestingDummyException("fake exception");
             })
-            .to(outEndpoint.getEndpointUri());
-    }
+        .to(outEndpoint.getEndpointUri());
+  }
 
-    @Override
-    public void configureOnException() {
-        onException(TestingDummyException.class)
-                .handled(true)
-                .log("DummyException happened, OutConnector onException handler is invoked!")
-                .process(exchange -> {
-                    exchange.getMessage().setBody("OutConnectorException");
-                })
-                .to("log:message");
-    }
+  @Override
+  public void configureOnException() {
+    onException(TestingDummyException.class)
+        .handled(true)
+        .log("DummyException happened, OutConnector onException handler is invoked!")
+        .process(
+            exchange -> {
+              exchange.getMessage().setBody("OutConnectorException");
+            })
+        .to("log:message");
+  }
 }

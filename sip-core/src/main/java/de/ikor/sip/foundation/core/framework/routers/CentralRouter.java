@@ -29,10 +29,10 @@ public abstract class CentralRouter {
       connector.configureOnException();
       connector.configure();
       appendToSIPmcAndRouteId(connector);
-      connector.handleResponse(connector.getConnectorDefinition());
+      connector.handleResponse(connector.getConnectorRouteDefinition());
     }
     this.inConnectors.addAll(Arrays.asList(inConnectors));
-    definition = new UseCaseTopologyDefinition(camelContext, this.getScenario());
+    definition = new UseCaseTopologyDefinition(this.getScenario());
     return definition;
   }
 
@@ -46,7 +46,7 @@ public abstract class CentralRouter {
     connector.configureOnException();
     connector.configure();
     appendToSIPmcAndRouteId(connector, "-testing");
-    connector.handleResponse(connector.getConnectorDefinition());
+    connector.handleResponse(connector.getConnectorRouteDefinition());
   }
 
   List<InConnector> getInConnectors() {
@@ -59,7 +59,7 @@ public abstract class CentralRouter {
 
   private void appendToSIPmcAndRouteId(InConnector connector, String routeSuffix) {
     connector
-        .getConnectorDefinition()
+        .getConnectorRouteDefinition()
         .to("sipmc:" + this.getScenario() + routeSuffix)
         .routeId(generateRouteId(this.getScenario(), connector.getName(), routeSuffix));
   }

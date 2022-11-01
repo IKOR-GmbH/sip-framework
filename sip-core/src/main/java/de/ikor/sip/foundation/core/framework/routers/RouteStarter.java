@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
 import java.util.List;
 import org.apache.camel.CamelContext;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,9 @@ public class RouteStarter extends EventNotifierSupport {
       router.configureOnException();
       router.configure();
       for (InConnector connector : router.getInConnectors()) {
+        if (connector.getRegisteredInCamel()) {
+          continue;
+        }
         addRoutesFromConnector(connector);
         CentralEndpointsRegister.setState("testing");
         router.switchToTestingDefinitionMode(connector);
@@ -38,7 +42,12 @@ public class RouteStarter extends EventNotifierSupport {
         connector.setRegisteredInCamel(true);
       }
       if (router.getUseCaseDefinition() != null) {
-        router.getUseCaseDefinition().build();
+        UseCaseTopologyDefinition useCaseTopologyDefinition = router.getUseCaseDefinition();
+        camelContext.addRoutes(useCaseTopologyDefinition.getRouteBuilder());
+        camelContext.addRoutes(useCaseTopologyDefinition.getTestingRouteBuilder());
+        for (RouteBuilder rb : useCaseTopologyDefinition.getOutConnectorsRouteBuilders()) {
+          camelContext.addRoutes(rb);
+        }
       } else {
         throw new EmptyCentralRouterException(router.getScenario());
       }
@@ -49,9 +58,6 @@ public class RouteStarter extends EventNotifierSupport {
   }
 
   private void addRoutesFromConnector(InConnector inConnector) throws Exception {
-    if (inConnector.getRegisteredInCamel()) {
-      return;
-    }
     if (inConnector.getRestBuilder() != null) {
       camelContext.addRoutes(inConnector.getRestBuilder());
     }

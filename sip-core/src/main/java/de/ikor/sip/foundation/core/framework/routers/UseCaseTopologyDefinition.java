@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.*;
 import org.apache.commons.collections4.CollectionUtils;
@@ -17,13 +16,13 @@ import org.apache.commons.collections4.CollectionUtils;
 public class UseCaseTopologyDefinition {
   private static final String TESTING_SUFFIX = "-testing";
   private static final String URI_PREFIX = "direct:";
-  private final CamelContext camelContext;
   private final String useCase;
 
+  @Getter private final List<RouteBuilder> outConnectorsRouteBuilders = new ArrayList<>();
   private ProcessorDefinition routeDefinition = null;
   private ProcessorDefinition testRouteDefinition = null;
   @Getter private RouteBuilder routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
-  private RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
+  @Getter private RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
 
   public UseCaseTopologyDefinition to(OutConnector... outConnectors) {
     routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
@@ -69,12 +68,8 @@ public class UseCaseTopologyDefinition {
     return multicastDefinition.end();
   }
 
-  public void build() throws Exception {
-    camelContext.addRoutes(this.routeBuilder);
-    camelContext.addRoutes(this.testingRouteBuilder);
-  }
-
-  private ProcessorDefinition initBaseRoute(ProcessorDefinition processorDefinition, String suffix) {
+  private ProcessorDefinition initBaseRoute(
+      ProcessorDefinition processorDefinition, String suffix) {
     String uri = "sipmc:" + useCase + suffix;
     RouteDefinition rd = new RouteDefinition();
 
@@ -96,7 +91,7 @@ public class UseCaseTopologyDefinition {
     if (TESTING_SUFFIX.equals(routeSuffix)) {
       routeDefinition.getOutputs().forEach(this::handleTestIDAppending);
     }
-    camelContext.addRoutes(rb);
+    outConnectorsRouteBuilders.add(rb);
 
     return this;
   }

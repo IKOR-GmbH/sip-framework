@@ -85,7 +85,7 @@ class CentralRouterStructureTest {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:OneOutConnector");
     SimpleOutConnector outConnector = new SimpleOutConnector();
     // act
-    routerSubject.from(inConnector).to(outConnector).build();
+    routerSubject.from(inConnector).to(outConnector);
     routeStarter.buildRoutes(routerSubject);
     // assert
     assertThat(getRoutesFromContext())
