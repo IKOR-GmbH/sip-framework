@@ -4,18 +4,16 @@ import static java.lang.String.format;
 
 import de.ikor.sip.foundation.core.framework.AdapterRouteConfiguration;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.Getter;
-import lombok.Setter;
-import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.builder.RouteConfigurationBuilder;
 import org.apache.camel.model.RouteConfigurationDefinition;
 
 public abstract class CentralRouter {
-  @Getter @Setter private static CamelContext camelContext;
 
   private final List<InConnector> inConnectors = new ArrayList<>();
 
@@ -36,7 +34,7 @@ public abstract class CentralRouter {
       connector.configureOnException();
       connector.configure();
       appendToSIPmcAndRouteId(connector);
-      connector.handleResponse(connector.getConnectorDefinition());
+      connector.handleResponse(connector.getConnectorRouteDefinition());
     }
     this.inConnectors.addAll(Arrays.asList(inConnectors));
     definition = new UseCaseTopologyDefinition(camelContext, this.getScenario(), getBuilder());
@@ -57,8 +55,12 @@ public abstract class CentralRouter {
     connector.setConfiguration(getBuilder());
     connector.configureOnException();
     connector.configure();
-    appendToSIPmcAndRouteId(connector, "-testing");
-    connector.handleResponse(connector.getConnectorDefinition());
+    appendToSIPmcAndRouteId(connector, TestingRoutesUtil.TESTING_SUFFIX);
+    connector
+        .getConnectorRouteDefinition()
+        .getOutputs()
+        .forEach(TestingRoutesUtil::handleTestIDAppending);
+    connector.handleResponse(connector.getConnectorRouteDefinition());
   }
 
   List<InConnector> getInConnectors() {
@@ -71,7 +73,7 @@ public abstract class CentralRouter {
 
   private void appendToSIPmcAndRouteId(InConnector connector, String routeSuffix) {
     connector
-        .getConnectorDefinition()
+        .getConnectorRouteDefinition()
         .to("sipmc:" + this.getScenario() + routeSuffix)
         .routeId(generateRouteId(this.getScenario(), connector.getName(), routeSuffix));
   }

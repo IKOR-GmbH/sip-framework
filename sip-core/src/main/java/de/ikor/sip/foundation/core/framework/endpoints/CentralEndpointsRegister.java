@@ -3,10 +3,13 @@ package de.ikor.sip.foundation.core.framework.endpoints;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Setter;
+import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.commons.lang3.StringUtils;
 
 public class CentralEndpointsRegister {
+
+  @Setter private static CamelContext camelContext;
 
   private static final String COLON = ":";
   private static final String QUESTION = "?";
@@ -58,6 +61,10 @@ public class CentralEndpointsRegister {
   public static void put(String id, RestInEndpoint inEndpoint) {
     restInEndpointRegistry.put(id, inEndpoint);
     testingRestInEndpointRegistry.put(id, toTestEndpoint(inEndpoint));
+  }
+
+  static Endpoint getCamelEndpoint(String uri) {
+    return camelContext.getEndpoint(uri);
   }
 
   private static InEndpoint toTestEndpoint(InEndpoint inEndpoint) {

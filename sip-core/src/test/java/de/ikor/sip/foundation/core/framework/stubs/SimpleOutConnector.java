@@ -25,7 +25,4 @@ public class SimpleOutConnector extends TestingOutConnector {
         .to(OutEndpoint.instance(uri, endpointId))
         .id("log-message-endpoint");
   }
-
-  @Override
-  public void configureOnConnectorLevel() {}
 }

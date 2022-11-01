@@ -14,7 +14,6 @@ import org.apache.camel.model.rest.RestDefinition;
 
 public abstract class InConnector implements Connector {
   @Getter private RouteBuilder routeBuilder;
-  @Getter private RouteBuilder restBuilder;
   private RestInEndpoint restInEndpoint;
   // TODO: Use different mechanism to detect this
   @Getter @Setter private Boolean registeredInCamel = false;
@@ -34,13 +33,12 @@ public abstract class InConnector implements Connector {
 
   protected RouteDefinition from(RestDefinition restDefinition) {
     restDefinition.to("direct:rest-" + restInEndpoint.getUri());
-    routeBuilder = anonymousDummyRouteBuilder(configuration);
     return routeBuilder.from("direct:rest-" + restInEndpoint.getUri());
   }
 
   protected RestDefinition rest(String uri, String id) {
-    restBuilder = getRouteBuilderInstance();
-    restInEndpoint = RestInEndpoint.instance(uri, id, restBuilder);
+    routeBuilder = getRouteBuilderInstance();
+    restInEndpoint = RestInEndpoint.instance(uri, id, routeBuilder);
     return restInEndpoint.rest();
   }
 
@@ -66,10 +64,10 @@ public abstract class InConnector implements Connector {
   }
 
   public String getEndpointUri() {
-    return getConnectorDefinition().getEndpointUrl();
+    return getConnectorRouteDefinition().getEndpointUrl();
   }
 
-  public RouteDefinition getConnectorDefinition() {
+  public RouteDefinition getConnectorRouteDefinition() {
     return routeBuilder.getRouteCollection().getRoutes().get(0);
   }
 }

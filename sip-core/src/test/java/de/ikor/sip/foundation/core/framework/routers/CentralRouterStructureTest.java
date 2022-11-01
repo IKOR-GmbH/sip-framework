@@ -35,7 +35,7 @@ class CentralRouterStructureTest {
   @Test
   void when_ApplicationStarts_then_CentralRouterBeanIsLoaded() {
     assertThat(routerSubject).as("CentralRouter bean not initialized").isNotNull();
-    Assertions.assertThat(CentralRouter.getCamelContext())
+    Assertions.assertThat(RouteStarter.getCamelContext())
         .as("Camel context not set on CentralRouter")
         .isNotNull();
   }
@@ -85,7 +85,7 @@ class CentralRouterStructureTest {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:OneOutConnector");
     SimpleOutConnector outConnector = new SimpleOutConnector();
     // act
-    routerSubject.from(inConnector).to(outConnector).build();
+    routerSubject.from(inConnector).to(outConnector);
     routeStarter.buildRoutes(routerSubject);
     // assert
     assertThat(getRoutesFromContext())
@@ -115,7 +115,7 @@ class CentralRouterStructureTest {
   }
 
   private Route getRouteFromContextById(String routeId) {
-    return CentralRouter.getCamelContext().getRoute(routeId);
+    return RouteStarter.getCamelContext().getRoute(routeId);
   }
 
   @Test
@@ -138,6 +138,6 @@ class CentralRouterStructureTest {
   }
 
   private List<Route> getRoutesFromContext() {
-    return CentralRouter.getCamelContext().getRoutes();
+    return RouteStarter.getCamelContext().getRoutes();
   }
 }
