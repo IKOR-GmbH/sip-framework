@@ -44,7 +44,7 @@ public abstract class CentralRouter {
     connector.configure();
     appendToSIPmcAndRouteId(connector, TestingRoutesUtil.TESTING_SUFFIX);
     connector
-        .getConnectorDefinition()
+        .getConnectorRouteDefinition()
         .getOutputs()
         .forEach(TestingRoutesUtil::handleTestIDAppending);
     connector.handleResponse(connector.getConnectorRouteDefinition());
