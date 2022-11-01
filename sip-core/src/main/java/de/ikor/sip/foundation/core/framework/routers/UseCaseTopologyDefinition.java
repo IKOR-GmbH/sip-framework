@@ -5,7 +5,6 @@ import static de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil.TESTI
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
 import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
