@@ -1,7 +1,11 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
+import static de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil.TESTING_SUFFIX;
+
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
+import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -10,11 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.*;
-import org.apache.commons.collections4.CollectionUtils;
 
 @RequiredArgsConstructor
 public class UseCaseTopologyDefinition {
-  private static final String TESTING_SUFFIX = "-testing";
   private static final String URI_PREFIX = "direct:";
   private final String useCase;
 
@@ -89,42 +91,10 @@ public class UseCaseTopologyDefinition {
     outConnector.configure(routeDefinition);
     // add testing suffix to processor definition id to prevent id duplication
     if (TESTING_SUFFIX.equals(routeSuffix)) {
-      routeDefinition.getOutputs().forEach(this::handleTestIDAppending);
+      routeDefinition.getOutputs().forEach(TestingRoutesUtil::handleTestIDAppending);
     }
     outConnectorsRouteBuilders.add(rb);
 
     return this;
-  }
-
-  private void handleTestIDAppending(ProcessorDefinition<?> processorDefinition) {
-    if (processorDefinition.getId() != null) {
-      appendTestIdToProcessor(processorDefinition);
-    }
-    if (CollectionUtils.isNotEmpty(processorDefinition.getOutputs())) {
-      processorDefinition.getOutputs().forEach(this::handleTestIDAppending);
-    }
-  }
-
-  private void appendTestIdToProcessor(ProcessorDefinition<?> processorDefinition) {
-    String id = processorDefinition.getId();
-    if (processorDefinition instanceof ChoiceDefinition) {
-      // handler for setId of ChoiceDefinition due to its custom implementation
-      handleChoiceDefinitionID((ChoiceDefinition) processorDefinition, id);
-    }
-    processorDefinition.setId(id + TESTING_SUFFIX);
-  }
-
-  private void handleChoiceDefinitionID(ChoiceDefinition choiceDefinition, String id) {
-    // Save reference to when and otherwise definition
-    List<WhenDefinition> whenDefinitions = choiceDefinition.getWhenClauses();
-    OtherwiseDefinition otherwiseDefinition = choiceDefinition.getOtherwise();
-    // remove when and otherwise definition so id would be set on choice definition
-    choiceDefinition.setWhenClauses(new ArrayList<>());
-    choiceDefinition.setOtherwise(null);
-    // set choice definition id with testing suffix
-    choiceDefinition.setId(id + TESTING_SUFFIX);
-    // place back original when and otherwise definition
-    choiceDefinition.setWhenClauses(whenDefinitions);
-    choiceDefinition.setOtherwise(otherwiseDefinition);
   }
 }
