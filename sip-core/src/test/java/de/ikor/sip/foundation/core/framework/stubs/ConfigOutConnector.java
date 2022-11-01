@@ -8,7 +8,4 @@ public class ConfigOutConnector extends OutConnector {
   public void configure(RouteDefinition route) {
     route.to("seda:out-config");
   }
-
-  @Override
-  public void configureOnConnectorLevel() {}
 }

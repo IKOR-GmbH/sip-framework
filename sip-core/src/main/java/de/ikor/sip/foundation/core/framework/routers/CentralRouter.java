@@ -37,7 +37,7 @@ public abstract class CentralRouter {
       connector.handleResponse(connector.getConnectorRouteDefinition());
     }
     this.inConnectors.addAll(Arrays.asList(inConnectors));
-    definition = new UseCaseTopologyDefinition(camelContext, this.getScenario(), getBuilder());
+    definition = new UseCaseTopologyDefinition(this.getScenario(), getBuilder());
     return definition;
   }
 

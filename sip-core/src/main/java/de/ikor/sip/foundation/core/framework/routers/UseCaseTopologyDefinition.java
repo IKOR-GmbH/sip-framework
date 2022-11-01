@@ -26,9 +26,7 @@ public class UseCaseTopologyDefinition {
   @Getter private RouteBuilder routeBuilder;
   @Getter private RouteBuilder testingRouteBuilder;
 
-  public UseCaseTopologyDefinition(
-      CamelContext camelContext, String useCase, RouteConfigurationBuilder configurationBuilder) {
-    this.camelContext = camelContext;
+  public UseCaseTopologyDefinition(String useCase, RouteConfigurationBuilder configurationBuilder) {
     this.useCase = useCase;
     this.configurationBuilder = configurationBuilder;
     routeBuilder = CentralRouter.anonymousDummyRouteBuilder(configurationBuilder);
@@ -37,7 +35,7 @@ public class UseCaseTopologyDefinition {
 
   public UseCaseTopologyDefinition to(OutConnector... outConnectors) {
     routeBuilder = CentralRouter.anonymousDummyRouteBuilder(configurationBuilder);
-    routeDefinition = initBaseRoute(routeBuilder, routeDefinition, "");
+    routeDefinition = initBaseRoute(routeDefinition, "");
     if (outConnectors.length > 1) {
       routeDefinition = appendMulticastDefinition(outConnectors, routeDefinition, "");
     } else {
@@ -52,7 +50,7 @@ public class UseCaseTopologyDefinition {
 
   private void generateTestRoutes(OutConnector... outConnectors) {
     testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder(configurationBuilder);
-    testRouteDefinition = initBaseRoute(testingRouteBuilder, testRouteDefinition, TESTING_SUFFIX);
+    testRouteDefinition = initBaseRoute(testRouteDefinition, TESTING_SUFFIX);
     CentralEndpointsRegister.setState("testing");
     if (outConnectors.length > 1) {
       testRouteDefinition =
