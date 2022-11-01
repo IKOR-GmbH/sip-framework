@@ -68,9 +68,6 @@ public class RouteStarter extends EventNotifierSupport {
   }
 
   private void addRoutesFromConnector(InConnector inConnector) throws Exception {
-    if (inConnector.getRestBuilder() != null) {
-      camelContext.addRoutes(inConnector.getRestBuilder());
-    }
     camelContext.addRoutes(inConnector.getRouteBuilder());
   }
 }
