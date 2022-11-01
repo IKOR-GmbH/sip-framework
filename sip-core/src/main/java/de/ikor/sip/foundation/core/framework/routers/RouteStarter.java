@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class RouteStarter extends EventNotifierSupport {
   List<CentralRouter> availableRouters;
-  CamelContext camelContext;
+
+  private static CamelContext camelContext;
 
   public RouteStarter(List<CentralRouter> availableRouters) {
     this.availableRouters = availableRouters;
@@ -20,9 +21,14 @@ public class RouteStarter extends EventNotifierSupport {
 
   @Override
   public void notify(CamelEvent event) {
-    this.camelContext = ((CamelEvent.CamelContextInitializingEvent) event).getContext();
-    CentralRouter.setCamelContext(camelContext);
+    camelContext = ((CamelEvent.CamelContextInitializingEvent) event).getContext();
+    CentralEndpointsRegister.setCamelContext(camelContext);
     availableRouters.forEach(this::buildRoutes);
+  }
+
+  @Override
+  public boolean isEnabled(CamelEvent event) {
+    return event instanceof CamelEvent.CamelContextInitializingEvent;
   }
 
   void buildRoutes(CentralRouter router) {
@@ -57,15 +63,14 @@ public class RouteStarter extends EventNotifierSupport {
     }
   }
 
+  static CamelContext getCamelContext() {
+    return camelContext;
+  }
+
   private void addRoutesFromConnector(InConnector inConnector) throws Exception {
     if (inConnector.getRestBuilder() != null) {
       camelContext.addRoutes(inConnector.getRestBuilder());
     }
     camelContext.addRoutes(inConnector.getRouteBuilder());
-  }
-
-  @Override
-  public boolean isEnabled(CamelEvent event) {
-    return event instanceof CamelEvent.CamelContextInitializingEvent;
   }
 }

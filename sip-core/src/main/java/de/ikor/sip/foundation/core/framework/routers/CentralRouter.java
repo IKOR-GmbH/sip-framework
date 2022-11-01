@@ -6,13 +6,9 @@ import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 
 public abstract class CentralRouter {
-  @Getter @Setter private static CamelContext camelContext;
 
   private final List<InConnector> inConnectors = new ArrayList<>();
 

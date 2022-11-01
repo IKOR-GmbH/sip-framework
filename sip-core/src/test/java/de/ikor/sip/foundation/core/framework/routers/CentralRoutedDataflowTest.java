@@ -125,7 +125,7 @@ class CentralRoutedDataflowTest {
 
   @Test
   void when_RouteUsesEnrich_then_SIPMetadataIsSupported() throws Exception {
-    CentralRouter.getCamelContext().addRoutes(routeBuilder());
+    RouteStarter.getCamelContext().addRoutes(routeBuilder());
     mock.expectedBodiesReceived("yes, enrich works");
     template.sendBody("direct:withEnrich", "enrichWorks?");
 
@@ -135,7 +135,7 @@ class CentralRoutedDataflowTest {
   @Test
   void when_InConnectorImplementsResponseProcessing_then_ConnectorReturnsProcessedResponse()
       throws Exception {
-    CentralRouter.getCamelContext().addRoutes(ComplexOutConnector.helperRouteBuilder);
+    RouteStarter.getCamelContext().addRoutes(ComplexOutConnector.helperRouteBuilder);
 
     routerSubject.from(new ComplexInConnector()).to(new ComplexOutConnector());
 
