@@ -32,25 +32,27 @@ public class RouteStarter extends EventNotifierSupport {
   }
 
   void buildRoutes(CentralRouter router) {
-    CentralEndpointsRegister.setState("actual");
     try {
       router.configureOnException();
       router.configure();
+
       for (InConnector connector : router.getInConnectors()) {
         if (connector.getRegisteredInCamel()) {
           continue;
         }
-        addRoutesFromConnector(connector);
         CentralEndpointsRegister.setState("testing");
-        router.switchToTestingDefinitionMode(connector);
-        addRoutesFromConnector(connector);
+        router.populateTestingRoute(connector);
         CentralEndpointsRegister.setState("actual");
+        camelContext.addRoutes(connector.getRouteBuilder());
         connector.setRegisteredInCamel(true);
       }
+
       if (router.getUseCaseDefinition() != null) {
+
         UseCaseTopologyDefinition useCaseTopologyDefinition = router.getUseCaseDefinition();
         camelContext.addRoutes(useCaseTopologyDefinition.getRouteBuilder());
         camelContext.addRoutes(useCaseTopologyDefinition.getTestingRouteBuilder());
+
         for (RouteBuilder rb : useCaseTopologyDefinition.getOutConnectorsRouteBuilders()) {
           camelContext.addRoutes(rb);
         }
@@ -65,9 +67,5 @@ public class RouteStarter extends EventNotifierSupport {
 
   static CamelContext getCamelContext() {
     return camelContext;
-  }
-
-  private void addRoutesFromConnector(InConnector inConnector) throws Exception {
-    camelContext.addRoutes(inConnector.getRouteBuilder());
   }
 }

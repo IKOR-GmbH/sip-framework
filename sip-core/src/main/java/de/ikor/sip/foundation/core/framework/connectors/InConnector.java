@@ -15,6 +15,7 @@ import org.apache.camel.model.rest.RestDefinition;
 public abstract class InConnector implements Connector {
   @Getter private RouteBuilder routeBuilder;
   private RestInEndpoint restInEndpoint;
+  private InEndpoint inEndpoint;
   // TODO: Use different mechanism to detect this
   @Getter @Setter private Boolean registeredInCamel = false;
 
@@ -26,6 +27,7 @@ public abstract class InConnector implements Connector {
 
   protected RouteDefinition from(InEndpoint inEndpoint) {
     routeBuilder = getRouteBuilderInstance();
+    this.inEndpoint = inEndpoint;
     return routeBuilder.from(getInEndpointUri(inEndpoint.getId()));
   }
 
@@ -50,10 +52,6 @@ public abstract class InConnector implements Connector {
     return last;
   }
 
-  public void createNewRouteBuilder() {
-    routeBuilder = anonymousDummyRouteBuilder();
-  }
-
   private RouteBuilder getRouteBuilderInstance() {
     if (routeBuilder == null) {
       return anonymousDummyRouteBuilder();
@@ -62,10 +60,16 @@ public abstract class InConnector implements Connector {
   }
 
   public String getEndpointUri() {
-    return getConnectorRouteDefinition().getEndpointUrl();
+    return inEndpoint.getUri();
   }
 
+  // TODO: Assumption here is that the first route is the "regular" one and the second
+  // is the testing one. This hardcoded .get(0) and .get(1) should be refactored
   public RouteDefinition getConnectorRouteDefinition() {
     return routeBuilder.getRouteCollection().getRoutes().get(0);
+  }
+
+  public RouteDefinition getConnectorTestingRouteDefinition() {
+    return routeBuilder.getRouteCollection().getRoutes().get(1);
   }
 }
