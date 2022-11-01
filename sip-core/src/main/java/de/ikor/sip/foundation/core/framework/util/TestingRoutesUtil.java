@@ -9,7 +9,9 @@ import org.apache.camel.model.WhenDefinition;
 import org.apache.commons.collections4.CollectionUtils;
 
 public class TestingRoutesUtil {
-  public static final String TESTING_SUFFIX = "-testing";
+  private TestingRoutesUtil() {}
+
+  public static final String TESTING_SUFFIX = "-testkit";
 
   public static void handleTestIDAppending(ProcessorDefinition<?> processorDefinition) {
     if (processorDefinition.getId() != null) {

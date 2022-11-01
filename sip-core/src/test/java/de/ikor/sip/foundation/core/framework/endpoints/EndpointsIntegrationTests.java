@@ -50,7 +50,7 @@ class EndpointsIntegrationTests {
     subject.from(SimpleInConnector.withUri("sipmc:hey-test")).to(outConnector);
     // assert
 
-    CentralEndpointsRegister.setState("testing");
+    CentralEndpointsRegister.putInTestingState();
     Endpoint registeredEndpoint = CentralEndpointsRegister.getEndpoint("cool-id");
     Endpoint endpointFromCamelContext = null;
     try {
@@ -61,6 +61,6 @@ class EndpointsIntegrationTests {
     }
     assertThat(registeredEndpoint.getEndpointUri()).endsWith("-testkit");
     assertThat(endpointFromCamelContext).isNotNull();
-    CentralEndpointsRegister.setState("actual");
+    CentralEndpointsRegister.putInActualState();
   }
 }

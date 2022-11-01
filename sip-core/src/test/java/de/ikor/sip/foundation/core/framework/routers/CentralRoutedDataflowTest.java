@@ -161,11 +161,11 @@ class CentralRoutedDataflowTest {
     routerSubject.from(inConnector).to(outConnector);
     routeStarter.buildRoutes(routerSubject);
 
-    CentralEndpointsRegister.setState("testing");
+    CentralEndpointsRegister.putInTestingState();
     template.sendBody("direct:multicast-6-testkit", "Hello dude!");
 
     mockTest.assertIsSatisfied();
-    CentralEndpointsRegister.setState("actual");
+    CentralEndpointsRegister.putInActualState();
   }
 
   private RoutesBuilder routeBuilder() {

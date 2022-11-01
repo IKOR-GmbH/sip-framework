@@ -43,7 +43,7 @@ public class UseCaseTopologyDefinition {
   private void generateTestRoutes(OutConnector... outConnectors) {
     testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
     testRouteDefinition = initBaseRoute(testRouteDefinition, TESTING_SUFFIX);
-    CentralEndpointsRegister.setState("testing");
+    CentralEndpointsRegister.putInTestingState();
     if (outConnectors.length > 1) {
       testRouteDefinition =
           appendMulticastDefinition(outConnectors, testRouteDefinition, TESTING_SUFFIX);
@@ -54,7 +54,7 @@ public class UseCaseTopologyDefinition {
       this.from(outConnector, URI_PREFIX + outConnector.getName(), TESTING_SUFFIX);
     }
     testingRouteBuilder.getRouteCollection().getRoutes().add((RouteDefinition) testRouteDefinition);
-    CentralEndpointsRegister.setState("actual");
+    CentralEndpointsRegister.putInActualState();
   }
 
   private ProcessorDefinition appendMulticastDefinition(
@@ -86,11 +86,11 @@ public class UseCaseTopologyDefinition {
     outConnector.setRouteBuilder(rb);
     outConnector.configureOnException();
     String routeId = CentralRouter.generateRouteId(useCase, outConnector.getName(), routeSuffix);
-    RouteDefinition routeDefinition = rb.from(uri + routeSuffix).routeId(routeId);
-    outConnector.configure(routeDefinition);
+    RouteDefinition connectorRouteDefinition = rb.from(uri + routeSuffix).routeId(routeId);
+    outConnector.configure(connectorRouteDefinition);
     // add testing suffix to processor definition id to prevent id duplication
     if (TESTING_SUFFIX.equals(routeSuffix)) {
-      routeDefinition.getOutputs().forEach(TestingRoutesUtil::handleTestIDAppending);
+      connectorRouteDefinition.getOutputs().forEach(TestingRoutesUtil::handleTestIDAppending);
     }
     outConnectorsRouteBuilders.add(rb);
 

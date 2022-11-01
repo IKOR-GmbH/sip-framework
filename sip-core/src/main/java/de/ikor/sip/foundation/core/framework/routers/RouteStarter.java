@@ -37,12 +37,12 @@ public class RouteStarter extends EventNotifierSupport {
       router.configure();
 
       for (InConnector connector : router.getInConnectors()) {
-        if (connector.getRegisteredInCamel()) {
+        if (Boolean.TRUE.equals(connector.getRegisteredInCamel())) {
           continue;
         }
-        CentralEndpointsRegister.setState("testing");
+        CentralEndpointsRegister.putInTestingState();
         router.populateTestingRoute(connector);
-        CentralEndpointsRegister.setState("actual");
+        CentralEndpointsRegister.putInActualState();
         camelContext.addRoutes(connector.getRouteBuilder());
         connector.setRegisteredInCamel(true);
       }
