@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
 import java.util.List;
 import org.apache.camel.CamelContext;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class RouteStarter extends EventNotifierSupport {
   List<CentralRouter> availableRouters;
-  CamelContext camelContext;
+
+  private static CamelContext camelContext;
 
   public RouteStarter(List<CentralRouter> availableRouters) {
     this.availableRouters = availableRouters;
@@ -19,9 +21,14 @@ public class RouteStarter extends EventNotifierSupport {
 
   @Override
   public void notify(CamelEvent event) {
-    this.camelContext = ((CamelEvent.CamelContextInitializingEvent) event).getContext();
-    CentralRouter.setCamelContext(camelContext);
+    camelContext = ((CamelEvent.CamelContextInitializingEvent) event).getContext();
+    CentralEndpointsRegister.setCamelContext(camelContext);
     availableRouters.forEach(this::buildRoutes);
+  }
+
+  @Override
+  public boolean isEnabled(CamelEvent event) {
+    return event instanceof CamelEvent.CamelContextInitializingEvent;
   }
 
   void buildRoutes(CentralRouter router) {
@@ -30,6 +37,9 @@ public class RouteStarter extends EventNotifierSupport {
       router.configureOnException();
       router.configure();
       for (InConnector connector : router.getInConnectors()) {
+        if (connector.getRegisteredInCamel()) {
+          continue;
+        }
         addRoutesFromConnector(connector);
         CentralEndpointsRegister.setState("testing");
         router.switchToTestingDefinitionMode(connector);
@@ -38,7 +48,12 @@ public class RouteStarter extends EventNotifierSupport {
         connector.setRegisteredInCamel(true);
       }
       if (router.getUseCaseDefinition() != null) {
-        router.getUseCaseDefinition().build();
+        UseCaseTopologyDefinition useCaseTopologyDefinition = router.getUseCaseDefinition();
+        camelContext.addRoutes(useCaseTopologyDefinition.getRouteBuilder());
+        camelContext.addRoutes(useCaseTopologyDefinition.getTestingRouteBuilder());
+        for (RouteBuilder rb : useCaseTopologyDefinition.getOutConnectorsRouteBuilders()) {
+          camelContext.addRoutes(rb);
+        }
       } else {
         throw new EmptyCentralRouterException(router.getScenario());
       }
@@ -48,18 +63,14 @@ public class RouteStarter extends EventNotifierSupport {
     }
   }
 
+  static CamelContext getCamelContext() {
+    return camelContext;
+  }
+
   private void addRoutesFromConnector(InConnector inConnector) throws Exception {
-    if (inConnector.getRegisteredInCamel()) {
-      return;
-    }
     if (inConnector.getRestBuilder() != null) {
       camelContext.addRoutes(inConnector.getRestBuilder());
     }
     camelContext.addRoutes(inConnector.getRouteBuilder());
-  }
-
-  @Override
-  public boolean isEnabled(CamelEvent event) {
-    return event instanceof CamelEvent.CamelContextInitializingEvent;
   }
 }

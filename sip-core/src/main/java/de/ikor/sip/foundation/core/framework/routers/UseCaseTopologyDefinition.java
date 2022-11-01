@@ -9,31 +9,28 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.*;
 
 @RequiredArgsConstructor
 public class UseCaseTopologyDefinition {
   private static final String URI_PREFIX = "direct:";
-  private final CamelContext camelContext;
   private final String useCase;
 
+  @Getter private final List<RouteBuilder> outConnectorsRouteBuilders = new ArrayList<>();
   private ProcessorDefinition routeDefinition = null;
   private ProcessorDefinition testRouteDefinition = null;
   @Getter private RouteBuilder routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
-  private RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
+  @Getter private RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
 
   public UseCaseTopologyDefinition to(OutConnector... outConnectors) {
     routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
-    routeDefinition = initBaseRoute(routeBuilder, routeDefinition, "");
+    routeDefinition = initBaseRoute(routeDefinition, "");
     if (outConnectors.length > 1) {
       routeDefinition = appendMulticastDefinition(outConnectors, routeDefinition, "");
     } else {
       OutConnector outConnector = outConnectors[0];
       routeDefinition.to(URI_PREFIX + outConnector.getName());
-      outConnector.setRouteBuilder(routeBuilder);
-      outConnector.configureOnConnectorLevel();
       this.from(outConnector, URI_PREFIX + outConnector.getName(), "");
     }
     routeBuilder.getRouteCollection().getRoutes().add((RouteDefinition) routeDefinition);
@@ -43,7 +40,7 @@ public class UseCaseTopologyDefinition {
 
   private void generateTestRoutes(OutConnector... outConnectors) {
     testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
-    testRouteDefinition = initBaseRoute(testingRouteBuilder, testRouteDefinition, TESTING_SUFFIX);
+    testRouteDefinition = initBaseRoute(testRouteDefinition, TESTING_SUFFIX);
     CentralEndpointsRegister.setState("testing");
     if (outConnectors.length > 1) {
       testRouteDefinition =
@@ -52,8 +49,6 @@ public class UseCaseTopologyDefinition {
       OutConnector outConnector = outConnectors[0];
       testRouteDefinition =
           testRouteDefinition.to(URI_PREFIX + outConnector.getName() + TESTING_SUFFIX);
-      outConnector.setRouteBuilder(testingRouteBuilder);
-      outConnector.configureOnConnectorLevel();
       this.from(outConnector, URI_PREFIX + outConnector.getName(), TESTING_SUFFIX);
     }
     testingRouteBuilder.getRouteCollection().getRoutes().add((RouteDefinition) testRouteDefinition);
@@ -67,21 +62,13 @@ public class UseCaseTopologyDefinition {
         .forEach(
             outConnector -> {
               multicastDefinition.to(URI_PREFIX + outConnector.getName() + suffix);
-              outConnector.setRouteBuilder(
-                  suffix.equals(TESTING_SUFFIX) ? testingRouteBuilder : routeBuilder);
-              outConnector.configureOnConnectorLevel();
               this.from(outConnector, URI_PREFIX + outConnector.getName(), suffix);
             });
     return multicastDefinition.end();
   }
 
-  public void build() throws Exception {
-    camelContext.addRoutes(this.routeBuilder);
-    camelContext.addRoutes(this.testingRouteBuilder);
-  }
-
   private ProcessorDefinition initBaseRoute(
-      RouteBuilder routeBuilder, ProcessorDefinition processorDefinition, String suffix) {
+      ProcessorDefinition processorDefinition, String suffix) {
     String uri = "sipmc:" + useCase + suffix;
     RouteDefinition rd = new RouteDefinition();
 
@@ -95,7 +82,7 @@ public class UseCaseTopologyDefinition {
       OutConnector outConnector, String uri, String routeSuffix) {
     RouteBuilder rb = CentralRouter.anonymousDummyRouteBuilder();
     outConnector.setRouteBuilder(rb);
-    outConnector.configureOnConnectorLevel();
+    outConnector.configureOnException();
     String routeId = CentralRouter.generateRouteId(useCase, outConnector.getName(), routeSuffix);
     RouteDefinition routeDefinition = rb.from(uri + routeSuffix).routeId(routeId);
     outConnector.configure(routeDefinition);
@@ -103,7 +90,7 @@ public class UseCaseTopologyDefinition {
     if (TESTING_SUFFIX.equals(routeSuffix)) {
       routeDefinition.getOutputs().forEach(TestingRoutesUtil::handleTestIDAppending);
     }
-    camelContext.addRoutes(rb);
+    outConnectorsRouteBuilders.add(rb);
 
     return this;
   }

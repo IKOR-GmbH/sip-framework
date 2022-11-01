@@ -64,10 +64,10 @@ public abstract class InConnector implements Connector {
   }
 
   public String getEndpointUri() {
-    return getConnectorDefinition().getEndpointUrl();
+    return getConnectorRouteDefinition().getEndpointUrl();
   }
 
-  public RouteDefinition getConnectorDefinition() {
+  public RouteDefinition getConnectorRouteDefinition() {
     return routeBuilder.getRouteCollection().getRoutes().get(0);
   }
 }
