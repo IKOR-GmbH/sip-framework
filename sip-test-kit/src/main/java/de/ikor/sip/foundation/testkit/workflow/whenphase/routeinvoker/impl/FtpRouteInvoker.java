@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
@@ -27,11 +26,11 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnClass(FtpComponent.class)
 @RequiredArgsConstructor
-@Slf4j
 public class FtpRouteInvoker implements RouteInvoker {
 
   private final CamelContext camelContext;
 
+  @SuppressWarnings("unchecked")
   @Override
   public Optional<Exchange> invoke(Exchange inputExchange) {
     RemoteFileEndpoint<FTPFile> ftpEndpoint =

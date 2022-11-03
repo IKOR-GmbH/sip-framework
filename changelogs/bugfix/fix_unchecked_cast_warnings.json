@@ -1,0 +1,5 @@
+{
+  "author": "nikolag-ikor",
+  "pullrequestId": "155",
+  "message": "Add suppress warnings for unchecked casts which are safe."
+}

@@ -49,6 +49,7 @@ class CxfRouteInvokerTest {
     when(restTemplateBuilder.build()).thenReturn(restTemplate);
   }
 
+  @SuppressWarnings("unchecked")
   @ParameterizedTest(name = "Using input body: {0}")
   @ValueSource(strings = {RESPONSE_BODY})
   @NullSource
