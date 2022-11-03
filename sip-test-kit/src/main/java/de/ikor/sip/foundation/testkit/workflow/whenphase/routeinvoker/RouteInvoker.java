@@ -18,10 +18,20 @@ public interface RouteInvoker {
   Optional<Exchange> invoke(Exchange exchange);
 
   /**
-   * Matching Endpoint with proper RouteInvoker
+   * Match Endpoint with proper RouteInvoker
    *
    * @param endpoint {@link Endpoint}
    * @return boolean true when matching
    */
   boolean isApplicable(Endpoint endpoint);
+
+  /**
+   * Check if component from RouteInvoker is for suspending
+   *
+   * @param endpoint {@link Endpoint}
+   * @return boolean true when matching
+   */
+  default boolean shouldSuspend(Endpoint endpoint) {
+    return false;
+  }
 }

@@ -47,6 +47,11 @@ public class JmsRouteInvoker implements RouteInvoker {
     return endpoint instanceof JmsEndpoint;
   }
 
+  @Override
+  public boolean shouldSuspend(Endpoint endpoint) {
+    return true;
+  }
+
   private Exchange createJmsExchange(JmsConsumer consumer, Exchange inputExchange) {
     Exchange jmsExchange = consumer.createExchange(false);
     JmsBinding binding = consumer.getEndpoint().getBinding();
