@@ -84,9 +84,11 @@ class CentralRouterStructureTest {
     // arrange
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:OneOutConnector");
     SimpleOutConnector outConnector = new SimpleOutConnector();
+
     // act
     routerSubject.input(inConnector).output(outConnector);
     routeStarter.buildRoutes(routerSubject);
+    
     // assert
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", routerSubject.getScenario())))
