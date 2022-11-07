@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.apache.camel.AggregationStrategy;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.*;
 
@@ -26,27 +27,31 @@ public class UseCaseTopologyDefinition {
   @Getter private RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
 
   public UseCaseTopologyDefinition output(OutConnector... outConnectors) {
+    return output(null, outConnectors);
+  }
+
+  public UseCaseTopologyDefinition output(AggregationStrategy aggregationStrategy, OutConnector... outConnectors) {
     routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
     routeDefinition = initBaseRoute(routeDefinition, "");
     if (outConnectors.length > 1) {
-      routeDefinition = appendMulticastDefinition(outConnectors, routeDefinition, "");
+      routeDefinition = appendMulticastDefinition(outConnectors, routeDefinition, aggregationStrategy, "");
     } else {
       OutConnector outConnector = outConnectors[0];
       routeDefinition.to(URI_PREFIX + outConnector.getName());
       this.from(outConnector, URI_PREFIX + outConnector.getName(), "");
     }
     routeBuilder.getRouteCollection().getRoutes().add((RouteDefinition) routeDefinition);
-    generateTestRoutes(outConnectors);
+    generateTestRoutes(aggregationStrategy, outConnectors);
     return this;
   }
 
-  private void generateTestRoutes(OutConnector... outConnectors) {
+  private void generateTestRoutes(AggregationStrategy aggregationStrategy, OutConnector... outConnectors) {
     testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
     testRouteDefinition = initBaseRoute(testRouteDefinition, TESTING_SUFFIX);
     CentralEndpointsRegister.putInTestingState();
     if (outConnectors.length > 1) {
       testRouteDefinition =
-          appendMulticastDefinition(outConnectors, testRouteDefinition, TESTING_SUFFIX);
+          appendMulticastDefinition(outConnectors, testRouteDefinition, aggregationStrategy, TESTING_SUFFIX);
     } else {
       OutConnector outConnector = outConnectors[0];
       testRouteDefinition =
@@ -58,8 +63,8 @@ public class UseCaseTopologyDefinition {
   }
 
   private ProcessorDefinition appendMulticastDefinition(
-      OutConnector[] outConnectors, ProcessorDefinition processorDefinition, String suffix) {
-    MulticastDefinition multicastDefinition = processorDefinition.multicast().parallelProcessing();
+      OutConnector[] outConnectors, ProcessorDefinition processorDefinition, AggregationStrategy aggregationStrategy, String suffix) {
+    MulticastDefinition multicastDefinition = processorDefinition.multicast(aggregationStrategy).parallelProcessing();
     Stream.of(outConnectors)
         .forEach(
             outConnector -> {
