@@ -25,7 +25,7 @@ public class UseCaseTopologyDefinition {
   @Getter private RouteBuilder routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
   @Getter private RouteBuilder testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
 
-  public UseCaseTopologyDefinition to(OutConnector... outConnectors) {
+  public UseCaseTopologyDefinition output(OutConnector... outConnectors) {
     routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
     routeDefinition = initBaseRoute(routeDefinition, "");
     if (outConnectors.length > 1) {

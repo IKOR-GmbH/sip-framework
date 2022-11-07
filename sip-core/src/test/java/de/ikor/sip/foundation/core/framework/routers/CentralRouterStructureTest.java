@@ -46,7 +46,7 @@ class CentralRouterStructureTest {
     // arrange
     SimpleInConnector simpleInConnector = SimpleInConnector.withUri("direct:singleInConnector");
     // act
-    routerSubject.from(simpleInConnector);
+    routerSubject.input(simpleInConnector);
     routeStarter.buildRoutes(routerSubject);
     // assert
     assertThat(getRoutesFromContext())
@@ -64,7 +64,7 @@ class CentralRouterStructureTest {
     SimpleInConnector firstInConnector = SimpleInConnector.withUri("direct:sip");
     SimpleInConnector secondInConnector = SimpleInConnector.withUri("direct:sipie");
     // act
-    routerSubject.from(firstInConnector, secondInConnector);
+    routerSubject.input(firstInConnector, secondInConnector);
     routeStarter.buildRoutes(routerSubject);
     // assert
     assertThat(getRoutesFromContext()).filteredOn(matchRoutesBasedOnUri("direct.*sip")).hasSize(1);
@@ -84,9 +84,11 @@ class CentralRouterStructureTest {
     // arrange
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:OneOutConnector");
     SimpleOutConnector outConnector = new SimpleOutConnector();
+
     // act
-    routerSubject.from(inConnector).to(outConnector);
+    routerSubject.input(inConnector).output(outConnector);
     routeStarter.buildRoutes(routerSubject);
+    
     // assert
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", routerSubject.getScenario())))
@@ -99,7 +101,7 @@ class CentralRouterStructureTest {
       given_OneInConnectorWithOneRoute_when_ConnectorIsRegistered_then_RouteIdIsUseCasePlusConnectorName()
           throws Exception {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:routeIdTest");
-    routerSubject.from(inConnector);
+    routerSubject.input(inConnector);
     routeStarter.buildRoutes(routerSubject);
 
     String expectedRouteId = format("%s-%s", routerSubject.getScenario(), inConnector.getName());
