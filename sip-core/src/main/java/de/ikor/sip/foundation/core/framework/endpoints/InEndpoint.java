@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.framework.endpoints;
 
 import lombok.Getter;
+import org.apache.camel.builder.EndpointConsumerBuilder;
 
 public class InEndpoint {
 
@@ -11,6 +12,10 @@ public class InEndpoint {
     InEndpoint inEndpoint = new InEndpoint(uri, id);
     CentralEndpointsRegister.put(id, inEndpoint);
     return CentralEndpointsRegister.getInEndpoint(id);
+  }
+
+  public static InEndpoint instance(EndpointConsumerBuilder endpointDslDefinition, String id) {
+    return instance(endpointDslDefinition.getUri(), id);
   }
 
   protected InEndpoint(String uri, String id) {

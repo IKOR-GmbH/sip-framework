@@ -12,7 +12,7 @@ import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 
-public abstract class InConnector implements Connector {
+public abstract class InConnector extends Connector {
   @Getter private RouteBuilder routeBuilder;
   private RestInEndpoint restInEndpoint;
   private InEndpoint inEndpoint;

@@ -5,6 +5,7 @@ import static java.lang.String.format;
 import java.util.Map;
 import lombok.Getter;
 import org.apache.camel.*;
+import org.apache.camel.builder.EndpointProducerBuilder;
 
 public class OutEndpoint implements Endpoint {
   private final Endpoint targetEndpoint;
@@ -13,6 +14,10 @@ public class OutEndpoint implements Endpoint {
   public static OutEndpoint instance(String uri, String endpointId) {
     CentralEndpointsRegister.put(endpointId, new OutEndpoint(uri, endpointId));
     return (OutEndpoint) CentralEndpointsRegister.getEndpoint(endpointId);
+  }
+
+  public static OutEndpoint instance(EndpointProducerBuilder endpointDslDefinition, String endpointId) {
+    return instance(endpointDslDefinition.getUri(), endpointId);
   }
 
   OutEndpoint(String uri, String endpointId) {
