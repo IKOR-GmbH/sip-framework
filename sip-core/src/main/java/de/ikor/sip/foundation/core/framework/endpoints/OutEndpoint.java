@@ -2,7 +2,6 @@ package de.ikor.sip.foundation.core.framework.endpoints;
 
 import static java.lang.String.format;
 
-import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
 import java.util.Map;
 import lombok.Getter;
 import org.apache.camel.*;
@@ -17,8 +16,8 @@ public class OutEndpoint implements Endpoint {
   }
 
   OutEndpoint(String uri, String endpointId) {
-    this.targetEndpoint = CentralRouter.getCamelContext().getEndpoint(uri);
-    this.setCamelContext(CentralRouter.getCamelContext());
+    this.targetEndpoint = CentralEndpointsRegister.getCamelEndpoint(uri);
+    this.setCamelContext(targetEndpoint.getCamelContext());
     this.endpointId = endpointId;
   }
 

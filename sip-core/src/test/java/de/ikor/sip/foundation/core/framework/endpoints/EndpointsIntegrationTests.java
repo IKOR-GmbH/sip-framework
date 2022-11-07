@@ -1,10 +1,8 @@
-package de.ikor.sip.foundation.core.framework;
+package de.ikor.sip.foundation.core.framework.endpoints;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.ikor.sip.foundation.core.apps.framework.CentralRouterTestingApplication;
-import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
-import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouter;
@@ -35,7 +33,7 @@ class EndpointsIntegrationTests {
     Endpoint endpointFromCamelContext = null;
     try {
       endpointFromCamelContext =
-          CentralRouter.getCamelContext().getEndpoint(registeredEndpoint.getEndpointUri());
+          CentralEndpointsRegister.getCamelEndpoint(registeredEndpoint.getEndpointUri());
     } catch (NoSuchEndpointException e) {
       // just ignore
     }
@@ -52,17 +50,17 @@ class EndpointsIntegrationTests {
     subject.input(SimpleInConnector.withUri("sipmc:hey-test")).output(outConnector);
     // assert
 
-    CentralEndpointsRegister.setState("testing");
+    CentralEndpointsRegister.putInTestingState();
     Endpoint registeredEndpoint = CentralEndpointsRegister.getEndpoint("cool-id");
     Endpoint endpointFromCamelContext = null;
     try {
       endpointFromCamelContext =
-          CentralRouter.getCamelContext().getEndpoint(registeredEndpoint.getEndpointUri());
+          CentralEndpointsRegister.getCamelEndpoint(registeredEndpoint.getEndpointUri());
     } catch (NoSuchEndpointException e) {
       // just ignore
     }
     assertThat(registeredEndpoint.getEndpointUri()).endsWith("-testkit");
     assertThat(endpointFromCamelContext).isNotNull();
-    CentralEndpointsRegister.setState("actual");
+    CentralEndpointsRegister.putInActualState();
   }
 }

@@ -53,7 +53,8 @@ class CentralRoutedDataflowTest {
 
     mock.expectedMessageCount(1);
     mock.expectedBodiesReceived("Hello dude!-[ep-1]");
-    routerSubject.input(inConnector).output(outConnector1).build();
+
+    routerSubject.input(inConnector).output(outConnector1);
     routeStarter.buildRoutes(routerSubject);
 
     template.sendBody("direct:multicast-1", "Hello dude!");
@@ -73,7 +74,7 @@ class CentralRoutedDataflowTest {
     mock.expectedBodiesReceived("Hello dude!-[ep-2]", "Hello dude!-[ep-1]");
     mock.expectedMessageCount(2);
 
-    routerSubject.input(inConnector).output(outConnector1, outConnector2).build();
+    routerSubject.input(inConnector).output(outConnector1, outConnector2);
     routeStarter.buildRoutes(routerSubject);
 
     template.sendBody("direct:multicast-3", "Hello dude!");
@@ -94,7 +95,7 @@ class CentralRoutedDataflowTest {
     mock.expectedBodiesReceived("Hello dude!-[ep-1]", "Hello dude!-[ep-1]-[ep-2]");
     mock.expectedMessageCount(2);
 
-    routerSubject.input(inConnector).output(outConnector1).output(outConnector2).build();
+    routerSubject.input(inConnector).output(outConnector1).output(outConnector2);
     routeStarter.buildRoutes(routerSubject);
 
     template.sendBody("direct:multicast-4", "Hello dude!");
@@ -116,7 +117,7 @@ class CentralRoutedDataflowTest {
     mock.expectedBodiesReceived("Hello dude!-[ep-2]", "Hello dude!-[ep-1]", "Hello dude!-[ep-3]");
     mock.expectedMessageCount(3);
 
-    routerSubject.input(inConnector).output(outConnector1, outConnector2).output(outConnector3).build();
+    routerSubject.input(inConnector).output(outConnector1, outConnector2).output(outConnector3);
 
     template.sendBody("direct:multicast-5", "Hello dude!");
 
@@ -125,7 +126,7 @@ class CentralRoutedDataflowTest {
 
   @Test
   void when_RouteUsesEnrich_then_SIPMetadataIsSupported() throws Exception {
-    CentralRouter.getCamelContext().addRoutes(routeBuilder());
+    RouteStarter.getCamelContext().addRoutes(routeBuilder());
     mock.expectedBodiesReceived("yes, enrich works");
     template.sendBody("direct:withEnrich", "enrichWorks?");
 
@@ -135,9 +136,9 @@ class CentralRoutedDataflowTest {
   @Test
   void when_InConnectorImplementsResponseProcessing_then_ConnectorReturnsProcessedResponse()
       throws Exception {
-    CentralRouter.getCamelContext().addRoutes(ComplexOutConnector.helperRouteBuilder);
+    RouteStarter.getCamelContext().addRoutes(ComplexOutConnector.helperRouteBuilder);
 
-    routerSubject.input(new ComplexInConnector()).output(new ComplexOutConnector()).build();
+    routerSubject.input(new ComplexInConnector()).output(new ComplexOutConnector());
 
     // act
     routeStarter.buildRoutes(routerSubject);
@@ -158,14 +159,14 @@ class CentralRoutedDataflowTest {
     mockTest.expectedBodiesReceived("Hello dude!-[ep-1]");
     mockTest.expectedMessageCount(1);
 
-    routerSubject.input(inConnector).output(outConnector).build();
+    routerSubject.input(inConnector).output(outConnector);
     routeStarter.buildRoutes(routerSubject);
 
-    CentralEndpointsRegister.setState("testing");
+    CentralEndpointsRegister.putInTestingState();
     template.sendBody("direct:multicast-6-testkit", "Hello dude!");
 
     mockTest.assertIsSatisfied();
-    CentralEndpointsRegister.setState("actual");
+    CentralEndpointsRegister.putInActualState();
   }
 
   private RoutesBuilder routeBuilder() {

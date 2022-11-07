@@ -3,16 +3,14 @@ package de.ikor.sip.foundation.core.framework.routers;
 import static java.lang.String.format;
 
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.RouteDefinition;
 
 public abstract class CentralRouter {
-  @Getter @Setter private static CamelContext camelContext;
 
   private final List<InConnector> inConnectors = new ArrayList<>();
 
@@ -28,11 +26,11 @@ public abstract class CentralRouter {
     for (InConnector connector : inConnectors) {
       connector.configureOnException();
       connector.configure();
-      appendToSIPmcAndRouteId(connector);
-      connector.handleResponse(connector.getConnectorDefinition());
+      appendSipMCAndRouteId(connector.getConnectorRouteDefinition(), connector.getName(), "");
+      connector.handleResponse(connector.getConnectorRouteDefinition());
     }
     this.inConnectors.addAll(Arrays.asList(inConnectors));
-    definition = new UseCaseTopologyDefinition(camelContext, this.getScenario());
+    definition = new UseCaseTopologyDefinition(this.getScenario());
     return definition;
   }
 
@@ -41,12 +39,17 @@ public abstract class CentralRouter {
     return format("%s-%s%s", scenarioName, connectorName, routeSuffix);
   }
 
-  void switchToTestingDefinitionMode(InConnector connector) {
-    connector.createNewRouteBuilder();
-    connector.configureOnException();
+  void populateTestingRoute(InConnector connector) {
     connector.configure();
-    appendToSIPmcAndRouteId(connector, "-testing");
-    connector.handleResponse(connector.getConnectorDefinition());
+    appendSipMCAndRouteId(
+        connector.getConnectorTestingRouteDefinition(),
+        connector.getName(),
+        TestingRoutesUtil.TESTING_SUFFIX);
+    connector
+        .getConnectorTestingRouteDefinition()
+        .getOutputs()
+        .forEach(TestingRoutesUtil::handleTestIDAppending);
+    connector.handleResponse(connector.getConnectorTestingRouteDefinition());
   }
 
   List<InConnector> getInConnectors() {
@@ -57,15 +60,11 @@ public abstract class CentralRouter {
     return definition;
   }
 
-  private void appendToSIPmcAndRouteId(InConnector connector, String routeSuffix) {
-    connector
-        .getConnectorDefinition()
+  private void appendSipMCAndRouteId(
+      RouteDefinition routeDefinition, String connectorName, String routeSuffix) {
+    routeDefinition
         .to("sipmc:" + this.getScenario() + routeSuffix)
-        .routeId(generateRouteId(this.getScenario(), connector.getName(), routeSuffix));
-  }
-
-  private void appendToSIPmcAndRouteId(InConnector connector) {
-    appendToSIPmcAndRouteId(connector, "");
+        .routeId(generateRouteId(this.getScenario(), connectorName, routeSuffix));
   }
 
   public static RouteBuilder anonymousDummyRouteBuilder() {

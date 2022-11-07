@@ -1,16 +1,19 @@
 package de.ikor.sip.foundation.core.framework.endpoints;
 
+import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Setter;
+import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.commons.lang3.StringUtils;
 
 public class CentralEndpointsRegister {
 
+  @Setter private static CamelContext camelContext;
+
   private static final String COLON = ":";
   private static final String QUESTION = "?";
-  private static final String TESTKIT_SUFFIX = "-testkit";
 
   private static Map<String, Endpoint> registry = new HashMap<>();
   private static Map<String, InEndpoint> inEndpointRegistry = new HashMap<>();
@@ -18,26 +21,29 @@ public class CentralEndpointsRegister {
   private static Map<String, InEndpoint> testingInEndpointRegistry = new HashMap<>();
   private static Map<String, RestInEndpoint> testingRestInEndpointRegistry = new HashMap<>();
   private static Map<String, Endpoint> testingOutEndpointRegistry = new HashMap<>();
-  @Setter private static String state = "actual";
+
+  private static final String STATE_ACTUAL = "actual";
+  private static final String STATE_TESTING = "testing";
+  private static String state = STATE_ACTUAL;
 
   private CentralEndpointsRegister() {}
 
   public static Endpoint getEndpoint(String endpointId) {
-    if ("actual".equals(state)) {
+    if (STATE_ACTUAL.equals(state)) {
       return registry.get(endpointId);
     }
     return testingOutEndpointRegistry.getOrDefault(endpointId, registry.get(endpointId));
   }
 
   public static InEndpoint getInEndpoint(String endpointId) {
-    if ("actual".equals(state)) {
+    if (STATE_ACTUAL.equals(state)) {
       return inEndpointRegistry.get(endpointId);
     }
     return testingInEndpointRegistry.get(endpointId);
   }
 
   public static RestInEndpoint getRestInEndpoint(String endpointId) {
-    if ("actual".equals(state)) {
+    if (STATE_ACTUAL.equals(state)) {
       return restInEndpointRegistry.get(endpointId);
     }
     return testingRestInEndpointRegistry.get(endpointId);
@@ -60,6 +66,10 @@ public class CentralEndpointsRegister {
     testingRestInEndpointRegistry.put(id, toTestEndpoint(inEndpoint));
   }
 
+  static Endpoint getCamelEndpoint(String uri) {
+    return camelContext.getEndpoint(uri);
+  }
+
   private static InEndpoint toTestEndpoint(InEndpoint inEndpoint) {
     return new InEndpoint(modifyUriForTestRoute(inEndpoint.getUri()), inEndpoint.getId());
   }
@@ -71,7 +81,7 @@ public class CentralEndpointsRegister {
 
   private static RestInEndpoint toTestEndpoint(RestInEndpoint restInEndpoint) {
     return new RestInEndpoint(
-        restInEndpoint.getUri() + TESTKIT_SUFFIX,
+        restInEndpoint.getUri() + TestingRoutesUtil.TESTING_SUFFIX,
         restInEndpoint.getId(),
         restInEndpoint.getRouteBuilder());
   }
@@ -91,7 +101,7 @@ public class CentralEndpointsRegister {
 
     addMoreUriEndpointParts(sb, uriEndpoint);
 
-    sb.append(TESTKIT_SUFFIX).append(uriOptions);
+    sb.append(TestingRoutesUtil.TESTING_SUFFIX).append(uriOptions);
     return sb.toString();
   }
 
@@ -104,5 +114,13 @@ public class CentralEndpointsRegister {
 
   public static String getInEndpointUri(String id) {
     return getInEndpoint(id).getUri();
+  }
+
+  public static void putInTestingState() {
+    state = STATE_TESTING;
+  }
+
+  public static void putInActualState() {
+    state = STATE_ACTUAL;
   }
 }
