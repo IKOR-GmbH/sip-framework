@@ -30,11 +30,13 @@ public class UseCaseTopologyDefinition {
     return output(null, outConnectors);
   }
 
-  public UseCaseTopologyDefinition output(AggregationStrategy aggregationStrategy, OutConnector... outConnectors) {
+  public UseCaseTopologyDefinition output(
+      AggregationStrategy aggregationStrategy, OutConnector... outConnectors) {
     routeBuilder = CentralRouter.anonymousDummyRouteBuilder();
     routeDefinition = initBaseRoute(routeDefinition, "");
     if (outConnectors.length > 1) {
-      routeDefinition = appendMulticastDefinition(outConnectors, routeDefinition, aggregationStrategy, "");
+      routeDefinition =
+          appendMulticastDefinition(outConnectors, routeDefinition, aggregationStrategy, "");
     } else {
       OutConnector outConnector = outConnectors[0];
       routeDefinition.to(URI_PREFIX + outConnector.getName());
@@ -45,13 +47,15 @@ public class UseCaseTopologyDefinition {
     return this;
   }
 
-  private void generateTestRoutes(AggregationStrategy aggregationStrategy, OutConnector... outConnectors) {
+  private void generateTestRoutes(
+      AggregationStrategy aggregationStrategy, OutConnector... outConnectors) {
     testingRouteBuilder = CentralRouter.anonymousDummyRouteBuilder();
     testRouteDefinition = initBaseRoute(testRouteDefinition, TESTING_SUFFIX);
     CentralEndpointsRegister.putInTestingState();
     if (outConnectors.length > 1) {
       testRouteDefinition =
-          appendMulticastDefinition(outConnectors, testRouteDefinition, aggregationStrategy, TESTING_SUFFIX);
+          appendMulticastDefinition(
+              outConnectors, testRouteDefinition, aggregationStrategy, TESTING_SUFFIX);
     } else {
       OutConnector outConnector = outConnectors[0];
       testRouteDefinition =
@@ -63,8 +67,12 @@ public class UseCaseTopologyDefinition {
   }
 
   private ProcessorDefinition appendMulticastDefinition(
-      OutConnector[] outConnectors, ProcessorDefinition processorDefinition, AggregationStrategy aggregationStrategy, String suffix) {
-    MulticastDefinition multicastDefinition = processorDefinition.multicast(aggregationStrategy).parallelProcessing();
+      OutConnector[] outConnectors,
+      ProcessorDefinition processorDefinition,
+      AggregationStrategy aggregationStrategy,
+      String suffix) {
+    MulticastDefinition multicastDefinition =
+        processorDefinition.multicast(aggregationStrategy).parallelProcessing();
     Stream.of(outConnectors)
         .forEach(
             outConnector -> {

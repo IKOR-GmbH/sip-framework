@@ -9,6 +9,7 @@ public class SimpleBodyOutConnector extends OutConnector {
 
   private String name;
   private String body;
+
   @Override
   public String getName() {
     return name;
@@ -16,7 +17,6 @@ public class SimpleBodyOutConnector extends OutConnector {
 
   @Override
   public void configure(RouteDefinition route) {
-    route.process(
-        exchange -> exchange.getMessage().setBody(body));
+    route.process(exchange -> exchange.getMessage().setBody(body));
   }
 }

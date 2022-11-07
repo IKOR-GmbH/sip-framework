@@ -169,33 +169,32 @@ class CentralRoutedDataflowTest {
     CentralEndpointsRegister.putInActualState();
   }
 
-
   @Test
   void given_RouteWithAggregation_when_MultipleOutConnectors_then_ResponseAggregated()
-          throws Exception {
+      throws Exception {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-7");
-    SimpleBodyOutConnector outConnector1 =
-            new SimpleBodyOutConnector("out1", "first");
-    SimpleBodyOutConnector outConnector2 =
-            new SimpleBodyOutConnector("out2", "second");
+    SimpleBodyOutConnector outConnector1 = new SimpleBodyOutConnector("out1", "first");
+    SimpleBodyOutConnector outConnector2 = new SimpleBodyOutConnector("out2", "second");
     SimpleOutConnector outConnector3 =
-            new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("out3");
+        new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("out3");
 
     mock.expectedBodiesReceived("first:second-[out3]");
     mock.expectedMessageCount(1);
 
-    AggregationStrategy aggregationStrategy = (oldExchange, newExchange) -> {
-      if(oldExchange == null) {
-        return newExchange;
-      }
-      String s1 = oldExchange.getMessage().getBody(String.class);
-      String s2 = newExchange.getMessage().getBody(String.class);
-      newExchange.getMessage().setBody(s1 + ":" + s2);
-      return newExchange;
-    };
-    routerSubject.input(inConnector)
-            .output(aggregationStrategy, outConnector1, outConnector2)
-            .output(outConnector3);
+    AggregationStrategy aggregationStrategy =
+        (oldExchange, newExchange) -> {
+          if (oldExchange == null) {
+            return newExchange;
+          }
+          String s1 = oldExchange.getMessage().getBody(String.class);
+          String s2 = newExchange.getMessage().getBody(String.class);
+          newExchange.getMessage().setBody(s1 + ":" + s2);
+          return newExchange;
+        };
+    routerSubject
+        .input(inConnector)
+        .output(aggregationStrategy, outConnector1, outConnector2)
+        .output(outConnector3);
     routeStarter.buildRoutes(routerSubject);
 
     template.sendBody("direct:multicast-7", "Hello dude!");
