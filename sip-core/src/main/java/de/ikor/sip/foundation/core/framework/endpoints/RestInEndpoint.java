@@ -1,10 +1,8 @@
 package de.ikor.sip.foundation.core.framework.endpoints;
 
-import lombok.Getter;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestDefinition;
 
-public class RestInEndpoint extends InEndpoint{
+public class RestInEndpoint extends InEndpoint {
 
   private final RestDefinition restDefinition;
 
