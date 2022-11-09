@@ -82,8 +82,7 @@ public class CentralEndpointsRegister {
   private static RestInEndpoint toTestEndpoint(RestInEndpoint restInEndpoint) {
     return new RestInEndpoint(
         restInEndpoint.getUri() + TestingRoutesUtil.TESTING_SUFFIX,
-        restInEndpoint.getId(),
-        restInEndpoint.getRouteBuilder());
+        restInEndpoint.getId());
   }
 
   private static String modifyUriForTestRoute(String uri) {

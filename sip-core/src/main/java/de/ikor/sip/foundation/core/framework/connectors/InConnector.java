@@ -33,13 +33,14 @@ public abstract class InConnector implements Connector {
 
   protected RouteDefinition from(RestDefinition restDefinition) {
     restDefinition.to("direct:rest-" + restInEndpoint.getUri());
+    routeBuilder.getRestCollection().getRests().add(restDefinition);
     return routeBuilder.from("direct:rest-" + restInEndpoint.getUri());
   }
 
   protected RestDefinition rest(String uri, String id) {
     routeBuilder = getRouteBuilderInstance();
-    restInEndpoint = RestInEndpoint.instance(uri, id, routeBuilder);
-    return restInEndpoint.rest();
+    restInEndpoint = RestInEndpoint.instance(uri, id);
+    return restInEndpoint.definition();
   }
 
   protected OnExceptionDefinition onException(Class<? extends Throwable>... exceptions) {
