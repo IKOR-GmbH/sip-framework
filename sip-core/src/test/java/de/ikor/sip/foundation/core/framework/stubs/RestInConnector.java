@@ -11,8 +11,6 @@ public class RestInConnector extends InConnector {
   @Override
   public void configure() {
     from(rest("/hello-append", "get-rest").get())
-
-        //    from(RestInEndpoint.instance("/hello-append", "get-rest").definition().get())
         .process(exchange -> exchange.getMessage().setBody("hello rest"));
   }
 
