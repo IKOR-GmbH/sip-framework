@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.apps.framework.CentralRouterTestingApplication;
+import de.ikor.sip.foundation.core.apps.core.CoreTestApplication;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
@@ -19,14 +19,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
-@SpringBootTest(classes = CentralRouterTestingApplication.class)
-@DirtiesContext
+@SpringBootTest(classes = CoreTestApplication.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @DisableJmx(false)
 @MockEndpoints("log:message*")
 class OnExceptionConfigurationTest {
 
-  @Autowired(required = false)
-  private TestingCentralRouter routerSubject;
+  private TestingCentralRouterDefinition routerSubject = new TestingCentralRouterDefinition();
 
   @Autowired(required = false)
   private RouteStarter routeStarter;
@@ -46,7 +45,7 @@ class OnExceptionConfigurationTest {
     // arrange
     InConnector inConnector = new OnExceptionInConnector(InEndpoint.instance("direct:inDirect-1", "inDirect-1"));
     routerSubject.input(inConnector);
-    routeStarter.buildRoutes(routerSubject);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
 
     mock.expectedBodiesReceived("InConnectorException");
     mock.expectedMessageCount(1);
@@ -63,8 +62,8 @@ class OnExceptionConfigurationTest {
     // arrange
     InConnector inConnector = SimpleInConnector.withUri("direct:inDirect-2");
     OutConnector outConnector = new OnExceptionOutConnector(OutEndpoint.instance("direct:outDirect", "outDirect-2"));
-    routerSubject.input(inConnector).output(outConnector);
-    routeStarter.buildRoutes(routerSubject);
+    routerSubject.input(inConnector).sequencedOutput(outConnector);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
 
     mock.expectedBodiesReceived("OutConnectorException");
     mock.expectedMessageCount(1);

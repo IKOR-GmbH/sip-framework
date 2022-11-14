@@ -1,21 +1,16 @@
-package de.ikor.sip.foundation.core.apps.framework;
+package de.ikor.sip.foundation.core.apps.framework.centralrouter;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
-import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
-import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouter;
+import de.ikor.sip.foundation.core.framework.official.CentralRouterDefinition;
+import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouterDefinition;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.context.annotation.Bean;
 
 @SIPIntegrationAdapter
 public class CentralRouterTestingApplication {
   @Bean
-  CentralRouter testingCentralRouter() {
-    return new TestingCentralRouter();
-  }
-
-  @Bean
-  CentralRouter restCentralRouter() {
-    return new RestCentralRouter();
+  CentralRouterDefinition testingCentralRouter() {
+    return new TestingCentralRouterDefinition();
   }
 
   @Bean

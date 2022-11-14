@@ -66,7 +66,7 @@ public class CentralEndpointsRegister {
     testingRestInEndpointRegistry.put(id, toTestEndpoint(inEndpoint));
   }
 
-  static Endpoint getCamelEndpoint(String uri) {
+  public static Endpoint getCamelEndpoint(String uri) {
     return camelContext.getEndpoint(uri);
   }
 

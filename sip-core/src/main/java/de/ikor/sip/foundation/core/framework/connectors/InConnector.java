@@ -6,7 +6,6 @@ import static de.ikor.sip.foundation.core.framework.routers.CentralRouter.anonym
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.RestInEndpoint;
 import lombok.Getter;
-import lombok.Setter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
@@ -16,8 +15,6 @@ public abstract class InConnector implements Connector {
   @Getter private RouteBuilder routeBuilder;
   private RestInEndpoint restInEndpoint;
   private InEndpoint inEndpoint;
-  // TODO: Use different mechanism to detect this
-  @Getter @Setter private Boolean registeredInCamel = false;
 
   public abstract void configure();
 

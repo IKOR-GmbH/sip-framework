@@ -5,8 +5,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
-import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
+import de.ikor.sip.foundation.core.framework.official.CentralRouterDefinition;
 import java.util.List;
+
+import de.ikor.sip.foundation.core.framework.routers.CentralRouterDomainModel;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.jupiter.api.Test;
@@ -17,7 +19,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootTest(classes = InvalidUsageOfOutConsumerTest.CoreTestApplication.class)
 class InvalidUsageOfOutConsumerTest {
   @Autowired CamelContext camelContext;
-  @Autowired List<CentralRouter> centralRouters;
+  @Autowired List<CentralRouterDefinition> centralRouters;
 
   @Test
   void when_OutEndpointIsUsedAsConsumer_then_RuntimeExceptionIsThrown() {
@@ -36,23 +38,24 @@ class InvalidUsageOfOutConsumerTest {
 
   @Test
   void when_MultipleCentralRoutersAreRegistered_then_ApplicationStartsSuccessfully() {
-    assertThat(centralRouters).asList().hasSize(2);
+    assertThat(centralRouters).asList().size().isGreaterThan(1);
   }
 
   @SIPIntegrationAdapter
   public static class CoreTestApplication {
     @Bean
-    CentralRouter firstSpyCentralRouter() {
-      return new SpyCentralRouter();
+    CentralRouterDefinition firstSpyCentralRouter() {
+      return new SpyCentralRouterDefinition();
     }
 
     @Bean
-    CentralRouter secondSpyCentralRouter() {
-      return new SpyCentralRouter();
+    CentralRouterDefinition secondSpyCentralRouter() {
+      return new SpyCentralRouterDefinition();
     }
   }
 
-  private static class SpyCentralRouter extends CentralRouter {
+  @CentralRouterDomainModel
+  private static class SpyCentralRouterDefinition extends CentralRouterDefinition {
     public static boolean isConfigured = false;
 
     @Override
@@ -61,7 +64,7 @@ class InvalidUsageOfOutConsumerTest {
     }
 
     @Override
-    public void configure() throws Exception {
+    public void defineTopology() throws Exception {
       isConfigured = true;
     }
 

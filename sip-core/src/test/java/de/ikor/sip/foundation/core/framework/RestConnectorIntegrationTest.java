@@ -2,7 +2,8 @@ package de.ikor.sip.foundation.core.framework;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.ikor.sip.foundation.core.apps.framework.CentralRouterTestingApplication;
+import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
+import de.ikor.sip.foundation.core.apps.framework.restrouter.RestCentralRouterDefinition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,9 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @SpringBootTest(
-    classes = {CentralRouterTestingApplication.class},
+    classes = {CentralRouterTestingApplication.class, RestCentralRouterDefinition.class},
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RestConnectorIntegrationTest {
+class RestConnectorIntegrationTest {
   @Autowired TestRestTemplate testRestTemplate;
 
   @Test

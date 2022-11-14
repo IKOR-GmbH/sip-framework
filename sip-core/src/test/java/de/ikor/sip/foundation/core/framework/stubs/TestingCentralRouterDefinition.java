@@ -1,8 +1,10 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
+import de.ikor.sip.foundation.core.framework.official.CentralRouterDefinition;
+import de.ikor.sip.foundation.core.framework.routers.CentralRouterDomainModel;
 
-public class TestingCentralRouter extends CentralRouter {
+@CentralRouterDomainModel(responseType = String.class)
+public class TestingCentralRouterDefinition extends CentralRouterDefinition {
   private static int useCaseCounter;
   public boolean isConfigured;
 
@@ -12,7 +14,7 @@ public class TestingCentralRouter extends CentralRouter {
   }
 
   @Override
-  public void configure() throws Exception {
+  public void defineTopology() throws Exception {
     isConfigured = true;
   }
 
