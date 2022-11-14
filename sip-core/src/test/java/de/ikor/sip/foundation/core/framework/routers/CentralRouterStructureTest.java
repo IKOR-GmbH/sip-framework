@@ -77,9 +77,9 @@ class CentralRouterStructureTest {
         .filteredOn(matchRoutesBasedOnUri("direct.*sipie"))
         .hasSize(1);
 
-//    assertThat(getRoutesFromContext()) TODO uncomment after doubled routes are enabled
-//        .filteredOn(matchRoutesBasedOnUri("direct.*sip-testkit"))
-//        .hasSize(1);
+    assertThat(getRoutesFromContext())
+        .filteredOn(matchRoutesBasedOnUri("direct.*sip-testkit"))
+        .hasSize(1);
   }
 
   @Test
