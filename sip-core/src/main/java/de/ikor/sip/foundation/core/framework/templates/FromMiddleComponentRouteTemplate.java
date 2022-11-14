@@ -2,7 +2,6 @@ package de.ikor.sip.foundation.core.framework.templates;
 
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.routers.CDMValidator;
-import de.ikor.sip.foundation.core.framework.routers.RouteStarter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.builder.TemplatedRouteBuilder;
 import org.apache.camel.model.MulticastDefinition;
@@ -10,6 +9,8 @@ import org.apache.camel.model.RouteDefinition;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Stream;
+
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 
 public class FromMiddleComponentRouteTemplate {
 
@@ -36,7 +37,7 @@ public class FromMiddleComponentRouteTemplate {
   }
 
   public TemplatedRouteBuilder fromMCMulticastRoute(RouteDefinition routeDefinition) {//TODO remove after analysis
-    return TemplatedRouteBuilder.builder(RouteStarter.camelContext, "sip-mc")
+    return TemplatedRouteBuilder.builder(camelContext(), "sip-mc")
         .parameter(USE_CASE_PARAM_KEY, useCase)
         .parameter(SUFFIX_PARAM_KEY, suffix)
         .handler(templateDef -> templateDef.setRoute(routeDefinition));
@@ -52,7 +53,7 @@ public class FromMiddleComponentRouteTemplate {
     multicastDefinition.parallelProcessing(isParallel);
     multicastDefinition.end();
 
-    return TemplatedRouteBuilder.builder(RouteStarter.camelContext, "sip-mc-multicast")
+    return TemplatedRouteBuilder.builder(camelContext(), "sip-mc-multicast")
         .parameter(USE_CASE_PARAM_KEY, useCase)
         .parameter(SUFFIX_PARAM_KEY, suffix)
         .parameter("central-domain-model", centralDomainRequest);

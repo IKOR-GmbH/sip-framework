@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,7 +39,7 @@ class CentralRouterStructureTest {
   void when_ApplicationStarts_then_CentralRouterBeanIsLoaded() {
     //TODO this test should check on routerSubject bean availability. routerSubject should be bean
     assertThat(routerSubject).as("CentralRouter bean not initialized").isNotNull();
-    Assertions.assertThat(RouteStarter.getCamelContext())
+    Assertions.assertThat(camelContext())
         .as("Camel context not set on CentralRouter")
         .isNotNull();
   }
@@ -147,10 +148,10 @@ class CentralRouterStructureTest {
   }
 
   private List<Route> getRoutesFromContext() {
-    return RouteStarter.getCamelContext().getRoutes();
+    return camelContext().getRoutes();
   }
 
   private Route getRouteFromContextById(String routeId) {
-    return RouteStarter.getCamelContext().getRoute(routeId);
+    return camelContext().getRoute(routeId);
   }
 }

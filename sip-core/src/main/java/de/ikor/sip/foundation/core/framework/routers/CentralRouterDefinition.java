@@ -1,18 +1,11 @@
-package de.ikor.sip.foundation.core.framework.official;
+package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
-import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
-import de.ikor.sip.foundation.core.framework.routers.CDMValidator;
-import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
-import de.ikor.sip.foundation.core.framework.routers.CentralRouterDomainModel;
-import de.ikor.sip.foundation.core.framework.routers.UseCaseTopologyDefinition;
 import lombok.Getter;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.RouteDefinition;
 
-import java.util.*;
-
-import static java.lang.String.format;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class CentralRouterDefinition {
   private final List<InConnector> inConnectors = new ArrayList<>();
@@ -31,14 +24,9 @@ public abstract class CentralRouterDefinition {
   }
 
   public Class<?> getCentralModelRequestClass() {
-    Class<?> expectedRequestClass;
-    if (this.getClass().isAnnotationPresent(CentralRouterDomainModel.class)) {
-      expectedRequestClass =
-          this.getClass().getAnnotation(CentralRouterDomainModel.class).requestType();
-    } else {
-      expectedRequestClass = String.class;
-    }
-    return expectedRequestClass;
+    return this.getClass().isAnnotationPresent(CentralRouterDomainModel.class)
+        ? this.getClass().getAnnotation(CentralRouterDomainModel.class).requestType()
+        : String.class;
   }
 
   public Class<?> getCentralModelResponseClass() {

@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.apps.framework.restrouter;
 
-import de.ikor.sip.foundation.core.framework.official.CentralRouterDefinition;
+import de.ikor.sip.foundation.core.framework.routers.CentralRouterDefinition;
 import de.ikor.sip.foundation.core.framework.routers.CentralRouterDomainModel;
 import de.ikor.sip.foundation.core.framework.stubs.AppendStringOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.RestInConnector;

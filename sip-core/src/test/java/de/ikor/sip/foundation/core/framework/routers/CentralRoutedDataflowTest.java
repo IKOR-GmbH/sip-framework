@@ -2,7 +2,6 @@ package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpointBuilder;
-import de.ikor.sip.foundation.core.framework.official.CentralRouterDefinition;
 import de.ikor.sip.foundation.core.framework.stubs.*;
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 import static org.assertj.core.api.Assertions.*;
 
 @CamelSpringBootTest
@@ -55,11 +55,18 @@ class CentralRoutedDataflowTest {
     mock.expectedMessageCount(1);
     mock.expectedBodiesReceived("Hello dude!-[ep-1]");
 
+
     routerSubject.input(inConnector).sequencedOutput(outConnector1);
     routeStarter.buildRoutes(routerSubject.toCentralRouter());
 
     template.sendBody("direct:multicast-1", "Hello dude!");
     mock.assertIsSatisfied();
+
+    mockTest.expectedBodiesReceived("Hello dude!-[ep-1]");
+    mockTest.expectedMessageCount(1);
+
+    template.sendBody("direct:multicast-1-testkit", "Hello dude!");
+    mockTest.assertIsSatisfied();
   }
 
   @Test
@@ -107,7 +114,7 @@ class CentralRoutedDataflowTest {
 
   @Test
   void when_RouteUsesEnrich_then_SIPMetadataIsSupported() throws Exception {
-    RouteStarter.getCamelContext().addRoutes(routeBuilder());
+    camelContext().addRoutes(routeBuilder());
     mock.expectedBodiesReceived("yes, enrich works");
     template.sendBody("direct:withEnrich", "enrichWorks?");
 
@@ -117,7 +124,7 @@ class CentralRoutedDataflowTest {
   @Test
   void when_InConnectorImplementsResponseProcessing_then_ConnectorReturnsProcessedResponse()
       throws Exception {
-    RouteStarter.getCamelContext().addRoutes(ComplexOutConnector.helperRouteBuilder);
+    camelContext().addRoutes(ComplexOutConnector.helperRouteBuilder);
 
     routerSubject.input(new ComplexInConnector()).sequencedOutput(new ComplexOutConnector());
 

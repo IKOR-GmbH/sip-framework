@@ -1,17 +1,15 @@
 package de.ikor.sip.foundation.core.framework.endpoints;
 
-import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.Setter;
-import org.apache.camel.CamelContext;
+
 import org.apache.camel.Endpoint;
 import org.apache.commons.lang3.StringUtils;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import static de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil.TESTING_SUFFIX;
+
 public class CentralEndpointsRegister {
-
-  @Setter private static CamelContext camelContext;
-
   private static final String COLON = ":";
   private static final String QUESTION = "?";
 
@@ -67,7 +65,7 @@ public class CentralEndpointsRegister {
   }
 
   public static Endpoint getCamelEndpoint(String uri) {
-    return camelContext.getEndpoint(uri);
+    return camelContext().getEndpoint(uri);
   }
 
   private static InEndpoint toTestEndpoint(InEndpoint inEndpoint) {
@@ -76,12 +74,12 @@ public class CentralEndpointsRegister {
 
   private static OutEndpoint toTestEndpoint(OutEndpoint outEndpoint) {
     return new OutEndpoint(
-        modifyUriForTestRoute(outEndpoint.getEndpointUri()), outEndpoint.getEndpointId());
+        modifyUriForTestRoute(outEndpoint.getEndpointUri()), outEndpoint.getEndpointId() + TESTING_SUFFIX);
   }
 
   private static RestInEndpoint toTestEndpoint(RestInEndpoint restInEndpoint) {
     return new RestInEndpoint(
-        restInEndpoint.getUri() + TestingRoutesUtil.TESTING_SUFFIX,
+        restInEndpoint.getUri() + TESTING_SUFFIX,
         restInEndpoint.getId(),
         restInEndpoint.getRouteBuilder());
   }
@@ -101,7 +99,7 @@ public class CentralEndpointsRegister {
 
     addMoreUriEndpointParts(sb, uriEndpoint);
 
-    sb.append(TestingRoutesUtil.TESTING_SUFFIX).append(uriOptions);
+    sb.append(TESTING_SUFFIX).append(uriOptions);
     return sb.toString();
   }
 
@@ -122,5 +120,9 @@ public class CentralEndpointsRegister {
 
   public static void putInActualState() {
     state = STATE_ACTUAL;
+  }
+
+  public static String suffixForCurrentState() {
+    return state.equals(STATE_TESTING) ? TESTING_SUFFIX : StringUtils.EMPTY;
   }
 }

@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.framework.templates;
 
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
-import de.ikor.sip.foundation.core.framework.routers.RouteStarter;
 import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
 import lombok.AllArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
@@ -11,8 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.stream.Stream;
 
-import static de.ikor.sip.foundation.core.framework.routers.CentralRouter.anonymousDummyRouteBuilder;
-import static de.ikor.sip.foundation.core.framework.routers.CentralRouter.generateRouteId;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.*;
 import static de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplate.SUFFIX_PARAM_KEY;
 import static de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplate.USE_CASE_PARAM_KEY;
 import static de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil.TESTING_SUFFIX;
@@ -34,7 +32,7 @@ public class FromDirectOutConnectorRouteTemplate {
               outConnector.configureOnException(); // TODO is this the perfect place?
               outConnector.configure(definition);
               TemplatedRouteBuilder parameter =
-                  TemplatedRouteBuilder.builder(RouteStarter.camelContext, "direct-out-connector")
+                  TemplatedRouteBuilder.builder(camelContext(), "direct-out-connector")
                       .parameter("out-connector-name", outConnector.getName())
                       .parameter(USE_CASE_PARAM_KEY, useCase)
                       .parameter(SUFFIX_PARAM_KEY, suffix);
@@ -51,7 +49,6 @@ public class FromDirectOutConnectorRouteTemplate {
   private void addOutConnectorRoute(OutConnector outConnector) {
     RouteBuilder rb = anonymousDummyRouteBuilder();
     outConnector.setRouteBuilder(rb);
-
     outConnector
         .configureOnException(); // TODO split configException from route building,
                                  // connector.configure and adding route to context
@@ -65,7 +62,7 @@ public class FromDirectOutConnectorRouteTemplate {
       connectorRouteDefinition.getOutputs().forEach(TestingRoutesUtil::handleTestIDAppending);
     }
     try {
-      RouteStarter.camelContext.addRoutes(rb);
+      camelContext().addRoutes(rb);
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException();

@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
+import de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.definitions.ActualRouteBinder;
@@ -7,17 +8,16 @@ import de.ikor.sip.foundation.core.framework.definitions.TestRouteBinder;
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
 import java.util.List;
 
-import de.ikor.sip.foundation.core.framework.official.CentralRouterDefinition;
 import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
-import org.apache.camel.CamelContext;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.stereotype.Component;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+
 @Component
 public class RouteStarter extends EventNotifierSupport {
   final List<CentralRouterDefinition> availableRouters;
-  public static CamelContext camelContext;
 
   public RouteStarter(RoutersAnnotationBasedFactory routersFactory) {
     this.availableRouters = routersFactory.getRouters();
@@ -25,8 +25,7 @@ public class RouteStarter extends EventNotifierSupport {
 
   @Override
   public void notify(CamelEvent event) {
-    camelContext = ((CamelEvent.CamelContextInitializingEvent) event).getContext();
-    CentralEndpointsRegister.setCamelContext(camelContext);
+    StaticRouteBuilderHelper.setCamelContext(((CamelEvent.CamelContextInitializingEvent) event).getContext());
     availableRouters.stream().map(CentralRouterDefinition::toCentralRouter).forEach(this::buildRoutes);
   }
 
@@ -51,7 +50,7 @@ public class RouteStarter extends EventNotifierSupport {
       CentralEndpointsRegister.putInActualState();
 
       for (InConnector connector : inConnectors) {
-        camelContext.addRoutes(connector.getRouteBuilder());
+        camelContext().addRoutes(connector.getRouteBuilder());
       }
 
       router
@@ -72,10 +71,6 @@ public class RouteStarter extends EventNotifierSupport {
     } else if ("par".equals(s)) {
       routeBinder.appendOutConnectorsParallel(outConnectors);
     }
-  }
-
-  static CamelContext getCamelContext() {
-    return camelContext;
   }
 
   void populateTestingRoute(InConnector connector, CentralRouter router) {

@@ -11,6 +11,7 @@ import org.apache.camel.model.RouteDefinition;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import  static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +28,7 @@ class RouteTemplatesTest {
           public void configure() throws Exception {
             multicastDefinition.to("direct:hi");
             TemplatedRouteBuilder someUseCase =
-                TemplatedRouteBuilder.builder(RouteStarter.camelContext, "sip-mc-multicast")
+                TemplatedRouteBuilder.builder(camelContext(), "sip-mc-multicast")
                     .parameter("use-case", "someUseCase")
                     .parameter("central-domain-model", String.class.getCanonicalName());
             someUseCase.add();
@@ -48,7 +49,7 @@ class RouteTemplatesTest {
           public void configure() throws Exception {
             definition.to("direct:hi");
             TemplatedRouteBuilder someUseCase =
-                TemplatedRouteBuilder.builder(RouteStarter.camelContext, "direct-out-connector")
+                TemplatedRouteBuilder.builder(camelContext(), "direct-out-connector")
                     .parameter("use-case", "someUseCase")
                     .parameter("out-connector-name", "someConnectorName");
             someUseCase.add();
@@ -69,7 +70,7 @@ class RouteTemplatesTest {
                   public void configure() throws Exception {
                       definition.to("direct:hi");
                       TemplatedRouteBuilder someUseCase =
-                              TemplatedRouteBuilder.builder(RouteStarter.camelContext, "central-routing")
+                              TemplatedRouteBuilder.builder(camelContext(), "central-routing")
                                       .parameter("use-case", "someUseCase")
                                       .parameter("out-connector-name", "someConnectorName");
                       someUseCase.add();

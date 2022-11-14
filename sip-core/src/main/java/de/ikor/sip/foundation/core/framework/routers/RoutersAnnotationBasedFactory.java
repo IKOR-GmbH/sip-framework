@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.framework.official.CentralRouterDefinition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

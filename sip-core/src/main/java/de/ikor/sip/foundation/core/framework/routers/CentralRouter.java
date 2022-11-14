@@ -2,20 +2,24 @@ package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
-import de.ikor.sip.foundation.core.framework.official.CentralRouterDefinition;
 import lombok.RequiredArgsConstructor;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 
 import java.util.List;
 import java.util.Map;
 
-import static de.ikor.sip.foundation.core.framework.routers.RouteStarter.getCamelContext;
-import static java.lang.String.format;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.generateRouteId;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 
 @RequiredArgsConstructor
-public class CentralRouter {
+class CentralRouter {
   private final CentralRouterDefinition centralRouterDefinition;
+
+  public void defineTopology() throws Exception {
+    centralRouterDefinition.defineTopology();
+    centralRouterDefinition.getInConnectors().forEach(this::configure);
+//    centralRouterDefinition.getInConnectors().forEach(this::addToContext);
+  }
 
   void appendSipMCAndRouteId(
       RouteDefinition routeDefinition, String connectorName, String routeSuffix) {
@@ -23,11 +27,6 @@ public class CentralRouter {
         .to("sipmc:" + centralRouterDefinition.getScenario() + routeSuffix)
         .routeId(
             generateRouteId(centralRouterDefinition.getScenario(), connectorName, routeSuffix));
-  }
-
-  public static String generateRouteId(
-      String scenarioName, String connectorName, String routeSuffix) {
-    return format("%s-%s%s", scenarioName, connectorName, routeSuffix);
   }
 
   public String getScenario() {
@@ -42,15 +41,9 @@ public class CentralRouter {
     centralRouterDefinition.configureOnException();
   }
 
-  public void defineTopology() throws Exception {
-    centralRouterDefinition.defineTopology();
-    centralRouterDefinition.getInConnectors().forEach(this::configure);
-//    centralRouterDefinition.getInConnectors().forEach(this::addToContext);
-  }
-
   private void addToContext(InConnector inConnector) {
     try {
-      getCamelContext().addRoutes(inConnector.getRouteBuilder());
+      camelContext().addRoutes(inConnector.getRouteBuilder());
     } catch (Exception e) {
       throw new RuntimeException(e);//TODO Handle exception
     }
@@ -76,14 +69,5 @@ public class CentralRouter {
   private void appendCDMValidatorIfResponseIsExpected(RouteDefinition connectorRouteDefinition) {
     Class<?> centralModelResponseClass = centralRouterDefinition.getCentralModelResponseClass();
     connectorRouteDefinition.process(new CDMValidator(centralModelResponseClass));
-  }
-
-  public static RouteBuilder anonymousDummyRouteBuilder() {
-    return new RouteBuilder() {
-      @Override
-      public void configure() {
-        // no need for implementation; used for building routes
-      }
-    };
   }
 }

@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.official.CentralRouterDefinition;
+import de.ikor.sip.foundation.core.framework.routers.CentralRouterDefinition;
 import de.ikor.sip.foundation.core.framework.routers.CentralRouterDomainModel;
 
 @CentralRouterDomainModel(requestType = WrongTypeRouterDefinition.class)

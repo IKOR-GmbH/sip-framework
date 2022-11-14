@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.framework.connectors;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteBuilder;
 import static de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister.getInEndpointUri;
-import static de.ikor.sip.foundation.core.framework.routers.CentralRouter.anonymousDummyRouteBuilder;
 
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.RestInEndpoint;
