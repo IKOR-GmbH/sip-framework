@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.framework.definitions;
+package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;

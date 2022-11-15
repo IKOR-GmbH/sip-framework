@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.util.LinkedHashMap;
 
 public class UseCaseTopologyDefinition {
-  @Getter private LinkedHashMap<OutConnector[], String> allConnectors = new LinkedHashMap<>();
+  @Getter private final LinkedHashMap<OutConnector[], String> allConnectors = new LinkedHashMap<>();
 
   public UseCaseTopologyDefinition sequencedOutput(OutConnector... outConnectors) {
     allConnectors.put(outConnectors, "seq");

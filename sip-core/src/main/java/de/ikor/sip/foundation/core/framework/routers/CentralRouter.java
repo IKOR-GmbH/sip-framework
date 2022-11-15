@@ -19,7 +19,7 @@ class CentralRouter {
   private final CentralRouterDefinition centralRouterDefinition;
   private List<InConnector> inConnectors;
 
-  public void defineTopology() {
+  public void buildTopology() {
     inConnectors =
         centralRouterDefinition.getInConnectorDefinitions().stream()
             .map(InConnectorDefinition::toInConnector)
@@ -44,7 +44,7 @@ class CentralRouter {
     return centralRouterDefinition.getCentralModelRequestClass();
   }
 
-  public void configureOnException() {
+  public void buildOnException() {
     centralRouterDefinition.configureOnException();
   }
 

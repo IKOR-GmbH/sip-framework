@@ -3,9 +3,9 @@ package de.ikor.sip.foundation.core.framework.routers;
 import de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
-import de.ikor.sip.foundation.core.framework.definitions.TestRouteBinder;
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
 import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
+import java.util.stream.Collectors;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.stereotype.Component;
@@ -18,8 +18,10 @@ import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.cam
 public class RouteStarter extends EventNotifierSupport {
   final List<CentralRouterDefinition> availableRouters;
 
-  public RouteStarter(RoutersAnnotationBasedFactory routersFactory) {
-    this.availableRouters = routersFactory.getRouters();
+  public RouteStarter(List<CentralRouterDefinition> centralRouters) {
+    this.availableRouters = centralRouters.stream()
+        .filter(router -> router.getClass().isAnnotationPresent(CentralRouterDomainModel.class))
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -39,7 +41,7 @@ public class RouteStarter extends EventNotifierSupport {
 
   public void configureDefinition(CentralRouterDefinition router) {
     try {
-      router.defineTopology();//Is This the key point?
+      router.defineTopology();
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -49,8 +51,8 @@ public class RouteStarter extends EventNotifierSupport {
     RouteBinder actualRouteBinder =
         new RouteBinder(router.getScenario(), router.getCentralModelRequestClass());
 
-      router.configureOnException();
-      router.defineTopology();
+      router.buildOnException();
+      router.buildTopology();
       router
           .getOutTopologyDefinition()
           .forEach(
@@ -66,8 +68,8 @@ public class RouteStarter extends EventNotifierSupport {
             new TestRouteBinder(router.getScenario(), router.getCentralModelRequestClass());
 
       CentralEndpointsRegister.putInTestingState();
-      router.configureOnException();
-      router.defineTopology();
+      router.buildOnException();
+      router.buildTopology();
       CentralEndpointsRegister.putInActualState();
 
       router
