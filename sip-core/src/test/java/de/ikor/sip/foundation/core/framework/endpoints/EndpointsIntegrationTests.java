@@ -29,7 +29,7 @@ class EndpointsIntegrationTests {
     subject.input(SimpleInConnector.withUri("direct:hey-test")).output(outConnector);
     // assert
 
-    Endpoint registeredEndpoint = CentralEndpointsRegister.getEndpoint("cool-id");
+    Endpoint registeredEndpoint = CentralEndpointsRegister.getOutEndpoint("cool-id");
     Endpoint endpointFromCamelContext = null;
     try {
       endpointFromCamelContext =
@@ -51,7 +51,7 @@ class EndpointsIntegrationTests {
     // assert
 
     CentralEndpointsRegister.putInTestingState();
-    Endpoint registeredEndpoint = CentralEndpointsRegister.getEndpoint("cool-id");
+    Endpoint registeredEndpoint = CentralEndpointsRegister.getOutEndpoint("cool-id");
     Endpoint endpointFromCamelContext = null;
     try {
       endpointFromCamelContext =

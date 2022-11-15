@@ -12,7 +12,7 @@ public class OutEndpoint implements Endpoint {
 
   public static OutEndpoint instance(String uri, String endpointId) {
     CentralEndpointsRegister.put(endpointId, new OutEndpoint(uri, endpointId));
-    return (OutEndpoint) CentralEndpointsRegister.getEndpoint(endpointId);
+    return (OutEndpoint) CentralEndpointsRegister.getOutEndpoint(endpointId);
   }
 
   OutEndpoint(String uri, String endpointId) {
