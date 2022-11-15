@@ -3,15 +3,14 @@ package de.ikor.sip.foundation.core.framework.routers;
 import de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
-import de.ikor.sip.foundation.core.framework.definitions.ActualRouteBinder;
 import de.ikor.sip.foundation.core.framework.definitions.TestRouteBinder;
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
-import java.util.List;
-
 import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 
@@ -25,47 +24,62 @@ public class RouteStarter extends EventNotifierSupport {
 
   @Override
   public void notify(CamelEvent event) {
-    StaticRouteBuilderHelper.setCamelContext(((CamelEvent.CamelContextInitializingEvent) event).getContext());
-    availableRouters.stream().map(CentralRouterDefinition::toCentralRouter).forEach(this::buildRoutes);
-  }
-
-  @Override
-  public boolean isEnabled(CamelEvent event) {
-    return event instanceof CamelEvent.CamelContextInitializingEvent;
+    StaticRouteBuilderHelper.setCamelContext(
+        ((CamelEvent.CamelContextInitializingEvent) event).getContext());
+    availableRouters
+        .forEach(this::configureDefinition);
+    availableRouters.stream().map(CentralRouterDefinition::toCentralRouter)
+            .forEach(this::buildRoutes);
   }
 
   void buildRoutes(CentralRouter router) {
-    ActualRouteBinder actualRouteBinder =
-        new ActualRouteBinder(router.getScenario(), router.getCentralModelRequestClass());
-    TestRouteBinder testingRouteBinder =
-            new TestRouteBinder(router.getScenario(), router.getCentralModelRequestClass());
+    buildActiveRoutes(router);
+    buildTestRoutes(router);
+  }
 
+  public void configureDefinition(CentralRouterDefinition router) {
     try {
-      router.configureOnException();
-      router.defineTopology();
-
-      List<InConnector> inConnectors = router.getInConnectors();
-      CentralEndpointsRegister.putInTestingState();
-      inConnectors.forEach(inConnector -> populateTestingRoute(inConnector, router));
-      CentralEndpointsRegister.putInActualState();
-
-      for (InConnector connector : inConnectors) {
-        camelContext().addRoutes(connector.getRouteBuilder());
-      }
-
-      router
-          .getOutTopologyDefinition()
-          .forEach((outConnectors, s) ->
-          {bindOutConnectors(actualRouteBinder, outConnectors, s);
-           bindOutConnectors(testingRouteBinder, outConnectors, s);});
-
+      router.defineTopology();//Is This the key point?
     } catch (Exception e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
   }
 
-  private void bindOutConnectors(
-      RouteBinder routeBinder, OutConnector[] outConnectors, String s) {
+  void buildActiveRoutes(CentralRouter router) {
+    RouteBinder actualRouteBinder =
+        new RouteBinder(router.getScenario(), router.getCentralModelRequestClass());
+
+      router.configureOnException();
+      router.defineTopology();
+      router
+          .getOutTopologyDefinition()
+          .forEach(
+              (outConnectors, s) -> {
+                bindOutConnectors(actualRouteBinder, outConnectors, s);
+              });
+
+
+  }
+
+  void buildTestRoutes(CentralRouter router) {
+    TestRouteBinder testingRouteBinder =
+            new TestRouteBinder(router.getScenario(), router.getCentralModelRequestClass());
+
+      CentralEndpointsRegister.putInTestingState();
+      router.configureOnException();
+      router.defineTopology();
+      CentralEndpointsRegister.putInActualState();
+
+      router
+              .getOutTopologyDefinition()
+              .forEach(
+                      (outConnectors, s) -> {
+                        bindOutConnectors(testingRouteBinder, outConnectors, s);
+                      });
+
+  }
+
+  private void bindOutConnectors(RouteBinder routeBinder, OutConnector[] outConnectors, String s) {
     if ("seq".equals(s)) {
       routeBinder.appendOutConnectorsSeq(outConnectors);
     } else if ("par".equals(s)) {
@@ -73,7 +87,8 @@ public class RouteStarter extends EventNotifierSupport {
     }
   }
 
-  void populateTestingRoute(InConnector connector, CentralRouter router) {
+  void populateTestingRoute(InConnector connector, CentralRouter router) throws Exception {
+    connector.setDefinition();
     connector.configure();
     router.appendSipMCAndRouteId(
         connector.getConnectorTestingRouteDefinition(),
@@ -86,5 +101,11 @@ public class RouteStarter extends EventNotifierSupport {
     connector.handleResponse(connector.getConnectorTestingRouteDefinition());
     // TODO Sta ako u handle response ima neki outConnector? Nece biti pokriven
     // handleTestIdAppending methodom
+    camelContext().addRoutes(connector.getRouteBuilder());
+  }
+
+  @Override
+  public boolean isEnabled(CamelEvent event) {
+    return event instanceof CamelEvent.CamelContextInitializingEvent;
   }
 }

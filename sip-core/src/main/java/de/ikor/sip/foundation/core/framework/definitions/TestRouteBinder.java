@@ -18,4 +18,11 @@ public class TestRouteBinder extends RouteBinder {
         super.appendOutConnectorsSeq(outConnectors);
         CentralEndpointsRegister.putInActualState();
     }
+
+    @Override
+    public void appendOutConnectorsParallel(OutConnector[] outConnectors) {
+        CentralEndpointsRegister.putInTestingState();
+        super.appendOutConnectorsSeq(outConnectors);
+        CentralEndpointsRegister.putInActualState();
+    }
 }

@@ -13,12 +13,20 @@ import org.apache.camel.model.RouteDefinition;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 @RequiredArgsConstructor
 public class RouteBinder {
   private final String useCase;
   private final Class<?> centralModelRequest;
-  protected final String suffix;
+  protected String suffix = EMPTY;
   @Getter protected final List<RouteBuilder> outConnectorsBuilders = new ArrayList<>();
+
+  public RouteBinder(String useCase, Class<?> centralModelRequest, String suffix) {
+    this.useCase = useCase;
+    this.centralModelRequest = centralModelRequest;
+    this.suffix = suffix;
+  }
 
   protected void appendOutConnectorsSeq(OutConnector[] outConnectors) {
     appendConnectors(outConnectors, false);

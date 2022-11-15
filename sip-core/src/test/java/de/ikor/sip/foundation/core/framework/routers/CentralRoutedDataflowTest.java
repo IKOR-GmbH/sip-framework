@@ -160,6 +160,7 @@ class CentralRoutedDataflowTest {
     CentralRouterDefinition noCentralModelRouterSubject = new WrongTypeRouterDefinition();
 
     //act
+    routeStarter.configureDefinition(noCentralModelRouterSubject);
     routeStarter.buildRoutes(noCentralModelRouterSubject.toCentralRouter());
 
     //assert

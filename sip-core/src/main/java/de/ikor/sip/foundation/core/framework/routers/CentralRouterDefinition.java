@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class CentralRouterDefinition {
-  private final List<InConnector> inConnectors = new ArrayList<>();
+  private final List<InConnectorDefinition> inConnectorDefinitions = new ArrayList<>();
   @Getter private UseCaseTopologyDefinition definition;
 
   public abstract String getScenario();
@@ -17,8 +17,8 @@ public abstract class CentralRouterDefinition {
 
   public void configureOnException() {}
 
-  public UseCaseTopologyDefinition input(InConnector... inConnectors) {
-    this.inConnectors.addAll(Arrays.asList(inConnectors));
+  public UseCaseTopologyDefinition input(InConnectorDefinition... inConnectorDefinitions) {
+    this.inConnectorDefinitions.addAll(Arrays.asList(inConnectorDefinitions));
     definition = new UseCaseTopologyDefinition();
     return definition;
   }
@@ -36,8 +36,8 @@ public abstract class CentralRouterDefinition {
     throw new IllegalStateException(""); // todo add message
   }
 
-  public List<InConnector> getInConnectors() {
-    return inConnectors;
+  public List<InConnectorDefinition> getInConnectorDefinitions() {
+    return inConnectorDefinitions;
   }
 
   public CentralRouter toCentralRouter() {

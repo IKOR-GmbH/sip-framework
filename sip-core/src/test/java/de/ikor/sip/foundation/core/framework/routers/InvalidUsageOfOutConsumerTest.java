@@ -1,14 +1,13 @@
-package de.ikor.sip.foundation.core.framework;
+package de.ikor.sip.foundation.core.framework.routers;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
-import de.ikor.sip.foundation.core.framework.routers.CentralRouterDefinition;
+
 import java.util.List;
 
-import de.ikor.sip.foundation.core.framework.routers.CentralRouterDomainModel;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.jupiter.api.Test;

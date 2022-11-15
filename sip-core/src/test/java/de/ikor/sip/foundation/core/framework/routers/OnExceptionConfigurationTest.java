@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.apps.core.CoreTestApplication;
-import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
@@ -43,8 +43,8 @@ class OnExceptionConfigurationTest {
     @Test
     void when_OnExceptionConfiguredOnInConnector_then_ValidateInConnectorOnExceptionExecution() throws Exception {
     // arrange
-    InConnector inConnector = new OnExceptionInConnector(InEndpoint.instance("direct:inDirect-1", "inDirect-1"));
-    routerSubject.input(inConnector);
+    InConnectorDefinition inConnectorDefinition = new OnExceptionInConnector(InEndpoint.instance("direct:inDirect-1", "inDirect-1"));
+    routerSubject.input(inConnectorDefinition);
     routeStarter.buildRoutes(routerSubject.toCentralRouter());
 
     mock.expectedBodiesReceived("InConnectorException");
@@ -60,9 +60,9 @@ class OnExceptionConfigurationTest {
     @Test
     void when_OnExceptionConfiguredOnOutConnector_then_ValidateOutConnectorOnExceptionExecution() throws Exception {
     // arrange
-    InConnector inConnector = SimpleInConnector.withUri("direct:inDirect-2");
+    InConnectorDefinition inConnectorDefinition = SimpleInConnector.withUri("direct:inDirect-2");
     OutConnector outConnector = new OnExceptionOutConnector(OutEndpoint.instance("direct:outDirect", "outDirect-2"));
-    routerSubject.input(inConnector).sequencedOutput(outConnector);
+    routerSubject.input(inConnectorDefinition).sequencedOutput(outConnector);
     routeStarter.buildRoutes(routerSubject.toCentralRouter());
 
     mock.expectedBodiesReceived("OutConnectorException");
