@@ -1,11 +1,10 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.Getter;
 
 public abstract class CentralRouterDefinition {
   private final List<InConnectorDefinition> inConnectorDefinitions = new ArrayList<>();

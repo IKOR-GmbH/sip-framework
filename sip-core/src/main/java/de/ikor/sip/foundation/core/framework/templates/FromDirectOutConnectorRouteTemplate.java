@@ -1,19 +1,18 @@
 package de.ikor.sip.foundation.core.framework.templates;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.*;
+import static de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplate.SUFFIX_PARAM_KEY;
+import static de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplate.USE_CASE_PARAM_KEY;
+import static de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil.TESTING_SUFFIX;
+
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.builder.TemplatedRouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Stream;
-
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.*;
-import static de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplate.SUFFIX_PARAM_KEY;
-import static de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplate.USE_CASE_PARAM_KEY;
-import static de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil.TESTING_SUFFIX;
 
 @AllArgsConstructor
 public class FromDirectOutConnectorRouteTemplate {
@@ -49,9 +48,8 @@ public class FromDirectOutConnectorRouteTemplate {
   private void addOutConnectorRoute(OutConnector outConnector) {
     RouteBuilder rb = anonymousDummyRouteBuilder();
     outConnector.setRouteBuilder(rb);
-    outConnector
-        .configureOnException(); // TODO split configException from route building,
-                                 // connector.configure and adding route to context
+    outConnector.configureOnException(); // TODO split configException from route building,
+    // connector.configure and adding route to context
 
     String routeId = generateRouteId(useCase, outConnector.getName(), suffix);
     RouteDefinition connectorRouteDefinition =

@@ -1,18 +1,17 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.generateRouteId;
+
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
-import lombok.RequiredArgsConstructor;
-import org.apache.camel.model.RouteDefinition;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.generateRouteId;
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import lombok.RequiredArgsConstructor;
+import org.apache.camel.model.RouteDefinition;
 
 @RequiredArgsConstructor
 class CentralRouter {

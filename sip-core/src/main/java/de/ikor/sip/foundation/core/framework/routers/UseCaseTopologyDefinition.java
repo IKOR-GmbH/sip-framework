@@ -1,20 +1,17 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
-import lombok.Getter;
-
 import java.util.LinkedHashMap;
+import lombok.Getter;
 
 public class UseCaseTopologyDefinition {
   @Getter private final LinkedHashMap<OutConnector[], String> allConnectors = new LinkedHashMap<>();
 
-  public UseCaseTopologyDefinition sequencedOutput(OutConnector... outConnectors) {
+  public void sequencedOutput(OutConnector... outConnectors) {
     allConnectors.put(outConnectors, "seq");
-    return this;
   }
 
-  public UseCaseTopologyDefinition parallelOutput(OutConnector... outConnectors) {
+  public void parallelOutput(OutConnector... outConnectors) {
     allConnectors.put(outConnectors, "par");
-    return this;
   }
 }

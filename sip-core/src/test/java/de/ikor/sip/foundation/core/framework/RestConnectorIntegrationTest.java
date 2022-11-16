@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
 import de.ikor.sip.foundation.core.apps.framework.restrouter.RestCentralRouterDefinition;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -17,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 class RestConnectorIntegrationTest {
   @Autowired TestRestTemplate testRestTemplate;
 
-//  @Test TODO UNCOMMENT
+  //  @Test TODO UNCOMMENT
   void When_sendGetRequestToRestConnector_Expect_ValidResponse() {
     ResponseEntity<String> response =
         testRestTemplate.getForEntity("/adapter/hello-append", String.class);

@@ -1,19 +1,15 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.templates.FromDirectOutConnectorRouteTemplate;
 import de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplate;
-import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.RouteDefinition;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.apache.camel.builder.RouteBuilder;
 
 @RequiredArgsConstructor
 public class RouteBinder {
@@ -45,7 +41,6 @@ public class RouteBinder {
         .fromMCMulticastRoute()
         .add();
 
-    new FromDirectOutConnectorRouteTemplate(useCase, suffix)
-        .fromCustomRouteBuilder(outConnectors);
+    new FromDirectOutConnectorRouteTemplate(useCase, suffix).fromCustomRouteBuilder(outConnectors);
   }
 }

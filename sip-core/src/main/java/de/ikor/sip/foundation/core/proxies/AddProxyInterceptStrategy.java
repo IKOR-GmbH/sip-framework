@@ -1,12 +1,10 @@
 package de.ikor.sip.foundation.core.proxies;
 
-import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.*;
-import org.apache.camel.model.OutputDefinition;
 import org.apache.camel.spi.InterceptStrategy;
 import org.springframework.stereotype.Component;
 

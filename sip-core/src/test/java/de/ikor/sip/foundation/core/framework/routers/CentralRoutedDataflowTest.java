@@ -1,5 +1,8 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import static org.assertj.core.api.Assertions.*;
+
 import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpointBuilder;
 import de.ikor.sip.foundation.core.framework.stubs.*;
@@ -14,9 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
-import static org.assertj.core.api.Assertions.*;
 
 @CamelSpringBootTest
 @SpringBootTest(classes = {CentralRouterTestingApplication.class})
@@ -54,7 +54,6 @@ class CentralRoutedDataflowTest {
 
     mock.expectedMessageCount(1);
     mock.expectedBodiesReceived("Hello dude!-[ep-1]");
-
 
     routerSubject.input(inConnector).sequencedOutput(outConnector1);
     routeStarter.buildRoutes(routerSubject.toCentralRouter());
@@ -156,17 +155,19 @@ class CentralRoutedDataflowTest {
   }
 
   @Test
-  void when_CentralRouterHasNoDomainModel_thenExceptionIsThrown () {
+  void when_CentralRouterHasNoDomainModel_thenExceptionIsThrown() {
     CentralRouterDefinition noCentralModelRouterSubject = new WrongTypeRouterDefinition();
 
-    //act
+    // act
     routeStarter.configureDefinition(noCentralModelRouterSubject);
     routeStarter.buildRoutes(noCentralModelRouterSubject.toCentralRouter());
 
-    //assert
+    // assert
     assertThatThrownBy(() -> template.sendBody("direct:multicast-7", "Hello dude!"))
-            .isInstanceOf(CamelExecutionException.class)
-            .getCause().hasMessageContaining("Wrong data type").hasMessageContaining("WrongTypeRouter");
+        .isInstanceOf(CamelExecutionException.class)
+        .getCause()
+        .hasMessageContaining("Wrong data type")
+        .hasMessageContaining("WrongTypeRouter");
   }
 
   private RoutesBuilder routeBuilder() {

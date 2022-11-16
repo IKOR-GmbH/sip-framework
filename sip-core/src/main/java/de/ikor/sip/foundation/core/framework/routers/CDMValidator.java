@@ -14,7 +14,7 @@ public class CDMValidator implements Processor {
     try {
       this.centralModelRequest = Class.forName(fullClassName);
     } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);//TODO
+      throw new RuntimeException(e); // TODO
     }
   }
 

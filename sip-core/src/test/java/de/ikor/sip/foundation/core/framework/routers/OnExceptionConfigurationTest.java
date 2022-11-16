@@ -40,10 +40,12 @@ class OnExceptionConfigurationTest {
     mock.reset();
   }
 
-    @Test
-    void when_OnExceptionConfiguredOnInConnector_then_ValidateInConnectorOnExceptionExecution() throws Exception {
+  @Test
+  void when_OnExceptionConfiguredOnInConnector_then_ValidateInConnectorOnExceptionExecution()
+      throws Exception {
     // arrange
-    InConnectorDefinition inConnectorDefinition = new OnExceptionInConnector(InEndpoint.instance("direct:inDirect-1", "inDirect-1"));
+    InConnectorDefinition inConnectorDefinition =
+        new OnExceptionInConnector(InEndpoint.instance("direct:inDirect-1", "inDirect-1"));
     routerSubject.input(inConnectorDefinition);
     routeStarter.buildRoutes(routerSubject.toCentralRouter());
 
@@ -57,11 +59,13 @@ class OnExceptionConfigurationTest {
     mock.assertIsSatisfied();
   }
 
-    @Test
-    void when_OnExceptionConfiguredOnOutConnector_then_ValidateOutConnectorOnExceptionExecution() throws Exception {
+  @Test
+  void when_OnExceptionConfiguredOnOutConnector_then_ValidateOutConnectorOnExceptionExecution()
+      throws Exception {
     // arrange
     InConnectorDefinition inConnectorDefinition = SimpleInConnector.withUri("direct:inDirect-2");
-    OutConnector outConnector = new OnExceptionOutConnector(OutEndpoint.instance("direct:outDirect", "outDirect-2"));
+    OutConnector outConnector =
+        new OnExceptionOutConnector(OutEndpoint.instance("direct:outDirect", "outDirect-2"));
     routerSubject.input(inConnectorDefinition).sequencedOutput(outConnector);
     routeStarter.buildRoutes(routerSubject.toCentralRouter());
 

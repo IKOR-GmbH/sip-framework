@@ -1,12 +1,12 @@
 package de.ikor.sip.foundation.core.framework.connectors;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteBuilder;
+
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
-
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteBuilder;
 
 @RequiredArgsConstructor
 public class InConnector {

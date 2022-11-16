@@ -1,13 +1,12 @@
 package de.ikor.sip.foundation.core.framework.endpoints;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.camel.Endpoint;
-import org.apache.commons.lang3.StringUtils;
-
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 import static de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil.TESTING_SUFFIX;
+
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.camel.Endpoint;
+import org.apache.commons.lang3.StringUtils;
 
 public class CentralEndpointsRegister {
   private static final String COLON = ":";
@@ -74,7 +73,8 @@ public class CentralEndpointsRegister {
 
   private static OutEndpoint toTestEndpoint(OutEndpoint outEndpoint) {
     return new OutEndpoint(
-        modifyUriForTestRoute(outEndpoint.getEndpointUri()), outEndpoint.getEndpointId() + TESTING_SUFFIX);
+        modifyUriForTestRoute(outEndpoint.getEndpointUri()),
+        outEndpoint.getEndpointId() + TESTING_SUFFIX);
   }
 
   private static RestInEndpoint toTestEndpoint(RestInEndpoint restInEndpoint) {

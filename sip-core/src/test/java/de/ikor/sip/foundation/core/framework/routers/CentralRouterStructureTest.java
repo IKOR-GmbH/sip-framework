@@ -1,10 +1,17 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouterDefinition;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import org.apache.camel.Route;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,19 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
-import static java.lang.String.format;
-import static org.assertj.core.api.Assertions.assertThat;
-
 @SpringBootTest(classes = {CentralRouterTestingApplication.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CentralRouterStructureTest {
-  @Autowired
-  private TestingCentralRouterDefinition routerSubject;
+  @Autowired private TestingCentralRouterDefinition routerSubject;
 
   @Autowired(required = false)
   private RouteStarter routeStarter;
@@ -37,11 +35,9 @@ class CentralRouterStructureTest {
 
   @Test
   void when_ApplicationStarts_then_CentralRouterBeanIsLoaded() {
-    //TODO this test should check on routerSubject bean availability. routerSubject should be bean
+    // TODO this test should check on routerSubject bean availability. routerSubject should be bean
     assertThat(routerSubject).as("CentralRouter bean not initialized").isNotNull();
-    Assertions.assertThat(camelContext())
-        .as("Camel context not set on CentralRouter")
-        .isNotNull();
+    Assertions.assertThat(camelContext()).as("Camel context not set on CentralRouter").isNotNull();
   }
 
   @Test
@@ -92,7 +88,7 @@ class CentralRouterStructureTest {
     // act
     routerSubject.input(inConnector).sequencedOutput(outConnector);
     routeStarter.buildRoutes(routerSubject.toCentralRouter());
-    
+
     // assert
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", routerSubject.getScenario())))

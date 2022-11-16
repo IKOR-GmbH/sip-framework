@@ -1,16 +1,15 @@
 package de.ikor.sip.foundation.core.framework.templates;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.routers.CDMValidator;
+import java.util.stream.Stream;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.builder.TemplatedRouteBuilder;
 import org.apache.camel.model.MulticastDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Stream;
-
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 
 public class FromMiddleComponentRouteTemplate {
 
@@ -36,7 +35,8 @@ public class FromMiddleComponentRouteTemplate {
     return this;
   }
 
-  public TemplatedRouteBuilder fromMCMulticastRoute(RouteDefinition routeDefinition) {//TODO remove after analysis
+  public TemplatedRouteBuilder fromMCMulticastRoute(
+      RouteDefinition routeDefinition) { // TODO remove after analysis
     return TemplatedRouteBuilder.builder(camelContext(), "sip-mc")
         .parameter(USE_CASE_PARAM_KEY, useCase)
         .parameter(SUFFIX_PARAM_KEY, suffix)

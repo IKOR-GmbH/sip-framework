@@ -22,7 +22,6 @@ public class SleepingOutConnector extends TestingOutConnector {
         .process(exchange -> Thread.sleep(1000)) // TODO handle Thread.sleep if possible
         .setBody(exchange -> exchange.getIn().getBody() + format("-[%s]", endpointId))
         .to(OutEndpoint.instance(uri, endpointId))
-        .id("log-message-endpoint")
-    ;
+        .id("log-message-endpoint");
   }
 }

@@ -23,7 +23,6 @@ public class SimpleOutConnector extends TestingOutConnector {
         .setBody(exchange -> exchange.getIn().getBody() + format("-[%s]", super.endpointId))
         .multicast()
         .to(OutEndpoint.instance(uri, endpointId))
-        .id("log-message-endpoint")
-    ;
+        .id("log-message-endpoint");
   }
 }
