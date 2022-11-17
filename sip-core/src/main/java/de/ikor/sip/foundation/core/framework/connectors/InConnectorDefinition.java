@@ -6,14 +6,15 @@ import static de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRe
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.RestInEndpoint;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 
 public abstract class InConnectorDefinition implements Connector {
-  @Getter private RouteBuilder routeBuilder;
-  private RestInEndpoint restInEndpoint;
+  @Getter @Setter
+  private RouteBuilder routeBuilder;
   private InEndpoint inEndpoint;
   private Class<? extends Throwable>[] exceptions;
 
@@ -35,15 +36,18 @@ public abstract class InConnectorDefinition implements Connector {
     return routeDefinition == null ? new RouteDefinition() : routeDefinition;
   }
 
-  protected RouteDefinition from(RestDefinition restDefinition) {
-    restDefinition.to("direct:rest-" + restInEndpoint.getUri());
-    return routeBuilder.from("direct:rest-" + restInEndpoint.getUri());
+  protected RouteDefinition from(RestDefinition restDefinition){
+    restDefinition.to("direct:rest-" + inEndpoint.getUri());
+    routeDefinition = initDefinition();
+    routeBuilder.getRestCollection().getRests().add(restDefinition);
+    return routeDefinition.from("direct:rest-" + inEndpoint.getUri());
   }
 
   protected RestDefinition rest(String uri, String id) {
     routeBuilder = getRouteBuilderInstance();
-    restInEndpoint = RestInEndpoint.instance(uri, id, routeBuilder);
-    return restInEndpoint.rest();
+    RestInEndpoint restInEndpoint = RestInEndpoint.instance(uri, id);
+    inEndpoint = restInEndpoint;
+    return restInEndpoint.definition();
   }
 
   protected OnExceptionDefinition onException(Class<? extends Throwable>... exceptions) {

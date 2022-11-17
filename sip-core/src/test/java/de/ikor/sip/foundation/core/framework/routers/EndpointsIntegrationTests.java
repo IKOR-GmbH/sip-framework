@@ -32,7 +32,7 @@ class EndpointsIntegrationTests {
     starter.buildRoutes(subject.toCentralRouter());
     // assert
 
-    Endpoint registeredEndpoint = CentralEndpointsRegister.getEndpoint("cool-id");
+    Endpoint registeredEndpoint = CentralEndpointsRegister.getOutEndpoint("cool-id");
     Endpoint endpointFromCamelContext = null;
     try {
       endpointFromCamelContext =
@@ -54,7 +54,7 @@ class EndpointsIntegrationTests {
     // assert
 
     CentralEndpointsRegister.putInTestingState();
-    Endpoint registeredEndpoint = CentralEndpointsRegister.getEndpoint("cool-id");
+    Endpoint registeredEndpoint = CentralEndpointsRegister.getOutEndpoint("cool-id");
     Endpoint endpointFromCamelContext = null;
     try {
       endpointFromCamelContext =

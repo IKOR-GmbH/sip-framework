@@ -31,6 +31,7 @@ class CentralRouter {
       RouteDefinition routeDefinition, String connectorName, String routeSuffix) {
     routeDefinition
         .to("sipmc:" + centralRouterDefinition.getScenario() + routeSuffix)
+            //TODO double id set
         .routeId(
             generateRouteId(centralRouterDefinition.getScenario(), connectorName, routeSuffix));
   }

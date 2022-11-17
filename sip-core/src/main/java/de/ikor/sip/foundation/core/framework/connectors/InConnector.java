@@ -2,16 +2,28 @@ package de.ikor.sip.foundation.core.framework.connectors;
 
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteBuilder;
 
-import lombok.RequiredArgsConstructor;
+import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.rest.RestDefinition;
 
-@RequiredArgsConstructor
+
 public class InConnector {
-  private final InConnectorDefinition connector;
-  private RouteBuilder routeBuilder;
+  @Getter private final InConnectorDefinition connector;
+  @Getter private  RouteBuilder routeBuilder;
+  private InEndpoint inEndpoint;
+  // TODO: Use different mechanism to detect this
+  @Getter
+  @Setter
+  private Boolean registeredInCamel = false;
+
+  public InConnector(InConnectorDefinition connector) {
+    this.connector = connector;
+  }
 
   public void configure() {
     connector.configure();
@@ -50,6 +62,7 @@ public class InConnector {
 
   public void setDefinition() {
     routeBuilder = anonymousDummyRouteBuilder();
+    connector.setRouteBuilder(routeBuilder);
     connector.setDefinition();
   }
 

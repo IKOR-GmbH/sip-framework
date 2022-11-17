@@ -12,12 +12,10 @@ public class CentralEndpointsRegister {
   private static final String COLON = ":";
   private static final String QUESTION = "?";
 
-  private static Map<String, Endpoint> registry = new HashMap<>();
-  private static Map<String, InEndpoint> inEndpointRegistry = new HashMap<>();
-  private static Map<String, RestInEndpoint> restInEndpointRegistry = new HashMap<>();
-  private static Map<String, InEndpoint> testingInEndpointRegistry = new HashMap<>();
-  private static Map<String, RestInEndpoint> testingRestInEndpointRegistry = new HashMap<>();
-  private static Map<String, Endpoint> testingOutEndpointRegistry = new HashMap<>();
+  private static final Map<String, Endpoint> outEndpointRegistry = new HashMap<>();
+  private static final Map<String, InEndpoint> inEndpointRegistry = new HashMap<>();
+  private static final Map<String, InEndpoint> testingInEndpointRegistry = new HashMap<>();
+  private static final Map<String, Endpoint> testingOutEndpointRegistry = new HashMap<>();
 
   private static final String STATE_ACTUAL = "actual";
   private static final String STATE_TESTING = "testing";
@@ -25,11 +23,11 @@ public class CentralEndpointsRegister {
 
   private CentralEndpointsRegister() {}
 
-  public static Endpoint getEndpoint(String endpointId) {
+  public static Endpoint getOutEndpoint(String endpointId) {
     if (STATE_ACTUAL.equals(state)) {
-      return registry.get(endpointId);
+      return outEndpointRegistry.get(endpointId);
     }
-    return testingOutEndpointRegistry.getOrDefault(endpointId, registry.get(endpointId));
+    return testingOutEndpointRegistry.getOrDefault(endpointId, outEndpointRegistry.get(endpointId));
   }
 
   public static InEndpoint getInEndpoint(String endpointId) {
@@ -39,18 +37,9 @@ public class CentralEndpointsRegister {
     return testingInEndpointRegistry.get(endpointId);
   }
 
-  public static RestInEndpoint getRestInEndpoint(String endpointId) {
-    if (STATE_ACTUAL.equals(state)) {
-      return restInEndpointRegistry.get(endpointId);
-    }
-    return testingRestInEndpointRegistry.get(endpointId);
-  }
-
-  public static void put(String endpointId, Endpoint endpoint) {
-    registry.put(endpointId, endpoint);
-    if (endpoint instanceof OutEndpoint) {
-      testingOutEndpointRegistry.put(endpointId, toTestEndpoint((OutEndpoint) endpoint));
-    }
+  public static void put(String endpointId, OutEndpoint endpoint) {
+    outEndpointRegistry.put(endpointId, endpoint);
+    testingOutEndpointRegistry.put(endpointId, toTestEndpoint(endpoint));
   }
 
   public static void put(String id, InEndpoint inEndpoint) {
@@ -58,16 +47,15 @@ public class CentralEndpointsRegister {
     testingInEndpointRegistry.put(id, toTestEndpoint(inEndpoint));
   }
 
-  public static void put(String id, RestInEndpoint inEndpoint) {
-    restInEndpointRegistry.put(id, inEndpoint);
-    testingRestInEndpointRegistry.put(id, toTestEndpoint(inEndpoint));
-  }
-
   public static Endpoint getCamelEndpoint(String uri) {
     return camelContext().getEndpoint(uri);
   }
 
   private static InEndpoint toTestEndpoint(InEndpoint inEndpoint) {
+    if (inEndpoint instanceof RestInEndpoint) {
+      return new RestInEndpoint(
+          inEndpoint.getUri() + TESTING_SUFFIX, inEndpoint.getId());
+    }
     return new InEndpoint(modifyUriForTestRoute(inEndpoint.getUri()), inEndpoint.getId());
   }
 
@@ -75,13 +63,6 @@ public class CentralEndpointsRegister {
     return new OutEndpoint(
         modifyUriForTestRoute(outEndpoint.getEndpointUri()),
         outEndpoint.getEndpointId() + TESTING_SUFFIX);
-  }
-
-  private static RestInEndpoint toTestEndpoint(RestInEndpoint restInEndpoint) {
-    return new RestInEndpoint(
-        restInEndpoint.getUri() + TESTING_SUFFIX,
-        restInEndpoint.getId(),
-        restInEndpoint.getRouteBuilder());
   }
 
   private static String modifyUriForTestRoute(String uri) {
