@@ -120,7 +120,7 @@ class RoutesFromDeclarativeBuilder extends RouteConfigurationBuilder {
                 "END: Connector-specified incoming route-definition for connector '%s', integration-scenario '%s'",
                 connector.getID(), scenario.getID()));
 
-    // Verify correct model
+    // PostRoute correct model
     route.log("Insert validation for common domain model here...");
 
     // Pass to MC

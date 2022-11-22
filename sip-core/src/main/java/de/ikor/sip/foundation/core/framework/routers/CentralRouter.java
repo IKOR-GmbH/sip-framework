@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.core.framework.routers;
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.generateRouteId;
 
+import de.ikor.sip.foundation.core.framework.beans.CDMValueSetter;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
@@ -30,6 +31,7 @@ class CentralRouter {
   void appendSipMCAndRouteId(
       RouteDefinition routeDefinition, String connectorName, String routeSuffix) {
     routeDefinition
+            .bean(CDMValueSetter.class, "process")
         .to("sipmc:" + centralRouterDefinition.getScenario() + routeSuffix)
             //TODO double id set
         .routeId(

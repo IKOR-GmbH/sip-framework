@@ -14,13 +14,7 @@ public class ExchangeContextHolder {
     }
 
     public ExchangeAttributes getContext() throws IllegalStateException {
-        ExchangeAttributes attributes = attributeHolder.get();
-
-        if(attributes == null) {
-            throw new IllegalStateException("No thread-bound exchange found");
-        }
-
-        return attributes;
+        return attributeHolder.get();
     }
 
     public void setContext(ExchangeAttributes context) {

@@ -10,7 +10,7 @@ import java.util.Map;
 public class ExchangeAttributes {
     private static final String DESTRUCTION_CB_PREFIX = ExchangeAttributes.class.getName() + ".DESTRUCTION_CALLBACK.";
     private final Map<String,Runnable> destructionCallbacks = new HashMap<>();
-    private volatile Exchange exchange;
+    private final Exchange exchange;
 
     /**
      * Create a new instance from an {@link Exchange}

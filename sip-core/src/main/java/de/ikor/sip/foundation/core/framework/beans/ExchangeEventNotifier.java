@@ -10,12 +10,13 @@ import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Configuration
 public class ExchangeEventNotifier extends EventNotifierSupport {
-    private final Map<String, ExchangeAttributes> cdms= new HashMap<>();
+    private final Map<String, ExchangeAttributes> cdms = new HashMap<>();
 
 
     public void notify(CamelEvent event) {
@@ -29,10 +30,7 @@ public class ExchangeEventNotifier extends EventNotifierSupport {
                 exchange.setProperty(ExchangeScope.SCOPE_PROPERTY, exchange.getExchangeId());
             }
             log.debug("RECEIVED CREATE EVENT - " + exchange.getProperty(ExchangeScope.SCOPE_PROPERTY));
-            ExchangeAttributes exchangeAttributes =
-                    cdms.getOrDefault(exchange.getProperty(ExchangeScope.SCOPE_PROPERTY, String.class),
-                            new ExchangeAttributes(exchange));
-            cdms.put(exchange.getProperty(ExchangeScope.SCOPE_PROPERTY, String.class), exchangeAttributes);
+            ExchangeAttributes exchangeAttributes =new ExchangeAttributes(exchange);
             ExchangeContextHolder.instance().setContext(exchangeAttributes);
         }
 
@@ -41,7 +39,8 @@ public class ExchangeEventNotifier extends EventNotifierSupport {
 
             Exchange exchange = ece.getExchange();
             log.debug("RECEIVED COMPLETE EVENT - " + exchange.getProperty(ExchangeScope.SCOPE_PROPERTY));
-            ExchangeContextHolder.instance().getContext().executeDestructionCallbacks();
+            if (ExchangeContextHolder.instance().getContext() != null)
+                ExchangeContextHolder.instance().getContext().executeDestructionCallbacks();
             ExchangeContextHolder.instance().resetContext();
         }
 

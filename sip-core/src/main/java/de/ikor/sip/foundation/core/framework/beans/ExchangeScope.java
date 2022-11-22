@@ -21,6 +21,7 @@ public class ExchangeScope implements Scope {
 
     @Override
     public String getConversationId() {
+        if (getScopeContext() == null) return "";
         String id = ((Exchange) getScopeContext().get()).getProperty(SCOPE_PROPERTY).toString();
         log.debug("Scope Bound with Conversation from Exchange w/ scope id - {}",id);
         return id;
