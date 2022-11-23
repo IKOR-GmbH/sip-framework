@@ -1,8 +1,5 @@
 package de.ikor.sip.foundation.core.framework.connectors;
 
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteBuilder;
-import static de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister.getInEndpointUri;
-
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.RestInEndpoint;
 import lombok.Getter;
@@ -12,12 +9,12 @@ import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 
+import static de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister.getInEndpointUri;
+
 public abstract class InConnectorDefinition implements Connector {
   @Getter @Setter
   private RouteBuilder routeBuilder;
   private InEndpoint inEndpoint;
-  private Class<? extends Throwable>[] exceptions;
-
   @Getter private RouteDefinition routeDefinition;
 
   public abstract void configure();
@@ -44,7 +41,6 @@ public abstract class InConnectorDefinition implements Connector {
   }
 
   protected RestDefinition rest(String uri, String id) {
-    routeBuilder = getRouteBuilderInstance();
     RestInEndpoint restInEndpoint = RestInEndpoint.instance(uri, id);
     inEndpoint = restInEndpoint;
     return restInEndpoint.definition();
@@ -60,12 +56,6 @@ public abstract class InConnectorDefinition implements Connector {
     return last;
   }
 
-  private RouteBuilder getRouteBuilderInstance() {
-    if (routeBuilder == null) {
-      return anonymousDummyRouteBuilder();
-    }
-    return routeBuilder;
-  }
 
   public String getEndpointUri() {
     return inEndpoint.getUri();

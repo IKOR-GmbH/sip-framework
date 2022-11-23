@@ -69,6 +69,32 @@ class CentralRoutedDataflowTest {
   }
 
   @Test
+  void when_RouteMulticastsParallelToTwoConnectors_then_ConnectorsForwardsTheExchange()
+          throws Exception {
+    SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-1");
+
+    SimpleOutConnector outConnector1 =
+            new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
+    SimpleOutConnector outConnector2 =
+            new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-2");
+
+    mock.expectedMessageCount(2);
+    mock.expectedBodiesReceivedInAnyOrder("Hello dudes!-[ep-1]", "Hello dudes!-[ep-2]");
+
+    routerSubject.input(inConnector).parallelOutput(outConnector1, outConnector2);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+
+    template.sendBody("direct:multicast-1", "Hello dudes!");
+    mock.assertIsSatisfied();
+
+    mockTest.expectedBodiesReceivedInAnyOrder("Hello dude - test!-[ep-1]", "Hello dude - test!-[ep-2]");
+    mockTest.expectedMessageCount(2);
+
+    template.sendBody("direct:multicast-1-testkit", "Hello dude - test!");
+    mockTest.assertIsSatisfied();
+  }
+
+  @Test
   void
       given_RouteWithParallelMulticast_when_FirstOutConnectorIsSlow_then_SecondConnectorExecutesFirst()
           throws Exception {
