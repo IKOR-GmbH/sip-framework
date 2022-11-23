@@ -1,15 +1,15 @@
 package de.ikor.sip.foundation.core.framework.connectors;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteBuilder;
+
 import lombok.Getter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
 
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteBuilder;
-
 public class InConnector {
   @Getter private final InConnectorDefinition connector;
-  @Getter private  RouteBuilder routeBuilder;
+  @Getter private RouteBuilder routeBuilder;
 
   public InConnector(InConnectorDefinition connector) {
     this.connector = connector;
@@ -18,10 +18,6 @@ public class InConnector {
   public void configure() {
     connector.configure();
     routeBuilder.getRouteCollection().route(connector.getRouteDefinition());
-  }
-
-  public RouteDefinition getConnectorTestingRouteDefinition() {
-    return routeBuilder.getRouteCollection().getRoutes().get(0);
   }
 
   // TODO: Assumption here is that the first route is the "regular" one and the second

@@ -30,7 +30,7 @@ class RouteTemplatesTest {
             TemplatedRouteBuilder someUseCase =
                 TemplatedRouteBuilder.builder(camelContext(), "sip-mc-multicast")
                     .parameter("use-case", "someUseCase")
-                    .parameter("central-domain-model", String.class.getCanonicalName());
+                    .parameter("central-domain-model", String.class);
             someUseCase.add();
           }
         };

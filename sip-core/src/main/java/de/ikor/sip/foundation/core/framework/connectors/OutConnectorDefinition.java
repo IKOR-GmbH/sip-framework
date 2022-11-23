@@ -5,7 +5,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
 
-public abstract class OutConnector implements Connector {
+public abstract class OutConnectorDefinition implements Connector {
 
   @Setter private RouteBuilder routeBuilder;
 

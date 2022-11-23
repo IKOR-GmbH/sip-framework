@@ -19,9 +19,8 @@ public class StaticRouteBuilderHelper {
     };
   }
 
-  public static String generateRouteId(
-      String scenarioName, String connectorName, String routeSuffix) {
-    return format("%s-%s%s", scenarioName, connectorName, routeSuffix);
+  public static String generateRouteId(String scenarioName, String connectorName) {
+    return format("%s-%s", scenarioName, connectorName);
   }
 
   public static CamelContext camelContext() {

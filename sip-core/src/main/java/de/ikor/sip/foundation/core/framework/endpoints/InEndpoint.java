@@ -10,7 +10,7 @@ public class InEndpoint {
   public static InEndpoint instance(String uri, String id) {
     InEndpoint inEndpoint = new InEndpoint(uri, id);
     CentralEndpointsRegister.put(id, inEndpoint);
-    return CentralEndpointsRegister.getInEndpoint(id);
+    return inEndpoint;
   }
 
   protected InEndpoint(String uri, String id) {

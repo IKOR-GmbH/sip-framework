@@ -3,11 +3,9 @@ package de.ikor.sip.foundation.core.framework.routers;
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.generateRouteId;
 
-import de.ikor.sip.foundation.core.framework.beans.CDMValueSetter;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
-import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
-import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,14 +26,11 @@ class CentralRouter {
     inConnectors.forEach(this::addToContext);
   }
 
-  void appendSipMCAndRouteId(
-      RouteDefinition routeDefinition, String connectorName, String routeSuffix) {
+  void appendSipMCAndRouteId(RouteDefinition routeDefinition, String connectorName) {
     routeDefinition
-            .bean(CDMValueSetter.class, "process")
-        .to("sipmc:" + centralRouterDefinition.getScenario() + routeSuffix)
-            //TODO double id set
-        .routeId(
-            generateRouteId(centralRouterDefinition.getScenario(), connectorName, routeSuffix));
+        .to("sipmc:" + centralRouterDefinition.getScenario())
+        // TODO double id set
+        .routeId(generateRouteId(centralRouterDefinition.getScenario(), connectorName));
   }
 
   public String getScenario() {
@@ -54,7 +49,7 @@ class CentralRouter {
     try {
       camelContext().addRoutes(inConnector.getRouteBuilder());
     } catch (Exception e) {
-      throw new RuntimeException(e); // TODO Handle exception
+      throw new RuntimeException(e);
     }
   }
 
@@ -62,16 +57,14 @@ class CentralRouter {
     inConnector.setDefinition();
     inConnector.configureOnException();
     inConnector.configure();
-    appendSipMCAndRouteId(
-        inConnector.getConnectorRouteDefinition(),
-        inConnector.getName(),
-        CentralEndpointsRegister.suffixForCurrentState());
-    appendCDMValidatorIfResponseIsExpected(inConnector.getConnectorRouteDefinition());
+    appendSipMCAndRouteId(inConnector.getConnectorRouteDefinition(), inConnector.getName());
+//    appendCDMValidatorIfResponseIsExpected(inConnector.getConnectorRouteDefinition());
+    //TODO fix validator first
 
     inConnector.handleResponse(inConnector.getConnectorRouteDefinition());
   }
 
-  public Map<OutConnector[], String> getOutTopologyDefinition() {
+  public Map<OutConnectorDefinition[], String> getOutTopologyDefinition() {
     return centralRouterDefinition.getDefinition().getAllConnectors();
   }
 

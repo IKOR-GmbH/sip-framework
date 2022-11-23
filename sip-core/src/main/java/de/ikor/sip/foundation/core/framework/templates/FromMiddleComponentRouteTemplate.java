@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.framework.templates;
 
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 
-import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
 import de.ikor.sip.foundation.core.framework.routers.CDMValidator;
 import java.util.stream.Stream;
 import org.apache.camel.builder.RouteBuilder;
@@ -14,11 +14,10 @@ import org.springframework.stereotype.Component;
 public class FromMiddleComponentRouteTemplate {
 
   public static final String USE_CASE_PARAM_KEY = "use-case";
-  public static final String SUFFIX_PARAM_KEY = "suffix";
-  private OutConnector[] outConnectors;
+  private OutConnectorDefinition[] outConnectors;
   private final String useCase;
   private String suffix;
-  public String centralDomainRequest;
+  public Class<?> centralDomainRequest;
   private boolean isParallel;
   protected static final String URI_PREFIX = "direct:";
 
@@ -31,7 +30,7 @@ public class FromMiddleComponentRouteTemplate {
   }
 
   public FromMiddleComponentRouteTemplate withCentralDomainRequest(Class<?> requestType) {
-    this.centralDomainRequest = requestType.getCanonicalName();
+    this.centralDomainRequest = requestType;
     return this;
   }
 
@@ -39,7 +38,6 @@ public class FromMiddleComponentRouteTemplate {
       RouteDefinition routeDefinition) { // TODO remove after analysis
     return TemplatedRouteBuilder.builder(camelContext(), "sip-mc")
         .parameter(USE_CASE_PARAM_KEY, useCase)
-        .parameter(SUFFIX_PARAM_KEY, suffix)
         .handler(templateDef -> templateDef.setRoute(routeDefinition));
   }
 
@@ -55,11 +53,10 @@ public class FromMiddleComponentRouteTemplate {
 
     return TemplatedRouteBuilder.builder(camelContext(), "sip-mc-multicast")
         .parameter(USE_CASE_PARAM_KEY, useCase)
-        .parameter(SUFFIX_PARAM_KEY, suffix)
         .parameter("central-domain-model", centralDomainRequest);
   }
 
-  public FromMiddleComponentRouteTemplate outConnectors(OutConnector[] outConnectors) {
+  public FromMiddleComponentRouteTemplate outConnectors(OutConnectorDefinition[] outConnectors) {
     this.outConnectors = outConnectors;
     return this;
   }
@@ -79,15 +76,14 @@ public class FromMiddleComponentRouteTemplate {
         multicastDefinition =
             routeTemplate("sip-mc-multicast")
                 .templateParameter(USE_CASE_PARAM_KEY)
-                .templateParameter(SUFFIX_PARAM_KEY, "")
                 .templateParameter("central-domain-model")
                 .templateBean(
                     "CDMValidator",
                     CDMValidator.class,
-                    rtc -> new CDMValidator((String) rtc.getProperty("central-domain-model")))
-                .from("sipmc:{{use-case}}{{suffix}}")
+                    rtc -> new CDMValidator((Class<?>) rtc.getProperty("central-domain-model")))
+                .from("sipmc:{{use-case}}")
                 .bean("{{CDMValidator}}")
-                .routeId("sipmc-bridge-{{use-case}}{{suffix}}")
+                .routeId("sipmc-bridge-{{use-case}}")
                 .multicast();
       }
     }
