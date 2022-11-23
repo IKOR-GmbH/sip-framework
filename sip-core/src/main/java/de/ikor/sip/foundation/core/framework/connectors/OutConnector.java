@@ -15,8 +15,6 @@ public abstract class OutConnector implements Connector {
 
   public abstract void configure(RouteDefinition route);
 
-  public void configureOnException() {}
-
   protected OnExceptionDefinition onException(Class<? extends Throwable>... exceptions) {
     OnExceptionDefinition last = null;
 

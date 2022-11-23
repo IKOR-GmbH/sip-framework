@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
 
-public class RestInConnector extends InConnector {
+public class RestInConnector extends InConnectorDefinition {
   @Override
   public String getName() {
     return "rest-connector";

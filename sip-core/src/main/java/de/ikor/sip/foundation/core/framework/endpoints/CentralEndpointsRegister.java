@@ -1,17 +1,14 @@
 package de.ikor.sip.foundation.core.framework.endpoints;
 
-import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import static de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil.TESTING_SUFFIX;
+
 import java.util.HashMap;
 import java.util.Map;
-import lombok.Setter;
-import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.commons.lang3.StringUtils;
 
 public class CentralEndpointsRegister {
-
-  @Setter private static CamelContext camelContext;
-
   private static final String COLON = ":";
   private static final String QUESTION = "?";
 
@@ -50,33 +47,22 @@ public class CentralEndpointsRegister {
     testingInEndpointRegistry.put(id, toTestEndpoint(inEndpoint));
   }
 
-  public static String getInEndpointUri(String id) {
-    return getInEndpoint(id).getUri();
-  }
-
-  public static void putInTestingState() {
-    state = STATE_TESTING;
-  }
-
-  public static void putInActualState() {
-    state = STATE_ACTUAL;
-  }
-
-  static Endpoint getCamelEndpoint(String uri) {
-    return camelContext.getEndpoint(uri);
+  public static Endpoint getCamelEndpoint(String uri) {
+    return camelContext().getEndpoint(uri);
   }
 
   private static InEndpoint toTestEndpoint(InEndpoint inEndpoint) {
     if (inEndpoint instanceof RestInEndpoint) {
       return new RestInEndpoint(
-          inEndpoint.getUri() + TestingRoutesUtil.TESTING_SUFFIX, inEndpoint.getId());
+          inEndpoint.getUri() + TESTING_SUFFIX, inEndpoint.getId());
     }
     return new InEndpoint(modifyUriForTestRoute(inEndpoint.getUri()), inEndpoint.getId());
   }
 
   private static OutEndpoint toTestEndpoint(OutEndpoint outEndpoint) {
     return new OutEndpoint(
-        modifyUriForTestRoute(outEndpoint.getEndpointUri()), outEndpoint.getEndpointId());
+        modifyUriForTestRoute(outEndpoint.getEndpointUri()),
+        outEndpoint.getEndpointId() + TESTING_SUFFIX);
   }
 
   private static String modifyUriForTestRoute(String uri) {
@@ -94,7 +80,7 @@ public class CentralEndpointsRegister {
 
     addMoreUriEndpointParts(sb, uriEndpoint);
 
-    sb.append(TestingRoutesUtil.TESTING_SUFFIX).append(uriOptions);
+    sb.append(TESTING_SUFFIX).append(uriOptions);
     return sb.toString();
   }
 
@@ -103,5 +89,21 @@ public class CentralEndpointsRegister {
     for (int i = 1; i <= numberOfColons; i++) {
       sb.append(COLON).append(uriEndpoint.split(COLON)[i]);
     }
+  }
+
+  public static String getInEndpointUri(String id) {
+    return getInEndpoint(id).getUri();
+  }
+
+  public static void putInTestingState() {
+    state = STATE_TESTING;
+  }
+
+  public static void putInActualState() {
+    state = STATE_ACTUAL;
+  }
+
+  public static String suffixForCurrentState() {
+    return state.equals(STATE_TESTING) ? TESTING_SUFFIX : StringUtils.EMPTY;
   }
 }
