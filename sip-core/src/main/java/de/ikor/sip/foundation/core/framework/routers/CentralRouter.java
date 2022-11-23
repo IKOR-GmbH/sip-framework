@@ -1,17 +1,16 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.generateRouteId;
+
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
-import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
-import lombok.RequiredArgsConstructor;
-import org.apache.camel.model.RouteDefinition;
-
+import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.generateRouteId;
+import lombok.RequiredArgsConstructor;
+import org.apache.camel.model.RouteDefinition;
 
 @RequiredArgsConstructor
 class CentralRouter {
@@ -27,13 +26,11 @@ class CentralRouter {
     inConnectors.forEach(this::addToContext);
   }
 
-  void appendSipMCAndRouteId(
-      RouteDefinition routeDefinition, String connectorName) {
+  void appendSipMCAndRouteId(RouteDefinition routeDefinition, String connectorName) {
     routeDefinition
         .to("sipmc:" + centralRouterDefinition.getScenario())
-            //TODO double id set
-        .routeId(
-            generateRouteId(centralRouterDefinition.getScenario(), connectorName));
+        // TODO double id set
+        .routeId(generateRouteId(centralRouterDefinition.getScenario(), connectorName));
   }
 
   public String getScenario() {
@@ -60,15 +57,13 @@ class CentralRouter {
     inConnector.setDefinition();
     inConnector.configureOnException();
     inConnector.configure();
-    appendSipMCAndRouteId(
-        inConnector.getConnectorRouteDefinition(),
-        inConnector.getName());
+    appendSipMCAndRouteId(inConnector.getConnectorRouteDefinition(), inConnector.getName());
     appendCDMValidatorIfResponseIsExpected(inConnector.getConnectorRouteDefinition());
 
     inConnector.handleResponse(inConnector.getConnectorRouteDefinition());
   }
 
-  public Map<OutConnector[], String> getOutTopologyDefinition() {
+  public Map<OutConnectorDefinition[], String> getOutTopologyDefinition() {
     return centralRouterDefinition.getDefinition().getAllConnectors();
   }
 

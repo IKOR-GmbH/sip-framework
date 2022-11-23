@@ -19,8 +19,7 @@ public class StaticRouteBuilderHelper {
     };
   }
 
-  public static String generateRouteId(
-      String scenarioName, String connectorName) {
+  public static String generateRouteId(String scenarioName, String connectorName) {
     return format("%s-%s", scenarioName, connectorName);
   }
 

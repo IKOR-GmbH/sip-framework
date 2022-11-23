@@ -64,13 +64,13 @@ class CentralRoutedDataflowTest {
 
   @Test
   void when_RouteMulticastsParallelToTwoConnectors_then_ConnectorsForwardsTheExchange()
-          throws Exception {
+      throws Exception {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-1");
 
     SimpleOutConnector outConnector1 =
-            new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
+        new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
     SimpleOutConnector outConnector2 =
-            new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-2");
+        new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-2");
 
     mock.expectedMessageCount(2);
     mock.expectedBodiesReceivedInAnyOrder("Hello dudes!-[ep-1]", "Hello dudes!-[ep-2]");

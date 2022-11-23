@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.core.framework.connectors;
 
+import static de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister.getInEndpointUri;
+
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.RestInEndpoint;
 import lombok.Getter;
@@ -9,11 +11,8 @@ import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 
-import static de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister.getInEndpointUri;
-
 public abstract class InConnectorDefinition implements Connector {
-  @Getter @Setter
-  private RouteBuilder routeBuilder;
+  @Getter @Setter private RouteBuilder routeBuilder;
   private InEndpoint inEndpoint;
   @Getter private RouteDefinition routeDefinition;
 
@@ -33,7 +32,7 @@ public abstract class InConnectorDefinition implements Connector {
     return routeDefinition == null ? new RouteDefinition() : routeDefinition;
   }
 
-  protected RouteDefinition from(RestDefinition restDefinition){
+  protected RouteDefinition from(RestDefinition restDefinition) {
     restDefinition.to("direct:rest-" + inEndpoint.getUri());
     routeDefinition = initDefinition();
     routeBuilder.getRestCollection().getRests().add(restDefinition);
@@ -55,7 +54,6 @@ public abstract class InConnectorDefinition implements Connector {
     }
     return last;
   }
-
 
   public String getEndpointUri() {
     return inEndpoint.getUri();

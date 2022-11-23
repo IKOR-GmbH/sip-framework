@@ -5,7 +5,6 @@ import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
-import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouterDefinition;
@@ -75,8 +74,9 @@ class CentralRouterStructureTest {
   }
 
   @Test
-  void when_OneOutConnectorIsRegisteredAsSequenced_then_OneActiveAndOneTestRouteWithSIPMCEndpointIsAvailable()
-      throws Exception {
+  void
+      when_OneOutConnectorIsRegisteredAsSequenced_then_OneActiveAndOneTestRouteWithSIPMCEndpointIsAvailable()
+          throws Exception {
     // arrange
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:OneOutConnector");
     SimpleOutConnector outConnector = new SimpleOutConnector();
@@ -87,13 +87,14 @@ class CentralRouterStructureTest {
     // assert
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", routerSubject.getScenario())))
-        .as("Connector reistered via sequencedOutput - Exactly one actual OutConnector is expected.")
+        .as(
+            "Connector reistered via sequencedOutput - Exactly one actual OutConnectorDefinition is expected.")
         .hasSize(1);
   }
 
   @Test
   void when_OneOutConnectorIsRegisteredAsParallel_then_OneRouteWithSIPMCEndpointIsAvailable()
-          throws Exception {
+      throws Exception {
     // arrange
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:OneOutConnector");
     SimpleOutConnector outConnector = new SimpleOutConnector();
@@ -104,9 +105,10 @@ class CentralRouterStructureTest {
 
     // assert
     assertThat(getRoutesFromContext())
-            .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", routerSubject.getScenario())))
-            .as("Connector reistered via parallelOutput - Exactly one actual OutConnector is expected.")
-            .hasSize(1);
+        .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", routerSubject.getScenario())))
+        .as(
+            "Connector reistered via parallelOutput - Exactly one actual OutConnectorDefinition is expected.")
+        .hasSize(1);
   }
 
   @Test

@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.framework.templates;
 
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 
-import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
 import de.ikor.sip.foundation.core.framework.routers.CDMValidator;
 import java.util.stream.Stream;
 import org.apache.camel.builder.RouteBuilder;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class FromMiddleComponentRouteTemplate {
 
   public static final String USE_CASE_PARAM_KEY = "use-case";
-  private OutConnector[] outConnectors;
+  private OutConnectorDefinition[] outConnectors;
   private final String useCase;
   private String suffix;
   public String centralDomainRequest;
@@ -56,7 +56,7 @@ public class FromMiddleComponentRouteTemplate {
         .parameter("central-domain-model", centralDomainRequest);
   }
 
-  public FromMiddleComponentRouteTemplate outConnectors(OutConnector[] outConnectors) {
+  public FromMiddleComponentRouteTemplate outConnectors(OutConnectorDefinition[] outConnectors) {
     this.outConnectors = outConnectors;
     return this;
   }

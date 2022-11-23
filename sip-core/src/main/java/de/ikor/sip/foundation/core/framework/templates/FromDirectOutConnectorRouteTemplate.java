@@ -3,9 +3,7 @@ package de.ikor.sip.foundation.core.framework.templates;
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.*;
 import static de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplate.USE_CASE_PARAM_KEY;
 
-
-import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
-
+import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
@@ -18,7 +16,7 @@ public class FromDirectOutConnectorRouteTemplate {
   private String useCase;
   private String suffix;
 
-  public void fromMCMulticastRoute(OutConnector[] outConnectors) {
+  public void fromMCMulticastRoute(OutConnectorDefinition[] outConnectors) {
     // TODO setting routeID does not work. Double check why and choose way to go
     RouteDefinition definition = FromDirectOutConnectorRouteTemplate.Template.getDefinition();
     Stream.of(outConnectors)
@@ -26,7 +24,7 @@ public class FromDirectOutConnectorRouteTemplate {
             outConnector -> {
               definition.setId(useCase + outConnector.getName() + suffix);
               //              outConnector.setRouteDefinition(definition);//toggling between
-              // definition and builder setter on OutConnector
+              // definition and builder setter on OutConnectorDefinition
               outConnector.configureOnException(); // TODO is this the perfect place?
               outConnector.configure(definition);
               TemplatedRouteBuilder parameter =
@@ -37,13 +35,13 @@ public class FromDirectOutConnectorRouteTemplate {
             });
   }
 
-  public void fromCustomRouteBuilder(OutConnector[] outConnectors) {
-    for (OutConnector connector : outConnectors) {
+  public void fromCustomRouteBuilder(OutConnectorDefinition[] outConnectors) {
+    for (OutConnectorDefinition connector : outConnectors) {
       addOutConnectorRoute(connector);
     }
   }
 
-  private void addOutConnectorRoute(OutConnector outConnector) {
+  private void addOutConnectorRoute(OutConnectorDefinition outConnector) {
     RouteBuilder rb = anonymousDummyRouteBuilder();
     outConnector.setRouteBuilder(rb);
     outConnector.configureOnException(); // TODO split configException from route building,
@@ -73,8 +71,7 @@ public class FromDirectOutConnectorRouteTemplate {
             routeTemplate("direct-out-connector")
                 .templateParameter(USE_CASE_PARAM_KEY)
                 .templateParameter("out-connector-name")
-                .from("direct:{{out-connector-name}}")
-        ;
+                .from("direct:{{out-connector-name}}");
       }
     }
 

@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
@@ -11,8 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = CentralRouterTestingApplication.class)
 @DirtiesContext

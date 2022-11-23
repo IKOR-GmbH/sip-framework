@@ -1,11 +1,10 @@
 package de.ikor.sip.foundation.core.framework.endpoints;
 
-import org.apache.camel.Endpoint;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import org.apache.camel.Endpoint;
 
 public class CentralEndpointsRegister {
   private static final Map<String, Endpoint> outEndpointRegistry = new HashMap<>();
@@ -30,11 +29,10 @@ public class CentralEndpointsRegister {
   }
 
   public static InEndpoint getInEndpoint(String endpointId) {
-      return inEndpointRegistry.get(endpointId);
+    return inEndpointRegistry.get(endpointId);
   }
 
   public static Endpoint getOutEndpoint(String endpointId) {
-      return outEndpointRegistry.get(endpointId);
+    return outEndpointRegistry.get(endpointId);
   }
-
 }

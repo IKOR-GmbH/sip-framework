@@ -1,10 +1,10 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
 import org.apache.camel.model.RouteDefinition;
 
-public class OnExceptionOutConnector extends OutConnector {
+public class OnExceptionOutConnector extends OutConnectorDefinition {
 
   private final OutEndpoint outEndpoint;
 
@@ -15,7 +15,7 @@ public class OnExceptionOutConnector extends OutConnector {
   @Override
   public void configure(RouteDefinition route) {
     route
-        .log("lets cause DummyException in OutConnector")
+        .log("lets cause DummyException in OutConnectorDefinition")
         .process(
             exchange -> {
               throw new TestingDummyException("fake exception");
@@ -27,7 +27,7 @@ public class OnExceptionOutConnector extends OutConnector {
   public void configureOnException() {
     onException(TestingDummyException.class)
         .handled(true)
-        .log("DummyException happened, OutConnector onException handler is invoked!")
+        .log("DummyException happened, OutConnectorDefinition onException handler is invoked!")
         .process(
             exchange -> {
               exchange.getMessage().setBody("OutConnectorException");

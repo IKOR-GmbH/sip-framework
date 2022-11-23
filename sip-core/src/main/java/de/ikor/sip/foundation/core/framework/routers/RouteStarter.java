@@ -1,15 +1,13 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper;
-import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
-import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
-import org.apache.camel.spi.CamelEvent;
-import org.apache.camel.support.EventNotifierSupport;
-import org.springframework.stereotype.Component;
-
+import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.apache.camel.spi.CamelEvent;
+import org.apache.camel.support.EventNotifierSupport;
+import org.springframework.stereotype.Component;
 
 @Component
 public class RouteStarter extends EventNotifierSupport {
@@ -53,11 +51,11 @@ public class RouteStarter extends EventNotifierSupport {
     router.buildTopology();
     router
         .getOutTopologyDefinition()
-        .forEach(
-            (outConnectors, s) -> bindOutConnectors(actualRouteBinder, outConnectors, s));
+        .forEach((outConnectors, s) -> bindOutConnectors(actualRouteBinder, outConnectors, s));
   }
 
-  private void bindOutConnectors(RouteBinder routeBinder, OutConnector[] outConnectors, String s) {
+  private void bindOutConnectors(
+      RouteBinder routeBinder, OutConnectorDefinition[] outConnectors, String s) {
     if ("seq".equals(s)) {
       routeBinder.appendOutConnectorsSeq(outConnectors);
     } else if ("par".equals(s)) {
