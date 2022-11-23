@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.core.framework.connectors;
 
 import static de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister.getInEndpointUri;
 
+import de.ikor.sip.foundation.core.framework.beans.CDMValueSetter;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.RestInEndpoint;
 import lombok.Getter;
@@ -25,7 +26,7 @@ public abstract class InConnectorDefinition implements Connector {
   protected RouteDefinition from(InEndpoint inEndpoint) {
     this.inEndpoint = inEndpoint;
     routeDefinition = initDefinition();
-    return routeDefinition.from(getInEndpointUri(inEndpoint.getId()));
+    return routeDefinition.from(getInEndpointUri(inEndpoint.getId())).bean(CDMValueSetter.class, "process");
   }
 
   private RouteDefinition initDefinition() {
@@ -36,7 +37,7 @@ public abstract class InConnectorDefinition implements Connector {
     restDefinition.to("direct:rest-" + inEndpoint.getUri());
     routeDefinition = initDefinition();
     routeBuilder.getRestCollection().getRests().add(restDefinition);
-    return routeDefinition.from("direct:rest-" + inEndpoint.getUri());
+    return routeDefinition.from("direct:rest-" + inEndpoint.getUri()).bean(CDMValueSetter.class, "process");
   }
 
   protected RestDefinition rest(String uri, String id) {

@@ -1,9 +1,6 @@
 package de.ikor.sip.foundation.core.framework;
 
-import de.ikor.sip.foundation.core.framework.beans.CDMHolder;
-import de.ikor.sip.foundation.core.framework.beans.CDMValueSetter;
-import de.ikor.sip.foundation.core.framework.beans.ExchangeEventNotifier;
-import de.ikor.sip.foundation.core.framework.beans.ExchangeScopeConfig;
+import de.ikor.sip.foundation.core.framework.beans.*;
 import de.ikor.sip.foundation.core.framework.routers.RouteStarter;
 import de.ikor.sip.foundation.core.framework.templates.FromCentralRouterTemplate;
 import de.ikor.sip.foundation.core.framework.templates.FromDirectOutConnectorRouteTemplate;
@@ -18,6 +15,7 @@ import org.springframework.context.annotation.Import;
   ExchangeScopeConfig.class,
   CDMHolder.class,
         CDMValueSetter.class,
-        ExchangeEventNotifier.class
+        ExchangeEventNotifier.class,
+        CDMRepository.class
 })
 public class FrameworkAutoConfig {}

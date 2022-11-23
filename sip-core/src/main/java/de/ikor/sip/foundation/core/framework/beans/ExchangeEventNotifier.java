@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.framework.beans;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.event.ExchangeCompletedEvent;
@@ -10,14 +11,14 @@ import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class ExchangeEventNotifier extends EventNotifierSupport {
-    private final Map<String, ExchangeAttributes> cdms = new HashMap<>();
 
+    private final CDMRepository repository;
 
     public void notify(CamelEvent event) {
         if(event instanceof ExchangeCreatedEvent) {
@@ -25,13 +26,15 @@ public class ExchangeEventNotifier extends EventNotifierSupport {
             ExchangeCreatedEvent ece = (ExchangeCreatedEvent) event;
 
             Exchange exchange = ece.getExchange();
+            String key = exchange.getProperty(ExchangeScope.SCOPE_PROPERTY, String.class);
 
-            if(exchange.getProperty(ExchangeScope.SCOPE_PROPERTY) == null) {
+            if(key == null) {
                 exchange.setProperty(ExchangeScope.SCOPE_PROPERTY, exchange.getExchangeId());
             }
             log.debug("RECEIVED CREATE EVENT - " + exchange.getProperty(ExchangeScope.SCOPE_PROPERTY));
-            ExchangeAttributes exchangeAttributes =new ExchangeAttributes(exchange);
-            ExchangeContextHolder.instance().setContext(exchangeAttributes);
+            ExchangeAttributes exchangeAttributes = new ExchangeAttributes(exchange);
+            repository.put(key, exchangeAttributes);
+            ExchangeContextHolder.instance().setContext((ExchangeAttributes) repository.getLast(key));
         }
 
         if(event instanceof ExchangeCompletedEvent || event instanceof ExchangeFailedEvent) {
