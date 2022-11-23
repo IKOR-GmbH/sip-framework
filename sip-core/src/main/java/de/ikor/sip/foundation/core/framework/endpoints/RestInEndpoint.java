@@ -7,10 +7,9 @@ public class RestInEndpoint extends InEndpoint {
   private final RestDefinition restDefinition;
 
   public static RestInEndpoint instance(String uri, String id) {
-
     RestInEndpoint inEndpoint = new RestInEndpoint(uri, id);
     CentralEndpointsRegister.put(id, inEndpoint);
-    return (RestInEndpoint) CentralEndpointsRegister.getInEndpoint(id);
+    return inEndpoint;
   }
 
   protected RestInEndpoint(String uri, String id) {

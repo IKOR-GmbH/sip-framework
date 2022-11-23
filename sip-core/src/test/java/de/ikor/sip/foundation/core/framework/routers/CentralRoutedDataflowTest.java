@@ -60,12 +60,6 @@ class CentralRoutedDataflowTest {
 
     template.sendBody("direct:multicast-1", "Hello dude!");
     mock.assertIsSatisfied();
-
-    mockTest.expectedBodiesReceived("Hello dude!-[ep-1]");
-    mockTest.expectedMessageCount(1);
-
-    template.sendBody("direct:multicast-1-testkit", "Hello dude!");
-    mockTest.assertIsSatisfied();
   }
 
   @Test
@@ -86,12 +80,6 @@ class CentralRoutedDataflowTest {
 
     template.sendBody("direct:multicast-1", "Hello dudes!");
     mock.assertIsSatisfied();
-
-    mockTest.expectedBodiesReceivedInAnyOrder("Hello dude - test!-[ep-1]", "Hello dude - test!-[ep-2]");
-    mockTest.expectedMessageCount(2);
-
-    template.sendBody("direct:multicast-1-testkit", "Hello dude - test!");
-    mockTest.assertIsSatisfied();
   }
 
   @Test
@@ -160,24 +148,6 @@ class CentralRoutedDataflowTest {
 
     assertThat(response).endsWith("voila").contains("body 1").contains("body 2");
     mock.assertIsSatisfied();
-  }
-
-  @Test
-  void given_TestingStateIsActive_when_TriggerTestingRoute_then_TestEndpointInvoked()
-      throws Exception {
-    SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-6");
-    SleepingOutConnector outConnector =
-        new SleepingOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
-
-    mockTest.expectedBodiesReceived("Hello dude!-[ep-1]");
-    mockTest.expectedMessageCount(1);
-
-    routerSubject.input(inConnector).sequencedOutput(outConnector);
-    routeStarter.buildRoutes(routerSubject.toCentralRouter());
-
-    template.sendBody("direct:multicast-6-testkit", "Hello dude!");
-
-    mockTest.assertIsSatisfied();
   }
 
   @Test

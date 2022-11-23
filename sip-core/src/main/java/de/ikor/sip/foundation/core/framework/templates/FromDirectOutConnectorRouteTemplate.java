@@ -1,12 +1,11 @@
 package de.ikor.sip.foundation.core.framework.templates;
 
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.*;
-import static de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplate.SUFFIX_PARAM_KEY;
 import static de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplate.USE_CASE_PARAM_KEY;
-import static de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil.TESTING_SUFFIX;
+
 
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
-import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
+
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
@@ -33,8 +32,7 @@ public class FromDirectOutConnectorRouteTemplate {
               TemplatedRouteBuilder parameter =
                   TemplatedRouteBuilder.builder(camelContext(), "direct-out-connector")
                       .parameter("out-connector-name", outConnector.getName())
-                      .parameter(USE_CASE_PARAM_KEY, useCase)
-                      .parameter(SUFFIX_PARAM_KEY, suffix);
+                      .parameter(USE_CASE_PARAM_KEY, useCase);
               parameter.add();
             });
   }
@@ -51,14 +49,11 @@ public class FromDirectOutConnectorRouteTemplate {
     outConnector.configureOnException(); // TODO split configException from route building,
     // connector.configure and adding route to context
 
-    String routeId = generateRouteId(useCase, outConnector.getName(), suffix);
+    String routeId = generateRouteId(useCase, outConnector.getName());
     RouteDefinition connectorRouteDefinition =
         rb.from("direct:" + outConnector.getName() + suffix).routeId(routeId);
 
     outConnector.configure(connectorRouteDefinition);
-    if (TESTING_SUFFIX.equals(suffix)) {
-      connectorRouteDefinition.getOutputs().forEach(TestingRoutesUtil::handleTestIDAppending);
-    }
     try {
       camelContext().addRoutes(rb);
     } catch (Exception e) {
@@ -77,10 +72,8 @@ public class FromDirectOutConnectorRouteTemplate {
         definition =
             routeTemplate("direct-out-connector")
                 .templateParameter(USE_CASE_PARAM_KEY)
-                .templateParameter(SUFFIX_PARAM_KEY, "")
                 .templateParameter("out-connector-name")
                 .from("direct:{{out-connector-name}}")
-        //                .routeId("{{use-case}}-{{out-connector-name}}-{{suffix}}")
         ;
       }
     }

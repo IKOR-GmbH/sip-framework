@@ -35,7 +35,6 @@ public class RouteStarter extends EventNotifierSupport {
 
   void buildRoutes(CentralRouter router) {
     buildActiveRoutes(router);
-    buildTestRoutes(router);
   }
 
   public void configureDefinition(CentralRouterDefinition router) {
@@ -56,23 +55,6 @@ public class RouteStarter extends EventNotifierSupport {
         .getOutTopologyDefinition()
         .forEach(
             (outConnectors, s) -> bindOutConnectors(actualRouteBinder, outConnectors, s));
-  }
-
-  void buildTestRoutes(CentralRouter router) {
-    TestRouteBinder testingRouteBinder =
-        new TestRouteBinder(router.getScenario(), router.getCentralModelRequestClass());
-
-    CentralEndpointsRegister.putInTestingState();
-    router.buildOnException();
-    router.buildTopology();
-    CentralEndpointsRegister.putInActualState();
-
-    router
-        .getOutTopologyDefinition()
-        .forEach(
-            (outConnectors, s) -> {
-              bindOutConnectors(testingRouteBinder, outConnectors, s);
-            });
   }
 
   private void bindOutConnectors(RouteBinder routeBinder, OutConnector[] outConnectors, String s) {

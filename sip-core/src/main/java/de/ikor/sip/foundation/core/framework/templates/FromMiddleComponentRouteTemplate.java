@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 public class FromMiddleComponentRouteTemplate {
 
   public static final String USE_CASE_PARAM_KEY = "use-case";
-  public static final String SUFFIX_PARAM_KEY = "suffix";
   private OutConnector[] outConnectors;
   private final String useCase;
   private String suffix;
@@ -39,7 +38,6 @@ public class FromMiddleComponentRouteTemplate {
       RouteDefinition routeDefinition) { // TODO remove after analysis
     return TemplatedRouteBuilder.builder(camelContext(), "sip-mc")
         .parameter(USE_CASE_PARAM_KEY, useCase)
-        .parameter(SUFFIX_PARAM_KEY, suffix)
         .handler(templateDef -> templateDef.setRoute(routeDefinition));
   }
 
@@ -55,7 +53,6 @@ public class FromMiddleComponentRouteTemplate {
 
     return TemplatedRouteBuilder.builder(camelContext(), "sip-mc-multicast")
         .parameter(USE_CASE_PARAM_KEY, useCase)
-        .parameter(SUFFIX_PARAM_KEY, suffix)
         .parameter("central-domain-model", centralDomainRequest);
   }
 
@@ -79,15 +76,14 @@ public class FromMiddleComponentRouteTemplate {
         multicastDefinition =
             routeTemplate("sip-mc-multicast")
                 .templateParameter(USE_CASE_PARAM_KEY)
-                .templateParameter(SUFFIX_PARAM_KEY, "")
                 .templateParameter("central-domain-model")
                 .templateBean(
                     "CDMValidator",
                     CDMValidator.class,
                     rtc -> new CDMValidator((String) rtc.getProperty("central-domain-model")))
-                .from("sipmc:{{use-case}}{{suffix}}")
+                .from("sipmc:{{use-case}}")
                 .bean("{{CDMValidator}}")
-                .routeId("sipmc-bridge-{{use-case}}{{suffix}}")
+                .routeId("sipmc-bridge-{{use-case}}")
                 .multicast();
       }
     }
