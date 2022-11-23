@@ -58,7 +58,8 @@ class CentralRouter {
     inConnector.configureOnException();
     inConnector.configure();
     appendSipMCAndRouteId(inConnector.getConnectorRouteDefinition(), inConnector.getName());
-    appendCDMValidatorIfResponseIsExpected(inConnector.getConnectorRouteDefinition());
+//    appendCDMValidatorIfResponseIsExpected(inConnector.getConnectorRouteDefinition());
+    //TODO fix validator first
 
     inConnector.handleResponse(inConnector.getConnectorRouteDefinition());
   }

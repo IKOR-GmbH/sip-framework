@@ -17,7 +17,7 @@ public class FromMiddleComponentRouteTemplate {
   private OutConnectorDefinition[] outConnectors;
   private final String useCase;
   private String suffix;
-  public String centralDomainRequest;
+  public Class<?> centralDomainRequest;
   private boolean isParallel;
   protected static final String URI_PREFIX = "direct:";
 
@@ -30,7 +30,7 @@ public class FromMiddleComponentRouteTemplate {
   }
 
   public FromMiddleComponentRouteTemplate withCentralDomainRequest(Class<?> requestType) {
-    this.centralDomainRequest = requestType.getCanonicalName();
+    this.centralDomainRequest = requestType;
     return this;
   }
 
@@ -80,7 +80,7 @@ public class FromMiddleComponentRouteTemplate {
                 .templateBean(
                     "CDMValidator",
                     CDMValidator.class,
-                    rtc -> new CDMValidator((String) rtc.getProperty("central-domain-model")))
+                    rtc -> new CDMValidator((Class<?>) rtc.getProperty("central-domain-model")))
                 .from("sipmc:{{use-case}}")
                 .bean("{{CDMValidator}}")
                 .routeId("sipmc-bridge-{{use-case}}")

@@ -10,16 +10,9 @@ public class CDMValidator implements Processor {
     this.centralModelRequest = centralModelRequest;
   }
 
-  public CDMValidator(String fullClassName) {
-    try {
-      this.centralModelRequest = Class.forName(fullClassName);
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e); // TODO
-    }
-  }
-
   @Override
   public void process(Exchange exchange) throws Exception {
+    //TODO fix it
     if (centralModelRequest.isInstance(CentralRouterDomainModel.undefined)
         && exchange.getMessage().getBody() != null) {
       throw new IllegalStateException("Wrong data type. Expected: no body present");
