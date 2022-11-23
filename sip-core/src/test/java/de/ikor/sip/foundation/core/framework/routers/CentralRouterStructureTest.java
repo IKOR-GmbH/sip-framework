@@ -88,7 +88,6 @@ class CentralRouterStructureTest {
     // act
     routerSubject.input(inConnector).sequencedOutput(outConnector);
     routeStarter.buildRoutes(routerSubject.toCentralRouter());
-
     // assert
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", routerSubject.getScenario())))
