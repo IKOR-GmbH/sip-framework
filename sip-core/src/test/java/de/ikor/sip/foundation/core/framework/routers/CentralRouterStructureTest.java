@@ -79,7 +79,7 @@ class CentralRouterStructureTest {
   }
 
   @Test
-  void when_OneOutConnectorIsRegistered_then_OneRouteWithSIPMCEndpointIsAvailable()
+  void when_OneOutConnectorIsRegisteredAsSequenced_then_OneActiveAndOneTestRouteWithSIPMCEndpointIsAvailable()
       throws Exception {
     // arrange
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:OneOutConnector");
@@ -92,8 +92,36 @@ class CentralRouterStructureTest {
     // assert
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", routerSubject.getScenario())))
-        .as("Exactly one OutConnectors is expected.")
+        .as("Connector reistered via sequencedOutput - Exactly one actual OutConnector is expected.")
         .hasSize(1);
+
+    assertThat(getRoutesFromContext())
+            .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s%s", routerSubject.getScenario(), "-testkit")))
+            .as("Connector reistered via sequencedOutput - Exactly one testing OutConnector is expected.")
+            .hasSize(1);
+  }
+
+  @Test
+  void when_OneOutConnectorIsRegisteredAsParrallel_then_OneRouteWithSIPMCEndpointIsAvailable()
+          throws Exception {
+    // arrange
+    SimpleInConnector inConnector = SimpleInConnector.withUri("direct:OneOutConnector");
+    SimpleOutConnector outConnector = new SimpleOutConnector();
+
+    // act
+    routerSubject.input(inConnector).parallelOutput(outConnector);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+
+    // assert
+    assertThat(getRoutesFromContext())
+            .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", routerSubject.getScenario())))
+            .as("Connector reistered via parallelOutput - Exactly one actual OutConnector is expected.")
+            .hasSize(1);
+
+    assertThat(getRoutesFromContext())
+            .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s%s", routerSubject.getScenario(), "-testkit")))
+            .as("Connector reistered via parallelOutput - Exactly one testing OutConnector is expected.")
+            .hasSize(1);
   }
 
   @Test

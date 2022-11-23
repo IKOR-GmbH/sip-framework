@@ -1,18 +1,15 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
-
 import de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper;
-import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
-import de.ikor.sip.foundation.core.framework.util.TestingRoutesUtil;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 public class RouteStarter extends EventNotifierSupport {
@@ -58,9 +55,7 @@ public class RouteStarter extends EventNotifierSupport {
     router
         .getOutTopologyDefinition()
         .forEach(
-            (outConnectors, s) -> {
-              bindOutConnectors(actualRouteBinder, outConnectors, s);
-            });
+            (outConnectors, s) -> bindOutConnectors(actualRouteBinder, outConnectors, s));
   }
 
   void buildTestRoutes(CentralRouter router) {
@@ -86,23 +81,6 @@ public class RouteStarter extends EventNotifierSupport {
     } else if ("par".equals(s)) {
       routeBinder.appendOutConnectorsParallel(outConnectors);
     }
-  }
-
-  void populateTestingRoute(InConnector connector, CentralRouter router) throws Exception {
-    connector.setDefinition();
-    connector.configure();
-    router.appendSipMCAndRouteId(
-        connector.getConnectorTestingRouteDefinition(),
-        connector.getName(),
-        TestingRoutesUtil.TESTING_SUFFIX);
-    connector
-        .getConnectorTestingRouteDefinition()
-        .getOutputs()
-        .forEach(TestingRoutesUtil::handleTestIDAppending);
-    connector.handleResponse(connector.getConnectorTestingRouteDefinition());
-    // TODO Sta ako u handle response ima neki outConnector? Nece biti pokriven
-    // handleTestIdAppending methodom
-    camelContext().addRoutes(connector.getRouteBuilder());
   }
 
   @Override
