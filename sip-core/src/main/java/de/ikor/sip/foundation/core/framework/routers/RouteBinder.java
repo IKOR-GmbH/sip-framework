@@ -9,11 +9,11 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteBuilder;
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @RequiredArgsConstructor
 public class RouteBinder {
@@ -30,7 +30,8 @@ public class RouteBinder {
   }
 
   private void appendConnectors(OutConnectorDefinition[] outConnectors, boolean isParallel) {
-    RouteDefinition route = FromMiddleComponentRouteTemplateBuilder.withUseCase(useCase)
+    RouteDefinition route =
+        FromMiddleComponentRouteTemplateBuilder.withUseCase(useCase)
             .withCentralDomainRequest(centralModelRequest)
             .outConnectors(outConnectors)
             .inParallel(isParallel)
@@ -38,12 +39,17 @@ public class RouteBinder {
 
     RouteBuilder builder = anonymousDummyRouteBuilder();
     builder.getRouteCollection().getRoutes().add(route);
+    addToContext(builder);
+
+    FromDirectOutConnectorRouteTemplate template = new FromDirectOutConnectorRouteTemplate(useCase);
+    Arrays.stream(outConnectors).map(template::bindWithRouteBuilder).forEach(this::addToContext);
+  }
+
+  private void addToContext(RouteBuilder builder) {
     try {
       camelContext().addRoutes(builder);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-
-    new FromDirectOutConnectorRouteTemplate(useCase).fromCustomRouteBuilder(outConnectors);
   }
 }

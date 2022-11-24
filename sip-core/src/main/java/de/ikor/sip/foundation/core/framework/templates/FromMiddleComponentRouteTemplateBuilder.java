@@ -37,19 +37,29 @@ public class FromMiddleComponentRouteTemplateBuilder {
   }
 
   public RouteDefinition createRoute() {
-    RouteDefinition multicastDefinition =
-        new RouteDefinition()
-            .from(format("sipmc:%s", useCase))
-            .process(new CDMValidator(centralDomainRequest))
-            .routeId(format("sipmc-bridge-%s", useCase));
-    MulticastDefinition multicastDefinition1 =
-        multicastDefinition.multicast().parallelProcessing(isParallel);
+    RouteDefinition routeDefinition = createNewFromSipMcDefinition();
+    appendMulticastToOutConnectors(routeDefinition);
+    return routeDefinition;
+  }
+
+  private RouteDefinition createNewFromSipMcDefinition() {
+    return new RouteDefinition()
+        .from(appendUseCase("sipmc:%s"))
+        .process(new CDMValidator(centralDomainRequest))
+        .routeId(appendUseCase("sipmc-bridge-%s"));
+  }
+
+  private String appendUseCase(String format) {
+    return format(format, useCase);
+  }
+
+  private void appendMulticastToOutConnectors(RouteDefinition routeDefinition) {
+    MulticastDefinition multicastDefinition =
+    routeDefinition.multicast().parallelProcessing(isParallel);
     Stream.of(outConnectors)
-        .forEach(
-            outConnector ->
-                multicastDefinition1.to(DIRECT_URI_PREFIX + outConnector.getName()));
-    multicastDefinition1.end();
-    return multicastDefinition;
+            .forEach(
+                    outConnector -> multicastDefinition.to(DIRECT_URI_PREFIX + outConnector.getName()));
+    multicastDefinition.end();
   }
 
   private FromMiddleComponentRouteTemplateBuilder(String useCase) {
