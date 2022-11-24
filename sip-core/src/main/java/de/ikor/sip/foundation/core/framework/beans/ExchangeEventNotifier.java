@@ -51,10 +51,9 @@ public class ExchangeEventNotifier extends EventNotifierSupport {
 
     @Override
     public boolean isEnabled(CamelEvent event) {
-        return (
-                (event instanceof ExchangeCreatedEvent) ||
-                        (event instanceof ExchangeCompletedEvent)
-        );
+        return event instanceof ExchangeCreatedEvent||
+                event instanceof ExchangeCompletedEvent ||
+                event instanceof ExchangeFailedEvent;
     }
 
     @Override
