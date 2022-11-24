@@ -1,8 +1,11 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
 import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class RestInConnector extends InConnectorDefinition {
+  final private String path;
   @Override
   public String getName() {
     return "rest-connector";
@@ -10,7 +13,7 @@ public class RestInConnector extends InConnectorDefinition {
 
   @Override
   public void configure() {
-    from(rest("/hello-append", "get-rest").get())
+    from(rest(path, "get-rest").get())
         .process(exchange -> exchange.getMessage().setBody("hello rest"));
   }
 

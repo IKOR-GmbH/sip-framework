@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.framework.templates;
 
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.*;
-import static de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplate.USE_CASE_PARAM_KEY;
 
 import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
 import java.util.stream.Stream;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class FromDirectOutConnectorRouteTemplate {
   private String useCase;
-  private String suffix;
+  public static final String USE_CASE_PARAM_KEY = "use-case";
 
   public void fromMCMulticastRoute(OutConnectorDefinition[] outConnectors) {
     // TODO setting routeID does not work. Double check why and choose way to go
@@ -22,7 +21,7 @@ public class FromDirectOutConnectorRouteTemplate {
     Stream.of(outConnectors)
         .forEach(
             outConnector -> {
-              definition.setId(useCase + outConnector.getName() + suffix);
+              definition.setId(useCase + outConnector.getName());
               //              outConnector.setRouteDefinition(definition);//toggling between
               // definition and builder setter on OutConnectorDefinition
               outConnector.configureOnException(); // TODO is this the perfect place?
@@ -49,7 +48,7 @@ public class FromDirectOutConnectorRouteTemplate {
 
     String routeId = generateRouteId(useCase, outConnector.getName());
     RouteDefinition connectorRouteDefinition =
-        rb.from("direct:" + outConnector.getName() + suffix).routeId(routeId);
+        rb.from("direct:" + outConnector.getName()).routeId(routeId);
 
     outConnector.configure(connectorRouteDefinition);
     try {

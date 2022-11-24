@@ -1,12 +1,11 @@
 package de.ikor.sip.foundation.core.framework.templates;
 
-import static de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplate.USE_CASE_PARAM_KEY;
-
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.springframework.stereotype.Component;
 
 public class FromCentralRouterTemplate {
+  private static final String USE_CASE_PARAM_KEY = "use-case";
   private FromCentralRouterTemplate() {}
 
   @Component

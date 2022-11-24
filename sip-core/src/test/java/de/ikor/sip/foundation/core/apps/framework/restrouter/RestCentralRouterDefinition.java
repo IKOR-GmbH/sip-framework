@@ -14,7 +14,7 @@ public class RestCentralRouterDefinition extends CentralRouterDefinition {
 
   @Override
   public void defineTopology() throws Exception {
-    input(new RestInConnector()).sequencedOutput(new AppendStringOutConnector());
+    input(new RestInConnector("/hello-append")).sequencedOutput(new AppendStringOutConnector());
   }
 
   @Override

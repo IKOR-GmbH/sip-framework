@@ -1,28 +1,25 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-
 import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
 import de.ikor.sip.foundation.core.framework.templates.FromDirectOutConnectorRouteTemplate;
-import de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplate;
-import java.util.ArrayList;
-import java.util.List;
+import de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplateBuilder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.RouteDefinition;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteBuilder;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @RequiredArgsConstructor
 public class RouteBinder {
   private final String useCase;
   private final Class<?> centralModelRequest;
-  protected String suffix = EMPTY;
   @Getter protected final List<RouteBuilder> outConnectorsBuilders = new ArrayList<>();
-
-  public RouteBinder(String useCase, Class<?> centralModelRequest, String suffix) {
-    this.useCase = useCase;
-    this.centralModelRequest = centralModelRequest;
-    this.suffix = suffix;
-  }
 
   protected void appendOutConnectorsSeq(OutConnectorDefinition[] outConnectors) {
     appendConnectors(outConnectors, false);
@@ -33,14 +30,20 @@ public class RouteBinder {
   }
 
   private void appendConnectors(OutConnectorDefinition[] outConnectors, boolean isParallel) {
-    FromMiddleComponentRouteTemplate.withUseCase(useCase)
-        .withSuffix(suffix)
-        .withCentralDomainRequest(centralModelRequest)
-        .outConnectors(outConnectors)
-        .inParallel(isParallel)
-        .fromMCMulticastRoute()
-        .add();
+    RouteDefinition route = FromMiddleComponentRouteTemplateBuilder.withUseCase(useCase)
+            .withCentralDomainRequest(centralModelRequest)
+            .outConnectors(outConnectors)
+            .inParallel(isParallel)
+            .createRoute();
 
-    new FromDirectOutConnectorRouteTemplate(useCase, suffix).fromCustomRouteBuilder(outConnectors);
+    RouteBuilder builder = anonymousDummyRouteBuilder();
+    builder.getRouteCollection().getRoutes().add(route);
+    try {
+      camelContext().addRoutes(builder);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+
+    new FromDirectOutConnectorRouteTemplate(useCase).fromCustomRouteBuilder(outConnectors);
   }
 }
