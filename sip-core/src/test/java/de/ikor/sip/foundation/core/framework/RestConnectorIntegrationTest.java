@@ -19,7 +19,7 @@ import org.springframework.test.annotation.DirtiesContext;
 class RestConnectorIntegrationTest {
   @Autowired TestRestTemplate testRestTemplate;
 
-//  @Test//TODO FIX Tomcat issue
+  @Test
   void When_sendGetRequestToRestConnector_Expect_ValidResponse() {
     ResponseEntity<String> response =
         testRestTemplate.getForEntity("/adapter/hello-append", String.class);
