@@ -3,23 +3,55 @@ package de.ikor.sip.foundation.core.framework.endpoints;
 import static java.lang.String.format;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+
 import lombok.Getter;
 import org.apache.camel.*;
 
 public class OutEndpoint implements Endpoint {
   private final Endpoint targetEndpoint;
   @Getter private final String endpointId;
+  @Getter private Optional<Class<?>> domainCLassType;
+  @Getter private Optional<Function<?, ?>> transformFunction;
 
   public static OutEndpoint instance(String uri, String endpointId) {
     OutEndpoint endpoint = new OutEndpoint(uri, endpointId);
-    CentralEndpointsRegister.put(endpointId, endpoint);
-    return endpoint;
+    return putInRegister(endpoint, endpointId);
+  }
+
+  public static OutEndpoint instance(String uri, String endpointId, Class<?> domainCLassType) {
+    OutEndpoint endpoint = new OutEndpoint(uri, endpointId);
+    endpoint.setDomainCLassType(domainCLassType);
+    return putInRegister(endpoint, endpointId);
+  }
+
+  public static <T, D> OutEndpoint instance(String uri, String endpointId, Class<T> domainCLassType, Function<T, D> transformFunction) {
+    OutEndpoint endpoint = new OutEndpoint(uri, endpointId);
+    endpoint.setDomainCLassType(domainCLassType);
+    endpoint.setTransformFunction(transformFunction);
+    return putInRegister(endpoint, endpointId);
   }
 
   OutEndpoint(String uri, String endpointId) {
     this.targetEndpoint = CentralEndpointsRegister.getCamelEndpoint(uri);
     this.setCamelContext(targetEndpoint.getCamelContext());
     this.endpointId = endpointId;
+    this.domainCLassType = Optional.empty();
+    this.transformFunction = Optional.empty();
+  }
+
+  private static OutEndpoint putInRegister(OutEndpoint endpoint, String endpointId) {
+    CentralEndpointsRegister.put(endpointId, endpoint);
+    return (OutEndpoint) CentralEndpointsRegister.getOutEndpoint(endpointId);
+  }
+
+  private void setDomainCLassType(Class<?> domainCLassType) {
+    this.domainCLassType = Optional.of(domainCLassType);
+  }
+
+  private void setTransformFunction(Function<?, ?> transformFunction) {
+    this.transformFunction = Optional.of(transformFunction);
   }
 
   @Override

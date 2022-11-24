@@ -2,6 +2,8 @@ package de.ikor.sip.foundation.core.framework.connectors;
 
 import static de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister.getInEndpointUri;
 
+import de.ikor.sip.foundation.core.framework.endpoints.EndpointDomainTransformation;
+import de.ikor.sip.foundation.core.framework.endpoints.EndpointDomainValidation;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.RestInEndpoint;
 import lombok.Getter;
@@ -25,7 +27,10 @@ public abstract class InConnectorDefinition implements Connector {
   protected RouteDefinition from(InEndpoint inEndpoint) {
     this.inEndpoint = inEndpoint;
     routeDefinition = initDefinition();
-    return routeDefinition.from(getInEndpointUri(inEndpoint.getId()));
+    routeDefinition.from(getInEndpointUri(inEndpoint.getId()));
+    inEndpoint.getTransformFunction().ifPresent(function -> routeDefinition.process(new EndpointDomainTransformation<>(function)));
+    inEndpoint.getDomainCLassType().ifPresent(domainCLassType -> routeDefinition.process(new EndpointDomainValidation(domainCLassType, inEndpoint.getId())));
+    return routeDefinition;
   }
 
   private RouteDefinition initDefinition() {
