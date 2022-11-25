@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteBuilder;
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.*;
 
 @RequiredArgsConstructor
 public class RouteBinder {
@@ -54,4 +53,6 @@ public class RouteBinder {
       throw new RuntimeException(e);
     }
   }
+
+
 }

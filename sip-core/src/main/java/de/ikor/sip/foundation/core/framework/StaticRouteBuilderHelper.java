@@ -26,7 +26,9 @@ public class StaticRouteBuilderHelper {
   public static RouteConfigurationBuilder anonymousDummyRouteConfigurationBuilder() {
     return new RouteConfigurationBuilder() {
       @Override
-      public void configuration() {}
+      public void configuration() {
+          // dummy builder
+      }
     };
   }
 

@@ -24,7 +24,7 @@ public class ConfigurationTestingCentralRouter extends CentralRouterDefinition {
   }
 
   @Override
-  public void scenarioConfiguration() {
+  public void defineConfiguration() {
     configuration().interceptFrom().setHeader(SCENARIO_HEADER_KEY, simple(SCENARIO_HEADER_VALUE));
   }
 

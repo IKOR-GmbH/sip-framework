@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.framework.AdapterRouteConfiguration;
+import de.ikor.sip.foundation.core.framework.GlobalRoutesConfiguration;
 import de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
 import java.util.List;
@@ -18,17 +18,17 @@ import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.ano
 @Component
 public class RouteStarter extends EventNotifierSupport {
   final List<CentralRouterDefinition> availableRouters;
-  private Optional<AdapterRouteConfiguration> routeConfiguration;
+  private final Optional<GlobalRoutesConfiguration> routeConfiguration;
 
   public RouteStarter(
           List<CentralRouterDefinition> centralRouters,
-          Optional<AdapterRouteConfiguration> routeConfiguration) {
+          Optional<GlobalRoutesConfiguration> routeConfiguration) {
     this.availableRouters =
             centralRouters.stream()
                     .filter(router -> router.getClass().isAnnotationPresent(CentralRouterDomainModel.class))
                     .collect(Collectors.toList());
     this.routeConfiguration = routeConfiguration;
-    this.routeConfiguration.ifPresent(AdapterRouteConfiguration::globalConfiguration);
+    this.routeConfiguration.ifPresent(GlobalRoutesConfiguration::defineGlobalConfiguration);
   }
 
   @Override
@@ -57,12 +57,11 @@ public class RouteStarter extends EventNotifierSupport {
   void buildActiveRoutes(CentralRouter router) {
     RouteConfigurationBuilder routeConfigurationBuilder =
             routeConfiguration
-                    .map(AdapterRouteConfiguration::getConfigurationBuilder)
+                    .map(GlobalRoutesConfiguration::getConfigurationBuilder)
                     .orElse(anonymousDummyRouteConfigurationBuilder());
     RouteBinder actualRouteBinder =
         new RouteBinder(router.getScenario(), router.getCentralModelRequestClass(), routeConfigurationBuilder);
-    routeConfiguration.ifPresent(router::addConfigToRouteBuilder);
-    router.buildConfiguration();
+    router.buildConfiguration(routeConfigurationBuilder);
     router.buildOnException();
     router.buildTopology();
     router

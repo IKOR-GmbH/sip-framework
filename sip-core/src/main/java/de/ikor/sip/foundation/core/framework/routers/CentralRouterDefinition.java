@@ -20,7 +20,7 @@ public abstract class CentralRouterDefinition {
 
   public void configureOnException() {}
 
-  public void scenarioConfiguration() {}
+  public void defineConfiguration() {}
 
   protected RouteConfigurationDefinition configuration() {
     return routeConfigurationBuilder.routeConfiguration();

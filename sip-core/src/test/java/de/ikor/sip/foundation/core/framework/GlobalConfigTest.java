@@ -2,11 +2,11 @@ package de.ikor.sip.foundation.core.framework;
 
 import static de.ikor.sip.foundation.core.apps.framework.ConfigurationTestingCentralRouter.SCENARIO_HEADER_KEY;
 import static de.ikor.sip.foundation.core.apps.framework.ConfigurationTestingCentralRouter.SCENARIO_HEADER_VALUE;
-import static de.ikor.sip.foundation.core.apps.framework.TestAdapterRouteConfiguration.GLOBAL_HEADER_KEY;
-import static de.ikor.sip.foundation.core.apps.framework.TestAdapterRouteConfiguration.GLOBAL_HEADER_VALUE;
+import static de.ikor.sip.foundation.core.apps.framework.TestGlobalRoutesConfiguration.GLOBAL_HEADER_KEY;
+import static de.ikor.sip.foundation.core.apps.framework.TestGlobalRoutesConfiguration.GLOBAL_HEADER_VALUE;
 
 import de.ikor.sip.foundation.core.apps.framework.ConfigurationTestingCentralRouter;
-import de.ikor.sip.foundation.core.apps.framework.TestAdapterRouteConfiguration;
+import de.ikor.sip.foundation.core.apps.framework.TestGlobalRoutesConfiguration;
 import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
 import org.apache.camel.*;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -19,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
-@SpringBootTest(classes = {CentralRouterTestingApplication.class, ConfigurationTestingCentralRouter.class, TestAdapterRouteConfiguration.class})
+@SpringBootTest(classes = {CentralRouterTestingApplication.class, ConfigurationTestingCentralRouter.class, TestGlobalRoutesConfiguration.class})
 @DisableJmx(false)
 @MockEndpoints("seda:out-config")
 @DirtiesContext

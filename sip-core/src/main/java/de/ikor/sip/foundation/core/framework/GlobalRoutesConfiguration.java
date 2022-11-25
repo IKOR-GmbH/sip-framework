@@ -8,13 +8,13 @@ import lombok.Getter;
 import org.apache.camel.builder.RouteConfigurationBuilder;
 import org.apache.camel.model.RouteConfigurationDefinition;
 
-public abstract class AdapterRouteConfiguration {
+public abstract class GlobalRoutesConfiguration {
   @Getter
   RouteConfigurationBuilder configurationBuilder = anonymousDummyRouteConfigurationBuilder();
 
   @Getter List<RouteConfigurationDefinition> routeConfigurationDefinitions = new ArrayList<>();
 
-  public abstract void globalConfiguration();
+  public abstract void defineGlobalConfiguration();
 
   protected RouteConfigurationDefinition configuration() {
     RouteConfigurationDefinition routeConfigurationDefinition =

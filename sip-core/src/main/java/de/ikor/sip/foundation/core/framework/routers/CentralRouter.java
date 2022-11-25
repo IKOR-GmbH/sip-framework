@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.framework.AdapterRouteConfiguration;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
@@ -25,7 +24,7 @@ class CentralRouter {
         centralRouterDefinition.getInConnectorDefinitions().stream()
             .map(InConnectorDefinition::toInConnector)
             .collect(Collectors.toList());
-    inConnectors.forEach(inConnector -> inConnector.setConfiguration(getConfigurationBuilder()));
+    inConnectors.forEach(inConnector -> inConnector.setConfiguration(configuration));
     inConnectors.forEach(this::configure);
     inConnectors.forEach(this::addToContext);
   }
@@ -60,9 +59,10 @@ class CentralRouter {
     centralRouterDefinition.configureOnException();
   }
 
-  public void buildConfiguration() {
-    centralRouterDefinition.setRouteConfigurationBuilder(getConfigurationBuilder());
-    centralRouterDefinition.scenarioConfiguration();
+  public void buildConfiguration(RouteConfigurationBuilder routeConfigurationBuilder) {
+    this.configuration = routeConfigurationBuilder;
+    centralRouterDefinition.setRouteConfigurationBuilder(this.configuration);
+    centralRouterDefinition.defineConfiguration();
   }
 
   private void addToContext(InConnector inConnector) {
@@ -81,19 +81,4 @@ class CentralRouter {
     Class<?> centralModelResponseClass = centralRouterDefinition.getCentralModelResponseClass();
     connectorRouteDefinition.process(new CDMValidator(centralModelResponseClass));
   }
-
-
-  public void addConfigToRouteBuilder(AdapterRouteConfiguration adapterRouteConfiguration) {
-    getConfigurationBuilder()
-        .getRouteConfigurationCollection()
-        .getRouteConfigurations()
-        .addAll(adapterRouteConfiguration.getRouteConfigurationDefinitions());
-  }
-
-  private RouteConfigurationBuilder getConfigurationBuilder() {
-    configuration =
-        configuration == null ? anonymousDummyRouteConfigurationBuilder() : configuration;
-    return configuration;
-  }
-
 }
