@@ -45,7 +45,6 @@ public class FromMiddleComponentRouteTemplateBuilder {
   private RouteDefinition createNewFromSipMcDefinition() {
     return new RouteDefinition()
         .from(appendUseCase("sipmc:%s"))
-        .process(new CDMValidator(centralDomainRequest))
         .routeId(appendUseCase("sipmc-bridge-%s"));
   }
 
