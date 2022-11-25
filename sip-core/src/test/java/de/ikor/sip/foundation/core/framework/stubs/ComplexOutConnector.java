@@ -1,14 +1,14 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
 import org.apache.camel.AggregationStrategy;
+import org.apache.camel.Message;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.processor.aggregate.GroupedBodyAggregationStrategy;
 
-public class ComplexOutConnector extends OutConnector {
+public class ComplexOutConnector extends OutConnectorDefinition {
 
   public static final String DIRECT_COMPLEX_MCAST_1_URI = "direct:complex-mcast-1";
   public static final String DIRECT_COMPLEX_MCAST_2_URI = "direct:complex-mcast-2";
@@ -34,6 +34,12 @@ public class ComplexOutConnector extends OutConnector {
   }
 
   private AggregationStrategy aggregationStrategy() {
-    return new GroupedBodyAggregationStrategy();
+    return (oldExchange, newExchange) -> {
+      Message message = newExchange.getMessage();
+      String firstBody = oldExchange == null ? "" : oldExchange.getMessage().getBody(String.class);
+      String secondBody = message.getBody(String.class);
+      message.setBody(firstBody + secondBody);
+      return newExchange;
+    };
   }
 }
