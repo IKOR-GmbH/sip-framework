@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class ExchangeAttributes {
-    private static final String DESTRUCTION_CB_PREFIX = ExchangeAttributes.class.getName() + ".DESTRUCTION_CALLBACK.";
+public class ConversationAttributes {
+    private static final String DESTRUCTION_CB_PREFIX = ConversationAttributes.class.getName() + ".DESTRUCTION_CALLBACK.";
     private final Map<String,Runnable> destructionCallbacks = new HashMap<>();
     private final Exchange exchange;
 
@@ -17,7 +17,7 @@ public class ExchangeAttributes {
      *
      * @param exchange {@link Exchange}
      */
-    public ExchangeAttributes(Exchange exchange) {
+    public ConversationAttributes(Exchange exchange) {
         this.exchange = exchange;
     }
 

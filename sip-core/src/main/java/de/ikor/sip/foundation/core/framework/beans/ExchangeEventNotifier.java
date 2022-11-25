@@ -10,9 +10,6 @@ import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -26,25 +23,25 @@ public class ExchangeEventNotifier extends EventNotifierSupport {
             ExchangeCreatedEvent ece = (ExchangeCreatedEvent) event;
 
             Exchange exchange = ece.getExchange();
-            String key = exchange.getProperty(ExchangeScope.SCOPE_PROPERTY, String.class);
+            String key = exchange.getProperty(ConversationScope.SCOPE_PROPERTY, String.class);
 
             if(key == null) {
-                exchange.setProperty(ExchangeScope.SCOPE_PROPERTY, exchange.getExchangeId());
+                exchange.setProperty(ConversationScope.SCOPE_PROPERTY, exchange.getExchangeId());
             }
-            log.debug("RECEIVED CREATE EVENT - " + exchange.getProperty(ExchangeScope.SCOPE_PROPERTY));
-            ExchangeAttributes exchangeAttributes = new ExchangeAttributes(exchange);
-            repository.put(key, exchangeAttributes);
-            ExchangeContextHolder.instance().setContext((ExchangeAttributes) repository.getLast(key));
+            log.debug("RECEIVED CREATE EVENT - " + exchange.getProperty(ConversationScope.SCOPE_PROPERTY));
+            ConversationAttributes conversationAttributes = new ConversationAttributes(exchange);
+            repository.put(key, conversationAttributes);
+            ConversationContextHolder.instance().setConversationAttributes((ConversationAttributes) repository.getLast(key));
         }
 
         if(event instanceof ExchangeCompletedEvent || event instanceof ExchangeFailedEvent) {
             ExchangeCompletedEvent ece = (ExchangeCompletedEvent) event;
 
             Exchange exchange = ece.getExchange();
-            log.debug("RECEIVED COMPLETE EVENT - " + exchange.getProperty(ExchangeScope.SCOPE_PROPERTY));
-            if (ExchangeContextHolder.instance().getContext() != null)
-                ExchangeContextHolder.instance().getContext().executeDestructionCallbacks();
-            ExchangeContextHolder.instance().resetContext();
+            log.debug("RECEIVED COMPLETE EVENT - " + exchange.getProperty(ConversationScope.SCOPE_PROPERTY));
+            if (ConversationContextHolder.instance().getConversationAttributes() != null)
+                ConversationContextHolder.instance().getConversationAttributes().executeDestructionCallbacks();
+            ConversationContextHolder.instance().resetConversationAttributes();
         }
 
     }

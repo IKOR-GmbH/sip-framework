@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Slf4j
 @Component
-@Scope(value="exchange",proxyMode=ScopedProxyMode.TARGET_CLASS)
+@Scope(value="conversation",proxyMode=ScopedProxyMode.TARGET_CLASS)
 public class CDMHolder {
     private Object internal;
 }

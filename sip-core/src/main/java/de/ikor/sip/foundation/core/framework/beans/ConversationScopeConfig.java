@@ -8,12 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class ExchangeScopeConfig {
+public class ConversationScopeConfig {
     @Bean
     public CustomScopeConfigurer customScope () {
         CustomScopeConfigurer configurer = new CustomScopeConfigurer ();
         Map<String, Object> workflowScope = new HashMap<>();
-        workflowScope.put("exchange", new ExchangeScope());
+        workflowScope.put("conversation", new ConversationScope());
         configurer.setScopes(workflowScope);
 
         return configurer;

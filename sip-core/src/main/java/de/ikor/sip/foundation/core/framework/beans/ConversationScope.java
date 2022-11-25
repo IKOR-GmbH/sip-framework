@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class ExchangeScope implements Scope {
+public class ConversationScope implements Scope {
 
     public static final String SCOPE_PROPERTY = "exchange";
     private static final String REFERENCE = "exchange";
@@ -32,25 +32,28 @@ public class ExchangeScope implements Scope {
         return REFERENCE.equals(name);
     }
 
-    protected ExchangeAttributes getScopeContext() {
-        return ExchangeContextHolder.instance().getContext();
-    }
-
+    @Override
     public Object get(String name, ObjectFactory<?> factory) {
         log.debug("Retrieving bean {}",name);
         Map<String, Object> beans = (Map<String, Object>) getScoped(scope,getConversationId(), mapFactory,false);
         return getScoped(beans,name,factory,true);
     }
 
+    @Override
     public void registerDestructionCallback(String name, Runnable callback) {
         log.debug("Registering destruction callback to bean {}",name);
         getScopeContext().registerDestructionCallback(name, callback);
     }
 
+    @Override
     public Object remove(String name) {
         log.debug("Removing bean {}",name);
         Map<String, Object> beans = (Map<String, Object>) getScoped(scope,getConversationId(), mapFactory,false);
         return beans.remove(name);
+    }
+
+    protected ConversationAttributes getScopeContext() {
+        return ConversationContextHolder.instance().getConversationAttributes();
     }
 
     protected Object getScoped(Map<String, Object> map, String name, ObjectFactory<?> factory, boolean registerCb) {
