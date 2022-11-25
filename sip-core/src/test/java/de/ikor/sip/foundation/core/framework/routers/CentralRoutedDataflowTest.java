@@ -150,21 +150,21 @@ class CentralRoutedDataflowTest {
     mock.assertIsSatisfied();
   }
 
-  @Test
-  void when_CentralRouterHasNoDomainModel_thenExceptionIsThrown() {
-    CentralRouterDefinition noCentralModelRouterSubject = new WrongTypeRouterDefinition();
-
-    // act
-    routeStarter.configureDefinition(noCentralModelRouterSubject);
-    routeStarter.buildRoutes(noCentralModelRouterSubject.toCentralRouter());
-
-    // assert
-    assertThatThrownBy(() -> template.sendBody("direct:multicast-7", "Hello dude!"))
-        .isInstanceOf(CamelExecutionException.class)
-        .getCause()
-        .hasMessageContaining("Wrong data type")
-        .hasMessageContaining("WrongTypeRouter");
-  }
+//  @Test TODO optional validation
+//  void when_CentralRouterHasNoDomainModel_thenExceptionIsThrown() {
+//    CentralRouterDefinition noCentralModelRouterSubject = new WrongTypeRouterDefinition();
+//
+//    // act
+//    routeStarter.configureDefinition(noCentralModelRouterSubject);
+//    routeStarter.buildRoutes(noCentralModelRouterSubject.toCentralRouter());
+//
+//    // assert
+//    assertThatThrownBy(() -> template.sendBody("direct:multicast-7", "Hello dude!"))
+//        .isInstanceOf(CamelExecutionException.class)
+//        .getCause()
+//        .hasMessageContaining("Wrong data type")
+//        .hasMessageContaining("WrongTypeRouter");
+//  }
 
   private RoutesBuilder routeBuilder() {
     return new RouteBuilder() {

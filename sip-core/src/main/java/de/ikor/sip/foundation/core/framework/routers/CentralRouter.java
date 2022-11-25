@@ -26,6 +26,17 @@ class CentralRouter {
     inConnectors.forEach(this::addToContext);
   }
 
+  private void configure(InConnector inConnector) {
+    inConnector.setDefinition();
+    inConnector.configureOnException();
+    inConnector.configure();
+    appendSipMCAndRouteId(inConnector.getConnectorRouteDefinition(), inConnector.getName());
+//    appendCDMValidatorIfResponseIsExpected(inConnector.getConnectorRouteDefinition());
+    //TODO fix validator first
+
+    inConnector.handleResponse(inConnector.getConnectorRouteDefinition());
+  }
+
   void appendSipMCAndRouteId(RouteDefinition routeDefinition, String connectorName) {
     routeDefinition
         .to("sipmc:" + centralRouterDefinition.getScenario())
@@ -51,17 +62,6 @@ class CentralRouter {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-  }
-
-  private void configure(InConnector inConnector) {
-    inConnector.setDefinition();
-    inConnector.configureOnException();
-    inConnector.configure();
-    appendSipMCAndRouteId(inConnector.getConnectorRouteDefinition(), inConnector.getName());
-//    appendCDMValidatorIfResponseIsExpected(inConnector.getConnectorRouteDefinition());
-    //TODO fix validator first
-
-    inConnector.handleResponse(inConnector.getConnectorRouteDefinition());
   }
 
   public Map<OutConnectorDefinition[], String> getOutTopologyDefinition() {
