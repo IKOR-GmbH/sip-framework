@@ -1,32 +1,32 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
+import de.ikor.sip.foundation.core.framework.AdapterRouteConfiguration;
 import de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.apache.camel.builder.RouteConfigurationBuilder;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.stereotype.Component;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteConfigurationBuilder;
+
 @Component
 public class RouteStarter extends EventNotifierSupport {
   final List<CentralRouterDefinition> availableRouters;
-
-  public RouteStarter(List<CentralRouterDefinition> centralRouters) {
-    this.availableRouters =
-        centralRouters.stream()
-            .filter(router -> router.getClass().isAnnotationPresent(CentralRouterDomainModel.class))
-            .collect(Collectors.toList());
-  }
-  //TODO
-  private static CamelContext camelContext;
-  Optional<AdapterRouteConfiguration> routeConfiguration;
+  private Optional<AdapterRouteConfiguration> routeConfiguration;
 
   public RouteStarter(
-          List<CentralRouter> availableRouters,
+          List<CentralRouterDefinition> centralRouters,
           Optional<AdapterRouteConfiguration> routeConfiguration) {
-    this.availableRouters = availableRouters;
+    this.availableRouters =
+            centralRouters.stream()
+                    .filter(router -> router.getClass().isAnnotationPresent(CentralRouterDomainModel.class))
+                    .collect(Collectors.toList());
     this.routeConfiguration = routeConfiguration;
     this.routeConfiguration.ifPresent(AdapterRouteConfiguration::globalConfiguration);
   }
@@ -55,9 +55,14 @@ public class RouteStarter extends EventNotifierSupport {
   }
 
   void buildActiveRoutes(CentralRouter router) {
+    RouteConfigurationBuilder routeConfigurationBuilder =
+            routeConfiguration
+                    .map(AdapterRouteConfiguration::getConfigurationBuilder)
+                    .orElse(anonymousDummyRouteConfigurationBuilder());
     RouteBinder actualRouteBinder =
-        new RouteBinder(router.getScenario(), router.getCentralModelRequestClass());
-
+        new RouteBinder(router.getScenario(), router.getCentralModelRequestClass(), routeConfigurationBuilder);
+    routeConfiguration.ifPresent(router::addConfigToRouteBuilder);
+    router.buildConfiguration();
     router.buildOnException();
     router.buildTopology();
     router
@@ -77,39 +82,5 @@ public class RouteStarter extends EventNotifierSupport {
   @Override
   public boolean isEnabled(CamelEvent event) {
     return event instanceof CamelEvent.CamelContextInitializingEvent;
-  }
-//TODO
-  void buildRoutes(CentralRouter router) {
-    CentralEndpointsRegister.setState("actual");
-    try {
-      routeConfiguration.ifPresent(router::addConfigToRouteBuilder);
-      router.scenarioConfiguration();
-      router.configureOnException();
-      router.configure();
-      for (InConnector connector : router.getInConnectors()) {
-        if (connector.getRegisteredInCamel()) {
-          continue;
-        }
-        addRoutesFromConnector(connector);
-        CentralEndpointsRegister.setState("testing");
-        router.switchToTestingDefinitionMode(connector);
-        addRoutesFromConnector(connector);
-        CentralEndpointsRegister.setState("actual");
-        connector.setRegisteredInCamel(true);
-      }
-      if (router.getUseCaseDefinition() != null) {
-        UseCaseTopologyDefinition useCaseTopologyDefinition = router.getUseCaseDefinition();
-        camelContext.addRoutes(useCaseTopologyDefinition.getRouteBuilder());
-        camelContext.addRoutes(useCaseTopologyDefinition.getTestingRouteBuilder());
-        for (RouteBuilder rb : useCaseTopologyDefinition.getOutConnectorsRouteBuilders()) {
-          camelContext.addRoutes(rb);
-        }
-      } else {
-        throw new EmptyCentralRouterException(router.getScenario());
-      }
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 }

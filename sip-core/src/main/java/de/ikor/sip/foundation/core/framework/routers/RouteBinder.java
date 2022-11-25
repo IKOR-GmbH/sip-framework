@@ -6,6 +6,7 @@ import de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteT
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.builder.RouteConfigurationBuilder;
 import org.apache.camel.model.RouteDefinition;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.cam
 public class RouteBinder {
   private final String useCase;
   private final Class<?> centralModelRequest;
+  private final RouteConfigurationBuilder routeConfigurationBuilder;
   @Getter protected final List<RouteBuilder> outConnectorsBuilders = new ArrayList<>();
 
   protected void appendOutConnectorsSeq(OutConnectorDefinition[] outConnectors) {
@@ -37,11 +39,11 @@ public class RouteBinder {
             .inParallel(isParallel)
             .createRoute();
 
-    RouteBuilder builder = anonymousDummyRouteBuilder();
+    RouteBuilder builder = anonymousDummyRouteBuilder(routeConfigurationBuilder);
     builder.getRouteCollection().getRoutes().add(route);
     addToContext(builder);
 
-    FromDirectOutConnectorRouteTemplate template = new FromDirectOutConnectorRouteTemplate(useCase);
+    FromDirectOutConnectorRouteTemplate template = new FromDirectOutConnectorRouteTemplate(useCase, routeConfigurationBuilder);
     Arrays.stream(outConnectors).map(template::bindWithRouteBuilder).forEach(this::addToContext);
   }
 

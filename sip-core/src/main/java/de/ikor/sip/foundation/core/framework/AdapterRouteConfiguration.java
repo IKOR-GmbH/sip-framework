@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.framework;
 
-import static de.ikor.sip.foundation.core.framework.routers.CentralRouter.anonymousDummyRouteConfigurationBuilder;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteConfigurationBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
