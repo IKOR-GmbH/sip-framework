@@ -7,7 +7,9 @@ public abstract class Connector {
   private EndpointRouteBuilder endpointRouteBuilder;
 
   public abstract String getName();
-  public abstract void configureOnException();
+  public void configureOnException() {
+
+  };
 
   public EndpointRouteBuilder endpointDsl() {
     if (endpointRouteBuilder == null) {

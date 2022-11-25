@@ -11,7 +11,7 @@ import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 
-public abstract class InConnectorDefinition implements Connector {
+public abstract class InConnectorDefinition extends Connector {
   @Getter @Setter private RouteBuilder routeBuilder;
   private InEndpoint inEndpoint;
   @Getter private RouteDefinition routeDefinition;

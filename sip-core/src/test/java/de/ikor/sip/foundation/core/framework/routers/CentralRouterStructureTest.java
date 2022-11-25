@@ -4,10 +4,9 @@ import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.cam
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.ikor.sip.foundation.core.apps.framework.CentralRouterTestingApplication;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
-import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
-import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
+import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
 import de.ikor.sip.foundation.core.framework.stubs.*;
 
 import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
@@ -141,23 +140,18 @@ class CentralRouterStructureTest {
   void
   when_CreateInEndpointWithEndpointDsl_then_VerifyRoute() {
     // arrange
-    InConnector inConnector = new EndpointDSLInConnector();
-    OutConnector outConnector = new StaticEndpointDSLOutConnector();
-    routerSubject.from(inConnector).to(outConnector);
-    String uriExpected = inConnector.getEndpointUri();
+    InConnectorDefinition inConnector = new EndpointDSLInConnector();
+    OutConnectorDefinition outConnector = new StaticEndpointDSLOutConnector();
+    routerSubject.input(inConnector).sequencedOutput(outConnector);
 
     // act
-    routeStarter.buildRoutes(routerSubject);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
 
     String expectedRouteId = format("%s-%s", routerSubject.getScenario(), inConnector.getName());
     Route route = getRouteFromContextById(expectedRouteId);
 
     // assert
-    assertThat(route.getEndpoint().getEndpointUri()).isEqualTo(uriExpected);
-  }
-
-  private Route getRouteFromContextById(String routeId) {
-    return RouteStarter.getCamelContext().getRoute(routeId);
+    assertThat(route.getEndpoint().getEndpointUri()).isEqualTo("direct://endpointdsl-direct");
   }
 
   @Test
