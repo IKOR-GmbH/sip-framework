@@ -5,7 +5,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
 
-public abstract class OutConnector extends Connector {
+public abstract class OutConnectorDefinition extends Connector {
 
   @Setter private RouteBuilder routeBuilder;
 
@@ -14,8 +14,6 @@ public abstract class OutConnector extends Connector {
   }
 
   public abstract void configure(RouteDefinition route);
-
-  public void configureOnException() {}
 
   protected OnExceptionDefinition onException(Class<? extends Throwable>... exceptions) {
     OnExceptionDefinition last = null;

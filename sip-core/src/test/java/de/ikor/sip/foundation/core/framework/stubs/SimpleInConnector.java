@@ -2,10 +2,10 @@ package de.ikor.sip.foundation.core.framework.stubs;
 
 import static java.lang.String.format;
 
-import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 
-public class SimpleInConnector extends InConnector {
+public class SimpleInConnector extends InConnectorDefinition {
   private InEndpoint ep;
   private String name = format("testing-connector-%s", System.nanoTime());
 

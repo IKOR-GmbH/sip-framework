@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,6 +10,10 @@ import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
 import de.ikor.sip.foundation.core.framework.stubs.*;
 
+import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
+import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
+import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
+import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouterDefinition;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -21,10 +26,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(classes = {CentralRouterTestingApplication.class})
-@DirtiesContext
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CentralRouterStructureTest {
-  @Autowired(required = false)
-  private TestingCentralRouter routerSubject;
+  @Autowired private TestingCentralRouterDefinition routerSubject;
 
   @Autowired(required = false)
   private RouteStarter routeStarter;
@@ -36,10 +40,9 @@ class CentralRouterStructureTest {
 
   @Test
   void when_ApplicationStarts_then_CentralRouterBeanIsLoaded() {
+    // TODO this test should check on routerSubject bean availability. routerSubject should be bean
     assertThat(routerSubject).as("CentralRouter bean not initialized").isNotNull();
-    Assertions.assertThat(RouteStarter.getCamelContext())
-        .as("Camel context not set on CentralRouter")
-        .isNotNull();
+    Assertions.assertThat(camelContext()).as("Camel context not set on CentralRouter").isNotNull();
   }
 
   @Test
@@ -48,8 +51,8 @@ class CentralRouterStructureTest {
     // arrange
     SimpleInConnector simpleInConnector = SimpleInConnector.withUri("direct:singleInConnector");
     // act
-    routerSubject.from(simpleInConnector);
-    routeStarter.buildRoutes(routerSubject);
+    routerSubject.input(simpleInConnector);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
     // assert
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri("direct.*singleInConnector"))
@@ -66,33 +69,51 @@ class CentralRouterStructureTest {
     SimpleInConnector firstInConnector = SimpleInConnector.withUri("direct:sip");
     SimpleInConnector secondInConnector = SimpleInConnector.withUri("direct:sipie");
     // act
-    routerSubject.from(firstInConnector, secondInConnector);
-    routeStarter.buildRoutes(routerSubject);
+    routerSubject.input(firstInConnector, secondInConnector);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
     // assert
     assertThat(getRoutesFromContext()).filteredOn(matchRoutesBasedOnUri("direct.*sip")).hasSize(1);
 
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri("direct.*sipie"))
         .hasSize(1);
+  }
 
+  @Test
+  void
+      when_OneOutConnectorIsRegisteredAsSequenced_then_OneActiveAndOneTestRouteWithSIPMCEndpointIsAvailable()
+          throws Exception {
+    // arrange
+    SimpleInConnector inConnector = SimpleInConnector.withUri("direct:OneOutConnector");
+    SimpleOutConnector outConnector = new SimpleOutConnector();
+
+    // act
+    routerSubject.input(inConnector).sequencedOutput(outConnector);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+    // assert
     assertThat(getRoutesFromContext())
-        .filteredOn(matchRoutesBasedOnUri("direct.*sip-testkit"))
+        .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", routerSubject.getScenario())))
+        .as(
+            "Connector reistered via sequencedOutput - Exactly one actual OutConnectorDefinition is expected.")
         .hasSize(1);
   }
 
   @Test
-  void when_OneOutConnectorIsRegistered_then_OneRouteWithSIPMCEndpointIsAvailable()
+  void when_OneOutConnectorIsRegisteredAsParallel_then_OneRouteWithSIPMCEndpointIsAvailable()
       throws Exception {
     // arrange
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:OneOutConnector");
     SimpleOutConnector outConnector = new SimpleOutConnector();
+
     // act
-    routerSubject.from(inConnector).to(outConnector);
-    routeStarter.buildRoutes(routerSubject);
+    routerSubject.input(inConnector).parallelOutput(outConnector);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+
     // assert
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", routerSubject.getScenario())))
-        .as("No OutConnectors registered.")
+        .as(
+            "Connector reistered via parallelOutput - Exactly one actual OutConnectorDefinition is expected.")
         .hasSize(1);
   }
 
@@ -101,15 +122,15 @@ class CentralRouterStructureTest {
       given_OneInConnectorWithOneRoute_when_ConnectorIsRegistered_then_RouteIdIsUseCasePlusConnectorName()
           throws Exception {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:routeIdTest");
-    routerSubject.from(inConnector);
-    routeStarter.buildRoutes(routerSubject);
+    routerSubject.input(inConnector);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
 
     String expectedRouteId = format("%s-%s", routerSubject.getScenario(), inConnector.getName());
     Route route = getRouteFromContextById(expectedRouteId);
 
     assertThat(route)
         .as(
-            "Expected route with Id: %s %s Detected: %s",
+            "Expected route with Id: %s %sDetected: %s",
             expectedRouteId,
             System.lineSeparator(),
             getRoutesFromContext().stream().map(Route::getId).collect(Collectors.joining(", ")))
@@ -159,6 +180,10 @@ class CentralRouterStructureTest {
   }
 
   private List<Route> getRoutesFromContext() {
-    return RouteStarter.getCamelContext().getRoutes();
+    return camelContext().getRoutes();
+  }
+
+  private Route getRouteFromContextById(String routeId) {
+    return camelContext().getRoute(routeId);
   }
 }

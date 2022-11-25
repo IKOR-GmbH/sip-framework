@@ -20,7 +20,7 @@ public class SimpleOutConnector extends TestingOutConnector {
   @Override
   public void configure(RouteDefinition route) {
     route
-        .setBody(exchange -> exchange.getIn().getBody() + format("-[%s]", endpointId))
+        .setBody(exchange -> exchange.getIn().getBody() + format("-[%s]", super.endpointId))
         .multicast()
         .to(OutEndpoint.instance(uri, endpointId))
         .id("log-message-endpoint");

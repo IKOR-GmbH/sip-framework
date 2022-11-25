@@ -1,9 +1,9 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import static org.assertj.core.api.Assertions.*;
 
-import de.ikor.sip.foundation.core.apps.framework.CentralRouterTestingApplication;
-import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
+import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpointBuilder;
 import de.ikor.sip.foundation.core.framework.stubs.*;
 import org.apache.camel.*;
@@ -20,12 +20,12 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
 @SpringBootTest(classes = {CentralRouterTestingApplication.class})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @DisableJmx(false)
 @MockEndpoints("log:message*")
-@DirtiesContext
 class CentralRoutedDataflowTest {
   @Autowired(required = false)
-  private TestingCentralRouter routerSubject;
+  private TestingCentralRouterDefinition routerSubject;
 
   @Autowired(required = false)
   private RouteStarter routeStarter;
@@ -48,15 +48,37 @@ class CentralRoutedDataflowTest {
   void when_RouteMulticastsParallelToOneConnector_then_ConnectorForwardsTheExchange()
       throws Exception {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-1");
+
     SimpleOutConnector outConnector1 =
         new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
 
     mock.expectedMessageCount(1);
     mock.expectedBodiesReceived("Hello dude!-[ep-1]");
-    routerSubject.from(inConnector).to(outConnector1);
-    routeStarter.buildRoutes(routerSubject);
+
+    routerSubject.input(inConnector).sequencedOutput(outConnector1);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
 
     template.sendBody("direct:multicast-1", "Hello dude!");
+    mock.assertIsSatisfied();
+  }
+
+  @Test
+  void when_RouteMulticastsParallelToTwoConnectors_then_ConnectorsForwardsTheExchange()
+      throws Exception {
+    SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-1");
+
+    SimpleOutConnector outConnector1 =
+        new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
+    SimpleOutConnector outConnector2 =
+        new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-2");
+
+    mock.expectedMessageCount(2);
+    mock.expectedBodiesReceivedInAnyOrder("Hello dudes!-[ep-1]", "Hello dudes!-[ep-2]");
+
+    routerSubject.input(inConnector).parallelOutput(outConnector1, outConnector2);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+
+    template.sendBody("direct:multicast-1", "Hello dudes!");
     mock.assertIsSatisfied();
   }
 
@@ -73,8 +95,8 @@ class CentralRoutedDataflowTest {
     mock.expectedBodiesReceived("Hello dude!-[ep-2]", "Hello dude!-[ep-1]");
     mock.expectedMessageCount(2);
 
-    routerSubject.from(inConnector).to(outConnector1, outConnector2);
-    routeStarter.buildRoutes(routerSubject);
+    routerSubject.input(inConnector).parallelOutput(outConnector1, outConnector2);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
 
     template.sendBody("direct:multicast-3", "Hello dude!");
 
@@ -86,46 +108,26 @@ class CentralRoutedDataflowTest {
       given_RouteWithSequencedExecution_when_FirstOutConnectorIsSlow_then_FirstConnectorExecutesFirst()
           throws Exception {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-4");
+
     SleepingOutConnector outConnector1 =
         new SleepingOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
     SimpleOutConnector outConnector2 =
         new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-2");
 
-    mock.expectedBodiesReceived("Hello dude!-[ep-1]", "Hello dude!-[ep-1]-[ep-2]");
+    mock.expectedBodiesReceived("Hello dude!-[ep-1]", "Hello dude!-[ep-2]");
     mock.expectedMessageCount(2);
 
-    routerSubject.from(inConnector).to(outConnector1).to(outConnector2);
-    routeStarter.buildRoutes(routerSubject);
+    routerSubject.input(inConnector).sequencedOutput(outConnector1, outConnector2);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
 
     template.sendBody("direct:multicast-4", "Hello dude!");
 
     mock.assertIsSatisfied();
   }
 
-  void // toDO make it work
-      given_RouteWithParallelAndSequencedMulticast_when_FirstOutConnectorIsSlow_then_SecondConnectorExecutesFirstAndThirdLast()
-      throws Exception {
-    SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-5");
-    SleepingOutConnector outConnector1 =
-        new SleepingOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
-    SimpleOutConnector outConnector2 =
-        new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-2");
-    SimpleOutConnector outConnector3 =
-        new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-3");
-
-    mock.expectedBodiesReceived("Hello dude!-[ep-2]", "Hello dude!-[ep-1]", "Hello dude!-[ep-3]");
-    mock.expectedMessageCount(3);
-
-    routerSubject.from(inConnector).to(outConnector1, outConnector2).to(outConnector3);
-
-    template.sendBody("direct:multicast-5", "Hello dude!");
-
-    mock.assertIsSatisfied();
-  }
-
   @Test
   void when_RouteUsesEnrich_then_SIPMetadataIsSupported() throws Exception {
-    RouteStarter.getCamelContext().addRoutes(routeBuilder());
+    camelContext().addRoutes(routeBuilder());
     mock.expectedBodiesReceived("yes, enrich works");
     template.sendBody("direct:withEnrich", "enrichWorks?");
 
@@ -135,12 +137,12 @@ class CentralRoutedDataflowTest {
   @Test
   void when_InConnectorImplementsResponseProcessing_then_ConnectorReturnsProcessedResponse()
       throws Exception {
-    RouteStarter.getCamelContext().addRoutes(ComplexOutConnector.helperRouteBuilder);
+    camelContext().addRoutes(ComplexOutConnector.helperRouteBuilder);
 
-    routerSubject.from(new ComplexInConnector()).to(new ComplexOutConnector());
+    routerSubject.input(new ComplexInConnector()).sequencedOutput(new ComplexOutConnector());
 
     // act
-    routeStarter.buildRoutes(routerSubject);
+    routeStarter.buildRoutes(routerSubject.toCentralRouter());
     String response =
         (String) template.sendBody("direct:complex-connector", ExchangePattern.InOut, "input body");
 
@@ -148,25 +150,21 @@ class CentralRoutedDataflowTest {
     mock.assertIsSatisfied();
   }
 
-  @Test
-  void given_TestingStateIsActive_when_TriggerTestingRoute_then_TestEndpointInvoked()
-      throws Exception {
-    SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-6");
-    SleepingOutConnector outConnector =
-        new SleepingOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
-
-    mockTest.expectedBodiesReceived("Hello dude!-[ep-1]");
-    mockTest.expectedMessageCount(1);
-
-    routerSubject.from(inConnector).to(outConnector);
-    routeStarter.buildRoutes(routerSubject);
-
-    CentralEndpointsRegister.putInTestingState();
-    template.sendBody("direct:multicast-6-testkit", "Hello dude!");
-
-    mockTest.assertIsSatisfied();
-    CentralEndpointsRegister.putInActualState();
-  }
+//  @Test TODO optional validation
+//  void when_CentralRouterHasNoDomainModel_thenExceptionIsThrown() {
+//    CentralRouterDefinition noCentralModelRouterSubject = new WrongTypeRouterDefinition();
+//
+//    // act
+//    routeStarter.configureDefinition(noCentralModelRouterSubject);
+//    routeStarter.buildRoutes(noCentralModelRouterSubject.toCentralRouter());
+//
+//    // assert
+//    assertThatThrownBy(() -> template.sendBody("direct:multicast-7", "Hello dude!"))
+//        .isInstanceOf(CamelExecutionException.class)
+//        .getCause()
+//        .hasMessageContaining("Wrong data type")
+//        .hasMessageContaining("WrongTypeRouter");
+//  }
 
   private RoutesBuilder routeBuilder() {
     return new RouteBuilder() {

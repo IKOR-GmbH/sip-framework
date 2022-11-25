@@ -12,8 +12,9 @@ public class OutEndpoint implements Endpoint {
   @Getter private final String endpointId;
 
   public static OutEndpoint instance(String uri, String endpointId) {
-    CentralEndpointsRegister.put(endpointId, new OutEndpoint(uri, endpointId));
-    return (OutEndpoint) CentralEndpointsRegister.getEndpoint(endpointId);
+    OutEndpoint endpoint = new OutEndpoint(uri, endpointId);
+    CentralEndpointsRegister.put(endpointId, endpoint);
+    return endpoint;
   }
 
   public static OutEndpoint instance(EndpointProducerBuilder endpointDslDefinition, String endpointId) {
