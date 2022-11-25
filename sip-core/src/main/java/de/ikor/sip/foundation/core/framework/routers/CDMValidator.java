@@ -19,7 +19,7 @@ public class CDMValidator implements Processor {
     }
     if (!centralModelRequest.isInstance(exchange.getMessage().getBody())) {
       throw new IllegalStateException(
-          "Wrong data type. Expected: " + centralModelRequest.getName());
+          "Wrong data type. Expected: " + centralModelRequest.getName() + ", but was: " + exchange.getMessage().getBody().getClass().getName());
     }
   }
 }
