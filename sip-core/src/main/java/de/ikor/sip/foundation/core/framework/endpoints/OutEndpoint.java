@@ -20,15 +20,15 @@ public class OutEndpoint implements Endpoint {
     return putInRegister(endpoint, endpointId);
   }
 
-  public static OutEndpoint instance(String uri, String endpointId, Class<?> domainCLassType) {
+  public static OutEndpoint instance(String uri, String endpointId, Class<?> domainClassType) {
     OutEndpoint endpoint = new OutEndpoint(uri, endpointId);
-    endpoint.setDomainClassType(domainCLassType);
+    endpoint.setDomainClassType(domainClassType);
     return putInRegister(endpoint, endpointId);
   }
 
-  public static <T, D> OutEndpoint instance(String uri, String endpointId, Class<T> domainCLassType, Function<T, D> transformFunction) {
+  public static <T, D> OutEndpoint instance(String uri, String endpointId, Class<T> domainClassType, Function<T, D> transformFunction) {
     OutEndpoint endpoint = new OutEndpoint(uri, endpointId);
-    endpoint.setDomainClassType(domainCLassType);
+    endpoint.setDomainClassType(domainClassType);
     endpoint.setTransformFunction(transformFunction);
     return putInRegister(endpoint, endpointId);
   }

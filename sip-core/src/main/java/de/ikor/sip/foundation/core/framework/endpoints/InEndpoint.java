@@ -17,15 +17,15 @@ public class InEndpoint {
     return putInRegister(inEndpoint, id);
   }
 
-  public static InEndpoint instance(String uri, String id, Class<?> domainCLassType) {
+  public static InEndpoint instance(String uri, String id, Class<?> domainClassType) {
     InEndpoint inEndpoint = new InEndpoint(uri, id);
-    inEndpoint.setDomainClassType(domainCLassType);
+    inEndpoint.setDomainClassType(domainClassType);
     return putInRegister(inEndpoint, id);
   }
 
-  public static <T, D> InEndpoint instance(String uri, String id, Class<D> domainCLassType, Function<T, D> transformFunction) {
+  public static <T, D> InEndpoint instance(String uri, String id, Class<D> domainClassType, Function<T, D> transformFunction) {
     InEndpoint inEndpoint = new InEndpoint(uri, id);
-    inEndpoint.setDomainClassType(domainCLassType);
+    inEndpoint.setDomainClassType(domainClassType);
     inEndpoint.setTransformFunction(transformFunction);
     return putInRegister(inEndpoint, id);
   }

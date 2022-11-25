@@ -16,4 +16,9 @@ public class OutConnectorStub extends OutConnectorDefinition {
             .to(outEndpoint)
             .to("log:messageOut");
     }
+
+    @Override
+    public String getName() {
+        return "OutConnectorStub";
+    }
 }

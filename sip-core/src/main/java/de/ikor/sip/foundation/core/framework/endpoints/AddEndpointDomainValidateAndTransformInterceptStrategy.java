@@ -12,7 +12,7 @@ import java.util.function.Function;
 import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.NON_OUTGOING_PROCESSOR_PREFIXES;
 
 @Component
-public class OutEndpointInterceptStrategy implements InterceptStrategy, Ordered {
+public class AddEndpointDomainValidateAndTransformInterceptStrategy implements InterceptStrategy, Ordered {
 
     @Override
     public Processor wrapProcessorInInterceptors(CamelContext context, NamedNode definition, Processor target, Processor nextTarget) {
@@ -20,6 +20,13 @@ public class OutEndpointInterceptStrategy implements InterceptStrategy, Ordered 
             return new DelegateAsyncProcessor(exchange -> doWrappedProcessing(target, exchange));
         }
         return target;
+    }
+
+    private void doWrappedProcessing(Processor target, Exchange exchange) {
+        OutEndpoint endpoint = (OutEndpoint) ((EndpointAware) target).getEndpoint();
+        endpoint.getDomainClassType().ifPresent(domainClassType -> domainValidationProcessing(domainClassType, exchange, endpoint.getEndpointUri()));
+        endpoint.getTransformFunction().ifPresent(function -> domainTransformationProcessing(function, exchange));
+        targetProcessorProcessing(target, exchange);
     }
 
     private boolean isOutEndpoint(Processor target) {
@@ -30,16 +37,9 @@ public class OutEndpointInterceptStrategy implements InterceptStrategy, Ordered 
         return StringUtils.startsWithAny(((EndpointAware) target).getEndpoint().getEndpointUri(), NON_OUTGOING_PROCESSOR_PREFIXES);
     }
 
-    private void doWrappedProcessing(Processor target, Exchange exchange) {
-        OutEndpoint endpoint = (OutEndpoint) ((EndpointAware) target).getEndpoint();
-        endpoint.getDomainClassType().ifPresent(domainCLassType -> domainValidationProcessing(domainCLassType, exchange, endpoint.getEndpointUri()));
-        endpoint.getTransformFunction().ifPresent(function -> domainTransformationProcessing(function, exchange));
-        targetProcessorProcessing(target, exchange);
-    }
-
     @SneakyThrows
-    private void domainValidationProcessing(Class<?> domainCLassType, Exchange exchange, String endpointUri) {
-        Processor validationProcessor = new EndpointDomainValidation(domainCLassType, endpointUri);
+    private void domainValidationProcessing(Class<?> domainClassType, Exchange exchange, String endpointUri) {
+        Processor validationProcessor = new EndpointDomainValidation(domainClassType, endpointUri);
         validationProcessor.process(exchange);
     }
 

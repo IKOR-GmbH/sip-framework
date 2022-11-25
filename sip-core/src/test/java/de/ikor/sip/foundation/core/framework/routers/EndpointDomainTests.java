@@ -124,7 +124,7 @@ class EndpointDomainTests {
         mockOutEndpoint.expectedMessageCount(1);
 
         // act
-        template.sendBody("direct:BasicOutConnector", outEndpointDomain);
+        template.sendBody("direct:OutConnectorStub", outEndpointDomain);
 
         // assert
         mockOutEndpoint.assertIsSatisfied();
@@ -147,7 +147,7 @@ class EndpointDomainTests {
         mockOutEndpoint.expectedMessageCount(1);
 
         // act
-        template.sendBody("direct:BasicOutConnector", outEndpointDomain);
+        template.sendBody("direct:OutConnectorStub", outEndpointDomain);
 
         // assert
         mockOutEndpoint.assertIsSatisfied();
@@ -166,7 +166,7 @@ class EndpointDomainTests {
                 a.mockEndpointsAndSkip("log:foo"));
 
         // act & assert
-        assertThrows(CamelExecutionException.class, () -> template.sendBody("direct:BasicOutConnector", "string type value"));
+        assertThrows(CamelExecutionException.class, () -> template.sendBody("direct:OutConnectorStub", "string type value"));
     }
 
 }
