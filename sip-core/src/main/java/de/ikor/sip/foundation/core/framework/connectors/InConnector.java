@@ -8,8 +8,6 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.builder.RouteConfigurationBuilder;
-import org.apache.camel.model.*;
-import org.apache.camel.model.rest.RestDefinition;
 
 public class InConnector {
   @Getter private final InConnectorDefinition connector;

@@ -41,8 +41,6 @@ class CentralRouter {
     inConnector.handleResponse(inConnector.getConnectorRouteDefinition());
   }
 
-  public void configureOnException() {}
-
   void appendSipMCAndRouteId(RouteDefinition routeDefinition, String connectorName) {
     routeDefinition
         .to("sipmc:" + centralRouterDefinition.getScenario())
