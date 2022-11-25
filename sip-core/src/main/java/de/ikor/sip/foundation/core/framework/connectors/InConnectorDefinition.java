@@ -3,6 +3,8 @@ package de.ikor.sip.foundation.core.framework.connectors;
 import static de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister.getInEndpointUri;
 
 import de.ikor.sip.foundation.core.framework.beans.CDMValueSetter;
+import de.ikor.sip.foundation.core.framework.endpoints.EndpointDomainTransformation;
+import de.ikor.sip.foundation.core.framework.endpoints.EndpointDomainValidation;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.RestInEndpoint;
 import lombok.Getter;
@@ -12,7 +14,7 @@ import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 
-public abstract class InConnectorDefinition implements Connector {
+public abstract class InConnectorDefinition extends Connector {
   @Getter @Setter private RouteBuilder routeBuilder;
   private InEndpoint inEndpoint;
   @Getter private RouteDefinition routeDefinition;
@@ -26,7 +28,10 @@ public abstract class InConnectorDefinition implements Connector {
   protected RouteDefinition from(InEndpoint inEndpoint) {
     this.inEndpoint = inEndpoint;
     routeDefinition = initDefinition();
-    return routeDefinition.from(getInEndpointUri(inEndpoint.getId())).bean(CDMValueSetter.class, "process");
+    routeDefinition.from(getInEndpointUri(inEndpoint.getId()));
+    inEndpoint.getTransformFunction().ifPresent(function -> routeDefinition.process(new EndpointDomainTransformation<>(function)));
+    inEndpoint.getDomainClassType().ifPresent(domainClassType -> routeDefinition.process(new EndpointDomainValidation(domainClassType, inEndpoint.getId())));
+    return routeDefinition.bean(CDMValueSetter.class, "process");
   }
 
   private RouteDefinition initDefinition() {
