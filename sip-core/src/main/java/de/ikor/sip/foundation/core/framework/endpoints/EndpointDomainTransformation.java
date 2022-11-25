@@ -19,7 +19,6 @@ public class EndpointDomainTransformation<T, D> implements Processor {
             exchange.getMessage().setBody(transformFunction.apply((T) exchange.getMessage().getBody()));
         } catch(ClassCastException e) {
             log.error(String.format("Class casting error in class %s", transformFunction.getClass()));
-            e.printStackTrace();
         }
 
     }

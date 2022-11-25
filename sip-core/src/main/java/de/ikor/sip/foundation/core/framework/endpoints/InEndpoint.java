@@ -9,7 +9,7 @@ public class InEndpoint {
 
   @Getter private String uri;
   @Getter private String id;
-  @Getter private Optional<Class<?>> domainCLassType;
+  @Getter private Optional<Class<?>> domainClassType;
   @Getter private Optional<Function<?, ?>> transformFunction;
 
   public static InEndpoint instance(String uri, String id) {
@@ -19,13 +19,13 @@ public class InEndpoint {
 
   public static InEndpoint instance(String uri, String id, Class<?> domainCLassType) {
     InEndpoint inEndpoint = new InEndpoint(uri, id);
-    inEndpoint.setDomainCLassType(domainCLassType);
+    inEndpoint.setDomainClassType(domainCLassType);
     return putInRegister(inEndpoint, id);
   }
 
   public static <T, D> InEndpoint instance(String uri, String id, Class<D> domainCLassType, Function<T, D> transformFunction) {
     InEndpoint inEndpoint = new InEndpoint(uri, id);
-    inEndpoint.setDomainCLassType(domainCLassType);
+    inEndpoint.setDomainClassType(domainCLassType);
     inEndpoint.setTransformFunction(transformFunction);
     return putInRegister(inEndpoint, id);
   }
@@ -33,7 +33,7 @@ public class InEndpoint {
   protected InEndpoint(String uri, String id) {
     this.uri = uri;
     this.id = id;
-    this.domainCLassType = Optional.empty();
+    this.domainClassType = Optional.empty();
     this.transformFunction = Optional.empty();
   }
 
@@ -42,8 +42,8 @@ public class InEndpoint {
     return CentralEndpointsRegister.getInEndpoint(id);
   }
 
-  private void setDomainCLassType(Class<?> domainCLassType) {
-    this.domainCLassType = Optional.of(domainCLassType);
+  private void setDomainClassType(Class<?> domainClassType) {
+    this.domainClassType = Optional.of(domainClassType);
   }
 
   private void setTransformFunction(Function<?, ?> transformFunction) {

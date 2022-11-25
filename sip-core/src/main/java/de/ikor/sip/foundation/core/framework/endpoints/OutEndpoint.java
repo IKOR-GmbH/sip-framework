@@ -12,7 +12,7 @@ import org.apache.camel.*;
 public class OutEndpoint implements Endpoint {
   private final Endpoint targetEndpoint;
   @Getter private final String endpointId;
-  @Getter private Optional<Class<?>> domainCLassType;
+  @Getter private Optional<Class<?>> domainClassType;
   @Getter private Optional<Function<?, ?>> transformFunction;
 
   public static OutEndpoint instance(String uri, String endpointId) {
@@ -22,13 +22,13 @@ public class OutEndpoint implements Endpoint {
 
   public static OutEndpoint instance(String uri, String endpointId, Class<?> domainCLassType) {
     OutEndpoint endpoint = new OutEndpoint(uri, endpointId);
-    endpoint.setDomainCLassType(domainCLassType);
+    endpoint.setDomainClassType(domainCLassType);
     return putInRegister(endpoint, endpointId);
   }
 
   public static <T, D> OutEndpoint instance(String uri, String endpointId, Class<T> domainCLassType, Function<T, D> transformFunction) {
     OutEndpoint endpoint = new OutEndpoint(uri, endpointId);
-    endpoint.setDomainCLassType(domainCLassType);
+    endpoint.setDomainClassType(domainCLassType);
     endpoint.setTransformFunction(transformFunction);
     return putInRegister(endpoint, endpointId);
   }
@@ -37,7 +37,7 @@ public class OutEndpoint implements Endpoint {
     this.targetEndpoint = CentralEndpointsRegister.getCamelEndpoint(uri);
     this.setCamelContext(targetEndpoint.getCamelContext());
     this.endpointId = endpointId;
-    this.domainCLassType = Optional.empty();
+    this.domainClassType = Optional.empty();
     this.transformFunction = Optional.empty();
   }
 
@@ -46,8 +46,8 @@ public class OutEndpoint implements Endpoint {
     return (OutEndpoint) CentralEndpointsRegister.getOutEndpoint(endpointId);
   }
 
-  private void setDomainCLassType(Class<?> domainCLassType) {
-    this.domainCLassType = Optional.of(domainCLassType);
+  private void setDomainClassType(Class<?> domainClassType) {
+    this.domainClassType = Optional.of(domainClassType);
   }
 
   private void setTransformFunction(Function<?, ?> transformFunction) {

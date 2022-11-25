@@ -7,12 +7,12 @@ import org.apache.camel.Processor;
 @AllArgsConstructor
 public class EndpointDomainValidation implements Processor {
 
-    private Class<?> domainCLassType;
+    private Class<?> domainClassType;
     private String endpointUri;
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        if (!domainCLassType.isAssignableFrom(exchange.getMessage().getBody().getClass())) {
+        if (!domainClassType.isAssignableFrom(exchange.getMessage().getBody().getClass())) {
             throw new EndpointDomainMismatchException(endpointUri);
         }
     }

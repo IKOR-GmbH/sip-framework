@@ -15,11 +15,7 @@ import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.NON_OUTGOING_PR
 public class OutEndpointInterceptStrategy implements InterceptStrategy, Ordered {
 
     @Override
-    public Processor wrapProcessorInInterceptors(CamelContext context, NamedNode definition, Processor target, Processor nextTarget) throws Exception {
-        // prepravi API za InEndpoint i OutEndpoint                     DONE
-        // proveri enrich i izbaci toDefinition proveru
-        // proveri log intercept strategy, sta se tu desava             DONE
-        // proveravaj za EndpointAware interface (ProcessorProxy)       DONE
+    public Processor wrapProcessorInInterceptors(CamelContext context, NamedNode definition, Processor target, Processor nextTarget) {
         if (target instanceof EndpointAware && isOutEndpoint(target) && !isInMemoryComponent(target)) {
             return new DelegateAsyncProcessor(exchange -> doWrappedProcessing(target, exchange));
         }
@@ -36,7 +32,7 @@ public class OutEndpointInterceptStrategy implements InterceptStrategy, Ordered 
 
     private void doWrappedProcessing(Processor target, Exchange exchange) {
         OutEndpoint endpoint = (OutEndpoint) ((EndpointAware) target).getEndpoint();
-        endpoint.getDomainCLassType().ifPresent(domainCLassType -> domainValidationProcessing(domainCLassType, exchange, endpoint.getEndpointUri()));
+        endpoint.getDomainClassType().ifPresent(domainCLassType -> domainValidationProcessing(domainCLassType, exchange, endpoint.getEndpointUri()));
         endpoint.getTransformFunction().ifPresent(function -> domainTransformationProcessing(function, exchange));
         targetProcessorProcessing(target, exchange);
     }

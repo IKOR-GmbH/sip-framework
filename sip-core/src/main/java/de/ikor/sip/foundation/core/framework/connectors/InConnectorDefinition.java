@@ -29,7 +29,7 @@ public abstract class InConnectorDefinition implements Connector {
     routeDefinition = initDefinition();
     routeDefinition.from(getInEndpointUri(inEndpoint.getId()));
     inEndpoint.getTransformFunction().ifPresent(function -> routeDefinition.process(new EndpointDomainTransformation<>(function)));
-    inEndpoint.getDomainCLassType().ifPresent(domainCLassType -> routeDefinition.process(new EndpointDomainValidation(domainCLassType, inEndpoint.getId())));
+    inEndpoint.getDomainClassType().ifPresent(domainCLassType -> routeDefinition.process(new EndpointDomainValidation(domainCLassType, inEndpoint.getId())));
     return routeDefinition;
   }
 
