@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import lombok.Getter;
 import org.apache.camel.*;
+import org.apache.camel.builder.EndpointProducerBuilder;
 
 public class OutEndpoint implements Endpoint {
   private final Endpoint targetEndpoint;
@@ -31,6 +32,10 @@ public class OutEndpoint implements Endpoint {
     endpoint.setDomainClassType(domainClassType);
     endpoint.setTransformFunction(transformFunction);
     return putInRegister(endpoint, endpointId);
+  }
+
+  public static OutEndpoint instance(EndpointProducerBuilder endpointDslDefinition, String endpointId) {
+    return instance(endpointDslDefinition.getUri(), endpointId);
   }
 
   OutEndpoint(String uri, String endpointId) {

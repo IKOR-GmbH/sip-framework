@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.framework.endpoints;
 
 import lombok.Getter;
+import org.apache.camel.builder.EndpointConsumerBuilder;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -28,6 +29,10 @@ public class InEndpoint {
     inEndpoint.setDomainClassType(domainClassType);
     inEndpoint.setTransformFunction(transformFunction);
     return putInRegister(inEndpoint, id);
+  }
+
+  public static InEndpoint instance(EndpointConsumerBuilder endpointDslDefinition, String id) {
+    return instance(endpointDslDefinition.getUri(), id);
   }
 
   protected InEndpoint(String uri, String id) {
