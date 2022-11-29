@@ -1,8 +1,5 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.generateRouteId;
-
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
 
@@ -10,11 +7,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.model.RouteDefinition;
+import lombok.Getter;
+import org.apache.camel.builder.RouteConfigurationBuilder;
+
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.*;
 
 @RequiredArgsConstructor
 class CentralRouter {
   private final CentralRouterDefinition centralRouterDefinition;
   private List<InConnector> inConnectors;
+  @Getter private RouteConfigurationBuilder configuration;
 
   public void setUpRoutes() {
     configureDefinition(centralRouterDefinition);
@@ -26,6 +28,7 @@ class CentralRouter {
         centralRouterDefinition.getInConnectorDefinitions().stream()
             .map(InConnectorDefinition::toInConnector)
             .collect(Collectors.toList());
+    inConnectors.forEach(inConnector -> inConnector.setConfiguration(configuration));
     inConnectors.forEach(this::configure);
     inConnectors.forEach(this::addToContext);
   }
@@ -58,6 +61,12 @@ class CentralRouter {
 
   public void buildOnException() {
     centralRouterDefinition.configureOnException();
+  }
+
+  public void buildConfiguration(RouteConfigurationBuilder routeConfigurationBuilder) {
+    this.configuration = routeConfigurationBuilder;
+    centralRouterDefinition.setRouteConfigurationBuilder(this.configuration);
+    centralRouterDefinition.defineConfiguration();
   }
 
   private void addToContext(InConnector inConnector) {

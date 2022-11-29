@@ -3,13 +3,16 @@ package de.ikor.sip.foundation.core.framework.connectors;
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteBuilder;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.builder.RouteConfigurationBuilder;
 
 public class InConnector extends Connector {
   @Getter private final InConnectorDefinition connector;
   @Getter private RouteBuilder routeBuilder;
+  @Setter private RouteConfigurationBuilder configuration;
 
   public InConnector(InConnectorDefinition connector) {
     this.connector = connector;
@@ -43,7 +46,7 @@ public class InConnector extends Connector {
   }
 
   public void setDefinition() {
-    routeBuilder = anonymousDummyRouteBuilder();
+    routeBuilder = anonymousDummyRouteBuilder(configuration);
     connector.setRouteBuilder(routeBuilder);
     connector.setDefinition();
   }
