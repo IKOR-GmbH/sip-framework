@@ -45,7 +45,7 @@ public class InConnector extends Connector {
     return connector.onException(exceptions);
   }
 
-  public void setDefinition() {
+  public void initDefinition() {
     routeBuilder = anonymousDummyRouteBuilder(configuration);
     connector.setRouteBuilder(routeBuilder);
     connector.setDefinition();

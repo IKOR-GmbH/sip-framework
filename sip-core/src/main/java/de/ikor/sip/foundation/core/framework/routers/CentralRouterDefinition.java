@@ -1,18 +1,21 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.builder.RouteConfigurationBuilder;
 import org.apache.camel.model.RouteConfigurationDefinition;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public abstract class CentralRouterDefinition {
   private final List<InConnectorDefinition> inConnectorDefinitions = new ArrayList<>();
+
   @Getter private UseCaseTopologyDefinition definition;
   @Setter private RouteConfigurationBuilder routeConfigurationBuilder;
+
 
   public abstract String getScenario();
 

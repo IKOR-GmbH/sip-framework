@@ -2,22 +2,14 @@ package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.framework.GlobalRoutesConfiguration;
 import de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper;
-import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.apache.camel.builder.RouteConfigurationBuilder;
 import org.apache.camel.CamelContext;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteConfigurationBuilder;
 
 @Component
 public class RouteStarter extends EventNotifierSupport {
@@ -38,45 +30,16 @@ public class RouteStarter extends EventNotifierSupport {
   @Override
   public void notify(CamelEvent event) {
     setStaticCamelContext(event);
-    availableRouters.stream()
-        .map(CentralRouterDefinition::toCentralRouter)
-        .forEach(CentralRouter::setUpRoutes);
+    List<CentralRouter> centralRouterStream = availableRouters.stream()
+            .map(CentralRouterDefinition::toCentralRouter).collect(Collectors.toList());
+
+    centralRouterStream.forEach(router -> router.setGlobalRouteConfig(routeConfiguration));
+    centralRouterStream.forEach(CentralRouter::setUpRoutes);
   }
 
   private void setStaticCamelContext(CamelEvent event) {
     CamelContext camelContext = ((CamelEvent.CamelContextInitializingEvent) event).getContext();
-    StaticRouteBuilderHelper.setCamelContext(
-            camelContext);
-  public void configureDefinition(CentralRouterDefinition router) {
-    try {
-      router.defineTopology();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  void buildActiveRoutes(CentralRouter router) {
-    RouteConfigurationBuilder routeConfigurationBuilder =
-            routeConfiguration
-                    .map(GlobalRoutesConfiguration::getConfigurationBuilder)
-                    .orElse(anonymousDummyRouteConfigurationBuilder());
-    RouteBinder actualRouteBinder =
-        new RouteBinder(router.getScenario(), router.getCentralModelRequestClass(), routeConfigurationBuilder);
-    router.buildConfiguration(routeConfigurationBuilder);
-    router.buildOnException();
-    router.buildTopology();
-    router
-        .getOutTopologyDefinition()
-        .forEach((outConnectors, s) -> bindOutConnectors(actualRouteBinder, outConnectors, s));
-  }
-
-  private void bindOutConnectors(
-      RouteBinder routeBinder, OutConnectorDefinition[] outConnectors, String s) {
-    if ("seq".equals(s)) {
-      routeBinder.appendOutConnectorsSeq(outConnectors);
-    } else if ("par".equals(s)) {
-      routeBinder.appendOutConnectorsParallel(outConnectors);
-    }
+    StaticRouteBuilderHelper.setCamelContext(camelContext);
   }
 
   @Override

@@ -65,10 +65,6 @@ public abstract class InConnectorDefinition extends Connector {
     return inEndpoint.getUri();
   }
 
-  public InConnector toInConnector() {
-    return new InConnector(this);
-  }
-
   public void setDefinition() {
     this.routeDefinition = new RouteDefinition();
   }

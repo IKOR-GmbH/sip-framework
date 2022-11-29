@@ -13,13 +13,15 @@ public class StaticRouteBuilderHelper {
 
   public static RouteBuilder anonymousDummyRouteBuilder(RouteConfigurationBuilder configuration) {
     RouteBuilder routeBuilder =
-            new RouteBuilder() {
-              @Override
-              public void configure() {
-                // no need for implementation; used for building routes
-              }
-            };
-    appendConfig(routeBuilder, configuration);
+        new RouteBuilder() {
+          @Override
+          public void configure() {
+            // no need for implementation; used for building routes
+          }
+        };
+    if (configuration != null) {
+      appendConfig(routeBuilder, configuration);
+    }
     return routeBuilder;
   }
 
@@ -27,7 +29,7 @@ public class StaticRouteBuilderHelper {
     return new RouteConfigurationBuilder() {
       @Override
       public void configuration() {
-          // dummy builder
+        // dummy builder
       }
     };
   }
@@ -45,52 +47,52 @@ public class StaticRouteBuilderHelper {
   }
 
   private static void appendConfig(
-          RouteBuilder routeBuilder, RouteConfigurationBuilder configuration) {
+      RouteBuilder routeBuilder, RouteConfigurationBuilder configuration) {
     configuration
-            .getRouteConfigurationCollection()
-            .getRouteConfigurations()
-            .forEach(
-                    routeConfigurationDefinition -> {
-                      routeConfigurationDefinition
+        .getRouteConfigurationCollection()
+        .getRouteConfigurations()
+        .forEach(
+            routeConfigurationDefinition -> {
+              routeConfigurationDefinition
+                  .getIntercepts()
+                  .forEach(
+                      interceptDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
                               .getIntercepts()
-                              .forEach(
-                                      interceptDefinition ->
-                                              routeBuilder
-                                                      .getRouteCollection()
-                                                      .getIntercepts()
-                                                      .add(interceptDefinition));
-                      routeConfigurationDefinition
+                              .add(interceptDefinition));
+              routeConfigurationDefinition
+                  .getInterceptFroms()
+                  .forEach(
+                      interceptDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
                               .getInterceptFroms()
-                              .forEach(
-                                      interceptDefinition ->
-                                              routeBuilder
-                                                      .getRouteCollection()
-                                                      .getInterceptFroms()
-                                                      .add(interceptDefinition));
-                      routeConfigurationDefinition
+                              .add(interceptDefinition));
+              routeConfigurationDefinition
+                  .getOnCompletions()
+                  .forEach(
+                      onCompletionDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
                               .getOnCompletions()
-                              .forEach(
-                                      onCompletionDefinition ->
-                                              routeBuilder
-                                                      .getRouteCollection()
-                                                      .getOnCompletions()
-                                                      .add(onCompletionDefinition));
-                      routeConfigurationDefinition
+                              .add(onCompletionDefinition));
+              routeConfigurationDefinition
+                  .getInterceptSendTos()
+                  .forEach(
+                      interceptDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
                               .getInterceptSendTos()
-                              .forEach(
-                                      interceptDefinition ->
-                                              routeBuilder
-                                                      .getRouteCollection()
-                                                      .getInterceptSendTos()
-                                                      .add(interceptDefinition));
-                      routeConfigurationDefinition
+                              .add(interceptDefinition));
+              routeConfigurationDefinition
+                  .getOnExceptions()
+                  .forEach(
+                      onExceptionDefinition ->
+                          routeBuilder
+                              .getRouteCollection()
                               .getOnExceptions()
-                              .forEach(
-                                      onExceptionDefinition ->
-                                              routeBuilder
-                                                      .getRouteCollection()
-                                                      .getOnExceptions()
-                                                      .add(onExceptionDefinition));
-                    });
+                              .add(onExceptionDefinition));
+            });
   }
 }
