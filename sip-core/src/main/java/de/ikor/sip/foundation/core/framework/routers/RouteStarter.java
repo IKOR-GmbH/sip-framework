@@ -1,13 +1,13 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper;
-import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import org.apache.camel.CamelContext;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class RouteStarter extends EventNotifierSupport {
@@ -22,45 +22,16 @@ public class RouteStarter extends EventNotifierSupport {
 
   @Override
   public void notify(CamelEvent event) {
-    StaticRouteBuilderHelper.setCamelContext(
-        ((CamelEvent.CamelContextInitializingEvent) event).getContext());
-    availableRouters.forEach(this::configureDefinition);
+    setStaticCamelContext(event);
     availableRouters.stream()
-        .filter(rd -> Objects.nonNull(rd.getDefinition()))
         .map(CentralRouterDefinition::toCentralRouter)
-        .forEach(this::buildRoutes);
+        .forEach(CentralRouter::setUpRoutes);
   }
 
-  void buildRoutes(CentralRouter router) {
-    buildActiveRoutes(router);
-  }
-
-  public void configureDefinition(CentralRouterDefinition router) {
-    try {
-      router.defineTopology();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  void buildActiveRoutes(CentralRouter router) {
-    RouteBinder actualRouteBinder =
-        new RouteBinder(router.getScenario(), router.getCentralModelRequestClass());
-
-    router.buildOnException();
-    router.buildTopology();
-    router
-        .getOutTopologyDefinition()
-        .forEach((outConnectors, s) -> bindOutConnectors(actualRouteBinder, outConnectors, s));
-  }
-
-  private void bindOutConnectors(
-      RouteBinder routeBinder, OutConnectorDefinition[] outConnectors, String s) {
-    if ("seq".equals(s)) {
-      routeBinder.appendOutConnectorsSeq(outConnectors);
-    } else if ("par".equals(s)) {
-      routeBinder.appendOutConnectorsParallel(outConnectors);
-    }
+  private void setStaticCamelContext(CamelEvent event) {
+    CamelContext camelContext = ((CamelEvent.CamelContextInitializingEvent) event).getContext();
+    StaticRouteBuilderHelper.setCamelContext(
+            camelContext);
   }
 
   @Override

@@ -30,6 +30,9 @@ public class RouteBinder {
   }
 
   private void appendConnectors(OutConnectorDefinition[] outConnectors, boolean isParallel) {
+    if (outConnectors == null) {
+      return;//TODO handle on different place
+    }
     RouteDefinition route =
         FromMiddleComponentRouteTemplateBuilder.withUseCase(useCase)
             .withCentralDomainRequest(centralModelRequest)

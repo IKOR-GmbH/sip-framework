@@ -39,7 +39,7 @@ public abstract class CentralRouterDefinition {
     return inConnectorDefinitions;
   }
 
-  public CentralRouter toCentralRouter() {
+  protected CentralRouter toCentralRouter() {
     return new CentralRouter(this);
   }
 }

@@ -5,9 +5,8 @@ import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.gen
 
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
-import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
+
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.model.RouteDefinition;
@@ -16,6 +15,11 @@ import org.apache.camel.model.RouteDefinition;
 class CentralRouter {
   private final CentralRouterDefinition centralRouterDefinition;
   private List<InConnector> inConnectors;
+
+  public void setUpRoutes() {
+    configureDefinition(centralRouterDefinition);
+    buildActiveRoutes();
+  }
 
   public void buildTopology() {
     inConnectors =
@@ -64,12 +68,37 @@ class CentralRouter {
     }
   }
 
-  public Map<OutConnectorDefinition[], String> getOutTopologyDefinition() {
-    return centralRouterDefinition.getDefinition().getAllConnectors();
+  public UseCaseTopologyDefinition getOutTopologyDefinition() {
+    return centralRouterDefinition.getDefinition();
   }
 
   private void appendCDMValidatorIfResponseIsExpected(RouteDefinition connectorRouteDefinition) {
     Class<?> centralModelResponseClass = centralRouterDefinition.getCentralModelResponseClass();
     connectorRouteDefinition.process(new CDMValidator(centralModelResponseClass));
+  }
+
+  public void configureDefinition(CentralRouterDefinition router) {
+    try {
+      router.defineTopology();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  void buildActiveRoutes() {
+    RouteBinder actualRouteBinder =
+            new RouteBinder(this.getScenario(), this.getCentralModelRequestClass());
+
+    this.buildOnException();
+    this.buildTopology();
+    UseCaseTopologyDefinition outTopologyDefinition = this.getOutTopologyDefinition();
+    bindOutConnectors(actualRouteBinder, outTopologyDefinition);
+  }
+
+  private void bindOutConnectors(
+          RouteBinder routeBinder, UseCaseTopologyDefinition outTopologyDefinition) {
+    routeBinder.appendOutConnectorsSeq(outTopologyDefinition.getConnectorsBindInSequence());
+    routeBinder.appendOutConnectorsParallel(outTopologyDefinition.getConnectorsBindInParallel());
   }
 }

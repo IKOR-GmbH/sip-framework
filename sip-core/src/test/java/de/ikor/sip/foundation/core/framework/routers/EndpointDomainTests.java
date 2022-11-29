@@ -5,7 +5,9 @@ import de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
 import de.ikor.sip.foundation.core.framework.stubs.*;
-import org.apache.camel.*;
+import org.apache.camel.CamelExecutionException;
+import org.apache.camel.EndpointInject;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.AdviceWith;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
@@ -54,7 +56,7 @@ class EndpointDomainTests {
         InConnectorStub inConnector = new InConnectorStub(InEndpoint.instance(DIRECT_IN, DIRECT_IN_ID, InEndpointDomain.class));
         InEndpointDomain inDomain = new InEndpointDomain("hello world");
         subject.input(inConnector);
-        routeStarter.buildRoutes(subject.toCentralRouter());
+        subject.toCentralRouter().setUpRoutes();
 
         String routeId = String.format("%s-%s", subject.getScenario(), inConnector.getName());
         AdviceWith.adviceWith(StaticRouteBuilderHelper.camelContext(), routeId, a ->
@@ -76,7 +78,7 @@ class EndpointDomainTests {
         InConnectorStub inConnector = new InConnectorStub(InEndpoint.instance(DIRECT_IN, DIRECT_IN_ID, InEndpointDomain.class, InEndpointDomain::new));
         InEndpointDomain expected = new InEndpointDomain("hello world");
         subject.input(inConnector);
-        routeStarter.buildRoutes(subject.toCentralRouter());
+        subject.toCentralRouter().setUpRoutes();
 
         String routeId = String.format("%s-%s", subject.getScenario(), inConnector.getName());
         AdviceWith.adviceWith(StaticRouteBuilderHelper.camelContext(), routeId, a ->
@@ -97,7 +99,7 @@ class EndpointDomainTests {
         // arrange
         InConnectorStub inConnector = new InConnectorStub(InEndpoint.instance(DIRECT_IN, DIRECT_IN_ID, InEndpointDomain.class));
         subject.input(inConnector);
-        routeStarter.buildRoutes(subject.toCentralRouter());
+        subject.toCentralRouter().setUpRoutes();
 
         String routeId = String.format("%s-%s", subject.getScenario(), inConnector.getName());
         AdviceWith.adviceWith(StaticRouteBuilderHelper.camelContext(), routeId, a ->
@@ -114,7 +116,7 @@ class EndpointDomainTests {
         OutConnectorStub outConnector = new OutConnectorStub(OutEndpoint.instance("log:foo", "outBasicConnector", OutEndpointDomain.class));
         OutEndpointDomain outEndpointDomain = new OutEndpointDomain("hello world");
         subject.input(inConnector).sequencedOutput(outConnector);
-        routeStarter.buildRoutes(subject.toCentralRouter());
+        subject.toCentralRouter().setUpRoutes();
 
         String routeId = String.format("%s-%s", subject.getScenario(), outConnector.getName());
         AdviceWith.adviceWith(StaticRouteBuilderHelper.camelContext(), routeId, a ->
@@ -137,7 +139,7 @@ class EndpointDomainTests {
         OutConnectorStub outConnector = new OutConnectorStub(OutEndpoint.instance("log:foo", "outBasicConnector", OutEndpointDomain.class, OutEndpointDomain::getContentWithMessage));
         OutEndpointDomain outEndpointDomain = new OutEndpointDomain("hello world");
         subject.input(inConnector).sequencedOutput(outConnector);
-        routeStarter.buildRoutes(subject.toCentralRouter());
+        subject.toCentralRouter().setUpRoutes();
 
         String routeId = String.format("%s-%s", subject.getScenario(), outConnector.getName());
         AdviceWith.adviceWith(StaticRouteBuilderHelper.camelContext(), routeId, a ->
@@ -159,7 +161,7 @@ class EndpointDomainTests {
         InConnectorStub inConnector = new InConnectorStub(InEndpoint.instance(DIRECT_IN, DIRECT_IN_ID));
         OutConnectorStub outConnector = new OutConnectorStub(OutEndpoint.instance("log:foo", "outBasicConnector", OutEndpointDomain.class));
         subject.input(inConnector).sequencedOutput(outConnector);
-        routeStarter.buildRoutes(subject.toCentralRouter());
+        subject.toCentralRouter().setUpRoutes();
 
         String routeId = String.format("%s-%s", subject.getScenario(), outConnector.getName());
         AdviceWith.adviceWith(StaticRouteBuilderHelper.camelContext(), routeId, a ->

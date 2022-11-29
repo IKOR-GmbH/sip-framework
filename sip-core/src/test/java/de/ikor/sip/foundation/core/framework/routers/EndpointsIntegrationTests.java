@@ -28,7 +28,7 @@ class EndpointsIntegrationTests {
 
     // act
     subject.input(SimpleInConnector.withUri("direct:hey-test")).sequencedOutput(outConnector);
-    starter.buildRoutes(subject.toCentralRouter());
+    subject.toCentralRouter().setUpRoutes();
 
     // assert
     Endpoint registeredEndpoint = CentralEndpointsRegister.getOutEndpoint("cool-id");

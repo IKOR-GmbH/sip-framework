@@ -56,7 +56,7 @@ class CentralRoutedDataflowTest {
     mock.expectedBodiesReceived("Hello dude!-[ep-1]");
 
     routerSubject.input(inConnector).sequencedOutput(outConnector1);
-    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+    routerSubject.toCentralRouter().setUpRoutes();
 
     template.sendBody("direct:multicast-1", "Hello dude!");
     mock.assertIsSatisfied();
@@ -76,7 +76,7 @@ class CentralRoutedDataflowTest {
     mock.expectedBodiesReceivedInAnyOrder("Hello dudes!-[ep-1]", "Hello dudes!-[ep-2]");
 
     routerSubject.input(inConnector).parallelOutput(outConnector1, outConnector2);
-    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+    routerSubject.toCentralRouter().setUpRoutes();
 
     template.sendBody("direct:multicast-1", "Hello dudes!");
     mock.assertIsSatisfied();
@@ -96,7 +96,7 @@ class CentralRoutedDataflowTest {
     mock.expectedMessageCount(2);
 
     routerSubject.input(inConnector).parallelOutput(outConnector1, outConnector2);
-    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+    routerSubject.toCentralRouter().setUpRoutes();
 
     template.sendBody("direct:multicast-3", "Hello dude!");
 
@@ -118,7 +118,7 @@ class CentralRoutedDataflowTest {
     mock.expectedMessageCount(2);
 
     routerSubject.input(inConnector).sequencedOutput(outConnector1, outConnector2);
-    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+    routerSubject.toCentralRouter().setUpRoutes();
 
     template.sendBody("direct:multicast-4", "Hello dude!");
 
@@ -142,7 +142,7 @@ class CentralRoutedDataflowTest {
     routerSubject.input(new ComplexInConnector()).sequencedOutput(new ComplexOutConnector());
 
     // act
-    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+    routerSubject.toCentralRouter().setUpRoutes();
     String response =
         (String) template.sendBody("direct:complex-connector", ExchangePattern.InOut, "input body");
 

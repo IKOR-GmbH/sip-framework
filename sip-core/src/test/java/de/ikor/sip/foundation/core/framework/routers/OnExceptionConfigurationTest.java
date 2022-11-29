@@ -47,7 +47,7 @@ class OnExceptionConfigurationTest {
     InConnectorDefinition inConnectorDefinition =
         new OnExceptionInConnector(InEndpoint.instance("direct:inDirect-1", "inDirect-1"));
     routerSubject.input(inConnectorDefinition);
-    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+    routerSubject.toCentralRouter().setUpRoutes();
 
     mock.expectedBodiesReceived("InConnectorException");
     mock.expectedMessageCount(1);
@@ -67,7 +67,7 @@ class OnExceptionConfigurationTest {
     OutConnectorDefinition outConnectorDefinition =
         new OnExceptionOutConnector(OutEndpoint.instance("direct:outDirect", "outDirect-2"));
     routerSubject.input(inConnectorDefinition).sequencedOutput(outConnectorDefinition);
-    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+    routerSubject.toCentralRouter().setUpRoutes();
 
     mock.expectedBodiesReceived("OutConnectorException");
     mock.expectedMessageCount(1);

@@ -51,7 +51,7 @@ class CentralRouterStructureTest {
     SimpleInConnector simpleInConnector = SimpleInConnector.withUri("direct:singleInConnector");
     // act
     routerSubject.input(simpleInConnector);
-    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+    routerSubject.toCentralRouter().setUpRoutes();
     // assert
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri("direct.*singleInConnector"))
@@ -69,7 +69,7 @@ class CentralRouterStructureTest {
     SimpleInConnector secondInConnector = SimpleInConnector.withUri("direct:sipie");
     // act
     routerSubject.input(firstInConnector, secondInConnector);
-    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+    routerSubject.toCentralRouter().setUpRoutes();
     // assert
     assertThat(getRoutesFromContext()).filteredOn(matchRoutesBasedOnUri("direct.*sip")).hasSize(1);
 
@@ -88,7 +88,7 @@ class CentralRouterStructureTest {
 
     // act
     routerSubject.input(inConnector).sequencedOutput(outConnector);
-    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+    routerSubject.toCentralRouter().setUpRoutes();
     // assert
     assertThat(getRoutesFromContext())
         .filteredOn(matchRoutesBasedOnUri(format("sipmc.*%s", routerSubject.getScenario())))
@@ -106,7 +106,7 @@ class CentralRouterStructureTest {
 
     // act
     routerSubject.input(inConnector).parallelOutput(outConnector);
-    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+    routerSubject.toCentralRouter().setUpRoutes();
 
     // assert
     assertThat(getRoutesFromContext())
@@ -122,7 +122,7 @@ class CentralRouterStructureTest {
           throws Exception {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:routeIdTest");
     routerSubject.input(inConnector);
-    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+    routerSubject.toCentralRouter().setUpRoutes();
 
     String expectedRouteId = format("%s-%s", routerSubject.getScenario(), inConnector.getName());
     Route route = getRouteFromContextById(expectedRouteId);
@@ -145,7 +145,7 @@ class CentralRouterStructureTest {
     routerSubject.input(inConnector).sequencedOutput(outConnector);
 
     // act
-    routeStarter.buildRoutes(routerSubject.toCentralRouter());
+    routerSubject.toCentralRouter().setUpRoutes();
 
     String expectedRouteId = format("%s-%s", routerSubject.getScenario(), inConnector.getName());
     Route route = getRouteFromContextById(expectedRouteId);
