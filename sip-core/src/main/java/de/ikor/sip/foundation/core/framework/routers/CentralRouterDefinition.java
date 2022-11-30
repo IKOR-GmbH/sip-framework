@@ -48,7 +48,7 @@ public abstract class CentralRouterDefinition {
     throw new IllegalStateException(""); // todo add message
   }
 
-  public List<InConnectorDefinition> getInConnectorDefinitions() {
+  List<InConnectorDefinition> getInConnectorDefinitions() {
     return inConnectorDefinitions;
   }
 

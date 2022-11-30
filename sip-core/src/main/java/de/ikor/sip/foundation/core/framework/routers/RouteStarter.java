@@ -24,7 +24,7 @@ public class RouteStarter extends EventNotifierSupport {
                     .map(CentralRouterDefinition::toCentralRouter)
                     .collect(Collectors.toList());
     globalRoutesConfiguration.ifPresent(GlobalRoutesConfiguration::defineGlobalConfiguration);
-    availableRouters.forEach(router -> router.setRouteConfig(globalRoutesConfiguration));
+    availableRouters.forEach(router -> router.appendToRouteConfig(globalRoutesConfiguration));
   }
 
   @Override

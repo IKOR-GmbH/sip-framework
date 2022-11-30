@@ -6,21 +6,19 @@ import de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteT
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.builder.RouteConfigurationBuilder;
 import org.apache.camel.model.RouteDefinition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.*;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteBuilder;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 
 @RequiredArgsConstructor
-public class RouteBinder {
-  private final String useCase;
-  private final Class<?> centralModelRequest;
-  private final RouteConfigurationBuilder routeConfigurationBuilder;
+public class OutConnectorsRouteBinder {
   @Getter protected final List<RouteBuilder> outConnectorsBuilders = new ArrayList<>();
+  private final Scenario scenario;
 
   protected void appendOutConnectorsSeq(OutConnectorDefinition[] outConnectors) {
     appendConnectors(outConnectors, false);
@@ -35,17 +33,18 @@ public class RouteBinder {
       return;//TODO handle on different place
     }
     RouteDefinition route =
-        FromMiddleComponentRouteTemplateBuilder.withUseCase(useCase)
-            .withCentralDomainRequest(centralModelRequest)
+        FromMiddleComponentRouteTemplateBuilder.withUseCase(scenario.getName())
+            .withCentralDomainRequest(scenario.getCdmRequestType())
             .outConnectors(outConnectors)
             .inParallel(isParallel)
             .createRoute();
 
-    RouteBuilder builder = anonymousDummyRouteBuilder(routeConfigurationBuilder);
+    RouteBuilder builder = anonymousDummyRouteBuilder(scenario.getScenarioRoutesConfiguration());
     builder.getRouteCollection().getRoutes().add(route);
     addToContext(builder);
 
-    FromDirectOutConnectorRouteTemplate template = new FromDirectOutConnectorRouteTemplate(useCase, routeConfigurationBuilder);
+    FromDirectOutConnectorRouteTemplate template =
+        new FromDirectOutConnectorRouteTemplate(scenario.getName(), scenario.getScenarioRoutesConfiguration());
     Arrays.stream(outConnectors).map(template::bindWithRouteBuilder).forEach(this::addToContext);
   }
 
@@ -56,6 +55,4 @@ public class RouteBinder {
       throw new RuntimeException(e);
     }
   }
-
-
 }
