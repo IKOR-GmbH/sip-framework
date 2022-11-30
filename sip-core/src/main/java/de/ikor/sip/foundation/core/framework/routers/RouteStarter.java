@@ -13,15 +13,15 @@ import java.util.stream.Collectors;
 
 @Component
 public class RouteStarter extends EventNotifierSupport {
-  final List<CentralRouter> availableRouters;
+  final List<CentralRouterService> availableRouters;
 
   public RouteStarter(
-          List<CentralRouterDefinition> centralRouters,
+          List<CentralRouter> centralRouters,
           Optional<GlobalRoutesConfiguration> globalRoutesConfiguration) {
     this.availableRouters =
             centralRouters.stream()
                     .filter(router -> router.getClass().isAnnotationPresent(IntegrationScenario.class))
-                    .map(CentralRouterDefinition::toCentralRouter)
+                    .map(CentralRouter::toCentralRouter)
                     .collect(Collectors.toList());
     globalRoutesConfiguration.ifPresent(GlobalRoutesConfiguration::defineGlobalConfiguration);
     availableRouters.forEach(router -> router.appendToRouteConfig(globalRoutesConfiguration));
@@ -30,7 +30,7 @@ public class RouteStarter extends EventNotifierSupport {
   @Override
   public void notify(CamelEvent event) {
     setStaticCamelContext(event);
-    availableRouters.forEach(CentralRouter::setUpRoutes);
+    availableRouters.forEach(CentralRouterService::setUpRoutes);
   }
 
   private void setStaticCamelContext(CamelEvent event) {

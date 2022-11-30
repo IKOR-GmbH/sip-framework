@@ -1,67 +1,59 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.framework.GlobalRoutesConfiguration;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
-import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
-import lombok.SneakyThrows;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.camel.builder.RouteConfigurationBuilder;
+import org.apache.camel.model.RouteConfigurationDefinition;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteConfigurationBuilder;
+public abstract class CentralRouter {
+  private final List<InConnector> inConnectors = new ArrayList<>();
 
-class CentralRouter {
-  private final CentralRouterDefinition routerDefinition;
-  private final Scenario scenario;
+  @Getter private UseCaseTopologyDefinition definition;
+  @Setter private RouteConfigurationBuilder routeConfigurationBuilder;
 
-  public CentralRouter(CentralRouterDefinition routerDefinition) {
-    this.scenario = new Scenario(routerDefinition);
-    this.routerDefinition = routerDefinition;
+  public abstract void defineTopology() throws Exception;
+
+  public void configureOnException() {}
+
+  public void defineConfiguration() {}
+
+  protected RouteConfigurationDefinition configuration() {
+    return routeConfigurationBuilder.routeConfiguration();
   }
 
-  @SneakyThrows
-  public void setUpRoutes() {
-    routerDefinition.defineTopology();
-    this.buildActiveRoutes();
+  public UseCaseTopologyDefinition input(InConnector... inConnectors) {
+    this.inConnectors.addAll(Arrays.asList(inConnectors));
+    definition = new UseCaseTopologyDefinition();
+    return definition;
   }
 
-  void buildActiveRoutes() {
-    this.buildOnException();
-    this.buildConfiguration();
-    this.bindInConnectors();
-    this.bindOutConnectors();
+  String getScenario() {
+    return this.getClass().getAnnotation(IntegrationScenario.class).name();
   }
 
-  private void bindInConnectors() {
-    InConnectorsRouteBinder inConnectorsRouteBinder = new InConnectorsRouteBinder(scenario);
-    inConnectorsRouteBinder.bindInConnectors(convert(routerDefinition.getInConnectorDefinitions()));
+  public Class<?> getCentralModelRequestClass() {
+    return this.getClass().isAnnotationPresent(IntegrationScenario.class)
+        ? this.getClass().getAnnotation(IntegrationScenario.class).requestType()
+        : String.class;
   }
 
-  private void buildOnException() {
-    routerDefinition.configureOnException();
+  public Class<?> getCentralModelResponseClass() {
+    if (this.getClass().isAnnotationPresent(IntegrationScenario.class)) {
+      return this.getClass().getAnnotation(IntegrationScenario.class).responseType();
+    }
+    throw new IllegalStateException(""); // todo add message
   }
 
-  private void buildConfiguration() {
-    routerDefinition.setRouteConfigurationBuilder(this.scenario.getScenarioRoutesConfiguration());
-    routerDefinition.defineConfiguration();
+  List<InConnector> getInConnectors() {
+    return inConnectors;
   }
 
-  private void bindOutConnectors() {
-    OutConnectorsRouteBinder outConnectorsBinder = new OutConnectorsRouteBinder(scenario);
-
-    outConnectorsBinder.appendOutConnectorsSeq(
-        routerDefinition.getDefinition().getConnectorsBindInSequence());
-    outConnectorsBinder.appendOutConnectorsParallel(
-        routerDefinition.getDefinition().getConnectorsBindInParallel());
-  }
-
-  void appendToRouteConfig(Optional<GlobalRoutesConfiguration> globalRoutesConfiguration) {
-    scenario.setScenarioRoutesConfiguration(anonymousDummyRouteConfigurationBuilder());
-    globalRoutesConfiguration.ifPresent(scenario::copyGlobalToScenarioConfiguration);
-  }
-
-  private List<InConnector> convert(List<InConnectorDefinition> inConnectorDefinitions) {
-    return inConnectorDefinitions.stream().map(InConnector::new).collect(Collectors.toList());
+  protected CentralRouterService toCentralRouter() {
+    return new CentralRouterService(this);
   }
 }

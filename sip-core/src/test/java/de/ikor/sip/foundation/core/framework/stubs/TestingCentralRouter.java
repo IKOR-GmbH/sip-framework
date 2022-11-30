@@ -1,10 +1,10 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.routers.CentralRouterDefinition;
+import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
 import de.ikor.sip.foundation.core.framework.routers.IntegrationScenario;
 
 @IntegrationScenario(name = "testing-use-case-", responseType = String.class)
-public class TestingCentralRouterDefinition extends CentralRouterDefinition {
+public class TestingCentralRouter extends CentralRouter {
   private static int useCaseCounter;
   public boolean isConfigured;
 

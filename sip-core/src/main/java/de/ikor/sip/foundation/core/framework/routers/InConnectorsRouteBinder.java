@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import de.ikor.sip.foundation.core.framework.connectors.InConnectorService;
 import org.apache.camel.model.RouteDefinition;
 
 import java.util.List;
@@ -15,18 +15,18 @@ public class InConnectorsRouteBinder {
     this.scenario = scenario;
   }
 
-  public void bindInConnectors(List<InConnector> inConnectors) {
-    inConnectors.forEach(this::configure);
-    inConnectors.forEach(this::addToContext);
+  public void bindInConnectors(List<InConnectorService> inConnectorServices) {
+    inConnectorServices.forEach(this::configure);
+    inConnectorServices.forEach(this::addToContext);
   }
 
-  private void configure(InConnector inConnector) {
-    inConnector.setConfiguration(scenario.getScenarioRoutesConfiguration());
-    inConnector.initDefinition();
-    inConnector.configureOnException();
-    inConnector.configure();
-    appendMiddleRouting(inConnector.getConnectorRouteDefinition(), inConnector.getName());
-    inConnector.handleResponse(inConnector.getConnectorRouteDefinition());
+  private void configure(InConnectorService inConnectorService) {
+    inConnectorService.setConfiguration(scenario.getScenarioRoutesConfiguration());
+    inConnectorService.initDefinition();
+    inConnectorService.configureOnException();
+    inConnectorService.configure();
+    appendMiddleRouting(inConnectorService.getConnectorRouteDefinition(), inConnectorService.getName());
+    inConnectorService.handleResponse(inConnectorService.getConnectorRouteDefinition());
   }
 
   private void appendMiddleRouting(RouteDefinition routeDefinition, String connectorName) {
@@ -38,9 +38,9 @@ public class InConnectorsRouteBinder {
         .routeId(generateRouteId(scenario.getName(), connectorName));
   }
 
-  private void addToContext(InConnector inConnector) {
+  private void addToContext(InConnectorService inConnectorService) {
     try {
-      camelContext().addRoutes(inConnector.getRouteBuilder());
+      camelContext().addRoutes(inConnectorService.getRouteBuilder());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

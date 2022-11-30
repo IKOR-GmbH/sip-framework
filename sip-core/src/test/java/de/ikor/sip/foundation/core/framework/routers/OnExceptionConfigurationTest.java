@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.apps.core.CoreTestApplication;
-import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
-import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
+import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
 import de.ikor.sip.foundation.core.framework.stubs.*;
@@ -25,7 +25,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @MockEndpoints("log:message*")
 class OnExceptionConfigurationTest {
 
-  private TestingCentralRouterDefinition routerSubject = new TestingCentralRouterDefinition();
+  private TestingCentralRouter routerSubject = new TestingCentralRouter();
 
   @Autowired(required = false)
   private RouteStarter routeStarter;
@@ -44,9 +44,9 @@ class OnExceptionConfigurationTest {
   void when_OnExceptionConfiguredOnInConnector_then_ValidateInConnectorOnExceptionExecution()
       throws Exception {
     // arrange
-    InConnectorDefinition inConnectorDefinition =
+    InConnector inConnector =
         new OnExceptionInConnector(InEndpoint.instance("direct:inDirect-1", "inDirect-1"));
-    routerSubject.input(inConnectorDefinition);
+    routerSubject.input(inConnector);
     routerSubject.toCentralRouter().setUpRoutes();
 
     mock.expectedBodiesReceived("InConnectorException");
@@ -63,10 +63,10 @@ class OnExceptionConfigurationTest {
   void when_OnExceptionConfiguredOnOutConnector_then_ValidateOutConnectorOnExceptionExecution()
       throws Exception {
     // arrange
-    InConnectorDefinition inConnectorDefinition = SimpleInConnector.withUri("direct:inDirect-2");
-    OutConnectorDefinition outConnectorDefinition =
+    InConnector inConnector = SimpleInConnector.withUri("direct:inDirect-2");
+    OutConnector outConnector =
         new OnExceptionOutConnector(OutEndpoint.instance("direct:outDirect", "outDirect-2"));
-    routerSubject.input(inConnectorDefinition).sequencedOutput(outConnectorDefinition);
+    routerSubject.input(inConnector).sequencedOutput(outConnector);
     routerSubject.toCentralRouter().setUpRoutes();
 
     mock.expectedBodiesReceived("OutConnectorException");

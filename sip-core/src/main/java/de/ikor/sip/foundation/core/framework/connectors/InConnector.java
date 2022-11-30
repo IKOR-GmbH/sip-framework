@@ -1,53 +1,71 @@
 package de.ikor.sip.foundation.core.framework.connectors;
 
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteBuilder;
+import static de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister.getInEndpointUri;
 
+import de.ikor.sip.foundation.core.framework.beans.CDMValueSetter;
+import de.ikor.sip.foundation.core.framework.endpoints.EndpointDomainTransformation;
+import de.ikor.sip.foundation.core.framework.endpoints.EndpointDomainValidation;
+import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
+import de.ikor.sip.foundation.core.framework.endpoints.RestInEndpoint;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.builder.RouteConfigurationBuilder;
+import org.apache.camel.model.rest.RestDefinition;
 
-public class InConnector extends Connector {
-  @Getter private final InConnectorDefinition connector;
-  @Getter private RouteBuilder routeBuilder;
-  @Setter private RouteConfigurationBuilder configuration;
+public abstract class InConnector extends Connector {
+  @Getter @Setter private RouteBuilder routeBuilder;
+  private InEndpoint inEndpoint;
+  @Getter private RouteDefinition routeDefinition;
 
-  public InConnector(InConnectorDefinition connector) {
-    this.connector = connector;
+  public abstract void configure();
+
+  public void configureOnException() {}
+
+  public void handleResponse(RouteDefinition route) {}
+
+  protected RouteDefinition from(InEndpoint inEndpoint) {
+    this.inEndpoint = inEndpoint;
+    routeDefinition = initDefinition();
+    routeDefinition.from(getInEndpointUri(inEndpoint.getId()));
+    inEndpoint.getTransformFunction().ifPresent(function -> routeDefinition.process(new EndpointDomainTransformation<>(function)));
+    inEndpoint.getDomainClassType().ifPresent(domainClassType -> routeDefinition.process(new EndpointDomainValidation(domainClassType, inEndpoint.getId())));
+    return routeDefinition.bean(CDMValueSetter.class, "process");
   }
 
-  public void configure() {
-    connector.configure();
-    routeBuilder.getRouteCollection().route(connector.getRouteDefinition());
+  private RouteDefinition initDefinition() {
+    return routeDefinition == null ? new RouteDefinition() : routeDefinition;
   }
 
-  // TODO: Assumption here is that the first route is the "regular" one and the second
-  // is the testing one. This hardcoded .get(0) and .get(1) should be refactored
-  public RouteDefinition getConnectorRouteDefinition() {
-    return routeBuilder.getRouteCollection().getRoutes().get(0);
+  protected RouteDefinition from(RestDefinition restDefinition) {
+    restDefinition.to("direct:rest-" + inEndpoint.getUri());
+    routeDefinition = initDefinition();
+    routeBuilder.getRestCollection().getRests().add(restDefinition);
+    return routeDefinition.from("direct:rest-" + inEndpoint.getUri()).bean(CDMValueSetter.class, "process");
   }
 
-  public String getName() {
-    return connector.getName();
-  }
-
-  public void handleResponse(RouteDefinition connectorTestingRouteDefinition) {
-    connector.handleResponse(connectorTestingRouteDefinition);
-  }
-
-  public void configureOnException() {
-    connector.configureOnException();
+  protected RestDefinition rest(String uri, String id) {
+    RestInEndpoint restInEndpoint = RestInEndpoint.instance(uri, id);
+    inEndpoint = restInEndpoint;
+    return restInEndpoint.definition();
   }
 
   protected OnExceptionDefinition onException(Class<? extends Throwable>... exceptions) {
-    return connector.onException(exceptions);
+    routeDefinition = initDefinition();
+    OnExceptionDefinition last = null;
+
+    for (Class<? extends Throwable> ex : exceptions) {
+      last = (last == null ? this.routeDefinition.onException(ex) : last.onException(ex));
+    }
+    return last;
   }
 
-  public void initDefinition() {
-    routeBuilder = anonymousDummyRouteBuilder(configuration);
-    connector.setRouteBuilder(routeBuilder);
-    connector.setDefinition();
+  public String getEndpointUri() {
+    return inEndpoint.getUri();
+  }
+
+  public void setDefinition() {
+    this.routeDefinition = new RouteDefinition();
   }
 }

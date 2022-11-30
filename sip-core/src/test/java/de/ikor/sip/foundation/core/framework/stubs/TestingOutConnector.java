@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 
-public abstract class TestingOutConnector extends OutConnectorDefinition {
+public abstract class TestingOutConnector extends OutConnector {
   protected final String name;
   protected String endpointId = "endpoint-id";
   protected String uri = "log:message";

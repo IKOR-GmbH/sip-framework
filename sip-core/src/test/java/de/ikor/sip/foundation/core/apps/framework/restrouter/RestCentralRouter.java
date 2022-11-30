@@ -1,12 +1,12 @@
 package de.ikor.sip.foundation.core.apps.framework.restrouter;
 
-import de.ikor.sip.foundation.core.framework.routers.CentralRouterDefinition;
+import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
 import de.ikor.sip.foundation.core.framework.routers.IntegrationScenario;
 import de.ikor.sip.foundation.core.framework.stubs.AppendStringOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.RestInConnector;
 
 @IntegrationScenario(name = "rest-scenario", responseType = String.class)
-public class RestCentralRouterDefinition extends CentralRouterDefinition {
+public class RestCentralRouter extends CentralRouter {
 
   @Override
   public void defineTopology() throws Exception {

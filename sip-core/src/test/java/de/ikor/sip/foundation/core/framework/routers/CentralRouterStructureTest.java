@@ -5,14 +5,13 @@ import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
-import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
-import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.*;
 
 import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
-import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouterDefinition;
+import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouter;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -27,7 +26,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @SpringBootTest(classes = {CentralRouterTestingApplication.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CentralRouterStructureTest {
-  @Autowired private TestingCentralRouterDefinition routerSubject;
+  @Autowired private TestingCentralRouter routerSubject;
 
   @Autowired(required = false)
   private RouteStarter routeStarter;
@@ -140,8 +139,8 @@ class CentralRouterStructureTest {
   void
   when_CreateInEndpointWithEndpointDsl_then_VerifyRoute() {
     // arrange
-    InConnectorDefinition inConnector = new EndpointDSLInConnector();
-    OutConnectorDefinition outConnector = new StaticEndpointDSLOutConnector();
+    InConnector inConnector = new EndpointDSLInConnector();
+    OutConnector outConnector = new StaticEndpointDSLOutConnector();
     routerSubject.input(inConnector).sequencedOutput(outConnector);
 
     // act

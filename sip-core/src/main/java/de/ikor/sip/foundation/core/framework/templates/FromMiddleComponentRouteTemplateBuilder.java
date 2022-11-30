@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.framework.templates;
 
-import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
-import de.ikor.sip.foundation.core.framework.routers.CDMValidator;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import org.apache.camel.model.MulticastDefinition;
 import org.apache.camel.model.RouteDefinition;
 
@@ -13,7 +12,7 @@ public class FromMiddleComponentRouteTemplateBuilder {
   private final String useCase;
   private boolean isParallel;
   private Class<?> centralDomainRequest;
-  private OutConnectorDefinition[] outConnectors;
+  private OutConnector[] outConnectors;
   protected static final String DIRECT_URI_PREFIX = "direct:";
 
   public static FromMiddleComponentRouteTemplateBuilder withUseCase(String useCase) {
@@ -26,7 +25,7 @@ public class FromMiddleComponentRouteTemplateBuilder {
   }
 
   public FromMiddleComponentRouteTemplateBuilder outConnectors(
-      OutConnectorDefinition[] outConnectors) {
+      OutConnector[] outConnectors) {
     this.outConnectors = outConnectors;
     return this;
   }

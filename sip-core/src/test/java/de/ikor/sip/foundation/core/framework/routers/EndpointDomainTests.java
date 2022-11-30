@@ -29,7 +29,7 @@ class EndpointDomainTests {
     private static final String DIRECT_IN = "direct:in";
     private static final String DIRECT_IN_ID = "inBasicConnector";
 
-    private final TestingCentralRouterDefinition subject = new TestingCentralRouterDefinition();
+    private final TestingCentralRouter subject = new TestingCentralRouter();
 
     @Autowired(required = false)
     private RouteStarter routeStarter;

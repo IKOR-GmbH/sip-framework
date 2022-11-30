@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootTest(classes = InvalidUsageOfOutConsumerTest.CoreTestApplication.class)
 class InvalidUsageOfOutConsumerTest {
   @Autowired CamelContext camelContext;
-  @Autowired List<CentralRouterDefinition> centralRouters;
+  @Autowired List<CentralRouter> centralRouters;
 
   @Test
   void when_OutEndpointIsUsedAsConsumer_then_RuntimeExceptionIsThrown() {
@@ -41,18 +41,18 @@ class InvalidUsageOfOutConsumerTest {
   @SIPIntegrationAdapter
   public static class CoreTestApplication {
     @Bean
-    CentralRouterDefinition firstSpyCentralRouter() {
+    CentralRouter firstSpyCentralRouter() {
       return new SpyCentralRouterDefinition();
     }
 
     @Bean
-    CentralRouterDefinition secondSpyCentralRouter() {
+    CentralRouter secondSpyCentralRouter() {
       return new SpyCentralRouterDefinition();
     }
   }
 
   @IntegrationScenario(name = "null")
-  private static class SpyCentralRouterDefinition extends CentralRouterDefinition {
+  private static class SpyCentralRouterDefinition extends CentralRouter {
     public static boolean isConfigured = false;
 
     @Override

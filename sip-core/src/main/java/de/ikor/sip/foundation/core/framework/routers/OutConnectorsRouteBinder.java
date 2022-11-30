@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.templates.FromDirectOutConnectorRouteTemplate;
 import de.ikor.sip.foundation.core.framework.templates.FromMiddleComponentRouteTemplateBuilder;
 import lombok.Getter;
@@ -20,15 +20,15 @@ public class OutConnectorsRouteBinder {
   @Getter protected final List<RouteBuilder> outConnectorsBuilders = new ArrayList<>();
   private final Scenario scenario;
 
-  protected void appendOutConnectorsSeq(OutConnectorDefinition[] outConnectors) {
+  protected void appendOutConnectorsSeq(OutConnector[] outConnectors) {
     appendConnectors(outConnectors, false);
   }
 
-  public void appendOutConnectorsParallel(OutConnectorDefinition[] outConnectors) {
+  public void appendOutConnectorsParallel(OutConnector[] outConnectors) {
     appendConnectors(outConnectors, true);
   }
 
-  private void appendConnectors(OutConnectorDefinition[] outConnectors, boolean isParallel) {
+  private void appendConnectors(OutConnector[] outConnectors, boolean isParallel) {
     if (outConnectors == null) {
       return;//TODO handle on different place
     }

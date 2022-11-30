@@ -25,7 +25,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @MockEndpoints("log:message*")
 class CentralRoutedDataflowTest {
   @Autowired(required = false)
-  private TestingCentralRouterDefinition routerSubject;
+  private TestingCentralRouter routerSubject;
 
   @Autowired(required = false)
   private RouteStarter routeStarter;

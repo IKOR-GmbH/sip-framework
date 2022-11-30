@@ -26,7 +26,7 @@ public class Scenario {
     @Setter(AccessLevel.PACKAGE)
     private RouteConfigurationBuilder scenarioRoutesConfiguration;
 
-    Scenario(CentralRouterDefinition routerDefinition) {
+    Scenario(CentralRouter routerDefinition) {
         this.name = routerDefinition.getScenario();
         this.cdmRequestType = routerDefinition.getCentralModelRequestClass();
         this.cdmResponseType = routerDefinition.getCentralModelResponseClass();

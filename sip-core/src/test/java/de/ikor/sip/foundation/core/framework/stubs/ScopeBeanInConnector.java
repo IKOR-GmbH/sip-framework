@@ -1,12 +1,12 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
 import de.ikor.sip.foundation.core.framework.beans.CDMHolder;
-import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
+import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ScopeBeanInConnector extends InConnectorDefinition {
+public class ScopeBeanInConnector extends InConnector {
   @Autowired
   CDMHolder bean;
 

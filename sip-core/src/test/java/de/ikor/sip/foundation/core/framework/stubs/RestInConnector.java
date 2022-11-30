@@ -1,10 +1,10 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
+import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class RestInConnector extends InConnectorDefinition {
+public class RestInConnector extends InConnector {
   final private String path;
   @Override
   public String getName() {

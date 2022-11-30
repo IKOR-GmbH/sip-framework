@@ -1,9 +1,7 @@
 package de.ikor.sip.foundation.core.framework;
 
 import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
-import de.ikor.sip.foundation.core.apps.framework.restrouter.RestCentralRouterDefinition;
-import de.ikor.sip.foundation.core.apps.framework.restrouter.ScopeBeanCentralRouterDefinition;
-import de.ikor.sip.foundation.core.framework.beans.CDMHolder;
+import de.ikor.sip.foundation.core.apps.framework.restrouter.ScopeBeanCentralRouter;
 import de.ikor.sip.foundation.core.framework.stubs.ScopeAppendOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.ScopeBeanInConnector;
 import org.junit.jupiter.api.Test;
@@ -17,7 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {CentralRouterTestingApplication.class,
-        ScopeBeanCentralRouterDefinition.class,
+        ScopeBeanCentralRouter.class,
         ScopeBeanInConnector.class,
         ScopeAppendOutConnector.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

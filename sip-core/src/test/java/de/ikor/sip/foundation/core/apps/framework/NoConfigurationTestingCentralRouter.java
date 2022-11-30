@@ -1,12 +1,12 @@
 package de.ikor.sip.foundation.core.apps.framework;
 
-import de.ikor.sip.foundation.core.framework.routers.CentralRouterDefinition;
+import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
 import de.ikor.sip.foundation.core.framework.routers.IntegrationScenario;
 import de.ikor.sip.foundation.core.framework.stubs.ConfigInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.NoConfigOutConnector;
 
 @IntegrationScenario(name = "no-config-scenario")
-public class NoConfigurationTestingCentralRouter extends CentralRouterDefinition {
+public class NoConfigurationTestingCentralRouter extends CentralRouter {
 
   @Override
   public void defineTopology() throws Exception {

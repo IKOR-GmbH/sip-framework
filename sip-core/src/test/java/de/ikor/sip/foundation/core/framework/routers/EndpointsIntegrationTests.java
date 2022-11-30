@@ -6,7 +6,7 @@ import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTes
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
-import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouterDefinition;
+import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouter;
 import org.apache.camel.Endpoint;
 import org.apache.camel.NoSuchEndpointException;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @SpringBootTest(classes = CentralRouterTestingApplication.class)
 @DirtiesContext
 class EndpointsIntegrationTests {
-  private final TestingCentralRouterDefinition subject = new TestingCentralRouterDefinition();
+  private final TestingCentralRouter subject = new TestingCentralRouter();
 
   @Autowired private RouteStarter starter;
 
