@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.framework.templates;
 
+import de.ikor.sip.foundation.core.framework.connectors.ConnectorStarter;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import lombok.AllArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
@@ -14,15 +15,14 @@ public class FromDirectOutConnectorRouteTemplate {
   private RouteConfigurationBuilder routeConfigurationBuilder;
 
   public RouteBuilder bindWithRouteBuilder(OutConnector outConnector) {
-    RouteBuilder rb = anonymousDummyRouteBuilder(routeConfigurationBuilder);
-    outConnector.setRouteBuilder(rb);
+    ConnectorStarter.initConnector(outConnector, routeConfigurationBuilder);
     outConnector.configureOnException();
 
     String routeId = generateRouteId(useCase, outConnector.getName());
     RouteDefinition connectorRouteDefinition =
-        rb.from("direct:" + outConnector.getName()).routeId(routeId);
+        outConnector.getRouteBuilder().from("direct:" + outConnector.getName()).routeId(routeId);
 
     outConnector.configure(connectorRouteDefinition);
-    return rb;
+    return outConnector.getRouteBuilder();
   }
 }

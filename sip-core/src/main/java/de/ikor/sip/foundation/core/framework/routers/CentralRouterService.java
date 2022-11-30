@@ -1,13 +1,9 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.framework.GlobalRoutesConfiguration;
-import de.ikor.sip.foundation.core.framework.connectors.InConnectorService;
-import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import lombok.SneakyThrows;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteConfigurationBuilder;
 
@@ -34,8 +30,8 @@ class CentralRouterService {
   }
 
   private void bindInConnectors() {
-    InConnectorsRouteBinder inConnectorsRouteBinder = new InConnectorsRouteBinder(scenario);
-    inConnectorsRouteBinder.bindInConnectors(convert(routerDefinition.getInConnectors()));
+    new InConnectorsRouteBinder(scenario)
+        .bindInConnectors(routerDefinition.getInConnectors());
   }
 
   private void buildOnException() {
@@ -59,9 +55,5 @@ class CentralRouterService {
   void appendToRouteConfig(Optional<GlobalRoutesConfiguration> globalRoutesConfiguration) {
     scenario.setScenarioRoutesConfiguration(anonymousDummyRouteConfigurationBuilder());
     globalRoutesConfiguration.ifPresent(scenario::copyGlobalToScenarioConfiguration);
-  }
-
-  private List<InConnectorService> convert(List<InConnector> inConnectors) {
-    return inConnectors.stream().map(InConnectorService::new).collect(Collectors.toList());
   }
 }

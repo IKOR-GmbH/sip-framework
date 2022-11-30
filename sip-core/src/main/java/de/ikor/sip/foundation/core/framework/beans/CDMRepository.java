@@ -9,6 +9,7 @@ import java.util.Map;
 
 @Service
 public class CDMRepository {
+  //TODO CDM is not perfect naming as it handles more than CDM objects
   private final Map<String, List<Object>> cdms = new HashMap<>();
 
   public void put(String key, Object value) {

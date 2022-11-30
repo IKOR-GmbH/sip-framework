@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteBuilder;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousRouteBuilder;
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 
 @RequiredArgsConstructor
@@ -34,12 +34,11 @@ public class OutConnectorsRouteBinder {
     }
     RouteDefinition route =
         FromMiddleComponentRouteTemplateBuilder.withUseCase(scenario.getName())
-            .withCentralDomainRequest(scenario.getCdmRequestType())
             .outConnectors(outConnectors)
             .inParallel(isParallel)
             .createRoute();
 
-    RouteBuilder builder = anonymousDummyRouteBuilder(scenario.getScenarioRoutesConfiguration());
+    RouteBuilder builder = anonymousRouteBuilder(scenario.getScenarioRoutesConfiguration());
     builder.getRouteCollection().getRoutes().add(route);
     addToContext(builder);
 

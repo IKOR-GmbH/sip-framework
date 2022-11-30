@@ -11,17 +11,11 @@ import static java.lang.String.format;
 public class FromMiddleComponentRouteTemplateBuilder {
   private final String useCase;
   private boolean isParallel;
-  private Class<?> centralDomainRequest;
   private OutConnector[] outConnectors;
   protected static final String DIRECT_URI_PREFIX = "direct:";
 
   public static FromMiddleComponentRouteTemplateBuilder withUseCase(String useCase) {
     return new FromMiddleComponentRouteTemplateBuilder(useCase);
-  }
-
-  public FromMiddleComponentRouteTemplateBuilder withCentralDomainRequest(Class<?> requestType) {
-    this.centralDomainRequest = requestType;
-    return this;
   }
 
   public FromMiddleComponentRouteTemplateBuilder outConnectors(

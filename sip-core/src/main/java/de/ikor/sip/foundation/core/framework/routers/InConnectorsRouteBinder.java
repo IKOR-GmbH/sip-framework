@@ -1,12 +1,13 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.framework.connectors.InConnectorService;
+import de.ikor.sip.foundation.core.framework.connectors.ConnectorStarter;
+import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 
 import java.util.List;
 
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.generateRouteId;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.*;
 
 public class InConnectorsRouteBinder {
   private final Scenario scenario;
@@ -15,18 +16,17 @@ public class InConnectorsRouteBinder {
     this.scenario = scenario;
   }
 
-  public void bindInConnectors(List<InConnectorService> inConnectorServices) {
+  public void bindInConnectors(List<InConnector> inConnectorServices) {
     inConnectorServices.forEach(this::configure);
     inConnectorServices.forEach(this::addToContext);
   }
 
-  private void configure(InConnectorService inConnectorService) {
-    inConnectorService.setConfiguration(scenario.getScenarioRoutesConfiguration());
-    inConnectorService.initDefinition();
-    inConnectorService.configureOnException();
-    inConnectorService.configure();
-    appendMiddleRouting(inConnectorService.getConnectorRouteDefinition(), inConnectorService.getName());
-    inConnectorService.handleResponse(inConnectorService.getConnectorRouteDefinition());
+  private void configure(InConnector inConnector) {
+    ConnectorStarter.initConnector(inConnector, scenario.getScenarioRoutesConfiguration());
+    inConnector.configureOnException();
+    inConnector.configure();
+    appendMiddleRouting(getFirstDef(inConnector.getRouteBuilder()), inConnector.getName());
+    inConnector.handleResponse(getFirstDef(inConnector.getRouteBuilder()));
   }
 
   private void appendMiddleRouting(RouteDefinition routeDefinition, String connectorName) {
@@ -38,11 +38,17 @@ public class InConnectorsRouteBinder {
         .routeId(generateRouteId(scenario.getName(), connectorName));
   }
 
-  private void addToContext(InConnectorService inConnectorService) {
+  private void addToContext(InConnector inConnectorService) {
     try {
       camelContext().addRoutes(inConnectorService.getRouteBuilder());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private RouteDefinition getFirstDef(RouteBuilder routeBuilder) {
+    // temporary method
+    // TODO is it OK to loop trough all routes? (testing routes should have different builder)
+    return routeBuilder.getRouteCollection().getRoutes().get(0);
   }
 }
