@@ -51,14 +51,9 @@ class InvalidUsageOfOutConsumerTest {
     }
   }
 
-  @CentralRouterDomainModel
+  @IntegrationScenario(name = "null")
   private static class SpyCentralRouterDefinition extends CentralRouterDefinition {
     public static boolean isConfigured = false;
-
-    @Override
-    public String getScenario() {
-      return "null";
-    }
 
     @Override
     public void defineTopology() throws Exception {

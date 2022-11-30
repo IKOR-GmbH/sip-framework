@@ -2,11 +2,7 @@ package de.ikor.sip.foundation.core.framework.stubs;
 
 import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
-import de.ikor.sip.foundation.core.framework.routers.CentralRouterDomainModel;
 import lombok.AllArgsConstructor;
-import org.apache.camel.model.dataformat.MimeMultipartDataFormat;
-import org.apache.camel.spi.DataFormat;
-import org.apache.camel.support.DefaultDataFormat;
 
 import static org.apache.camel.builder.Builder.body;
 import static org.apache.camel.builder.Builder.simple;

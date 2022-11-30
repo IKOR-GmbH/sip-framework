@@ -1,14 +1,10 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
 import de.ikor.sip.foundation.core.framework.routers.CentralRouterDefinition;
-import de.ikor.sip.foundation.core.framework.routers.CentralRouterDomainModel;
+import de.ikor.sip.foundation.core.framework.routers.IntegrationScenario;
 
-@CentralRouterDomainModel(requestType = WrongTypeRouterDefinition.class)
+@IntegrationScenario(name =  "WrongTypeRouter", requestType = WrongTypeRouterDefinition.class)
 public class WrongTypeRouterDefinition extends CentralRouterDefinition {
-  @Override
-  public String getScenario() {
-    return "WrongTypeRouter";
-  }
 
   @Override
   public void defineTopology() throws Exception {

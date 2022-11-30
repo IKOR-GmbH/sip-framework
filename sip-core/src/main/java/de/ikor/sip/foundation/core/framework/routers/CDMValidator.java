@@ -12,7 +12,7 @@ public class CDMValidator implements Processor {
 
   @Override
   public void process(Exchange exchange) throws Exception {
-    if (centralModelRequest.isInstance(CentralRouterDomainModel.undefined)
+    if (centralModelRequest.isInstance(IntegrationScenario.undefined)
         && exchange.getMessage().getBody() != null) {
       throw new IllegalStateException("Wrong data type. Expected: no body present");
     }

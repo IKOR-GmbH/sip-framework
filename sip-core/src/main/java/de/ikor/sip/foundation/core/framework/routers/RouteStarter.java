@@ -20,7 +20,7 @@ public class RouteStarter extends EventNotifierSupport {
           Optional<GlobalRoutesConfiguration> globalRoutesConfiguration) {
     this.availableRouters =
             centralRouters.stream()
-                    .filter(router -> router.getClass().isAnnotationPresent(CentralRouterDomainModel.class))
+                    .filter(router -> router.getClass().isAnnotationPresent(IntegrationScenario.class))
                     .map(CentralRouterDefinition::toCentralRouter)
                     .collect(Collectors.toList());
     globalRoutesConfiguration.ifPresent(GlobalRoutesConfiguration::defineGlobalConfiguration);

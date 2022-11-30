@@ -16,9 +16,6 @@ public abstract class CentralRouterDefinition {
   @Getter private UseCaseTopologyDefinition definition;
   @Setter private RouteConfigurationBuilder routeConfigurationBuilder;
 
-
-  public abstract String getScenario();
-
   public abstract void defineTopology() throws Exception;
 
   public void configureOnException() {}
@@ -35,15 +32,19 @@ public abstract class CentralRouterDefinition {
     return definition;
   }
 
+  String getScenario() {
+    return this.getClass().getAnnotation(IntegrationScenario.class).name();
+  }
+
   public Class<?> getCentralModelRequestClass() {
-    return this.getClass().isAnnotationPresent(CentralRouterDomainModel.class)
-        ? this.getClass().getAnnotation(CentralRouterDomainModel.class).requestType()
+    return this.getClass().isAnnotationPresent(IntegrationScenario.class)
+        ? this.getClass().getAnnotation(IntegrationScenario.class).requestType()
         : String.class;
   }
 
   public Class<?> getCentralModelResponseClass() {
-    if (this.getClass().isAnnotationPresent(CentralRouterDomainModel.class)) {
-      return this.getClass().getAnnotation(CentralRouterDomainModel.class).responseType();
+    if (this.getClass().isAnnotationPresent(IntegrationScenario.class)) {
+      return this.getClass().getAnnotation(IntegrationScenario.class).responseType();
     }
     throw new IllegalStateException(""); // todo add message
   }
