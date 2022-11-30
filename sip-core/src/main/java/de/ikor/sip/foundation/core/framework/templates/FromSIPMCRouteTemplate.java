@@ -8,23 +8,23 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 
-public class FromMiddleComponentRouteTemplateBuilder {
+public class FromSIPMCRouteTemplate {
   private final String useCase;
   private boolean isParallel;
   private OutConnector[] outConnectors;
   protected static final String DIRECT_URI_PREFIX = "direct:";
 
-  public static FromMiddleComponentRouteTemplateBuilder withUseCase(String useCase) {
-    return new FromMiddleComponentRouteTemplateBuilder(useCase);
+  public static FromSIPMCRouteTemplate withUseCase(String useCase) {
+    return new FromSIPMCRouteTemplate(useCase);
   }
 
-  public FromMiddleComponentRouteTemplateBuilder outConnectors(
+  public FromSIPMCRouteTemplate outConnectors(
       OutConnector[] outConnectors) {
     this.outConnectors = outConnectors;
     return this;
   }
 
-  public FromMiddleComponentRouteTemplateBuilder inParallel(boolean b) {
+  public FromSIPMCRouteTemplate inParallel(boolean b) {
     this.isParallel = b;
     return this;
   }
@@ -54,7 +54,7 @@ public class FromMiddleComponentRouteTemplateBuilder {
     multicastDefinition.end();
   }
 
-  private FromMiddleComponentRouteTemplateBuilder(String useCase) {
+  private FromSIPMCRouteTemplate(String useCase) {
     this.useCase = useCase;
   }
 }

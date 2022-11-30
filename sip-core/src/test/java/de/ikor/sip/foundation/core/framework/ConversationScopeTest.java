@@ -26,7 +26,7 @@ public class ConversationScopeTest {
     TestRestTemplate testRestTemplate;
 
     @Test
-    void When_sendGetRequestToRestConnector_Expect_ValidResponse2() {
+    void When_sendGetRequestToRestConnector_Expect_ValidResponse() {
         ResponseEntity<String> response =
                 testRestTemplate.getForEntity("/adapter/hello-bean", String.class);
         assertThat(response.getStatusCode()).describedAs(response.getBody()).isEqualTo(HttpStatus.OK);

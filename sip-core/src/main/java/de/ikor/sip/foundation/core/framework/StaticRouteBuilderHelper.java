@@ -11,7 +11,7 @@ public class StaticRouteBuilderHelper {
 
   private StaticRouteBuilderHelper() {}
 
-  public static RouteBuilder anonymousRouteBuilder(RouteConfigurationBuilder configuration) {
+  public static RouteBuilder configuredRouteBuilder(RouteConfigurationBuilder configuration) {
     RouteBuilder routeBuilder =
         new RouteBuilder() {
           @Override

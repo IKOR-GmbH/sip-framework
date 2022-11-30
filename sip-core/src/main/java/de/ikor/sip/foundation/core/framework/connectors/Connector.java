@@ -31,7 +31,7 @@ public abstract class Connector {
   }
 
   void initBuilders(RouteConfigurationBuilder configurationBuilder) {
-    this.routeBuilder = StaticRouteBuilderHelper.anonymousRouteBuilder(configurationBuilder);
+    this.routeBuilder = StaticRouteBuilderHelper.configuredRouteBuilder(configurationBuilder);
     this.endpointRouteBuilder = anonymousDummyEndpointRouteBuilder();
   }
 

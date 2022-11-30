@@ -30,8 +30,7 @@ class CentralRouterService {
   }
 
   private void bindInConnectors() {
-    new InConnectorsRouteBinder(scenario)
-        .bindInConnectors(routerDefinition.getInConnectors());
+    new InConnectorsRouteBinder(scenario).bindInConnectors(routerDefinition.getInConnectors());
   }
 
   private void buildOnException() {
@@ -44,12 +43,7 @@ class CentralRouterService {
   }
 
   private void bindOutConnectors() {
-    OutConnectorsRouteBinder outConnectorsBinder = new OutConnectorsRouteBinder(scenario);
-
-    outConnectorsBinder.appendOutConnectorsSeq(
-        routerDefinition.getDefinition().getConnectorsBindInSequence());
-    outConnectorsBinder.appendOutConnectorsParallel(
-        routerDefinition.getDefinition().getConnectorsBindInParallel());
+    new OutConnectorsRouteBinder(scenario).appendOutConnectors(routerDefinition.getDefinition());
   }
 
   void appendToRouteConfig(Optional<GlobalRoutesConfiguration> globalRoutesConfiguration) {
