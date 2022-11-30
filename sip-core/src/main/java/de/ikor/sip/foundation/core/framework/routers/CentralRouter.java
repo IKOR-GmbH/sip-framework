@@ -49,15 +49,15 @@ class CentralRouter {
     inConnector.configureOnException();
     inConnector.configure();
     appendSipMCAndRouteId(inConnector.getConnectorRouteDefinition(), inConnector.getName());
-    appendCDMValidatorIfResponseIsExpected(inConnector.getConnectorRouteDefinition());
-
     inConnector.handleResponse(inConnector.getConnectorRouteDefinition());
   }
 
   void appendSipMCAndRouteId(RouteDefinition routeDefinition, String connectorName) {
     routeDefinition
+        .process(new CDMValidator(getCDMRequestType()))
         .to("sipmc:" + routerDefinition.getScenario())
-        // TODO double id set
+            .process(new CDMValidator(getCDMResponseType()))
+        // TODO double id set; @Nemanja -> can you specify the case
         .routeId(generateRouteId(routerDefinition.getScenario(), connectorName));
   }
 
@@ -79,9 +79,12 @@ class CentralRouter {
     }
   }
 
-  private void appendCDMValidatorIfResponseIsExpected(RouteDefinition connectorRouteDefinition) {
-    Class<?> centralModelResponseClass = routerDefinition.getCentralModelResponseClass();
-    connectorRouteDefinition.process(new CDMValidator(centralModelResponseClass));
+  private Class<?> getCDMRequestType() {
+    return routerDefinition.getCentralModelRequestClass();
+  }
+
+  private Class<?> getCDMResponseType() {
+    return routerDefinition.getCentralModelResponseClass();
   }
 
   private void bindOutConnectors() {

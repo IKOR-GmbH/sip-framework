@@ -4,21 +4,26 @@ import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.routers.CentralRouterDomainModel;
 import lombok.AllArgsConstructor;
+import org.apache.camel.model.dataformat.MimeMultipartDataFormat;
+import org.apache.camel.spi.DataFormat;
+import org.apache.camel.support.DefaultDataFormat;
+
+import static org.apache.camel.builder.Builder.body;
+import static org.apache.camel.builder.Builder.simple;
 
 @AllArgsConstructor
-@CentralRouterDomainModel(requestType = InEndpointDomain.class)// TODO this should be some central domain
 public class InConnectorStub extends InConnectorDefinition {
 
-    private InEndpoint inEndpoint;
+  private InEndpoint inEndpoint;
 
-    @Override
-    public String getName() {
-        return "BasicInConnector";
-    }
+  @Override
+  public String getName() {
+    return "BasicInConnector";
+  }
 
-    @Override
-    public void configure() {
-        from(inEndpoint)
-                .to("log:messageIn");
-    }
+  @Override
+  public void configure() {
+    from(inEndpoint).to("log:messageIn")
+            .setBody(body().convertToString());
+  }
 }
