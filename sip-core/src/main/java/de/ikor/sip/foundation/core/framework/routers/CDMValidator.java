@@ -4,7 +4,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
 public class CDMValidator implements Processor {
-  private Class<?> centralModelRequest;
+  private final Class<?> centralModelRequest;
 
   public CDMValidator(Class<?> centralModelRequest) {
     this.centralModelRequest = centralModelRequest;
@@ -12,7 +12,6 @@ public class CDMValidator implements Processor {
 
   @Override
   public void process(Exchange exchange) throws Exception {
-    //TODO fix it
     if (centralModelRequest.isInstance(CentralRouterDomainModel.undefined)
         && exchange.getMessage().getBody() != null) {
       throw new IllegalStateException("Wrong data type. Expected: no body present");

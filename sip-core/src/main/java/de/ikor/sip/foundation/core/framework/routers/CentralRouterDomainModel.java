@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CentralRouterDomainModel {
-  Undefined undefined = null;
+  Undefined undefined = new Undefined() {};
 
   Class<?> requestType() default String.class;
 

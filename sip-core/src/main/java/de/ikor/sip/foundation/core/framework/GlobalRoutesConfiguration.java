@@ -12,14 +12,9 @@ public abstract class GlobalRoutesConfiguration {
   @Getter
   RouteConfigurationBuilder configurationBuilder = anonymousDummyRouteConfigurationBuilder();
 
-  @Getter List<RouteConfigurationDefinition> routeConfigurationDefinitions = new ArrayList<>();
-
   public abstract void defineGlobalConfiguration();
 
   protected RouteConfigurationDefinition configuration() {
-    RouteConfigurationDefinition routeConfigurationDefinition =
-        configurationBuilder.routeConfiguration();
-    routeConfigurationDefinitions.add(routeConfigurationDefinition);
-    return routeConfigurationDefinition;
+    return configurationBuilder.routeConfiguration();
   }
 }

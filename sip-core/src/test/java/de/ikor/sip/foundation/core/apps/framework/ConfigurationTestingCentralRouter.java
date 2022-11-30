@@ -20,7 +20,7 @@ public class ConfigurationTestingCentralRouter extends CentralRouterDefinition {
 
   @Override
   public void defineTopology() throws Exception {
-    input(new ConfigInConnector()).parallelOutput(new ConfigOutConnector());
+    input(new ConfigInConnector()).parallelOutput(new ConfigOutConnector("config"));
   }
 
   @Override

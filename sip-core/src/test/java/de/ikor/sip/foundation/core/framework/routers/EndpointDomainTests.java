@@ -1,14 +1,12 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.apps.core.CoreTestApplication;
-import de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
 import de.ikor.sip.foundation.core.framework.stubs.*;
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.builder.AdviceWith;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.DisableJmx;
@@ -24,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @CamelSpringBootTest
 @SpringBootTest(classes = CoreTestApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-@DisableJmx(false)
 @MockEndpoints("log:message*")
+@DisableJmx(false)
 class EndpointDomainTests {
 
     private static final String DIRECT_IN = "direct:in";
@@ -55,12 +53,9 @@ class EndpointDomainTests {
         // arrange
         InConnectorStub inConnector = new InConnectorStub(InEndpoint.instance(DIRECT_IN, DIRECT_IN_ID, InEndpointDomain.class));
         InEndpointDomain inDomain = new InEndpointDomain("hello world");
-        subject.input(inConnector);
+        subject.input(inConnector)
+                .sequencedOutput(new SimpleOutConnector());
         subject.toCentralRouter().setUpRoutes();
-
-        String routeId = String.format("%s-%s", subject.getScenario(), inConnector.getName());
-        AdviceWith.adviceWith(StaticRouteBuilderHelper.camelContext(), routeId, a ->
-                a.mockEndpointsAndSkip(String.format("sipmc:%s", subject.getScenario())));
 
         mockInEndpoint.expectedBodiesReceived(inDomain);
         mockInEndpoint.expectedMessageCount(1);
@@ -77,12 +72,9 @@ class EndpointDomainTests {
         // arrange
         InConnectorStub inConnector = new InConnectorStub(InEndpoint.instance(DIRECT_IN, DIRECT_IN_ID, InEndpointDomain.class, InEndpointDomain::new));
         InEndpointDomain expected = new InEndpointDomain("hello world");
-        subject.input(inConnector);
+        subject.input(inConnector)
+                .sequencedOutput(new SimpleOutConnector());
         subject.toCentralRouter().setUpRoutes();
-
-        String routeId = String.format("%s-%s", subject.getScenario(), inConnector.getName());
-        AdviceWith.adviceWith(StaticRouteBuilderHelper.camelContext(), routeId, a ->
-                a.mockEndpointsAndSkip(String.format("sipmc:%s", subject.getScenario())));
 
         mockInEndpoint.message(0).body(InEndpointDomain.class).contains(expected);
         mockInEndpoint.expectedMessageCount(1);
@@ -101,10 +93,6 @@ class EndpointDomainTests {
         subject.input(inConnector);
         subject.toCentralRouter().setUpRoutes();
 
-        String routeId = String.format("%s-%s", subject.getScenario(), inConnector.getName());
-        AdviceWith.adviceWith(StaticRouteBuilderHelper.camelContext(), routeId, a ->
-                a.mockEndpointsAndSkip(String.format("sipmc:%s", subject.getScenario())));
-
         // act & assert
         assertThrows(CamelExecutionException.class, () -> template.sendBody(DIRECT_IN, "string type value"));
     }
@@ -117,10 +105,6 @@ class EndpointDomainTests {
         OutEndpointDomain outEndpointDomain = new OutEndpointDomain("hello world");
         subject.input(inConnector).sequencedOutput(outConnector);
         subject.toCentralRouter().setUpRoutes();
-
-        String routeId = String.format("%s-%s", subject.getScenario(), outConnector.getName());
-        AdviceWith.adviceWith(StaticRouteBuilderHelper.camelContext(), routeId, a ->
-                a.mockEndpointsAndSkip("log:foo"));
 
         mockOutEndpoint.expectedBodiesReceived(outEndpointDomain);
         mockOutEndpoint.expectedMessageCount(1);
@@ -141,10 +125,6 @@ class EndpointDomainTests {
         subject.input(inConnector).sequencedOutput(outConnector);
         subject.toCentralRouter().setUpRoutes();
 
-        String routeId = String.format("%s-%s", subject.getScenario(), outConnector.getName());
-        AdviceWith.adviceWith(StaticRouteBuilderHelper.camelContext(), routeId, a ->
-                a.mockEndpointsAndSkip("log:foo"));
-
         mockOutEndpoint.expectedBodiesReceived("hello world success");
         mockOutEndpoint.expectedMessageCount(1);
 
@@ -162,10 +142,6 @@ class EndpointDomainTests {
         OutConnectorStub outConnector = new OutConnectorStub(OutEndpoint.instance("log:foo", "outBasicConnector", OutEndpointDomain.class));
         subject.input(inConnector).sequencedOutput(outConnector);
         subject.toCentralRouter().setUpRoutes();
-
-        String routeId = String.format("%s-%s", subject.getScenario(), outConnector.getName());
-        AdviceWith.adviceWith(StaticRouteBuilderHelper.camelContext(), routeId, a ->
-                a.mockEndpointsAndSkip("log:foo"));
 
         // act & assert
         assertThrows(CamelExecutionException.class, () -> template.sendBody("direct:OutConnectorStub", "string type value"));

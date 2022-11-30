@@ -17,13 +17,14 @@ public class RouteStarter extends EventNotifierSupport {
 
   public RouteStarter(
           List<CentralRouterDefinition> centralRouters,
-          Optional<GlobalRoutesConfiguration> routeConfiguration) {
+          Optional<GlobalRoutesConfiguration> globalRoutesConfiguration) {
     this.availableRouters =
             centralRouters.stream()
                     .filter(router -> router.getClass().isAnnotationPresent(CentralRouterDomainModel.class))
                     .map(CentralRouterDefinition::toCentralRouter)
                     .collect(Collectors.toList());
-    availableRouters.forEach(router -> router.setGlobalRouteConfig(routeConfiguration));
+    globalRoutesConfiguration.ifPresent(GlobalRoutesConfiguration::defineGlobalConfiguration);
+    availableRouters.forEach(router -> router.setRouteConfig(globalRoutesConfiguration));
   }
 
   @Override

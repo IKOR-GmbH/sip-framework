@@ -6,6 +6,7 @@ import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.camel.builder.RouteConfigurationBuilder;
+import org.apache.camel.model.RouteConfigurationDefinition;
 import org.apache.camel.model.RouteDefinition;
 
 import java.util.List;
@@ -27,6 +28,7 @@ class CentralRouter {
 
   void buildActiveRoutes() {
     this.buildOnException();
+    this.buildConfiguration(routeConfigurationBuilder);
     this.bindInConnectors();
     this.bindOutConnectors();
   }
@@ -39,9 +41,7 @@ class CentralRouter {
   }
 
   private List<InConnector> convert(List<InConnectorDefinition> inConnectorDefinitions) {
-    return inConnectorDefinitions.stream()
-            .map(InConnector::new)
-            .collect(Collectors.toList());
+    return inConnectorDefinitions.stream().map(InConnector::new).collect(Collectors.toList());
   }
 
   private void configure(InConnector inConnector) {
@@ -49,8 +49,7 @@ class CentralRouter {
     inConnector.configureOnException();
     inConnector.configure();
     appendSipMCAndRouteId(inConnector.getConnectorRouteDefinition(), inConnector.getName());
-//    appendCDMValidatorIfResponseIsExpected(inConnector.getConnectorRouteDefinition());
-    //TODO fix validator first
+    appendCDMValidatorIfResponseIsExpected(inConnector.getConnectorRouteDefinition());
 
     inConnector.handleResponse(inConnector.getConnectorRouteDefinition());
   }
@@ -87,17 +86,32 @@ class CentralRouter {
 
   private void bindOutConnectors() {
     RouteBinder routeBinder =
-            new RouteBinder(routerDefinition.getScenario(), routerDefinition.getCentralModelRequestClass(), routeConfigurationBuilder);
-    buildConfiguration(routeConfigurationBuilder);
-    routeBinder.appendOutConnectorsSeq(routerDefinition.getDefinition().getConnectorsBindInSequence());
-    routeBinder.appendOutConnectorsParallel(routerDefinition.getDefinition().getConnectorsBindInParallel());
+        new RouteBinder(
+            routerDefinition.getScenario(),
+            routerDefinition.getCentralModelRequestClass(),
+            routeConfigurationBuilder);
+
+    routeBinder.appendOutConnectorsSeq(
+        routerDefinition.getDefinition().getConnectorsBindInSequence());
+    routeBinder.appendOutConnectorsParallel(
+        routerDefinition.getDefinition().getConnectorsBindInParallel());
   }
 
-  void setGlobalRouteConfig(Optional<GlobalRoutesConfiguration> routeConfiguration) {
-    routeConfiguration.ifPresent(GlobalRoutesConfiguration::defineGlobalConfiguration);
-    routeConfigurationBuilder =
-            routeConfiguration
-                    .map(GlobalRoutesConfiguration::getConfigurationBuilder)
-                    .orElse(anonymousDummyRouteConfigurationBuilder());
+  void setRouteConfig(Optional<GlobalRoutesConfiguration> globalRoutesConfiguration) {
+    routeConfigurationBuilder = anonymousDummyRouteConfigurationBuilder();
+    globalRoutesConfiguration.ifPresent(this::copyGlobalConfigToRouteConfigurationBuilder);
+  }
+
+  private void copyGlobalConfigToRouteConfigurationBuilder(
+      GlobalRoutesConfiguration routesConfiguration) {
+    List<RouteConfigurationDefinition> routeConfigurations =
+        routesConfiguration
+            .getConfigurationBuilder()
+            .getRouteConfigurationCollection()
+            .getRouteConfigurations();
+
+    routeConfigurationBuilder
+        .getRouteConfigurationCollection()
+        .setRouteConfigurations(routeConfigurations);
   }
 }
