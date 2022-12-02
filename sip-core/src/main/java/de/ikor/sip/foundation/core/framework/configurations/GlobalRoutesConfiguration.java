@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.framework;
+package de.ikor.sip.foundation.core.framework.configurations;
 
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteConfigurationBuilder;
 

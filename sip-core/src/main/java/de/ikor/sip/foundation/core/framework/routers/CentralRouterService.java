@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.framework.routers;
 
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteConfigurationBuilder;
 
-import de.ikor.sip.foundation.core.framework.GlobalRoutesConfiguration;
+import de.ikor.sip.foundation.core.framework.configurations.GlobalRoutesConfiguration;
 import java.util.Optional;
 import lombok.SneakyThrows;
 

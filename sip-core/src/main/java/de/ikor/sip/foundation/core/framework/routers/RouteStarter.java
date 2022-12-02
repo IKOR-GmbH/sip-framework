@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.framework.GlobalRoutesConfiguration;
+import de.ikor.sip.foundation.core.framework.configurations.GlobalRoutesConfiguration;
 import de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper;
 import java.util.List;
 import java.util.Optional;
