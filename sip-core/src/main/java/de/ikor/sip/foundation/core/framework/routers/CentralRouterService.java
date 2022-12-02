@@ -1,11 +1,10 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.framework.GlobalRoutesConfiguration;
-import lombok.SneakyThrows;
-
-import java.util.Optional;
-
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.anonymousDummyRouteConfigurationBuilder;
+
+import de.ikor.sip.foundation.core.framework.GlobalRoutesConfiguration;
+import java.util.Optional;
+import lombok.SneakyThrows;
 
 class CentralRouterService {
   private final CentralRouter routerDefinition;

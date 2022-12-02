@@ -1,10 +1,9 @@
 package de.ikor.sip.foundation.core.framework.endpoints;
 
-import lombok.Getter;
-import org.apache.camel.builder.EndpointConsumerBuilder;
-
 import java.util.Optional;
 import java.util.function.Function;
+import lombok.Getter;
+import org.apache.camel.builder.EndpointConsumerBuilder;
 
 public class InEndpoint {
 
@@ -24,7 +23,8 @@ public class InEndpoint {
     return putInRegister(inEndpoint, id);
   }
 
-  public static <T, D> InEndpoint instance(String uri, String id, Class<D> domainClassType, Function<T, D> transformFunction) {
+  public static <T, D> InEndpoint instance(
+      String uri, String id, Class<D> domainClassType, Function<T, D> transformFunction) {
     InEndpoint inEndpoint = new InEndpoint(uri, id);
     inEndpoint.setDomainClassType(domainClassType);
     inEndpoint.setTransformFunction(transformFunction);
@@ -54,5 +54,4 @@ public class InEndpoint {
   private void setTransformFunction(Function<?, ?> transformFunction) {
     this.transformFunction = Optional.of(transformFunction);
   }
-
 }

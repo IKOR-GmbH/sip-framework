@@ -1,13 +1,13 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.generateRouteId;
+
 import de.ikor.sip.foundation.core.framework.connectors.ConnectorStarter;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import java.util.List;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
-
-import java.util.List;
-
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.*;
 
 public class InConnectorsRouteBinder {
   private final Scenario scenario;
@@ -47,8 +47,8 @@ public class InConnectorsRouteBinder {
   }
 
   private RouteDefinition getFirstDef(RouteBuilder routeBuilder) {
-    // temporary method
-    // TODO is it OK to loop trough all routes? (testing routes should have different builder)
+    // TODO temporary method - is it OK to loop trough all routes?
+    // what happens with one connector with multiple routes
     return routeBuilder.getRouteCollection().getRoutes().get(0);
   }
 }

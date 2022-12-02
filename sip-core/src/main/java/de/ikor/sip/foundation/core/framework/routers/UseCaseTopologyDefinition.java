@@ -1,13 +1,11 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
-
 import java.util.LinkedHashMap;
 import java.util.Optional;
 
 public class UseCaseTopologyDefinition {
-  private final LinkedHashMap<String, OutConnector[]> connectorsByBoundType =
-          new LinkedHashMap<>();
+  private final LinkedHashMap<String, OutConnector[]> connectorsByBoundType = new LinkedHashMap<>();
 
   public void sequencedOutput(OutConnector... outConnectors) {
     connectorsByBoundType.put("seq", outConnectors);
@@ -17,11 +15,11 @@ public class UseCaseTopologyDefinition {
     connectorsByBoundType.put("par", outConnectors);
   }
 
-  public Optional<OutConnector[]> getConnectorsBindInParallel () {
+  public Optional<OutConnector[]> getConnectorsBindInParallel() {
     return Optional.ofNullable(connectorsByBoundType.get("par"));
   }
 
-  public Optional<OutConnector[]> getConnectorsBindInSequence () {
+  public Optional<OutConnector[]> getConnectorsBindInSequence() {
     return Optional.ofNullable(connectorsByBoundType.get("seq"));
   }
 }

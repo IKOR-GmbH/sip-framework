@@ -7,8 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ScopeBeanInConnector extends InConnector {
-  @Autowired
-  CDMHolder bean;
+  @Autowired CDMHolder bean;
 
   @Override
   public String getName() {
@@ -18,9 +17,10 @@ public class ScopeBeanInConnector extends InConnector {
   @Override
   public void configure() {
     from(rest("/hello-bean", "get-bean").get())
-        .process(exchange -> {
-          bean.setInternal("hello bean");
-        });
+        .process(
+            exchange -> {
+              bean.setInternal("hello bean");
+            });
   }
 
   @Override

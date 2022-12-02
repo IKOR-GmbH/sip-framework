@@ -10,12 +10,12 @@ public class NoConfigurationTestingCentralRouter extends CentralRouter {
 
   @Override
   public void defineTopology() throws Exception {
-    input(ConfigInConnector.withSedaChannel("no-config")).parallelOutput(new NoConfigOutConnector("no-config").outEndpointId("no-config"));
+    input(ConfigInConnector.withSedaChannel("no-config"))
+        .parallelOutput(new NoConfigOutConnector("no-config").outEndpointId("no-config"));
   }
 
   @Override
-  public void defineConfiguration() {
-  }
+  public void defineConfiguration() {}
 
   @Override
   public void configureOnException() {}

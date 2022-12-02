@@ -1,12 +1,11 @@
 package de.ikor.sip.foundation.core.framework.templates;
 
+import static java.lang.String.format;
+
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
+import java.util.stream.Stream;
 import org.apache.camel.model.MulticastDefinition;
 import org.apache.camel.model.RouteDefinition;
-
-import java.util.stream.Stream;
-
-import static java.lang.String.format;
 
 public class FromSIPMCRouteTemplate {
   private final String useCase;
@@ -18,8 +17,7 @@ public class FromSIPMCRouteTemplate {
     return new FromSIPMCRouteTemplate(useCase);
   }
 
-  public FromSIPMCRouteTemplate outConnectors(
-      OutConnector[] outConnectors) {
+  public FromSIPMCRouteTemplate outConnectors(OutConnector[] outConnectors) {
     this.outConnectors = outConnectors;
     return this;
   }
@@ -47,10 +45,10 @@ public class FromSIPMCRouteTemplate {
 
   private void appendMulticastToOutConnectors(RouteDefinition routeDefinition) {
     MulticastDefinition multicastDefinition =
-    routeDefinition.multicast().parallelProcessing(isParallel);
+        routeDefinition.multicast().parallelProcessing(isParallel);
     Stream.of(outConnectors)
-            .forEach(
-                    outConnector -> multicastDefinition.to(DIRECT_URI_PREFIX + outConnector.getName()));
+        .forEach(
+            outConnector -> multicastDefinition.to(DIRECT_URI_PREFIX + outConnector.getName()));
     multicastDefinition.end();
   }
 

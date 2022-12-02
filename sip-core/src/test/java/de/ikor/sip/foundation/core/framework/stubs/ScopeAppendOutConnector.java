@@ -8,15 +8,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ScopeAppendOutConnector extends OutConnector {
-    @Autowired
-    CDMHolder bean;
+  @Autowired CDMHolder bean;
 
-    @Override
-    public void configure(RouteDefinition route) {
-        route.process(
-                exchange -> {
-                    String body = bean.getInternal() + "-bean";
-                    exchange.getMessage().setBody(body);
-                });
-    }
+  @Override
+  public void configure(RouteDefinition route) {
+    route.process(
+        exchange -> {
+          String body = bean.getInternal() + "-bean";
+          exchange.getMessage().setBody(body);
+        });
+  }
 }

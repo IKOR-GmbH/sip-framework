@@ -1,11 +1,10 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import org.apache.camel.Exchange;
-import org.apache.camel.model.RouteDefinition;
+import static de.ikor.sip.foundation.core.apps.framework.ConfigurationTestingCentralRouter.SCENARIO_HEADER_KEY;
 
 import java.util.Objects;
-
-import static de.ikor.sip.foundation.core.apps.framework.ConfigurationTestingCentralRouter.SCENARIO_HEADER_KEY;
+import org.apache.camel.Exchange;
+import org.apache.camel.model.RouteDefinition;
 
 public class NoConfigOutConnector extends TestingOutConnector {
   public NoConfigOutConnector(String name) {
@@ -14,9 +13,7 @@ public class NoConfigOutConnector extends TestingOutConnector {
 
   @Override
   public void configure(RouteDefinition route) {
-    route.
-    setBody(this::bodyFromHeader)
-    .to("seda:out-" + name);
+    route.setBody(this::bodyFromHeader).to("seda:out-" + name);
   }
 
   private String bodyFromHeader(Exchange exchange) {
