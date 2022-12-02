@@ -1,11 +1,10 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
+import static org.apache.camel.builder.Builder.body;
+
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import lombok.AllArgsConstructor;
-
-import static org.apache.camel.builder.Builder.body;
-import static org.apache.camel.builder.Builder.simple;
 
 @AllArgsConstructor
 public class InConnectorStub extends InConnector {
@@ -19,7 +18,6 @@ public class InConnectorStub extends InConnector {
 
   @Override
   public void configure() {
-    from(inEndpoint).to("log:messageIn")
-            .setBody(body().convertToString());
+    from(inEndpoint).to("log:messageIn").setBody(body().convertToString());
   }
 }

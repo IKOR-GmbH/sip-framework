@@ -20,7 +20,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
-@SpringBootTest(classes = {CoreTestApplication.class, NoConfigurationTestingCentralRouter.class, ConfigurationTestingCentralRouter.class, TestGlobalRoutesConfiguration.class})
+@SpringBootTest(
+    classes = {
+      CoreTestApplication.class,
+      NoConfigurationTestingCentralRouter.class,
+      ConfigurationTestingCentralRouter.class,
+      TestGlobalRoutesConfiguration.class
+    })
 @DisableJmx(false)
 @MockEndpoints("seda:out.*config")
 @DirtiesContext
@@ -46,7 +52,8 @@ class GlobalConfigTest {
   }
 
   @Test
-  void given_TwoScenariosAndOneScenarioLevelConfiguration_when_ScenarioWithoutConfigurationIsTriggered_expect_HeaderIsNotSet()
+  void
+      given_TwoScenariosAndOneScenarioLevelConfiguration_when_ScenarioWithoutConfigurationIsTriggered_expect_HeaderIsNotSet()
           throws InterruptedException {
     noConfigMock.expectedBodiesReceived("no-config ");
 

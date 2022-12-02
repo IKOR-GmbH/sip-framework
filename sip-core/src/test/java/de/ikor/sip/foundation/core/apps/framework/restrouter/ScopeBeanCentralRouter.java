@@ -7,12 +7,13 @@ import de.ikor.sip.foundation.core.framework.stubs.ScopeBeanInConnector;
 import org.apache.camel.converter.stream.InputStreamCache;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@IntegrationScenario(name = "bean-scenario", responseType = String.class, requestType = InputStreamCache.class)
+@IntegrationScenario(
+    name = "bean-scenario",
+    responseType = String.class,
+    requestType = InputStreamCache.class)
 public class ScopeBeanCentralRouter extends CentralRouter {
-  @Autowired
-  private ScopeAppendOutConnector appendStringOutConnector;
-  @Autowired
-  private ScopeBeanInConnector restInConnector;
+  @Autowired private ScopeAppendOutConnector appendStringOutConnector;
+  @Autowired private ScopeBeanInConnector restInConnector;
 
   @Override
   public void defineTopology() throws Exception {

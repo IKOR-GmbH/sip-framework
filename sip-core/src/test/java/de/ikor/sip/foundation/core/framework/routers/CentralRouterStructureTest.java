@@ -4,11 +4,10 @@ import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.cam
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.*;
-
-import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouter;
@@ -136,8 +135,7 @@ class CentralRouterStructureTest {
   }
 
   @Test
-  void
-  when_CreateInEndpointWithEndpointDsl_then_VerifyRoute() {
+  void when_CreateInEndpointWithEndpointDsl_then_VerifyRoute() {
     // arrange
     InConnector inConnector = new EndpointDSLInConnector();
     OutConnector outConnector = new StaticEndpointDSLOutConnector();

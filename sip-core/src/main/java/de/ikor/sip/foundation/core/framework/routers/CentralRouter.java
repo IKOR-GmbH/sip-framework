@@ -1,14 +1,13 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.builder.RouteConfigurationBuilder;
 import org.apache.camel.model.RouteConfigurationDefinition;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public abstract class CentralRouter {
   private final List<InConnector> inConnectors = new ArrayList<>();

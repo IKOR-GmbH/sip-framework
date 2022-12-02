@@ -1,11 +1,11 @@
 package de.ikor.sip.foundation.core.framework.templates;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.generateRouteId;
+
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import lombok.AllArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
-
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.generateRouteId;
 
 @AllArgsConstructor
 public class FromDirectOutRouteTemplate {

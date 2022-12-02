@@ -8,17 +8,15 @@ import org.apache.camel.model.RouteDefinition;
 @AllArgsConstructor
 public class OutConnectorStub extends OutConnector {
 
-    private OutEndpoint outEndpoint;
+  private OutEndpoint outEndpoint;
 
-    @Override
-    public void configure(RouteDefinition route) {
-        route
-            .to(outEndpoint)
-            .to("log:messageOut");
-    }
+  @Override
+  public void configure(RouteDefinition route) {
+    route.to(outEndpoint).to("log:messageOut");
+  }
 
-    @Override
-    public String getName() {
-        return "OutConnectorStub";
-    }
+  @Override
+  public String getName() {
+    return "OutConnectorStub";
+  }
 }

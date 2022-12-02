@@ -1,21 +1,20 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.configuredRouteBuilder;
+
 import de.ikor.sip.foundation.core.framework.connectors.ConnectorStarter;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.templates.FromDirectOutRouteTemplate;
 import de.ikor.sip.foundation.core.framework.templates.FromSIPMCRouteTemplate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.configuredRouteBuilder;
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 
 @RequiredArgsConstructor
 public class OutConnectorsRouteBinder {

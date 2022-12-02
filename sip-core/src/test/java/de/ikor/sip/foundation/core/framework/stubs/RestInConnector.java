@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class RestInConnector extends InConnector {
-  final private String path;
+  private final String path;
+
   @Override
   public String getName() {
     return "rest-connector";
