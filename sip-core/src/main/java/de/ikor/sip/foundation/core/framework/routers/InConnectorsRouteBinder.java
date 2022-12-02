@@ -32,10 +32,17 @@ public class InConnectorsRouteBinder {
   private void appendMiddleRouting(RouteDefinition routeDefinition, String connectorName) {
     routeDefinition
         .process(new CDMValidator(scenario.getCdmRequestType()))
-        .to("sipmc:" + scenario.getName())
-        .process(new CDMValidator(scenario.getCdmResponseType()))
+        .to("sipmc:" + scenario.getName());
+
+    if (shouldAddResponseCDMValidator()) {
+      routeDefinition.process(new CDMValidator(scenario.getCdmResponseType()));
+    }
         // TODO double id set; @Nemanja -> can you specify the case
-        .routeId(generateRouteId(scenario.getName(), connectorName));
+    routeDefinition.routeId(generateRouteId(scenario.getName(), connectorName));
+  }
+
+  private boolean shouldAddResponseCDMValidator() {
+    return !scenario.getCdmResponseType().isAssignableFrom(IntegrationScenario.Undefined.class);
   }
 
   private void addToContext(InConnector inConnectorService) {
