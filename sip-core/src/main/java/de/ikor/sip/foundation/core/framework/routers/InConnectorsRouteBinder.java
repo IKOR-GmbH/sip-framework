@@ -37,7 +37,6 @@ public class InConnectorsRouteBinder {
     if (shouldAddResponseCDMValidator()) {
       routeDefinition.process(new CDMValidator(scenario.getCdmResponseType()));
     }
-        // TODO double id set; @Nemanja -> can you specify the case
     routeDefinition.routeId(generateRouteId(scenario.getName(), connectorName));
   }
 
