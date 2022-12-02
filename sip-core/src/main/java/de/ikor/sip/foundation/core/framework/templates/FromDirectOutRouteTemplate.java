@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 
+import static de.ikor.sip.foundation.core.framework.templates.FromSIPMCRouteTemplate.DIRECT_URI_PREFIX;
+
 @AllArgsConstructor
 public class FromDirectOutRouteTemplate {
   private String useCase;
@@ -16,7 +18,7 @@ public class FromDirectOutRouteTemplate {
 
     String routeId = generateRouteId(useCase, outConnector.getName());
     RouteDefinition connectorRouteDefinition =
-        outConnector.getRouteBuilder().from("direct:" + outConnector.getName()).routeId(routeId);
+        outConnector.getRouteBuilder().from(DIRECT_URI_PREFIX + outConnector.getName()).routeId(routeId);
 
     outConnector.configure(connectorRouteDefinition);
     return outConnector.getRouteBuilder();
