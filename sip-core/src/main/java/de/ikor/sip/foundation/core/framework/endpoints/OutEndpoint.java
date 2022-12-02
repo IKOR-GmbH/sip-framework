@@ -39,6 +39,16 @@ public class OutEndpoint implements Endpoint {
     return instance(endpointDslDefinition.getUri(), endpointId);
   }
 
+  public static OutEndpoint instance(
+          EndpointProducerBuilder endpointDslDefinition, String endpointId, Class<?> domainClassType) {
+    return instance(endpointDslDefinition.getUri(), endpointId, domainClassType);
+  }
+
+  public static <T, D> OutEndpoint instance(
+          EndpointProducerBuilder endpointDslDefinition, String endpointId, Class<T> domainClassType, Function<T, D> transformFunction) {
+    return instance(endpointDslDefinition.getUri(), endpointId, domainClassType, transformFunction);
+  }
+
   OutEndpoint(String uri, String endpointId) {
     this.targetEndpoint = CentralEndpointsRegister.getCamelEndpoint(uri);
     this.setCamelContext(targetEndpoint.getCamelContext());
