@@ -35,9 +35,6 @@ class CentralRoutedDataflowTest {
   @EndpointInject("mock:log:message")
   private MockEndpoint mock;
 
-  @EndpointInject("mock:log:message-testkit")
-  private MockEndpoint mockTest;
-
   @BeforeEach
   void setup() {
     routerSubject.setupTestingState();

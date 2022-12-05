@@ -11,12 +11,11 @@ public abstract class Connector {
   public abstract String getName();
 
   @Getter protected RouteBuilder routeBuilder;
-  @Getter private EndpointRouteBuilder endpointRouteBuilder;
+  private EndpointRouteBuilder endpointRouteBuilder;
 
   public void configureOnException() {}
 
   public EndpointRouteBuilder endpointDsl() {
-    // TODO does it work with multiple calls? One connector with multiple endpoints
     return endpointRouteBuilder;
   }
 

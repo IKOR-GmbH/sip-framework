@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.camel.Route;
+import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.ToDefinition;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -137,8 +139,8 @@ class CentralRouterStructureTest {
   @Test
   void when_CreateInEndpointWithEndpointDsl_then_VerifyRoute() {
     // arrange
-    InConnector inConnector = new EndpointDSLInConnector();
-    OutConnector outConnector = new StaticEndpointDSLOutConnector();
+    InConnector inConnector = new EndpointDSLInConnector("endpointdsl-direct", "endpointdsl-id");
+    OutConnector outConnector = new StaticEndpointDSLOutConnector("temp/out", "staticendpointdsl-id");
     routerSubject.input(inConnector).sequencedOutput(outConnector);
 
     // act
@@ -149,6 +151,27 @@ class CentralRouterStructureTest {
 
     // assert
     assertThat(route.getEndpoint().getEndpointUri()).isEqualTo("direct://endpointdsl-direct");
+  }
+
+  @Test
+  void when_CreateMultipleOutEndpointsWithEndpointDSL_then_CheckOutEndpointsAreValid() {
+    // arrange
+    InConnector inConnector = new EndpointDSLInConnector("endpointdsl-direct", "endpointdsl-id");
+    OutConnector outConnector1 = new StaticEndpointDSLOutConnector("direct1", "staticendpointdsl-id1");
+    OutConnector outConnector2 = new StaticEndpointDSLOutConnector("direct2", "staticendpointdsl-id2");
+    routerSubject.input(inConnector).sequencedOutput(outConnector1, outConnector2);
+
+    // act
+    routerSubject.toCentralRouter().setUpRoutes();
+
+    String expectedRouteId1 = format("%s-%s", routerSubject.getScenario(), outConnector1.getName());
+    String expectedRouteId2 = format("%s-%s", routerSubject.getScenario(), outConnector2.getName());
+    Route route1 = getRouteFromContextById(expectedRouteId1);
+    Route route2 = getRouteFromContextById(expectedRouteId2);
+
+    // assert
+    assertThat(((ToDefinition)((RouteDefinition)route1.getRoute()).getOutputs().get(0)).getUri()).isEqualTo("direct://direct1");
+    assertThat(((ToDefinition)((RouteDefinition)route2.getRoute()).getOutputs().get(0)).getUri()).isEqualTo("direct://direct2");
   }
 
   @Test
