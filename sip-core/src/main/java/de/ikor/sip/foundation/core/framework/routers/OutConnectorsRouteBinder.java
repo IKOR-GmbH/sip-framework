@@ -22,8 +22,10 @@ public class OutConnectorsRouteBinder {
   private final Scenario scenario;
 
   protected void appendOutConnectors(UseCaseTopologyDefinition definition) {
-    definition.getConnectorsBindInParallel().ifPresent(this::appendParallel);
-    definition.getConnectorsBindInSequence().ifPresent(this::appendSequenced);
+    if (definition != null) {
+      definition.getConnectorsBindInParallel().ifPresent(this::appendParallel);
+      definition.getConnectorsBindInSequence().ifPresent(this::appendSequenced);
+    }
   }
 
   private void appendParallel(OutConnector[] outConnectors) {

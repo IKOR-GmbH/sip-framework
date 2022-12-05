@@ -25,7 +25,8 @@ import org.springframework.test.annotation.DirtiesContext;
 @MockEndpoints("log:message*")
 class OnExceptionConfigurationTest {
 
-  private TestingCentralRouter routerSubject = new TestingCentralRouter();
+  @Autowired
+  private TestingCentralRouter routerSubject;
 
   @Autowired private ProducerTemplate template;
 
