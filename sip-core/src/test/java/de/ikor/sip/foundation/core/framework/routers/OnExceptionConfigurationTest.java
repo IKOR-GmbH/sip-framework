@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.apps.core.CoreTestApplication;
+import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
@@ -19,16 +19,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
-@SpringBootTest(classes = CoreTestApplication.class)
+@SpringBootTest(classes = CentralRouterTestingApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @DisableJmx(false)
 @MockEndpoints("log:message*")
 class OnExceptionConfigurationTest {
 
   private TestingCentralRouter routerSubject = new TestingCentralRouter();
-
-  @Autowired(required = false)
-  private RouteStarter routeStarter;
 
   @Autowired private ProducerTemplate template;
 

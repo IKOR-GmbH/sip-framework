@@ -19,8 +19,6 @@ import org.springframework.test.annotation.DirtiesContext;
 class EndpointsIntegrationTests {
   private final TestingCentralRouter subject = new TestingCentralRouter();
 
-  @Autowired private RouteStarter starter;
-
   @Test
   void when_OutEndpointIsOnTheRoute_then_OutEndpointHasProperId() throws Exception {
     // arrange

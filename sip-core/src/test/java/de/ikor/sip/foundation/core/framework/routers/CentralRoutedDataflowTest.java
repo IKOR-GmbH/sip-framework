@@ -27,9 +27,6 @@ class CentralRoutedDataflowTest {
   @Autowired(required = false)
   private TestingCentralRouter routerSubject;
 
-  @Autowired(required = false)
-  private RouteStarter routeStarter;
-
   @Autowired private ProducerTemplate template;
 
   @EndpointInject("mock:log:message")

@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.framework.routers;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import de.ikor.sip.foundation.core.apps.core.CoreTestApplication;
+import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
 import de.ikor.sip.foundation.core.framework.stubs.*;
@@ -20,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
-@SpringBootTest(classes = CoreTestApplication.class)
+@SpringBootTest(classes = CentralRouterTestingApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @MockEndpoints("log:message*")
 @DisableJmx(false)
@@ -30,9 +30,6 @@ class EndpointDomainTests {
   private static final String DIRECT_IN_ID = "inBasicConnector";
 
   private final TestingCentralRouter subject = new TestingCentralRouter();
-
-  @Autowired(required = false)
-  private RouteStarter routeStarter;
 
   @Autowired private ProducerTemplate template;
 
