@@ -6,6 +6,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
 import java.util.List;
+
+import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.jupiter.api.Test;
@@ -53,11 +55,10 @@ class InvalidUsageOfOutConsumerTest {
 
   @IntegrationScenario(name = "null")
   private static class SpyCentralRouterDefinition extends CentralRouter {
-    public static boolean isConfigured = false;
 
     @Override
     public void defineTopology() throws Exception {
-      isConfigured = true;
+      input(SimpleInConnector.withUri("direct:dummyMockBean-" + this.hashCode()));
     }
 
     @Override

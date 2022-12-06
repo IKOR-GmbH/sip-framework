@@ -8,18 +8,5 @@ import org.springframework.context.annotation.Bean;
 
 @SIPIntegrationAdapter
 public class CentralRouterTestingApplication {
-  @Bean
-  CentralRouter testingCentralRouter() {
-    return new TestingCentralRouter();
-  }
 
-  @Bean
-  RouteBuilder setUpHelperRoutes() {
-    return new RouteBuilder() {
-      @Override
-      public void configure() throws Exception {
-        from("direct:test-enrich").setBody(simple("yes, enrich works"));
-      }
-    };
-  }
 }

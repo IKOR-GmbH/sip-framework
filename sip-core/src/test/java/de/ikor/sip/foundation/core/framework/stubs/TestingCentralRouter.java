@@ -6,11 +6,9 @@ import de.ikor.sip.foundation.core.framework.routers.IntegrationScenario;
 @IntegrationScenario(name = "testing-use-case-", responseType = String.class)
 public class TestingCentralRouter extends CentralRouter {
   private static int useCaseCounter;
-  public boolean isConfigured;
 
   @Override
   public void defineTopology() throws Exception {
-    isConfigured = true;
   }
 
   public void setupTestingState() {

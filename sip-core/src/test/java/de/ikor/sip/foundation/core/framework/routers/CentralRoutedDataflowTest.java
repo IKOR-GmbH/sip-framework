@@ -19,13 +19,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
-@SpringBootTest(classes = {CentralRouterTestingApplication.class})
+@SpringBootTest(classes = {CentralRouterTestingApplication.class, EnrichRouteConfiguration.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @DisableJmx(false)
 @MockEndpoints("log:message*")
 class CentralRoutedDataflowTest {
-  @Autowired(required = false)
-  private TestingCentralRouter routerSubject;
+
+  private final TestingCentralRouter routerSubject = new TestingCentralRouter();
 
   @Autowired private ProducerTemplate template;
 

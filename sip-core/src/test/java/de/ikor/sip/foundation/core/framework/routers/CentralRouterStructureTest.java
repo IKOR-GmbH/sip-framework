@@ -17,31 +17,20 @@ import java.util.stream.Collectors;
 import org.apache.camel.Route;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.ToDefinition;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-@SpringBootTest(classes = {CentralRouterTestingApplication.class})
+@SpringBootTest(classes = CentralRouterTestingApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CentralRouterStructureTest {
-  @Autowired private TestingCentralRouter routerSubject;
 
-  @Autowired(required = false)
-  private RouteStarter routeStarter;
+  private final TestingCentralRouter routerSubject = new TestingCentralRouter();
 
   @BeforeEach
   void setup() {
     routerSubject.setupTestingState();
-  }
-
-  @Test
-  void when_ApplicationStarts_then_CentralRouterBeanIsLoaded() {
-    // TODO this test should check on routerSubject bean availability. routerSubject should be bean
-    assertThat(routerSubject).as("CentralRouter bean not initialized").isNotNull();
-    Assertions.assertThat(camelContext()).as("Camel context not set on CentralRouter").isNotNull();
   }
 
   @Test
@@ -172,21 +161,6 @@ class CentralRouterStructureTest {
     // assert
     assertThat(((ToDefinition)((RouteDefinition)route1.getRoute()).getOutputs().get(0)).getUri()).isEqualTo("direct://direct1");
     assertThat(((ToDefinition)((RouteDefinition)route2.getRoute()).getOutputs().get(0)).getUri()).isEqualTo("direct://direct2");
-  }
-
-  @Test
-  void when_ApplicationStarts_then_CentralRouterBeanIsConfigured() throws Exception {
-    assertThat(routerSubject.isConfigured).isTrue();
-  }
-
-  @Test
-  void when_AppStarts_then_RouteStarterIsInitialized() {
-    assertThat(routeStarter).as("RouteStarter bean is not initialized").isNotNull();
-  }
-
-  @Test
-  void given_CentralRouterBeansArePresent_when_AppStarts_then_RoutStarterHasRouters() {
-    assertThat(routeStarter.availableRouters).isNotEmpty();
   }
 
   public static Predicate<Route> matchRoutesBasedOnUri(String regex) {

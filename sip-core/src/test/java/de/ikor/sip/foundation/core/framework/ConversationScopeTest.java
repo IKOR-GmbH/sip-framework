@@ -23,7 +23,7 @@ import org.springframework.test.annotation.DirtiesContext;
     },
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext
-public class ConversationScopeTest {
+class ConversationScopeTest {
 
   @Autowired TestRestTemplate testRestTemplate;
 
