@@ -2,7 +2,6 @@ package de.ikor.sip.foundation.core.framework.connectors;
 
 import static de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister.getInEndpointUri;
 
-import de.ikor.sip.foundation.core.framework.beans.CDMValueSetter;
 import de.ikor.sip.foundation.core.framework.endpoints.EndpointDomainTransformation;
 import de.ikor.sip.foundation.core.framework.endpoints.EndpointDomainValidation;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
@@ -33,15 +32,14 @@ public abstract class InConnector extends Connector {
             domainClassType ->
                 routeDefinition.process(
                     new EndpointDomainValidation(domainClassType, inEndpoint.getId())));
-    return routeDefinition.bean(CDMValueSetter.class, "process");
+    return routeDefinition;
   }
 
   protected RouteDefinition from(RestDefinition restDefinition) {
     restDefinition.to("direct:rest-" + inEndpoint.getUri());
     routeBuilder.getRestCollection().getRests().add(restDefinition);
     return routeBuilder
-        .from("direct:rest-" + inEndpoint.getUri())
-        .bean(CDMValueSetter.class, "process");
+        .from("direct:rest-" + inEndpoint.getUri());
   }
 
   protected RestDefinition rest(String uri, String id) {
