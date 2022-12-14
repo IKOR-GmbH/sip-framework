@@ -15,7 +15,7 @@ public abstract class CentralRouter {
   @Getter private UseCaseTopologyDefinition definition;
   @Setter private RouteConfigurationBuilder routeConfigurationBuilder;
 
-  public abstract void defineTopology() throws Exception;
+  public abstract void defineTopology();
 
   public void configureOnException() {}
 

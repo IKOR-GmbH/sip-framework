@@ -11,12 +11,12 @@ public abstract class TestingOutConnector extends OutConnector {
     this.name = name;
   }
 
-  public <T extends TestingOutConnector> T outEndpointId(String outEndpointId) {
+  public <T extends TestingOutConnector> T withId(String outEndpointId) {
     this.endpointId = outEndpointId;
     return (T) this;
   }
 
-  public <T extends TestingOutConnector> T outEndpointUri(String outEndpointUri) {
+  public <T extends TestingOutConnector> T withUri(String outEndpointUri) {
     this.uri = outEndpointUri;
     return (T) this;
   }

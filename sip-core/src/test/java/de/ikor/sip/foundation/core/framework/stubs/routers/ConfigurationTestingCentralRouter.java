@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.apps.framework;
+package de.ikor.sip.foundation.core.framework.stubs.routers;
 
 import static org.apache.camel.builder.Builder.simple;
 
@@ -14,7 +14,7 @@ public class ConfigurationTestingCentralRouter extends CentralRouter {
   public static final String SCENARIO_HEADER_VALUE = "scenario header";
 
   @Override
-  public void defineTopology() throws Exception {
+  public void defineTopology() {
     input(new ConfigInConnector()).parallelOutput(new ConfigOutConnector("config"));
   }
 

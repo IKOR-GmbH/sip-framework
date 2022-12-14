@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.apps.framework;
+package de.ikor.sip.foundation.core.framework.stubs.routers;
 
 import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
 import de.ikor.sip.foundation.core.framework.routers.IntegrationScenario;
@@ -9,9 +9,9 @@ import de.ikor.sip.foundation.core.framework.stubs.NoConfigOutConnector;
 public class NoConfigurationTestingCentralRouter extends CentralRouter {
 
   @Override
-  public void defineTopology() throws Exception {
+  public void defineTopology() {
     input(ConfigInConnector.withSedaChannel("no-config"))
-        .parallelOutput(new NoConfigOutConnector("no-config").outEndpointId("no-config"));
+        .parallelOutput(new NoConfigOutConnector("no-config").withId("no-config"));
   }
 
   @Override

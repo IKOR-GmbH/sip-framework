@@ -1,17 +1,22 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import static de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector.withUri;
 import static org.assertj.core.api.Assertions.*;
 
-import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
+import de.ikor.sip.foundation.core.apps.framework.centralrouter.EmptyTestingApplication;
+import de.ikor.sip.foundation.core.framework.stubs.routers.TestingCentralRouter;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpointBuilder;
 import de.ikor.sip.foundation.core.framework.stubs.*;
+import de.ikor.sip.foundation.core.framework.testutil.TestSetupUtil;
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.DisableJmx;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,146 +24,107 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
-@SpringBootTest(classes = {CentralRouterTestingApplication.class, EnrichRouteConfiguration.class})
+@SpringBootTest(classes = {EmptyTestingApplication.class, EnrichRouteConfiguration.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @DisableJmx(false)
 @MockEndpoints("log:message*")
 class CentralRoutedDataflowTest {
 
   private final TestingCentralRouter routerSubject = new TestingCentralRouter();
-
+  private String inEndpointUri;
   @Autowired private ProducerTemplate template;
 
   @EndpointInject("mock:log:message")
-  private MockEndpoint mock;
+  private MockEndpoint loggerMock;
 
   @BeforeEach
   void setup() {
-    routerSubject.setupTestingState();
-    mock.reset();
+    loggerMock.reset();
+    inEndpointUri = TestSetupUtil.getNextEndpointId();
+  }
+
+  @AfterEach
+  void assertTest() throws InterruptedException {
+    loggerMock.assertIsSatisfied();
   }
 
   @Test
-  void when_RouteMulticastsParallelToOneConnector_then_ConnectorForwardsTheExchange()
-      throws Exception {
-    SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-1");
+  void when_RouteMulticastsParallelToOneConnector_then_ConnectorForwardsTheExchange() {
+    setupRouterWithParallel(outLogConn("ep-1"));
 
-    SimpleOutConnector outConnector1 =
-        new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
+    sendMessageToInEndpoint("Hello dude!");
 
-    mock.expectedMessageCount(1);
-    mock.expectedBodiesReceived("Hello dude!-[ep-1]");
-
-    routerSubject.input(inConnector).sequencedOutput(outConnector1);
-    routerSubject.toCentralRouter().setUpRoutes();
-
-    template.sendBody("direct:multicast-1", "Hello dude!");
-    mock.assertIsSatisfied();
+    loggerMock.expectedMessageCount(1);
+    loggerMock.expectedBodiesReceived("Hello dude!-[ep-1]");
   }
 
   @Test
-  void when_RouteMulticastsParallelToTwoConnectors_then_ConnectorsForwardsTheExchange()
-      throws Exception {
-    SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-1");
+  void when_RouteMulticastsParallelToTwoConnectors_then_ConnectorsForwardsTheExchange() {
+    setupRouterWithParallel(outLogConn("ep-1"), outLogConn("ep-2"));
 
-    SimpleOutConnector outConnector1 =
-        new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
-    SimpleOutConnector outConnector2 =
-        new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-2");
+    loggerMock.expectedMessageCount(2);
+    loggerMock.expectedBodiesReceivedInAnyOrder("Hello dudes!-[ep-1]", "Hello dudes!-[ep-2]");
 
-    mock.expectedMessageCount(2);
-    mock.expectedBodiesReceivedInAnyOrder("Hello dudes!-[ep-1]", "Hello dudes!-[ep-2]");
-
-    routerSubject.input(inConnector).parallelOutput(outConnector1, outConnector2);
-    routerSubject.toCentralRouter().setUpRoutes();
-
-    template.sendBody("direct:multicast-1", "Hello dudes!");
-    mock.assertIsSatisfied();
+    sendMessageToInEndpoint("Hello dudes!");
   }
 
   @Test
   void
-      given_RouteWithParallelMulticast_when_FirstOutConnectorIsSlow_then_SecondConnectorExecutesFirst()
-          throws Exception {
-    SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-3");
-    SleepingOutConnector outConnector1 =
-        new SleepingOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
-    SimpleOutConnector outConnector2 =
-        new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-2");
+      given_RouteWithParallelMulticast_when_FirstOutConnectorIsSlow_then_SecondConnectorExecutesFirst() {
+    setupRouterWithParallel(sleepingOutLogConn("ep-1"), outLogConn("ep-2"));
 
-    mock.expectedBodiesReceived("Hello dude!-[ep-2]", "Hello dude!-[ep-1]");
-    mock.expectedMessageCount(2);
+    sendMessageToInEndpoint("Hello dude!");
 
-    routerSubject.input(inConnector).parallelOutput(outConnector1, outConnector2);
-    routerSubject.toCentralRouter().setUpRoutes();
-
-    template.sendBody("direct:multicast-3", "Hello dude!");
-
-    mock.assertIsSatisfied();
+    loggerMock.expectedBodiesReceived("Hello dude!-[ep-2]", "Hello dude!-[ep-1]");
+    loggerMock.expectedMessageCount(2);
   }
 
   @Test
   void
-      given_RouteWithSequencedExecution_when_FirstOutConnectorIsSlow_then_FirstConnectorExecutesFirst()
-          throws Exception {
-    SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-4");
+      given_RouteWithSequencedExecution_when_FirstOutConnectorIsSlow_then_FirstConnectorExecutesFirst() {
+    setupRouterWithSequence(sleepingOutLogConn("ep-1"), outLogConn("ep-2"));
 
-    SleepingOutConnector outConnector1 =
-        new SleepingOutConnector().outEndpointUri("log:message").outEndpointId("ep-1");
-    SimpleOutConnector outConnector2 =
-        new SimpleOutConnector().outEndpointUri("log:message").outEndpointId("ep-2");
+    loggerMock.expectedBodiesReceived("Hello dude!-[ep-1]", "Hello dude!-[ep-2]");
+    loggerMock.expectedMessageCount(2);
 
-    mock.expectedBodiesReceived("Hello dude!-[ep-1]", "Hello dude!-[ep-2]");
-    mock.expectedMessageCount(2);
-
-    routerSubject.input(inConnector).sequencedOutput(outConnector1, outConnector2);
-    routerSubject.toCentralRouter().setUpRoutes();
-
-    template.sendBody("direct:multicast-4", "Hello dude!");
-
-    mock.assertIsSatisfied();
+    sendMessageToInEndpoint("Hello dude!");
   }
 
   @Test
   void when_RouteUsesEnrich_then_SIPMetadataIsSupported() throws Exception {
-    camelContext().addRoutes(routeBuilder());
-    mock.expectedBodiesReceived("yes, enrich works");
+    startEnrichRouteWithOutEndpointBuilder();
+    loggerMock.expectedBodiesReceived("yes, enrich works");
     template.sendBody("direct:withEnrich", "enrichWorks?");
-
-    mock.assertIsSatisfied();
   }
 
   @Test
   void when_InConnectorImplementsResponseProcessing_then_ConnectorReturnsProcessedResponse()
       throws Exception {
+    // arrange
     camelContext().addRoutes(ComplexOutConnector.helperRouteBuilder);
-
     routerSubject.input(new ComplexInConnector()).sequencedOutput(new ComplexOutConnector());
-
+    startTheRouter(routerSubject);
     // act
-    routerSubject.toCentralRouter().setUpRoutes();
     String response =
         (String) template.sendBody("direct:complex-connector", ExchangePattern.InOut, "input body");
-
+    // assert
     assertThat(response).endsWith("voila").contains("body 1").contains("body 2");
-    mock.assertIsSatisfied();
   }
 
-  //  @Test TODO optional validation
-  //  void when_CentralRouterHasNoDomainModel_thenExceptionIsThrown() {
-  //    CentralRouterDefinition noCentralModelRouterSubject = new WrongTypeRouterDefinition();
-  //
-  //    // act
-  //    routeStarter.configureDefinition(noCentralModelRouterSubject);
-  //    routeStarter.buildRoutes(noCentralModelRouterSubject.toCentralRouter());
-  //
-  //    // assert
-  //    assertThatThrownBy(() -> template.sendBody("direct:multicast-7", "Hello dude!"))
-  //        .isInstanceOf(CamelExecutionException.class)
-  //        .getCause()
-  //        .hasMessageContaining("Wrong data type")
-  //        .hasMessageContaining("WrongTypeRouter");
-  //  }
+  @Test
+  void when_CentralRouterHasNoDomainModel_thenExceptionIsThrown() {
+    CentralRouter noCentralModelRouterSubject = new WrongTypeRouter();
+
+    // act
+    noCentralModelRouterSubject.toCentralRouter().setUpRoutes();
+
+    // assert
+    assertThatThrownBy(() -> template.sendBody("direct:multicast-7", "Hello dude!"))
+        .isInstanceOf(CamelExecutionException.class)
+        .getCause()
+        .hasMessageContaining("Wrong data type")
+        .hasMessageContaining("WrongTypeRouter");
+  }
 
   private RoutesBuilder routeBuilder() {
     return new RouteBuilder() {
@@ -171,5 +137,35 @@ class CentralRoutedDataflowTest {
         from("direct:oho").process();
       }
     };
+  }
+
+  private OutConnector outLogConn(String id) {
+    return new SimpleOutConnector().withUri("log:message").withId(id);
+  }
+
+  private OutConnector sleepingOutLogConn(String id) {
+    return new SleepingOutConnector().withUri("log:message").withId(id);
+  }
+
+  private void sendMessageToInEndpoint(String message) {
+    template.sendBody(inEndpointUri, message);
+  }
+
+  private void startTheRouter(CentralRouter routerSubject) {
+    routerSubject.toCentralRouter().setUpRoutes();
+  }
+
+  private void setupRouterWithParallel(OutConnector... outConnectors) {
+    routerSubject.input(withUri(inEndpointUri)).parallelOutput(outConnectors);
+    routerSubject.toCentralRouter().setUpRoutes();
+  }
+
+  private void setupRouterWithSequence(OutConnector... outConnectors) {
+    routerSubject.input(withUri(inEndpointUri)).sequencedOutput(outConnectors);
+    routerSubject.toCentralRouter().setUpRoutes();
+  }
+
+  private void startEnrichRouteWithOutEndpointBuilder() throws Exception {
+    camelContext().addRoutes(routeBuilder());
   }
 }

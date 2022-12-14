@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.apps.framework.restrouter;
+package de.ikor.sip.foundation.core.framework.stubs.routers;
 
 import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
 import de.ikor.sip.foundation.core.framework.routers.IntegrationScenario;
@@ -16,7 +16,7 @@ public class ScopeBeanCentralRouter extends CentralRouter {
   @Autowired private ScopeBeanInConnector restInConnector;
 
   @Override
-  public void defineTopology() throws Exception {
+  public void defineTopology() {
     input(restInConnector).sequencedOutput(appendStringOutConnector);
   }
 

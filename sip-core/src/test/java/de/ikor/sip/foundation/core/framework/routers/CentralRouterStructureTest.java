@@ -4,13 +4,13 @@ import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.cam
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
+import de.ikor.sip.foundation.core.apps.framework.centralrouter.EmptyTestingApplication;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.*;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
-import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouter;
+import de.ikor.sip.foundation.core.framework.stubs.routers.TestingCentralRouter;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-@SpringBootTest(classes = CentralRouterTestingApplication.class)
+@SpringBootTest(classes = EmptyTestingApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CentralRouterStructureTest {
 
@@ -30,7 +30,6 @@ class CentralRouterStructureTest {
 
   @BeforeEach
   void setup() {
-    routerSubject.setupTestingState();
   }
 
   @Test
@@ -146,8 +145,10 @@ class CentralRouterStructureTest {
   void when_CreateMultipleOutEndpointsWithEndpointDSL_then_CheckOutEndpointsAreValid() {
     // arrange
     InConnector inConnector = new EndpointDSLInConnector("endpointdsl-direct", "endpointdsl-id");
-    OutConnector outConnector1 = new StaticEndpointDSLOutConnector("direct1", "staticendpointdsl-id1");
-    OutConnector outConnector2 = new StaticEndpointDSLOutConnector("direct2", "staticendpointdsl-id2");
+    OutConnector outConnector1 =
+        new StaticEndpointDSLOutConnector("direct1", "staticendpointdsl-id1");
+    OutConnector outConnector2 =
+        new StaticEndpointDSLOutConnector("direct2", "staticendpointdsl-id2");
     routerSubject.input(inConnector).sequencedOutput(outConnector1, outConnector2);
 
     // act
@@ -159,8 +160,10 @@ class CentralRouterStructureTest {
     Route route2 = getRouteFromContextById(expectedRouteId2);
 
     // assert
-    assertThat(((ToDefinition)((RouteDefinition)route1.getRoute()).getOutputs().get(0)).getUri()).isEqualTo("direct://direct1");
-    assertThat(((ToDefinition)((RouteDefinition)route2.getRoute()).getOutputs().get(0)).getUri()).isEqualTo("direct://direct2");
+    assertThat(((ToDefinition) ((RouteDefinition) route1.getRoute()).getOutputs().get(0)).getUri())
+        .isEqualTo("direct://direct1");
+    assertThat(((ToDefinition) ((RouteDefinition) route2.getRoute()).getOutputs().get(0)).getUri())
+        .isEqualTo("direct://direct2");
   }
 
   public static Predicate<Route> matchRoutesBasedOnUri(String regex) {

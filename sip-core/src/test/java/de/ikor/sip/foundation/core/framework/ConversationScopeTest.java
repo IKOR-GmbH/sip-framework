@@ -2,8 +2,8 @@ package de.ikor.sip.foundation.core.framework;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
-import de.ikor.sip.foundation.core.apps.framework.restrouter.ScopeBeanCentralRouter;
+import de.ikor.sip.foundation.core.apps.framework.centralrouter.EmptyTestingApplication;
+import de.ikor.sip.foundation.core.framework.stubs.routers.ScopeBeanCentralRouter;
 import de.ikor.sip.foundation.core.framework.stubs.ScopeAppendOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.ScopeBeanInConnector;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(
     classes = {
-      CentralRouterTestingApplication.class,
+      EmptyTestingApplication.class,
       ScopeBeanCentralRouter.class,
       ScopeBeanInConnector.class,
       ScopeAppendOutConnector.class

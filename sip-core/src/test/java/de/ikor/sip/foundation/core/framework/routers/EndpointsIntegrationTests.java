@@ -2,18 +2,18 @@ package de.ikor.sip.foundation.core.framework.routers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.ikor.sip.foundation.core.apps.framework.centralrouter.CentralRouterTestingApplication;
+import de.ikor.sip.foundation.core.apps.framework.centralrouter.EmptyTestingApplication;
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
-import de.ikor.sip.foundation.core.framework.stubs.TestingCentralRouter;
+import de.ikor.sip.foundation.core.framework.stubs.routers.TestingCentralRouter;
 import org.apache.camel.Endpoint;
 import org.apache.camel.NoSuchEndpointException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-@SpringBootTest(classes = CentralRouterTestingApplication.class)
+@SpringBootTest(classes = EmptyTestingApplication.class)
 @DirtiesContext
 class EndpointsIntegrationTests {
   private final TestingCentralRouter subject = new TestingCentralRouter();
@@ -21,7 +21,7 @@ class EndpointsIntegrationTests {
   @Test
   void when_OutEndpointIsOnTheRoute_then_OutEndpointHasProperId() throws Exception {
     // arrange
-    SimpleOutConnector outConnector = new SimpleOutConnector().outEndpointId("cool-id");
+    SimpleOutConnector outConnector = new SimpleOutConnector().withId("cool-id");
 
     // act
     subject.input(SimpleInConnector.withUri("direct:hey-test")).sequencedOutput(outConnector);

@@ -7,7 +7,7 @@ import de.ikor.sip.foundation.core.framework.routers.IntegrationScenario;
 public class WrongTypeRouter extends CentralRouter {
 
   @Override
-  public void defineTopology() throws Exception {
+  public void defineTopology() {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:multicast-7");
     SimpleOutConnector outConnector = new SimpleOutConnector();
     input(inConnector).sequencedOutput(outConnector);

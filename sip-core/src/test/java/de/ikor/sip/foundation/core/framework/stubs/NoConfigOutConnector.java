@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import static de.ikor.sip.foundation.core.apps.framework.ConfigurationTestingCentralRouter.SCENARIO_HEADER_KEY;
+import static de.ikor.sip.foundation.core.framework.stubs.routers.ConfigurationTestingCentralRouter.SCENARIO_HEADER_KEY;
 
 import java.util.Objects;
 import org.apache.camel.Exchange;

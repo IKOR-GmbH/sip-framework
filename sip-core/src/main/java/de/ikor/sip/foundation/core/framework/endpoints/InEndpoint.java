@@ -56,10 +56,10 @@ public class InEndpoint {
   }
 
   private void setDomainClassType(Class<?> domainClassType) {
-    this.domainClassType = Optional.of(domainClassType);
+    this.domainClassType = Optional.ofNullable(domainClassType);
   }
 
   private void setTransformFunction(Function<?, ?> transformFunction) {
-    this.transformFunction = Optional.of(transformFunction);
+    this.transformFunction = Optional.ofNullable(transformFunction);
   }
 }
