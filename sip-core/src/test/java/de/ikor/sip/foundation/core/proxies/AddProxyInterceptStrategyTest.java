@@ -19,8 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class AddProxyInterceptStrategyTest {
   private static final String PROCESSOR_ID = "processorId";
   private AddProxyInterceptStrategy addProxyInterceptStrategy;
-  private ProcessorProxyRegistry proxyRegistry = new ProcessorProxyRegistry();
-  private List<ProxyExtension> extensions = new ArrayList<>();
+  private final ProcessorProxyRegistry proxyRegistry = new ProcessorProxyRegistry();
+  private final List<ProxyExtension> extensions = new ArrayList<>();
   @Mock private NamedNode definition;
   @Mock private Processor original;
 

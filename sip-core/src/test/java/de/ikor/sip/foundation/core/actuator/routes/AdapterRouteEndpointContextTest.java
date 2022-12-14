@@ -20,8 +20,6 @@ class AdapterRouteEndpointContextTest {
 
   @Autowired private MockMvc mvcBean;
 
-  @Autowired private CamelContext camelContext;
-
   @Test
   void When_callingAdapterRoutesEndpoint_Then_httpSuccessReceived() throws Exception {
     mvcBean.perform(get("/actuator/adapter-routes")).andExpect(status().is2xxSuccessful());

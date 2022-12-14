@@ -19,7 +19,7 @@ class EndpointsIntegrationTests {
   private final TestingCentralRouter subject = new TestingCentralRouter();
 
   @Test
-  void when_OutEndpointIsOnTheRoute_then_OutEndpointHasProperId() throws Exception {
+  void when_OutEndpointIsOnTheRoute_then_OutEndpointHasProperId() {
     // arrange
     SimpleOutConnector outConnector = new SimpleOutConnector().withId("cool-id");
 

@@ -93,8 +93,7 @@ class EndpointDomainTests {
   }
 
   @Test
-  void GIVEN_inEndpointDomain_WHEN_sendingRawStringAsPayload_THEN_unsuccessfulValidation()
-      throws Exception {
+  void GIVEN_inEndpointDomain_WHEN_sendingRawStringAsPayload_THEN_unsuccessfulValidation() {
     // arrange
     InConnector inConnector =
         SimpleInConnector.withEndpoint(InEndpoint.instance(inEndpointUri, DIRECT_IN_ID, InEndpointDomain.class));
@@ -156,8 +155,7 @@ class EndpointDomainTests {
   }
 
   @Test
-  void GIVEN_outEndpointDomain_WHEN_sendingRawStringAsPayload_THEN_unsuccessfulValidation()
-      throws Exception {
+  void GIVEN_outEndpointDomain_WHEN_sendingRawStringAsPayload_THEN_unsuccessfulValidation() {
     // arrange
     InConnector inConnector = SimpleInConnector.withEndpoint(InEndpoint.instance(inEndpointUri, DIRECT_IN_ID));
     OutConnectorStub outConnector =

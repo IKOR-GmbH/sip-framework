@@ -4,9 +4,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
+import de.ikor.sip.foundation.core.apps.framework.centralrouter.EmptyTestingApplication;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import java.util.List;
+
+import de.ikor.sip.foundation.core.framework.stubs.routers.RestCentralRouter;
+import de.ikor.sip.foundation.core.framework.stubs.routers.ScopeBeanCentralRouter;
+import de.ikor.sip.foundation.core.framework.stubs.routers.TestingCentralRouter;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.jupiter.api.Test;
@@ -14,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 
-@SpringBootTest(classes = InvalidUsageOfOutConsumerTest.CoreTestApplication.class)
+@SpringBootTest(classes = {EmptyTestingApplication.class, RestCentralRouter.class, TestingCentralRouter.class})
 class InvalidUsageOfOutConsumerTest {
   @Autowired CamelContext camelContext;
   @Autowired List<CentralRouter> centralRouters;
@@ -37,30 +42,5 @@ class InvalidUsageOfOutConsumerTest {
   @Test
   void when_MultipleCentralRoutersAreRegistered_then_ApplicationStartsSuccessfully() {
     assertThat(centralRouters).asList().size().isGreaterThan(1);
-  }
-
-  @SIPIntegrationAdapter
-  public static class CoreTestApplication {
-    @Bean
-    CentralRouter firstSpyCentralRouter() {
-      return new SpyCentralRouterDefinition();
-    }
-
-    @Bean
-    CentralRouter secondSpyCentralRouter() {
-      return new SpyCentralRouterDefinition();
-    }
-  }
-
-  @IntegrationScenario(name = "null")
-  private static class SpyCentralRouterDefinition extends CentralRouter {
-
-    @Override
-    public void defineTopology() {
-      input(SimpleInConnector.withUri("direct:dummyMockBean-" + this.hashCode()));
-    }
-
-    @Override
-    public void configureOnException() {}
   }
 }
