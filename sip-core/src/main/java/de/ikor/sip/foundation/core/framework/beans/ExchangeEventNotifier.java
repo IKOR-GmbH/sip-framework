@@ -24,30 +24,42 @@ public class ExchangeEventNotifier extends EventNotifierSupport {
 
       Exchange exchange = ece.getExchange();
       String key = exchange.getProperty(ConversationScope.SCOPE_PROPERTY, String.class);
-
       if (key == null) {
-        exchange.setProperty(ConversationScope.SCOPE_PROPERTY, exchange.getExchangeId());
+        key = exchange.getExchangeId();
+        exchange.setProperty(ConversationScope.SCOPE_PROPERTY, key);
       }
-      log.debug(
-          "RECEIVED CREATE EVENT - " + exchange.getProperty(ConversationScope.SCOPE_PROPERTY));
+      logEvent("CREATE", key);
       ConversationAttributes conversationAttributes = new ConversationAttributes(exchange);
       repository.put(key, conversationAttributes);
       ConversationContextHolder.instance()
           .setConversationAttributes((ConversationAttributes) repository.getLast(key));
     }
 
-    if (event instanceof ExchangeCompletedEvent || event instanceof ExchangeFailedEvent) {
+    if (event instanceof ExchangeCompletedEvent) {
       ExchangeCompletedEvent ece = (ExchangeCompletedEvent) event;
-
-      Exchange exchange = ece.getExchange();
-      log.debug(
-          "RECEIVED COMPLETE EVENT - " + exchange.getProperty(ConversationScope.SCOPE_PROPERTY));
-      if (ConversationContextHolder.instance().getConversationAttributes() != null)
-        ConversationContextHolder.instance()
-            .getConversationAttributes()
-            .executeDestructionCallbacks();
-      ConversationContextHolder.instance().resetConversationAttributes();
+      logEvent("COMPLETE", ece.getExchange().getProperty(ConversationScope.SCOPE_PROPERTY, String.class));
+      resetContextHolderInstance();
     }
+
+    if (event instanceof ExchangeFailedEvent) {
+      ExchangeFailedEvent efe = (ExchangeFailedEvent) event;
+      logEvent("FAILED", efe.getExchange().getProperty(ConversationScope.SCOPE_PROPERTY, String.class));
+      resetContextHolderInstance();
+    }
+  }
+
+  private void resetContextHolderInstance() {
+    if (ConversationContextHolder.instance().getConversationAttributes() != null) {
+      ConversationContextHolder.instance()
+          .getConversationAttributes()
+          .executeDestructionCallbacks();
+    }
+    ConversationContextHolder.instance().resetConversationAttributes();
+  }
+
+  private void logEvent(String type, String property) {
+    log.debug(
+        "RECEIVED {} EVENT - {}", type, property);
   }
 
   @Override
@@ -63,7 +75,7 @@ public class ExchangeEventNotifier extends EventNotifierSupport {
     setIgnoreExchangeCompletedEvent(false);
     setIgnoreExchangeCreatedEvent(false);
     setIgnoreExchangeEvents(false);
-    setIgnoreExchangeFailedEvents(true);
+    setIgnoreExchangeFailedEvents(false);
     setIgnoreExchangeRedeliveryEvents(true);
     setIgnoreExchangeSendingEvents(true);
     setIgnoreExchangeSentEvents(true);
