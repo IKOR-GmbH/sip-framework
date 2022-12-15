@@ -15,35 +15,19 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class ExchangeEventNotifier extends EventNotifierSupport {
 
-  private final CDMRepository repository;
-
   public void notify(CamelEvent event) {
     if (event instanceof ExchangeCreatedEvent) {
 
       ExchangeCreatedEvent ece = (ExchangeCreatedEvent) event;
-
       Exchange exchange = ece.getExchange();
       String key = exchange.getProperty(ConversationScope.SCOPE_PROPERTY, String.class);
       if (key == null) {
         key = exchange.getExchangeId();
         exchange.setProperty(ConversationScope.SCOPE_PROPERTY, key);
       }
-      logEvent("CREATE", key);
-      ConversationAttributes conversationAttributes = new ConversationAttributes(exchange);
-      repository.put(key, conversationAttributes);
       ConversationContextHolder.instance()
-          .setConversationAttributes((ConversationAttributes) repository.getLast(key));
-    }
-
-    if (event instanceof ExchangeCompletedEvent) {
-      ExchangeCompletedEvent ece = (ExchangeCompletedEvent) event;
-      logEvent("COMPLETE", ece.getExchange().getProperty(ConversationScope.SCOPE_PROPERTY, String.class));
-      resetContextHolderInstance();
-    }
-
-    if (event instanceof ExchangeFailedEvent) {
-      ExchangeFailedEvent efe = (ExchangeFailedEvent) event;
-      logEvent("FAILED", efe.getExchange().getProperty(ConversationScope.SCOPE_PROPERTY, String.class));
+          .setConversationAttributes(new ConversationAttributes(key));
+    } else {
       resetContextHolderInstance();
     }
   }
@@ -55,11 +39,6 @@ public class ExchangeEventNotifier extends EventNotifierSupport {
           .executeDestructionCallbacks();
     }
     ConversationContextHolder.instance().resetConversationAttributes();
-  }
-
-  private void logEvent(String type, String property) {
-    log.debug(
-        "RECEIVED {} EVENT - {}", type, property);
   }
 
   @Override
