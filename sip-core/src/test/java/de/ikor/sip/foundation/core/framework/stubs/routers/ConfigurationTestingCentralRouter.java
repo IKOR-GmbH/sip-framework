@@ -1,26 +1,21 @@
-package de.ikor.sip.foundation.core.apps.framework;
+package de.ikor.sip.foundation.core.framework.stubs.routers;
 
 import static org.apache.camel.builder.Builder.simple;
 
-import de.ikor.sip.foundation.core.framework.routers.CentralRouterDefinition;
-import de.ikor.sip.foundation.core.framework.routers.CentralRouterDomainModel;
+import de.ikor.sip.foundation.core.framework.routers.CentralRouter;
+import de.ikor.sip.foundation.core.framework.routers.IntegrationScenario;
 import de.ikor.sip.foundation.core.framework.stubs.ConfigInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.ConfigOutConnector;
 
-@CentralRouterDomainModel
-public class ConfigurationTestingCentralRouter extends CentralRouterDefinition {
+@IntegrationScenario(name = "config-scenario")
+public class ConfigurationTestingCentralRouter extends CentralRouter {
 
   public static final String SCENARIO_HEADER_KEY = "scenario";
   public static final String SCENARIO_HEADER_VALUE = "scenario header";
 
   @Override
-  public String getScenario() {
-    return "config-scenario";
-  }
-
-  @Override
-  public void defineTopology() throws Exception {
-    input(new ConfigInConnector()).parallelOutput(new ConfigOutConnector());
+  public void defineTopology() {
+    input(new ConfigInConnector()).parallelOutput(new ConfigOutConnector("config"));
   }
 
   @Override

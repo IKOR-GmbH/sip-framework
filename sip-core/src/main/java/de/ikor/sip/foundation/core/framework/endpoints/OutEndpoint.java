@@ -5,7 +5,6 @@ import static java.lang.String.format;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-
 import lombok.Getter;
 import org.apache.camel.*;
 import org.apache.camel.builder.EndpointProducerBuilder;
@@ -27,15 +26,27 @@ public class OutEndpoint implements Endpoint {
     return putInRegister(endpoint, endpointId);
   }
 
-  public static <T, D> OutEndpoint instance(String uri, String endpointId, Class<T> domainClassType, Function<T, D> transformFunction) {
+  public static <T, D> OutEndpoint instance(
+      String uri, String endpointId, Class<T> domainClassType, Function<T, D> transformFunction) {
     OutEndpoint endpoint = new OutEndpoint(uri, endpointId);
     endpoint.setDomainClassType(domainClassType);
     endpoint.setTransformFunction(transformFunction);
     return putInRegister(endpoint, endpointId);
   }
 
-  public static OutEndpoint instance(EndpointProducerBuilder endpointDslDefinition, String endpointId) {
+  public static OutEndpoint instance(
+      EndpointProducerBuilder endpointDslDefinition, String endpointId) {
     return instance(endpointDslDefinition.getUri(), endpointId);
+  }
+
+  public static OutEndpoint instance(
+          EndpointProducerBuilder endpointDslDefinition, String endpointId, Class<?> domainClassType) {
+    return instance(endpointDslDefinition.getUri(), endpointId, domainClassType);
+  }
+
+  public static <T, D> OutEndpoint instance(
+          EndpointProducerBuilder endpointDslDefinition, String endpointId, Class<T> domainClassType, Function<T, D> transformFunction) {
+    return instance(endpointDslDefinition.getUri(), endpointId, domainClassType, transformFunction);
   }
 
   OutEndpoint(String uri, String endpointId) {

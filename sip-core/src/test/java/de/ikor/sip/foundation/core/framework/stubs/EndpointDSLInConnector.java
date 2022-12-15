@@ -1,17 +1,22 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
+import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
+import lombok.AllArgsConstructor;
 
-public class EndpointDSLInConnector extends InConnectorDefinition {
+@AllArgsConstructor
+public class EndpointDSLInConnector extends InConnector {
 
-    @Override
-    public String getName() {
-        return "EndpointDslInConnector";
-    }
+  private String endpointPath;
+  private String endpointId;
 
-    @Override
-    public void configure() {
-        from(InEndpoint.instance(endpointDsl().direct("endpointdsl-direct"), "endpointdsl-id"));
-    }
+  @Override
+  public String getName() {
+    return "EndpointDslInConnector";
+  }
+
+  @Override
+  public void configure() {
+    from(InEndpoint.instance(endpointDsl().direct(endpointPath), endpointId));
+  }
 }

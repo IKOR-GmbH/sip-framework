@@ -1,11 +1,14 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
 import static java.lang.String.format;
+import static org.apache.camel.builder.Builder.body;
 
-import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
+import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 
-public class SimpleInConnector extends InConnectorDefinition {
+import java.util.function.Function;
+
+public class SimpleInConnector extends InConnector {
   private InEndpoint ep;
   private String name = format("testing-connector-%s", System.nanoTime());
 
@@ -13,13 +16,21 @@ public class SimpleInConnector extends InConnectorDefinition {
     ep = InEndpoint.instance(endpointUri, id);
   }
 
+  private SimpleInConnector(InEndpoint inEndpoint) {
+    ep = inEndpoint;
+  }
+
   public static SimpleInConnector withUri(String endpointUri) {
     return new SimpleInConnector(endpointUri, format("in-ep-id-%s", System.nanoTime()));
   }
 
+  public static SimpleInConnector withEndpoint(InEndpoint inEndpoint) {
+    return new SimpleInConnector(inEndpoint);
+  }
+
   @Override
   public void configure() {
-    from(ep);
+    from(ep).to("log:messageIn").setBody(body().convertToString());
   }
 
   public String getName() {

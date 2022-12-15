@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CDMValueSetter {
-    private final CDMHolder bean;
+  private final CDMHolder bean;
 
-    public void process(Exchange exchange) {
-        bean.setInternal(exchange.getMessage().getBody());
-    }
+  public void process(Exchange exchange) {
+    bean.setInternal(exchange.getMessage().getBody());
+  }
 }

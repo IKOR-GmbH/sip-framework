@@ -7,6 +7,5 @@ import lombok.Data;
 @Data
 public class InEndpointDomain {
 
-    private String content;
-
+  private String content;
 }

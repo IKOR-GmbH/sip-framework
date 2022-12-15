@@ -1,33 +1,25 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import java.util.LinkedHashMap;
-import lombok.Getter;
+import java.util.Optional;
 
 public class UseCaseTopologyDefinition {
-  @Getter
-  private final LinkedHashMap<OutConnectorDefinition[], String> allConnectors =
-      new LinkedHashMap<>();
+  private final LinkedHashMap<String, OutConnector[]> connectorsByBoundType = new LinkedHashMap<>();
 
-  private final LinkedHashMap<String, OutConnectorDefinition[]> connectorsByBoundType =
-          new LinkedHashMap<>();
-
-  public void sequencedOutput(OutConnectorDefinition... outConnectors) {
+  public void sequencedOutput(OutConnector... outConnectors) {
     connectorsByBoundType.put("seq", outConnectors);
-    allConnectors.put(outConnectors, "seq");
   }
 
-  public void parallelOutput(OutConnectorDefinition... outConnectors) {
+  public void parallelOutput(OutConnector... outConnectors) {
     connectorsByBoundType.put("par", outConnectors);
-    allConnectors.put(outConnectors, "par");
   }
 
-
-  public OutConnectorDefinition[] getConnectorsBindInParallel () {
-    return connectorsByBoundType.get("par");
+  public Optional<OutConnector[]> getConnectorsBindInParallel() {
+    return Optional.ofNullable(connectorsByBoundType.get("par"));
   }
 
-  public OutConnectorDefinition[] getConnectorsBindInSequence () {
-    return connectorsByBoundType.get("seq");
+  public Optional<OutConnector[]> getConnectorsBindInSequence() {
+    return Optional.ofNullable(connectorsByBoundType.get("seq"));
   }
 }

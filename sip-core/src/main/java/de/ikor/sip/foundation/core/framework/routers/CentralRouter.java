@@ -1,113 +1,59 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import de.ikor.sip.foundation.core.framework.GlobalRoutesConfiguration;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
-import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.apache.camel.model.RouteDefinition;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.camel.builder.RouteConfigurationBuilder;
+import org.apache.camel.model.RouteConfigurationDefinition;
 
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.*;
+public abstract class CentralRouter {
+  private final List<InConnector> inConnectors = new ArrayList<>();
 
-@RequiredArgsConstructor
-class CentralRouter {
-  private final CentralRouterDefinition routerDefinition;
-  private Optional<GlobalRoutesConfiguration> routeGlobalConfig;
-  private RouteConfigurationBuilder routeConfigurationBuilder;
+  @Getter private UseCaseTopologyDefinition definition;
+  @Setter private RouteConfigurationBuilder routeConfigurationBuilder;
 
-  @SneakyThrows
-  public void setUpRoutes() {
-    routerDefinition.defineTopology();
-    this.buildActiveRoutes();
+  public abstract void defineTopology();
+
+  public void configureOnException() {}
+
+  public void defineConfiguration() {}
+
+  protected RouteConfigurationDefinition configuration() {
+    return routeConfigurationBuilder.routeConfiguration();
   }
 
-  void buildActiveRoutes() {
-    this.buildOnException();
-    this.bindInConnectors();
-    this.bindOutConnectors();
+  public UseCaseTopologyDefinition input(InConnector... inConnectors) {
+    this.inConnectors.addAll(Arrays.asList(inConnectors));
+    definition = new UseCaseTopologyDefinition();
+    return definition;
   }
 
-  private void bindInConnectors() {
-    List<InConnector> inConnectors = convert(routerDefinition.getInConnectorDefinitions());
-    inConnectors.forEach(inConnector -> inConnector.setConfiguration(routeConfigurationBuilder));
-    inConnectors.forEach(this::configure);
-    inConnectors.forEach(this::addToContext);
+  String getScenario() {
+    return this.getClass().getAnnotation(IntegrationScenario.class).name();
   }
 
-  private List<InConnector> convert(List<InConnectorDefinition> inConnectorDefinitions) {
-    return inConnectorDefinitions.stream()
-            .map(InConnector::new)
-            .collect(Collectors.toList());
+  public Class<?> getCentralModelRequestClass() {
+    return this.getClass().isAnnotationPresent(IntegrationScenario.class)
+        ? this.getClass().getAnnotation(IntegrationScenario.class).requestType()
+        : String.class;
   }
 
-  private void configure(InConnector inConnector) {
-    inConnector.initDefinition();
-    inConnector.configureOnException();
-    inConnector.configure();
-    appendSipMCAndRouteId(inConnector.getConnectorRouteDefinition(), inConnector.getName());
-//    appendCDMValidatorIfResponseIsExpected(inConnector.getConnectorRouteDefinition());
-    //TODO fix validator first
-
-    inConnector.handleResponse(inConnector.getConnectorRouteDefinition());
-  }
-
-  void appendSipMCAndRouteId(RouteDefinition routeDefinition, String connectorName) {
-    routeDefinition
-        .to("sipmc:" + routerDefinition.getScenario())
-        // TODO double id set
-        .routeId(generateRouteId(routerDefinition.getScenario(), connectorName));
-  }
-
-  public String getScenario() {
-    return routerDefinition.getScenario();
-  }
-
-  public void buildOnException() {
-    routerDefinition.configureOnException();
-  }
-
-  public void buildConfiguration(RouteConfigurationBuilder routeConfigurationBuilder) {
-    this.routeConfigurationBuilder = routeConfigurationBuilder;
-    routerDefinition.setRouteConfigurationBuilder(this.routeConfigurationBuilder);
-    routerDefinition.defineConfiguration();
-  }
-
-  private void addToContext(InConnector inConnector) {
-    try {
-      camelContext().addRoutes(inConnector.getRouteBuilder());
-    } catch (Exception e) {
-      throw new RuntimeException(e);
+  public Class<?> getCentralModelResponseClass() {
+    if (this.getClass().isAnnotationPresent(IntegrationScenario.class)) {
+      return this.getClass().getAnnotation(IntegrationScenario.class).responseType();
     }
+    throw new IllegalStateException(
+        "Central router must be declared with @IntegrationScenario annotation");
   }
 
-  public UseCaseTopologyDefinition getOutTopologyDefinition() {
-    return routerDefinition.getDefinition();
+  List<InConnector> getInConnectors() {
+    return inConnectors;
   }
 
-  private void appendCDMValidatorIfResponseIsExpected(RouteDefinition connectorRouteDefinition) {
-    Class<?> centralModelResponseClass = routerDefinition.getCentralModelResponseClass();
-    connectorRouteDefinition.process(new CDMValidator(centralModelResponseClass));
-  }
-
-  private void bindOutConnectors() {
-    RouteBinder routeBinder =
-            new RouteBinder(this.getScenario(), routerDefinition.getCentralModelRequestClass(), routeConfigurationBuilder);
-    buildConfiguration(routeConfigurationBuilder);
-    routeBinder.appendOutConnectorsSeq(this.getOutTopologyDefinition().getConnectorsBindInSequence());
-    routeBinder.appendOutConnectorsParallel(this.getOutTopologyDefinition().getConnectorsBindInParallel());
-  }
-
-  public void setGlobalRouteConfig(Optional<GlobalRoutesConfiguration> routeConfiguration) {
-    routeConfigurationBuilder =
-            routeConfiguration
-                    .map(GlobalRoutesConfiguration::getConfigurationBuilder)
-                    .orElse(anonymousDummyRouteConfigurationBuilder());
-    this.routeGlobalConfig = routeConfiguration;
+  protected CentralRouterService toCentralRouter() {
+    return new CentralRouterService(this);
   }
 }
