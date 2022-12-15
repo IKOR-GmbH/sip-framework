@@ -6,12 +6,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CentralRouterDomainModel {
-  Undefined undefined = null;
+public @interface IntegrationScenario {
+  Undefined undefined = new Undefined() {};
 
   Class<?> requestType() default String.class;
 
   Class<?> responseType() default Undefined.class;
+
+  String name();
 
   interface Undefined {}
 }

@@ -1,9 +1,9 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
+import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 
-public class OnExceptionInConnector extends InConnectorDefinition {
+public class OnExceptionInConnector extends InConnector {
 
   private final InEndpoint inEndpoint;
 

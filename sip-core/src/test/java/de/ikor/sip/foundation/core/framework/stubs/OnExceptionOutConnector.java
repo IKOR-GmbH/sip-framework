@@ -1,10 +1,10 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.connectors.OutConnectorDefinition;
+import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
 import org.apache.camel.model.RouteDefinition;
 
-public class OnExceptionOutConnector extends OutConnectorDefinition {
+public class OnExceptionOutConnector extends OutConnector {
 
   private final OutEndpoint outEndpoint;
 

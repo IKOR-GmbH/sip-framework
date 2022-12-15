@@ -3,11 +3,11 @@ package de.ikor.sip.foundation.core.framework.stubs;
 import static de.ikor.sip.foundation.core.framework.endpoints.OutEndpointBuilder.outEndpointBuilder;
 import static org.apache.camel.builder.Builder.body;
 
-import de.ikor.sip.foundation.core.framework.connectors.InConnectorDefinition;
+import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import org.apache.camel.model.RouteDefinition;
 
-public class ComplexInConnector extends InConnectorDefinition {
+public class ComplexInConnector extends InConnector {
   @Override
   public String getName() {
     return "complex-in-connector";

@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.translate;
 
+import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,7 +15,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 @Configuration
 @ConfigurationProperties(prefix = "sip.core.translation")
 public class TranslateConfiguration {
-  private List<String> fileLocations;
+  private List<String> fileLocations = new LinkedList<>();
   private List<String> sipFileLocations;
   private String lang = "en";
   private String defaultEncoding = "UTF-8";

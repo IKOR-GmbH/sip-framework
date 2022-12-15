@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class OutEndpointDomain {
 
-    private String contentWithMessage;
+  private String contentWithMessage;
 
-    public OutEndpointDomain(String content) {
-        this.contentWithMessage = String.format("%s success", content);
-    }
+  public OutEndpointDomain(String content) {
+    this.contentWithMessage = String.format("%s success", content);
+  }
 }
