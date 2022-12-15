@@ -72,8 +72,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>2.6.9</spring.boot.version>
-        <camel.version>3.15.0</camel.version>
+        <spring.boot.version>2.7.6</spring.boot.version>
+        <camel.version>3.18.4</camel.version>
         <jackson-jsr310.version>2.12.7</jackson-jsr310.version>
         <springdoc-openapi.version>1.6.2</springdoc-openapi.version>
         <lombok.version>1.18.22</lombok.version>
