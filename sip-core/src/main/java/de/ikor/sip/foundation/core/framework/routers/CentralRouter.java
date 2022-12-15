@@ -45,7 +45,8 @@ public abstract class CentralRouter {
     if (this.getClass().isAnnotationPresent(IntegrationScenario.class)) {
       return this.getClass().getAnnotation(IntegrationScenario.class).responseType();
     }
-    throw new IllegalStateException(""); // todo add message
+    throw new IllegalStateException(
+        "Central router must be declared with @IntegrationScenario annotation");
   }
 
   List<InConnector> getInConnectors() {

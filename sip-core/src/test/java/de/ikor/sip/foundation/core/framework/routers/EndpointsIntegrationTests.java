@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.framework.routers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.ikor.sip.foundation.core.apps.framework.centralrouter.EmptyTestingApplication;
+import de.ikor.sip.foundation.core.apps.framework.emptyapp.EmptyTestingApplication;
 import de.ikor.sip.foundation.core.framework.endpoints.CentralEndpointsRegister;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;

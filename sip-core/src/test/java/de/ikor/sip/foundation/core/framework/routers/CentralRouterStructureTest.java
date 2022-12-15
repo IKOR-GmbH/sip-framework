@@ -1,40 +1,35 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
-import static java.lang.String.format;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import de.ikor.sip.foundation.core.apps.framework.centralrouter.EmptyTestingApplication;
+import de.ikor.sip.foundation.core.apps.framework.emptyapp.EmptyTestingApplication;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
-import de.ikor.sip.foundation.core.framework.stubs.*;
+import de.ikor.sip.foundation.core.framework.stubs.EndpointDSLInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
+import de.ikor.sip.foundation.core.framework.stubs.StaticEndpointDSLOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.routers.TestingCentralRouter;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import org.apache.camel.Route;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.ToDefinition;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest(classes = EmptyTestingApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CentralRouterStructureTest {
-
   private final TestingCentralRouter routerSubject = new TestingCentralRouter();
 
-  @BeforeEach
-  void setup() {
-  }
-
   @Test
-  void when_SingleInConnectorIsRegistered_then_OneRouteStartingWithProperEndpointIsAvailable()
-      throws Exception {
+  void when_SingleInConnectorIsRegistered_then_OneRouteStartingWithProperEndpointIsAvailable() {
     // arrange
     SimpleInConnector simpleInConnector = SimpleInConnector.withUri("direct:singleInConnector");
     // act
@@ -50,8 +45,7 @@ class CentralRouterStructureTest {
   }
 
   @Test
-  void when_MultipleInConnectorsAreRegistered_then_OneRoutePerConnectorIsAvailable()
-      throws Exception {
+  void when_MultipleInConnectorsAreRegistered_then_OneRoutePerConnectorIsAvailable() {
     // arrange
     SimpleInConnector firstInConnector = SimpleInConnector.withUri("direct:sip");
     SimpleInConnector secondInConnector = SimpleInConnector.withUri("direct:sipie");
@@ -68,8 +62,7 @@ class CentralRouterStructureTest {
 
   @Test
   void
-      when_OneOutConnectorIsRegisteredAsSequenced_then_OneActiveAndOneTestRouteWithSIPMCEndpointIsAvailable()
-          throws Exception {
+      when_OneOutConnectorIsRegisteredAsSequenced_then_OneActiveAndOneTestRouteWithSIPMCEndpointIsAvailable() {
     // arrange
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:OneOutConnector");
     SimpleOutConnector outConnector = new SimpleOutConnector();
@@ -86,8 +79,7 @@ class CentralRouterStructureTest {
   }
 
   @Test
-  void when_OneOutConnectorIsRegisteredAsParallel_then_OneRouteWithSIPMCEndpointIsAvailable()
-      throws Exception {
+  void when_OneOutConnectorIsRegisteredAsParallel_then_OneRouteWithSIPMCEndpointIsAvailable() {
     // arrange
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:OneOutConnector");
     SimpleOutConnector outConnector = new SimpleOutConnector();
@@ -106,8 +98,7 @@ class CentralRouterStructureTest {
 
   @Test
   void
-      given_OneInConnectorWithOneRoute_when_ConnectorIsRegistered_then_RouteIdIsUseCasePlusConnectorName()
-          throws Exception {
+      given_OneInConnectorWithOneRoute_when_ConnectorIsRegistered_then_RouteIdIsUseCasePlusConnectorName() {
     SimpleInConnector inConnector = SimpleInConnector.withUri("direct:routeIdTest");
     routerSubject.input(inConnector);
     routerSubject.toCentralRouter().setUpRoutes();

@@ -4,7 +4,7 @@ import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.cam
 import static de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector.withUri;
 import static org.assertj.core.api.Assertions.*;
 
-import de.ikor.sip.foundation.core.apps.framework.centralrouter.EmptyTestingApplication;
+import de.ikor.sip.foundation.core.apps.framework.emptyapp.EmptyTestingApplication;
 import de.ikor.sip.foundation.core.framework.stubs.routers.TestingCentralRouter;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpointBuilder;
