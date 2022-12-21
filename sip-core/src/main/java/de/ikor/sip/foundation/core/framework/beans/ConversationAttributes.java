@@ -13,6 +13,8 @@ public class ConversationAttributes {
   private final Map<String, Runnable> destructionCallbacks = new HashMap<>();
   @Getter private final String conversationKey;
 
+  @Getter protected final Map<String, Object> scope = new HashMap<>();
+
   /**
    * Create a new instance from an {@link String}
    *
@@ -22,19 +24,5 @@ public class ConversationAttributes {
     this.conversationKey = key;
   }
 
-  public void registerDestructionCallback(String name, Runnable callback) {
-    synchronized (this.destructionCallbacks) {
-      destructionCallbacks.put(DESTRUCTION_CB_PREFIX + name, callback);
-    }
-  }
 
-  public void executeDestructionCallbacks() {
-    synchronized (this.destructionCallbacks) {
-      for (Map.Entry<String, Runnable> cb : destructionCallbacks.entrySet()) {
-        log.debug("Executing destruction callback: " + cb.getKey());
-        cb.getValue().run();
-      }
-      destructionCallbacks.clear();
-    }
-  }
 }

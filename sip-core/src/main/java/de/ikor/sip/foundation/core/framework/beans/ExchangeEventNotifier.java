@@ -25,20 +25,19 @@ public class ExchangeEventNotifier extends EventNotifierSupport {
         key = exchange.getExchangeId();
         exchange.setProperty(ConversationScope.SCOPE_PROPERTY, key);
       }
-      ConversationContextHolder.instance()
-          .setConversationAttributes(new ConversationAttributes(key));
+      ConversationContextHolder.instance().setConversationAttributes(key);
     } else {
       resetContextHolderInstance();
     }
   }
 
   private void resetContextHolderInstance() {
-    if (ConversationContextHolder.instance().getConversationAttributes() != null) {
-      ConversationContextHolder.instance()
-          .getConversationAttributes()
-          .executeDestructionCallbacks();
+    ConversationContextHolder conversationContextHolder = ConversationContextHolder.instance();
+    String conversationId = conversationContextHolder.getConversationId();
+    if (conversationId != null) {
+      conversationContextHolder.getScope().remove(conversationId);
     }
-    ConversationContextHolder.instance().resetConversationAttributes();
+    conversationContextHolder.resetConversationAttributes();
   }
 
   @Override
@@ -46,19 +45,5 @@ public class ExchangeEventNotifier extends EventNotifierSupport {
     return event instanceof ExchangeCreatedEvent
         || event instanceof ExchangeCompletedEvent
         || event instanceof ExchangeFailedEvent;
-  }
-
-  @Override
-  protected void doStart() {
-    setIgnoreCamelContextEvents(true);
-    setIgnoreExchangeCompletedEvent(false);
-    setIgnoreExchangeCreatedEvent(false);
-    setIgnoreExchangeEvents(false);
-    setIgnoreExchangeFailedEvents(false);
-    setIgnoreExchangeRedeliveryEvents(true);
-    setIgnoreExchangeSendingEvents(true);
-    setIgnoreExchangeSentEvents(true);
-    setIgnoreRouteEvents(true);
-    setIgnoreServiceEvents(true);
   }
 }
