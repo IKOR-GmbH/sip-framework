@@ -286,7 +286,7 @@ this to be ignored, you need to specify these headers by using mentioned special
 
 Examples: `"[kafka.TOPIC]"`, `"[kafka.OFFSET]"`, etc.
 
-Another limitation is in data type conversions which same as for JMS component. Only String and JSON String are 
+Another limitation is in data type conversions which are same as for JMS component. Only String and JSON String are 
 supported.
 
 # Complete example

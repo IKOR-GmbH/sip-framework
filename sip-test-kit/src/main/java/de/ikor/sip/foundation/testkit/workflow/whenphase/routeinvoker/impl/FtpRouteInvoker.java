@@ -113,7 +113,7 @@ public class FtpRouteInvoker implements RouteInvoker {
 
   private void prepareOtherHeaders(Map<String, Object> headers) {
     if (headers.containsKey(FILE_LAST_MODIFIED)) {
-      Long lastModifiedTimestamp = (Long) headers.get(FILE_LAST_MODIFIED);
+      Long lastModifiedTimestamp = Long.valueOf((Integer) headers.get(FILE_LAST_MODIFIED));
       headers.putIfAbsent(MESSAGE_TIMESTAMP, lastModifiedTimestamp);
     }
   }
