@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.framework.beans;
+package de.ikor.sip.foundation.core.framework.scope.conversation;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @Scope(value = "conversation", proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class CDMHolder {
+public class ConversationScopeBean {
   private Object internal;
 }

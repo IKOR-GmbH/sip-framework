@@ -9,7 +9,7 @@ public class TestingCentralRouterAsBean extends CentralRouter {
   public boolean isConfigured;
 
   @Override
-  public void defineTopology()  {
+  public void defineTopology() {
     isConfigured = true;
     input(SimpleInConnector.withUri("direct:dummyMockBean"));
   }

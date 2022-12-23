@@ -1,13 +1,13 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
-import de.ikor.sip.foundation.core.framework.beans.CDMHolder;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
+import de.ikor.sip.foundation.core.framework.scope.conversation.ConversationScopeBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ScopeBeanInConnector extends InConnector {
-  @Autowired CDMHolder bean;
+  @Autowired ConversationScopeBean conversationScopeBean;
 
   @Override
   public String getName() {
@@ -19,7 +19,7 @@ public class ScopeBeanInConnector extends InConnector {
     from(rest("/hello-bean", "get-bean").get())
         .process(
             exchange -> {
-              bean.setInternal("hello bean");
+              conversationScopeBean.setInternal("hello bean");
             });
   }
 

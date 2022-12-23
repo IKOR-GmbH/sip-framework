@@ -3,9 +3,9 @@ package de.ikor.sip.foundation.core.framework;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.ikor.sip.foundation.core.apps.framework.emptyapp.EmptyTestingApplication;
-import de.ikor.sip.foundation.core.framework.stubs.routers.ScopeBeanCentralRouter;
 import de.ikor.sip.foundation.core.framework.stubs.ScopeAppendOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.ScopeBeanInConnector;
+import de.ikor.sip.foundation.core.framework.stubs.routers.ScopeBeanCentralRouter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,11 +1,13 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import de.ikor.sip.foundation.core.apps.framework.emptyapp.EmptyTestingApplication;
-import de.ikor.sip.foundation.core.framework.stubs.routers.TestingCentralRouter;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpoint;
 import de.ikor.sip.foundation.core.framework.stubs.*;
+import de.ikor.sip.foundation.core.framework.stubs.routers.TestingCentralRouter;
 import de.ikor.sip.foundation.core.framework.testutil.TestSetupUtil;
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.EndpointInject;
@@ -19,8 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @CamelSpringBootTest
 @SpringBootTest(classes = EmptyTestingApplication.class)
@@ -54,7 +54,8 @@ class EndpointDomainTests {
       throws Exception {
     // arrange
     InConnector inConnector =
-         SimpleInConnector.withEndpoint(InEndpoint.instance(inEndpointUri, DIRECT_IN_ID, InEndpointDomain.class));
+        SimpleInConnector.withEndpoint(
+            InEndpoint.instance(inEndpointUri, DIRECT_IN_ID, InEndpointDomain.class));
     InEndpointDomain inDomain = new InEndpointDomain("hello world");
     subject.input(inConnector).sequencedOutput(new SimpleOutConnector());
     subject.toCentralRouter().setUpRoutes();
@@ -75,8 +76,9 @@ class EndpointDomainTests {
           throws Exception {
     // arrange
     InConnector inConnector =
-            SimpleInConnector.withEndpoint(InEndpoint.instance(
-                    inEndpointUri, DIRECT_IN_ID, InEndpointDomain.class, InEndpointDomain::new));
+        SimpleInConnector.withEndpoint(
+            InEndpoint.instance(
+                inEndpointUri, DIRECT_IN_ID, InEndpointDomain.class, InEndpointDomain::new));
 
     InEndpointDomain expected = new InEndpointDomain("hello world");
     subject.input(inConnector).sequencedOutput(new SimpleOutConnector());
@@ -96,7 +98,8 @@ class EndpointDomainTests {
   void GIVEN_inEndpointDomain_WHEN_sendingRawStringAsPayload_THEN_unsuccessfulValidation() {
     // arrange
     InConnector inConnector =
-        SimpleInConnector.withEndpoint(InEndpoint.instance(inEndpointUri, DIRECT_IN_ID, InEndpointDomain.class));
+        SimpleInConnector.withEndpoint(
+            InEndpoint.instance(inEndpointUri, DIRECT_IN_ID, InEndpointDomain.class));
     subject.input(inConnector).sequencedOutput(new SimpleOutConnector());
     subject.toCentralRouter().setUpRoutes();
 
@@ -109,7 +112,8 @@ class EndpointDomainTests {
   void GIVEN_outEndpointDomain_WHEN_sendingOutEndpointDomainAsPayload_THEN_successfulValidation()
       throws Exception {
     // arrange
-    InConnector inConnector = SimpleInConnector.withEndpoint(InEndpoint.instance(inEndpointUri, DIRECT_IN_ID));
+    InConnector inConnector =
+        SimpleInConnector.withEndpoint(InEndpoint.instance(inEndpointUri, DIRECT_IN_ID));
     OutConnectorStub outConnector =
         new OutConnectorStub(
             OutEndpoint.instance("log:foo", "outBasicConnector", OutEndpointDomain.class));
@@ -132,7 +136,8 @@ class EndpointDomainTests {
       GIVEN_outEndpointDomainAndTransformation_WHEN_sendingOutEndpointDomainAsPayload_THEN_expectRawStringResultWithSuccessfulValidationAndTransformation()
           throws Exception {
     // arrange
-    InConnector inConnector = SimpleInConnector.withEndpoint(InEndpoint.instance(inEndpointUri, DIRECT_IN_ID));
+    InConnector inConnector =
+        SimpleInConnector.withEndpoint(InEndpoint.instance(inEndpointUri, DIRECT_IN_ID));
     OutConnectorStub outConnector =
         new OutConnectorStub(
             OutEndpoint.instance(
@@ -157,7 +162,8 @@ class EndpointDomainTests {
   @Test
   void GIVEN_outEndpointDomain_WHEN_sendingRawStringAsPayload_THEN_unsuccessfulValidation() {
     // arrange
-    InConnector inConnector = SimpleInConnector.withEndpoint(InEndpoint.instance(inEndpointUri, DIRECT_IN_ID));
+    InConnector inConnector =
+        SimpleInConnector.withEndpoint(InEndpoint.instance(inEndpointUri, DIRECT_IN_ID));
     OutConnectorStub outConnector =
         new OutConnectorStub(
             OutEndpoint.instance("log:foo", "outBasicConnector", OutEndpointDomain.class));

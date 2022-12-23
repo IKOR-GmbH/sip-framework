@@ -38,8 +38,7 @@ public abstract class InConnector extends Connector {
   protected RouteDefinition from(RestDefinition restDefinition) {
     restDefinition.to("direct:rest-" + inEndpoint.getUri());
     routeBuilder.getRestCollection().getRests().add(restDefinition);
-    return routeBuilder
-        .from("direct:rest-" + inEndpoint.getUri());
+    return routeBuilder.from("direct:rest-" + inEndpoint.getUri());
   }
 
   protected RestDefinition rest(String uri, String id) {
