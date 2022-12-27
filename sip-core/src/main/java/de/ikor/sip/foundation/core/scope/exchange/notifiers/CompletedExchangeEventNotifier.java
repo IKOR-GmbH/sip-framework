@@ -1,9 +1,6 @@
-package de.ikor.sip.foundation.core.framework.beans.notifiers;
+package de.ikor.sip.foundation.core.scope.exchange.notifiers;
 
-import de.ikor.sip.foundation.core.framework.beans.ConversationContextHolder;
-import de.ikor.sip.foundation.core.framework.beans.ConversationScope;
-import org.apache.camel.Exchange;
-import org.apache.camel.impl.event.AbstractExchangeEvent;
+import de.ikor.sip.foundation.core.scope.exchange.ExchangeContextHolder;
 import org.apache.camel.impl.event.ExchangeCompletedEvent;
 import org.apache.camel.impl.event.ExchangeFailedEvent;
 import org.apache.camel.spi.CamelEvent;
@@ -16,13 +13,12 @@ public class CompletedExchangeEventNotifier extends EventNotifierSupport {
   }
 
   private void resetContextHolderInstance() {
-    ConversationContextHolder conversationContextHolder = ConversationContextHolder.instance();
+    ExchangeContextHolder conversationContextHolder = ExchangeContextHolder.instance();
     conversationContextHolder.resetConversationAttributes();
   }
 
   @Override
   public boolean isEnabled(CamelEvent event) {
-    return  event instanceof ExchangeCompletedEvent ||
-            event instanceof ExchangeFailedEvent;
+    return event instanceof ExchangeCompletedEvent || event instanceof ExchangeFailedEvent;
   }
 }

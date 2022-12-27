@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.framework.scope.conversation;
+package de.ikor.sip.foundation.core.scope.conversation;
 
 import java.util.HashMap;
 import java.util.HashSet;

@@ -1,6 +1,6 @@
-package de.ikor.sip.foundation.core.framework.scope.exchange.notifiers;
+package de.ikor.sip.foundation.core.scope.exchange.notifiers;
 
-import de.ikor.sip.foundation.core.framework.scope.exchange.ExchangeContextHolder;
+import de.ikor.sip.foundation.core.scope.exchange.ExchangeContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;

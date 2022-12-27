@@ -6,8 +6,6 @@ import static org.apache.camel.builder.Builder.body;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.InEndpoint;
 
-import java.util.function.Function;
-
 public class SimpleInConnector extends InConnector {
   private InEndpoint ep;
   private String name = format("testing-connector-%s", System.nanoTime());

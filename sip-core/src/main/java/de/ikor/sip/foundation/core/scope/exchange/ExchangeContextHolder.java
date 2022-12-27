@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.framework.scope.exchange;
+package de.ikor.sip.foundation.core.scope.exchange;
 
 import java.util.HashMap;
 import java.util.Map;

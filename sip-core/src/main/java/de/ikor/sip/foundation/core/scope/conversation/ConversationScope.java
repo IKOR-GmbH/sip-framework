@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.framework.beans;
+package de.ikor.sip.foundation.core.scope.conversation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,15 +9,12 @@ import org.springframework.beans.factory.config.Scope;
 @Slf4j
 public class ConversationScope implements Scope {
 
-  public static final String SCOPE_PROPERTY = "conversation";
   private static final String REFERENCE = "conversation";
-
-  protected final ObjectFactory<?> mapFactory = HashMap::new;
 
   @Override
   public String getConversationId() {
-    if (getConversationHelder() == null) return "";
-    String id = getConversationHelder().getConversationId();
+    if (getScopeContext() == null) return "";
+    String id = getScopeContext();
     log.debug("Scope Bound with Conversation from Exchange w/ scope id - {}", id);
     return id;
   }
@@ -30,30 +27,31 @@ public class ConversationScope implements Scope {
   @Override
   public Object get(String name, ObjectFactory<?> factory) {
     log.debug("Retrieving bean {}", name);
-    Map<String, Object> beans =
-        (Map<String, Object>) getScopedBean(getConversationHelder().getScope(), getConversationId(), mapFactory);
+    Map<String, Object> beans = getOrCreateScopedBeans(getConversationId());
     return getScopedBean(beans, name, factory);
   }
 
   @Override
   public void registerDestructionCallback(String name, Runnable callback) {
-    log.debug("Registering destruction callback to bean {}", name);
+    // not used
   }
 
   @Override
   public Object remove(String name) {
-    log.debug("Removing bean {}", name);
-    Map<String, Object> beans =
-        (Map<String, Object>) getScopedBean(getConversationHelder().getScope(), getConversationId(), mapFactory);
-    return beans.remove(name);
+    return null;
   }
 
-  protected ConversationContextHolder getConversationHelder() {
-    return ConversationContextHolder.instance();
+  protected String getScopeContext() {
+    return ConversationContextHolder.instance().attributeHolder.get();
   }
 
-  protected Object getScopedBean(
-      Map<String, Object> map, String name, ObjectFactory<?> factory) {
+  protected Map<String, Object> getOrCreateScopedBeans(String name) {
+    Map<String, Map<String, Object>> scopeBeans =
+        ConversationContextHolder.instance().getScopeBeans();
+    return scopeBeans.computeIfAbsent(name, k -> new HashMap<>());
+  }
+
+  protected Object getScopedBean(Map<String, Object> map, String name, ObjectFactory<?> factory) {
     Object o = map.get(name);
     if (o == null) {
       o = factory.getObject();

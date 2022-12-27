@@ -1,6 +1,6 @@
-package de.ikor.sip.foundation.core.framework.scope.conversation.notifiers;
+package de.ikor.sip.foundation.core.scope.conversation.notifiers;
 
-import de.ikor.sip.foundation.core.framework.scope.conversation.ConversationContextHolder;
+import de.ikor.sip.foundation.core.scope.conversation.ConversationContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;

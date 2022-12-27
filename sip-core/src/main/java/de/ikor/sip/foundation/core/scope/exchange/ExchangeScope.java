@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.framework.scope.exchange;
+package de.ikor.sip.foundation.core.scope.exchange;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectFactory;

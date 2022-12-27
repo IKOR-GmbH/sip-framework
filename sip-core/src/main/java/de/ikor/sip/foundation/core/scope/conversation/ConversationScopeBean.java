@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.framework.scope.exchange;
+package de.ikor.sip.foundation.core.scope.conversation;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Slf4j
 @Component
-@Scope(value = "exchange", proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class ExchangeScopeBean {
+@Scope(value = "conversation", proxyMode = ScopedProxyMode.TARGET_CLASS)
+public class ConversationScopeBean {
   private Object internal;
 }

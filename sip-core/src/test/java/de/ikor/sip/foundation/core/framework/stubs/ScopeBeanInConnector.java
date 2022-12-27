@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.framework.stubs;
 
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
-import de.ikor.sip.foundation.core.framework.scope.conversation.ConversationScopeBean;
+import de.ikor.sip.foundation.core.scope.conversation.ConversationScopeBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

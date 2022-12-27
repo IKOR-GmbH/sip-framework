@@ -1,6 +1,6 @@
-package de.ikor.sip.foundation.core.framework.scope.conversation.notifiers;
+package de.ikor.sip.foundation.core.scope.conversation.notifiers;
 
-import de.ikor.sip.foundation.core.framework.scope.conversation.ConversationContextHolder;
+import de.ikor.sip.foundation.core.scope.conversation.ConversationContextHolder;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.event.AbstractExchangeEvent;
 import org.apache.camel.impl.event.ExchangeCompletedEvent;

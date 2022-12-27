@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.framework;
+package de.ikor.sip.foundation.core.scope;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
