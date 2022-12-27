@@ -31,7 +31,7 @@ public @interface ConditionalOnSIPAuthProvider {
 
   /**
    * The fully qualified classname of the authentication provider relevant for the class this
-   * annotation is putBeanInScope onto
+   * annotation is put onto
    *
    * @return the classname
    */
