@@ -7,9 +7,11 @@ import org.apache.camel.Exchange;
 import org.apache.camel.impl.event.ExchangeCreatedEvent;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class ConversationCreatedExchangeEventNotifier extends EventNotifierSupport {
   public static final String SCOPE_PROPERTY = "scopeKey";
 
