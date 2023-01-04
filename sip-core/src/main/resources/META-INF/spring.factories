@@ -8,4 +8,5 @@ de.ikor.sip.foundation.core.actuator.info.ActuatorInfoAutoConfig,\
 de.ikor.sip.foundation.core.framework.FrameworkAutoConfig, \
 de.ikor.sip.foundation.core.openapi.OpenApiResolverAutoConfig, \
 de.ikor.sip.foundation.core.actuator.declarative.ActuatorDefinitionAutoConfig, \
-de.ikor.sip.foundation.core.declarative.RoutesFromDeclarativeBuilder
+de.ikor.sip.foundation.core.declarative.AdapterBuilder, \
+de.ikor.sip.foundation.core.declarative.DeclarationsRegistry

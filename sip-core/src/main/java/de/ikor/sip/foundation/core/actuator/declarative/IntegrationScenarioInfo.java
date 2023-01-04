@@ -9,5 +9,6 @@ public class IntegrationScenarioInfo {
 
   String scenarioId;
   String scenarioDescription;
-  String domainModelClass;
+  String requestModelClass;
+  String responseModelClass;
 }

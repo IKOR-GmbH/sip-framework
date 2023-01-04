@@ -35,11 +35,16 @@ public class InEndpoint {
     return instance(endpointDslDefinition.getUri(), id);
   }
 
-  public static InEndpoint instance(EndpointConsumerBuilder endpointDslDefinition, String id, Class<?> domainClassType) {
+  public static InEndpoint instance(
+      EndpointConsumerBuilder endpointDslDefinition, String id, Class<?> domainClassType) {
     return instance(endpointDslDefinition.getUri(), id, domainClassType);
   }
 
-  public static <T, D> InEndpoint instance(EndpointConsumerBuilder endpointDslDefinition, String id, Class<D> domainClassType, Function<T, D> transformFunction) {
+  public static <T, D> InEndpoint instance(
+      EndpointConsumerBuilder endpointDslDefinition,
+      String id,
+      Class<D> domainClassType,
+      Function<T, D> transformFunction) {
     return instance(endpointDslDefinition.getUri(), id, domainClassType, transformFunction);
   }
 

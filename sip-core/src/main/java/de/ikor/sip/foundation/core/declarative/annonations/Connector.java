@@ -1,6 +1,5 @@
-package de.ikor.sip.foundation.core.declarative.annotations;
+package de.ikor.sip.foundation.core.declarative.annonations;
 
-import de.ikor.sip.foundation.core.declarative.definitions.ConnectorDefinition;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,11 +9,6 @@ import org.springframework.stereotype.Component;
 /**
  * Annotation for beans that represent a connector that links an (external) system with one or more
  * {@link IntegrationScenario}s.
- *
- * <p>Must only be used on a bean implementing {@link ConnectorDefinition}.
- *
- * @see ScenarioParticipationIncoming
- * @see ScenarioParticipationOutgoing
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -22,7 +16,7 @@ import org.springframework.stereotype.Component;
 public @interface Connector {
 
   /** @return The ID of the connector. Must be unique among all connectors within the adapter. */
-  String value();
+  String connectorId();
 
   /**
    * Optional path to the resource (typically a markdown file) that describes this connector. If not

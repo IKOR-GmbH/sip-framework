@@ -37,13 +37,16 @@ public class ExchangeEventNotifier extends EventNotifierSupport {
 
     if (event instanceof ExchangeCompletedEvent) {
       ExchangeCompletedEvent ece = (ExchangeCompletedEvent) event;
-      logEvent("COMPLETE", ece.getExchange().getProperty(ConversationScope.SCOPE_PROPERTY, String.class));
+      logEvent(
+          "COMPLETE",
+          ece.getExchange().getProperty(ConversationScope.SCOPE_PROPERTY, String.class));
       resetContextHolderInstance();
     }
 
     if (event instanceof ExchangeFailedEvent) {
       ExchangeFailedEvent efe = (ExchangeFailedEvent) event;
-      logEvent("FAILED", efe.getExchange().getProperty(ConversationScope.SCOPE_PROPERTY, String.class));
+      logEvent(
+          "FAILED", efe.getExchange().getProperty(ConversationScope.SCOPE_PROPERTY, String.class));
       resetContextHolderInstance();
     }
   }
@@ -58,8 +61,7 @@ public class ExchangeEventNotifier extends EventNotifierSupport {
   }
 
   private void logEvent(String type, String property) {
-    log.debug(
-        "RECEIVED {} EVENT - {}", type, property);
+    log.debug("RECEIVED {} EVENT - {}", type, property);
   }
 
   @Override

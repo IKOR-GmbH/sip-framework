@@ -1,14 +1,14 @@
 package de.ikor.sip.foundation.core.framework;
 
-import static de.ikor.sip.foundation.core.framework.stubs.routers.ConfigurationTestingCentralRouter.SCENARIO_HEADER_KEY;
-import static de.ikor.sip.foundation.core.framework.stubs.routers.ConfigurationTestingCentralRouter.SCENARIO_HEADER_VALUE;
 import static de.ikor.sip.foundation.core.apps.framework.TestGlobalRoutesConfiguration.GLOBAL_HEADER_KEY;
 import static de.ikor.sip.foundation.core.apps.framework.TestGlobalRoutesConfiguration.GLOBAL_HEADER_VALUE;
+import static de.ikor.sip.foundation.core.framework.stubs.routers.ConfigurationTestingCentralRouter.SCENARIO_HEADER_KEY;
+import static de.ikor.sip.foundation.core.framework.stubs.routers.ConfigurationTestingCentralRouter.SCENARIO_HEADER_VALUE;
 
 import de.ikor.sip.foundation.core.apps.core.CoreTestApplication;
+import de.ikor.sip.foundation.core.apps.framework.TestGlobalRoutesConfiguration;
 import de.ikor.sip.foundation.core.framework.stubs.routers.ConfigurationTestingCentralRouter;
 import de.ikor.sip.foundation.core.framework.stubs.routers.NoConfigurationTestingCentralRouter;
-import de.ikor.sip.foundation.core.apps.framework.TestGlobalRoutesConfiguration;
 import org.apache.camel.*;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;

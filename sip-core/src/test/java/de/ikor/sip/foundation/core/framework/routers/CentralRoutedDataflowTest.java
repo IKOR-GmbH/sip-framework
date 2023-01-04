@@ -5,10 +5,10 @@ import static de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector.with
 import static org.assertj.core.api.Assertions.*;
 
 import de.ikor.sip.foundation.core.apps.framework.emptyapp.EmptyTestingApplication;
-import de.ikor.sip.foundation.core.framework.stubs.routers.TestingCentralRouter;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
 import de.ikor.sip.foundation.core.framework.endpoints.OutEndpointBuilder;
 import de.ikor.sip.foundation.core.framework.stubs.*;
+import de.ikor.sip.foundation.core.framework.stubs.routers.TestingCentralRouter;
 import de.ikor.sip.foundation.core.framework.testutil.TestSetupUtil;
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;

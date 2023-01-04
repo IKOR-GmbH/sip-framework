@@ -1,5 +1,9 @@
 package de.ikor.sip.foundation.core.framework.routers;
 
+import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
+import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import de.ikor.sip.foundation.core.apps.framework.emptyapp.EmptyTestingApplication;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import de.ikor.sip.foundation.core.framework.connectors.OutConnector;
@@ -8,20 +12,15 @@ import de.ikor.sip.foundation.core.framework.stubs.SimpleInConnector;
 import de.ikor.sip.foundation.core.framework.stubs.SimpleOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.StaticEndpointDSLOutConnector;
 import de.ikor.sip.foundation.core.framework.stubs.routers.TestingCentralRouter;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import org.apache.camel.Route;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
-import static java.lang.String.format;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = EmptyTestingApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -119,7 +118,8 @@ class CentralRouterStructureTest {
   void when_CreateInEndpointWithEndpointDsl_then_VerifyRoute() {
     // arrange
     InConnector inConnector = new EndpointDSLInConnector("endpointdsl-direct", "endpointdsl-id");
-    OutConnector outConnector = new StaticEndpointDSLOutConnector("temp/out", "staticendpointdsl-id");
+    OutConnector outConnector =
+        new StaticEndpointDSLOutConnector("temp/out", "staticendpointdsl-id");
     routerSubject.input(inConnector).sequencedOutput(outConnector);
 
     // act

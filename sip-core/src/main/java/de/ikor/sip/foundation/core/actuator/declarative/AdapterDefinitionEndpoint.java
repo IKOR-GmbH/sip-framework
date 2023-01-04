@@ -1,12 +1,9 @@
 package de.ikor.sip.foundation.core.actuator.declarative;
 
-import de.ikor.sip.foundation.core.declarative.annotations.Connector;
-import de.ikor.sip.foundation.core.declarative.annotations.IntegrationScenario;
-import de.ikor.sip.foundation.core.declarative.annotations.ScenarioParticipationIncoming;
-import de.ikor.sip.foundation.core.declarative.annotations.ScenarioParticipationOutgoing;
-import de.ikor.sip.foundation.core.declarative.definitions.ConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.definitions.IntegrationScenarioDefinition;
-import java.util.Arrays;
+import de.ikor.sip.foundation.core.declarative.annonations.Connector;
+import de.ikor.sip.foundation.core.declarative.annonations.IntegrationScenario;
+import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,28 +33,30 @@ public class AdapterDefinitionEndpoint {
         context.getBeansWithAnnotation(Connector.class).values().stream()
             .map(ConnectorDefinition.class::cast)
             .collect(Collectors.toUnmodifiableList());
-    for (var connector : connectors) {
-      var incomingParticipations =
-          Arrays.stream(connector.getClass().getMethods())
-              .filter(method -> method.isAnnotationPresent(ScenarioParticipationIncoming.class))
-              .map(method -> method.getAnnotation(ScenarioParticipationIncoming.class))
-              .map(ScenarioParticipationIncoming::value)
-              .collect(Collectors.toUnmodifiableList());
-      var outgoingParticipations =
-          Arrays.stream(connector.getClass().getMethods())
-              .filter(method -> method.isAnnotationPresent(ScenarioParticipationOutgoing.class))
-              .map(method -> method.getAnnotation(ScenarioParticipationOutgoing.class))
-              .map(ScenarioParticipationOutgoing::value)
-              .collect(Collectors.toUnmodifiableList());
-      var info =
-          new ConnectorInfo.ConnectorInfoBuilder()
-              .connectorId(connector.getID())
-              .connectorDescription(connector.getDocumentation())
-              .participatesIncoming(incomingParticipations)
-              .participatesOutgoing(outgoingParticipations)
-              .build();
-      connectorInfos.put(connector.getID(), info);
-    }
+    //    for (var connector : connectors) {
+    //      var incomingParticipations =
+    //          Arrays.stream(connector.getClass().getMethods())
+    //              .filter(method ->
+    // method.isAnnotationPresent(ScenarioParticipationIncoming.class))
+    //              .map(method -> method.getAnnotation(ScenarioParticipationIncoming.class))
+    //              .map(ScenarioParticipationIncoming::value)
+    //              .collect(Collectors.toUnmodifiableList());
+    //      var outgoingParticipations =
+    //          Arrays.stream(connector.getClass().getMethods())
+    //              .filter(method ->
+    // method.isAnnotationPresent(ScenarioParticipationOutgoing.class))
+    //              .map(method -> method.getAnnotation(ScenarioParticipationOutgoing.class))
+    //              .map(ScenarioParticipationOutgoing::value)
+    //              .collect(Collectors.toUnmodifiableList());
+    //      var info =
+    //          new ConnectorInfo.ConnectorInfoBuilder()
+    //              .connectorId(connector.getID())
+    //              .connectorDescription(connector.getDocumentation())
+    //              .participatesIncoming(incomingParticipations)
+    //              .participatesOutgoing(outgoingParticipations)
+    //              .build();
+    //      connectorInfos.put(connector.getID(), info);
+    //    }
 
     var scenarios =
         context.getBeansWithAnnotation(IntegrationScenario.class).values().stream()
@@ -68,7 +67,11 @@ public class AdapterDefinitionEndpoint {
           new IntegrationScenarioInfo.IntegrationScenarioInfoBuilder()
               .scenarioId(scenario.getID())
               .scenarioDescription(scenario.getDescription())
-              .domainModelClass(scenario.getDomainModelBaseClass().getName())
+              .requestModelClass(scenario.getRequestModelClass().getName())
+              .responseModelClass(
+                  scenario.getResponseModelClass().isPresent()
+                      ? scenario.getResponseModelClass().get().getName()
+                      : "NO RESPONSE")
               .build();
       integrationScenarios.put(info.getScenarioId(), info);
     }
