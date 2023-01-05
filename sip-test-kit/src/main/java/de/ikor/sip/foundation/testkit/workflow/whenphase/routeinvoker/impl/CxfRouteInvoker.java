@@ -11,7 +11,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
-import org.apache.camel.component.cxf.CxfEndpoint;
+import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
