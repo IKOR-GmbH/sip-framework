@@ -66,8 +66,8 @@ class CamelBodyValidatorTest {
     Message expectedMessage = mock(Message.class);
     when(result.getMessage()).thenReturn(resultMessage);
     when(expected.getMessage()).thenReturn(expectedMessage);
-    when(resultMessage.getBody()).thenReturn(null);
-    when(expectedMessage.getBody()).thenReturn("null");
+    when(resultMessage.getBody()).thenReturn("null");
+    when(expectedMessage.getBody()).thenReturn("test");
 
     ValidationResult validationResult = bodyValidatorSubject.execute(result, expected);
 
@@ -80,8 +80,8 @@ class CamelBodyValidatorTest {
     Message expectedMessage = mock(Message.class);
     when(result.getMessage()).thenReturn(resultMessage);
     when(expected.getMessage()).thenReturn(expectedMessage);
-    when(resultMessage.getBody()).thenReturn(null);
-    when(expectedMessage.getBody()).thenReturn("");
+    when(resultMessage.getBody()).thenReturn("test");
+    when(expectedMessage.getBody()).thenReturn("test");
 
     ValidationResult validationResult = bodyValidatorSubject.execute(result, expected);
 

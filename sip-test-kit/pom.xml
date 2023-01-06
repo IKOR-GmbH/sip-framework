@@ -65,7 +65,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-cxf-starter</artifactId>
+            <artifactId>camel-cxf-soap-starter</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>wsdl4j</groupId>

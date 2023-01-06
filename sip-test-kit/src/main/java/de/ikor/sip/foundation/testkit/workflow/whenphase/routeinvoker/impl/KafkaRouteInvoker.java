@@ -4,6 +4,7 @@ import static de.ikor.sip.foundation.testkit.util.TestKitHelper.*;
 import static java.lang.System.currentTimeMillis;
 import static org.apache.camel.Exchange.*;
 import static org.apache.camel.component.kafka.KafkaConstants.*;
+import static org.apache.camel.component.kafka.KafkaConstants.OFFSET;
 
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.RouteInvokerRuntimeException;
