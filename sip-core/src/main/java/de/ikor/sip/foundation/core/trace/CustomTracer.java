@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class CustomTracer extends DefaultTracer {
+public class CustomTracer extends DefaultTracer implements TraceSupport {
 
   public static final String TRACE_SET = "traceSet";
 
@@ -32,7 +32,6 @@ public class CustomTracer extends DefaultTracer {
       CamelContext camelContext,
       SIPTraceConfig sipTraceConfig) {
     setExchangeFormatter(exchangeFormatter);
-    camelContext.setTracing(true);
     this.sipTraceConfig = sipTraceConfig;
   }
 
