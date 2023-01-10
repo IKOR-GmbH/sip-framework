@@ -6,7 +6,8 @@ de.ikor.sip.foundation.core.actuator.routes.ActuatorRoutesAutoConfig,\
 de.ikor.sip.foundation.core.actuator.health.ActuatorHealthAutoConfig,\
 de.ikor.sip.foundation.core.actuator.info.ActuatorInfoAutoConfig,\
 de.ikor.sip.foundation.core.openapi.OpenApiResolverAutoConfig,\
-de.ikor.sip.foundation.core.scope.CustomScopeConfig
+de.ikor.sip.foundation.core.scope.CustomScopeConfig,\
+de.ikor.sip.foundation.core.configuration.CamelContextConfiguration
 
 org.springframework.context.ApplicationListener=\
 de.ikor.sip.foundation.core.actuator.config.EndpointExposureConfiguration

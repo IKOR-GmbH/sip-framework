@@ -7,8 +7,10 @@ import org.apache.camel.Exchange;
 import org.apache.camel.impl.event.ExchangeCreatedEvent;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 @RequiredArgsConstructor
 public class CreatedExchangeEventNotifier extends EventNotifierSupport {
 

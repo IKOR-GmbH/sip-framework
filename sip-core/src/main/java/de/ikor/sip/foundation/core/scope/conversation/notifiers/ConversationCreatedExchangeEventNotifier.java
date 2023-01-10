@@ -1,17 +1,22 @@
 package de.ikor.sip.foundation.core.scope.conversation.notifiers;
 
 import de.ikor.sip.foundation.core.scope.conversation.ConversationContextHolder;
+import de.ikor.sip.foundation.core.scope.conversation.ConversationTracker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.event.ExchangeCreatedEvent;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 @RequiredArgsConstructor
 public class ConversationCreatedExchangeEventNotifier extends EventNotifierSupport {
   public static final String SCOPE_PROPERTY = "scopeKey";
+  private final ConversationTracker conversationTracker;
+  private final ConversationContextHolder contextHolder;
 
   public void notify(CamelEvent event) {
     ExchangeCreatedEvent ece = (ExchangeCreatedEvent) event;
@@ -21,8 +26,8 @@ public class ConversationCreatedExchangeEventNotifier extends EventNotifierSuppo
       key = exchange.getExchangeId();
       exchange.setProperty(SCOPE_PROPERTY, key);
     }
-    ConversationContextHolder.instance().setConversationAttributes(key);
-    ConversationContextHolder.instance().appendBreadcrumbs(key, exchange.getExchangeId());
+    contextHolder.setConversationId(key);
+    conversationTracker.registerOpenedExchange(key, exchange.getExchangeId());
   }
 
   @Override

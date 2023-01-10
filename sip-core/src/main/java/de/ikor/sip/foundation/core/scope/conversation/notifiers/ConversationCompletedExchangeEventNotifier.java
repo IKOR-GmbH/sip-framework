@@ -1,21 +1,27 @@
 package de.ikor.sip.foundation.core.scope.conversation.notifiers;
 
 import de.ikor.sip.foundation.core.scope.conversation.ConversationContextHolder;
+import de.ikor.sip.foundation.core.scope.conversation.ConversationTracker;
+import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.event.AbstractExchangeEvent;
 import org.apache.camel.impl.event.ExchangeCompletedEvent;
 import org.apache.camel.impl.event.ExchangeFailedEvent;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public class ConversationCompletedExchangeEventNotifier extends EventNotifierSupport {
+  private final ConversationTracker conversationTracker;
+  private final ConversationContextHolder conversationHolder;
 
   public void notify(CamelEvent event) {
     AbstractExchangeEvent abstractExchangeEvent = (AbstractExchangeEvent) event;
     Exchange exchange = abstractExchangeEvent.getExchange();
-    String key =
-        exchange.getProperty(ConversationCreatedExchangeEventNotifier.SCOPE_PROPERTY, String.class);
-    ConversationContextHolder.instance().removeBreadcrumbs(key, exchange);
+    conversationHolder.removeBean();
+    conversationTracker.registerClosedExchange(exchange);
   }
 
   @Override
