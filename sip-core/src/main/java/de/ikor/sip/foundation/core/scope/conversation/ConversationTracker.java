@@ -25,6 +25,7 @@ public class ConversationTracker {
     Set<String> crumbs = breadcrumbs.get(key);
     crumbs.remove(exchange.getExchangeId());
     if (crumbs.isEmpty()) {
+      breadcrumbs.remove(key);
       sendConversationCompletedEvent(exchange);
     }
   }
