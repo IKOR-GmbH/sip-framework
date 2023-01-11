@@ -15,12 +15,12 @@ import static de.ikor.sip.foundation.core.scope.conversation.notifiers.Conversat
 public class ConversationTracker {
   private final Map<String, Set<String>> breadcrumbs = new HashMap<>();
 
-  public void registerOpenedExchange(String key, String exchangeId) {
+  public void registerExchange(String key, String exchangeId) {
     breadcrumbs.computeIfAbsent(key, k -> new HashSet<>());
     breadcrumbs.get(key).add(exchangeId);
   }
 
-  public void registerClosedExchange(Exchange exchange) {
+  public void deregisterExchange(Exchange exchange) {
     String key = exchange.getProperty(SCOPE_PROPERTY, String.class);
     Set<String> crumbs = breadcrumbs.get(key);
     crumbs.remove(exchange.getExchangeId());

@@ -21,7 +21,7 @@ public class ConversationCompletedExchangeEventNotifier extends EventNotifierSup
     AbstractExchangeEvent abstractExchangeEvent = (AbstractExchangeEvent) event;
     Exchange exchange = abstractExchangeEvent.getExchange();
     conversationHolder.removeBean();
-    conversationTracker.registerClosedExchange(exchange);
+    conversationTracker.deregisterExchange(exchange);
   }
 
   @Override

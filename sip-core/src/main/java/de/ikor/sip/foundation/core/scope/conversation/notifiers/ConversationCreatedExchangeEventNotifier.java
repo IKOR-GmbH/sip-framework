@@ -27,7 +27,7 @@ public class ConversationCreatedExchangeEventNotifier extends EventNotifierSuppo
       exchange.setProperty(SCOPE_PROPERTY, key);
     }
     contextHolder.setConversationId(key);
-    conversationTracker.registerOpenedExchange(key, exchange.getExchangeId());
+    conversationTracker.registerExchange(key, exchange.getExchangeId());
   }
 
   @Override
