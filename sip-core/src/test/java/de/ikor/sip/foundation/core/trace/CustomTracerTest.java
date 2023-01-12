@@ -33,7 +33,7 @@ class CustomTracerTest {
     exchange = mock(Exchange.class);
     traceConfig = new SIPTraceConfig();
     exchangeFormatter = mock(SIPExchangeFormatter.class);
-    subject = new CustomTracer(exchangeFormatter, camelContext, traceConfig);
+    subject = new CustomTracer(exchangeFormatter, traceConfig);
     Logger logger = (Logger) LoggerFactory.getLogger("org.apache.camel.Tracing");
     listAppender = new ListAppender<>();
     listAppender.start();

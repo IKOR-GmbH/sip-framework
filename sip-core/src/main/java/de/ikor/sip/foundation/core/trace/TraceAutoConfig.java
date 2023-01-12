@@ -2,7 +2,6 @@ package de.ikor.sip.foundation.core.trace;
 
 import de.ikor.sip.foundation.core.annotation.SIPFeature;
 import de.ikor.sip.foundation.core.util.FoundationFeature;
-import org.apache.camel.CamelContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -14,7 +13,4 @@ import org.springframework.context.annotation.ComponentScan;
 @SIPFeature(name = FoundationFeature.TRACING, versions = 1)
 @ConditionalOnProperty(value = "sip.core.tracing.enabled", havingValue = "true")
 public class TraceAutoConfig {
-    public TraceAutoConfig(CamelContext camelContext) {
-        camelContext.setTracing(true);
-    }
 }

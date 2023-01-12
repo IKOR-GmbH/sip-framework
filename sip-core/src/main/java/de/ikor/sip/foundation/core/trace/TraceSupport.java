@@ -14,4 +14,6 @@ public interface TraceSupport {
   void traceAfterRoute(NamedRoute route, Exchange exchange);
 
   boolean shouldTrace(NamedNode node);
+
+  boolean isFeatureEnabled();
 }

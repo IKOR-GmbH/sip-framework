@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.trace;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.NamedNode;
 import org.apache.camel.NamedRoute;
@@ -24,12 +23,10 @@ public class CustomTracer extends DefaultTracer implements TraceSupport {
    * Creates new instance of CustomTracer Enables tracing in CamelContext
    *
    * @param exchangeFormatter {@link SIPExchangeFormatter}
-   * @param camelContext {@link CamelContext}
    * @param sipTraceConfig set of {@link SIPTraceConfig}
    */
   public CustomTracer(
       SIPExchangeFormatter exchangeFormatter,
-      CamelContext camelContext,
       SIPTraceConfig sipTraceConfig) {
     setExchangeFormatter(exchangeFormatter);
     this.sipTraceConfig = sipTraceConfig;
@@ -39,6 +36,11 @@ public class CustomTracer extends DefaultTracer implements TraceSupport {
   public void traceBeforeRoute(NamedRoute route, Exchange exchange) {
     addIdToTraceSet(exchange);
     super.traceBeforeRoute(route, exchange);
+  }
+
+  @Override
+  public boolean isFeatureEnabled() {
+    return sipTraceConfig.isLog();
   }
 
   @Override
