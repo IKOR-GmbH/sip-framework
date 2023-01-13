@@ -9,31 +9,36 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import java.util.*;
+
+import de.ikor.sip.foundation.core.CoreTestApplication;
 import org.apache.camel.*;
+import org.apache.camel.builder.ExchangeBuilder;
 import org.apache.camel.support.DefaultMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(classes = CoreTestApplication.class, properties = {
+        "sip.core.tracing.enabled=true"
+})
 class CustomTracerTest {
 
-  private static final String LOG_MESSAGE = "log message";
-  private static final String EXCHANGE_ID = "id";
+  private static final String EXCHANGE_ID = "exchangeId";
   private static final String ROUTE_ID = "routeId";
-  SIPExchangeFormatter exchangeFormatter;
-  CustomTracer subject;
-  CamelContext camelContext;
+  @Autowired CustomTracer subject;
+  @Autowired ExtendedCamelContext camelContext;
+  @Autowired SIPTraceConfig sipTraceConfig;
   ListAppender<ILoggingEvent> listAppender;
-  SIPTraceConfig traceConfig;
   Exchange exchange;
+  NamedNode node = mock(NamedNode.class, RETURNS_DEEP_STUBS);
 
   @BeforeEach
   void setUp() {
-    camelContext = mock(CamelContext.class);
-    exchange = mock(Exchange.class);
-    traceConfig = new SIPTraceConfig();
-    exchangeFormatter = mock(SIPExchangeFormatter.class);
-    subject = new CustomTracer(exchangeFormatter, traceConfig);
+    exchange = ExchangeBuilder.anExchange(camelContext).build();
+    exchange.setExchangeId(EXCHANGE_ID);
+
     Logger logger = (Logger) LoggerFactory.getLogger("org.apache.camel.Tracing");
     listAppender = new ListAppender<>();
     listAppender.start();
@@ -41,27 +46,26 @@ class CustomTracerTest {
   }
 
   @Test
-  void When_dumpTrace_With_LogsEnabled_Then_messageInLog() {
+  void When_traceBeforeNode_With_LogsEnabled_Then_messageInLog() {
     // arrange
-    traceConfig.setLog(true);
     List<ILoggingEvent> logsList = listAppender.list;
 
     // act
-    subject.dumpTrace(LOG_MESSAGE, null);
+    subject.traceBeforeNode(node, exchange);
 
     // assert
-    assertThat(logsList.get(0).getMessage()).isEqualTo(LOG_MESSAGE);
+    assertThat(logsList.get(0).getMessage()).contains("Id: " + EXCHANGE_ID);
     assertThat(logsList.get(0).getLevel()).isEqualTo(Level.INFO);
   }
 
   @Test
   void When_dumpTrace_With_DisabledLogs_Then_emptyLogs() {
     // arrange
-    traceConfig.setLog(false);
     List<ILoggingEvent> logsList = listAppender.list;
+    sipTraceConfig.setLog(false);
 
     // act
-    subject.dumpTrace(LOG_MESSAGE, null);
+    subject.traceBeforeNode(node, exchange);
 
     // assert
     assertThat(logsList).isEmpty();
@@ -69,15 +73,12 @@ class CustomTracerTest {
 
   @Test
   void When_traceBeforeNode_With_NoIdInHeaders_Then_OneTracingId() {
-    // arrange
-    initTracingIDTest();
-
     // act
-    subject.traceBeforeNode(mock(NamedNode.class), exchange);
+    subject.traceBeforeNode(node, exchange);
 
     // assert
     assertThat(exchange.getIn().getHeader(TRACE_SET, TraceSet.class).getExchangeIds())
-        .contains(EXCHANGE_ID);
+        .containsExactly(EXCHANGE_ID);
   }
 
   @Test
@@ -85,44 +86,27 @@ class CustomTracerTest {
     // arrange
     String oldId = "old";
     TraceSet traceSet = new TraceSet();
-    initTracingIDTest();
     exchange.getIn().setHeader(TRACE_SET, traceSet.cloneAndAdd(oldId));
 
     // act
-    subject.traceBeforeNode(mock(NamedNode.class), exchange);
+    subject.traceBeforeNode(node, exchange);
 
     // assert
     assertThat(exchange.getIn().getHeader(TRACE_SET, TraceSet.class).getExchangeIds())
-        .contains(oldId)
-        .contains(EXCHANGE_ID);
+        .containsExactly(oldId, EXCHANGE_ID);
   }
 
   @Test
   void When_traceBeforeRoute_With_NoIdInHeaders_Then_OneTracingId() {
     // arrange
     NamedRoute namedRoute = mock(NamedRoute.class);
-    initTracingIDTest();
-    when(exchange.getFromRouteId()).thenReturn(ROUTE_ID);
     when(namedRoute.getRouteId()).thenReturn(ROUTE_ID);
-    when(camelContext.isDebugging()).thenReturn(false);
-    when(exchangeFormatter.format(exchange)).thenReturn("formatted");
-    subject.setCamelContext(camelContext);
 
     // act
     subject.traceBeforeRoute(namedRoute, exchange);
 
     // assert
     assertThat(exchange.getIn().getHeader(TRACE_SET, TraceSet.class).getExchangeIds())
-        .contains(EXCHANGE_ID);
-  }
-
-  private void initTracingIDTest() {
-    subject.setEnabled(false);
-    ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
-    when(camelContext.getHeadersMapFactory()).thenReturn(null);
-    Message message = new DefaultMessage(camelContext);
-    when(exchange.getIn()).thenReturn(message);
-    when(exchange.getContext()).thenReturn(camelContext);
-    when(exchange.getExchangeId()).thenReturn(EXCHANGE_ID);
+        .containsExactly(EXCHANGE_ID);
   }
 }
