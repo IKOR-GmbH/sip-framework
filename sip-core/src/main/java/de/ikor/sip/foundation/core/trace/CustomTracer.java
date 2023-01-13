@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.NamedNode;
 import org.apache.camel.NamedRoute;
-import org.apache.camel.Route;
 import org.apache.camel.impl.engine.DefaultTracer;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +54,7 @@ public class CustomTracer extends DefaultTracer implements TraceSupport {
   }
 
   @Override
-  public void traceAfterRoute(Route route, Exchange exchange) {
+  public void traceAfterRoute(NamedRoute route, Exchange exchange) {
     if (sipTraceConfig.isLog()) {
       super.traceAfterRoute(route, exchange);
     }
