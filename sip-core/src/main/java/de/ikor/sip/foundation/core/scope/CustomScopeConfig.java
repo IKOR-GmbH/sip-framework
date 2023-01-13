@@ -2,7 +2,6 @@ package de.ikor.sip.foundation.core.scope;
 
 import de.ikor.sip.foundation.core.scope.conversation.ConversationContextHolder;
 import de.ikor.sip.foundation.core.scope.conversation.ConversationScope;
-import de.ikor.sip.foundation.core.scope.exchange.ExchangeScope;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.config.CustomScopeConfigurer;
@@ -17,7 +16,6 @@ public class CustomScopeConfig {
   public CustomScopeConfigurer customScope(ConversationContextHolder contextHolder) {
     CustomScopeConfigurer configurer = new CustomScopeConfigurer();
     Map<String, Object> workflowScope = new HashMap<>();
-    workflowScope.put("exchange", new ExchangeScope());
     workflowScope.put("conversation", new ConversationScope(contextHolder));
     configurer.setScopes(workflowScope);
 
