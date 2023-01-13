@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "174",
+  "message": "Add conversation scope beans, mechanism for storing and destroying them and tracking when the conversation is done. Refactor tracing to improve performance."
+}
