@@ -1,15 +1,14 @@
 package de.ikor.sip.foundation.core.scope.conversation;
 
-import org.apache.camel.Exchange;
-import org.apache.camel.support.EventHelper;
-import org.springframework.stereotype.Component;
+import static de.ikor.sip.foundation.core.scope.conversation.notifiers.ConversationCreatedExchangeEventNotifier.SCOPE_PROPERTY;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import static de.ikor.sip.foundation.core.scope.conversation.notifiers.ConversationCreatedExchangeEventNotifier.SCOPE_PROPERTY;
+import org.apache.camel.Exchange;
+import org.apache.camel.support.EventHelper;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ConversationTracker {

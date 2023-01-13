@@ -11,5 +11,5 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(value = "conversation", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ConversationScopeBean {
-    private Object internal;
+  private Object internal;
 }

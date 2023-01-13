@@ -10,17 +10,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class CompletedExchangeEventNotifier extends EventNotifierSupport {
 
-    public void notify(CamelEvent event) {
-        resetContextHolderInstance();
-    }
+  public void notify(CamelEvent event) {
+    resetContextHolderInstance();
+  }
 
-    private void resetContextHolderInstance() {
-        ExchangeContextHolder conversationContextHolder = ExchangeContextHolder.instance();
-        conversationContextHolder.resetConversationAttributes();
-    }
+  private void resetContextHolderInstance() {
+    ExchangeContextHolder conversationContextHolder = ExchangeContextHolder.instance();
+    conversationContextHolder.resetConversationAttributes();
+  }
 
-    @Override
-    public boolean isEnabled(CamelEvent event) {
-        return event instanceof ExchangeCompletedEvent || event instanceof ExchangeFailedEvent;
-    }
+  @Override
+  public boolean isEnabled(CamelEvent event) {
+    return event instanceof ExchangeCompletedEvent || event instanceof ExchangeFailedEvent;
+  }
 }

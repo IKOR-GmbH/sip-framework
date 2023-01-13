@@ -1,24 +1,22 @@
 package de.ikor.sip.foundation.core.util;
 
+import static de.ikor.sip.foundation.core.scope.conversation.notifiers.ConversationCreatedExchangeEventNotifier.SCOPE_PROPERTY;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.event.AbstractExchangeEvent;
 
-import static de.ikor.sip.foundation.core.scope.conversation.notifiers.ConversationCreatedExchangeEventNotifier.SCOPE_PROPERTY;
-
 public class ConversationCompletedEvent extends AbstractExchangeEvent {
-    @Getter
-    @Setter
-    private String conversationId;
+  @Getter @Setter private String conversationId;
 
-    public ConversationCompletedEvent(Exchange source) {
-        super(source);
-        conversationId = source.getProperty(SCOPE_PROPERTY, String.class);
-    }
+  public ConversationCompletedEvent(Exchange source) {
+    super(source);
+    conversationId = source.getProperty(SCOPE_PROPERTY, String.class);
+  }
 
-    @Override
-    public Type getType() {
-        return Type.Custom;
-    }
+  @Override
+  public Type getType() {
+    return Type.Custom;
+  }
 }

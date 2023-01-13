@@ -39,6 +39,6 @@ class CoreCamelSpringBootTest {
   @Test
   void WHEN_appIsStarted_EXPECT_ExtendedEventFactoryIsLoaded() {
     assertThat(camelContext.getManagementStrategy().getEventFactory())
-            .isInstanceOf(ExtendedEventFactory.class);
+        .isInstanceOf(ExtendedEventFactory.class);
   }
 }

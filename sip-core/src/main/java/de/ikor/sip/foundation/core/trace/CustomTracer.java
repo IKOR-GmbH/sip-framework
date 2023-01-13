@@ -26,9 +26,7 @@ public class CustomTracer extends DefaultTracer implements TraceSupport {
    * @param exchangeFormatter {@link SIPExchangeFormatter}
    * @param sipTraceConfig set of {@link SIPTraceConfig}
    */
-  public CustomTracer(
-      SIPExchangeFormatter exchangeFormatter,
-      SIPTraceConfig sipTraceConfig) {
+  public CustomTracer(SIPExchangeFormatter exchangeFormatter, SIPTraceConfig sipTraceConfig) {
     setExchangeFormatter(exchangeFormatter);
     this.sipTraceConfig = sipTraceConfig;
   }

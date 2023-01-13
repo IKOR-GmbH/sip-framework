@@ -12,5 +12,4 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan
 @SIPFeature(name = FoundationFeature.TRACING, versions = 1)
 @ConditionalOnProperty(value = "sip.core.tracing.enabled", havingValue = "true")
-public class TraceAutoConfig {
-}
+public class TraceAutoConfig {}

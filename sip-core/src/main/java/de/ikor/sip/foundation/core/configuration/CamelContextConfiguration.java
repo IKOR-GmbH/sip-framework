@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class CamelContextConfiguration {
-    public CamelContextConfiguration(CamelContext camelContext) {
-        camelContext.getManagementStrategy().setEventFactory(new ExtendedEventFactory());
-    }
+  public CamelContextConfiguration(CamelContext camelContext) {
+    camelContext.getManagementStrategy().setEventFactory(new ExtendedEventFactory());
+  }
 }

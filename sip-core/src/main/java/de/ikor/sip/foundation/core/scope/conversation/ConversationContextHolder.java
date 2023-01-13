@@ -1,14 +1,13 @@
 package de.ikor.sip.foundation.core.scope.conversation;
 
 import de.ikor.sip.foundation.core.util.ConversationCompletedEvent;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.support.EventNotifierSupport;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class ConversationContextHolder extends EventNotifierSupport {
