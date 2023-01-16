@@ -72,8 +72,6 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#exchange-tracing">Exchange tracing</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#openapi-descriptor">OpenAPI Descriptor</a>
-    </li>
     <li class="toctree-l3"><a class="reference internal" href="#sip-details-in-actuator-info-endpoint">SIP Details in actuator info endpoint</a>
     </li>
         </ul>
@@ -126,6 +124,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/2.4.0/index.html">JavaDoc 2.4.0</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/2.3.0/index.html">JavaDoc 2.3.0</a>
                 </li>
               </ul>
@@ -173,8 +175,7 @@
     <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
       <li>Core</li>
     <li class="wy-breadcrumbs-aside">
-        <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/core.md"
-          class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/core.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -194,7 +195,6 @@
 <li><a href="#logging-translation">Logging Translation</a></li>
 <li><a href="#changing-log-level-programmatically">Changing log level programmatically</a></li>
 <li><a href="#exchange-tracing">Exchange tracing</a></li>
-<li><a href="#openapi-descriptor">OpenAPI Descriptor</a></li>
 <li><a href="#sip-details-in-actuator-info-endpoint">SIP Details in actuator info endpoint</a></li>
 </ul>
 </li>
@@ -369,37 +369,21 @@ open logback.xml in target directory* and edit the log levels on loggers defined
 <p>This works for all loggers except the ones on Camel routes.</p>
 <h3 id="exchange-tracing">Exchange tracing<a class="headerlink" href="#exchange-tracing" title="Permanent link">&para;</a></h3>
 <p>SIP Core offers usage of Camel's built-in Tracer for tracing and logging information about all processor
-an exchange when through and TraceHistory service which stores all data logged by it.
+an exchange went through.
 Configuration of the Tracer is enabled by adapting ExchangeFormatter.</p>
 <p>Tracing functionality is set to false by default. In order to enable it, the following configuration should be added to
 the application.yml:</p>
 <pre class="highlight"><code class="language-yaml">sip:
   core:
     tracing:
-      enabled: true
-      trace-type: LOG | MEMORY | "*" | LOG,MEMORY</code></pre>
-<p>Additionally, trace-type must be defined. Three types of tracing can be used:</p>
-<ul>
-<li>LOG - trace messages will be shown in logs</li>
-<li>MEMORY - trace messages will be stored in trace history and can be seen on the "actuator/tracing"*</li>
-<li>"*" | LOG,MEMORY - Both values are valid to be used. In case a user set both types, then the tracing will be available
-  as LOG and as MEMORY type at the same time.</li>
-</ul>
-<p>Note: In order to access trace records trough web API the "actuator/tracing" must be exposed:
-<pre class="highlight"><code class="language-yaml">management:
-  endpoints:
-    web:
-      exposure:
-        include: {...},tracing</code></pre></p>
-<p>When adding tracing endpoint, please configure the entire list of endpoints which you want to be exposed including the
-default ones.</p>
-<p>Configuring the ExchangeFormatter can be achieved in two ways:</p>
-<ul>
-<li>through configuration file:
+      enabled: true</code></pre>
+<p>Logging in console is enabled by default, but it can be turned off with <code>sip.core.tracing.log</code> property.</p>
+<p>Configuring the ExchangeFormatter can be achieved through configuration file:</p>
 <pre class="highlight"><code class="language-yaml">sip:
   core:
     tracing:
       enabled: true
+      log: true
       exchange-formatter:
         multiline: true
         showHeaders: true
@@ -408,38 +392,30 @@ default ones.</p>
         maxChars: 100
  ```
 
-- by using the following POST request:</code></pre>
-/actuator/tracing/format/{exchangeFormatterParameterName}
- ```</li>
-</ul>
-<p>The body of the request should include the value we want for the given parameter. In this case, we can change only one
-parameter per request.</p>
-<p>TraceHistory is enabled with previous configuration.
-Exchanges will contain the "tracingId" header, which has the original Exchange's Id as value,
-and based on EIP used in a route, it may append other exchange Ids which were used in a request.
-To see them in TraceHistory messages just set the "showHeaders" and "showExchangeId" parameters in ExchangeFormatter to true.
-A "tracingId" header will appear as a list of exchanges separated by a coma.</p>
-<p><strong>Expanding the traffic trace limit:</strong></p>
-<p>Introduced the SipLimitedLinkedList in order to limit the number of logged events in memory.
-Default limit is 100 events, but it could be changed by following configuration:
-<pre class="highlight"><code class="language-yaml">sip:
-  core:
-    tracing:
-      enabled: true
-      limit: 120 #100 by default</code></pre></p>
-<h3 id="openapi-descriptor">OpenAPI Descriptor<a class="headerlink" href="#openapi-descriptor" title="Permanent link">&para;</a></h3>
-<p>Framework provides an Open API description of all custom or Spring provided endpoints within your adapter.
-Endpoints are created as extension of Spring's actuator.</p>
-<p>By using a sip-archetype code generator, you receive an adapter with a default setup for OpenAPI.</p>
-<p>For working with Swagger OpenAPI, check their official <a href="https://swagger.io/tools/swagger-ui/">documentation</a>.</p>
-<p><strong>Adding Custom Swagger Docs:</strong></p>
-<p>SIP Framework provides a Swagger documentation for the actuator endpoints out of the box. In case a custom Swagger
+Exchanges will contain the "traceSet" header, which appears as a list of ordered exchange Ids,
+appended based on EIP used in a route and separated by a coma.
+
+### OpenAPI Descriptor
+
+Framework provides an Open API description of all custom or Spring provided endpoints within your adapter.
+Endpoints are created as extension of Spring's actuator.
+
+By using a sip-archetype code generator, you receive an adapter with a default setup for OpenAPI.
+
+For working with Swagger OpenAPI, check their official [documentation](https://swagger.io/tools/swagger-ui/).
+
+**Adding Custom Swagger Docs:**
+
+SIP Framework provides a Swagger documentation for the actuator endpoints out of the box. In case a custom Swagger
 documentation is needed it could be added by including the Swagger Apache Camel component. This component is only
-supporting the REST DSL component. For controller classes annotated with <code>@RestController</code> an entry is added to the
-default swagger docs. This might not be the expected behavior for which reason the <code>REST DSL</code> component is recommended.</p>
-<p>The custom Swagger documentation could easily be added by defining it in the <code>restConfiguration</code> as seen in the
-following listing.</p>
-<pre class="highlight"><code class="language-java">restConfiguration()
+supporting the REST DSL component. For controller classes annotated with `@RestController` an entry is added to the
+default swagger docs. This might not be the expected behavior for which reason the `REST DSL` component is recommended.
+
+The custom Swagger documentation could easily be added by defining it in the `restConfiguration` as seen in the
+following listing.
+
+```java
+restConfiguration()
   .contextPath("/adapter")
   .apiContextPath("/api-docs")
   .apiContextRouteId("api-docs");</code></pre>

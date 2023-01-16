@@ -104,6 +104,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/2.4.0/index.html">JavaDoc 2.4.0</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/2.3.0/index.html">JavaDoc 2.3.0</a>
                 </li>
               </ul>
@@ -151,8 +155,7 @@
     <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
       <li>Test Kit</li>
     <li class="wy-breadcrumbs-aside">
-        <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/test-kit.md"
-          class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/test-kit.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -184,6 +187,9 @@
 <li><a href="#soap">SOAP</a></li>
 <li><a href="#file">File</a></li>
 <li><a href="#ftp-ftps-sftp">FTP, FTPS, SFTP</a></li>
+<li><a href="#jms">JMS</a></li>
+<li><a href="#mail">Mail</a></li>
+<li><a href="#kafka">Kafka</a></li>
 </ul>
 </li>
 <li><a href="#complete-example">Complete example</a></li>
@@ -249,6 +255,8 @@ Running this class would execute the test, but also it will be executed in the t
   - endpoint: "id of endpoint that should be mocked"
     returning:
       body: "Response message that real endpoint is expected to return"
+      headers:
+        header-key: "Value of the header"
   THEN-expect:
   - endpoint: "id of endpoint under test" # matches endpoint under test defined in when phase
     having:
@@ -287,7 +295,7 @@ The body can also be defined as plain text or JSON string, which represents a PO
 <h2 id="with-mocks">WITH-mocks<a class="headerlink" href="#with-mocks" title="Permanent link">&para;</a></h2>
 <p>This section contains a list of endpoints for which we wish to have specific mocked response.
 "endpoint" is the endpoint ID, (processor ID in Camel route) of the mocked endpoint.
-"returning" should have the body, that we expect as the response from real external call.</p>
+"returning" should have body and headers, that we expect as the response from real external call.</p>
 <pre class="highlight"><code class="language-yaml">    WITH-mocks:
       - endpoint: "external-service"
         returning:
@@ -316,6 +324,9 @@ the ID of mocked endpoint and defining the expected body or headers.</p>
 <li>SOAP (by using CXF)</li>
 <li>File</li>
 <li>FTP, FTPS, SFTP</li>
+<li>JMS</li>
+<li>Mail (imap, imaps, pop3, pop3s, smtp, smtps)</li>
+<li>Kafka</li>
 </ul>
 <p>Please check the special conditions for these components in following chapters. since there are some special conditions
 which must be met.</p>
@@ -358,6 +369,35 @@ headers automatically are different, and they are not the same as for File heade
 <code>CamelFileNameOnly</code>, <code>CamelFileRelativePath</code>, <code>CamelFileAbsolutePath</code> and <code>CamelFilePath</code>.
 7) <code>CamelFileLastModified</code> - by providing this header, <code>CamelMessageTimestamp</code> will be set additionally.</p>
 <p>Same rules as in File chapter for overriding and providing other headers apply here as well.</p>
+<h3 id="jms">JMS<a class="headerlink" href="#jms" title="Permanent link">&para;</a></h3>
+<p>When testing JMS component, there are a few limitations.</p>
+<p>Original JMS <code>Message</code> and JMS <code>Session</code> are not provided within the exchange. That means if there is some logic within 
+the route which is based on these elements, tests for that kind of route could not be created. Instead of original JMS
+Message, we provide our custom implementation <code>SIPJmsTextMessage</code> which is there to support Test Kit testing purpose.</p>
+<p>When providing camel JMS specified headers within test case definition, there are 3 following headers which could not 
+be provided with simple String value, hence we skip adding these values and keep default ones (<code>JMSDestination</code>, 
+<code>JMSReplyTo</code>, <code>JMSCorrelationIDAsBytes</code>).</p>
+<p>If the logic of a route leans on JMS component type converters or custom type converter option, tests can not be 
+created. Currently, type converters are not supported and only possible values are simple String or JSON String. 
+But in case of json, type conversion should be done somewhere in the route and outside JMS component.</p>
+<h3 id="mail">Mail<a class="headerlink" href="#mail" title="Permanent link">&para;</a></h3>
+<p>All mail protocols are supported in Test Kit as well as their security variants.</p>
+<p>Its usage is quite straightforward, the content of an email is set as body of the <code>when-execute</code> phase,
+while <code>To</code>, <code>From</code>, <code>Subject</code>, etc. are defined as headers.</p>
+<p>Attachments are not supported.</p>
+<h3 id="kafka">Kafka<a class="headerlink" href="#kafka" title="Permanent link">&para;</a></h3>
+<p>As for some of previous components, our support of Test Kit Camel Kafka component provides automatically setting Camel 
+Kafka specific headers. Few automatically configured headers for each test are listed here:</p>
+<p>1) <code>kafka.TOPIC</code> - has the same value as topic name in URI endpoint format
+2) <code>kafka.TIMESTAMP</code> - generated current timestamp
+3) <code>CamelMessageTimestamp</code> - generated current timestamp</p>
+<p>Keep in mind that other specific headers from Camel Kafka API should be provided under double quotes and squared 
+parenthesis. This is necessary because of Camel Kafka headers API which is using header keys with dot in between and
+yaml format for <i><b>TestCaseDefinition</i></b> file will process dots as complex object with subfields. If you want 
+this to be ignored, you need to specify these headers by using mentioned special format.</p>
+<p>Examples: <code>"[kafka.TOPIC]"</code>, <code>"[kafka.OFFSET]"</code>, etc.</p>
+<p>Another limitation is in data type conversions which same as for JMS component. Only String and JSON String are 
+supported.</p>
 <h1 id="complete-example">Complete example<a class="headerlink" href="#complete-example" title="Permanent link">&para;</a></h1>
 <p><strong>Sample Route</strong></p>
 <pre class="highlight"><code class="language-java">public class SampleRestRoute extends RouteBuilder {
