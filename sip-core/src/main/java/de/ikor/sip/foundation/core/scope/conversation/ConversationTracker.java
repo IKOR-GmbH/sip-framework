@@ -10,6 +10,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.support.EventHelper;
 import org.springframework.stereotype.Component;
 
+/** Keeps track of staring exchange and all that were crated from it */
 @Component
 public class ConversationTracker {
   private final Map<String, Set<String>> breadcrumbs = new HashMap<>();
