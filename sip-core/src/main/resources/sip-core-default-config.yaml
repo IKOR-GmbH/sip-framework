@@ -16,7 +16,7 @@ sip.core:
     exchange-formatter:
       showHeaders: true
       showExchangeId: true
-    traceType: "*"
+    log: true
   actuator:
     endpoints: adapter-routes,tracing
     adapter-routes:

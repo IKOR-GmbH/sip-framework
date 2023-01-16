@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.trace;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.NamedNode;
 import org.apache.camel.NamedRoute;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class CustomTracer extends DefaultTracer {
+public class CustomTracer extends DefaultTracer implements TraceSupport {
 
   public static final String TRACE_SET = "traceSet";
 
@@ -24,28 +23,41 @@ public class CustomTracer extends DefaultTracer {
    * Creates new instance of CustomTracer Enables tracing in CamelContext
    *
    * @param exchangeFormatter {@link SIPExchangeFormatter}
-   * @param camelContext {@link CamelContext}
    * @param sipTraceConfig set of {@link SIPTraceConfig}
    */
-  public CustomTracer(
-      SIPExchangeFormatter exchangeFormatter,
-      CamelContext camelContext,
-      SIPTraceConfig sipTraceConfig) {
+  public CustomTracer(SIPExchangeFormatter exchangeFormatter, SIPTraceConfig sipTraceConfig) {
     setExchangeFormatter(exchangeFormatter);
-    camelContext.setTracing(true);
     this.sipTraceConfig = sipTraceConfig;
   }
 
   @Override
   public void traceBeforeRoute(NamedRoute route, Exchange exchange) {
     addIdToTraceSet(exchange);
-    super.traceBeforeRoute(route, exchange);
+    if (sipTraceConfig.isLog()) {
+      super.traceBeforeRoute(route, exchange);
+    }
   }
 
   @Override
   public void traceBeforeNode(NamedNode node, Exchange exchange) {
     addIdToTraceSet(exchange);
-    super.traceBeforeNode(node, exchange);
+    if (sipTraceConfig.isLog()) {
+      super.traceBeforeNode(node, exchange);
+    }
+  }
+
+  @Override
+  public void traceAfterNode(NamedNode node, Exchange exchange) {
+    if (sipTraceConfig.isLog()) {
+      super.traceAfterNode(node, exchange);
+    }
+  }
+
+  @Override
+  public void traceAfterRoute(NamedRoute route, Exchange exchange) {
+    if (sipTraceConfig.isLog()) {
+      super.traceAfterRoute(route, exchange);
+    }
   }
 
   private void addIdToTraceSet(Exchange exchange) {
@@ -56,12 +68,5 @@ public class CustomTracer extends DefaultTracer {
     TraceSet traceSet = exchange.getIn().getHeader(TRACE_SET, TraceSet.class);
     if (traceSet == null) traceSet = new TraceSet();
     return traceSet.cloneAndAdd(exchange.getExchangeId());
-  }
-
-  @Override
-  protected void dumpTrace(String out, Object node) {
-    if (sipTraceConfig.isLog()) {
-      super.dumpTrace(out, node);
-    }
   }
 }
