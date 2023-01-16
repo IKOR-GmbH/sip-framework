@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "174",
-  "message": "Refactor tracing mechanism to improve performance when logging trace messages is disabled."
-}

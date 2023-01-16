@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "149",
-  "message": "Add mechanism which will automatically include SIP Actuator endpoints to configured list of Actuator endpoints"
-}
