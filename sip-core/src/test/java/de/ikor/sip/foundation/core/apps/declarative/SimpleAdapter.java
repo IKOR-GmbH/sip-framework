@@ -6,11 +6,15 @@ import de.ikor.sip.foundation.core.declarative.annonations.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonations.OutboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedInboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedOutboundEndpoint;
+import de.ikor.sip.foundation.core.declarative.endpoints.RestEndpoint;
+import de.ikor.sip.foundation.core.declarative.orchestation.EndpointOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.AnnotatedScenario;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.builder.endpoint.dsl.DirectEndpointBuilderFactory.DirectEndpointConsumerBuilder;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.rest.RestDefinition;
 
 @SIPIntegrationAdapter
 public class SimpleAdapter {
@@ -64,6 +68,37 @@ public class SimpleAdapter {
     @Override
     protected void configureEndpointRoute(RouteDefinition definition) {
       definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED");
+    }
+  }
+
+  @IntegrationScenario(scenarioId = "restscene", requestModel = String.class)
+  public class RestScenario extends AnnotatedScenario {}
+
+  @InboundEndpoint(belongsToConnector = "SIP1", providesToScenario = "restscene")
+  public class RestEndpointTest extends RestEndpoint {
+
+    @Override
+    protected void configureRest(RestDefinition definition) {
+      definition.post("path").type(String.class);
+    }
+
+    @Override
+    protected void configureEndpointRoute(RouteDefinition definition) {
+      definition.process(exchange -> exchange.getMessage());
+    }
+  }
+
+  @OutboundEndpoint(belongsToConnector = "SIP2", consumesFromScenario = "restscene")
+  public class AppendRestMessageConsumer extends AnnotatedOutboundEndpoint {
+
+    @Override
+    public EndpointProducerBuilder getOutboundEndpoint() {
+      return StaticEndpointBuilders.log("message");
+    }
+
+    @Override
+    protected void configureEndpointRoute(RouteDefinition definition) {
+      definition.setBody(exchange -> exchange.getIn().getBody() + "-REST");
     }
   }
 }
