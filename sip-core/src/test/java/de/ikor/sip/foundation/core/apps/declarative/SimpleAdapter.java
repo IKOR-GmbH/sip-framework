@@ -7,8 +7,6 @@ import de.ikor.sip.foundation.core.declarative.annonations.OutboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedInboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedOutboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.endpoints.RestEndpoint;
-import de.ikor.sip.foundation.core.declarative.orchestation.EndpointOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.AnnotatedScenario;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;

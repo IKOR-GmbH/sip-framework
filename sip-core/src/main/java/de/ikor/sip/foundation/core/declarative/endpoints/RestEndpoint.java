@@ -13,54 +13,57 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class RestEndpoint implements RestBridge, Orchestrator<EndpointOrchestrationInfo>, RestEndpointDefinition {
+public abstract class RestEndpoint
+    implements RestBridge, Orchestrator<EndpointOrchestrationInfo>, RestEndpointDefinition {
 
+  private DeclarationsRegistry declarationsRegistry;
 
-    private DeclarationsRegistry declarationsRegistry;
+  protected final DeclarationsRegistry getDeclarationsRegistry() {
+    return declarationsRegistry;
+  }
 
-    protected final DeclarationsRegistry getDeclarationsRegistry() {
-        return declarationsRegistry;
-    }
+  @Autowired
+  public final void setDeclarationsRegistry(final DeclarationsRegistry declarationsRegistry) {
+    this.declarationsRegistry = declarationsRegistry;
+  }
 
-    @Autowired
-    public final void setDeclarationsRegistry(final DeclarationsRegistry declarationsRegistry) {
-        this.declarationsRegistry = declarationsRegistry;
-    }
+  @Override
+  public void doBridge(final RestEndpointBridgeInfo data) {
+    configureRest(data.getRestDefinition());
+  }
 
-    @Override
-    public void doBridge(final RestEndpointBridgeInfo data) {
-        configureRest(data.getRestDefinition());
-    }
+  public RestBridge getBridge() {
+    return this;
+  }
 
-    public RestBridge getBridge() { return this;}
+  public Orchestrator<EndpointOrchestrationInfo> getOrchestrator() {
+    return this;
+  }
 
-    public Orchestrator<EndpointOrchestrationInfo> getOrchestrator() {
-        return this;
-    }
+  @Override
+  public void doOrchestrate(final EndpointOrchestrationInfo data) {
+    configureEndpointRoute(data.getRouteDefinition());
+  }
 
-    @Override
-    public void doOrchestrate(final EndpointOrchestrationInfo data) {
-        configureEndpointRoute(data.getRouteDefinition());
-    }
-    @Override
-    public boolean canOrchestrate(final EndpointOrchestrationInfo data) {
-        return data != null;
-    }
+  @Override
+  public boolean canOrchestrate(final EndpointOrchestrationInfo data) {
+    return data != null;
+  }
 
+  protected abstract void configureRest(final RestDefinition definition);
 
-    protected abstract void configureRest(final RestDefinition definition);
-    protected abstract void configureEndpointRoute(final RouteDefinition definition);
+  protected abstract void configureEndpointRoute(final RouteDefinition definition);
 
-    private final InboundEndpoint inboundEndpointAnnotation =
-            ReflectionHelper.getAnnotationOrThrow(InboundEndpoint.class, this);
+  private final InboundEndpoint inboundEndpointAnnotation =
+      ReflectionHelper.getAnnotationOrThrow(InboundEndpoint.class, this);
 
-    public final ConnectorDefinition getConnector() {
-        return getDeclarationsRegistry()
-                .getConnectorById(inboundEndpointAnnotation.belongsToConnector());
-    }
+  public final ConnectorDefinition getConnector() {
+    return getDeclarationsRegistry()
+        .getConnectorById(inboundEndpointAnnotation.belongsToConnector());
+  }
 
-    public final IntegrationScenarioDefinition getProvidedScenario() {
-        return getDeclarationsRegistry()
-                .getScenarioById(inboundEndpointAnnotation.providesToScenario());
-    }
+  public final IntegrationScenarioDefinition getProvidedScenario() {
+    return getDeclarationsRegistry()
+        .getScenarioById(inboundEndpointAnnotation.providesToScenario());
+  }
 }

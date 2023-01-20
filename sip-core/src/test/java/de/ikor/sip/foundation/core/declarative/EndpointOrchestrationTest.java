@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.*;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.http;
 
@@ -18,14 +19,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
-import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.*;
-
 @CamelSpringBootTest
-@SpringBootTest(classes = {SimpleAdapter.class},
-        properties = {
-        "camel.rest.binding-mode=auto"
-        },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+    classes = {SimpleAdapter.class},
+    properties = {"camel.rest.binding-mode=auto"},
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisableJmx(false)
 @MockEndpoints("log:message*")
 @DirtiesContext
@@ -35,8 +33,7 @@ public class EndpointOrchestrationTest {
   private MockEndpoint mockedLogger;
 
   @Autowired private FluentProducerTemplate template;
-  @LocalServerPort
-  private int localServerPort;
+  @LocalServerPort private int localServerPort;
 
   @BeforeEach
   void setup() {
@@ -58,6 +55,9 @@ public class EndpointOrchestrationTest {
   @Test
   void When_UsingScenario_With_RestEndpoint_Then_RestRoutesAreCreatedAndConnectedToScenario() {
     mockedLogger.expectedBodiesReceivedInAnyOrder("Hi Adapter-REST");
-    template.withBody("Hi Adapter").to(http("localhost:"+localServerPort+"/adapter/path")).send();
+    template
+        .withBody("Hi Adapter")
+        .to(http("localhost:" + localServerPort + "/adapter/path"))
+        .send();
   }
 }

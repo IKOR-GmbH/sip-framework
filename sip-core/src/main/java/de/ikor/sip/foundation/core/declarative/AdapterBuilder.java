@@ -43,9 +43,9 @@ public class AdapterBuilder extends RouteBuilder {
             .collect(
                 Collectors.groupingBy(IntegrationScenarioConsumerDefinition::getConsumedScenario));
     this.restEndpoints =
-            context.getBeansOfType(RestEndpointDefinition.class).values().stream()
-                    .collect(
-                            Collectors.groupingBy(IntegrationScenarioProviderDefinition::getProvidedScenario));
+        context.getBeansOfType(RestEndpointDefinition.class).values().stream()
+            .collect(
+                Collectors.groupingBy(IntegrationScenarioProviderDefinition::getProvidedScenario));
   }
 
   @Override
@@ -56,25 +56,23 @@ public class AdapterBuilder extends RouteBuilder {
   private void buildScenario(IntegrationScenarioDefinition scenarioDefinition) {
     List<InboundEndpointDefinition> inboundEndpointDefinitions =
         inboundEndpoints.get(scenarioDefinition);
-    if(inboundEndpointDefinitions != null)
-    for (InboundEndpointDefinition definition : inboundEndpointDefinitions) {
-      buildInboundEndpoint(definition, scenarioDefinition.getID());
-    }
+    if (inboundEndpointDefinitions != null)
+      for (InboundEndpointDefinition definition : inboundEndpointDefinitions) {
+        buildInboundEndpoint(definition, scenarioDefinition.getID());
+      }
 
     List<OutboundEndpointDefinition> outboundEndpointDefinitions =
         outboundEndpoints.get(scenarioDefinition);
-    if(outboundEndpointDefinitions != null)
-    for (OutboundEndpointDefinition definition : outboundEndpointDefinitions) {
-      buildOutboundEndpoint(definition, scenarioDefinition.getID());
-    }
+    if (outboundEndpointDefinitions != null)
+      for (OutboundEndpointDefinition definition : outboundEndpointDefinitions) {
+        buildOutboundEndpoint(definition, scenarioDefinition.getID());
+      }
 
-
-    List<RestEndpointDefinition> restEndpointDefinitions =
-            restEndpoints.get(scenarioDefinition);
-    if(restEndpointDefinitions != null)
-    for (RestEndpointDefinition definition : restEndpointDefinitions) {
-      buildRestEndpoint(definition, scenarioDefinition.getID());
-    }
+    List<RestEndpointDefinition> restEndpointDefinitions = restEndpoints.get(scenarioDefinition);
+    if (restEndpointDefinitions != null)
+      for (RestEndpointDefinition definition : restEndpointDefinitions) {
+        buildRestEndpoint(definition, scenarioDefinition.getID());
+      }
   }
 
   private void buildInboundEndpoint(
@@ -92,21 +90,20 @@ public class AdapterBuilder extends RouteBuilder {
     camelRoute.to(outboundEndpointDefinition.getOutboundEndpoint());
   }
 
-  private void buildRestEndpoint(
-          RestEndpointDefinition restEndpointDefinition, String scenarioID) {
+  private void buildRestEndpoint(RestEndpointDefinition restEndpointDefinition, String scenarioID) {
 
     RestDefinition restRoute = rest();
     bridgeEndpoint(restRoute, restEndpointDefinition);
-    restRoute.to("direct:rest"+scenarioID);
-    RouteDefinition camelRoute = from("direct:rest"+scenarioID);
+    restRoute.to("direct:rest" + scenarioID);
+    RouteDefinition camelRoute = from("direct:rest" + scenarioID);
     orchestrateEndpoint(camelRoute, restEndpointDefinition);
     camelRoute.to("sipmc:" + scenarioID);
   }
 
-  private void bridgeEndpoint(RestDefinition restRoute, RestEndpointDefinition restEndpointDefinition) {
+  private void bridgeEndpoint(
+      RestDefinition restRoute, RestEndpointDefinition restEndpointDefinition) {
     RestEndpointBridgeInfo restEndpointBridgeInfo = () -> restRoute;
     restEndpointDefinition.getBridge().doBridge(restEndpointBridgeInfo);
-
   }
 
   private void orchestrateEndpoint(
