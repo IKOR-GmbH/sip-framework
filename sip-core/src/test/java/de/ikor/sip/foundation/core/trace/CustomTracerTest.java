@@ -20,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(
     classes = CoreTestApplication.class,
-    properties = {"sip.core.tracing.enabled=true"})
+    properties = {"sip.core.tracing.enabled=true", "sip.core.tracing.log=true"})
 class CustomTracerTest {
 
   private static final String EXCHANGE_ID = "exchangeId";

@@ -1,9 +1,9 @@
 package de.ikor.sip.foundation.core.openapi;
 
-import static de.ikor.sip.foundation.core.apps.core.CoreTestApplication.REST_ENDPOINT;
+import static de.ikor.sip.foundation.core.CoreTestApplication.REST_ENDPOINT;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.ikor.sip.foundation.core.apps.core.CoreTestApplication;
+import de.ikor.sip.foundation.core.CoreTestApplication;
 import io.swagger.v3.oas.models.OpenAPI;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
