@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.apps.core;
+package de.ikor.sip.foundation.core;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import org.apache.camel.RoutesBuilder;

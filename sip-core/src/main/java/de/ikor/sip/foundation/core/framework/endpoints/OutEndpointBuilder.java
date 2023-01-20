@@ -24,6 +24,11 @@ public class OutEndpointBuilder implements EndpointProducerBuilder {
   }
 
   @Override
+  public String getRawUri() {
+    return uri;
+  }
+
+  @Override
   public void doSetProperty(String name, Object value) {}
 
   @Override

@@ -263,6 +263,7 @@ By default, the following properties come as a part of SIP Framework, to overrid
 file with desired values.
 
 When using a yaml configuration file, which is already available in resources, adapt the properties to its format.
+
 Name | Description | Value | Default |
 --- | --- | --- | --- |
 sip.core.translation.enabled | Enable SIP translation | boolean | true |
@@ -279,8 +280,9 @@ sip.core.metrics.external-endpoint-health-check.scheduler.fixed-delay | Sets hea
 sip.core.metrics.external-endpoint-health-check.scheduler.initial-delay | Sets health check execution initial delay | Integer | 5000 |
 sip.core.actuator.extensions.health.enabled | Enable additional SIP Health check | boolean | true |
 sip.core.actuator.extensions.info.enabled | Expose additional adapter information through /actuator/info | boolean | true |
+sip.core.actuator.adapter-routes.enabled | Enable controlling lifecycle of routes | boolean | true |
 management.info.camel.enabled | Enable basic camel info under /actuator/info endpoint | boolean | false |
-management.endpoints.web.exposure.include | Set which endpoints are included | String | health,info,metrics,loggers,prometheus,adapter-routes |
+management.endpoints.web.exposure.include | Set which endpoints are included | String | health,info,metrics,loggers,prometheus |
 management.endpoint.health.show-details | Enable health details in actuator | String | always |
 springdoc.show-actuator | Show actuator API in Swagger docs| boolean | true |
 springdoc.api-docs.path | Custom path to API docs | String | /api-docs |

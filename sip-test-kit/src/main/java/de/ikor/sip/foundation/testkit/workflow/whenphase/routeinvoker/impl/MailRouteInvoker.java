@@ -45,6 +45,11 @@ public class MailRouteInvoker implements RouteInvoker {
     return endpoint instanceof MailEndpoint;
   }
 
+  @Override
+  public boolean shouldSuspend(Endpoint endpoint) {
+    return true;
+  }
+
   private MailMessage createMailMessage(Exchange whenDefinition) {
     MailMessage mailMessage =
         new MailMessage(whenDefinition, createMimeMessage(whenDefinition), true);
