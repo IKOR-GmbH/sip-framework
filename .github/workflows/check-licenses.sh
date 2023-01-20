@@ -22,6 +22,7 @@ while read line; do
       [[ $line == *"(The Apache Software License, Version 2.0)"* ]] ||
       [[ $line == *"(Apache License, Version 2.0)"* ]] ||
       [[ $line == *"(Apache License, version 2.0)"* ]] ||
+      [[ $line == *"(Apache-2.0)"* ]] ||
       [[ $line == *"(Apache License 2.0)"* ]] ||
       [[ $line == *"(The Apache License, Version 2.0)"* ]] ||
       [[ $line == *"(Apache 2)"* ]] ||

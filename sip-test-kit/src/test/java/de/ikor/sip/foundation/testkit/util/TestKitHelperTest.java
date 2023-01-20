@@ -1,5 +1,8 @@
 package de.ikor.sip.foundation.testkit.util;
 
+import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_HEADER;
+import static de.ikor.sip.foundation.testkit.util.TestKitHelper.*;
+import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker.TEST_NAME_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -13,22 +16,22 @@ import java.util.Map;
 import org.apache.camel.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class TestKitHelperTest {
 
-  private static final String SERIALIZABLE_DEFAULT_VALUE = "This is non serializable value";
   private static final String BODY = "body";
   private static final String ROUTE_ID = "routeId";
 
   private Exchange exchange;
-  private Map<String, Object> headers;
   private ExtendedCamelContext camelContext;
 
   @BeforeEach
   void setup() {
     camelContext = mock(ExtendedCamelContext.class);
     exchange = mock(Exchange.class);
-    headers = new HashMap<>();
+    Map<String, Object> headers = new HashMap<>();
     Message message = mock(Message.class);
     when(exchange.getMessage()).thenReturn(message);
     when(message.getBody()).thenReturn(BODY);
@@ -60,7 +63,7 @@ class TestKitHelperTest {
     when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
 
     // act
-    Endpoint actualEndpoint = TestKitHelper.resolveEndpoint(exchange, camelContext);
+    Endpoint actualEndpoint = resolveEndpoint(exchange, camelContext);
 
     // arrange
     assertThat(actualEndpoint).isEqualTo(expectedEndpoint);
@@ -69,9 +72,7 @@ class TestKitHelperTest {
   @Test
   void GIVEN_noRoute_WHEN_resolveEndpoint_THEN_expectIllegalArgumentException() {
     // act & arrange
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> TestKitHelper.resolveEndpoint(exchange, camelContext));
+    assertThrows(IllegalArgumentException.class, () -> resolveEndpoint(exchange, camelContext));
   }
 
   @Test
@@ -84,7 +85,7 @@ class TestKitHelperTest {
     when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
 
     // act
-    Consumer actualConsumer = TestKitHelper.resolveConsumer(exchange, camelContext);
+    Consumer actualConsumer = resolveConsumer(exchange, camelContext);
 
     // arrange
     assertThat(actualConsumer).isEqualTo(expectedConsumer);
@@ -101,7 +102,7 @@ class TestKitHelperTest {
     properties.setMessage(messageProperties);
 
     // act
-    Exchange actual = TestKitHelper.parseExchangeProperties(properties, camelContext);
+    Exchange actual = parseExchangeProperties(properties, camelContext);
 
     // arrange
     assertThat(actual.getMessage().getBody()).isEqualTo("body");
@@ -111,10 +112,23 @@ class TestKitHelperTest {
   @Test
   void GIVEN_noProperties_WHEN_parseExchangeProperties_THEN_expectExchangeWithValues() {
     // act
-    Exchange actual = TestKitHelper.parseExchangeProperties(null, camelContext);
+    Exchange actual = parseExchangeProperties(null, camelContext);
 
     // arrange
     assertThat(actual.getMessage().getBody()).isNull();
     assertThat(actual.getMessage().getHeaders()).isEmpty();
+  }
+
+  @ParameterizedTest(name = "Using input headerKey: {0}")
+  @ValueSource(strings = {TEST_NAME_HEADER, TEST_MODE_HEADER})
+  void GIVEN_sipTestKitHeader_WHEN_isTestKitHeader_THEN_expectTrue(String headerKey) {
+    // act + assert
+    assertThat(isTestKitHeader(headerKey)).isTrue();
+  }
+
+  @Test
+  void GIVEN_customHeader_WHEN_isTestKitHeader_THEN_expectFalse() {
+    // act + assert
+    assertThat(isTestKitHeader("customHeaderKey")).isFalse();
   }
 }

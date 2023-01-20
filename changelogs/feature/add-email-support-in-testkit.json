@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "147",
-  "message": "Add possibility to test camel routes, which use email component, with TestKit."
-}

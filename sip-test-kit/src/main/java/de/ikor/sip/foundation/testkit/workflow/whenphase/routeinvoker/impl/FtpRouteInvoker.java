@@ -30,6 +30,7 @@ public class FtpRouteInvoker implements RouteInvoker {
 
   private final CamelContext camelContext;
 
+  @SuppressWarnings("unchecked")
   @Override
   public Optional<Exchange> invoke(Exchange inputExchange) {
     RemoteFileEndpoint<FTPFile> ftpEndpoint =
@@ -54,6 +55,11 @@ public class FtpRouteInvoker implements RouteInvoker {
   @Override
   public boolean isApplicable(Endpoint endpoint) {
     return endpoint instanceof RemoteFileEndpoint;
+  }
+
+  @Override
+  public boolean shouldSuspend(Endpoint endpoint) {
+    return true;
   }
 
   private Map<String, Object> prepareFtpHeaders(

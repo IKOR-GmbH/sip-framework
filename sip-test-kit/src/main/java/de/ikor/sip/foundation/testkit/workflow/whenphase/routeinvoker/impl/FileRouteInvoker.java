@@ -39,6 +39,11 @@ public class FileRouteInvoker implements RouteInvoker {
     return endpoint instanceof FileEndpoint;
   }
 
+  @Override
+  public boolean shouldSuspend(Endpoint endpoint) {
+    return true;
+  }
+
   private Map<String, Object> prepareFileHeaders(Exchange inputExchange) {
     Map<String, Object> headers = inputExchange.getMessage().getHeaders();
 

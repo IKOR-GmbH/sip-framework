@@ -5,8 +5,13 @@ de.ikor.sip.foundation.core.proxies.ProxyAutoConfig,\
 de.ikor.sip.foundation.core.actuator.routes.ActuatorRoutesAutoConfig,\
 de.ikor.sip.foundation.core.actuator.health.ActuatorHealthAutoConfig,\
 de.ikor.sip.foundation.core.actuator.info.ActuatorInfoAutoConfig,\
+de.ikor.sip.foundation.core.openapi.OpenApiResolverAutoConfig,\
+de.ikor.sip.foundation.core.scope.ConversationAutoConfig,\
+de.ikor.sip.foundation.core.configuration.CamelContextConfiguration,\
 de.ikor.sip.foundation.core.framework.FrameworkAutoConfig, \
-de.ikor.sip.foundation.core.openapi.OpenApiResolverAutoConfig, \
 de.ikor.sip.foundation.core.actuator.declarative.ActuatorDefinitionAutoConfig, \
 de.ikor.sip.foundation.core.declarative.AdapterBuilder, \
 de.ikor.sip.foundation.core.declarative.DeclarationsRegistry
+
+org.springframework.context.ApplicationListener=\
+de.ikor.sip.foundation.core.actuator.config.EndpointExposureConfiguration
