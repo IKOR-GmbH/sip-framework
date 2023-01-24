@@ -8,8 +8,10 @@ import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
+import de.ikor.sip.foundation.core.framework.routers.CDMValidator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
@@ -49,7 +51,7 @@ public class AdapterBuilder extends RouteBuilder {
     List<InboundEndpointDefinition> inboundEndpointDefinitions =
         inboundEndpoints.get(scenarioDefinition);
     for (InboundEndpointDefinition definition : inboundEndpointDefinitions) {
-      buildInboundEndpoint(definition, scenarioDefinition.getID());
+      buildInboundEndpoint(definition, scenarioDefinition);
     }
 
     List<OutboundEndpointDefinition> outboundEndpointDefinitions =
@@ -60,10 +62,13 @@ public class AdapterBuilder extends RouteBuilder {
   }
 
   private void buildInboundEndpoint(
-      InboundEndpointDefinition inboundEndpointDefinition, String scenarioID) {
+      InboundEndpointDefinition inboundEndpointDefinition,
+      IntegrationScenarioDefinition scenarioDefinition) {
     RouteDefinition camelRoute = from(inboundEndpointDefinition.getInboundEndpoint());
     orchestrateEndpoint(camelRoute, inboundEndpointDefinition);
-    camelRoute.to("sipmc:" + scenarioID);
+    appendRequestValidation(scenarioDefinition.getRequestModelClass(), camelRoute);
+    camelRoute.to("sipmc:" + scenarioDefinition.getID());
+    appendResponseValidation(scenarioDefinition.getResponseModelClass(), camelRoute);
   }
 
   private void buildOutboundEndpoint(
@@ -72,6 +77,15 @@ public class AdapterBuilder extends RouteBuilder {
     RouteDefinition camelRoute = from("sipmc:" + scenarioID);
     orchestrateEndpoint(camelRoute, outboundEndpointDefinition);
     camelRoute.to(outboundEndpointDefinition.getOutboundEndpoint());
+  }
+
+  private void appendResponseValidation(
+      Optional<Class<?>> responseModelClass, RouteDefinition camelRoute) {
+    responseModelClass.ifPresent(aClass -> camelRoute.process(new CDMValidator(aClass)));
+  }
+
+  private void appendRequestValidation(Class<?> requestModelClass, RouteDefinition camelRoute) {
+    camelRoute.process(new CDMValidator(requestModelClass));
   }
 
   private void orchestrateEndpoint(

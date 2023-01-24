@@ -66,4 +66,38 @@ public class SimpleAdapter {
       definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED");
     }
   }
+
+  @IntegrationScenario(
+      scenarioId = "CDMValidation",
+      requestModel = CDMRequest.class,
+      responseModel = CDMResponse.class)
+  public class CDMValidationScenario extends AnnotatedScenario {}
+
+  @InboundEndpoint(belongsToConnector = "SIP1", providesToScenario = "CDMValidation")
+  public class InboundCDMEndpoint extends AnnotatedInboundEndpoint {
+
+    @Override
+    public DirectEndpointConsumerBuilder getInboundEndpoint() {
+      return StaticEndpointBuilders.direct("cdm-validator");
+    }
+  }
+
+  @OutboundEndpoint(belongsToConnector = "SIP2", consumesFromScenario = "CDMValidation")
+  public class OutboundCDMEndpoint extends AnnotatedOutboundEndpoint {
+
+    @Override
+    public EndpointProducerBuilder getOutboundEndpoint() {
+      return StaticEndpointBuilders.log("message");
+    }
+
+    @Override
+    protected void configureEndpointRoute(RouteDefinition definition) {
+      definition.process(
+          exchange -> {
+            CDMRequest request = exchange.getMessage().getBody(CDMRequest.class);
+            CDMResponse response = new CDMResponse("ID: " + request.getId());
+            exchange.getMessage().setBody(request.getId() == 1000 ? response : "Wrong CDM type");
+          });
+    }
+  }
 }
