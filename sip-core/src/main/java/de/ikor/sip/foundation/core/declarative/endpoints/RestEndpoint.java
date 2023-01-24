@@ -4,25 +4,20 @@ import de.ikor.sip.foundation.core.declarative.annonations.InboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestation.EndpointOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
-import de.ikor.sip.foundation.core.declarative.orchestation.RestBridge;
 import de.ikor.sip.foundation.core.declarative.orchestation.RestEndpointBridgeInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.ReflectionHelper;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 
-public abstract class RestEndpoint extends AnnotatedEndpoint
-    implements RestBridge, RestEndpointDefinition {
+public abstract class RestEndpoint extends AnnotatedEndpoint implements InEndpointDefinition {
 
   @Override
-  public void doBridge(final RestEndpointBridgeInfo data) {
-    configureRest(data.getRestDefinition());
+  public void doBridge(final EndpointOrchestrationInfo data) {
+    configureRest(((RestEndpointBridgeInfo) data).getRestDefinition());
   }
 
-  public RestBridge getBridge() {
-    return this;
-  }
-
+  @Override
   public Orchestrator<EndpointOrchestrationInfo> getOrchestrator() {
     return this;
   }
@@ -39,6 +34,7 @@ public abstract class RestEndpoint extends AnnotatedEndpoint
 
   protected abstract void configureRest(final RestDefinition definition);
 
+  @Override
   protected abstract void configureEndpointRoute(final RouteDefinition definition);
 
   private final InboundEndpoint inboundEndpointAnnotation =
