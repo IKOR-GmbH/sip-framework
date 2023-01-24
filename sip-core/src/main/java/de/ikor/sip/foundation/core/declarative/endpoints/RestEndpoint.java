@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.core.declarative.endpoints;
 
-import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.annonations.InboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestation.EndpointOrchestrationInfo;
@@ -11,21 +10,9 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import de.ikor.sip.foundation.core.declarative.utils.ReflectionHelper;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestDefinition;
-import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class RestEndpoint
-    implements RestBridge, Orchestrator<EndpointOrchestrationInfo>, RestEndpointDefinition {
-
-  private DeclarationsRegistry declarationsRegistry;
-
-  protected final DeclarationsRegistry getDeclarationsRegistry() {
-    return declarationsRegistry;
-  }
-
-  @Autowired
-  public final void setDeclarationsRegistry(final DeclarationsRegistry declarationsRegistry) {
-    this.declarationsRegistry = declarationsRegistry;
-  }
+public abstract class RestEndpoint extends AnnotatedEndpoint
+    implements RestBridge, RestEndpointDefinition {
 
   @Override
   public void doBridge(final RestEndpointBridgeInfo data) {

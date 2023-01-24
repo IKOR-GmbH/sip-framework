@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.*;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.http;
 
@@ -16,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
@@ -54,7 +53,7 @@ public class EndpointOrchestrationTest {
 
   @Test
   void When_UsingScenario_With_RestEndpoint_Then_RestRoutesAreCreatedAndConnectedToScenario() {
-    mockedLogger.expectedBodiesReceivedInAnyOrder("Hi Adapter-REST");
+    mockedLogger.expectedBodiesReceivedInAnyOrder("Hi Adapter-CONSUMED");
     template
         .withBody("Hi Adapter")
         .to(http("localhost:" + localServerPort + "/adapter/path"))

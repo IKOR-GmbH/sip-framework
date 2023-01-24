@@ -69,10 +69,7 @@ public class SimpleAdapter {
     }
   }
 
-  @IntegrationScenario(scenarioId = "restscene", requestModel = String.class)
-  public class RestScenario extends AnnotatedScenario {}
-
-  @InboundEndpoint(belongsToConnector = "SIP1", providesToScenario = "restscene")
+  @InboundEndpoint(belongsToConnector = "SIP1", providesToScenario = "AppendStaticMessage")
   public class RestEndpointTest extends RestEndpoint {
 
     @Override
@@ -83,20 +80,6 @@ public class SimpleAdapter {
     @Override
     protected void configureEndpointRoute(RouteDefinition definition) {
       definition.process(exchange -> exchange.getMessage());
-    }
-  }
-
-  @OutboundEndpoint(belongsToConnector = "SIP2", consumesFromScenario = "restscene")
-  public class AppendRestMessageConsumer extends AnnotatedOutboundEndpoint {
-
-    @Override
-    public EndpointProducerBuilder getOutboundEndpoint() {
-      return StaticEndpointBuilders.log("message");
-    }
-
-    @Override
-    protected void configureEndpointRoute(RouteDefinition definition) {
-      definition.setBody(exchange -> exchange.getIn().getBody() + "-REST");
     }
   }
 }
