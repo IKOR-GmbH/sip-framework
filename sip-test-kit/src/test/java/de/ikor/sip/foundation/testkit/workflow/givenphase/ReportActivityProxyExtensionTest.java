@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.testkit.workflow.TestCase;
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
@@ -70,7 +71,7 @@ class ReportActivityProxyExtensionTest {
 
     // act + assert
     assertThatThrownBy(() -> subject.run(proxy, original, current))
-        .isInstanceOf(IllegalArgumentException.class)
+        .isInstanceOf(SIPFrameworkException.class)
         .hasMessage("Test case with name " + TEST_NAME + " could not be found!");
   }
 

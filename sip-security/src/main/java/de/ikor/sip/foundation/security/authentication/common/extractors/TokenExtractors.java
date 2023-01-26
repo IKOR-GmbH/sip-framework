@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.security.authentication.common.extractors;
 
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.security.authentication.SIPAuthenticationProvider;
 import de.ikor.sip.foundation.security.config.ConditionalOnSIPSecurityAuthenticationEnabled;
 import java.util.Map;
@@ -30,14 +31,14 @@ public class TokenExtractors {
    */
   public void addMapping(Class<?> providerClassName, SIPTokenExtractor<?> tokenExtraction) {
     if (providerToExtractorMapping.containsKey(providerClassName)) {
-      throw new IllegalStateException(
+      throw new SIPFrameworkException(
           "Token extractor mapping for this provider exists already:" + providerClassName);
     }
 
     if (providerToExtractorMapping.values().stream()
         .map(Object::getClass)
         .anyMatch(tokenExtraction.getClass()::equals)) {
-      throw new IllegalStateException(
+      throw new SIPFrameworkException(
           "Token extractor mapping for this extractor exists already:"
               + tokenExtraction.getClass());
     }
@@ -45,7 +46,7 @@ public class TokenExtractors {
     if (providerToExtractorMapping.values().stream()
         .map(SIPTokenExtractor::getTokenType)
         .anyMatch(tokenExtraction.getTokenType()::equals)) {
-      throw new IllegalStateException(
+      throw new SIPFrameworkException(
           "A token extractor mapping for an extractor with the same token type already exists: "
               + tokenExtraction.getTokenType());
     }

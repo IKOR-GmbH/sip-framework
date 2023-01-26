@@ -3,6 +3,8 @@ package de.ikor.sip.foundation.core.actuator.config;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Properties;
+
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import lombok.Setter;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
@@ -72,7 +74,7 @@ public class EndpointExposureConfiguration
     try {
       return resourcePatternResolver.getResources(path);
     } catch (IOException e) {
-      throw new IllegalArgumentException(String.format("File not found for path %s", path));
+      throw new SIPFrameworkException(String.format("File not found for path %s", path));
     }
   }
 }

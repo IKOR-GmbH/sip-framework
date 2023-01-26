@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.security.authentication.x509;
 
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.security.authentication.ConditionalOnSIPAuthProvider;
 import de.ikor.sip.foundation.security.authentication.common.validators.SIPTokenValidator;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties;
@@ -70,7 +71,7 @@ public class SIPX509FileValidator implements SIPTokenValidator<SIPX509Authentica
               });
 
     } catch (Exception e) {
-      throw new IllegalStateException("X509 Acl file could not be parsed properly", e);
+      throw new SIPFrameworkException("X509 Acl file could not be parsed properly", e);
     }
   }
 

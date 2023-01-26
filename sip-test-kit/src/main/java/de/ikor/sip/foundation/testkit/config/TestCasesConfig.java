@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.testkit.config;
 import static de.ikor.sip.foundation.testkit.util.TestKitHelper.parseExchangeProperties;
 import static java.util.stream.Collectors.toList;
 
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseBatchDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
@@ -96,7 +97,7 @@ public class TestCasesConfig {
 
   private void validateTestDefinition(TestCaseDefinition testCaseDefinition) {
     if (testCaseDefinition.getWhenExecute() == null) {
-      throw new IllegalArgumentException("When-execute is not defined!");
+      throw new SIPFrameworkException("When-execute is not defined!");
     }
   }
 
