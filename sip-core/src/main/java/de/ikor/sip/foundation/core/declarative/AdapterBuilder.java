@@ -110,12 +110,12 @@ public class AdapterBuilder extends RouteBuilder {
   }
 
   private void orchestrateEndpoint(
-      EndpointOrchestrationInfo camelRoute,
+      EndpointOrchestrationInfo orchestrationInfo,
       Orchestratable<EndpointOrchestrationInfo> orchestratable) {
 
     Orchestrator<EndpointOrchestrationInfo> orchestrator = orchestratable.getOrchestrator();
-    if (orchestrator.canOrchestrate(camelRoute)) {
-      orchestrator.doOrchestrate(camelRoute);
+    if (orchestrator.canOrchestrate(orchestrationInfo)) {
+      orchestrator.doOrchestrate(orchestrationInfo);
     }
   }
 }
