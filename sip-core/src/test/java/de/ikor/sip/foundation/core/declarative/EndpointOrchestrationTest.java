@@ -53,7 +53,7 @@ public class EndpointOrchestrationTest {
 
   @Test
   void When_UsingScenario_With_RestEndpoint_Then_RestRoutesAreCreatedAndConnectedToScenario() {
-    mockedLogger.expectedBodiesReceivedInAnyOrder("Hi Adapter-CONSUMED");
+    mockedLogger.expectedBodiesReceivedInAnyOrder("PRODUCED_REST-Hi Adapter-CONSUMED");
     template
         .withBody("Hi Adapter")
         .to(http("localhost:" + localServerPort + "/adapter/path"))
