@@ -4,6 +4,7 @@ import static de.ikor.sip.foundation.testkit.util.TestKitHelper.parseExchangePro
 import static java.util.stream.Collectors.toList;
 
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseBatchDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
@@ -103,7 +104,7 @@ public class TestCasesConfig {
 
   private void validateTestCaseInitializations(List<TestCase> testCases) {
     if (testCases.size() != testCaseBatchDefinition.getTestCaseDefinitions().size()) {
-      throw new BeanCreationException("Some test cases were not created.");
+      throw new SIPFrameworkInitializationException("Some test cases were not created.");
     }
   }
 }
