@@ -419,7 +419,7 @@
                     <configuration>
                         <excludes>
                             <exclude>**/*Config*</exclude>
-                            <exclude>**/util/exception/*</exclude>
+                            <exclude>**/util/exception/**</exclude>
                         </excludes>
                     </configuration>
                     <executions>
