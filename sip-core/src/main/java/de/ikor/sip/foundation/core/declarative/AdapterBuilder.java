@@ -25,6 +25,8 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class AdapterBuilder extends RouteBuilder {
 
+  private static final String DIRECT_REST = "direct:rest";
+  private static final String SIPMC = "sipmc:";
   private final ApplicationContext context;
   private final DeclarationsRegistry declarationsRegistry;
 
@@ -73,13 +75,13 @@ public class AdapterBuilder extends RouteBuilder {
     RouteDefinition camelRoute = from(inboundEndpointDefinition.getInboundEndpoint());
     EndpointOrchestrationInfo orchestrationInfo = () -> camelRoute;
     orchestrateEndpoint(orchestrationInfo, inboundEndpointDefinition);
-    camelRoute.to("sipmc:" + scenarioID);
+    camelRoute.to(SIPMC + scenarioID);
   }
 
   private void buildOutboundEndpoint(
       OutboundEndpointDefinition outboundEndpointDefinition, String scenarioID) {
 
-    RouteDefinition camelRoute = from("sipmc:" + scenarioID);
+    RouteDefinition camelRoute = from(SIPMC + scenarioID);
     EndpointOrchestrationInfo orchestrationInfo = () -> camelRoute;
     orchestrateEndpoint(orchestrationInfo, outboundEndpointDefinition);
     camelRoute.to(outboundEndpointDefinition.getOutboundEndpoint());
@@ -89,7 +91,7 @@ public class AdapterBuilder extends RouteBuilder {
 
     RestDefinition restRoute = rest();
 
-    RouteDefinition camelRoute = from("direct:rest" + scenarioID);
+    RouteDefinition camelRoute = from(DIRECT_REST + scenarioID);
 
     RestEndpointBridgeInfo restEndpointBridgeInfo =
         new RestEndpointBridgeInfo() {
@@ -105,9 +107,9 @@ public class AdapterBuilder extends RouteBuilder {
         };
 
     restEndpointDefinition.getOrchestrator().doBridge(restEndpointBridgeInfo);
-    restRoute.to("direct:rest" + scenarioID);
+    restRoute.to(DIRECT_REST + scenarioID);
     orchestrateEndpoint(restEndpointBridgeInfo, restEndpointDefinition);
-    camelRoute.to("sipmc:" + scenarioID);
+    camelRoute.to(SIPMC + scenarioID);
   }
 
   private void orchestrateEndpoint(
