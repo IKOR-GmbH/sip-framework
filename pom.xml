@@ -118,8 +118,7 @@
              beeing anywhere -->
         <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
-        <sonar.coverage.exclusions>**/*Config*</sonar.coverage.exclusions>
-        <sonar.coverage.exclusions>**/util/exception/*</sonar.coverage.exclusions>
+        <sonar.coverage.exclusions>**/*Config*,**/util/exception/*</sonar.coverage.exclusions>
     </properties>
 
     <modules>
