@@ -6,7 +6,7 @@ import de.ikor.sip.foundation.core.declarative.endpoints.RestEndpoint;
 import de.ikor.sip.foundation.core.declarative.orchestation.EndpointOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestratable;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
-import de.ikor.sip.foundation.core.declarative.orchestation.RestEndpointBridgeInfo;
+import de.ikor.sip.foundation.core.declarative.orchestation.RestEndpointOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
@@ -53,14 +53,12 @@ public class AdapterBuilder extends RouteBuilder {
   private void buildScenario(IntegrationScenarioDefinition scenarioDefinition) {
     List<InboundEndpointDefinition> inboundEndpointDefinitions =
         inboundEndpoints.get(scenarioDefinition);
-
     for (InboundEndpointDefinition definition : inboundEndpointDefinitions) {
       buildInboundEndpoint(definition, scenarioDefinition.getID());
     }
 
     List<OutboundEndpointDefinition> outboundEndpointDefinitions =
         outboundEndpoints.get(scenarioDefinition);
-
     for (OutboundEndpointDefinition definition : outboundEndpointDefinitions) {
       buildOutboundEndpoint(definition, scenarioDefinition.getID());
     }
@@ -90,11 +88,10 @@ public class AdapterBuilder extends RouteBuilder {
   private void buildRestEndpoint(RestEndpoint restEndpointDefinition, String scenarioID) {
 
     RestDefinition restRoute = rest();
-
     RouteDefinition camelRoute = from(DIRECT_REST + scenarioID);
 
-    RestEndpointBridgeInfo restEndpointBridgeInfo =
-        new RestEndpointBridgeInfo() {
+    RestEndpointOrchestrationInfo restEndpointBridgeInfo =
+        new RestEndpointOrchestrationInfo() {
           @Override
           public RestDefinition getRestDefinition() {
             return restRoute;
@@ -106,9 +103,9 @@ public class AdapterBuilder extends RouteBuilder {
           }
         };
 
-    restEndpointDefinition.getOrchestrator().doBridge(restEndpointBridgeInfo);
-    restRoute.to(DIRECT_REST + scenarioID);
     orchestrateEndpoint(restEndpointBridgeInfo, restEndpointDefinition);
+
+    restRoute.to(DIRECT_REST + scenarioID);
     camelRoute.to(SIPMC + scenarioID);
   }
 
