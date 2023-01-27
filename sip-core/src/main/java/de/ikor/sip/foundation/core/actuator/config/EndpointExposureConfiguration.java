@@ -1,10 +1,9 @@
 package de.ikor.sip.foundation.core.actuator.config;
 
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Properties;
-
-import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import lombok.Setter;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;

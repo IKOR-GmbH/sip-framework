@@ -3,8 +3,7 @@ package de.ikor.sip.foundation.core.actuator.health;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 
 /**
- * Exception duplicated uri patterns (health indicator matchers) used in {@link
- * HealthMonitorSetup}
+ * Exception duplicated uri patterns (health indicator matchers) used in {@link HealthMonitorSetup}
  */
 public class DuplicateUriPatternError extends SIPFrameworkException {
 
