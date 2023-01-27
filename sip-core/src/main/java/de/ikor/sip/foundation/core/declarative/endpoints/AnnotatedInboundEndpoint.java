@@ -24,4 +24,9 @@ public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint
     return getDeclarationsRegistry()
         .getScenarioById(inboundEndpointAnnotation.providesToScenario());
   }
+
+  @Override
+  public final String getConnectorId() {
+    return this.getClass().getAnnotation(InboundEndpoint.class).belongsToConnector();
+  }
 }
