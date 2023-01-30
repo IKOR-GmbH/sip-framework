@@ -23,6 +23,7 @@ de.ikor.sip.foundation.core.trace
 de.ikor.sip.foundation.core.translate
 de.ikor.sip.foundation.core.translate.logging
 de.ikor.sip.foundation.core.util
+de.ikor.sip.foundation.core.util.exception
 de.ikor.sip.foundation.mvnplugin
 de.ikor.sip.foundation.mvnplugin.model
 de.ikor.sip.foundation.security.authentication
