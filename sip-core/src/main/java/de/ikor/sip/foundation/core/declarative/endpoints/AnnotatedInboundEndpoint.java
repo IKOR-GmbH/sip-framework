@@ -14,6 +14,11 @@ public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint
       ReflectionHelper.getAnnotationOrThrow(InboundEndpoint.class, this);
 
   @Override
+  public final String getEndpointId() {
+    return inboundEndpointAnnotation.endpointId();
+  }
+
+  @Override
   public final ConnectorDefinition getConnector() {
     return getDeclarationsRegistry()
         .getConnectorById(inboundEndpointAnnotation.belongsToConnector());

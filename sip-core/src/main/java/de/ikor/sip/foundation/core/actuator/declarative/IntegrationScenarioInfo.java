@@ -1,10 +1,10 @@
 package de.ikor.sip.foundation.core.actuator.declarative;
 
-import lombok.Builder;
-import lombok.Value;
+import lombok.*;
 
-@Value
-@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class IntegrationScenarioInfo {
 
   String scenarioId;

@@ -1,38 +1,47 @@
 package de.ikor.sip.foundation.core.declarative;
 
 import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedInboundEndpoint;
+import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedOutboundEndpoint;
+import de.ikor.sip.foundation.core.declarative.endpoints.InboundEndpointDefinition;
+import de.ikor.sip.foundation.core.declarative.endpoints.OutboundEndpointDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import java.util.Map;
-import java.util.stream.Collectors;
+
+import java.util.List;
 import javax.annotation.PostConstruct;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+@Getter
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class DeclarationsRegistry {
 
-  private final ApplicationContext context;
-  private Map<String, ConnectorDefinition> connectors;
-  @Getter private Map<String, IntegrationScenarioDefinition> scenarios;
+  private List<ConnectorDefinition> connectors;
+  private List<IntegrationScenarioDefinition> integrationScenarios;
+  private List<InboundEndpointDefinition> inboundEndpoints;
+  private List<OutboundEndpointDefinition> outboundEndpoints;
 
+  // TODO some check for unique id-s
   @PostConstruct
-  private void createRegistry() {
-    this.connectors =
-        context.getBeansOfType(ConnectorDefinition.class).values().stream()
-            .collect(Collectors.toUnmodifiableMap(def -> def.getID(), def -> def));
-    this.scenarios =
-        context.getBeansOfType(IntegrationScenarioDefinition.class).values().stream()
-            .collect(Collectors.toUnmodifiableMap(def -> def.getID(), def -> def));
+  private void updateEndpoints() {
+    inboundEndpoints.forEach(endpoint -> ((AnnotatedInboundEndpoint) endpoint).setDeclarationsRegistry(this));
+    outboundEndpoints.forEach(endpoint -> ((AnnotatedOutboundEndpoint) endpoint).setDeclarationsRegistry(this));
   }
 
   public ConnectorDefinition getConnectorById(final String connectorId) {
-    return connectors.get(connectorId);
+    return connectors.stream()
+            .filter(connector -> connector.getID().equals(connectorId))
+            .findFirst()
+            .orElse(null);  // TODO
   }
 
   public IntegrationScenarioDefinition getScenarioById(final String scenarioId) {
-    return scenarios.get(scenarioId);
+    return integrationScenarios.stream()
+            .filter(scenario -> scenario.getID().equals(scenarioId))
+            .findFirst()
+            .orElse(null);  // TODO
   }
 }

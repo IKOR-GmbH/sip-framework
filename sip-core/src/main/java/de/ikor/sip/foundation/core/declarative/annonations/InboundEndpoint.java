@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public @interface InboundEndpoint {
 
+  String endpointId();
+
   String belongsToConnector();
 
   String providesToScenario();

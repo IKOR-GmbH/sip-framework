@@ -12,6 +12,11 @@ public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
       ReflectionHelper.getAnnotationOrThrow(OutboundEndpoint.class, this);
 
   @Override
+  public final String getEndpointId() {
+    return outboundEndpointAnnotation.endpointId();
+  }
+
+  @Override
   public final IntegrationScenarioDefinition getConsumedScenario() {
     return getDeclarationsRegistry()
         .getScenarioById(outboundEndpointAnnotation.consumesFromScenario());

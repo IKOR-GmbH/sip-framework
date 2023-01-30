@@ -11,7 +11,6 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProvi
 import lombok.AllArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AdapterBuilder extends RouteBuilder {
 
-  private final ApplicationContext context;
   private final DeclarationsRegistry declarationsRegistry;
 
   private Map<IntegrationScenarioDefinition, List<InboundEndpointDefinition>> inboundEndpoints;
@@ -31,19 +29,17 @@ public class AdapterBuilder extends RouteBuilder {
 
   @PostConstruct
   private void fetchEndpoints() {
-    this.inboundEndpoints =
-        context.getBeansOfType(InboundEndpointDefinition.class).values().stream()
-            .collect(
-                Collectors.groupingBy(IntegrationScenarioProviderDefinition::getProvidedScenario));
-    this.outboundEndpoints =
-        context.getBeansOfType(OutboundEndpointDefinition.class).values().stream()
-            .collect(
-                Collectors.groupingBy(IntegrationScenarioConsumerDefinition::getConsumedScenario));
+    this.inboundEndpoints = declarationsRegistry.getInboundEndpoints()
+            .stream()
+            .collect(Collectors.groupingBy(IntegrationScenarioProviderDefinition::getProvidedScenario));
+    this.outboundEndpoints = declarationsRegistry.getOutboundEndpoints()
+            .stream()
+            .collect(Collectors.groupingBy(IntegrationScenarioConsumerDefinition::getConsumedScenario));
   }
 
   @Override
   public void configure() throws Exception {
-    declarationsRegistry.getScenarios().values().forEach(this::buildScenario);
+    declarationsRegistry.getIntegrationScenarios().forEach(this::buildScenario);
   }
 
   private void buildScenario(IntegrationScenarioDefinition scenarioDefinition) {

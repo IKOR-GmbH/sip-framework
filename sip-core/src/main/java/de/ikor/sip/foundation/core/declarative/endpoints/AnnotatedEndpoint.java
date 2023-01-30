@@ -4,16 +4,15 @@ import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.orchestation.EndpointOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import org.apache.camel.model.RouteDefinition;
-import org.springframework.beans.factory.annotation.Autowired;
 
 abstract class AnnotatedEndpoint implements Orchestrator<EndpointOrchestrationInfo> {
+
   private DeclarationsRegistry declarationsRegistry;
 
   protected final DeclarationsRegistry getDeclarationsRegistry() {
     return declarationsRegistry;
   }
 
-  @Autowired
   public final void setDeclarationsRegistry(final DeclarationsRegistry declarationsRegistry) {
     this.declarationsRegistry = declarationsRegistry;
   }

@@ -1,15 +1,17 @@
 package de.ikor.sip.foundation.core.actuator.declarative;
 
+import java.util.ArrayList;
 import java.util.List;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
+import lombok.*;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ConnectorInfo {
 
   String connectorId;
   String connectorDescription;
-  List<String> participatesIncoming;
-  List<String> participatesOutgoing;
+  List<String> inboundEndpoints = new ArrayList<>();
+  List<String> outboundEndpoints = new ArrayList<>();
 }

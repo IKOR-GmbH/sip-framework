@@ -19,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = {SimpleAdapter.class})
 @DisableJmx(false)
 @MockEndpoints("log:message*")
-public class BasicStructureTest {
+class BasicStructureTest {
 
   @EndpointInject("mock:log:message")
   private MockEndpoint mockedLogger;

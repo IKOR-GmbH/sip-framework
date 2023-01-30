@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connectors;
 
+import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.annonations.Connector;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
@@ -9,6 +10,8 @@ import java.util.Map;
 import org.springframework.core.io.ClassPathResource;
 
 public class AnnotatedConnector implements ConnectorDefinition {
+
+  private DeclarationsRegistry declarationsRegistry;
 
   private final Connector annotation = ReflectionHelper.getAnnotationOrThrow(Connector.class, this);
 
@@ -45,5 +48,9 @@ public class AnnotatedConnector implements ConnectorDefinition {
   public final Map<String, IntegrationScenarioProviderDefinition>
       getProvidedIntegrationScenarios() {
     throw new UnsupportedOperationException();
+  }
+
+  public final void setDeclarationsRegistry(final DeclarationsRegistry declarationsRegistry) {
+    this.declarationsRegistry = declarationsRegistry;
   }
 }
