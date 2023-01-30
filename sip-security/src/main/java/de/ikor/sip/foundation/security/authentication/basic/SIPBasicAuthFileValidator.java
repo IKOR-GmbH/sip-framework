@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.security.authentication.basic;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.security.authentication.ConditionalOnSIPAuthProvider;
 import de.ikor.sip.foundation.security.authentication.common.validators.SIPTokenValidator;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties;
@@ -57,7 +58,7 @@ public class SIPBasicAuthFileValidator
           .forEachRemaining(
               e -> userPwMap.put(e.get("username").textValue(), e.get("password").textValue()));
     } catch (Exception e) {
-      throw new IllegalStateException(
+      throw new SIPFrameworkException(
           "Basic authentication users file could not be parsed properly", e);
     }
   }
