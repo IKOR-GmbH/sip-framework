@@ -1,5 +1,6 @@
-package de.ikor.sip.foundation.core.framework.routers;
+package de.ikor.sip.foundation.core.declarative.validator;
 
+import de.ikor.sip.foundation.core.framework.routers.IntegrationScenario;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 

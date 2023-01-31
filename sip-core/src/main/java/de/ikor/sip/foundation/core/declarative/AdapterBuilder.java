@@ -8,7 +8,7 @@ import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
-import de.ikor.sip.foundation.core.framework.routers.CDMValidator;
+import de.ikor.sip.foundation.core.declarative.validator.CDMValidator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
