@@ -17,6 +17,11 @@ public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
   }
 
   @Override
+  public final String getBelongsToConnector() {
+    return outboundEndpointAnnotation.belongsToConnector();
+  }
+
+  @Override
   public final IntegrationScenarioDefinition getConsumedScenario() {
     return getDeclarationsRegistry()
         .getScenarioById(outboundEndpointAnnotation.consumesFromScenario());

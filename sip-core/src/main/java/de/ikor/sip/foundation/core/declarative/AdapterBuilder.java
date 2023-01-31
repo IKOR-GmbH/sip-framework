@@ -62,9 +62,7 @@ public class AdapterBuilder extends RouteBuilder {
     RouteDefinition camelRoute = from(inboundEndpointDefinition.getInboundEndpoint());
     orchestrateEndpoint(camelRoute, inboundEndpointDefinition);
     camelRoute.to("sipmc:" + scenarioID);
-    String routeId =
-        String.format("in-%s-%s", inboundEndpointDefinition.getConnectorId(), scenarioID);
-    camelRoute.routeId(routeId);
+    camelRoute.routeId(inboundEndpointDefinition.getEndpointId());
   }
 
   private void buildOutboundEndpoint(
@@ -73,9 +71,7 @@ public class AdapterBuilder extends RouteBuilder {
     RouteDefinition camelRoute = from("sipmc:" + scenarioID);
     orchestrateEndpoint(camelRoute, outboundEndpointDefinition);
     camelRoute.to(outboundEndpointDefinition.getOutboundEndpoint());
-    String routeId =
-        String.format("out-%s-%s", outboundEndpointDefinition.getConnectorId(), scenarioID);
-    camelRoute.routeId(routeId);
+    camelRoute.routeId(outboundEndpointDefinition.getEndpointId());
   }
 
   private void orchestrateEndpoint(

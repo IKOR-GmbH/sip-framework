@@ -19,6 +19,11 @@ public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint
   }
 
   @Override
+  public final String getBelongsToConnector() {
+    return inboundEndpointAnnotation.belongsToConnector();
+  }
+
+  @Override
   public final ConnectorDefinition getConnector() {
     return getDeclarationsRegistry()
         .getConnectorById(inboundEndpointAnnotation.belongsToConnector());

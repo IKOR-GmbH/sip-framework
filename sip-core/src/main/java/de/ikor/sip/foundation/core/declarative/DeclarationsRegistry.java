@@ -7,6 +7,7 @@ import de.ikor.sip.foundation.core.declarative.endpoints.InboundEndpointDefiniti
 import de.ikor.sip.foundation.core.declarative.endpoints.OutboundEndpointDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,5 +44,21 @@ public class DeclarationsRegistry {
         .filter(scenario -> scenario.getID().equals(scenarioId))
         .findFirst()
         .orElse(null); // TODO
+  }
+
+  public List<InboundEndpointDefinition> getInboundEndpointsByConnectorId(String connectorId) {
+    return inboundEndpoints.stream()
+        .filter(
+            endpoint ->
+                ((AnnotatedInboundEndpoint) endpoint).getBelongsToConnector().equals(connectorId))
+        .collect(Collectors.toList());
+  }
+
+  public List<OutboundEndpointDefinition> getOutboundEndpointsByConnectorId(String connectorId) {
+    return outboundEndpoints.stream()
+        .filter(
+            endpoint ->
+                ((AnnotatedOutboundEndpoint) endpoint).getBelongsToConnector().equals(connectorId))
+        .collect(Collectors.toList());
   }
 }

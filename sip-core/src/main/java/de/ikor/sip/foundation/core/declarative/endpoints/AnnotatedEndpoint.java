@@ -9,6 +9,8 @@ abstract class AnnotatedEndpoint implements Orchestrator<EndpointOrchestrationIn
 
   private DeclarationsRegistry declarationsRegistry;
 
+  protected abstract String getBelongsToConnector();
+
   protected final DeclarationsRegistry getDeclarationsRegistry() {
     return declarationsRegistry;
   }

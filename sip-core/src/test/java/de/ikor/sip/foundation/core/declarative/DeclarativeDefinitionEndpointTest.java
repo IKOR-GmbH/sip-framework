@@ -33,8 +33,7 @@ class DeclarativeDefinitionEndpointTest {
   @LocalServerPort private int localServerPort;
 
   @Test
-  void GIVEN_SimpleAdapter_WHEN_actuatorGetScenarioInfo_THEN_retrieveScenarios()
-      throws IOException {
+  void when_ActuatorGetScenarioInfo_then_RetrieveScenarios() throws IOException {
     // arrange
     HttpUriRequest request =
         new HttpGet(
@@ -53,8 +52,7 @@ class DeclarativeDefinitionEndpointTest {
   }
 
   @Test
-  void GIVEN_SimpleAdapter_WHEN_actuatorGetConnectorInfo_THEN_retrieveConnectors()
-      throws IOException {
+  void when_ActuatorGetConnectorInfo_then_RetrieveConnectors() throws IOException {
     // arrange
     HttpUriRequest request =
         new HttpGet(
@@ -73,8 +71,7 @@ class DeclarativeDefinitionEndpointTest {
   }
 
   @Test
-  void GIVEN_SimpleAdapter_WHEN_actuatorGetEndpointInfo_THEN_retrieveEndpoints()
-      throws IOException {
+  void when_ActuatorGetEndpointInfo_then_RetrieveEndpoints() throws IOException {
     // arrange
     HttpUriRequest request =
         new HttpGet(

@@ -33,7 +33,7 @@ public class DeclarativeDefinitionEndpoint {
     List<OutboundEndpointDefinition> outboundEndpoints =
         declarationsRegistry.getOutboundEndpoints();
 
-    initializeConnectorInfoRegistry(inboundEndpoints, outboundEndpoints);
+    initializeConnectorInfoRegistry();
     initializeIntegrationScenarioInfoRegistry();
     initializeEndpointInfoRegistry(inboundEndpoints, outboundEndpoints);
   }
@@ -53,12 +53,9 @@ public class DeclarativeDefinitionEndpoint {
     return endpointInfoRegistry;
   }
 
-  private void initializeConnectorInfoRegistry(
-      List<InboundEndpointDefinition> inboundEndpoints,
-      List<OutboundEndpointDefinition> outboundEndpoints) {
+  private void initializeConnectorInfoRegistry() {
     for (ConnectorDefinition connector : declarationsRegistry.getConnectors()) {
-      ConnectorInfo info = createConnectorInfo(connector, inboundEndpoints, outboundEndpoints);
-      connectorInfoRegistry.add(info);
+      connectorInfoRegistry.add(createConnectorInfo(connector));
     }
   }
 
@@ -79,25 +76,19 @@ public class DeclarativeDefinitionEndpoint {
             createAndAdd(endpoint.getEndpointId(), endpoint.getOutboundEndpoint().getUri()));
   }
 
-  private ConnectorInfo createConnectorInfo(
-      ConnectorDefinition connectorDefinition,
-      List<InboundEndpointDefinition> inboundEndpoints,
-      List<OutboundEndpointDefinition> outboundEndpoints) {
+  private ConnectorInfo createConnectorInfo(ConnectorDefinition connector) {
     ConnectorInfo info = new ConnectorInfo();
-    info.setConnectorId(connectorDefinition.getID());
-    info.setConnectorDescription(connectorDefinition.getDocumentation());
+    info.setConnectorId(connector.getID());
+    info.setConnectorDescription(connector.getDocumentation());
 
-    for (InboundEndpointDefinition endpoint : inboundEndpoints) {
-      if (endpoint.getConnector().getID().equals(info.getConnectorId())) {
-        info.getInboundEndpoints().add(endpoint.getEndpointId());
-      }
-    }
+    declarationsRegistry
+        .getInboundEndpointsByConnectorId(connector.getID())
+        .forEach(endpoint -> info.getInboundEndpoints().add(endpoint.getEndpointId()));
 
-    for (OutboundEndpointDefinition endpoint : outboundEndpoints) {
-      if (endpoint.getConnector().getID().equals(info.getConnectorId())) {
-        info.getOutboundEndpoints().add(endpoint.getEndpointId());
-      }
-    }
+    declarationsRegistry
+        .getOutboundEndpointsByConnectorId(connector.getID())
+        .forEach(endpoint -> info.getOutboundEndpoints().add(endpoint.getEndpointId()));
+
     return info;
   }
 
