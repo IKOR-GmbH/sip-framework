@@ -20,7 +20,10 @@ public class SimpleAdapter {
   @IntegrationScenario(scenarioId = "Passthrough", requestModel = String.class)
   class PassthroughScenario extends AnnotatedScenario {}
 
-  @InboundEndpoint(endpointId = "passthroughProvider", belongsToConnector = "SIP1", providesToScenario = "Passthrough")
+  @InboundEndpoint(
+      endpointId = "passthroughProvider",
+      belongsToConnector = "SIP1",
+      providesToScenario = "Passthrough")
   class PassthroughProvider extends AnnotatedInboundEndpoint {
 
     @Override
@@ -29,7 +32,10 @@ public class SimpleAdapter {
     }
   }
 
-  @OutboundEndpoint(endpointId = "passthroughCosumer", belongsToConnector = "SIP2", consumesFromScenario = "Passthrough")
+  @OutboundEndpoint(
+      endpointId = "passthroughCosumer",
+      belongsToConnector = "SIP2",
+      consumesFromScenario = "Passthrough")
   class PassthroughCosumer extends AnnotatedOutboundEndpoint {
 
     @Override
@@ -41,7 +47,10 @@ public class SimpleAdapter {
   @IntegrationScenario(scenarioId = "AppendStaticMessage", requestModel = String.class)
   public class AppendStaticMessageScenario extends AnnotatedScenario {}
 
-  @InboundEndpoint(endpointId = "appendStaticMessageProvider", belongsToConnector = "SIP1", providesToScenario = "AppendStaticMessage")
+  @InboundEndpoint(
+      endpointId = "appendStaticMessageProvider",
+      belongsToConnector = "SIP1",
+      providesToScenario = "AppendStaticMessage")
   public class AppendStaticMessageProvider extends AnnotatedInboundEndpoint {
 
     @Override
@@ -55,7 +64,10 @@ public class SimpleAdapter {
     }
   }
 
-  @OutboundEndpoint(endpointId = "appendStaticMessageConsumer", belongsToConnector = "SIP2", consumesFromScenario = "AppendStaticMessage")
+  @OutboundEndpoint(
+      endpointId = "appendStaticMessageConsumer",
+      belongsToConnector = "SIP2",
+      consumesFromScenario = "AppendStaticMessage")
   public class AppendStaticMessageConsumer extends AnnotatedOutboundEndpoint {
 
     @Override
@@ -70,12 +82,8 @@ public class SimpleAdapter {
   }
 
   @Connector(connectorId = "SIP1")
-  public class ConnectorSip1 extends AnnotatedConnector {
-
-  }
+  public class ConnectorSip1 extends AnnotatedConnector {}
 
   @Connector(connectorId = "SIP2")
-  public class ConnectorSip2 extends AnnotatedConnector {
-
-  }
+  public class ConnectorSip2 extends AnnotatedConnector {}
 }

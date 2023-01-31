@@ -5,7 +5,6 @@ import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.endpoints.InboundEndpointDefinition;
 import de.ikor.sip.foundation.core.declarative.endpoints.OutboundEndpointDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -31,7 +30,8 @@ public class DeclarativeDefinitionEndpoint {
   @PostConstruct
   private void collectInfo() {
     List<InboundEndpointDefinition> inboundEndpoints = declarationsRegistry.getInboundEndpoints();
-    List<OutboundEndpointDefinition> outboundEndpoints = declarationsRegistry.getOutboundEndpoints();
+    List<OutboundEndpointDefinition> outboundEndpoints =
+        declarationsRegistry.getOutboundEndpoints();
 
     initializeConnectorInfoRegistry(inboundEndpoints, outboundEndpoints);
     initializeIntegrationScenarioInfoRegistry();
@@ -53,7 +53,9 @@ public class DeclarativeDefinitionEndpoint {
     return endpointInfoRegistry;
   }
 
-  private void initializeConnectorInfoRegistry(List<InboundEndpointDefinition> inboundEndpoints, List<OutboundEndpointDefinition> outboundEndpoints) {
+  private void initializeConnectorInfoRegistry(
+      List<InboundEndpointDefinition> inboundEndpoints,
+      List<OutboundEndpointDefinition> outboundEndpoints) {
     for (ConnectorDefinition connector : declarationsRegistry.getConnectors()) {
       ConnectorInfo info = createConnectorInfo(connector, inboundEndpoints, outboundEndpoints);
       connectorInfoRegistry.add(info);
@@ -67,21 +69,28 @@ public class DeclarativeDefinitionEndpoint {
     }
   }
 
-  private void initializeEndpointInfoRegistry(List<InboundEndpointDefinition> inboundEndpoints, List<OutboundEndpointDefinition> outboundEndpoints) {
-    inboundEndpoints.forEach(endpoint -> createAndAdd(endpoint.getEndpointId(), endpoint.getInboundEndpoint().getUri()));
-    outboundEndpoints.forEach(endpoint -> createAndAdd(endpoint.getEndpointId(), endpoint.getOutboundEndpoint().getUri()));
+  private void initializeEndpointInfoRegistry(
+      List<InboundEndpointDefinition> inboundEndpoints,
+      List<OutboundEndpointDefinition> outboundEndpoints) {
+    inboundEndpoints.forEach(
+        endpoint -> createAndAdd(endpoint.getEndpointId(), endpoint.getInboundEndpoint().getUri()));
+    outboundEndpoints.forEach(
+        endpoint ->
+            createAndAdd(endpoint.getEndpointId(), endpoint.getOutboundEndpoint().getUri()));
   }
 
-  private ConnectorInfo createConnectorInfo(ConnectorDefinition connectorDefinition, List<InboundEndpointDefinition> inboundEndpoints,
-                                            List<OutboundEndpointDefinition> outboundEndpoints) {
+  private ConnectorInfo createConnectorInfo(
+      ConnectorDefinition connectorDefinition,
+      List<InboundEndpointDefinition> inboundEndpoints,
+      List<OutboundEndpointDefinition> outboundEndpoints) {
     ConnectorInfo info = new ConnectorInfo();
     info.setConnectorId(connectorDefinition.getID());
     info.setConnectorDescription(connectorDefinition.getDocumentation());
 
     for (InboundEndpointDefinition endpoint : inboundEndpoints) {
-        if (endpoint.getConnector().getID().equals(info.getConnectorId())) {
-          info.getInboundEndpoints().add(endpoint.getEndpointId());
-        }
+      if (endpoint.getConnector().getID().equals(info.getConnectorId())) {
+        info.getInboundEndpoints().add(endpoint.getEndpointId());
+      }
     }
 
     for (OutboundEndpointDefinition endpoint : outboundEndpoints) {
@@ -92,12 +101,14 @@ public class DeclarativeDefinitionEndpoint {
     return info;
   }
 
-  private IntegrationScenarioInfo createIntegrationScenarioInfo(IntegrationScenarioDefinition scenario) {
+  private IntegrationScenarioInfo createIntegrationScenarioInfo(
+      IntegrationScenarioDefinition scenario) {
     IntegrationScenarioInfo info = new IntegrationScenarioInfo();
     info.setScenarioId(scenario.getID());
     info.setScenarioDescription(scenario.getDescription());
     info.setRequestModelClass(scenario.getRequestModelClass().getName());
-    info.setResponseModelClass(scenario.getResponseModelClass().isPresent()
+    info.setResponseModelClass(
+        scenario.getResponseModelClass().isPresent()
             ? scenario.getResponseModelClass().get().getName()
             : NO_RESPONSE);
     return info;
@@ -107,5 +118,4 @@ public class DeclarativeDefinitionEndpoint {
     EndpointInfo info = new EndpointInfo(endpointId, uri);
     endpointInfoRegistry.add(info);
   }
-
 }

@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EndpointInfo {
 
-    private String id;
-    private String camelUri;
+  private String id;
+  private String camelUri;
 }

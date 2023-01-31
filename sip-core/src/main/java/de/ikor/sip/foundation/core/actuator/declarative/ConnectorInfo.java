@@ -2,7 +2,6 @@ package de.ikor.sip.foundation.core.actuator.declarative;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.*;
 
 @Data

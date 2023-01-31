@@ -8,15 +8,14 @@ import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -29,12 +28,14 @@ public class AdapterBuilder extends RouteBuilder {
 
   @PostConstruct
   private void fetchEndpoints() {
-    this.inboundEndpoints = declarationsRegistry.getInboundEndpoints()
-            .stream()
-            .collect(Collectors.groupingBy(IntegrationScenarioProviderDefinition::getProvidedScenario));
-    this.outboundEndpoints = declarationsRegistry.getOutboundEndpoints()
-            .stream()
-            .collect(Collectors.groupingBy(IntegrationScenarioConsumerDefinition::getConsumedScenario));
+    this.inboundEndpoints =
+        declarationsRegistry.getInboundEndpoints().stream()
+            .collect(
+                Collectors.groupingBy(IntegrationScenarioProviderDefinition::getProvidedScenario));
+    this.outboundEndpoints =
+        declarationsRegistry.getOutboundEndpoints().stream()
+            .collect(
+                Collectors.groupingBy(IntegrationScenarioConsumerDefinition::getConsumedScenario));
   }
 
   @Override
@@ -62,9 +63,7 @@ public class AdapterBuilder extends RouteBuilder {
     orchestrateEndpoint(camelRoute, inboundEndpointDefinition);
     camelRoute.to("sipmc:" + scenarioID);
     String routeId =
-        String.format(
-            "in-%s-%s",
-            inboundEndpointDefinition.getConnectorId(), scenarioID);
+        String.format("in-%s-%s", inboundEndpointDefinition.getConnectorId(), scenarioID);
     camelRoute.routeId(routeId);
   }
 
@@ -75,9 +74,7 @@ public class AdapterBuilder extends RouteBuilder {
     orchestrateEndpoint(camelRoute, outboundEndpointDefinition);
     camelRoute.to(outboundEndpointDefinition.getOutboundEndpoint());
     String routeId =
-        String.format(
-            "out-%s-%s",
-            outboundEndpointDefinition.getConnectorId(), scenarioID);
+        String.format("out-%s-%s", outboundEndpointDefinition.getConnectorId(), scenarioID);
     camelRoute.routeId(routeId);
   }
 
