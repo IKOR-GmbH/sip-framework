@@ -37,7 +37,7 @@ class DeclarativeDefinitionEndpointTest {
     // arrange
     HttpUriRequest request =
         new HttpGet(
-            "http://localhost:" + localServerPort + "/actuator/adapterdefinition/scenarios");
+            "http://localhost:" + localServerPort + "/actuator/adapter-definition/scenarios");
 
     // act
     HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -45,6 +45,7 @@ class DeclarativeDefinitionEndpointTest {
         mapper.getTypeFactory().constructCollectionType(List.class, IntegrationScenarioInfo.class);
     List<IntegrationScenarioInfo> scenarios =
         mapper.readValue(httpResponse.getEntity().getContent(), collectionType);
+
 
     // assert
     assertThat(httpResponse.getStatusLine().getStatusCode()).isEqualTo(200);
@@ -56,7 +57,7 @@ class DeclarativeDefinitionEndpointTest {
     // arrange
     HttpUriRequest request =
         new HttpGet(
-            "http://localhost:" + localServerPort + "/actuator/adapterdefinition/connectors");
+            "http://localhost:" + localServerPort + "/actuator/adapter-definition/connectors");
 
     // act
     HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -75,7 +76,7 @@ class DeclarativeDefinitionEndpointTest {
     // arrange
     HttpUriRequest request =
         new HttpGet(
-            "http://localhost:" + localServerPort + "/actuator/adapterdefinition/endpoints");
+            "http://localhost:" + localServerPort + "/actuator/adapter-definition/endpoints");
 
     // act
     HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);

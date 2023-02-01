@@ -17,13 +17,18 @@ import org.apache.camel.model.RouteDefinition;
 @SIPIntegrationAdapter
 public class SimpleAdapter {
 
-  @IntegrationScenario(scenarioId = "Passthrough", requestModel = String.class)
+  private static final String SIP1 = "SIP1";
+  private static final String SIP2 = "SIP2";
+  private static final String APPEND_STATIC_MESSAGE_SCENARIO = "AppendStaticMessage";
+  private static final String PASS_THROUGH_SCENARIO = "Passthrough";
+
+  @IntegrationScenario(scenarioId = PASS_THROUGH_SCENARIO, requestModel = String.class)
   class PassthroughScenario extends AnnotatedScenario {}
 
   @InboundEndpoint(
       endpointId = "passthroughProvider",
-      belongsToConnector = "SIP1",
-      providesToScenario = "Passthrough")
+      belongsToConnector = SIP1,
+      providesToScenario = PASS_THROUGH_SCENARIO)
   class PassthroughProvider extends AnnotatedInboundEndpoint {
 
     @Override
@@ -34,8 +39,8 @@ public class SimpleAdapter {
 
   @OutboundEndpoint(
       endpointId = "passthroughCosumer",
-      belongsToConnector = "SIP2",
-      consumesFromScenario = "Passthrough")
+      belongsToConnector = SIP2,
+      consumesFromScenario = PASS_THROUGH_SCENARIO)
   class PassthroughCosumer extends AnnotatedOutboundEndpoint {
 
     @Override
@@ -44,13 +49,13 @@ public class SimpleAdapter {
     }
   }
 
-  @IntegrationScenario(scenarioId = "AppendStaticMessage", requestModel = String.class)
+  @IntegrationScenario(scenarioId = APPEND_STATIC_MESSAGE_SCENARIO, requestModel = String.class)
   public class AppendStaticMessageScenario extends AnnotatedScenario {}
 
   @InboundEndpoint(
       endpointId = "appendStaticMessageProvider",
-      belongsToConnector = "SIP1",
-      providesToScenario = "AppendStaticMessage")
+      belongsToConnector = SIP1,
+      providesToScenario = APPEND_STATIC_MESSAGE_SCENARIO)
   public class AppendStaticMessageProvider extends AnnotatedInboundEndpoint {
 
     @Override
@@ -66,8 +71,8 @@ public class SimpleAdapter {
 
   @OutboundEndpoint(
       endpointId = "appendStaticMessageConsumer",
-      belongsToConnector = "SIP2",
-      consumesFromScenario = "AppendStaticMessage")
+      belongsToConnector = SIP2,
+      consumesFromScenario = APPEND_STATIC_MESSAGE_SCENARIO)
   public class AppendStaticMessageConsumer extends AnnotatedOutboundEndpoint {
 
     @Override
@@ -81,9 +86,9 @@ public class SimpleAdapter {
     }
   }
 
-  @Connector(connectorId = "SIP1")
+  @Connector(connectorId = SIP1)
   public class ConnectorSip1 extends AnnotatedConnector {}
 
-  @Connector(connectorId = "SIP2")
+  @Connector(connectorId = SIP2)
   public class ConnectorSip2 extends AnnotatedConnector {}
 }

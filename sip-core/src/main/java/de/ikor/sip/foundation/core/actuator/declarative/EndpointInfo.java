@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class EndpointInfo {
 
   private String id;
-  private String camelUri;
+  private String camelEndpoint;
 }

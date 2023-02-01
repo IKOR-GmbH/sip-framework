@@ -7,16 +7,24 @@ import de.ikor.sip.foundation.core.declarative.endpoints.OutboundEndpointDefinit
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.boot.actuate.endpoint.web.Link;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Component
-@RestControllerEndpoint(id = "adapterdefinition")
+@RestControllerEndpoint(id = "adapter-definition")
 public class DeclarativeDefinitionEndpoint {
 
   private static final String NO_RESPONSE = "NO RESPONSE";
+  private static final String CONNECTORS = "connectors";
+  private static final String SCENARIOS = "scenarios";
+  private static final String ENDPOINTS = "endpoints";
+  private static final String URI_FORMAT = "%s/%s";
 
   private final DeclarationsRegistry declarationsRegistry;
   private final List<ConnectorInfo> connectorInfoRegistry = new ArrayList<>();
@@ -36,6 +44,17 @@ public class DeclarativeDefinitionEndpoint {
     initializeConnectorInfoRegistry();
     initializeIntegrationScenarioInfoRegistry();
     initializeEndpointInfoRegistry(inboundEndpoints, outboundEndpoints);
+  }
+
+  @GetMapping
+  public Map<String, Link> getLinks(HttpServletRequest request) {
+    String basePath = request.getRequestURL().toString();
+
+    Link connectorsUri = new Link(String.format(URI_FORMAT, basePath, CONNECTORS));
+    Link scenariosUri = new Link(String.format(URI_FORMAT, basePath, SCENARIOS));
+    Link endpointsUri = new Link(String.format(URI_FORMAT, basePath, ENDPOINTS));
+
+    return Map.of(CONNECTORS, connectorsUri, SCENARIOS, scenariosUri, ENDPOINTS, endpointsUri);
   }
 
   @GetMapping("/connectors")
@@ -98,6 +117,7 @@ public class DeclarativeDefinitionEndpoint {
     info.setScenarioId(scenario.getID());
     info.setScenarioDescription(scenario.getDescription());
     info.setRequestModelClass(scenario.getRequestModelClass().getName());
+    info.setRequestModelClassDetails(scenario.getRequestModelClass().toString());
     info.setResponseModelClass(
         scenario.getResponseModelClass().isPresent()
             ? scenario.getResponseModelClass().get().getName()
