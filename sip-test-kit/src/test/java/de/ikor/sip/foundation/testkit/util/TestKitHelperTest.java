@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
@@ -70,9 +71,9 @@ class TestKitHelperTest {
   }
 
   @Test
-  void GIVEN_noRoute_WHEN_resolveEndpoint_THEN_expectIllegalArgumentException() {
+  void GIVEN_noRoute_WHEN_resolveEndpoint_THEN_expectSIPFrameworkException() {
     // act & arrange
-    assertThrows(IllegalArgumentException.class, () -> resolveEndpoint(exchange, camelContext));
+    assertThrows(SIPFrameworkException.class, () -> resolveEndpoint(exchange, camelContext));
   }
 
   @Test

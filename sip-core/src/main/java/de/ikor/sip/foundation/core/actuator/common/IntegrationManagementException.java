@@ -1,7 +1,9 @@
 package de.ikor.sip.foundation.core.actuator.common;
 
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
+
 /** The custom runtime exception to be used as a default exception in this library. */
-public class IntegrationManagementException extends RuntimeException {
+public class IntegrationManagementException extends SIPFrameworkException {
 
   /**
    * Constructs an IntegrationManagementException.

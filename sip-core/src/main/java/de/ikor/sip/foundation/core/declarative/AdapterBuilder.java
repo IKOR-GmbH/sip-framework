@@ -10,16 +10,17 @@ import de.ikor.sip.foundation.core.declarative.orchestation.RestEndpointOrchestr
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -73,7 +74,14 @@ public class AdapterBuilder extends RouteBuilder {
     RouteDefinition camelRoute = from(inboundEndpointDefinition.getInboundEndpoint());
     EndpointOrchestrationInfo orchestrationInfo = () -> camelRoute;
     orchestrateEndpoint(orchestrationInfo, inboundEndpointDefinition);
+
     camelRoute.to(SIPMC + scenarioID);
+    String routeId =
+        String.format(
+            "in-%s-%s",
+            inboundEndpointDefinition.getConnectorId(), scenarioID);
+    camelRoute.routeId(routeId);
+
   }
 
   private void buildOutboundEndpoint(
@@ -83,6 +91,11 @@ public class AdapterBuilder extends RouteBuilder {
     EndpointOrchestrationInfo orchestrationInfo = () -> camelRoute;
     orchestrateEndpoint(orchestrationInfo, outboundEndpointDefinition);
     camelRoute.to(outboundEndpointDefinition.getOutboundEndpoint());
+    String routeId =
+        String.format(
+            "out-%s-%s",
+            outboundEndpointDefinition.getConnectorId(), scenarioID);
+    camelRoute.routeId(routeId);
   }
 
   private void buildRestEndpoint(RestEndpoint restEndpointDefinition, String scenarioID) {

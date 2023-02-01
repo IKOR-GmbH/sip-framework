@@ -7,7 +7,7 @@ import static org.apache.camel.component.kafka.KafkaConstants.*;
 import static org.apache.camel.component.kafka.KafkaConstants.OFFSET;
 
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.RouteInvokerRuntimeException;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.RouteInvokerException;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +63,7 @@ public class KafkaRouteInvoker implements RouteInvoker {
     try {
       kafkaConsumer.getProcessor().process(kafkaExchange);
     } catch (Exception e) {
-      throw new RouteInvokerRuntimeException(this.getClass().getName());
+      throw new RouteInvokerException(this.getClass().getName());
     }
 
     return Optional.empty();
