@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.security.config;
 
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.security.authentication.CompositeAuthenticationFilter;
 import de.ikor.sip.foundation.security.authentication.SIPAuthenticationProvider;
 import de.ikor.sip.foundation.security.authentication.common.extractors.TokenExtractors;
@@ -74,13 +75,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .collect(Collectors.toList());
 
     if (!providersUnavailableAtRuntime.isEmpty()) {
-      throw new IllegalStateException(
+      throw new SIPFrameworkException(
           "Some providers declared in the config are not available in runtime: "
               + providersUnavailableAtRuntime);
     }
 
     if (configHasDuplicateAuthProviders()) {
-      throw new IllegalStateException(
+      throw new SIPFrameworkException(
           "Each auth provider may only be configured once, duplicates are not allowed");
     }
 

@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationToken;
 import de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthTokenExtractor;
 import java.util.Objects;
@@ -43,7 +44,7 @@ class TokenExtractorsTest {
     subject.addMapping(mappingKey, extractor);
 
     // assert
-    assertThatExceptionOfType(IllegalStateException.class)
+    assertThatExceptionOfType(SIPFrameworkException.class)
         .isThrownBy(() -> subject.addMapping(mappingKey, extractor))
         .withMessageContaining("Token extractor mapping for this provider exists already:");
   }
@@ -63,7 +64,7 @@ class TokenExtractorsTest {
     subject.addMapping(mappingKey1, extractor1);
 
     // assert
-    assertThatExceptionOfType(IllegalStateException.class)
+    assertThatExceptionOfType(SIPFrameworkException.class)
         .isThrownBy(() -> subject.addMapping(mappingKey2, extractor2))
         .withMessageContaining(
             "A token extractor mapping for an extractor with the same token type already exists");
@@ -81,7 +82,7 @@ class TokenExtractorsTest {
     subject.addMapping(mappingKey1, extractor);
 
     // assert
-    assertThatExceptionOfType(IllegalStateException.class)
+    assertThatExceptionOfType(SIPFrameworkException.class)
         .isThrownBy(() -> subject.addMapping(mappingKey2, extractor))
         .withMessageContaining("Token extractor mapping for this extractor exists already:");
   }
