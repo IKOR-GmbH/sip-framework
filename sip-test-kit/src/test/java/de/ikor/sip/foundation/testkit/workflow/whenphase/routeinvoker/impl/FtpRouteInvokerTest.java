@@ -8,7 +8,7 @@ import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.RouteInvokerRuntimeException;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.RouteInvokerException;
 import org.apache.camel.*;
 import org.apache.camel.component.file.remote.RemoteFileComponent;
 import org.apache.camel.component.file.remote.RemoteFileConfiguration;
@@ -249,7 +249,7 @@ class FtpRouteInvokerTest {
     doThrow(Exception.class).when(processor).process(any());
 
     // act & assert
-    assertThrows(RouteInvokerRuntimeException.class, () -> subject.invoke(inputExchange));
+    assertThrows(RouteInvokerException.class, () -> subject.invoke(inputExchange));
   }
 
   @Test

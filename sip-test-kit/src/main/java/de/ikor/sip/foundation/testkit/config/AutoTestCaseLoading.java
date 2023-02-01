@@ -2,11 +2,11 @@ package de.ikor.sip.foundation.testkit.config;
 
 import static de.ikor.sip.foundation.testkit.SIPBatchTest.SIP_BATCH_TEST;
 
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -59,7 +59,7 @@ public class AutoTestCaseLoading {
     try {
       return resourcePatternResolver.getResources(path);
     } catch (IOException e) {
-      throw new BeanInitializationException("File not found for path " + path);
+      throw new SIPFrameworkInitializationException("File not found for path " + path);
     }
   }
 

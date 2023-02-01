@@ -5,6 +5,7 @@ import static javax.xml.bind.DatatypeConverter.parseBoolean;
 
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.testkit.workflow.TestCase;
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
@@ -47,8 +48,7 @@ public class ReportActivityProxyExtension implements ProxyExtension {
     Optional<TestCase> tc =
         testCases.stream().filter(testCase -> testCase.getTestName().equals(testName)).findFirst();
     if (tc.isEmpty()) {
-      throw new IllegalArgumentException(
-          "Test case with name " + testName + " could not be found!");
+      throw new SIPFrameworkException("Test case with name " + testName + " could not be found!");
     }
     return tc.get().getTestExecutionStatus();
   }

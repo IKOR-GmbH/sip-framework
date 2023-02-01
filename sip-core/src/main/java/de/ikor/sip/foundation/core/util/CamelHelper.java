@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.util;
 
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import org.apache.camel.Processor;
 import org.apache.camel.processor.WrapProcessor;
 
@@ -7,7 +8,7 @@ import org.apache.camel.processor.WrapProcessor;
 public class CamelHelper {
 
   private CamelHelper() {
-    throw new IllegalStateException("Utility class");
+    throw new SIPFrameworkException("Utility class");
   }
 
   /**

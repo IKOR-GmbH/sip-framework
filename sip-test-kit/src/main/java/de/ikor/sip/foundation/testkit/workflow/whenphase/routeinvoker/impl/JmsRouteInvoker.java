@@ -5,7 +5,7 @@ import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.SIP
 
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.SIPJmsTextMessage;
-import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.RouteInvokerRuntimeException;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.RouteInvokerException;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.UnsupportedJmsHeaderException;
 import java.util.Map;
 import java.util.Optional;
@@ -37,7 +37,7 @@ public class JmsRouteInvoker implements RouteInvoker {
     try {
       processor.process(exchange);
     } catch (Exception e) {
-      throw new RouteInvokerRuntimeException(this.getClass().getName());
+      throw new RouteInvokerException(this.getClass().getName());
     }
     return Optional.empty();
   }

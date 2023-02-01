@@ -72,10 +72,12 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>2.7.6</spring.boot.version>
-        <camel.version>3.18.4</camel.version>
+        <spring.boot.version>2.7.7</spring.boot.version>
+        <camel.version>3.18.5</camel.version>
         <jackson-jsr310.version>2.12.7</jackson-jsr310.version>
-        <springdoc-openapi.version>1.6.7</springdoc-openapi.version>
+        <springdoc-openapi.version>1.6.14</springdoc-openapi.version>
+        <snakeyaml.version>1.33</snakeyaml.version>
+        <swagger-annotation.version>2.2.8</swagger-annotation.version>
         <lombok.version>1.18.22</lombok.version>
         <mapstruct.version>1.5.2.Final</mapstruct.version>
         <commons-text.version>1.10.0</commons-text.version>
@@ -118,7 +120,7 @@
              beeing anywhere -->
         <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
-        <sonar.coverage.exclusions>**/*Config*</sonar.coverage.exclusions>
+        <sonar.coverage.exclusions>**/*Config*,**/util/exception/*</sonar.coverage.exclusions>
     </properties>
 
     <modules>
@@ -319,13 +321,18 @@
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-annotations</artifactId>
-                <version>2.1.11</version>
+                <version>${swagger-annotation.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-artifact</artifactId>
                 <version>${maven-project-dependecies.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
             </dependency>
             <!-- Spring is using 9.1, Cxf is using 9.2 -->
             <!-- When Spring upgrades to 9.2, then explicit dependency can be removed -->
@@ -419,6 +426,7 @@
                     <configuration>
                         <excludes>
                             <exclude>**/*Config*</exclude>
+                            <exclude>**/util/exception/*</exclude>
                         </excludes>
                     </configuration>
                     <executions>

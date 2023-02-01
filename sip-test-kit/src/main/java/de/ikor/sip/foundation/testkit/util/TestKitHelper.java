@@ -5,6 +5,7 @@ import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.Rou
 import static org.apache.camel.builder.ExchangeBuilder.anExchange;
 
 import de.ikor.sip.foundation.core.util.SIPExchangeHelper;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +36,7 @@ public class TestKitHelper extends SIPExchangeHelper {
   public static Endpoint resolveEndpoint(Exchange exchange, CamelContext camelContext) {
     Route route = resolveRoute(exchange, camelContext);
     if (route == null) {
-      throw new IllegalArgumentException(
-          "Route with id " + getRouteId(exchange) + " was not found");
+      throw new SIPFrameworkException("Route with id " + getRouteId(exchange) + " was not found");
     }
     return route.getEndpoint();
   }

@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.security.authentication.x509;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties.AuthProviderSettings;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties.ValidationSettings;
@@ -18,7 +19,7 @@ class SIPX509FileValidatorTest {
   @Test
   void WHEN_ctor_WITH_badFileConfig_THEN_exception() throws Exception {
     // act + assert
-    assertThatExceptionOfType(IllegalStateException.class)
+    assertThatExceptionOfType(SIPFrameworkException.class)
         .isThrownBy(() -> getSipX509FileValidator(X_509_TEST_BAD_ACL));
   }
 
