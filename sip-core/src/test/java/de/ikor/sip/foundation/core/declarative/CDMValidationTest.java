@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import de.ikor.sip.foundation.core.apps.declarative.CDMRequest;
 import de.ikor.sip.foundation.core.apps.declarative.CDMResponse;
 import de.ikor.sip.foundation.core.apps.declarative.SimpleAdapter;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import org.apache.camel.FluentProducerTemplate;
@@ -50,13 +51,13 @@ class CDMValidationTest {
   void when_CDMRequestIsNotValid_then_ExceptionOccurs() {
     Exchange target = template.withBody("String").to(direct("cdm-validator")).send();
 
-    assertThat(target.getException()).isInstanceOf(IllegalStateException.class);
+    assertThat(target.getException()).isInstanceOf(SIPFrameworkInitializationException.class);
   }
 
   @Test
   void when_CDMResponseIsNotValid_then_ExceptionOccurs() {
     Exchange target = template.withBody(new CDMRequest(1001)).to(direct("cdm-validator")).send();
 
-    assertThat(target.getException()).isInstanceOf(IllegalStateException.class);
+    assertThat(target.getException()).isInstanceOf(SIPFrameworkInitializationException.class);
   }
 }
