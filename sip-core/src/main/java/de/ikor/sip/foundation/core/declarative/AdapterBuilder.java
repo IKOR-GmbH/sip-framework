@@ -9,16 +9,16 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsu
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.declarative.validator.CDMValidator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -68,6 +68,12 @@ public class AdapterBuilder extends RouteBuilder {
     orchestrateEndpoint(camelRoute, inboundEndpointDefinition);
     appendRequestValidation(scenarioDefinition.getRequestModelClass(), camelRoute);
     camelRoute.to("sipmc:" + scenarioDefinition.getID());
+    String routeId =
+        String.format(
+            "in-%s-%s",
+            inboundEndpointDefinition.getConnectorId(), scenarioID);
+    camelRoute.routeId(routeId);
+
     appendResponseValidation(scenarioDefinition.getResponseModelClass(), camelRoute);
   }
 
@@ -77,6 +83,11 @@ public class AdapterBuilder extends RouteBuilder {
     RouteDefinition camelRoute = from("sipmc:" + scenarioID);
     orchestrateEndpoint(camelRoute, outboundEndpointDefinition);
     camelRoute.to(outboundEndpointDefinition.getOutboundEndpoint());
+    String routeId =
+        String.format(
+            "out-%s-%s",
+            outboundEndpointDefinition.getConnectorId(), scenarioID);
+    camelRoute.routeId(routeId);
   }
 
   private void appendResponseValidation(
