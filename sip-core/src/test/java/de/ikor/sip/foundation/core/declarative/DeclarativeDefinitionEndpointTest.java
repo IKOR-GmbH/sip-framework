@@ -37,7 +37,7 @@ class DeclarativeDefinitionEndpointTest {
     // arrange
     HttpUriRequest request =
         new HttpGet(
-            "http://localhost:" + localServerPort + "/actuator/adapter-definition/scenarios");
+            "http://localhost:" + localServerPort + "/actuator/adapterdefinition/scenarios");
 
     // act
     HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -57,7 +57,7 @@ class DeclarativeDefinitionEndpointTest {
     // arrange
     HttpUriRequest request =
         new HttpGet(
-            "http://localhost:" + localServerPort + "/actuator/adapter-definition/connectors");
+            "http://localhost:" + localServerPort + "/actuator/adapterdefinition/connectors");
 
     // act
     HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -76,7 +76,7 @@ class DeclarativeDefinitionEndpointTest {
     // arrange
     HttpUriRequest request =
         new HttpGet(
-            "http://localhost:" + localServerPort + "/actuator/adapter-definition/endpoints");
+            "http://localhost:" + localServerPort + "/actuator/adapterdefinition/endpoints");
 
     // act
     HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);

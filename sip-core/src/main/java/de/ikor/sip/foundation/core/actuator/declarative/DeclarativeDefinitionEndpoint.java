@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Component
-@RestControllerEndpoint(id = "adapter-definition")
+@RestControllerEndpoint(id = "adapterdefinition")
 public class DeclarativeDefinitionEndpoint {
 
   private static final String NO_RESPONSE = "NO RESPONSE";
@@ -117,7 +117,6 @@ public class DeclarativeDefinitionEndpoint {
     info.setScenarioId(scenario.getID());
     info.setScenarioDescription(scenario.getDescription());
     info.setRequestModelClass(scenario.getRequestModelClass().getName());
-    info.setRequestModelClassDetails(scenario.getRequestModelClass().toString());
     info.setResponseModelClass(
         scenario.getResponseModelClass().isPresent()
             ? scenario.getResponseModelClass().get().getName()

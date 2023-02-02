@@ -7,5 +7,5 @@ import org.springframework.context.annotation.ComponentScan;
  * Class in charge of toggling all beans under de.ikor.sip.foundation.core.actuator.declarative package..
  */
 @ComponentScan
-@ConditionalOnProperty(value = "sip.core.actuator.adapter-definition.enabled", havingValue = "true")
+@ConditionalOnProperty(value = "sip.core.actuator.adapterdefinition.enabled", havingValue = "true")
 public class ActuatorDefinitionAutoConfig {}

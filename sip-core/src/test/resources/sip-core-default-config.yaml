@@ -15,8 +15,8 @@ sip.core:
       showExchangeId: true
     traceType: "*"
   actuator:
-    endpoints: adapter-definition
-    adapter-definition:
+    endpoints: adapterdefinition
+    adapterdefinition:
       enabled: true
     extensions:
       info:
