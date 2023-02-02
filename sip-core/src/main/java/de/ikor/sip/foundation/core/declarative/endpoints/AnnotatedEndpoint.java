@@ -32,7 +32,16 @@ abstract class AnnotatedEndpoint implements Orchestrator<EndpointOrchestrationIn
     configureEndpointRoute(data.getRouteDefinition());
   }
 
+  @Override
+  public void doAfter(final EndpointOrchestrationInfo data) {
+    configureAfterResponse(data.getRouteDefinition());
+  }
+
   protected void configureEndpointRoute(final RouteDefinition definition) {
+    // NO-OP by default
+  }
+
+  protected void configureAfterResponse(final RouteDefinition definition) {
     // NO-OP by default
   }
 }

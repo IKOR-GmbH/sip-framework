@@ -51,6 +51,11 @@ public class SimpleAdapter {
     protected void configureEndpointRoute(RouteDefinition definition) {
       definition.setBody(exchange -> "PRODUCED-" + exchange.getIn().getBody());
     }
+
+    @Override
+    protected void configureAfterResponse(RouteDefinition definition) {
+      definition.setBody(exchange -> exchange.getIn().getBody() + "-Handled");
+    }
   }
 
   @OutboundEndpoint(belongsToConnector = "SIP2", consumesFromScenario = "AppendStaticMessage")
