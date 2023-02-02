@@ -37,13 +37,9 @@ public class DeclarativeDefinitionEndpoint {
 
   @PostConstruct
   private void collectInfo() {
-    List<InboundEndpointDefinition> inboundEndpoints = declarationsRegistry.getInboundEndpoints();
-    List<OutboundEndpointDefinition> outboundEndpoints =
-        declarationsRegistry.getOutboundEndpoints();
-
     initializeConnectorInfoRegistry();
     initializeIntegrationScenarioInfoRegistry();
-    initializeEndpointInfoRegistry(inboundEndpoints, outboundEndpoints);
+    initializeEndpointInfoRegistry();
   }
 
   @GetMapping
@@ -85,12 +81,10 @@ public class DeclarativeDefinitionEndpoint {
     }
   }
 
-  private void initializeEndpointInfoRegistry(
-      List<InboundEndpointDefinition> inboundEndpoints,
-      List<OutboundEndpointDefinition> outboundEndpoints) {
-    inboundEndpoints.forEach(
+  private void initializeEndpointInfoRegistry() {
+    declarationsRegistry.getInboundEndpoints().forEach(
         endpoint -> createAndAdd(endpoint.getEndpointId(), endpoint.getInboundEndpoint().getUri()));
-    outboundEndpoints.forEach(
+    declarationsRegistry.getOutboundEndpoints().forEach(
         endpoint ->
             createAndAdd(endpoint.getEndpointId(), endpoint.getOutboundEndpoint().getUri()));
   }
