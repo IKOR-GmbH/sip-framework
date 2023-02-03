@@ -16,29 +16,6 @@ import org.apache.camel.model.rest.RestDefinition;
 
 @SIPIntegrationAdapter
 public class SimpleAdapter {
-  // ----> Passthrough SCENARIO
-  @IntegrationScenario(scenarioId = "Passthrough", requestModel = String.class)
-  class PassthroughScenario extends AnnotatedScenario {}
-
-  @InboundEndpoint(belongsToConnector = "SIP1", providesToScenario = "Passthrough")
-  class PassthroughProvider extends AnnotatedInboundEndpoint {
-
-    @Override
-    public DirectEndpointConsumerBuilder getInboundEndpoint() {
-      return StaticEndpointBuilders.direct("trigger-passthrough");
-    }
-  }
-
-  @OutboundEndpoint(belongsToConnector = "SIP2", consumesFromScenario = "Passthrough")
-  class PassthroughCosumer extends AnnotatedOutboundEndpoint {
-
-    @Override
-    public EndpointProducerBuilder getOutboundEndpoint() {
-      return StaticEndpointBuilders.log("message");
-    }
-  }
-  // <---- Passthrough SCENARIO
-
   // ----> AppendStaticMessage SCENARIO
   @IntegrationScenario(scenarioId = "AppendStaticMessage", requestModel = String.class)
   public class AppendStaticMessageScenario extends AnnotatedScenario {}
@@ -104,40 +81,4 @@ public class SimpleAdapter {
     }
   }
   // <---- RestDSL SCENARIO
-
-  // ----> CDMValidation SCENARIO
-  @IntegrationScenario(
-      scenarioId = "CDMValidation",
-      requestModel = CDMRequest.class,
-      responseModel = CDMResponse.class)
-  public class CDMValidationScenario extends AnnotatedScenario {}
-
-  @InboundEndpoint(belongsToConnector = "SIP1", providesToScenario = "CDMValidation")
-  public class InboundCDMEndpoint extends AnnotatedInboundEndpoint {
-
-    @Override
-    public DirectEndpointConsumerBuilder getInboundEndpoint() {
-      return StaticEndpointBuilders.direct("cdm-validator");
-    }
-  }
-
-  @OutboundEndpoint(belongsToConnector = "SIP2", consumesFromScenario = "CDMValidation")
-  public class OutboundCDMEndpoint extends AnnotatedOutboundEndpoint {
-
-    @Override
-    public EndpointProducerBuilder getOutboundEndpoint() {
-      return StaticEndpointBuilders.log("message");
-    }
-
-    @Override
-    protected void configureEndpointRoute(RouteDefinition definition) {
-      definition.process(
-          exchange -> {
-            CDMRequest request = exchange.getMessage().getBody(CDMRequest.class);
-            CDMResponse response = new CDMResponse("ID: " + request.getId());
-            exchange.getMessage().setBody(request.getId() == 1000 ? response : "Wrong CDM type");
-          });
-    }
-  }
-  // <---- CDMValidation SCENARIO
 }
