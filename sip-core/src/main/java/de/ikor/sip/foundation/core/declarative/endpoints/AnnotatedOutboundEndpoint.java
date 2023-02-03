@@ -12,13 +12,8 @@ public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
       ReflectionHelper.getAnnotationOrThrow(OutboundEndpoint.class, this);
 
   @Override
-  public final String getEndpointId() {
+  public final String getAnnotationEndpointId() {
     return outboundEndpointAnnotation.endpointId();
-  }
-
-  @Override
-  public final String getBelongsToConnector() {
-    return outboundEndpointAnnotation.belongsToConnector();
   }
 
   @Override
@@ -27,6 +22,7 @@ public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
         .getScenarioById(outboundEndpointAnnotation.consumesFromScenario());
   }
 
+  // TODO: This is currently never used, do we need it?
   @Override
   public final ConnectorDefinition getConnector() {
     return getDeclarationsRegistry()

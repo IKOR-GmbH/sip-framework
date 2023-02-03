@@ -3,13 +3,22 @@ package de.ikor.sip.foundation.core.declarative.endpoints;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.orchestation.EndpointOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.camel.Endpoint;
 import org.apache.camel.model.RouteDefinition;
 
+@Data
 abstract class AnnotatedEndpoint implements Orchestrator<EndpointOrchestrationInfo> {
 
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
   private DeclarationsRegistry declarationsRegistry;
 
-  protected abstract String getBelongsToConnector();
+  private Endpoint camelEndpoint;
+  private String endpointId;
 
   protected final DeclarationsRegistry getDeclarationsRegistry() {
     return declarationsRegistry;

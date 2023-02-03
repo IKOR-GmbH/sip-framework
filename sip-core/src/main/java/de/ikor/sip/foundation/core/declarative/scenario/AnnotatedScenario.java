@@ -39,7 +39,7 @@ public abstract class AnnotatedScenario implements IntegrationScenarioDefinition
     final var annotationPath = scenarioAnnotation.pathToDocumentationResource();
     final var resourcePath =
         annotationPath.isEmpty()
-            ? String.format("docs/integration-scenarios/%s.md", getID())
+            ? String.format("documents/structure/integration-scenarios/%s", getID())
             : annotationPath;
     final var resource = new ClassPathResource(resourcePath);
 

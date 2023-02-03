@@ -2,34 +2,35 @@ package de.ikor.sip.foundation.core.actuator.declarative;
 
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.endpoints.InboundEndpointDefinition;
-import de.ikor.sip.foundation.core.declarative.endpoints.OutboundEndpointDefinition;
+import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedInboundEndpoint;
+import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedOutboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-
+import org.apache.camel.Endpoint;
 import org.springframework.boot.actuate.endpoint.web.Link;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/** Actuator endpoints for exposing Connectors, Integration Scenarios and Endpoints. */
 @Component
 @RestControllerEndpoint(id = "adapterdefinition")
 public class DeclarativeDefinitionEndpoint {
 
   private static final String NO_RESPONSE = "NO RESPONSE";
-  private static final String CONNECTORS = "connectors";
-  private static final String SCENARIOS = "scenarios";
-  private static final String ENDPOINTS = "endpoints";
+  private static final String CONNECTORS_PATH = "connectors";
+  private static final String SCENARIOS_PATH = "scenarios";
+  private static final String ENDPOINTS_PATH = "endpoints";
   private static final String URI_FORMAT = "%s/%s";
 
   private final DeclarationsRegistry declarationsRegistry;
-  private final List<ConnectorInfo> connectorInfoRegistry = new ArrayList<>();
-  private final List<IntegrationScenarioInfo> integrationScenarioInfoRegistry = new ArrayList<>();
-  private final List<EndpointInfo> endpointInfoRegistry = new ArrayList<>();
+  private final List<ConnectorInfo> connectors = new ArrayList<>();
+  private final List<IntegrationScenarioInfo> scenarios = new ArrayList<>();
+  private final List<EndpointInfo> endpoints = new ArrayList<>();
 
   public DeclarativeDefinitionEndpoint(DeclarationsRegistry declarationsRegistry) {
     this.declarationsRegistry = declarationsRegistry;
@@ -42,51 +43,59 @@ public class DeclarativeDefinitionEndpoint {
     initializeEndpointInfoRegistry();
   }
 
+  /**
+   * Base endpoint which exposes other child endpoints for connectors, scenarios and endpoints.
+   *
+   * @param request HttpServletRequest
+   * @return links Map<String, Link>
+   */
   @GetMapping
   public Map<String, Link> getLinks(HttpServletRequest request) {
     String basePath = request.getRequestURL().toString();
 
-    Link connectorsUri = new Link(String.format(URI_FORMAT, basePath, CONNECTORS));
-    Link scenariosUri = new Link(String.format(URI_FORMAT, basePath, SCENARIOS));
-    Link endpointsUri = new Link(String.format(URI_FORMAT, basePath, ENDPOINTS));
+    Link connectorsUri = new Link(String.format(URI_FORMAT, basePath, CONNECTORS_PATH));
+    Link scenariosUri = new Link(String.format(URI_FORMAT, basePath, SCENARIOS_PATH));
+    Link endpointsUri = new Link(String.format(URI_FORMAT, basePath, ENDPOINTS_PATH));
 
-    return Map.of(CONNECTORS, connectorsUri, SCENARIOS, scenariosUri, ENDPOINTS, endpointsUri);
+    return Map.of(
+        CONNECTORS_PATH, connectorsUri, SCENARIOS_PATH, scenariosUri, ENDPOINTS_PATH, endpointsUri);
   }
 
   @GetMapping("/connectors")
   public List<ConnectorInfo> getConnectorInfo() {
-    return connectorInfoRegistry;
+    return connectors;
   }
 
   @GetMapping("/scenarios")
   public List<IntegrationScenarioInfo> getScenarioInfo() {
-    return integrationScenarioInfoRegistry;
+    return scenarios;
   }
 
   @GetMapping("/endpoints")
   public List<EndpointInfo> getEndpointInfo() {
-    return endpointInfoRegistry;
+    return endpoints;
   }
 
   private void initializeConnectorInfoRegistry() {
     for (ConnectorDefinition connector : declarationsRegistry.getConnectors()) {
-      connectorInfoRegistry.add(createConnectorInfo(connector));
+      connectors.add(createConnectorInfo(connector));
     }
   }
 
   private void initializeIntegrationScenarioInfoRegistry() {
     for (IntegrationScenarioDefinition scenario : declarationsRegistry.getIntegrationScenarios()) {
       IntegrationScenarioInfo info = createIntegrationScenarioInfo(scenario);
-      integrationScenarioInfoRegistry.add(info);
+      scenarios.add(info);
     }
   }
 
   private void initializeEndpointInfoRegistry() {
-    declarationsRegistry.getInboundEndpoints().forEach(
-        endpoint -> createAndAdd(endpoint.getEndpointId(), endpoint.getInboundEndpoint().getUri()));
-    declarationsRegistry.getOutboundEndpoints().forEach(
-        endpoint ->
-            createAndAdd(endpoint.getEndpointId(), endpoint.getOutboundEndpoint().getUri()));
+    declarationsRegistry
+        .getInboundEndpointDefinitions()
+        .forEach(endpoint -> createAndAddInboundEndpoint((AnnotatedInboundEndpoint) endpoint));
+    declarationsRegistry
+        .getOutboundEndpointDefinitions()
+        .forEach(endpoint -> createAndAddOutboundEndpoint((AnnotatedOutboundEndpoint) endpoint));
   }
 
   private ConnectorInfo createConnectorInfo(ConnectorDefinition connector) {
@@ -96,11 +105,17 @@ public class DeclarativeDefinitionEndpoint {
 
     declarationsRegistry
         .getInboundEndpointsByConnectorId(connector.getID())
-        .forEach(endpoint -> info.getInboundEndpoints().add(endpoint.getEndpointId()));
+        .forEach(
+            endpoint ->
+                info.getInboundEndpoints()
+                    .add(((AnnotatedInboundEndpoint) endpoint).getEndpointId()));
 
     declarationsRegistry
         .getOutboundEndpointsByConnectorId(connector.getID())
-        .forEach(endpoint -> info.getOutboundEndpoints().add(endpoint.getEndpointId()));
+        .forEach(
+            endpoint ->
+                info.getOutboundEndpoints()
+                    .add(((AnnotatedOutboundEndpoint) endpoint).getEndpointId()));
 
     return info;
   }
@@ -118,8 +133,23 @@ public class DeclarativeDefinitionEndpoint {
     return info;
   }
 
-  private void createAndAdd(String endpointId, String uri) {
-    EndpointInfo info = new EndpointInfo(endpointId, uri);
-    endpointInfoRegistry.add(info);
+  private void createAndAddInboundEndpoint(AnnotatedInboundEndpoint endpoint) {
+    EndpointInfo info = new EndpointInfo();
+    Endpoint camelEndpoint = endpoint.getCamelEndpoint();
+    info.setId(endpoint.getEndpointId());
+    info.setCamelEndpointUri(camelEndpoint.getEndpointUri());
+    info.setConnector(endpoint.getConnectorId());
+    info.setScenario(endpoint.getProvidedScenario().getID());
+    endpoints.add(info);
+  }
+
+  private void createAndAddOutboundEndpoint(AnnotatedOutboundEndpoint endpoint) {
+    EndpointInfo info = new EndpointInfo();
+    Endpoint camelEndpoint = endpoint.getCamelEndpoint();
+    info.setId(endpoint.getEndpointId());
+    info.setCamelEndpointUri(camelEndpoint.getEndpointUri());
+    info.setConnector(endpoint.getConnectorId());
+    info.setScenario(endpoint.getConsumedScenario().getID());
+    endpoints.add(info);
   }
 }

@@ -28,7 +28,9 @@ public class AnnotatedConnector implements ConnectorDefinition {
   public String getDocumentation() {
     final var annotationPath = annotation.pathToDocumentationResource();
     final var resourcePath =
-        annotationPath.isEmpty() ? String.format("docs/connectors/%s.md", getID()) : annotationPath;
+        annotationPath.isEmpty()
+            ? String.format("documents/structure/connectors/%s", getID())
+            : annotationPath;
     final var resource = new ClassPathResource(resourcePath);
 
     if (!resource.isReadable()) {

@@ -14,15 +14,11 @@ public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint
       ReflectionHelper.getAnnotationOrThrow(InboundEndpoint.class, this);
 
   @Override
-  public final String getEndpointId() {
+  public final String getAnnotationEndpointId() {
     return inboundEndpointAnnotation.endpointId();
   }
 
-  @Override
-  public final String getBelongsToConnector() {
-    return inboundEndpointAnnotation.belongsToConnector();
-  }
-
+  // TODO: This is currently never used, do we need it?
   @Override
   public final ConnectorDefinition getConnector() {
     return getDeclarationsRegistry()

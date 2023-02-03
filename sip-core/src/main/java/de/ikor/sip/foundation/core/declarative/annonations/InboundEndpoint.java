@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public @interface InboundEndpoint {
 
-  String endpointId();
+  String endpointId() default "";
 
   String belongsToConnector();
 

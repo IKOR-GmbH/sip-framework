@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedInboundEndpoint;
+import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedOutboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.endpoints.InboundEndpointDefinition;
 import de.ikor.sip.foundation.core.declarative.endpoints.OutboundEndpointDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestation.EndpointOrchestrationInfo;
@@ -29,11 +31,11 @@ public class AdapterBuilder extends RouteBuilder {
   @PostConstruct
   private void fetchEndpoints() {
     this.inboundEndpoints =
-        declarationsRegistry.getInboundEndpoints().stream()
+        declarationsRegistry.getInboundEndpointDefinitions().stream()
             .collect(
                 Collectors.groupingBy(IntegrationScenarioProviderDefinition::getProvidedScenario));
     this.outboundEndpoints =
-        declarationsRegistry.getOutboundEndpoints().stream()
+        declarationsRegistry.getOutboundEndpointDefinitions().stream()
             .collect(
                 Collectors.groupingBy(IntegrationScenarioConsumerDefinition::getConsumedScenario));
   }
@@ -62,7 +64,7 @@ public class AdapterBuilder extends RouteBuilder {
     RouteDefinition camelRoute = from(inboundEndpointDefinition.getInboundEndpoint());
     orchestrateEndpoint(camelRoute, inboundEndpointDefinition);
     camelRoute.to("sipmc:" + scenarioID);
-    camelRoute.routeId(inboundEndpointDefinition.getEndpointId());
+    camelRoute.routeId(((AnnotatedInboundEndpoint) inboundEndpointDefinition).getEndpointId());
   }
 
   private void buildOutboundEndpoint(
@@ -71,7 +73,7 @@ public class AdapterBuilder extends RouteBuilder {
     RouteDefinition camelRoute = from("sipmc:" + scenarioID);
     orchestrateEndpoint(camelRoute, outboundEndpointDefinition);
     camelRoute.to(outboundEndpointDefinition.getOutboundEndpoint());
-    camelRoute.routeId(outboundEndpointDefinition.getEndpointId());
+    camelRoute.routeId(((AnnotatedOutboundEndpoint) outboundEndpointDefinition).getEndpointId());
   }
 
   private void orchestrateEndpoint(
