@@ -6,7 +6,8 @@ import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import org.apache.camel.model.RouteDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 
-abstract class AnnotatedEndpoint implements Orchestrator<EndpointOrchestrationInfo>, EndpointWithAfter {
+abstract class AnnotatedEndpoint
+    implements Orchestrator<EndpointOrchestrationInfo>, EndpointWithAfter {
   private DeclarationsRegistry declarationsRegistry;
 
   protected final DeclarationsRegistry getDeclarationsRegistry() {
@@ -31,7 +32,6 @@ abstract class AnnotatedEndpoint implements Orchestrator<EndpointOrchestrationIn
   public void doOrchestrate(final EndpointOrchestrationInfo data) {
     configureEndpointRoute(data.getRouteDefinition());
   }
-
 
   protected void configureEndpointRoute(final RouteDefinition definition) {
     // NO-OP by default

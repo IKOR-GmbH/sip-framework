@@ -1,5 +1,8 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import de.ikor.sip.foundation.core.apps.declarative.SimpleAdapter;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
@@ -13,9 +16,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @CamelSpringBootTest
 @SpringBootTest(classes = {SimpleAdapter.class})

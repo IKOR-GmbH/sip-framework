@@ -32,6 +32,5 @@ public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint
   }
 
   @Override
-  public void configureAfterResponse(final RouteDefinition definition) {
-  }
+  public void configureAfterResponse(final RouteDefinition definition) {}
 }

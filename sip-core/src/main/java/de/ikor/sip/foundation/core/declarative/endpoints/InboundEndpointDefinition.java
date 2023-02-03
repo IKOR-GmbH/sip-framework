@@ -6,6 +6,8 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProvi
 import org.apache.camel.builder.EndpointConsumerBuilder;
 
 public interface InboundEndpointDefinition
-    extends IntegrationScenarioProviderDefinition, Orchestratable<EndpointOrchestrationInfo>, EndpointWithAfter{
+    extends IntegrationScenarioProviderDefinition,
+        Orchestratable<EndpointOrchestrationInfo>,
+        EndpointWithAfter {
   EndpointConsumerBuilder getInboundEndpoint();
 }

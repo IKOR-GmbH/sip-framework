@@ -97,8 +97,7 @@ public class AdapterBuilder extends RouteBuilder {
   }
 
   private void appendAfterHandler(
-      RouteDefinition routeDefinition,
-      EndpointWithAfter responseHandler) {
-      responseHandler.configureAfterResponse(routeDefinition);
+      RouteDefinition routeDefinition, EndpointWithAfter responseHandler) {
+    responseHandler.configureAfterResponse(routeDefinition);
   }
 }

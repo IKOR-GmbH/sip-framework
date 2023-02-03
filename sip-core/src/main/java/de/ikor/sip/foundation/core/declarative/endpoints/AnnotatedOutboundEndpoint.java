@@ -19,8 +19,7 @@ public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
   }
 
   @Override
-  public void configureAfterResponse(final RouteDefinition data) {
-  }
+  public void configureAfterResponse(final RouteDefinition data) {}
 
   @Override
   public final ConnectorDefinition getConnector() {
