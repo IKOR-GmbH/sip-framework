@@ -16,7 +16,7 @@ import org.apache.camel.model.rest.RestDefinition;
 
 @SIPIntegrationAdapter
 public class SimpleAdapter {
-
+  // ----> Passthrough SCENARIO
   @IntegrationScenario(scenarioId = "Passthrough", requestModel = String.class)
   class PassthroughScenario extends AnnotatedScenario {}
 
@@ -37,7 +37,9 @@ public class SimpleAdapter {
       return StaticEndpointBuilders.log("message");
     }
   }
+  // <---- Passthrough SCENARIO
 
+  // ----> AppendStaticMessage SCENARIO
   @IntegrationScenario(scenarioId = "AppendStaticMessage", requestModel = String.class)
   public class AppendStaticMessageScenario extends AnnotatedScenario {}
 
@@ -55,20 +57,6 @@ public class SimpleAdapter {
     }
   }
 
-  @InboundEndpoint(belongsToConnector = "SIP1", providesToScenario = "AppendStaticMessage")
-  public class RestEndpointTest extends RestEndpoint {
-
-    @Override
-    protected void configureRest(RestDefinition definition) {
-      definition.post("path").type(String.class);
-    }
-
-    @Override
-    protected void configureEndpointRoute(RouteDefinition definition) {
-      definition.setBody(exchange -> "PRODUCED_REST-" + exchange.getIn().getBody());
-    }
-  }
-
   @OutboundEndpoint(belongsToConnector = "SIP2", consumesFromScenario = "AppendStaticMessage")
   public class AppendStaticMessageConsumer extends AnnotatedOutboundEndpoint {
 
@@ -82,7 +70,42 @@ public class SimpleAdapter {
       definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED");
     }
   }
+  // <---- AppendStaticMessage SCENARIO
 
+  // ----> RestDSL SCENARIO
+  @IntegrationScenario(scenarioId = "RestDSL", requestModel = String.class)
+  public class RestDSLScenario extends AnnotatedScenario {}
+
+  @InboundEndpoint(belongsToConnector = "SIP1", providesToScenario = "RestDSL")
+  public class RestEndpointTest extends RestEndpoint {
+
+    @Override
+    protected void configureRest(RestDefinition definition) {
+      definition.post("path").type(String.class);
+    }
+
+    @Override
+    protected void configureEndpointRoute(RouteDefinition definition) {
+      definition.setBody(exchange -> "PRODUCED_REST-" + exchange.getIn().getBody());
+    }
+  }
+
+  @OutboundEndpoint(belongsToConnector = "SIP2", consumesFromScenario = "RestDSL")
+  public class RestScenarioConsumer extends AnnotatedOutboundEndpoint {
+
+    @Override
+    public EndpointProducerBuilder getOutboundEndpoint() {
+      return StaticEndpointBuilders.log("message");
+    }
+
+    @Override
+    protected void configureEndpointRoute(RouteDefinition definition) {
+      definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED");
+    }
+  }
+  // <---- RestDSL SCENARIO
+
+  // ----> CDMValidation SCENARIO
   @IntegrationScenario(
       scenarioId = "CDMValidation",
       requestModel = CDMRequest.class,
@@ -116,4 +139,5 @@ public class SimpleAdapter {
           });
     }
   }
+  // <---- CDMValidation SCENARIO
 }
