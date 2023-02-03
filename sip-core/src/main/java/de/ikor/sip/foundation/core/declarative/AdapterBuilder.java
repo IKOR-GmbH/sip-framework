@@ -11,18 +11,17 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsu
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.declarative.validator.CDMValidator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -75,8 +74,8 @@ public class AdapterBuilder extends RouteBuilder {
     RestDefinition restDefinition = rest();
     EndpointOrchestrationInfo orchestrationInfo = createEndpointInfo(camelRoute, restDefinition);
     String routeId =
-            String.format(
-                    "in-%s-%s", inboundEndpointDefinition.getConnectorId(), scenarioDefinition.getID());
+        String.format(
+            "in-%s-%s", inboundEndpointDefinition.getConnectorId(), scenarioDefinition.getID());
     camelRoute.routeId(routeId);
     orchestrateEndpoint(orchestrationInfo, inboundEndpointDefinition);
     bindRest(restDefinition, scenarioID);
@@ -85,8 +84,11 @@ public class AdapterBuilder extends RouteBuilder {
     appendResponseValidation(scenarioDefinition.getResponseModelClass(), camelRoute);
   }
 
-  private RouteDefinition createRouteDefinition(InboundEndpointDefinition inboundEndpointDefinition, String scenarioID) {
-    return inboundEndpointDefinition instanceof RestEndpoint ? from(DIRECT_REST + scenarioID) : from(inboundEndpointDefinition.getInboundEndpoint());
+  private RouteDefinition createRouteDefinition(
+      InboundEndpointDefinition inboundEndpointDefinition, String scenarioID) {
+    return inboundEndpointDefinition instanceof RestEndpoint
+        ? from(DIRECT_REST + scenarioID)
+        : from(inboundEndpointDefinition.getInboundEndpoint());
   }
 
   private void bindRest(RestDefinition restDefinition, String scenarioID) {
@@ -96,7 +98,7 @@ public class AdapterBuilder extends RouteBuilder {
   }
 
   private EndpointOrchestrationInfo createEndpointInfo(
-          RouteDefinition camelRoute, RestDefinition restDefinition) {
+      RouteDefinition camelRoute, RestDefinition restDefinition) {
     return new RestEndpointOrchestrationInfo() {
       @Override
       public RestDefinition getRestDefinition() {
