@@ -5,6 +5,7 @@ import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.ReflectionHelper;
 import lombok.RequiredArgsConstructor;
+import org.apache.camel.model.RouteDefinition;
 
 @RequiredArgsConstructor
 public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint
@@ -28,5 +29,9 @@ public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint
   @Override
   public final String getConnectorId() {
     return this.getClass().getAnnotation(InboundEndpoint.class).belongsToConnector();
+  }
+
+  @Override
+  public void configureAfterResponse(final RouteDefinition definition) {
   }
 }

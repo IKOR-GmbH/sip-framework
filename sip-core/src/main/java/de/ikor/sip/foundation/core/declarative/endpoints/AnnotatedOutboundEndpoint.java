@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.declarative.annonations.OutboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.ReflectionHelper;
+import org.apache.camel.model.RouteDefinition;
 
 public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
     implements OutboundEndpointDefinition {
@@ -15,6 +16,10 @@ public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
   public final IntegrationScenarioDefinition getConsumedScenario() {
     return getDeclarationsRegistry()
         .getScenarioById(outboundEndpointAnnotation.consumesFromScenario());
+  }
+
+  @Override
+  public void configureAfterResponse(final RouteDefinition data) {
   }
 
   @Override

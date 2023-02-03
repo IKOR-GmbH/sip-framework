@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import de.ikor.sip.foundation.core.declarative.endpoints.EndpointWithAfter;
 import de.ikor.sip.foundation.core.declarative.endpoints.InboundEndpointDefinition;
 import de.ikor.sip.foundation.core.declarative.endpoints.OutboundEndpointDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestation.EndpointOrchestrationInfo;
@@ -8,15 +9,16 @@ import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -68,7 +70,7 @@ public class AdapterBuilder extends RouteBuilder {
     String routeId =
         String.format("in-%s-%s", inboundEndpointDefinition.getConnectorId(), scenarioID);
     camelRoute.routeId(routeId);
-    appendAfterHandler(orchestrationInfo, inboundEndpointDefinition);
+    appendAfterHandler(orchestrationInfo.getRouteDefinition(), inboundEndpointDefinition);
   }
 
   private void buildOutboundEndpoint(
@@ -81,7 +83,7 @@ public class AdapterBuilder extends RouteBuilder {
     String routeId =
         String.format("out-%s-%s", outboundEndpointDefinition.getConnectorId(), scenarioID);
     camelRoute.routeId(routeId);
-    appendAfterHandler(orchestrationInfo, outboundEndpointDefinition);
+    appendAfterHandler(orchestrationInfo.getRouteDefinition(), outboundEndpointDefinition);
   }
 
   private void orchestrateEndpoint(
@@ -95,10 +97,8 @@ public class AdapterBuilder extends RouteBuilder {
   }
 
   private void appendAfterHandler(
-      EndpointOrchestrationInfo orchestrationInfo,
-      Orchestratable<EndpointOrchestrationInfo> orchestratable) {
-    if (orchestratable.getOrchestrator().canOrchestrate(orchestrationInfo)) {
-      orchestratable.getOrchestrator().doAfter(orchestrationInfo);
-    }
+      RouteDefinition routeDefinition,
+      EndpointWithAfter responseHandler) {
+      responseHandler.configureAfterResponse(routeDefinition);
   }
 }

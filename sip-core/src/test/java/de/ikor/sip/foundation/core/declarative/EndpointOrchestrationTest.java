@@ -1,8 +1,5 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import de.ikor.sip.foundation.core.apps.declarative.SimpleAdapter;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
@@ -16,6 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @CamelSpringBootTest
 @SpringBootTest(classes = {SimpleAdapter.class})
@@ -43,6 +43,7 @@ class EndpointOrchestrationTest {
     mockedLogger.expectedMessageCount(1);
     mockedLogger.expectedBodiesReceived("PRODUCED-Hi Adapter-CONSUMED");
     Exchange exchange = template.withBody("Hi Adapter").to(direct("triggerAdapter-append")).send();
-    assertThat(exchange.getMessage().getBody(String.class)).contains("Handled");
+    assertThat(exchange.getMessage().getBody(String.class))
+        .contains("PRODUCED-Hi Adapter-CONSUMED-Handled");
   }
 }

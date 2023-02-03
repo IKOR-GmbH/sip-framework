@@ -53,7 +53,7 @@ public class SimpleAdapter {
     }
 
     @Override
-    protected void configureAfterResponse(RouteDefinition definition) {
+    public void configureAfterResponse(RouteDefinition definition) {
       definition.setBody(exchange -> exchange.getIn().getBody() + "-Handled");
     }
   }
