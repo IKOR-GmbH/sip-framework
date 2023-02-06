@@ -8,11 +8,13 @@ import de.ikor.sip.foundation.core.declarative.annonations.OutboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.connectors.AnnotatedConnector;
 import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedInboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedOutboundEndpoint;
+import de.ikor.sip.foundation.core.declarative.endpoints.RestEndpoint;
 import de.ikor.sip.foundation.core.declarative.scenario.AnnotatedScenario;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.builder.endpoint.dsl.DirectEndpointBuilderFactory.DirectEndpointConsumerBuilder;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.rest.RestDefinition;
 
 @SIPIntegrationAdapter
 public class SimpleAdapter {
@@ -69,10 +71,24 @@ public class SimpleAdapter {
     }
   }
 
+  @InboundEndpoint(belongsToConnector = "SIP1", providesToScenario = "AppendStaticMessage")
+  public class RestEndpointTest extends RestEndpoint {
+
+    @Override
+    protected void configureRest(RestDefinition definition) {
+      definition.post("path").type(String.class);
+    }
+
+    @Override
+    protected void configureEndpointRoute(RouteDefinition definition) {
+      definition.setBody(exchange -> "PRODUCED_REST-" + exchange.getIn().getBody());
+    }
+  }
+
   @OutboundEndpoint(
-      endpointId = "appendStaticMessageConsumer",
-      belongsToConnector = SIP2,
-      consumesFromScenario = APPEND_STATIC_MESSAGE_SCENARIO)
+          endpointId = "appendStaticMessageConsumer",
+          belongsToConnector = SIP2,
+          consumesFromScenario = APPEND_STATIC_MESSAGE_SCENARIO)
   public class AppendStaticMessageConsumer extends AnnotatedOutboundEndpoint {
 
     @Override

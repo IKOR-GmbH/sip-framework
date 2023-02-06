@@ -1,9 +1,11 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions;
 
-/** Exception for impossible invoking first processor in tested route */
-public class RouteInvokerRuntimeException extends RuntimeException {
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 
-  public RouteInvokerRuntimeException(String routeInvokerName) {
+/** Exception for impossible invoking first processor in tested route */
+public class RouteInvokerException extends SIPFrameworkException {
+
+  public RouteInvokerException(String routeInvokerName) {
     super(String.format("%s could not invoke route under test", routeInvokerName));
   }
 
