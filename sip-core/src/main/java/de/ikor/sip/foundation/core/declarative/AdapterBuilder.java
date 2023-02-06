@@ -2,8 +2,8 @@ package de.ikor.sip.foundation.core.declarative;
 
 import de.ikor.sip.foundation.core.declarative.endpoints.InboundEndpointDefinition;
 import de.ikor.sip.foundation.core.declarative.endpoints.OutboundEndpointDefinition;
-import de.ikor.sip.foundation.core.declarative.endpoints.RestEndpoint;
 import de.ikor.sip.foundation.core.declarative.endpoints.ResponseEndpoint;
+import de.ikor.sip.foundation.core.declarative.endpoints.RestEndpoint;
 import de.ikor.sip.foundation.core.declarative.orchestation.EndpointOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestratable;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;

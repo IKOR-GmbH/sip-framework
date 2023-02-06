@@ -28,7 +28,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @DisableJmx(false)
 @MockEndpoints("log:message*")
 @DirtiesContext
-public class EndpointOrchestrationTest {
+class EndpointOrchestrationTest {
 
   @EndpointInject("mock:log:message")
   private MockEndpoint mockedLogger;
@@ -58,10 +58,13 @@ public class EndpointOrchestrationTest {
   @Test
   void When_UsingPOSTScenario_With_RestEndpoint_Then_RestRoutesAreCreatedAndConnectedToScenario() {
     mockedLogger.expectedBodiesReceivedInAnyOrder("PRODUCED_REST-Hi Adapter-CONSUMED");
-    template
-        .withBody("Hi Adapter")
-        .to(http("localhost:" + localServerPort + "/adapter/path"))
-        .send();
+    Exchange exchange =
+        template
+            .withBody("Hi Adapter")
+            .to(http("localhost:" + localServerPort + "/adapter/path"))
+            .send();
+    assertThat(exchange.getMessage().getBody(String.class))
+        .contains("PRODUCED_REST-Hi Adapter-CONSUMED-Handled-Outbound");
   }
 
   @Test
