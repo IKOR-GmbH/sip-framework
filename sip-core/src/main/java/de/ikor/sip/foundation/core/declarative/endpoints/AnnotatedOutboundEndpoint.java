@@ -1,8 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.endpoints;
 
 import de.ikor.sip.foundation.core.declarative.annonations.OutboundEndpoint;
-import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.ReflectionHelper;
 
 public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
@@ -12,25 +10,25 @@ public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
       ReflectionHelper.getAnnotationOrThrow(OutboundEndpoint.class, this);
 
   @Override
-  public final String getAnnotationEndpointId() {
-    return outboundEndpointAnnotation.endpointId();
-  }
-
-  @Override
-  public final IntegrationScenarioDefinition getConsumedScenario() {
-    return getDeclarationsRegistry()
-        .getScenarioById(outboundEndpointAnnotation.consumesFromScenario());
-  }
-
-  // TODO: This is currently never used, do we need it?
-  @Override
-  public final ConnectorDefinition getConnector() {
-    return getDeclarationsRegistry()
-        .getConnectorById(outboundEndpointAnnotation.belongsToConnector());
-  }
-
-  @Override
   public final String getConnectorId() {
     return this.getClass().getAnnotation(OutboundEndpoint.class).belongsToConnector();
+  }
+
+  @Override
+  public final String getScenarioId() {
+    return this.getClass().getAnnotation(OutboundEndpoint.class).consumesFromScenario();
+  }
+
+  @Override
+  public EndpointType getEndpointType() {
+    return EndpointType.OUTBOUND_ENDPOINT;
+  }
+
+  @Override
+  public void initEndpointId(String prefix, String scenarioId, String connectorId) {
+    endpointId = outboundEndpointAnnotation.endpointId();
+    if (endpointId.isEmpty()) {
+      endpointId = String.format(ENDPOINT_ID_FORMAT, prefix, scenarioId, connectorId);
+    }
   }
 }

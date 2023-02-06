@@ -86,9 +86,9 @@ public class SimpleAdapter {
   }
 
   @OutboundEndpoint(
-          endpointId = "appendStaticMessageConsumer",
-          belongsToConnector = SIP2,
-          consumesFromScenario = APPEND_STATIC_MESSAGE_SCENARIO)
+      endpointId = "appendStaticMessageConsumer",
+      belongsToConnector = SIP2,
+      consumesFromScenario = APPEND_STATIC_MESSAGE_SCENARIO)
   public class AppendStaticMessageConsumer extends AnnotatedOutboundEndpoint {
 
     @Override

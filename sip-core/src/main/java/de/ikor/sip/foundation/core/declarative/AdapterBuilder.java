@@ -9,9 +9,7 @@ import de.ikor.sip.foundation.core.declarative.orchestation.EndpointOrchestratio
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestratable;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestation.RestEndpointOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,7 +18,6 @@ import lombok.AllArgsConstructor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestDefinition;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,7 +26,6 @@ public class AdapterBuilder extends RouteBuilder {
 
   private static final String DIRECT_REST = "direct:rest";
   private static final String SIPMC = "sipmc:";
-  private final ApplicationContext context;
   private final DeclarationsRegistry declarationsRegistry;
 
   private Map<IntegrationScenarioDefinition, List<InboundEndpointDefinition>> inboundEndpoints;
@@ -38,18 +34,20 @@ public class AdapterBuilder extends RouteBuilder {
   @PostConstruct
   private void fetchEndpoints() {
     this.inboundEndpoints =
-        declarationsRegistry.getInboundEndpointDefinitions().stream()
+        declarationsRegistry.getInboundEndpoints().stream()
             .collect(
-                Collectors.groupingBy(IntegrationScenarioProviderDefinition::getProvidedScenario));
+                Collectors.groupingBy(
+                    endpoint -> declarationsRegistry.getScenarioById(endpoint.getScenarioId())));
     this.outboundEndpoints =
-        declarationsRegistry.getOutboundEndpointDefinitions().stream()
+        declarationsRegistry.getOutboundEndpoints().stream()
             .collect(
-                Collectors.groupingBy(IntegrationScenarioConsumerDefinition::getConsumedScenario));
+                Collectors.groupingBy(
+                    endpoint -> declarationsRegistry.getScenarioById(endpoint.getScenarioId())));
   }
 
   @Override
   public void configure() throws Exception {
-    declarationsRegistry.getIntegrationScenarios().forEach(this::buildScenario);
+    declarationsRegistry.getScenarios().forEach(this::buildScenario);
   }
 
   private void buildScenario(IntegrationScenarioDefinition scenarioDefinition) {
@@ -109,7 +107,7 @@ public class AdapterBuilder extends RouteBuilder {
 
     orchestrateEndpoint(restEndpointBridgeInfo, restEndpointDefinition);
 
-    restRoute.to(DIRECT_REST + scenarioID);
+    restRoute.id(restEndpointDefinition.getEndpointId()).to(DIRECT_REST + scenarioID);
     camelRoute.to(SIPMC + scenarioID);
   }
 

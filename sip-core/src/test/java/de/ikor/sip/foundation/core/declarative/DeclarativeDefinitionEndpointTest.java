@@ -46,7 +46,6 @@ class DeclarativeDefinitionEndpointTest {
     List<IntegrationScenarioInfo> scenarios =
         mapper.readValue(httpResponse.getEntity().getContent(), collectionType);
 
-
     // assert
     assertThat(httpResponse.getStatusLine().getStatusCode()).isEqualTo(200);
     assertThat(scenarios.size()).isEqualTo(2);
@@ -87,6 +86,6 @@ class DeclarativeDefinitionEndpointTest {
 
     // assert
     assertThat(httpResponse.getStatusLine().getStatusCode()).isEqualTo(200);
-    assertThat(endpoints.size()).isEqualTo(4);
+    assertThat(endpoints.size()).isEqualTo(5);
   }
 }

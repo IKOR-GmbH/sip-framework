@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.camel.Endpoint;
 import org.springframework.boot.actuate.endpoint.web.Link;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.stereotype.Component;
@@ -38,9 +37,9 @@ public class DeclarativeDefinitionEndpoint {
 
   @PostConstruct
   private void collectInfo() {
-    initializeConnectorInfoRegistry();
-    initializeIntegrationScenarioInfoRegistry();
-    initializeEndpointInfoRegistry();
+    initializeConnectorInfos();
+    initializeIntegrationScenarioInfos();
+    initializeEndpointInfos();
   }
 
   /**
@@ -76,25 +75,24 @@ public class DeclarativeDefinitionEndpoint {
     return endpoints;
   }
 
-  private void initializeConnectorInfoRegistry() {
+  private void initializeConnectorInfos() {
     for (ConnectorDefinition connector : declarationsRegistry.getConnectors()) {
       connectors.add(createConnectorInfo(connector));
     }
   }
 
-  private void initializeIntegrationScenarioInfoRegistry() {
-    for (IntegrationScenarioDefinition scenario : declarationsRegistry.getIntegrationScenarios()) {
-      IntegrationScenarioInfo info = createIntegrationScenarioInfo(scenario);
-      scenarios.add(info);
+  private void initializeIntegrationScenarioInfos() {
+    for (IntegrationScenarioDefinition scenario : declarationsRegistry.getScenarios()) {
+      scenarios.add(createIntegrationScenarioInfo(scenario));
     }
   }
 
-  private void initializeEndpointInfoRegistry() {
+  private void initializeEndpointInfos() {
     declarationsRegistry
-        .getInboundEndpointDefinitions()
+        .getInboundEndpoints()
         .forEach(endpoint -> createAndAddInboundEndpoint((AnnotatedInboundEndpoint) endpoint));
     declarationsRegistry
-        .getOutboundEndpointDefinitions()
+        .getOutboundEndpoints()
         .forEach(endpoint -> createAndAddOutboundEndpoint((AnnotatedOutboundEndpoint) endpoint));
   }
 
@@ -135,21 +133,19 @@ public class DeclarativeDefinitionEndpoint {
 
   private void createAndAddInboundEndpoint(AnnotatedInboundEndpoint endpoint) {
     EndpointInfo info = new EndpointInfo();
-    Endpoint camelEndpoint = endpoint.getCamelEndpoint();
-    info.setId(endpoint.getEndpointId());
-    info.setCamelEndpointUri(camelEndpoint.getEndpointUri());
-    info.setConnector(endpoint.getConnectorId());
-    info.setScenario(endpoint.getProvidedScenario().getID());
+    info.setEndpointId(endpoint.getEndpointId());
+    info.setEndpointType(endpoint.getEndpointType());
+    info.setConnectorId(endpoint.getConnectorId());
+    info.setScenarioId(endpoint.getScenarioId());
     endpoints.add(info);
   }
 
   private void createAndAddOutboundEndpoint(AnnotatedOutboundEndpoint endpoint) {
     EndpointInfo info = new EndpointInfo();
-    Endpoint camelEndpoint = endpoint.getCamelEndpoint();
-    info.setId(endpoint.getEndpointId());
-    info.setCamelEndpointUri(camelEndpoint.getEndpointUri());
-    info.setConnector(endpoint.getConnectorId());
-    info.setScenario(endpoint.getConsumedScenario().getID());
+    info.setEndpointId(endpoint.getEndpointId());
+    info.setEndpointType(endpoint.getEndpointType());
+    info.setConnectorId(endpoint.getConnectorId());
+    info.setScenarioId(endpoint.getScenarioId());
     endpoints.add(info);
   }
 }

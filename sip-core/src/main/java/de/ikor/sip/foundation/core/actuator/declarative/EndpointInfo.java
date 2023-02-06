@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.core.actuator.declarative;
 
 import de.ikor.sip.foundation.core.declarative.annonations.InboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.annonations.OutboundEndpoint;
+import de.ikor.sip.foundation.core.declarative.endpoints.EndpointType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,8 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EndpointInfo {
 
-  private String id;
-  private String camelEndpointUri;
-  private String connector;
-  private String scenario;
+  private String endpointId;
+  private EndpointType endpointType;
+  private String camelEndpointUri; // TODO: Implement getting these information
+  private String connectorId;
+  private String scenarioId;
 }
