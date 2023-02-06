@@ -10,7 +10,7 @@ public interface IntegrationScenarioDefinition extends Orchestratable<ConnectorO
 
   String getDescription();
 
-  Class<? extends Object> getRequestModelClass();
+  Class<?> getRequestModelClass();
 
-  Optional<Class<? extends Object>> getResponseModelClass();
+  Optional<Class<?>> getResponseModelClass();
 }

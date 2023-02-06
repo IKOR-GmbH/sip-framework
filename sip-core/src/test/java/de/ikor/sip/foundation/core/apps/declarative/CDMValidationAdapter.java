@@ -7,6 +7,8 @@ import de.ikor.sip.foundation.core.declarative.annonations.OutboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedInboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedOutboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.scenario.AnnotatedScenario;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.builder.endpoint.dsl.DirectEndpointBuilderFactory.DirectEndpointConsumerBuilder;
@@ -14,6 +16,19 @@ import org.apache.camel.model.RouteDefinition;
 
 @SIPIntegrationAdapter
 public class CDMValidationAdapter {
+
+  @Data
+  @AllArgsConstructor
+  public static class CDMRequest {
+    private int id;
+  }
+
+  @Data
+  @AllArgsConstructor
+  public static class CDMResponse {
+    private String id;
+  }
+
   @IntegrationScenario(
       scenarioId = "CDMValidation",
       requestModel = CDMRequest.class,

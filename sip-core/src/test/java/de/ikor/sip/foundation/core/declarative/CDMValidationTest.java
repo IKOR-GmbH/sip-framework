@@ -3,8 +3,8 @@ package de.ikor.sip.foundation.core.declarative;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.ikor.sip.foundation.core.apps.declarative.CDMRequest;
-import de.ikor.sip.foundation.core.apps.declarative.CDMResponse;
+import de.ikor.sip.foundation.core.apps.declarative.CDMValidationAdapter.CDMRequest;
+import de.ikor.sip.foundation.core.apps.declarative.CDMValidationAdapter.CDMResponse;
 import de.ikor.sip.foundation.core.apps.declarative.SimpleAdapter;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import org.apache.camel.EndpointInject;
