@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.validator;
 
-import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
@@ -14,7 +14,7 @@ public class CDMValidator implements Processor {
   @Override
   public void process(Exchange exchange) throws Exception {
     if (!centralModelRequest.isInstance(exchange.getMessage().getBody())) {
-      throw new SIPFrameworkInitializationException(
+      throw new SIPFrameworkException(
           "Wrong data type. Expected: "
               + centralModelRequest.getName()
               + ", but was: "

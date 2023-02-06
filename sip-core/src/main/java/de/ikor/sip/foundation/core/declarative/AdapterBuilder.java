@@ -62,7 +62,7 @@ public class AdapterBuilder extends RouteBuilder {
     List<OutboundEndpointDefinition> outboundEndpointDefinitions =
         outboundEndpoints.get(scenarioDefinition);
     for (OutboundEndpointDefinition definition : outboundEndpointDefinitions) {
-      buildOutboundEndpoint(definition, scenarioDefinition.getID());
+      buildOutboundEndpoint(definition, scenarioDefinition);
     }
   }
 
@@ -81,7 +81,6 @@ public class AdapterBuilder extends RouteBuilder {
     bindRest(restDefinition, scenarioID);
     appendRequestValidation(scenarioDefinition.getRequestModelClass(), camelRoute);
     camelRoute.to(SIPMC + scenarioID);
-    appendResponseValidation(scenarioDefinition.getResponseModelClass(), camelRoute);
   }
 
   private RouteDefinition createRouteDefinition(
@@ -113,15 +112,18 @@ public class AdapterBuilder extends RouteBuilder {
   }
 
   private void buildOutboundEndpoint(
-      OutboundEndpointDefinition outboundEndpointDefinition, String scenarioID) {
+      OutboundEndpointDefinition outboundEndpointDefinition,
+      IntegrationScenarioDefinition scenarioDefinition) {
 
-    RouteDefinition camelRoute = from(SIPMC + scenarioID);
+    RouteDefinition camelRoute = from(SIPMC + scenarioDefinition.getID());
     EndpointOrchestrationInfo orchestrationInfo = () -> camelRoute;
     orchestrateEndpoint(orchestrationInfo, outboundEndpointDefinition);
     camelRoute.to(outboundEndpointDefinition.getOutboundEndpoint());
     String routeId =
-        String.format("out-%s-%s", outboundEndpointDefinition.getConnectorId(), scenarioID);
+        String.format(
+            "out-%s-%s", outboundEndpointDefinition.getConnectorId(), scenarioDefinition.getID());
     camelRoute.routeId(routeId);
+    appendResponseValidation(scenarioDefinition.getResponseModelClass(), camelRoute);
   }
 
   private void appendResponseValidation(
