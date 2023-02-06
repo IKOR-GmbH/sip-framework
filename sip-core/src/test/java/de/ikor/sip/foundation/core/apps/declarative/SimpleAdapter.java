@@ -58,7 +58,7 @@ public class SimpleAdapter {
 
     @Override
     protected void configureRest(RestDefinition definition) {
-      definition.post("path").type(String.class);
+      definition.post("path").type(String.class).get("path");
     }
 
     @Override

@@ -5,6 +5,7 @@ import de.ikor.sip.foundation.core.declarative.orchestation.RestEndpointOrchestr
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.ToDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 
 public abstract class RestEndpoint extends AnnotatedInboundEndpoint
@@ -33,9 +34,11 @@ public abstract class RestEndpoint extends AnnotatedInboundEndpoint
   private void prependRestRoute(RestEndpointOrchestrationInfo orchestrationInfo) {
     RestDefinition restDefinition = orchestrationInfo.getRestDefinition();
     if (!restDefinition.getVerbs().isEmpty()) {
-      // restDefinition.getVerbs().forEach(verbDefinition -> verbDefinition.setTo(new
-      // ToDefinition(getInboundEndpoint().getUri())));
-      restDefinition.to(getInboundEndpoint().getUri());
+      restDefinition
+          .getVerbs()
+          .forEach(
+              verbDefinition ->
+                  verbDefinition.setTo(new ToDefinition(getInboundEndpoint().getUri())));
     }
   }
 }
