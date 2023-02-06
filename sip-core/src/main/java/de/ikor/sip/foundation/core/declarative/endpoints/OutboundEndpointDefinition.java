@@ -8,7 +8,7 @@ import org.apache.camel.builder.EndpointProducerBuilder;
 public interface OutboundEndpointDefinition
     extends IntegrationScenarioConsumerDefinition,
         Orchestratable<EndpointOrchestrationInfo>,
-        EndpointWithAfter {
+        ResponseEndpoint {
 
   EndpointProducerBuilder getOutboundEndpoint();
 }

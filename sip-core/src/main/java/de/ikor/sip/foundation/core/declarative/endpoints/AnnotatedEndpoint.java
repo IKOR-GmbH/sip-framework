@@ -7,7 +7,7 @@ import org.apache.camel.model.RouteDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 
 abstract class AnnotatedEndpoint
-    implements Orchestrator<EndpointOrchestrationInfo>, EndpointWithAfter {
+    implements Orchestrator<EndpointOrchestrationInfo>, ResponseEndpoint {
   private DeclarationsRegistry declarationsRegistry;
 
   protected final DeclarationsRegistry getDeclarationsRegistry() {
