@@ -52,11 +52,17 @@ class EndpointOrchestrationTest {
   }
 
   @Test
-  void When_UsingScenario_With_RestEndpoint_Then_RestRoutesAreCreatedAndConnectedToScenario() {
+  void When_UsingPOSTScenario_With_RestEndpoint_Then_RestRoutesAreCreatedAndConnectedToScenario() {
     mockedLogger.expectedBodiesReceivedInAnyOrder("PRODUCED_REST-Hi Adapter-CONSUMED");
     template
         .withBody("Hi Adapter")
         .to(http("localhost:" + localServerPort + "/adapter/path"))
         .send();
+  }
+
+  @Test
+  void When_UsingGETScenario_With_RestEndpoint_Then_RestRoutesAreCreatedAndConnectedToScenario() {
+    mockedLogger.expectedBodiesReceivedInAnyOrder("PRODUCED_REST--CONSUMED");
+    template.to(http("localhost:" + localServerPort + "/adapter/path")).send();
   }
 }

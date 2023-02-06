@@ -10,6 +10,7 @@ import de.ikor.sip.foundation.core.declarative.orchestation.Orchestratable;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestation.RestEndpointOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import de.ikor.sip.foundation.core.declarative.validator.CDMValidator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class AdapterBuilder extends RouteBuilder {
 
-  private static final String DIRECT_REST = "direct:rest";
   private static final String SIPMC = "sipmc:";
   private final DeclarationsRegistry declarationsRegistry;
 
@@ -53,62 +53,50 @@ public class AdapterBuilder extends RouteBuilder {
   private void buildScenario(IntegrationScenarioDefinition scenarioDefinition) {
     List<InboundEndpointDefinition> inboundEndpointDefinitions =
         inboundEndpoints.get(scenarioDefinition);
-    for (InboundEndpointDefinition definition : inboundEndpointDefinitions) {
-      buildInboundEndpoint(definition, scenarioDefinition.getID());
-    }
+    inboundEndpointDefinitions.forEach(
+        definition -> buildInboundEndpoint(definition, scenarioDefinition));
 
     List<OutboundEndpointDefinition> outboundEndpointDefinitions =
         outboundEndpoints.get(scenarioDefinition);
-    for (OutboundEndpointDefinition definition : outboundEndpointDefinitions) {
-      buildOutboundEndpoint(definition, scenarioDefinition.getID());
-    }
+
+    outboundEndpointDefinitions.forEach(
+        definition -> buildOutboundEndpoint(definition, scenarioDefinition));
   }
 
   private void buildInboundEndpoint(
-      InboundEndpointDefinition inboundEndpointDefinition, String scenarioID) {
-    if (inboundEndpointDefinition instanceof RestEndpoint) {
-      buildRestEndpoint((RestEndpoint) inboundEndpointDefinition, scenarioID);
-      return;
-    }
+      InboundEndpointDefinition inboundEndpointDefinition,
+      IntegrationScenarioDefinition scenarioDefinition) {
+
     RouteDefinition camelRoute = from(inboundEndpointDefinition.getInboundEndpoint());
-    EndpointOrchestrationInfo orchestrationInfo = () -> camelRoute;
+
+    EndpointOrchestrationInfo orchestrationInfo =
+        createInEndpointOrchestrationInfo(inboundEndpointDefinition, camelRoute);
     orchestrateEndpoint(orchestrationInfo, inboundEndpointDefinition);
-    camelRoute.to(SIPMC + scenarioID);
+
+    appendCDMValidation(scenarioDefinition.getRequestModelClass(), camelRoute);
+    camelRoute.to(SIPMC + scenarioDefinition.getID());
     camelRoute.routeId(((AnnotatedInboundEndpoint) inboundEndpointDefinition).getEndpointId());
+
   }
 
   private void buildOutboundEndpoint(
-      OutboundEndpointDefinition outboundEndpointDefinition, String scenarioID) {
+      OutboundEndpointDefinition outboundEndpointDefinition,
+      IntegrationScenarioDefinition scenarioDefinition) {
 
-    RouteDefinition camelRoute = from(SIPMC + scenarioID);
+    RouteDefinition camelRoute = from(SIPMC + scenarioDefinition.getID());
     EndpointOrchestrationInfo orchestrationInfo = () -> camelRoute;
     orchestrateEndpoint(orchestrationInfo, outboundEndpointDefinition);
+
     camelRoute.to(outboundEndpointDefinition.getOutboundEndpoint());
+    scenarioDefinition
+        .getResponseModelClass()
+        .ifPresent(responseModelClass -> appendCDMValidation(responseModelClass, camelRoute));
+
     camelRoute.routeId(((AnnotatedOutboundEndpoint) outboundEndpointDefinition).getEndpointId());
   }
 
-  private void buildRestEndpoint(RestEndpoint restEndpointDefinition, String scenarioID) {
-
-    RestDefinition restRoute = rest();
-    RouteDefinition camelRoute = from(DIRECT_REST + scenarioID);
-
-    RestEndpointOrchestrationInfo restEndpointBridgeInfo =
-        new RestEndpointOrchestrationInfo() {
-          @Override
-          public RestDefinition getRestDefinition() {
-            return restRoute;
-          }
-
-          @Override
-          public RouteDefinition getRouteDefinition() {
-            return camelRoute;
-          }
-        };
-
-    orchestrateEndpoint(restEndpointBridgeInfo, restEndpointDefinition);
-
-    restRoute.id(restEndpointDefinition.getEndpointId()).to(DIRECT_REST + scenarioID);
-    camelRoute.to(SIPMC + scenarioID);
+  private void appendCDMValidation(Class<?> CDMClass, RouteDefinition camelRoute) {
+    camelRoute.process(new CDMValidator(CDMClass));
   }
 
   private void orchestrateEndpoint(
@@ -119,5 +107,25 @@ public class AdapterBuilder extends RouteBuilder {
     if (orchestrator.canOrchestrate(orchestrationInfo)) {
       orchestrator.doOrchestrate(orchestrationInfo);
     }
+  }
+
+  private EndpointOrchestrationInfo createInEndpointOrchestrationInfo(
+      InboundEndpointDefinition inboundEndpointDefinition, RouteDefinition camelRoute) {
+
+    if (inboundEndpointDefinition instanceof RestEndpoint) {
+      RestDefinition restDefinition = rest();
+      return new RestEndpointOrchestrationInfo() {
+        @Override
+        public RestDefinition getRestDefinition() {
+          return restDefinition;
+        }
+
+        @Override
+        public RouteDefinition getRouteDefinition() {
+          return camelRoute;
+        }
+      };
+    }
+    return () -> camelRoute;
   }
 }

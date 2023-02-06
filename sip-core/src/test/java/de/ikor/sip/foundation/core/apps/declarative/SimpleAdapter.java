@@ -22,35 +22,8 @@ public class SimpleAdapter {
   private static final String SIP1 = "SIP1";
   private static final String SIP2 = "SIP2";
   private static final String APPEND_STATIC_MESSAGE_SCENARIO = "AppendStaticMessage";
-  private static final String PASS_THROUGH_SCENARIO = "Passthrough";
 
-  @IntegrationScenario(scenarioId = PASS_THROUGH_SCENARIO, requestModel = String.class)
-  class PassthroughScenario extends AnnotatedScenario {}
-
-  @InboundEndpoint(
-      endpointId = "passthroughProvider",
-      belongsToConnector = SIP1,
-      providesToScenario = PASS_THROUGH_SCENARIO)
-  class PassthroughProvider extends AnnotatedInboundEndpoint {
-
-    @Override
-    public DirectEndpointConsumerBuilder getInboundEndpoint() {
-      return StaticEndpointBuilders.direct("trigger-passthrough");
-    }
-  }
-
-  @OutboundEndpoint(
-      endpointId = "passthroughCosumer",
-      belongsToConnector = SIP2,
-      consumesFromScenario = PASS_THROUGH_SCENARIO)
-  class PassthroughCosumer extends AnnotatedOutboundEndpoint {
-
-    @Override
-    public EndpointProducerBuilder getOutboundEndpoint() {
-      return StaticEndpointBuilders.log("message");
-    }
-  }
-
+  // ----> AppendStaticMessage SCENARIO
   @IntegrationScenario(scenarioId = APPEND_STATIC_MESSAGE_SCENARIO, requestModel = String.class)
   public class AppendStaticMessageScenario extends AnnotatedScenario {}
 
@@ -71,24 +44,7 @@ public class SimpleAdapter {
     }
   }
 
-  @InboundEndpoint(belongsToConnector = "SIP1", providesToScenario = "AppendStaticMessage")
-  public class RestEndpointTest extends RestEndpoint {
-
-    @Override
-    protected void configureRest(RestDefinition definition) {
-      definition.post("path").type(String.class);
-    }
-
-    @Override
-    protected void configureEndpointRoute(RouteDefinition definition) {
-      definition.setBody(exchange -> "PRODUCED_REST-" + exchange.getIn().getBody());
-    }
-  }
-
-  @OutboundEndpoint(
-      endpointId = "appendStaticMessageConsumer",
-      belongsToConnector = SIP2,
-      consumesFromScenario = APPEND_STATIC_MESSAGE_SCENARIO)
+  @OutboundEndpoint(endpointId = "appendStaticMessageConsumer",belongsToConnector = SIP2, consumesFromScenario = APPEND_STATIC_MESSAGE_SCENARIO)
   public class AppendStaticMessageConsumer extends AnnotatedOutboundEndpoint {
 
     @Override
@@ -101,7 +57,40 @@ public class SimpleAdapter {
       definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED");
     }
   }
+  // <---- AppendStaticMessage SCENARIO
 
+  // ----> RestDSL SCENARIO
+  @IntegrationScenario(scenarioId = "RestDSL", requestModel = String.class)
+  public class RestDSLScenario extends AnnotatedScenario {}
+
+  @InboundEndpoint(belongsToConnector = SIP1, providesToScenario = "RestDSL")
+  public class RestEndpointTest extends RestEndpoint {
+
+    @Override
+    protected void configureRest(RestDefinition definition) {
+      definition.post("path").type(String.class).get("path");
+    }
+
+    @Override
+    protected void configureEndpointRoute(RouteDefinition definition) {
+      definition.setBody(exchange -> "PRODUCED_REST-" + exchange.getIn().getBody());
+    }
+  }
+
+  @OutboundEndpoint(belongsToConnector = SIP2, consumesFromScenario = "RestDSL")
+  public class RestScenarioConsumer extends AnnotatedOutboundEndpoint {
+
+    @Override
+    public EndpointProducerBuilder getOutboundEndpoint() {
+      return StaticEndpointBuilders.log("message");
+    }
+
+    @Override
+    protected void configureEndpointRoute(RouteDefinition definition) {
+      definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED");
+    }
+  }
+  // <---- RestDSL SCENARIO
   @Connector(connectorId = SIP1)
   public class ConnectorSip1 extends AnnotatedConnector {}
 

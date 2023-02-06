@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.core.framework.routers;
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.camelContext;
 import static de.ikor.sip.foundation.core.framework.StaticRouteBuilderHelper.generateRouteId;
 
+import de.ikor.sip.foundation.core.declarative.validator.CDMValidator;
 import de.ikor.sip.foundation.core.framework.connectors.ConnectorStarter;
 import de.ikor.sip.foundation.core.framework.connectors.InConnector;
 import java.util.List;
