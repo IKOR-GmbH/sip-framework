@@ -1,10 +1,10 @@
 package de.ikor.sip.foundation.core.declarative.endpoints;
 
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatEndpointId;
+
 import de.ikor.sip.foundation.core.declarative.annonations.InboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import lombok.RequiredArgsConstructor;
-
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatEndpointId;
 
 @RequiredArgsConstructor
 public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint

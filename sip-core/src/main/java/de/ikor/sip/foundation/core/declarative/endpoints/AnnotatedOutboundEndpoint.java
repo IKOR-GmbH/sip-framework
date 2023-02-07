@@ -1,9 +1,9 @@
 package de.ikor.sip.foundation.core.declarative.endpoints;
 
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatEndpointId;
+
 import de.ikor.sip.foundation.core.declarative.annonations.OutboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
-
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatEndpointId;
 
 public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
     implements OutboundEndpointDefinition {

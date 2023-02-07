@@ -17,9 +17,7 @@ public class DeclarativeHelper {
     return ann;
   }
 
-
   public static String formatEndpointId(String type, String scenarioID, String connectorId) {
-    return String.format(
-            ENDPOINT_ID_FORMAT, type, scenarioID, connectorId);
+    return String.format(ENDPOINT_ID_FORMAT, type, scenarioID, connectorId);
   }
 }
