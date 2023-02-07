@@ -14,9 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeclarationsRegistry {
 
-  private static final String IN_PREFIX = "in";
-  private static final String OUT_PREFIX = "out";
-
   private final List<ConnectorDefinition> connectors;
   private final List<IntegrationScenarioDefinition> scenarios;
   private final List<InboundEndpointDefinition> inboundEndpoints;
@@ -32,7 +29,6 @@ public class DeclarationsRegistry {
     this.inboundEndpoints = inboundEndpoints;
     this.outboundEndpoints = outboundEndpoints;
 
-    initEndpointIds();
     checkForDuplicateEndpointIds();
   }
 
@@ -56,21 +52,6 @@ public class DeclarationsRegistry {
     return outboundEndpoints.stream()
         .filter(endpoint -> endpoint.getConnectorId().equals(connectorId))
         .collect(Collectors.toList());
-  }
-
-  private void initEndpointIds() {
-    inboundEndpoints.forEach(
-        endpoint -> initInboundEndpointId((AnnotatedInboundEndpoint) endpoint));
-    outboundEndpoints.forEach(
-        endpoint -> initOutboundEndpointId((AnnotatedOutboundEndpoint) endpoint));
-  }
-
-  private void initInboundEndpointId(AnnotatedInboundEndpoint endpoint) {
-    endpoint.initEndpointId(IN_PREFIX, endpoint.getScenarioId(), endpoint.getConnectorId());
-  }
-
-  private void initOutboundEndpointId(AnnotatedOutboundEndpoint endpoint) {
-    endpoint.initEndpointId(OUT_PREFIX, endpoint.getScenarioId(), endpoint.getConnectorId());
   }
 
   private void checkForDuplicateEndpointIds() {

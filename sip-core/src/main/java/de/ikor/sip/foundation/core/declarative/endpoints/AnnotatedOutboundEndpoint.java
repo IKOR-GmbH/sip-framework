@@ -10,25 +10,26 @@ public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
       ReflectionHelper.getAnnotationOrThrow(OutboundEndpoint.class, this);
 
   @Override
+  public String getEndpointId() {
+    if (outboundEndpointAnnotation.endpointId().isEmpty()) {
+      return String.format(
+          ENDPOINT_ID_FORMAT, getEndpointType().getValue(), getScenarioId(), getConnectorId());
+    }
+    return outboundEndpointAnnotation.endpointId();
+  }
+
+  @Override
   public final String getConnectorId() {
-    return this.getClass().getAnnotation(OutboundEndpoint.class).belongsToConnector();
+    return outboundEndpointAnnotation.belongsToConnector();
   }
 
   @Override
   public final String getScenarioId() {
-    return this.getClass().getAnnotation(OutboundEndpoint.class).consumesFromScenario();
+    return outboundEndpointAnnotation.consumesFromScenario();
   }
 
   @Override
   public EndpointType getEndpointType() {
-    return EndpointType.OUTBOUND_ENDPOINT;
-  }
-
-  @Override
-  public void initEndpointId(String prefix, String scenarioId, String connectorId) {
-    endpointId = outboundEndpointAnnotation.endpointId();
-    if (endpointId.isEmpty()) {
-      endpointId = String.format(ENDPOINT_ID_FORMAT, prefix, scenarioId, connectorId);
-    }
+    return EndpointType.OUT;
   }
 }

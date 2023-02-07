@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.core.declarative.scenario;
 
-
 /**
  * Defines common methods for {@link IntegrationScenarioConsumerDefinition} and {@link
  * IntegrationScenarioProviderDefinition}

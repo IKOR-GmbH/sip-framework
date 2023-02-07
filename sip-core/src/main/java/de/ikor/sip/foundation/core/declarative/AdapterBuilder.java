@@ -76,7 +76,6 @@ public class AdapterBuilder extends RouteBuilder {
     appendCDMValidation(scenarioDefinition.getRequestModelClass(), camelRoute);
     camelRoute.to(SIPMC + scenarioDefinition.getID());
     camelRoute.routeId(((AnnotatedInboundEndpoint) inboundEndpointDefinition).getEndpointId());
-
   }
 
   private void buildOutboundEndpoint(

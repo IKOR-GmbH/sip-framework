@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.core.declarative.connectors;
 
-
 public interface ConnectorDefinition {
 
   String getID();

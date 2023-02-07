@@ -9,4 +9,5 @@ public class FoundationFeature {
   public static final String INFO = "info";
   public static final String ADAPTER_ROUTES = "adapter-routes";
   public static final String HEALTH = "health";
+  public static final String ADAPTER_DEFINITION = "adapterdefinition";
 }

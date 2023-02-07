@@ -4,7 +4,6 @@ import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.orchestation.EndpointOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import lombok.Data;
-import lombok.Getter;
 import org.apache.camel.model.RouteDefinition;
 
 @Data
@@ -14,11 +13,11 @@ abstract class AnnotatedEndpoint
   protected static final String ENDPOINT_ID_FORMAT = "%s-%s-%s";
   private DeclarationsRegistry declarationsRegistry;
 
-  @Getter protected String endpointId;
-
   public Orchestrator<EndpointOrchestrationInfo> getOrchestrator() {
     return this;
   }
+
+  public abstract String getEndpointId();
 
   @Override
   public boolean canOrchestrate(final EndpointOrchestrationInfo data) {
@@ -33,6 +32,4 @@ abstract class AnnotatedEndpoint
   protected void configureEndpointRoute(final RouteDefinition definition) {
     // NO-OP by default
   }
-
-  public abstract void initEndpointId(String prefix, String scenarioId, String connectorId);
 }

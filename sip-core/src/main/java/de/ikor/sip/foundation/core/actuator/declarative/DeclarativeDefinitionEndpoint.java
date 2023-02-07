@@ -1,5 +1,8 @@
 package de.ikor.sip.foundation.core.actuator.declarative;
 
+import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeModelTransformer.*;
+
+import de.ikor.sip.foundation.core.actuator.declarative.model.*;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedInboundEndpoint;
@@ -20,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RestControllerEndpoint(id = "adapterdefinition")
 public class DeclarativeDefinitionEndpoint {
 
-  private static final String NO_RESPONSE = "NO RESPONSE";
   private static final String CONNECTORS_PATH = "connectors";
   private static final String SCENARIOS_PATH = "scenarios";
   private static final String ENDPOINTS_PATH = "endpoints";
@@ -77,7 +79,7 @@ public class DeclarativeDefinitionEndpoint {
 
   private void initializeConnectorInfos() {
     for (ConnectorDefinition connector : declarationsRegistry.getConnectors()) {
-      connectors.add(createConnectorInfo(connector));
+      connectors.add(createConnectorInfo(declarationsRegistry, connector));
     }
   }
 
@@ -90,62 +92,13 @@ public class DeclarativeDefinitionEndpoint {
   private void initializeEndpointInfos() {
     declarationsRegistry
         .getInboundEndpoints()
-        .forEach(endpoint -> createAndAddInboundEndpoint((AnnotatedInboundEndpoint) endpoint));
+        .forEach(
+            endpoint ->
+                endpoints.add(createAndAddInboundEndpoint((AnnotatedInboundEndpoint) endpoint)));
     declarationsRegistry
         .getOutboundEndpoints()
-        .forEach(endpoint -> createAndAddOutboundEndpoint((AnnotatedOutboundEndpoint) endpoint));
-  }
-
-  private ConnectorInfo createConnectorInfo(ConnectorDefinition connector) {
-    ConnectorInfo info = new ConnectorInfo();
-    info.setConnectorId(connector.getID());
-    info.setConnectorDescription(connector.getDocumentation());
-
-    declarationsRegistry
-        .getInboundEndpointsByConnectorId(connector.getID())
         .forEach(
             endpoint ->
-                info.getInboundEndpoints()
-                    .add(((AnnotatedInboundEndpoint) endpoint).getEndpointId()));
-
-    declarationsRegistry
-        .getOutboundEndpointsByConnectorId(connector.getID())
-        .forEach(
-            endpoint ->
-                info.getOutboundEndpoints()
-                    .add(((AnnotatedOutboundEndpoint) endpoint).getEndpointId()));
-
-    return info;
-  }
-
-  private IntegrationScenarioInfo createIntegrationScenarioInfo(
-      IntegrationScenarioDefinition scenario) {
-    IntegrationScenarioInfo info = new IntegrationScenarioInfo();
-    info.setScenarioId(scenario.getID());
-    info.setScenarioDescription(scenario.getDescription());
-    info.setRequestModelClass(scenario.getRequestModelClass().getName());
-    info.setResponseModelClass(
-        scenario.getResponseModelClass().isPresent()
-            ? scenario.getResponseModelClass().get().getName()
-            : NO_RESPONSE);
-    return info;
-  }
-
-  private void createAndAddInboundEndpoint(AnnotatedInboundEndpoint endpoint) {
-    EndpointInfo info = new EndpointInfo();
-    info.setEndpointId(endpoint.getEndpointId());
-    info.setEndpointType(endpoint.getEndpointType());
-    info.setConnectorId(endpoint.getConnectorId());
-    info.setScenarioId(endpoint.getScenarioId());
-    endpoints.add(info);
-  }
-
-  private void createAndAddOutboundEndpoint(AnnotatedOutboundEndpoint endpoint) {
-    EndpointInfo info = new EndpointInfo();
-    info.setEndpointId(endpoint.getEndpointId());
-    info.setEndpointType(endpoint.getEndpointType());
-    info.setConnectorId(endpoint.getConnectorId());
-    info.setScenarioId(endpoint.getScenarioId());
-    endpoints.add(info);
+                endpoints.add(createAndAddOutboundEndpoint((AnnotatedOutboundEndpoint) endpoint)));
   }
 }
