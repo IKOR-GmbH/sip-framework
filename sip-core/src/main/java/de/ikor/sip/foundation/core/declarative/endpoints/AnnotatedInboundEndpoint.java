@@ -1,21 +1,22 @@
 package de.ikor.sip.foundation.core.declarative.endpoints;
 
 import de.ikor.sip.foundation.core.declarative.annonations.InboundEndpoint;
-import de.ikor.sip.foundation.core.declarative.utils.ReflectionHelper;
+import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import lombok.RequiredArgsConstructor;
+
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatEndpointId;
 
 @RequiredArgsConstructor
 public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint
     implements InboundEndpointDefinition {
 
   private final InboundEndpoint inboundEndpointAnnotation =
-      ReflectionHelper.getAnnotationOrThrow(InboundEndpoint.class, this);
+      DeclarativeHelper.getAnnotationOrThrow(InboundEndpoint.class, this);
 
   @Override
   public String getEndpointId() {
     if (inboundEndpointAnnotation.endpointId().isEmpty()) {
-      return String.format(
-          ENDPOINT_ID_FORMAT, getEndpointType().getValue(), getScenarioId(), getConnectorId());
+      return formatEndpointId(getEndpointType().getValue(), getScenarioId(), getConnectorId());
     }
     return inboundEndpointAnnotation.endpointId();
   }

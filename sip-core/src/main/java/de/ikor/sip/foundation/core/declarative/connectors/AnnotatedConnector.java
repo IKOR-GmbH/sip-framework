@@ -1,13 +1,14 @@
 package de.ikor.sip.foundation.core.declarative.connectors;
 
 import de.ikor.sip.foundation.core.declarative.annonations.Connector;
-import de.ikor.sip.foundation.core.declarative.utils.ReflectionHelper;
-import java.io.IOException;
+import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import org.springframework.core.io.ClassPathResource;
+
+import java.io.IOException;
 
 public class AnnotatedConnector implements ConnectorDefinition {
 
-  private final Connector annotation = ReflectionHelper.getAnnotationOrThrow(Connector.class, this);
+  private final Connector annotation = DeclarativeHelper.getAnnotationOrThrow(Connector.class, this);
 
   @Override
   public final String getID() {

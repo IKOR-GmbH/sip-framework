@@ -10,7 +10,6 @@ import org.apache.camel.model.RouteDefinition;
 abstract class AnnotatedEndpoint
     implements Orchestrator<EndpointOrchestrationInfo>, AnnotatedEndpointType {
 
-  protected static final String ENDPOINT_ID_FORMAT = "%s-%s-%s";
   private DeclarationsRegistry declarationsRegistry;
 
   public Orchestrator<EndpointOrchestrationInfo> getOrchestrator() {
