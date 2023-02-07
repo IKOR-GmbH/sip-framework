@@ -26,7 +26,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @DisableJmx(false)
 @MockEndpoints("log:message*")
 @DirtiesContext
-public class EndpointOrchestrationTest {
+class EndpointOrchestrationTest {
 
   @EndpointInject("mock:log:message")
   private MockEndpoint mockedLogger;

@@ -1,30 +1,39 @@
 package de.ikor.sip.foundation.core.declarative.endpoints;
 
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatEndpointId;
+
 import de.ikor.sip.foundation.core.declarative.annonations.OutboundEndpoint;
-import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import de.ikor.sip.foundation.core.declarative.utils.ReflectionHelper;
+import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import org.apache.commons.lang3.StringUtils;
 
 public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
     implements OutboundEndpointDefinition {
 
   private final OutboundEndpoint outboundEndpointAnnotation =
-      ReflectionHelper.getAnnotationOrThrow(OutboundEndpoint.class, this);
+      DeclarativeHelper.getAnnotationOrThrow(OutboundEndpoint.class, this);
+
+  private final String endpointId =
+      StringUtils.defaultIfEmpty(
+          outboundEndpointAnnotation.endpointId(),
+          formatEndpointId(getEndpointType(), getScenarioId(), getConnectorId()));
 
   @Override
-  public final IntegrationScenarioDefinition getConsumedScenario() {
-    return getDeclarationsRegistry()
-        .getScenarioById(outboundEndpointAnnotation.consumesFromScenario());
-  }
-
-  @Override
-  public final ConnectorDefinition getConnector() {
-    return getDeclarationsRegistry()
-        .getConnectorById(outboundEndpointAnnotation.belongsToConnector());
+  public String getEndpointId() {
+    return endpointId;
   }
 
   @Override
   public final String getConnectorId() {
-    return this.getClass().getAnnotation(OutboundEndpoint.class).belongsToConnector();
+    return outboundEndpointAnnotation.belongsToConnector();
+  }
+
+  @Override
+  public final String getScenarioId() {
+    return outboundEndpointAnnotation.consumesFromScenario();
+  }
+
+  @Override
+  public EndpointType getEndpointType() {
+    return EndpointType.OUT;
   }
 }

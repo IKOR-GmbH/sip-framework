@@ -8,14 +8,13 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 
-public abstract class RestEndpoint extends AnnotatedInboundEndpoint
-    implements InboundEndpointDefinition {
+public abstract class RestEndpoint extends AnnotatedInboundEndpoint {
 
   private static final String REST_DIRECT_PATH = "rest";
 
   @Override
   public EndpointConsumerBuilder getInboundEndpoint() {
-    return StaticEndpointBuilders.direct(REST_DIRECT_PATH + getProvidedScenario().getID());
+    return StaticEndpointBuilders.direct(REST_DIRECT_PATH + getEndpointId());
   }
 
   @Override
