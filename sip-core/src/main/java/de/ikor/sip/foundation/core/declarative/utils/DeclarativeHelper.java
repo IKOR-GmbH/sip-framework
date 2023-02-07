@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.utils;
 
+import de.ikor.sip.foundation.core.declarative.endpoints.EndpointType;
 import java.lang.annotation.Annotation;
 
 public class DeclarativeHelper {
@@ -17,7 +18,7 @@ public class DeclarativeHelper {
     return ann;
   }
 
-  public static String formatEndpointId(String type, String scenarioID, String connectorId) {
-    return String.format(ENDPOINT_ID_FORMAT, type, scenarioID, connectorId);
+  public static String formatEndpointId(EndpointType type, String scenarioID, String connectorId) {
+    return String.format(ENDPOINT_ID_FORMAT, type.getValue(), scenarioID, connectorId);
   }
 }

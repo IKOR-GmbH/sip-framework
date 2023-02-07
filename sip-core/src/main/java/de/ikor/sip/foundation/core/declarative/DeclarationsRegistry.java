@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectors.DefaultConnector;
 import de.ikor.sip.foundation.core.declarative.endpoints.*;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -115,8 +116,7 @@ public class DeclarationsRegistry {
 
   private void checkIfDuplicate(Set<String> set, String id, String declarativeElement) {
     if (!set.add(id)) {
-      // TODO: Change to SIPFrameworkInitializationException when merged with develop branch
-      throw new RuntimeException(
+      throw new SIPFrameworkInitializationException(
           String.format("There is a duplicate %s id: %s", declarativeElement, id));
     }
   }

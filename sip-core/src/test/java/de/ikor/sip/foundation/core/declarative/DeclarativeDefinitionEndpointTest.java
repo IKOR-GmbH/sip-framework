@@ -1,10 +1,14 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.EndpointInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
+import java.io.IOException;
+import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -14,17 +18,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-import java.io.IOException;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-//@CamelSpringBootTest
-//@SpringBootTest(
+// @CamelSpringBootTest
+// @SpringBootTest(
 //    classes = {SimpleAdapter.class},
 //    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@DisableJmx(false)
-//TODO fix test
+// @DisableJmx(false)
+// TODO fix test
 class DeclarativeDefinitionEndpointTest {
 
   @Autowired private ObjectMapper mapper;

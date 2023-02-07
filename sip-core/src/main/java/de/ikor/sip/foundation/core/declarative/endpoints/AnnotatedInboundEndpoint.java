@@ -5,6 +5,7 @@ import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.fo
 import de.ikor.sip.foundation.core.declarative.annonations.InboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 @RequiredArgsConstructor
 public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint
@@ -13,12 +14,14 @@ public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint
   private final InboundEndpoint inboundEndpointAnnotation =
       DeclarativeHelper.getAnnotationOrThrow(InboundEndpoint.class, this);
 
+  private final String endpointId =
+      StringUtils.defaultIfEmpty(
+          inboundEndpointAnnotation.endpointId(),
+          formatEndpointId(getEndpointType(), getScenarioId(), getConnectorId()));
+
   @Override
   public String getEndpointId() {
-    if (inboundEndpointAnnotation.endpointId().isEmpty()) {
-      return formatEndpointId(getEndpointType().getValue(), getScenarioId(), getConnectorId());
-    }
-    return inboundEndpointAnnotation.endpointId();
+    return endpointId;
   }
 
   @Override

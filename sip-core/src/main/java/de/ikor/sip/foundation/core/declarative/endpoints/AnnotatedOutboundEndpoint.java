@@ -4,6 +4,7 @@ import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.fo
 
 import de.ikor.sip.foundation.core.declarative.annonations.OutboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import org.apache.commons.lang3.StringUtils;
 
 public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
     implements OutboundEndpointDefinition {
@@ -11,12 +12,14 @@ public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
   private final OutboundEndpoint outboundEndpointAnnotation =
       DeclarativeHelper.getAnnotationOrThrow(OutboundEndpoint.class, this);
 
+  private final String endpointId =
+      StringUtils.defaultIfEmpty(
+          outboundEndpointAnnotation.endpointId(),
+          formatEndpointId(getEndpointType(), getScenarioId(), getConnectorId()));
+
   @Override
   public String getEndpointId() {
-    if (outboundEndpointAnnotation.endpointId().isEmpty()) {
-      return formatEndpointId(getEndpointType().getValue(), getScenarioId(), getConnectorId());
-    }
-    return outboundEndpointAnnotation.endpointId();
+    return endpointId;
   }
 
   @Override
