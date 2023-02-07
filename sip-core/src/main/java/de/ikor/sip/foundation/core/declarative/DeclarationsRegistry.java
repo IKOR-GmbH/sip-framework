@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative;
 
 import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.connectors.DefaultConnector;
 import de.ikor.sip.foundation.core.declarative.endpoints.*;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.*;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class DeclarationsRegistry {
+
+  private static final String CONNECTOR = "connector";
+  private static final String ENDPOINT = "endpoint";
 
   private final List<ConnectorDefinition> connectors;
   private final List<IntegrationScenarioDefinition> scenarios;
@@ -29,7 +33,15 @@ public class DeclarationsRegistry {
     this.inboundEndpoints = inboundEndpoints;
     this.outboundEndpoints = outboundEndpoints;
 
+    initConnectors();
+    checkForDuplicateConnectorIds();
     checkForDuplicateEndpointIds();
+  }
+
+  public Optional<ConnectorDefinition> getConnectorById(final String connectorId) {
+    return connectors.stream()
+        .filter(connector -> connector.getID().equals(connectorId))
+        .findFirst();
   }
 
   public IntegrationScenarioDefinition getScenarioById(final String scenarioId) {
@@ -54,24 +66,49 @@ public class DeclarationsRegistry {
         .collect(Collectors.toList());
   }
 
+  private void initConnectors() {
+    inboundEndpoints.forEach(
+        endpoint -> {
+          Optional<ConnectorDefinition> connector = getConnectorById(endpoint.getConnectorId());
+          if (connector.isEmpty()) {
+            connectors.add(new DefaultConnector(endpoint.getConnectorId()));
+          }
+        });
+    outboundEndpoints.forEach(
+        endpoint -> {
+          Optional<ConnectorDefinition> connector = getConnectorById(endpoint.getConnectorId());
+          if (connector.isEmpty()) {
+            connectors.add(new DefaultConnector(endpoint.getConnectorId()));
+          }
+        });
+  }
+
+  private void checkForDuplicateConnectorIds() {
+    Set<String> set = new HashSet<>();
+    List<String> connectorIds =
+        connectors.stream().map(ConnectorDefinition::getID).collect(Collectors.toList());
+    connectorIds.forEach(id -> checkIfDuplicate(set, id, CONNECTOR));
+  }
+
   private void checkForDuplicateEndpointIds() {
     Set<String> set = new HashSet<>();
     List<String> inboundIds =
         inboundEndpoints.stream()
             .map(endpoint -> ((AnnotatedInboundEndpoint) endpoint).getEndpointId())
             .collect(Collectors.toList());
-    inboundIds.forEach(id -> checkIfDuplicate(set, id));
+    inboundIds.forEach(id -> checkIfDuplicate(set, id, ENDPOINT));
     List<String> outboundIds =
         outboundEndpoints.stream()
             .map(endpoint -> ((AnnotatedOutboundEndpoint) endpoint).getEndpointId())
             .collect(Collectors.toList());
-    outboundIds.forEach(id -> checkIfDuplicate(set, id));
+    outboundIds.forEach(id -> checkIfDuplicate(set, id, ENDPOINT));
   }
 
-  private void checkIfDuplicate(Set<String> set, String id) {
+  private void checkIfDuplicate(Set<String> set, String id, String declarativeElement) {
     if (!set.add(id)) {
       // TODO: Change to SIPFrameworkInitializationException when merged with develop branch
-      throw new RuntimeException(String.format("There is a duplicate endpoint id: %s", id));
+      throw new RuntimeException(
+          String.format("There is a duplicate %s id: %s", declarativeElement, id));
     }
   }
 }
