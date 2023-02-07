@@ -5,12 +5,14 @@ import java.util.List;
 import lombok.*;
 
 /** Class which represents POJO model for exposing {@link Connector} */
-@Value
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ConnectorInfo {
 
-  String connectorId;
-  String connectorDescription;
-  List<String> inboundEndpoints;
-  List<String> outboundEndpoints;
+  private String connectorId;
+  private String connectorDescription;
+  private List<String> inboundEndpoints;
+  private List<String> outboundEndpoints;
 }

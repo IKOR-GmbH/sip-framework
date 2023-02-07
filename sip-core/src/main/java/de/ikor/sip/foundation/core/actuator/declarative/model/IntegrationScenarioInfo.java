@@ -4,12 +4,14 @@ import de.ikor.sip.foundation.core.declarative.annonations.IntegrationScenario;
 import lombok.*;
 
 /** Class which represents POJO model for exposing {@link IntegrationScenario} */
-@Value
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class IntegrationScenarioInfo {
 
-  String scenarioId;
-  String scenarioDescription;
-  String requestModelClass;
-  String responseModelClass;
+  private String scenarioId;
+  private String scenarioDescription;
+  private String requestModelClass;
+  private String responseModelClass;
 }
