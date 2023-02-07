@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public @interface OutboundEndpoint {
 
+  String endpointId() default "";
+
   String belongsToConnector();
 
   String consumesFromScenario();

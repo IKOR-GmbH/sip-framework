@@ -1,8 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.connectors;
 
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
-import java.util.Map;
+import java.io.IOException;
+import org.springframework.core.io.ClassPathResource;
 
 public interface ConnectorDefinition {
 
@@ -10,7 +9,23 @@ public interface ConnectorDefinition {
 
   String getDocumentation();
 
-  Map<String, IntegrationScenarioConsumerDefinition> getConsumedIntegrationScenarios();
+  default String readDocumentation(String path) {
+    final var resourcePath =
+        path.isEmpty() ? String.format("documents/structure/connectors/%s", getID()) : path;
+    final var resource = new ClassPathResource(resourcePath);
 
-  Map<String, IntegrationScenarioProviderDefinition> getProvidedIntegrationScenarios();
+    if (!resource.isReadable()) {
+      return String.format("No documentation has been provided for connector '%s'", getID());
+    }
+
+    try (var input = resource.getInputStream()) {
+      return new String(input.readAllBytes());
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to read documentation resource", e);
+    }
+  }
+
+  //  Map<String, IntegrationScenarioConsumerDefinition> getConsumedIntegrationScenarios();
+  //
+  //  Map<String, IntegrationScenarioProviderDefinition> getProvidedIntegrationScenarios();
 }
