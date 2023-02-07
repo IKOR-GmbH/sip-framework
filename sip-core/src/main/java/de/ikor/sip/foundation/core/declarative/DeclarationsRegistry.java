@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class DeclarationsRegistry {
 
   private static final String CONNECTOR = "connector";
+  private static final String SCENARIO = "integration scenario";
   private static final String ENDPOINT = "endpoint";
 
   private final List<ConnectorDefinition> connectors;
@@ -33,9 +34,10 @@ public class DeclarationsRegistry {
     this.inboundEndpoints = inboundEndpoints;
     this.outboundEndpoints = outboundEndpoints;
 
-    initConnectors();
-    checkForDuplicateConnectorIds();
-    checkForDuplicateEndpointIds();
+    createMissingConnectors();
+    checkForDuplicateConnectors();
+    checkForDuplicateScenarios();
+    checkForDuplicateEndpoints();
   }
 
   public Optional<ConnectorDefinition> getConnectorById(final String connectorId) {
@@ -66,7 +68,7 @@ public class DeclarationsRegistry {
         .collect(Collectors.toList());
   }
 
-  private void initConnectors() {
+  private void createMissingConnectors() {
     inboundEndpoints.forEach(
         endpoint -> {
           Optional<ConnectorDefinition> connector = getConnectorById(endpoint.getConnectorId());
@@ -83,14 +85,21 @@ public class DeclarationsRegistry {
         });
   }
 
-  private void checkForDuplicateConnectorIds() {
+  private void checkForDuplicateConnectors() {
     Set<String> set = new HashSet<>();
     List<String> connectorIds =
         connectors.stream().map(ConnectorDefinition::getID).collect(Collectors.toList());
     connectorIds.forEach(id -> checkIfDuplicate(set, id, CONNECTOR));
   }
 
-  private void checkForDuplicateEndpointIds() {
+  private void checkForDuplicateScenarios() {
+    Set<String> set = new HashSet<>();
+    List<String> scenarioIds =
+        scenarios.stream().map(IntegrationScenarioDefinition::getID).collect(Collectors.toList());
+    scenarioIds.forEach(id -> checkIfDuplicate(set, id, SCENARIO));
+  }
+
+  private void checkForDuplicateEndpoints() {
     Set<String> set = new HashSet<>();
     List<String> inboundIds =
         inboundEndpoints.stream()
