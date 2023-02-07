@@ -38,6 +38,7 @@ public class DeclarationsRegistry {
     createMissingConnectors();
     checkForDuplicateConnectors();
     checkForDuplicateScenarios();
+    checkForUnusedScenarios();
     checkForDuplicateEndpoints();
   }
 
@@ -66,6 +67,18 @@ public class DeclarationsRegistry {
   public List<OutboundEndpointDefinition> getOutboundEndpointsByConnectorId(String connectorId) {
     return outboundEndpoints.stream()
         .filter(endpoint -> endpoint.getConnectorId().equals(connectorId))
+        .collect(Collectors.toList());
+  }
+
+  public List<InboundEndpointDefinition> getInboundEndpointsByScenarioId(String scenarioId) {
+    return inboundEndpoints.stream()
+        .filter(endpoint -> endpoint.getScenarioId().equals(scenarioId))
+        .collect(Collectors.toList());
+  }
+
+  public List<OutboundEndpointDefinition> getOutboundEndpointsByScenarioId(String scenarioId) {
+    return outboundEndpoints.stream()
+        .filter(endpoint -> endpoint.getScenarioId().equals(scenarioId))
         .collect(Collectors.toList());
   }
 
@@ -98,6 +111,19 @@ public class DeclarationsRegistry {
     List<String> scenarioIds =
         scenarios.stream().map(IntegrationScenarioDefinition::getID).collect(Collectors.toList());
     scenarioIds.forEach(id -> checkIfDuplicate(set, id, SCENARIO));
+  }
+
+  private void checkForUnusedScenarios() {
+    scenarios.stream()
+        .filter(scenario -> getInboundEndpointsByScenarioId(scenario.getID()).isEmpty())
+        .filter(scenario -> getOutboundEndpointsByScenarioId(scenario.getID()).isEmpty())
+        .map(
+            scenario -> {
+              throw new RuntimeException(
+                  String.format(
+                      "There is unused integration scenario with id %s", scenario.getID()));
+            })
+        .collect(Collectors.toList());
   }
 
   private void checkForDuplicateEndpoints() {
