@@ -16,4 +16,5 @@ public @interface InboundEndpoint {
   String belongsToConnector();
 
   String providesToScenario();
+
 }
