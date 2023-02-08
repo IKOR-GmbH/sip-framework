@@ -24,4 +24,7 @@ abstract class AnnotatedEndpoint
   protected void configureEndpointRoute(final RouteDefinition definition) {
     // NO-OP by default
   }
+
+  @Override
+  public void configureAfterResponse(final RouteDefinition definition) {}
 }
