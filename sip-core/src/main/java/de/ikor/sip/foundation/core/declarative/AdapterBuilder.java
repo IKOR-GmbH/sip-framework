@@ -44,6 +44,8 @@ public class AdapterBuilder extends RouteBuilder {
   @Override
   public void configure() throws Exception {
     declarationsRegistry.getScenarios().forEach(this::buildScenario);
+
+    
   }
 
   private void buildScenario(IntegrationScenarioDefinition scenarioDefinition) {
@@ -64,14 +66,14 @@ public class AdapterBuilder extends RouteBuilder {
       IntegrationScenarioDefinition scenarioDefinition) {
 
     RouteDefinition camelRoute = from(inboundEndpointDefinition.getInboundEndpoint());
-    camelRoute.routeId(((AnnotatedInboundEndpoint) inboundEndpointDefinition).getEndpointId());
+    camelRoute.routeId(inboundEndpointDefinition.getEndpointId());
     EndpointOrchestrationInfo orchestrationInfo =
         createInEndpointOrchestrationInfo(inboundEndpointDefinition, camelRoute);
     orchestrateEndpoint(orchestrationInfo, inboundEndpointDefinition);
 
     appendCDMValidation(scenarioDefinition.getRequestModelClass(), camelRoute);
     camelRoute.to(SIPMC + scenarioDefinition.getID());
-    camelRoute.id(((AnnotatedInboundEndpoint) inboundEndpointDefinition).getEndpointId());
+    camelRoute.id(inboundEndpointDefinition.getEndpointId());
   }
 
   private void buildOutboundEndpoint(
@@ -79,12 +81,12 @@ public class AdapterBuilder extends RouteBuilder {
       IntegrationScenarioDefinition scenarioDefinition) {
 
     RouteDefinition camelRoute = from(SIPMC + scenarioDefinition.getID());
-    camelRoute.routeId(((AnnotatedOutboundEndpoint) outboundEndpointDefinition).getEndpointId());
+    camelRoute.routeId(outboundEndpointDefinition.getEndpointId());
     EndpointOrchestrationInfo orchestrationInfo = () -> camelRoute;
     orchestrateEndpoint(orchestrationInfo, outboundEndpointDefinition);
 
     camelRoute.to(outboundEndpointDefinition.getOutboundEndpoint());
-    camelRoute.id(((AnnotatedOutboundEndpoint) outboundEndpointDefinition).getEndpointId());
+    camelRoute.id(outboundEndpointDefinition.getEndpointId());
     scenarioDefinition
         .getResponseModelClass()
         .ifPresent(responseModelClass -> appendCDMValidation(responseModelClass, camelRoute));
