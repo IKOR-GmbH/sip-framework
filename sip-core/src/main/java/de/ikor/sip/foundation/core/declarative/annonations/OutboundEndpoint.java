@@ -16,5 +16,4 @@ public @interface OutboundEndpoint {
   String belongsToConnector();
 
   String consumesFromScenario();
-
 }

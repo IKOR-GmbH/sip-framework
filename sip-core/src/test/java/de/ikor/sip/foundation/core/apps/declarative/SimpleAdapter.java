@@ -42,6 +42,11 @@ public class SimpleAdapter {
     protected void configureEndpointRoute(RouteDefinition definition) {
       definition.setBody(exchange -> "PRODUCED-" + exchange.getIn().getBody());
     }
+
+    @Override
+    public void configureAfterResponse(RouteDefinition definition) {
+      definition.setBody(exchange -> exchange.getIn().getBody() + "-Handled");
+    }
   }
 
   @OutboundEndpoint(
@@ -91,6 +96,11 @@ public class SimpleAdapter {
     @Override
     protected void configureEndpointRoute(RouteDefinition definition) {
       definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED");
+    }
+
+    @Override
+    public void configureAfterResponse(RouteDefinition definition) {
+      definition.setBody(exchange -> exchange.getIn().getBody() + "-Handled-Outbound");
     }
   }
   // <---- RestDSL SCENARIO

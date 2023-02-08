@@ -4,6 +4,7 @@ import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.fo
 
 import de.ikor.sip.foundation.core.declarative.annonations.InboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import org.apache.camel.model.RouteDefinition;
 import org.apache.commons.lang3.StringUtils;
 
 public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint
@@ -31,4 +32,7 @@ public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint
   public final String getScenarioId() {
     return inboundEndpointAnnotation.providesToScenario();
   }
+
+  @Override
+  public void configureAfterResponse(final RouteDefinition definition) {}
 }

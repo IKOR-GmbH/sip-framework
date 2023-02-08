@@ -44,8 +44,6 @@ public class AdapterBuilder extends RouteBuilder {
   @Override
   public void configure() throws Exception {
     declarationsRegistry.getScenarios().forEach(this::buildScenario);
-
-    
   }
 
   private void buildScenario(IntegrationScenarioDefinition scenarioDefinition) {
@@ -74,6 +72,7 @@ public class AdapterBuilder extends RouteBuilder {
     appendCDMValidation(scenarioDefinition.getRequestModelClass(), camelRoute);
     camelRoute.to(SIPMC + scenarioDefinition.getID());
     camelRoute.id(inboundEndpointDefinition.getEndpointId());
+    appendAfterHandler(orchestrationInfo.getRouteDefinition(), inboundEndpointDefinition);
   }
 
   private void buildOutboundEndpoint(
@@ -90,6 +89,7 @@ public class AdapterBuilder extends RouteBuilder {
     scenarioDefinition
         .getResponseModelClass()
         .ifPresent(responseModelClass -> appendCDMValidation(responseModelClass, camelRoute));
+    appendAfterHandler(orchestrationInfo.getRouteDefinition(), outboundEndpointDefinition);
   }
 
   private void appendCDMValidation(Class<?> CDMClass, RouteDefinition camelRoute) {
@@ -124,5 +124,10 @@ public class AdapterBuilder extends RouteBuilder {
       };
     }
     return () -> camelRoute;
+  }
+
+  private void appendAfterHandler(
+      RouteDefinition routeDefinition, EndpointDefinition responseHandler) {
+    responseHandler.configureAfterResponse(routeDefinition);
   }
 }

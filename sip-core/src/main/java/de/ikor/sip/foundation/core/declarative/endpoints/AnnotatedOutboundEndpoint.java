@@ -4,6 +4,7 @@ import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.fo
 
 import de.ikor.sip.foundation.core.declarative.annonations.OutboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import org.apache.camel.model.RouteDefinition;
 import org.apache.commons.lang3.StringUtils;
 
 public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
@@ -26,6 +27,9 @@ public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
   public final String getConnectorId() {
     return outboundEndpointAnnotation.belongsToConnector();
   }
+
+  @Override
+  public void configureAfterResponse(final RouteDefinition data) {}
 
   @Override
   public final String getScenarioId() {
