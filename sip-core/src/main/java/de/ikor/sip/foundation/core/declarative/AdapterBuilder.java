@@ -1,11 +1,6 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedInboundEndpoint;
-import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedOutboundEndpoint;
-import de.ikor.sip.foundation.core.declarative.endpoints.InboundEndpointDefinition;
-import de.ikor.sip.foundation.core.declarative.endpoints.OutboundEndpointDefinition;
-import de.ikor.sip.foundation.core.declarative.endpoints.ResponseEndpoint;
-import de.ikor.sip.foundation.core.declarative.endpoints.RestEndpoint;
+import de.ikor.sip.foundation.core.declarative.endpoints.*;
 import de.ikor.sip.foundation.core.declarative.orchestation.EndpointOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestratable;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
@@ -132,7 +127,7 @@ public class AdapterBuilder extends RouteBuilder {
   }
 
   private void appendAfterHandler(
-      RouteDefinition routeDefinition, ResponseEndpoint responseHandler) {
+      RouteDefinition routeDefinition, EndpointDefinition responseHandler) {
     responseHandler.configureAfterResponse(routeDefinition);
   }
 }

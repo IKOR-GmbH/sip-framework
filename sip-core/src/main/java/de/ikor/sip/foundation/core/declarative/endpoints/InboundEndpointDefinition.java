@@ -8,8 +8,7 @@ import org.apache.camel.builder.EndpointConsumerBuilder;
 public interface InboundEndpointDefinition
     extends EndpointDefinition,
         IntegrationScenarioProviderDefinition,
-        Orchestratable<EndpointOrchestrationInfo>,
-        ResponseEndpoint {
+        Orchestratable<EndpointOrchestrationInfo> {
 
   EndpointConsumerBuilder getInboundEndpoint();
 

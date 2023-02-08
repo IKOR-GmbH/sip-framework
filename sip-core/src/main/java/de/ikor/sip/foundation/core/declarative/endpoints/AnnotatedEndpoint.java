@@ -1,12 +1,11 @@
 package de.ikor.sip.foundation.core.declarative.endpoints;
 
-
 import de.ikor.sip.foundation.core.declarative.orchestation.EndpointOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import org.apache.camel.model.RouteDefinition;
 
 abstract class AnnotatedEndpoint
-    implements EndpointDefinition, Orchestrator<EndpointOrchestrationInfo>, ResponseEndpoint {
+    implements EndpointDefinition, Orchestrator<EndpointOrchestrationInfo> {
 
   public Orchestrator<EndpointOrchestrationInfo> getOrchestrator() {
     return this;
