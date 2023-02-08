@@ -4,11 +4,9 @@ import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.fo
 
 import de.ikor.sip.foundation.core.declarative.annonations.InboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.camel.model.RouteDefinition;
 
-@RequiredArgsConstructor
 public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint
     implements InboundEndpointDefinition {
 
@@ -33,11 +31,6 @@ public abstract class AnnotatedInboundEndpoint extends AnnotatedEndpoint
   @Override
   public final String getScenarioId() {
     return inboundEndpointAnnotation.providesToScenario();
-  }
-
-  @Override
-  public EndpointType getEndpointType() {
-    return EndpointType.IN;
   }
 
   @Override

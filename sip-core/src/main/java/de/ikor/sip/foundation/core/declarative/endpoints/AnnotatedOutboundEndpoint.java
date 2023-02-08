@@ -35,9 +35,4 @@ public abstract class AnnotatedOutboundEndpoint extends AnnotatedEndpoint
   public final String getScenarioId() {
     return outboundEndpointAnnotation.consumesFromScenario();
   }
-
-  @Override
-  public EndpointType getEndpointType() {
-    return EndpointType.OUT;
-  }
 }

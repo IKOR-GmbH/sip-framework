@@ -20,6 +20,7 @@ public @interface IntegrationScenario {
   Class<?> responseModel() default Void.class;
 
   /**
+   * TODO: update javadocs
    * Optional path to the resource (typically a markdown file) that describes this scenario. If not
    * given, an attempt is made to retrieve documentation from <code>
    * docs/integration-scenarios/&lt;scenario-ID&gt;</code> automatically.

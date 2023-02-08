@@ -6,8 +6,14 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProvi
 import org.apache.camel.builder.EndpointConsumerBuilder;
 
 public interface InboundEndpointDefinition
-    extends IntegrationScenarioProviderDefinition,
+    extends EndpointDefinition,
+        IntegrationScenarioProviderDefinition,
         Orchestratable<EndpointOrchestrationInfo>,
         ResponseEndpoint {
+
   EndpointConsumerBuilder getInboundEndpoint();
+
+  default EndpointType getEndpointType() {
+    return EndpointType.IN;
+  }
 }
