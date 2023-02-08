@@ -64,14 +64,14 @@ public class AdapterBuilder extends RouteBuilder {
       IntegrationScenarioDefinition scenarioDefinition) {
 
     RouteDefinition camelRoute = from(inboundEndpointDefinition.getInboundEndpoint());
-
+    camelRoute.routeId(inboundEndpointDefinition.getEndpointId());
     EndpointOrchestrationInfo orchestrationInfo =
         createInEndpointOrchestrationInfo(inboundEndpointDefinition, camelRoute);
     orchestrateEndpoint(orchestrationInfo, inboundEndpointDefinition);
 
     appendCDMValidation(scenarioDefinition.getRequestModelClass(), camelRoute);
     camelRoute.to(SIPMC + scenarioDefinition.getID());
-    camelRoute.routeId(((AnnotatedInboundEndpoint) inboundEndpointDefinition).getEndpointId());
+    camelRoute.id(inboundEndpointDefinition.getEndpointId());
     appendAfterHandler(orchestrationInfo.getRouteDefinition(), inboundEndpointDefinition);
   }
 
@@ -80,15 +80,15 @@ public class AdapterBuilder extends RouteBuilder {
       IntegrationScenarioDefinition scenarioDefinition) {
 
     RouteDefinition camelRoute = from(SIPMC + scenarioDefinition.getID());
+    camelRoute.routeId(outboundEndpointDefinition.getEndpointId());
     EndpointOrchestrationInfo orchestrationInfo = () -> camelRoute;
     orchestrateEndpoint(orchestrationInfo, outboundEndpointDefinition);
 
     camelRoute.to(outboundEndpointDefinition.getOutboundEndpoint());
+    camelRoute.id(outboundEndpointDefinition.getEndpointId());
     scenarioDefinition
         .getResponseModelClass()
         .ifPresent(responseModelClass -> appendCDMValidation(responseModelClass, camelRoute));
-
-    camelRoute.routeId(((AnnotatedOutboundEndpoint) outboundEndpointDefinition).getEndpointId());
     appendAfterHandler(orchestrationInfo.getRouteDefinition(), outboundEndpointDefinition);
   }
 

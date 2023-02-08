@@ -36,8 +36,15 @@ public abstract class RestEndpoint extends AnnotatedInboundEndpoint {
       restDefinition
           .getVerbs()
           .forEach(
-              verbDefinition ->
-                  verbDefinition.setTo(new ToDefinition(getInboundEndpoint().getUri())));
+              verbDefinition -> {
+                verbDefinition.setTo(new ToDefinition(getInboundEndpoint().getUri()));
+                verbDefinition.setId(
+                    verbDefinition.asVerb()
+                        + "-"
+                        + verbDefinition.getPath()
+                        + "-"
+                        + getEndpointId());
+              });
     }
   }
 }
