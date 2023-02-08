@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 @Configuration
 @EnableConfigurationProperties
 @Profile("test")
+@ConditionalOnProperty(value = SIP_BATCH_TEST, havingValue = "true")
 public class AutoTestCaseLoading {
 
   private static final String YML_TEST_CASES_PATH_PROPERTY = "sip.testkit.test-cases-path";
@@ -36,9 +38,7 @@ public class AutoTestCaseLoading {
       ConfigurableEnvironment environment) {
     String testCasePath =
         environment.getProperty(YML_TEST_CASES_PATH_PROPERTY, DEFAULT_TEST_CASES_LOCATION);
-    if (isBatchTest(environment)) {
-      addRouteControllerSuperviseProperty(environment);
-    }
+    addRouteControllerSuperviseProperty(environment);
     Properties testCasesFromFile = loadTestsFromYMLPropertiesFile(testCasePath);
     PropertiesPropertySource testCasesPropertySource =
         new PropertiesPropertySource(TEST_CASES_PROPERTIES_NAME, testCasesFromFile);
@@ -67,9 +67,5 @@ public class AutoTestCaseLoading {
     MutablePropertySources propertySources = environment.getPropertySources();
     propertySources.addFirst(
         new MapPropertySource("sipBatchProperties", Map.of(ROUTE_CONTROLLER_SUPERVISE, true)));
-  }
-
-  private boolean isBatchTest(ConfigurableEnvironment environment) {
-    return environment.getProperty(SIP_BATCH_TEST, "false").equals("true");
   }
 }
