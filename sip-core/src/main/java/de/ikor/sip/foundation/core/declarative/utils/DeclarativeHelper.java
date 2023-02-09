@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.utils;
 
-import de.ikor.sip.foundation.core.declarative.connectors.ConnectorType;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 
 import java.lang.annotation.Annotation;
 

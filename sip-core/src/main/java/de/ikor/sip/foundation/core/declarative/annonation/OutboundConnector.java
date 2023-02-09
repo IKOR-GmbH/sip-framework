@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.annonations;
+package de.ikor.sip.foundation.core.declarative.annonation;
 
 import org.springframework.stereotype.Component;
 
@@ -10,13 +10,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Component
-public @interface InboundConnector {
+public @interface OutboundConnector {
 
     String connectorId() default "";
 
     String belongsToGroup();
 
-    String toScenario();
+    String fromScenario();
 
     String[] domains() default {};
 }

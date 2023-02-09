@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import de.ikor.sip.foundation.core.declarative.connectors.InboundConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.connectors.OutboundConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;

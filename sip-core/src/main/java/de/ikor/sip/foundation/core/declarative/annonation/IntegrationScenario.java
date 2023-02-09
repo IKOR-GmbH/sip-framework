@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.annonations;
+package de.ikor.sip.foundation.core.declarative.annonation;
 
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.scenario;
 
-import de.ikor.sip.foundation.core.declarative.annonations.IntegrationScenario;
+import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.orchestation.ConsumerOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
@@ -9,7 +9,7 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 import java.util.Optional;
 
-public abstract class AnnotatedScenario implements IntegrationScenarioDefinition {
+public abstract class IntegrationScenarioBase implements IntegrationScenarioDefinition {
 
     private final IntegrationScenario scenarioAnnotation =
             DeclarativeHelper.getAnnotationOrThrow(IntegrationScenario.class, this);

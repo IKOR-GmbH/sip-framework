@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.actuator.declarative.model;
 
-import de.ikor.sip.foundation.core.declarative.annonations.ConnectorGroup;
+import de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup;
 import java.util.List;
 import lombok.*;
 

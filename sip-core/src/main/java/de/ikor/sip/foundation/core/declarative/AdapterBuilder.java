@@ -1,9 +1,9 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.connectors.InboundConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.connectors.OutboundConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.connectors.RestConnectorBase;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.connector.RestConnectorBase;
 import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestratable;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;

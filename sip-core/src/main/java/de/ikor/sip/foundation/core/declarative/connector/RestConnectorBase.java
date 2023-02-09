@@ -1,6 +1,6 @@
-package de.ikor.sip.foundation.core.declarative.connectors;
+package de.ikor.sip.foundation.core.declarative.connector;
 
-import de.ikor.sip.foundation.core.declarative.annonations.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.RestConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;

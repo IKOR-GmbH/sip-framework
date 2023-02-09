@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.connectors;
+package de.ikor.sip.foundation.core.declarative.connector;
 
 import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestratable;

@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.core.actuator.declarative.model;
 
-import de.ikor.sip.foundation.core.declarative.annonations.InboundConnector;
-import de.ikor.sip.foundation.core.declarative.annonations.OutboundConnector;
-import de.ikor.sip.foundation.core.declarative.connectors.ConnectorType;
+import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 import lombok.*;
 
 /**
