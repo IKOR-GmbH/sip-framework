@@ -10,8 +10,7 @@ de.ikor.sip.foundation.core.scope.ConversationAutoConfig,\
 de.ikor.sip.foundation.core.configuration.CamelContextConfiguration,\
 de.ikor.sip.foundation.core.framework.FrameworkAutoConfig, \
 de.ikor.sip.foundation.core.actuator.declarative.ActuatorDefinitionAutoConfig, \
-de.ikor.sip.foundation.core.declarative.AdapterBuilder, \
-de.ikor.sip.foundation.core.declarative.DeclarationsRegistry
+de.ikor.sip.foundation.core.declarative.DeclarativeStructureAutoConfig
 
 org.springframework.context.ApplicationListener=\
 de.ikor.sip.foundation.core.actuator.config.EndpointExposureConfiguration
