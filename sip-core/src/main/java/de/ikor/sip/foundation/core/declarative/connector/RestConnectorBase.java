@@ -36,7 +36,7 @@ public abstract class RestConnectorBase extends ConnectorBase<RestsDefinition>
     protected abstract void configureRest(final RestDefinition definition);
 
     @Override
-    public String getConnectorGroupId() {
+    public final String getConnectorGroupId() {
         return inboundConnectorAnnotation.belongsToGroup();
     }
 

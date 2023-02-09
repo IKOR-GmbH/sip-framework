@@ -33,7 +33,7 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase<RouteDe
     }
 
     @Override
-    public Class<? extends RouteDefinition> getEndpointDefinitionTypeClass() {
+    public final Class<? extends RouteDefinition> getEndpointDefinitionTypeClass() {
         return RouteDefinition.class;
     }
 
