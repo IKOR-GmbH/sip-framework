@@ -2,8 +2,8 @@ package de.ikor.sip.foundation.core.declarative;
 
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
+import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import lombok.Getter;
@@ -29,6 +29,7 @@ public class DeclarationsRegistry {
     private final List<IntegrationScenarioDefinition> scenarios;
     private final List<InboundConnectorDefinition> inboundEndpoints;
     private final List<OutboundConnectorDefinition> outboundEndpoints;
+
 
     public DeclarationsRegistry(
             List<ConnectorGroupDefinition> connectors,
@@ -120,13 +121,13 @@ public class DeclarationsRegistry {
 
     public List<InboundConnectorDefinition> getInboundEndpointsByScenarioId(String scenarioId) {
         return inboundEndpoints.stream()
-                .filter(endpoint -> endpoint.getScenarioId().equals(scenarioId))
+                .filter(endpoint -> endpoint.toScenarioId().equals(scenarioId))
                 .collect(Collectors.toList());
     }
 
     public List<OutboundConnectorDefinition> getOutboundEndpointsByScenarioId(String scenarioId) {
         return outboundEndpoints.stream()
-                .filter(endpoint -> endpoint.getScenarioId().equals(scenarioId))
+                .filter(endpoint -> endpoint.fromScenarioId().equals(scenarioId))
                 .collect(Collectors.toList());
     }
 

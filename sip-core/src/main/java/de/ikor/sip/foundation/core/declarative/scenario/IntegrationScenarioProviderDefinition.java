@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.scenario;
 
-public interface IntegrationScenarioProviderDefinition extends IntegrationScenarioParticipant {
+public interface IntegrationScenarioProviderDefinition {
 
-    //  IntegrationScenarioDefinition getProvidedScenario();
+    String toScenarioId();
+
 }

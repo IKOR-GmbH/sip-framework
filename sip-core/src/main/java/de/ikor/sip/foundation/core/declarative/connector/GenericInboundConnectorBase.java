@@ -44,6 +44,11 @@ public abstract class GenericInboundConnectorBase extends ConnectorBase<RoutesDe
 
     @Override
     public final String getScenarioId() {
+        return toScenarioId();
+    }
+
+    @Override
+    public String toScenarioId() {
         return inboundConnectorAnnotation.toScenario();
     }
 
