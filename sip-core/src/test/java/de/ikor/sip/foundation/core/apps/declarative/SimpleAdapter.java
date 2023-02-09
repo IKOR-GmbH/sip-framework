@@ -1,14 +1,14 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
-import de.ikor.sip.foundation.core.declarative.annonations.InboundConnector;
-import de.ikor.sip.foundation.core.declarative.annonations.IntegrationScenario;
-import de.ikor.sip.foundation.core.declarative.annonations.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
+import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroup;
-import de.ikor.sip.foundation.core.declarative.connectors.GenericInboundConnectorBase;
-import de.ikor.sip.foundation.core.declarative.connectors.GenericOutboundConnectorBase;
-import de.ikor.sip.foundation.core.declarative.connectors.RestConnectorBase;
-import de.ikor.sip.foundation.core.declarative.scenario.AnnotatedScenario;
+import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
+import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
+import de.ikor.sip.foundation.core.declarative.connector.RestConnectorBase;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.builder.endpoint.dsl.DirectEndpointBuilderFactory.DirectEndpointConsumerBuilder;
@@ -24,7 +24,7 @@ public class SimpleAdapter {
 
   // ----> AppendStaticMessage SCENARIO
   @IntegrationScenario(scenarioId = APPEND_STATIC_MESSAGE_SCENARIO, requestModel = String.class)
-  public class AppendStaticMessageScenario extends AnnotatedScenario {}
+  public class AppendStaticMessageScenario extends IntegrationScenarioBase {}
 
   @InboundConnector(
       connectorId = "appendStaticMessageProvider",
@@ -68,7 +68,7 @@ public class SimpleAdapter {
 
   // ----> RestDSL SCENARIO
   @IntegrationScenario(scenarioId = "RestDSL", requestModel = String.class)
-  public class RestDSLScenario extends AnnotatedScenario {}
+  public class RestDSLScenario extends IntegrationScenarioBase {}
 
   @InboundConnector(belongsToGroup = SIP1, toScenario = "RestDSL")
   public class RestConnectorTestBase extends RestConnectorBase {
@@ -109,9 +109,9 @@ public class SimpleAdapter {
     }
   }
   // <---- RestDSL SCENARIO
-  @de.ikor.sip.foundation.core.declarative.annonations.ConnectorGroup(groupId = SIP1)
+  @de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup(groupId = SIP1)
   public class ConnectorGroupSip1 extends ConnectorGroup {}
 
-  @de.ikor.sip.foundation.core.declarative.annonations.ConnectorGroup(groupId = SIP2)
+  @de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup(groupId = SIP2)
   public class ConnectorGroupSip2 extends ConnectorGroup {}
 }

@@ -5,8 +5,8 @@ import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeModelT
 import de.ikor.sip.foundation.core.actuator.declarative.model.*;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
-import de.ikor.sip.foundation.core.declarative.connectors.GenericInboundConnectorBase;
-import de.ikor.sip.foundation.core.declarative.connectors.GenericOutboundConnectorBase;
+import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
+import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;

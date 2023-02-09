@@ -7,8 +7,8 @@ import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
  */
 public class ConnectorGroup implements ConnectorGroupDefinition {
 
-    private final de.ikor.sip.foundation.core.declarative.annonations.ConnectorGroup annotation =
-            DeclarativeHelper.getAnnotationOrThrow(de.ikor.sip.foundation.core.declarative.annonations.ConnectorGroup.class, this);
+    private final de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup annotation =
+            DeclarativeHelper.getAnnotationOrThrow(de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup.class, this);
 
     @Override
     public String getDocumentation() {

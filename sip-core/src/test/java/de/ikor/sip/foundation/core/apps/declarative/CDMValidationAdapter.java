@@ -1,12 +1,12 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
-import de.ikor.sip.foundation.core.declarative.annonations.InboundConnector;
-import de.ikor.sip.foundation.core.declarative.annonations.IntegrationScenario;
-import de.ikor.sip.foundation.core.declarative.annonations.OutboundConnector;
-import de.ikor.sip.foundation.core.declarative.connectors.GenericInboundConnectorBase;
-import de.ikor.sip.foundation.core.declarative.connectors.GenericOutboundConnectorBase;
-import de.ikor.sip.foundation.core.declarative.scenario.AnnotatedScenario;
+import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
+import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
+import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.camel.builder.EndpointProducerBuilder;
@@ -33,7 +33,7 @@ public class CDMValidationAdapter {
       scenarioId = "CDMValidation",
       requestModel = CDMRequest.class,
       responseModel = CDMResponse.class)
-  public class CDMValidationScenario extends AnnotatedScenario {}
+  public class CDMValidationScenario extends IntegrationScenarioBase {}
 
   @InboundConnector(belongsToGroup = "SIP1", toScenario = "CDMValidation")
   public class InboundCDMConnectorBase extends GenericInboundConnectorBase {
