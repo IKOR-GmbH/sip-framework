@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Getter
 @Slf4j
 @Service
-public class DeclarationsRegistry {
+public class DeclarationsRegistry implements DeclarationRegistryApi {
 
   private static final String CONNECTOR = "connector";
   private static final String SCENARIO = "integration scenario";
@@ -42,12 +42,14 @@ public class DeclarationsRegistry {
     checkForDuplicateEndpoints();
   }
 
+  @Override
   public Optional<ConnectorDefinition> getConnectorById(final String connectorId) {
     return connectors.stream()
         .filter(connector -> connector.getID().equals(connectorId))
         .findFirst();
   }
 
+  @Override
   public IntegrationScenarioDefinition getScenarioById(final String scenarioId) {
     return scenarios.stream()
         .filter(scenario -> scenario.getID().equals(scenarioId))
@@ -58,24 +60,42 @@ public class DeclarationsRegistry {
                     String.format("There is no integration scenario with id: %s", scenarioId)));
   }
 
+  @Override
+  public Optional<InboundEndpointDefinition> getInboundEndpointById(String endpointId) {
+    return inboundEndpoints.stream()
+        .filter(endpoint -> endpoint.getEndpointId().equals(endpointId))
+        .findFirst();
+  }
+
+  @Override
+  public Optional<OutboundEndpointDefinition> getOutboundEndpointById(String endpointId) {
+    return outboundEndpoints.stream()
+        .filter(endpoint -> endpoint.getEndpointId().equals(endpointId))
+        .findFirst();
+  }
+
+  @Override
   public List<InboundEndpointDefinition> getInboundEndpointsByConnectorId(String connectorId) {
     return inboundEndpoints.stream()
         .filter(endpoint -> endpoint.getConnectorId().equals(connectorId))
         .collect(Collectors.toList());
   }
 
+  @Override
   public List<OutboundEndpointDefinition> getOutboundEndpointsByConnectorId(String connectorId) {
     return outboundEndpoints.stream()
         .filter(endpoint -> endpoint.getConnectorId().equals(connectorId))
         .collect(Collectors.toList());
   }
 
+  @Override
   public List<InboundEndpointDefinition> getInboundEndpointsByScenarioId(String scenarioId) {
     return inboundEndpoints.stream()
         .filter(endpoint -> endpoint.getScenarioId().equals(scenarioId))
         .collect(Collectors.toList());
   }
 
+  @Override
   public List<OutboundEndpointDefinition> getOutboundEndpointsByScenarioId(String scenarioId) {
     return outboundEndpoints.stream()
         .filter(endpoint -> endpoint.getScenarioId().equals(scenarioId))
