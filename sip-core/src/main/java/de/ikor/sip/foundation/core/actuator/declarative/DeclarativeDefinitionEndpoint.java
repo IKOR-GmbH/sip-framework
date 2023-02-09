@@ -91,17 +91,5 @@ public class DeclarativeDefinitionEndpoint {
     declarationsRegistry
         .getEndpoints()
         .forEach(endpoint -> endpoints.add(createAndAddEndpointInfo(endpoint)));
-    //    declarationsRegistry
-    //        .getInboundEndpoints()
-    //        .forEach(
-    //            endpoint ->
-    //                endpoints.add(createAndAddInboundEndpoint((AnnotatedInboundEndpoint)
-    // endpoint)));
-    //    declarationsRegistry
-    //        .getOutboundEndpoints()
-    //        .forEach(
-    //            endpoint ->
-    //                endpoints.add(createAndAddOutboundEndpoint((AnnotatedOutboundEndpoint)
-    // endpoint)));
   }
 }
