@@ -1,16 +1,17 @@
 package de.ikor.sip.foundation.core.declarative.scenario;
 
-import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestation.ConsumerOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestratable;
+
 import java.util.Optional;
 
-public interface IntegrationScenarioDefinition extends Orchestratable<ConnectorOrchestrationInfo> {
+public interface IntegrationScenarioDefinition extends Orchestratable<ConsumerOrchestrationInfo> {
 
-  String getID();
+    String getID();
 
-  String getDescription();
+    String getDescription();
 
-  Class<?> getRequestModelClass();
+    Class<?> getRequestModelClass();
 
-  Optional<Class<?>> getResponseModelClass();
+    Optional<Class<?>> getResponseModelClass();
 }

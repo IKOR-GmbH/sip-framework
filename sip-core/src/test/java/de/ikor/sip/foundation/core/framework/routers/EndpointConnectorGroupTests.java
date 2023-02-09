@@ -27,7 +27,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @MockEndpoints("log:message*")
 @DisableJmx(false)
-class EndpointDomainTests {
+class EndpointConnectorGroupTests {
   private static final String DIRECT_IN_ID = "inBasicConnector";
 
   private final TestingCentralRouter subject = new TestingCentralRouter();

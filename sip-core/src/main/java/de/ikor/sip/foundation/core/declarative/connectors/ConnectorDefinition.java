@@ -1,31 +1,17 @@
 package de.ikor.sip.foundation.core.declarative.connectors;
 
-import java.io.IOException;
-import org.springframework.core.io.ClassPathResource;
+import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestation.Orchestratable;
+import org.apache.camel.model.OptionalIdentifiedDefinition;
 
-public interface ConnectorDefinition {
+// TODO: Missing java docs, when the inheritance structure is final add this.
+public interface ConnectorDefinition<ORCHINFO_TYPE extends ConnectorOrchestrationInfo, DEFINITION_TYPE extends OptionalIdentifiedDefinition<DEFINITION_TYPE>> extends Orchestratable<ORCHINFO_TYPE> {
+    String getConnectorId();
 
-  String getID();
+    ConnectorType getConnectorType();
 
-  String getDocumentation();
+    String getConnectorGroupId();
 
-  default String readDocumentation(String path) {
-    final var resourcePath =
-        path.isEmpty() ? String.format("documents/structure/connectors/%s", getID()) : path;
-    final var resource = new ClassPathResource(resourcePath);
+    Class<? extends DEFINITION_TYPE> getEndpointDefinitionTypeClass();
 
-    if (!resource.isReadable()) {
-      return String.format("No documentation has been provided for connector '%s'", getID());
-    }
-
-    try (var input = resource.getInputStream()) {
-      return new String(input.readAllBytes());
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to read documentation resource", e);
-    }
-  }
-
-  //  Map<String, IntegrationScenarioConsumerDefinition> getConsumedIntegrationScenarios();
-  //
-  //  Map<String, IntegrationScenarioProviderDefinition> getProvidedIntegrationScenarios();
 }

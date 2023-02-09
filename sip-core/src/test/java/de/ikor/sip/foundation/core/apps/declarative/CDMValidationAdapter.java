@@ -1,11 +1,11 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
-import de.ikor.sip.foundation.core.declarative.annonations.InboundEndpoint;
+import de.ikor.sip.foundation.core.declarative.annonations.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonations.IntegrationScenario;
-import de.ikor.sip.foundation.core.declarative.annonations.OutboundEndpoint;
-import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedInboundEndpoint;
-import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedOutboundEndpoint;
+import de.ikor.sip.foundation.core.declarative.annonations.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.connectors.GenericInboundConnectorBase;
+import de.ikor.sip.foundation.core.declarative.connectors.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.scenario.AnnotatedScenario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,8 +35,8 @@ public class CDMValidationAdapter {
       responseModel = CDMResponse.class)
   public class CDMValidationScenario extends AnnotatedScenario {}
 
-  @InboundEndpoint(belongsToConnector = "SIP1", providesToScenario = "CDMValidation")
-  public class InboundCDMEndpoint extends AnnotatedInboundEndpoint {
+  @InboundConnector(belongsToGroup = "SIP1", toScenario = "CDMValidation")
+  public class InboundCDMConnectorBase extends GenericInboundConnectorBase {
 
     @Override
     public DirectEndpointConsumerBuilder getInboundEndpoint() {
@@ -44,8 +44,8 @@ public class CDMValidationAdapter {
     }
   }
 
-  @OutboundEndpoint(belongsToConnector = "SIP2", consumesFromScenario = "CDMValidation")
-  public class OutboundCDMEndpoint extends AnnotatedOutboundEndpoint {
+  @OutboundConnector(belongsToGroup = "SIP2", fromScenario = "CDMValidation")
+  public class OutboundCDMConnector extends GenericOutboundConnectorBase {
 
     @Override
     public EndpointProducerBuilder getOutboundEndpoint() {

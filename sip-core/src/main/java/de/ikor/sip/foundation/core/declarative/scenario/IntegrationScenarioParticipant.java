@@ -5,10 +5,5 @@ package de.ikor.sip.foundation.core.declarative.scenario;
  * IntegrationScenarioProviderDefinition}
  */
 public interface IntegrationScenarioParticipant {
-
-  //  ConnectorDefinition getConnector();
-
-  String getConnectorId();
-
-  String getScenarioId();
+    String getScenarioId();
 }

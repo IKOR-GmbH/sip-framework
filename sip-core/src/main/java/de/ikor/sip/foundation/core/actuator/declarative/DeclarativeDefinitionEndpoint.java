@@ -4,9 +4,9 @@ import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeModelT
 
 import de.ikor.sip.foundation.core.actuator.declarative.model.*;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
-import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedInboundEndpoint;
-import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedOutboundEndpoint;
+import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
+import de.ikor.sip.foundation.core.declarative.connectors.GenericInboundConnectorBase;
+import de.ikor.sip.foundation.core.declarative.connectors.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +78,7 @@ public class DeclarativeDefinitionEndpoint {
   }
 
   private void initializeConnectorInfos() {
-    for (ConnectorDefinition connector : declarationsRegistry.getConnectors()) {
+    for (ConnectorGroupDefinition connector : declarationsRegistry.getConnectors()) {
       connectors.add(createConnectorInfo(declarationsRegistry, connector));
     }
   }
@@ -94,11 +94,11 @@ public class DeclarativeDefinitionEndpoint {
         .getInboundEndpoints()
         .forEach(
             endpoint ->
-                endpoints.add(createAndAddInboundEndpoint((AnnotatedInboundEndpoint) endpoint)));
+                endpoints.add(createAndAddInboundEndpoint((GenericInboundConnectorBase) endpoint)));
     declarationsRegistry
         .getOutboundEndpoints()
         .forEach(
             endpoint ->
-                endpoints.add(createAndAddOutboundEndpoint((AnnotatedOutboundEndpoint) endpoint)));
+                endpoints.add(createAndAddOutboundEndpoint((GenericOutboundConnectorBase) endpoint)));
   }
 }
