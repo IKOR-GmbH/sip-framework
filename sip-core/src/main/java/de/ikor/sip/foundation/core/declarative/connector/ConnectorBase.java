@@ -3,13 +3,12 @@ package de.ikor.sip.foundation.core.declarative.connector;
 import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import lombok.Getter;
-import org.apache.camel.model.OptionalIdentifiedDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract class ConnectorBase<DEFINITION_TYPE extends OptionalIdentifiedDefinition<DEFINITION_TYPE>>
-        implements ConnectorDefinition<ConnectorOrchestrationInfo, DEFINITION_TYPE> {
+abstract class ConnectorBase
+        implements ConnectorDefinition<ConnectorOrchestrationInfo> {
 
     @Getter
     protected final Logger logger = LoggerFactory.getLogger(getClass());

@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatEndpointId;
 
-public abstract class GenericOutboundConnectorBase extends ConnectorBase<RouteDefinition>
+public abstract class GenericOutboundConnectorBase extends ConnectorBase
         implements OutboundConnectorDefinition<ConnectorOrchestrationInfo, RouteDefinition> {
 
     private final OutboundConnector outboundConnectorAnnotation =
@@ -30,11 +30,6 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase<RouteDe
     @Override
     public String getConnectorGroupId() {
         return outboundConnectorAnnotation.belongsToGroup();
-    }
-
-    @Override
-    public final Class<? extends RouteDefinition> getEndpointDefinitionTypeClass() {
-        return RouteDefinition.class;
     }
 
     @Override

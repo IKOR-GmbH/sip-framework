@@ -52,7 +52,7 @@ public class SimpleAdapter {
     @OutboundConnector(
             connectorId = "appendStaticMessageConsumer",
             belongsToGroup = SIP2,
-            fromScenario = APPEND_STATIC_MESSAGE_SCENARIO)
+            fromScenario = APPEND_STATIC_MESSAGE_SCENARIO   )
     public class AppendStaticMessageConsumer extends GenericOutboundConnectorBase {
 
         @Override

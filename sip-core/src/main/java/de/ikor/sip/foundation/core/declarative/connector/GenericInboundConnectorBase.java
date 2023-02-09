@@ -13,7 +13,7 @@ import java.util.List;
 
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatEndpointId;
 
-public abstract class GenericInboundConnectorBase extends ConnectorBase<RoutesDefinition> implements InboundConnectorDefinition<ConnectorOrchestrationInfo, RoutesDefinition> {
+public abstract class GenericInboundConnectorBase extends ConnectorBase implements InboundConnectorDefinition<ConnectorOrchestrationInfo, RoutesDefinition> {
 
 
     private final InboundConnector inboundConnectorAnnotation =
@@ -33,13 +33,13 @@ public abstract class GenericInboundConnectorBase extends ConnectorBase<RoutesDe
     protected abstract EndpointConsumerBuilder defineInitiatingEndpoint();
 
     @Override
-    public final String getConnectorGroupId() {
-        return inboundConnectorAnnotation.belongsToGroup();
+    public final Class<RoutesDefinition> getEndpointDefinitionTypeClass() {
+        return RoutesDefinition.class;
     }
 
     @Override
-    public final Class<RoutesDefinition> getEndpointDefinitionTypeClass() {
-        return RoutesDefinition.class;
+    public final String getConnectorGroupId() {
+        return inboundConnectorAnnotation.belongsToGroup();
     }
 
     @Override

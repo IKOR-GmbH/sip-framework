@@ -13,7 +13,7 @@ import java.util.List;
 
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatEndpointId;
 
-public abstract class RestConnectorBase extends ConnectorBase<RestsDefinition>
+public abstract class RestConnectorBase extends ConnectorBase
         implements InboundConnectorDefinition<ConnectorOrchestrationInfo, RestsDefinition> {
 
     private static final String REST_DIRECT_PATH = "rest";
@@ -36,17 +36,22 @@ public abstract class RestConnectorBase extends ConnectorBase<RestsDefinition>
     protected abstract void configureRest(final RestDefinition definition);
 
     @Override
-    public final String getConnectorGroupId() {
-        return inboundConnectorAnnotation.belongsToGroup();
-    }
-
-    @Override
     public final Class<RestsDefinition> getEndpointDefinitionTypeClass() {
         return RestsDefinition.class;
     }
 
     @Override
+    public final String getConnectorGroupId() {
+        return inboundConnectorAnnotation.belongsToGroup();
+    }
+
+    @Override
     public final String getScenarioId() {
+        return toScenarioId();
+    }
+
+    @Override
+    public String toScenarioId() {
         return inboundConnectorAnnotation.toScenario();
     }
 

@@ -8,7 +8,7 @@ import org.apache.camel.model.RouteDefinition;
 import java.util.List;
 
 public interface InboundConnectorDefinition<ORCHINFO_TYPE extends ConnectorOrchestrationInfo, DEFINITION_TYPE extends OptionalIdentifiedDefinition<DEFINITION_TYPE>>
-        extends ConnectorDefinition<ORCHINFO_TYPE, DEFINITION_TYPE>,
+        extends ConnectorDefinition<ORCHINFO_TYPE>,
         IntegrationScenarioProviderDefinition {
 
     List<RouteDefinition> defineInboundEndpoints(DEFINITION_TYPE definition);
@@ -16,5 +16,7 @@ public interface InboundConnectorDefinition<ORCHINFO_TYPE extends ConnectorOrche
     default ConnectorType getConnectorType() {
         return ConnectorType.IN;
     }
+
+    Class<? extends DEFINITION_TYPE> getEndpointDefinitionTypeClass();
 
 }
