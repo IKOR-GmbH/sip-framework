@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.actuator.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPFeature;
 import de.ikor.sip.foundation.core.util.FoundationFeature;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -11,5 +11,6 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @ComponentScan
 @SIPFeature(name = FoundationFeature.ADAPTER_DEFINITION, versions = 1)
-@ConditionalOnProperty(value = "sip.core.actuator.adapterdefinition.enabled", havingValue = "true")
+@ConditionalOnExpression(
+    "#{${sip.core.actuator.adapterdefinition.enabled:true} and ${sip.core.declarativestructure.enabled:true}}")
 public class ActuatorDefinitionAutoConfig {}

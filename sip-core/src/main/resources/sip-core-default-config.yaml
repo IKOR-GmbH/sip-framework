@@ -36,6 +36,8 @@ sip.core:
       scheduler:
         fixed-delay: 900000
         initial-delay: 5000
+  declarativestructure:
+    enabled: true
 sip.adapter:
   camel-endpoint-context-path: ${server.servlet.context-path}${camel.servlet.mapping.context-path}
   camel-cxf-endpoint-context-path: ${server.servlet.context-path}${cxf.path}
