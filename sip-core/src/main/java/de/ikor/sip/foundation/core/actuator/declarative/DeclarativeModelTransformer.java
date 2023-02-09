@@ -5,8 +5,7 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.EndpointInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedInboundEndpoint;
-import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedOutboundEndpoint;
+import de.ikor.sip.foundation.core.declarative.endpoints.*;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,8 +32,12 @@ public class DeclarativeModelTransformer {
     return ConnectorInfo.builder()
         .connectorId(connector.getID())
         .connectorDescription(connector.getDocumentation())
-        .inboundEndpoints(fetchInboundEndpointIds(declarationsRegistry, connector.getID()))
-        .outboundEndpoints(fetchOutboundEndpointIds(declarationsRegistry, connector.getID()))
+        .inboundEndpoints(
+            fetchInboundEndpointIds(
+                declarationsRegistry.getInboundEndpointsByConnectorId(connector.getID())))
+        .outboundEndpoints(
+            fetchOutboundEndpointIds(
+                declarationsRegistry.getOutboundEndpointsByConnectorId(connector.getID())))
         .build();
   }
 
@@ -58,27 +61,12 @@ public class DeclarativeModelTransformer {
   }
 
   /**
-   * Creates initialized {@link EndpointInfo} from {@link AnnotatedInboundEndpoint}
+   * Creates initialized {@link EndpointInfo} from {@link EndpointDefinition}
    *
    * @param endpoint from which info object is created
    * @return EndpointInfo
    */
-  public static EndpointInfo createAndAddInboundEndpoint(AnnotatedInboundEndpoint endpoint) {
-    return EndpointInfo.builder()
-        .endpointId(endpoint.getEndpointId())
-        .endpointType(endpoint.getEndpointType())
-        .connectorId(endpoint.getConnectorId())
-        .scenarioId(endpoint.getScenarioId())
-        .build();
-  }
-
-  /**
-   * Creates initialized {@link EndpointInfo} from {@link AnnotatedOutboundEndpoint}
-   *
-   * @param endpoint from which info object is created
-   * @return EndpointInfo
-   */
-  public static EndpointInfo createAndAddOutboundEndpoint(AnnotatedOutboundEndpoint endpoint) {
+  public static EndpointInfo createAndAddEndpointInfo(EndpointDefinition endpoint) {
     return EndpointInfo.builder()
         .endpointId(endpoint.getEndpointId())
         .endpointType(endpoint.getEndpointType())
@@ -88,16 +76,16 @@ public class DeclarativeModelTransformer {
   }
 
   private static List<String> fetchInboundEndpointIds(
-      DeclarationsRegistry declarationsRegistry, String connectorId) {
-    return declarationsRegistry.getInboundEndpointsByConnectorId(connectorId).stream()
-        .map(endpoint -> ((AnnotatedInboundEndpoint) endpoint).getEndpointId())
+      List<InboundEndpointDefinition> inboundEndpoints) {
+    return inboundEndpoints.stream()
+        .map(EndpointDefinition::getEndpointId)
         .collect(Collectors.toList());
   }
 
   private static List<String> fetchOutboundEndpointIds(
-      DeclarationsRegistry declarationsRegistry, String connectorId) {
-    return declarationsRegistry.getOutboundEndpointsByConnectorId(connectorId).stream()
-        .map(endpoint -> ((AnnotatedOutboundEndpoint) endpoint).getEndpointId())
+      List<OutboundEndpointDefinition> outboundEndpoints) {
+    return outboundEndpoints.stream()
+        .map(EndpointDefinition::getEndpointId)
         .collect(Collectors.toList());
   }
 }

@@ -5,8 +5,6 @@ import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeModelT
 import de.ikor.sip.foundation.core.actuator.declarative.model.*;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedInboundEndpoint;
-import de.ikor.sip.foundation.core.declarative.endpoints.AnnotatedOutboundEndpoint;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,14 +89,19 @@ public class DeclarativeDefinitionEndpoint {
 
   private void initializeEndpointInfos() {
     declarationsRegistry
-        .getInboundEndpoints()
-        .forEach(
-            endpoint ->
-                endpoints.add(createAndAddInboundEndpoint((AnnotatedInboundEndpoint) endpoint)));
-    declarationsRegistry
-        .getOutboundEndpoints()
-        .forEach(
-            endpoint ->
-                endpoints.add(createAndAddOutboundEndpoint((AnnotatedOutboundEndpoint) endpoint)));
+        .getEndpoints()
+        .forEach(endpoint -> endpoints.add(createAndAddEndpointInfo(endpoint)));
+    //    declarationsRegistry
+    //        .getInboundEndpoints()
+    //        .forEach(
+    //            endpoint ->
+    //                endpoints.add(createAndAddInboundEndpoint((AnnotatedInboundEndpoint)
+    // endpoint)));
+    //    declarationsRegistry
+    //        .getOutboundEndpoints()
+    //        .forEach(
+    //            endpoint ->
+    //                endpoints.add(createAndAddOutboundEndpoint((AnnotatedOutboundEndpoint)
+    // endpoint)));
   }
 }

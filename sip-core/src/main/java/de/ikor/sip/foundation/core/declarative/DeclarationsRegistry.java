@@ -22,18 +22,15 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
 
   private final List<ConnectorDefinition> connectors;
   private final List<IntegrationScenarioDefinition> scenarios;
-  private final List<InboundEndpointDefinition> inboundEndpoints;
-  private final List<OutboundEndpointDefinition> outboundEndpoints;
+  private final List<EndpointDefinition> endpoints;
 
   public DeclarationsRegistry(
       List<ConnectorDefinition> connectors,
       List<IntegrationScenarioDefinition> scenarios,
-      List<InboundEndpointDefinition> inboundEndpoints,
-      List<OutboundEndpointDefinition> outboundEndpoints) {
+      List<EndpointDefinition> endpoints) {
     this.connectors = connectors;
     this.scenarios = scenarios;
-    this.inboundEndpoints = inboundEndpoints;
-    this.outboundEndpoints = outboundEndpoints;
+    this.endpoints = endpoints;
 
     createMissingConnectors();
     checkForDuplicateConnectors();
@@ -61,56 +58,82 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
   }
 
   @Override
-  public Optional<InboundEndpointDefinition> getInboundEndpointById(String endpointId) {
-    return inboundEndpoints.stream()
+  public Optional<EndpointDefinition> getEndpointById(final String endpointId) {
+    return endpoints.stream()
         .filter(endpoint -> endpoint.getEndpointId().equals(endpointId))
+        .findFirst();
+  }
+
+  @Override
+  public List<InboundEndpointDefinition> getInboundEndpoints() {
+    return endpoints.stream()
+        .filter(InboundEndpointDefinition.class::isInstance)
+        .map(InboundEndpointDefinition.class::cast)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<OutboundEndpointDefinition> getOutboundEndpoints() {
+    return endpoints.stream()
+        .filter(OutboundEndpointDefinition.class::isInstance)
+        .map(OutboundEndpointDefinition.class::cast)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public Optional<InboundEndpointDefinition> getInboundEndpointById(String endpointId) {
+    return endpoints.stream()
+        .filter(endpoint -> endpoint.getEndpointId().equals(endpointId))
+        .map(InboundEndpointDefinition.class::cast)
         .findFirst();
   }
 
   @Override
   public Optional<OutboundEndpointDefinition> getOutboundEndpointById(String endpointId) {
-    return outboundEndpoints.stream()
+    return endpoints.stream()
         .filter(endpoint -> endpoint.getEndpointId().equals(endpointId))
+        .map(OutboundEndpointDefinition.class::cast)
         .findFirst();
   }
 
   @Override
   public List<InboundEndpointDefinition> getInboundEndpointsByConnectorId(String connectorId) {
-    return inboundEndpoints.stream()
+    return endpoints.stream()
         .filter(endpoint -> endpoint.getConnectorId().equals(connectorId))
+        .filter(InboundEndpointDefinition.class::isInstance)
+        .map(InboundEndpointDefinition.class::cast)
         .collect(Collectors.toList());
   }
 
   @Override
   public List<OutboundEndpointDefinition> getOutboundEndpointsByConnectorId(String connectorId) {
-    return outboundEndpoints.stream()
+    return endpoints.stream()
         .filter(endpoint -> endpoint.getConnectorId().equals(connectorId))
+        .filter(OutboundEndpointDefinition.class::isInstance)
+        .map(OutboundEndpointDefinition.class::cast)
         .collect(Collectors.toList());
   }
 
   @Override
   public List<InboundEndpointDefinition> getInboundEndpointsByScenarioId(String scenarioId) {
-    return inboundEndpoints.stream()
+    return endpoints.stream()
         .filter(endpoint -> endpoint.getScenarioId().equals(scenarioId))
+        .filter(InboundEndpointDefinition.class::isInstance)
+        .map(InboundEndpointDefinition.class::cast)
         .collect(Collectors.toList());
   }
 
   @Override
   public List<OutboundEndpointDefinition> getOutboundEndpointsByScenarioId(String scenarioId) {
-    return outboundEndpoints.stream()
+    return endpoints.stream()
         .filter(endpoint -> endpoint.getScenarioId().equals(scenarioId))
+        .filter(OutboundEndpointDefinition.class::isInstance)
+        .map(OutboundEndpointDefinition.class::cast)
         .collect(Collectors.toList());
   }
 
   private void createMissingConnectors() {
-    inboundEndpoints.forEach(
-        endpoint -> {
-          Optional<ConnectorDefinition> connector = getConnectorById(endpoint.getConnectorId());
-          if (connector.isEmpty()) {
-            connectors.add(new DefaultConnector(endpoint.getConnectorId()));
-          }
-        });
-    outboundEndpoints.forEach(
+    endpoints.forEach(
         endpoint -> {
           Optional<ConnectorDefinition> connector = getConnectorById(endpoint.getConnectorId());
           if (connector.isEmpty()) {
@@ -139,7 +162,7 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
         .filter(scenario -> getOutboundEndpointsByScenarioId(scenario.getID()).isEmpty())
         .map(
             scenario -> {
-              throw new RuntimeException(
+              throw new SIPFrameworkInitializationException(
                   String.format(
                       "There is unused integration scenario with id %s", scenario.getID()));
             })
@@ -148,16 +171,9 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
 
   private void checkForDuplicateEndpoints() {
     Set<String> set = new HashSet<>();
-    List<String> inboundIds =
-        inboundEndpoints.stream()
-            .map(endpoint -> ((AnnotatedInboundEndpoint) endpoint).getEndpointId())
-            .collect(Collectors.toList());
-    inboundIds.forEach(id -> checkIfDuplicate(set, id, ENDPOINT));
-    List<String> outboundIds =
-        outboundEndpoints.stream()
-            .map(endpoint -> ((AnnotatedOutboundEndpoint) endpoint).getEndpointId())
-            .collect(Collectors.toList());
-    outboundIds.forEach(id -> checkIfDuplicate(set, id, ENDPOINT));
+    List<String> endpointIds =
+        endpoints.stream().map(EndpointDefinition::getEndpointId).collect(Collectors.toList());
+    endpointIds.forEach(id -> checkIfDuplicate(set, id, ENDPOINT));
   }
 
   private void checkIfDuplicate(Set<String> set, String id, String declarativeElement) {

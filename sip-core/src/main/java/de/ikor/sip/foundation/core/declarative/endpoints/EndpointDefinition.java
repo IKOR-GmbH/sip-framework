@@ -6,6 +6,10 @@ import org.apache.camel.model.RouteDefinition;
 public interface EndpointDefinition {
   String getEndpointId();
 
+  String getConnectorId();
+
+  String getScenarioId();
+
   EndpointType getEndpointType();
 
   /**

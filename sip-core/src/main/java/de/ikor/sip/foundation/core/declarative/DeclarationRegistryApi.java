@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative;
 
 import de.ikor.sip.foundation.core.declarative.connectors.ConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.endpoints.EndpointDefinition;
 import de.ikor.sip.foundation.core.declarative.endpoints.InboundEndpointDefinition;
 import de.ikor.sip.foundation.core.declarative.endpoints.OutboundEndpointDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -13,6 +14,12 @@ public interface DeclarationRegistryApi {
   Optional<ConnectorDefinition> getConnectorById(final String connectorId);
 
   IntegrationScenarioDefinition getScenarioById(final String scenarioId);
+
+  Optional<EndpointDefinition> getEndpointById(final String endpointId);
+
+  List<InboundEndpointDefinition> getInboundEndpoints();
+
+  List<OutboundEndpointDefinition> getOutboundEndpoints();
 
   Optional<InboundEndpointDefinition> getInboundEndpointById(String endpointId);
 
