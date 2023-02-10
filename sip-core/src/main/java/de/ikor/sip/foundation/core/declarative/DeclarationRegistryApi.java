@@ -17,18 +17,22 @@ public interface DeclarationRegistryApi {
 
   Optional<ConnectorDefinition> getConnectorById(final String connectorId);
 
+  @SuppressWarnings("rawtypes")
   List<InboundConnectorDefinition> getInboundConnectors();
 
   List<OutboundConnectorDefinition> getOutboundConnectors();
 
+  @SuppressWarnings("rawtypes")
   Optional<InboundConnectorDefinition> getInboundConnectorById(String connectorId);
 
   Optional<OutboundConnectorDefinition> getOutboundConnectorById(String connectorId);
 
+  @SuppressWarnings("rawtypes")
   List<InboundConnectorDefinition> getInboundConnectorsByConnectorGroupId(String connectorGroupId);
 
   List<OutboundConnectorDefinition> getOutboundEndpointsByConnectorGroupId(String connectorGroupId);
 
+  @SuppressWarnings("rawtypes")
   List<InboundConnectorDefinition> getInboundConnectorsByScenarioId(String scenarioId);
 
   List<OutboundConnectorDefinition> getOutboundConnectorsByScenarioId(String scenarioId);

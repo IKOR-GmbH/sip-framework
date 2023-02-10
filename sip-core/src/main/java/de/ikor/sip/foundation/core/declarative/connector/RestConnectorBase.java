@@ -16,8 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 public abstract class RestConnectorBase extends ConnectorBase
     implements InboundConnectorDefinition<RestsDefinition> {
 
-  private static final String REST_DIRECT_PATH = "rest";
-
   private final InboundConnector inboundConnectorAnnotation =
       DeclarativeHelper.getAnnotationOrThrow(InboundConnector.class, this);
 

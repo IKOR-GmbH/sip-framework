@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.orchestation;
 
-public interface Orchestratable<T_ORCHESTRATION_INFO extends OrchestrationInfo> {
+public interface Orchestratable<ORCHESTRATION_TYPE extends OrchestrationInfo> {
 
-  Orchestrator<T_ORCHESTRATION_INFO> getOrchestrator();
+  Orchestrator<ORCHESTRATION_TYPE> getOrchestrator();
 }

@@ -3,8 +3,6 @@ package de.ikor.sip.foundation.core.declarative;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestation.Orchestratable;
-import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.validator.CDMValidator;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -32,7 +30,10 @@ public class AdapterBuilder extends RouteBuilder {
   private static final String SCENARIO_HANDOVER_COMPONENT = "sipmc";
   private final DeclarationsRegistry declarationsRegistry;
   private final RoutesRegistry routesRegistry;
+
+  @SuppressWarnings("rawtypes")
   private Map<IntegrationScenarioDefinition, List<InboundConnectorDefinition>> inboundConnectors;
+
   private Map<IntegrationScenarioDefinition, List<OutboundConnectorDefinition>> outboundConnectors;
 
   @PostConstruct
@@ -66,8 +67,8 @@ public class AdapterBuilder extends RouteBuilder {
             connectorDefinition -> buildOutboundConnector(connectorDefinition, scenarioDefinition));
   }
 
-  private void buildInboundConnector(
-      final InboundConnectorDefinition inboundConnector,
+  private <T extends OptionalIdentifiedDefinition<T>> void buildInboundConnector(
+      final InboundConnectorDefinition<T> inboundConnector,
       final IntegrationScenarioDefinition scenarioDefinition) {
 
     final var requestOrchestrationRouteId =
@@ -99,8 +100,7 @@ public class AdapterBuilder extends RouteBuilder {
             .process(
                 new CDMValidator(
                     scenarioDefinition
-                        .getRequestModelClass())) // TODO: move validation to camel-component for
-            // scenarios
+                        .getRequestModelClass())) // TODO: move validation to camel-component
             .to(
                 StaticEndpointBuilders.direct(
                     SCENARIO_HANDOVER_COMPONENT, scenarioDefinition.getID()));
@@ -189,16 +189,6 @@ public class AdapterBuilder extends RouteBuilder {
     }
     throw new SIPFrameworkInitializationException(
         String.format("Failed to resolve unknown connector definition type: %s", type.getName()));
-  }
-
-  private void orchestrateEndpoint(
-      ConnectorOrchestrationInfo orchestrationInfo,
-      Orchestratable<ConnectorOrchestrationInfo> orchestratable) {
-
-    Orchestrator<ConnectorOrchestrationInfo> orchestrator = orchestratable.getOrchestrator();
-    if (orchestrator.canOrchestrate(orchestrationInfo)) {
-      orchestrator.doOrchestrate(orchestrationInfo);
-    }
   }
 
   @Value
