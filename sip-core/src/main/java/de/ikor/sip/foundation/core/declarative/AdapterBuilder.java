@@ -82,16 +82,10 @@ public class AdapterBuilder extends RouteBuilder {
 
     // Channel all inbound camel endpoint routes to the orchestration route
     final var endpointDefinitionType = inboundConnector.getEndpointDefinitionTypeClass();
-    final List<RouteDefinition> baseRoutes =
-        inboundConnector.defineInboundEndpoints(
-            resolveConnectorDefinitionType(endpointDefinitionType),
-            StaticEndpointBuilders.direct(requestOrchestrationRouteId));
-    var endpointCounter = 0;
-    for (RouteDefinition baseRoute : baseRoutes) {
-      baseRoute.routeId(
-          routesRegistry.generateRouteIdForConnector(
-              RouteRole.EXTERNAL_ENDPOINT, inboundConnector, ++endpointCounter));
-    }
+    inboundConnector.defineInboundEndpoints(
+        resolveConnectorDefinitionType(endpointDefinitionType),
+        StaticEndpointBuilders.direct(requestOrchestrationRouteId),
+        routesRegistry);
 
     // Build scenario handoff and response-route
     final var handoffRouteDefinition =

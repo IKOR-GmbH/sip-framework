@@ -1,17 +1,18 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
+import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
-import java.util.List;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.OptionalIdentifiedDefinition;
-import org.apache.camel.model.RouteDefinition;
 
 public interface InboundConnectorDefinition<
         DEFINITION_TYPE extends OptionalIdentifiedDefinition<DEFINITION_TYPE>>
     extends ConnectorDefinition, IntegrationScenarioProviderDefinition {
 
-  List<RouteDefinition> defineInboundEndpoints(
-      DEFINITION_TYPE definition, EndpointProducerBuilder targetToDefinition);
+  void defineInboundEndpoints(
+      DEFINITION_TYPE definition,
+      EndpointProducerBuilder targetToDefinition,
+      RoutesRegistry routeRegistry);
 
   default ConnectorType getConnectorType() {
     return ConnectorType.IN;

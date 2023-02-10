@@ -21,8 +21,8 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
           formatConnectorId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
 
   @Override
-  public final RouteDefinition defineOutboundEndpoints(final RouteDefinition routeDefinition) {
-    return routeDefinition.to(defineOutgoingEndpoint());
+  public final void defineOutboundEndpoints(final RouteDefinition routeDefinition) {
+    routeDefinition.to(defineOutgoingEndpoint());
   }
 
   protected abstract EndpointProducerBuilder defineOutgoingEndpoint();

@@ -2,15 +2,16 @@ package de.ikor.sip.foundation.core.declarative.connector;
 
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
 
+import de.ikor.sip.foundation.core.declarative.RouteRole;
+import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
-import java.util.List;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointProducerBuilder;
-import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 import org.apache.camel.model.rest.RestsDefinition;
+import org.apache.camel.model.rest.VerbDefinition;
 import org.apache.commons.lang3.StringUtils;
 
 public abstract class RestConnectorBase extends ConnectorBase
@@ -25,13 +26,19 @@ public abstract class RestConnectorBase extends ConnectorBase
           formatConnectorId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
 
   @Override
-  public List<RouteDefinition> defineInboundEndpoints(
-      final RestsDefinition definition, final EndpointProducerBuilder targetToDefinition) {
+  public void defineInboundEndpoints(
+      final RestsDefinition definition,
+      final EndpointProducerBuilder targetToDefinition,
+      final RoutesRegistry routeRegistry) {
     var rest = definition.rest();
+    var endpointCounter = 0;
     configureRest(rest);
-    rest.getVerbs()
-        .forEach(verbDefinition -> verbDefinition.setTo(new ToDefinition(targetToDefinition)));
-    return rest.asRouteDefinition(definition.getCamelContext());
+    for (VerbDefinition verb : rest.getVerbs()) {
+      verb.setId(
+          routeRegistry.generateRouteIdForConnector(
+              RouteRole.EXTERNAL_ENDPOINT, this, ++endpointCounter));
+      verb.setTo(new ToDefinition(targetToDefinition));
+    }
   }
 
   protected abstract void configureRest(final RestDefinition definition);

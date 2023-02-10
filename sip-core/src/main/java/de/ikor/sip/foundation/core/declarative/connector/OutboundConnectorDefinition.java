@@ -5,7 +5,7 @@ import org.apache.camel.model.RouteDefinition;
 
 public interface OutboundConnectorDefinition
     extends ConnectorDefinition, IntegrationScenarioConsumerDefinition {
-  RouteDefinition defineOutboundEndpoints(RouteDefinition type);
+  void defineOutboundEndpoints(RouteDefinition type);
 
   default ConnectorType getConnectorType() {
     return ConnectorType.OUT;
