@@ -2,6 +2,5 @@ package de.ikor.sip.foundation.core.declarative.scenario;
 
 public interface IntegrationScenarioProviderDefinition {
 
-    String toScenarioId();
-
+  String toScenarioId();
 }

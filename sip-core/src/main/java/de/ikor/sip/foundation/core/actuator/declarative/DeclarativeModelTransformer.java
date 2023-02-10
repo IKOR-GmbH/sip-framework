@@ -4,13 +4,9 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
-import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
-import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
-import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.connector.*;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,30 +24,36 @@ public class DeclarativeModelTransformer {
    * Creates initialized {@link ConnectorGroupInfo} from {@link ConnectorGroupDefinition}
    *
    * @param declarationsRegistry for fetching the endpoints related to connector
-   * @param connector from which info object is created
-   * @return ConnectorInfo
+   * @param connectorGroup from which info object is created
+   * @return ConnectorGroupInfo
    */
-  public static ConnectorGroupInfo createConnectorInfo(
-      DeclarationsRegistry declarationsRegistry, ConnectorGroupDefinition connector) {
+  public static ConnectorGroupInfo createConnectorGroupInfo(
+      DeclarationsRegistry declarationsRegistry, ConnectorGroupDefinition connectorGroup) {
     return ConnectorGroupInfo.builder()
-        .connectorGroupId(connector.getID())
-        .connectorGroupDescription(connector.getDocumentation())
-        .inboundConnectors(fetchInboundEndpointIds(declarationsRegistry, connector.getID()))
-        .outboundConnectors(fetchOutboundEndpointIds(declarationsRegistry, connector.getID()))
+        .connectorGroupId(connectorGroup.getID())
+        .connectorGroupDescription(connectorGroup.getDocumentation())
+        .inboundConnectors(
+            fetchInboundConnectorIds(
+                declarationsRegistry.getInboundConnectorsByConnectorGroupId(
+                    connectorGroup.getID())))
+        .outboundConnectors(
+            fetchOutboundConnectorIds(
+                declarationsRegistry.getOutboundEndpointsByConnectorGroupId(
+                    connectorGroup.getID())))
         .build();
   }
 
-  private static List<String> fetchInboundEndpointIds(
-      DeclarationsRegistry declarationsRegistry, String connectorId) {
-    return declarationsRegistry.getInboundEndpointsByConnectorId(connectorId).stream()
-        .map(endpoint -> endpoint.getConnectorId())
+  private static List<String> fetchInboundConnectorIds(
+      List<InboundConnectorDefinition> inboundConnectors) {
+    return inboundConnectors.stream()
+        .map(ConnectorDefinition::getConnectorId)
         .collect(Collectors.toList());
   }
 
-  private static List<String> fetchOutboundEndpointIds(
-      DeclarationsRegistry declarationsRegistry, String connectorId) {
-    return declarationsRegistry.getOutboundEndpointsByConnectorId(connectorId).stream()
-        .map(endpoint -> endpoint.getConnectorId())
+  private static List<String> fetchOutboundConnectorIds(
+      List<OutboundConnectorDefinition> outboundConnectors) {
+    return outboundConnectors.stream()
+        .map(ConnectorDefinition::getConnectorId)
         .collect(Collectors.toList());
   }
 
@@ -75,32 +77,17 @@ public class DeclarativeModelTransformer {
   }
 
   /**
-   * Creates initialized {@link ConnectorInfo} from {@link GenericInboundConnectorBase}
+   * Creates initialized {@link ConnectorInfo} from {@link ConnectorDefinition}
    *
-   * @param endpoint from which info object is created
-   * @return EndpointInfo
+   * @param connector from which info object is created
+   * @return ConnectorInfo
    */
-  public static ConnectorInfo createAndAddInboundEndpoint(InboundConnectorDefinition endpoint) {
+  public static ConnectorInfo createAndAddEndpointInfo(ConnectorDefinition connector) {
     return ConnectorInfo.builder()
-        .connectorId(endpoint.getConnectorId())
-        .connectorType(endpoint.getConnectorType())
-        .connectorGroupId(endpoint.getConnectorGroupId())
-        .scenarioId(endpoint.getScenarioId())
-        .build();
-  }
-
-  /**
-   * Creates initialized {@link ConnectorInfo} from {@link GenericOutboundConnectorBase}
-   *
-   * @param endpoint from which info object is created
-   * @return EndpointInfo
-   */
-  public static ConnectorInfo createAndAddOutboundEndpoint(OutboundConnectorDefinition endpoint) {
-    return ConnectorInfo.builder()
-        .connectorId(endpoint.getConnectorId())
-        .connectorType(endpoint.getConnectorType())
-        .connectorGroupId(endpoint.getConnectorGroupId())
-        .scenarioId(endpoint.getScenarioId())
+        .connectorId(connector.getConnectorId())
+        .connectorType(connector.getConnectorType())
+        .connectorGroupId(connector.getConnectorGroupId())
+        .scenarioId(connector.getScenarioId())
         .build();
   }
 }

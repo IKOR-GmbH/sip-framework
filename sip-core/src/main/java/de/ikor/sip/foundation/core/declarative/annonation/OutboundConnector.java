@@ -1,26 +1,25 @@
 package de.ikor.sip.foundation.core.declarative.annonation;
 
-import org.springframework.stereotype.Component;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.springframework.stereotype.Component;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Component
 public @interface OutboundConnector {
 
-    String connectorId() default "";
+  String connectorId() default "";
 
-    String belongsToGroup();
+  String belongsToGroup();
 
-    String fromScenario();
+  String fromScenario();
 
-    Class<?> requestModel();
+  Class<?> requestModel();
 
-    Class<?> responseModel() default Void.class;
+  Class<?> responseModel() default Void.class;
 
-    String[] domains() default {};
+  String[] domains() default {};
 }

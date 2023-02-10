@@ -5,5 +5,4 @@ import org.springframework.context.annotation.ComponentScan;
 
 @ComponentScan
 @ConditionalOnProperty(value = "sip.core.declarativestructure.enabled", havingValue = "true")
-public class DeclarativeStructureAutoConfig {
-}
+public class DeclarativeStructureAutoConfig {}

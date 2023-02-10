@@ -38,17 +38,24 @@ public class CDMValidationAdapter {
       responseModel = CDMResponse.class)
   public class CDMValidationScenario extends IntegrationScenarioBase {}
 
-  @InboundConnector(belongsToGroup = "SIP1", toScenario = "CDMValidation", requestModel = CDMRequest.class, responseModel = CDMResponse.class)
+  @InboundConnector(
+      belongsToGroup = "SIP1",
+      toScenario = "CDMValidation",
+      requestModel = CDMRequest.class,
+      responseModel = CDMResponse.class)
   public class InboundCDMConnector extends GenericInboundConnectorBase {
 
     @Override
     protected EndpointConsumerBuilder defineInitiatingEndpoint() {
       return StaticEndpointBuilders.direct("cdm-validator");
     }
-
   }
 
-  @OutboundConnector(belongsToGroup = "SIP2", fromScenario = "CDMValidation", requestModel = CDMRequest.class, responseModel = CDMResponse.class)
+  @OutboundConnector(
+      belongsToGroup = "SIP2",
+      fromScenario = "CDMValidation",
+      requestModel = CDMRequest.class,
+      responseModel = CDMResponse.class)
   public class OutboundCDMConnector extends GenericOutboundConnectorBase {
     @Override
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
@@ -57,7 +64,8 @@ public class CDMValidationAdapter {
 
     @Override
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-      return ConnectorOrchestrator.forConnector(this).setRequestRouteTransformer(this::configureEndpointRoute);
+      return ConnectorOrchestrator.forConnector(this)
+          .setRequestRouteTransformer(this::configureEndpointRoute);
     }
 
     protected void configureEndpointRoute(RouteDefinition definition) {

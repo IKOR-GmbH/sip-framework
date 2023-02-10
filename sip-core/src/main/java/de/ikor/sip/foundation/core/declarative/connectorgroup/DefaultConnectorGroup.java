@@ -9,17 +9,17 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class DefaultConnectorGroup implements ConnectorGroupDefinition {
 
-    private static final String EMPTY_PATH = "";
+  private static final String EMPTY_PATH = "";
 
-    private String connectorId;
+  private String connectorId;
 
-    @Override
-    public String getDocumentation() {
-        return readDocumentation(EMPTY_PATH);
-    }
+  @Override
+  public String getDocumentation() {
+    return readDocumentation(EMPTY_PATH);
+  }
 
-    @Override
-    public String getID() {
-        return connectorId;
-    }
+  @Override
+  public String getID() {
+    return connectorId;
+  }
 }

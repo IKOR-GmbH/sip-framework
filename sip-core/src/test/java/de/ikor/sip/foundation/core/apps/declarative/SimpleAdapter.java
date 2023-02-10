@@ -102,10 +102,12 @@ public class SimpleAdapter {
     @OutboundConnector(belongsToGroup = SIP2, fromScenario = "RestDSL", requestModel = String.class, responseModel = String.class)
     public class RestScenarioConsumer extends GenericOutboundConnectorBase {
 
-        @Override
-        protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-            return ConnectorOrchestrator.forConnector(this).setRequestRouteTransformer(this::defineRequestRoute).setResponseRouteTransformer(this::defineResponseRoute);
-        }
+    @Override
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setRequestRouteTransformer(this::defineRequestRoute)
+          .setResponseRouteTransformer(this::defineResponseRoute);
+    }
 
         protected void defineRequestRoute(final RouteDefinition definition) {
             definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED");

@@ -4,15 +4,15 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsu
 import org.apache.camel.model.RouteDefinition;
 
 public interface OutboundConnectorDefinition
-        extends ConnectorDefinition, IntegrationScenarioConsumerDefinition {
-    RouteDefinition defineOutboundEndpoints(RouteDefinition type);
+    extends ConnectorDefinition, IntegrationScenarioConsumerDefinition {
+  RouteDefinition defineOutboundEndpoints(RouteDefinition type);
 
-    default ConnectorType getConnectorType() {
-        return ConnectorType.OUT;
-    }
+  default ConnectorType getConnectorType() {
+    return ConnectorType.OUT;
+  }
 
-    @Override
-    default String getScenarioId() {
-        return fromScenarioId();
-    }
+  @Override
+  default String getScenarioId() {
+    return fromScenarioId();
+  }
 }
