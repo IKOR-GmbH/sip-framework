@@ -16,8 +16,11 @@ import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.RouteDefinition;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScan.Filter;
 
 @SIPIntegrationAdapter
+@ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))
 public class CDMValidationAdapter {
 
   @Data

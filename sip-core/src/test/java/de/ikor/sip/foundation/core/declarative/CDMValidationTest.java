@@ -3,9 +3,9 @@ package de.ikor.sip.foundation.core.declarative;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import de.ikor.sip.foundation.core.apps.declarative.CDMValidationAdapter;
 import de.ikor.sip.foundation.core.apps.declarative.CDMValidationAdapter.CDMRequest;
 import de.ikor.sip.foundation.core.apps.declarative.CDMValidationAdapter.CDMResponse;
-import de.ikor.sip.foundation.core.apps.declarative.SimpleAdapter;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @CamelSpringBootTest
-@SpringBootTest(classes = {SimpleAdapter.class})
+@SpringBootTest(classes = {CDMValidationAdapter.class})
 @DisableJmx(false)
 @MockEndpoints("log:message*")
 class CDMValidationTest {
@@ -54,12 +54,10 @@ class CDMValidationTest {
     assertThat(target.getException()).isInstanceOf(SIPFrameworkException.class);
   }
 
-  @Test
-  void when_CDMResponseIsNotValid_then_ExceptionOccurs() {
-    // TODO update
-    //    Exchange target = template.withBody(new
-    // CDMRequest(1001)).to(direct("cdm-validator")).send();
-    //
-    //    assertThat(target.getException()).isInstanceOf(SIPFrameworkException.class);
-  }
+//  @Test
+//  void when_CDMResponseIsNotValid_then_ExceptionOccurs() {
+//    Exchange target = template.withBody(new CDMRequest(1001)).to(direct("cdm-validator")).send();
+//
+//    assertThat(target.getException()).isInstanceOf(SIPFrameworkException.class);
+//  }
 }
