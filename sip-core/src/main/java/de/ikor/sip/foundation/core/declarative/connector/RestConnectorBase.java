@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatEndpointId;
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
 
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
@@ -13,14 +13,6 @@ import org.apache.camel.model.rest.RestDefinition;
 import org.apache.camel.model.rest.RestsDefinition;
 import org.apache.commons.lang3.StringUtils;
 
-<<<<<<< Updated upstream
-import java.util.List;
-import java.util.Optional;
-
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
-
-=======
->>>>>>> Stashed changes
 public abstract class RestConnectorBase extends ConnectorBase
     implements InboundConnectorDefinition<RestsDefinition> {
 
@@ -29,17 +21,10 @@ public abstract class RestConnectorBase extends ConnectorBase
   private final InboundConnector inboundConnectorAnnotation =
       DeclarativeHelper.getAnnotationOrThrow(InboundConnector.class, this);
 
-<<<<<<< Updated upstream
-    private final String connectorId =
-            StringUtils.defaultIfEmpty(
-                    inboundConnectorAnnotation.connectorId(),
-                    formatConnectorId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
-=======
   private final String connectorId =
       StringUtils.defaultIfEmpty(
           inboundConnectorAnnotation.connectorId(),
-          formatEndpointId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
->>>>>>> Stashed changes
+          formatConnectorId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
 
   @Override
   public List<RouteDefinition> defineInboundEndpoints(

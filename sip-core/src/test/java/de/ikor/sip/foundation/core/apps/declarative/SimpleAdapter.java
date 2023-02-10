@@ -21,86 +21,21 @@ import org.apache.camel.model.rest.RestDefinition;
 @SIPIntegrationAdapter
 public class SimpleAdapter {
 
-    private static final String SIP1 = "SIP1";
-    private static final String SIP2 = "SIP2";
-    private static final String APPEND_STATIC_MESSAGE_SCENARIO = "AppendStaticMessage";
+  private static final String SIP1 = "SIP1";
+  private static final String SIP2 = "SIP2";
+  private static final String APPEND_STATIC_MESSAGE_SCENARIO = "AppendStaticMessage";
 
-    // ----> AppendStaticMessage SCENARIO
-    @IntegrationScenario(scenarioId = APPEND_STATIC_MESSAGE_SCENARIO, requestModel = String.class)
-    public class AppendStaticMessageScenario extends IntegrationScenarioBase {
-    }
+  // ----> AppendStaticMessage SCENARIO
+  @IntegrationScenario(scenarioId = APPEND_STATIC_MESSAGE_SCENARIO, requestModel = String.class)
+  public class AppendStaticMessageScenario extends IntegrationScenarioBase {}
 
-    @InboundConnector(
-            connectorId = "appendStaticMessageProvider",
-            belongsToGroup = SIP1,
-            toScenario = APPEND_STATIC_MESSAGE_SCENARIO,
-            requestModel = String.class,
-            responseModel = String.class
-            )
-    public class AppendStaticMessageProvider extends GenericInboundConnectorBase {
-
-        @Override
-        protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-            return ConnectorOrchestrator.forConnector(this).setRequestRouteTransformer(this::defineRequestRoute).setResponseRouteTransformer(this::defineResponseRoute);
-        }
-
-        protected void defineRequestRoute(final RouteDefinition definition) {
-            definition.setBody(exchange -> "PRODUCED-" + exchange.getIn().getBody());
-        }
-
-        protected void defineResponseRoute(final RouteDefinition definition) {
-            definition.setBody(exchange -> exchange.getIn().getBody() + "-Handled");
-        }
-
-        @Override
-        protected EndpointConsumerBuilder defineInitiatingEndpoint() {
-            return StaticEndpointBuilders.direct("triggerAdapter-append");
-        }
-    }
-
-    @OutboundConnector(
-            connectorId = "appendStaticMessageConsumer",
-            belongsToGroup = SIP2,
-            fromScenario = APPEND_STATIC_MESSAGE_SCENARIO,
-            requestModel = String.class)
-    public class AppendStaticMessageConsumer extends GenericOutboundConnectorBase {
-
-        @Override
-        protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-            return ConnectorOrchestrator.forConnector(this).setRequestRouteTransformer(definition -> definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED"));
-        }
-
-        @Override
-        protected EndpointProducerBuilder defineOutgoingEndpoint() {
-            return StaticEndpointBuilders.log("message");
-        }
-    }
-    // <---- AppendStaticMessage SCENARIO
-
-    // ----> RestDSL SCENARIO
-    @IntegrationScenario(scenarioId = "RestDSL", requestModel = String.class)
-    public class RestDSLScenario extends IntegrationScenarioBase {
-    }
-
-    @InboundConnector(belongsToGroup = SIP1, toScenario = "RestDSL", requestModel = String.class)
-    public class RestConnectorTestBase extends RestConnectorBase {
-
-        @Override
-        protected void configureRest(RestDefinition definition) {
-            definition.post("path").type(String.class).get("path");
-        }
-        @Override
-        protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-            return ConnectorOrchestrator.forConnector(this).setRequestRouteTransformer(this::defineRequestRoute);
-        }
-        protected void defineRequestRoute(final RouteDefinition definition) {
-            definition.setBody(exchange -> "PRODUCED_REST-" + exchange.getIn().getBody());
-        }
-
-    }
-
-    @OutboundConnector(belongsToGroup = SIP2, fromScenario = "RestDSL", requestModel = String.class, responseModel = String.class)
-    public class RestScenarioConsumer extends GenericOutboundConnectorBase {
+  @InboundConnector(
+      connectorId = "appendStaticMessageProvider",
+      belongsToGroup = SIP1,
+      toScenario = APPEND_STATIC_MESSAGE_SCENARIO,
+      requestModel = String.class,
+      responseModel = String.class)
+  public class AppendStaticMessageProvider extends GenericInboundConnectorBase {
 
     @Override
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
@@ -109,26 +44,97 @@ public class SimpleAdapter {
           .setResponseRouteTransformer(this::defineResponseRoute);
     }
 
-        protected void defineRequestRoute(final RouteDefinition definition) {
-            definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED");
-        }
-
-        protected void defineResponseRoute(final RouteDefinition definition) {
-            definition.setBody(exchange -> exchange.getIn().getBody() + "-Handled-Outbound");
-        }
-
-        @Override
-        protected EndpointProducerBuilder defineOutgoingEndpoint() {
-            return StaticEndpointBuilders.log("message");
-        }
+    protected void defineRequestRoute(final RouteDefinition definition) {
+      definition.setBody(exchange -> "PRODUCED-" + exchange.getIn().getBody());
     }
 
-    // <---- RestDSL SCENARIO
-    @de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup(groupId = SIP1)
-    public class ConnectorGroupSip1 extends ConnectorGroupBase {
+    protected void defineResponseRoute(final RouteDefinition definition) {
+      definition.setBody(exchange -> exchange.getIn().getBody() + "-Handled");
     }
 
-    @de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup(groupId = SIP2)
-    public class ConnectorGroupSip2 extends ConnectorGroupBase {
+    @Override
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+      return StaticEndpointBuilders.direct("triggerAdapter-append");
     }
+  }
+
+  @OutboundConnector(
+      connectorId = "appendStaticMessageConsumer",
+      belongsToGroup = SIP2,
+      fromScenario = APPEND_STATIC_MESSAGE_SCENARIO,
+      requestModel = String.class)
+  public class AppendStaticMessageConsumer extends GenericOutboundConnectorBase {
+
+    @Override
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setRequestRouteTransformer(
+              definition ->
+                  definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED"));
+    }
+
+    @Override
+    protected EndpointProducerBuilder defineOutgoingEndpoint() {
+      return StaticEndpointBuilders.log("message");
+    }
+  }
+  // <---- AppendStaticMessage SCENARIO
+
+  // ----> RestDSL SCENARIO
+  @IntegrationScenario(scenarioId = "RestDSL", requestModel = String.class)
+  public class RestDSLScenario extends IntegrationScenarioBase {}
+
+  @InboundConnector(belongsToGroup = SIP1, toScenario = "RestDSL", requestModel = String.class)
+  public class RestConnectorTestBase extends RestConnectorBase {
+
+    @Override
+    protected void configureRest(RestDefinition definition) {
+      definition.post("path").type(String.class).get("path");
+    }
+
+    @Override
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setRequestRouteTransformer(this::defineRequestRoute);
+    }
+
+    protected void defineRequestRoute(final RouteDefinition definition) {
+      definition.setBody(exchange -> "PRODUCED_REST-" + exchange.getIn().getBody());
+    }
+  }
+
+  @OutboundConnector(
+      belongsToGroup = SIP2,
+      fromScenario = "RestDSL",
+      requestModel = String.class,
+      responseModel = String.class)
+  public class RestScenarioConsumer extends GenericOutboundConnectorBase {
+
+    @Override
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setRequestRouteTransformer(this::defineRequestRoute)
+          .setResponseRouteTransformer(this::defineResponseRoute);
+    }
+
+    protected void defineRequestRoute(final RouteDefinition definition) {
+      definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED");
+    }
+
+    protected void defineResponseRoute(final RouteDefinition definition) {
+      definition.setBody(exchange -> exchange.getIn().getBody() + "-Handled-Outbound");
+    }
+
+    @Override
+    protected EndpointProducerBuilder defineOutgoingEndpoint() {
+      return StaticEndpointBuilders.log("message");
+    }
+  }
+
+  // <---- RestDSL SCENARIO
+  @de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup(groupId = SIP1)
+  public class ConnectorGroupSip1 extends ConnectorGroupBase {}
+
+  @de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup(groupId = SIP2)
+  public class ConnectorGroupSip2 extends ConnectorGroupBase {}
 }

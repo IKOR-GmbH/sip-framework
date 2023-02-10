@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatEndpointId;
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
 
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
@@ -13,33 +13,16 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.commons.lang3.StringUtils;
 
-<<<<<<< Updated upstream
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
-
-public abstract class GenericInboundConnectorBase extends ConnectorBase implements InboundConnectorDefinition<RoutesDefinition> {
-=======
 public abstract class GenericInboundConnectorBase extends ConnectorBase
     implements InboundConnectorDefinition<RoutesDefinition> {
->>>>>>> Stashed changes
 
   private final InboundConnector inboundConnectorAnnotation =
       DeclarativeHelper.getAnnotationOrThrow(InboundConnector.class, this);
 
-<<<<<<< Updated upstream
-    private final String connectorId =
-            StringUtils.defaultIfEmpty(
-                    inboundConnectorAnnotation.connectorId(),
-                    formatConnectorId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
-=======
   private final String connectorId =
       StringUtils.defaultIfEmpty(
           inboundConnectorAnnotation.connectorId(),
-          formatEndpointId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
->>>>>>> Stashed changes
+          formatConnectorId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
 
   @Override
   public final List<RouteDefinition> defineInboundEndpoints(

@@ -5,11 +5,8 @@ import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationExce
 import java.lang.annotation.Annotation;
 
 public class DeclarativeHelper {
-<<<<<<< Updated upstream
-    public static final String CONNECTOR_ID_FORMAT = "%s-%s-%s";
-=======
-  public static final String ENDPOINT_ID_FORMAT = "%s-%s-%s";
->>>>>>> Stashed changes
+
+  public static final String CONNECTOR_ID_FORMAT = "%s-%s-%s";
 
   private DeclarativeHelper() {}
 
@@ -23,13 +20,8 @@ public class DeclarativeHelper {
     return ann;
   }
 
-<<<<<<< Updated upstream
-    public static String formatConnectorId(ConnectorType type, String scenarioID, String connectorId) {
-        return String.format(CONNECTOR_ID_FORMAT, type.getValue(), scenarioID, connectorId);
-    }
-=======
-  public static String formatEndpointId(ConnectorType type, String scenarioID, String connectorId) {
-    return String.format(ENDPOINT_ID_FORMAT, type.getValue(), scenarioID, connectorId);
+  public static String formatConnectorId(
+      ConnectorType type, String scenarioID, String connectorId) {
+    return String.format(CONNECTOR_ID_FORMAT, type.getValue(), scenarioID, connectorId);
   }
->>>>>>> Stashed changes
 }
