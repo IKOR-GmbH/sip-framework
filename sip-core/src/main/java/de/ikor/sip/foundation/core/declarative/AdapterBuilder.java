@@ -70,7 +70,7 @@ public class AdapterBuilder extends RouteBuilder {
 
         // Channel all inbound camel endpoint routes to the orchestration route
         final var endpointDefinitionType = inboundConnector.getEndpointDefinitionTypeClass();
-        final List<RouteDefinition> baseRoutes = inboundConnector.defineInboundEndpoints(resolveConnectorDefinitionType(endpointDefinitionType), requestOrchestrationRouteId);
+        final List<RouteDefinition> baseRoutes = inboundConnector.defineInboundEndpoints(resolveConnectorDefinitionType(endpointDefinitionType), StaticEndpointBuilders.direct(requestOrchestrationRouteId));
         var endpointCounter = 0;
         for (RouteDefinition baseRoute : baseRoutes) {
             baseRoute
@@ -97,20 +97,6 @@ public class AdapterBuilder extends RouteBuilder {
             inboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
         }
         requestRouteDefinition.to(StaticEndpointBuilders.direct(scenarioHandoffRouteId));
-    }
-
-    private <T extends OptionalIdentifiedDefinition<T>> T resolveConnectorDefinitionType(Class<? extends T> type) {
-        if (type.equals(RoutesDefinition.class)) {
-            var routeCollection = getRouteCollection();
-            routeCollection.setCamelContext(getCamelContext());
-            return (T) routeCollection;
-        }
-        if (type.equals(RestsDefinition.class)) {
-            var restCollection = getRestCollection();
-            restCollection.setCamelContext(getCamelContext());
-            return (T) restCollection;
-        }
-        throw new SIPFrameworkInitializationException(String.format("Failed to resolve unknown connector definition type: %s", type.getName()));
     }
 
     private void buildOutboundConnector(
@@ -146,6 +132,20 @@ public class AdapterBuilder extends RouteBuilder {
             outboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
         }
         requestRouteDefinition.to(StaticEndpointBuilders.direct(externalEndpointRouteId));
+    }
+
+    private <T extends OptionalIdentifiedDefinition<T>> T resolveConnectorDefinitionType(Class<? extends T> type) {
+        if (type.equals(RoutesDefinition.class)) {
+            var routeCollection = getRouteCollection();
+            routeCollection.setCamelContext(getCamelContext());
+            return (T) routeCollection;
+        }
+        if (type.equals(RestsDefinition.class)) {
+            var restCollection = getRestCollection();
+            restCollection.setCamelContext(getCamelContext());
+            return (T) restCollection;
+        }
+        throw new SIPFrameworkInitializationException(String.format("Failed to resolve unknown connector definition type: %s", type.getName()));
     }
 
     private void orchestrateEndpoint(

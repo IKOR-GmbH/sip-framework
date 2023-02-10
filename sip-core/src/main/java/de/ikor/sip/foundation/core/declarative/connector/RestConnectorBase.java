@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.declarative.connector;
 
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
-import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
+import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.apache.camel.model.rest.RestDefinition;
@@ -28,10 +28,10 @@ public abstract class RestConnectorBase extends ConnectorBase
                     formatEndpointId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
 
     @Override
-    public List<RouteDefinition> defineInboundEndpoints(final RestsDefinition definition, final String toRouteId) {
+    public List<RouteDefinition> defineInboundEndpoints(final RestsDefinition definition, final EndpointProducerBuilder targetToDefinition) {
         var rest = definition.rest();
         configureRest(rest);
-        rest.getVerbs().forEach(verbDefinition -> verbDefinition.setTo(new ToDefinition(StaticEndpointBuilders.direct(toRouteId))));
+        rest.getVerbs().forEach(verbDefinition -> verbDefinition.setTo(new ToDefinition(targetToDefinition)));
         return rest.asRouteDefinition(definition.getCamelContext());
     }
 

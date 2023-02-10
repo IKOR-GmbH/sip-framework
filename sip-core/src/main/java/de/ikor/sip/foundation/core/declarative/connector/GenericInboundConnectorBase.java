@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.core.declarative.connector;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import org.apache.camel.builder.EndpointConsumerBuilder;
-import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
+import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.commons.lang3.StringUtils;
@@ -25,8 +25,8 @@ public abstract class GenericInboundConnectorBase extends ConnectorBase implemen
                     formatEndpointId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
 
     @Override
-    public final List<RouteDefinition> defineInboundEndpoints(final RoutesDefinition definition, final String toRouteId) {
-        return Collections.singletonList(definition.from(defineInitiatingEndpoint()).to(StaticEndpointBuilders.direct(toRouteId)));
+    public final List<RouteDefinition> defineInboundEndpoints(final RoutesDefinition definition, final EndpointProducerBuilder targetToDefinition) {
+        return Collections.singletonList(definition.from(defineInitiatingEndpoint()).to(targetToDefinition));
     }
 
     protected abstract EndpointConsumerBuilder defineInitiatingEndpoint();
