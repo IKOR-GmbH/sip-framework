@@ -89,6 +89,14 @@ public class SimpleAdapter {
         protected void configureRest(RestDefinition definition) {
             definition.post("path").type(String.class).get("path");
         }
+        @Override
+        protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+            return ConnectorOrchestrator.forConnector(this).setRequestRouteTransformer(this::defineRequestRoute);
+        }
+        protected void defineRequestRoute(final RouteDefinition definition) {
+            definition.setBody(exchange -> "PRODUCED_REST-" + exchange.getIn().getBody());
+        }
+
     }
 
     @OutboundConnector(belongsToGroup = SIP2, fromScenario = "RestDSL", requestModel = String.class, responseModel = String.class)

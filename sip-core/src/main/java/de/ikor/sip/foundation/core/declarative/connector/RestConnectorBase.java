@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatEndpointId;
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
 
 public abstract class RestConnectorBase extends ConnectorBase
         implements InboundConnectorDefinition<RestsDefinition> {
@@ -25,7 +25,7 @@ public abstract class RestConnectorBase extends ConnectorBase
     private final String connectorId =
             StringUtils.defaultIfEmpty(
                     inboundConnectorAnnotation.connectorId(),
-                    formatEndpointId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
+                    formatConnectorId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
 
     @Override
     public List<RouteDefinition> defineInboundEndpoints(final RestsDefinition definition, final EndpointProducerBuilder targetToDefinition) {
