@@ -64,70 +64,88 @@ public class AdapterBuilder extends RouteBuilder {
             final InboundConnectorDefinition inboundConnector,
             final IntegrationScenarioDefinition scenarioDefinition) {
 
-        final var hasResponseRoute = scenarioDefinition.getResponseModelClass().isPresent();
         final var requestOrchestrationRouteId = routesRegistry.generateRouteIdForConnector(RouteRole.CONNECTOR_REQUEST_ORCHESTRATION, inboundConnector);
         final var responseOrchestrationRouteId = routesRegistry.generateRouteIdForConnector(RouteRole.CONNECTOR_RESPONSE_ORCHESTRATION, inboundConnector);
-        final var handoffOrchestrationRouteId = routesRegistry.generateRouteIdForConnector(RouteRole.SCENARIO_HANDOFF, inboundConnector);
+        final var scenarioHandoffRouteId = routesRegistry.generateRouteIdForConnector(RouteRole.SCENARIO_HANDOFF, inboundConnector);
 
         // Channel all inbound camel endpoint routes to the orchestration route
         final var endpointDefinitionType = inboundConnector.getEndpointDefinitionTypeClass();
-        final List<RouteDefinition> baseRoutes = inboundConnector.defineInboundEndpoints(resolveConnectorDefinitionType(endpointDefinitionType));
+        final List<RouteDefinition> baseRoutes = inboundConnector.defineInboundEndpoints(resolveConnectorDefinitionType(endpointDefinitionType), requestOrchestrationRouteId);
         var endpointCounter = 0;
         for (RouteDefinition baseRoute : baseRoutes) {
             baseRoute
-                    .routeId(routesRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, inboundConnector, ++endpointCounter))
-                    .to(StaticEndpointBuilders.direct(requestOrchestrationRouteId));
+                    .routeId(routesRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, inboundConnector, ++endpointCounter));
         }
 
         // Build scenario handoff and response-route
-        final var handoffRouteDefinition = from(StaticEndpointBuilders.direct(handoffOrchestrationRouteId))
+        final var handoffRouteDefinition = from(StaticEndpointBuilders.direct(scenarioHandoffRouteId))
+                .routeId(scenarioHandoffRouteId)
                 .process(new CDMValidator(scenarioDefinition.getRequestModelClass()))                   // TODO: move validation to camel-component for scenarios
                 .to(StaticEndpointBuilders.direct(SCENARIO_HANDOVER_COMPONENT, scenarioDefinition.getID()));
-        if (hasResponseRoute) {
+        if (inboundConnector.hasResponseFlow()) {
             handoffRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
         }
 
         // Build orchestration route(s) to/from scenario
         final var requestRouteDefinition = from(StaticEndpointBuilders.direct(requestOrchestrationRouteId))
                 .routeId(requestOrchestrationRouteId);
-        final Optional<RouteDefinition> responseRouteDefinition = hasResponseRoute ? Optional.of(from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
+        final Optional<RouteDefinition> responseRouteDefinition = inboundConnector.hasResponseFlow() ? Optional.of(from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
                 .routeId(responseOrchestrationRouteId)) : Optional.empty();
 
         var orchestrationInfo = new OrchestrationRoutes(requestRouteDefinition, responseRouteDefinition);
         if (inboundConnector.getOrchestrator().canOrchestrate(orchestrationInfo)) {
             inboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
         }
-        requestRouteDefinition.to(StaticEndpointBuilders.direct(handoffOrchestrationRouteId));
+        requestRouteDefinition.to(StaticEndpointBuilders.direct(scenarioHandoffRouteId));
     }
-
-    private void buildOutboundConnector(
-            final OutboundConnectorDefinition outboundEndpointDefinition,
-            final IntegrationScenarioDefinition scenarioDefinition) {
-
-        log.warn("Outbound connector initialization WIP");
-
-//        RouteDefinition camelRoute = from(SCENARIO_HANDOVER_COMPONENT + scenarioDefinition.getID());
-//        camelRoute.routeId(outboundEndpointDefinition.getConnectorId());
-//        ConnectorOrchestrationInfo orchestrationInfo = () -> camelRoute;
-//        orchestrateEndpoint(orchestrationInfo, outboundEndpointDefinition);
-//
-//        camelRoute.to(outboundEndpointDefinition.getOutboundEndpoint());
-//        camelRoute.id(outboundEndpointDefinition.getConnectorId());
-//        scenarioDefinition
-//                .getResponseModelClass()
-//                .ifPresent(responseModelClass -> appendCDMValidation(responseModelClass, camelRoute));
-//        appendAfterHandler(orchestrationInfo.getRouteDefinition(), outboundEndpointDefinition);
-    }
-
 
     private <T extends OptionalIdentifiedDefinition<T>> T resolveConnectorDefinitionType(Class<? extends T> type) {
         if (type.equals(RoutesDefinition.class)) {
-            return (T) getRouteCollection();
+            var routeCollection = getRouteCollection();
+            routeCollection.setCamelContext(getCamelContext());
+            return (T) routeCollection;
         }
         if (type.equals(RestsDefinition.class)) {
-            return (T) getRestCollection();
+            var restCollection = getRestCollection();
+            restCollection.setCamelContext(getCamelContext());
+            return (T) restCollection;
         }
         throw new SIPFrameworkInitializationException(String.format("Failed to resolve unknown connector definition type: %s", type.getName()));
+    }
+
+    private void buildOutboundConnector(
+            final OutboundConnectorDefinition outboundConnector,
+            final IntegrationScenarioDefinition scenarioDefinition) {
+
+        final var externalEndpointRouteId = routesRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, outboundConnector);
+        final var requestOrchestrationRouteId = routesRegistry.generateRouteIdForConnector(RouteRole.CONNECTOR_REQUEST_ORCHESTRATION, outboundConnector);
+        final var responseOrchestrationRouteId = routesRegistry.generateRouteIdForConnector(RouteRole.CONNECTOR_RESPONSE_ORCHESTRATION, outboundConnector);
+        final var scenarioTakeoverRouteId = routesRegistry.generateRouteIdForConnector(RouteRole.SCENARIO_TAKEOVER, outboundConnector);
+
+        // Build takeover route from scenario
+        from(StaticEndpointBuilders.direct(SCENARIO_HANDOVER_COMPONENT, scenarioDefinition.getID()))
+                .routeId(scenarioTakeoverRouteId)
+                .to(StaticEndpointBuilders.direct(requestOrchestrationRouteId));
+
+        // Build endpoint route that connects to external system
+        final var endpointRouteDefinition = from(StaticEndpointBuilders.direct(externalEndpointRouteId))
+                .routeId(externalEndpointRouteId);
+        outboundConnector.defineOutboundEndpoints(endpointRouteDefinition);
+        if (outboundConnector.hasResponseFlow()) {
+            endpointRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
+        }
+
+        // Build orchestration route(s) to/from scenario
+        final var requestRouteDefinition = from(StaticEndpointBuilders.direct(requestOrchestrationRouteId))
+                .routeId(requestOrchestrationRouteId);
+        final Optional<RouteDefinition> responseRouteDefinition = outboundConnector.hasResponseFlow() ? Optional.of(from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
+                .routeId(responseOrchestrationRouteId)) : Optional.empty();
+
+        var orchestrationInfo = new OrchestrationRoutes(requestRouteDefinition, responseRouteDefinition);
+        if (outboundConnector.getOrchestrator().canOrchestrate(orchestrationInfo)) {
+            outboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
+        }
+        requestRouteDefinition.to(StaticEndpointBuilders.direct(externalEndpointRouteId));
     }
 
     private void orchestrateEndpoint(

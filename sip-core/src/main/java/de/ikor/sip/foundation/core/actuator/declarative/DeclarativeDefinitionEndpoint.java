@@ -1,22 +1,26 @@
 package de.ikor.sip.foundation.core.actuator.declarative;
 
-import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeModelTransformer.*;
-
-import de.ikor.sip.foundation.core.actuator.declarative.model.*;
+import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
-import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
-import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.boot.actuate.endpoint.web.Link;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeModelTransformer.createAndAddInboundEndpoint;
+import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeModelTransformer.createAndAddOutboundEndpoint;
+import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeModelTransformer.createConnectorInfo;
+import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeModelTransformer.createIntegrationScenarioInfo;
 
 /** Actuator endpoints for exposing Connectors, Integration Scenarios and Endpoints. */
 @Component
@@ -29,9 +33,9 @@ public class DeclarativeDefinitionEndpoint {
   private static final String URI_FORMAT = "%s/%s";
 
   private final DeclarationsRegistry declarationsRegistry;
-  private final List<ConnectorInfo> connectors = new ArrayList<>();
+  private final List<ConnectorGroupInfo> connectors = new ArrayList<>();
   private final List<IntegrationScenarioInfo> scenarios = new ArrayList<>();
-  private final List<EndpointInfo> endpoints = new ArrayList<>();
+  private final List<ConnectorInfo> endpoints = new ArrayList<>();
 
   public DeclarativeDefinitionEndpoint(DeclarationsRegistry declarationsRegistry) {
     this.declarationsRegistry = declarationsRegistry;
@@ -63,7 +67,7 @@ public class DeclarativeDefinitionEndpoint {
   }
 
   @GetMapping("/connectors")
-  public List<ConnectorInfo> getConnectorInfo() {
+  public List<ConnectorGroupInfo> getConnectorInfo() {
     return connectors;
   }
 
@@ -73,7 +77,7 @@ public class DeclarativeDefinitionEndpoint {
   }
 
   @GetMapping("/endpoints")
-  public List<EndpointInfo> getEndpointInfo() {
+  public List<ConnectorInfo> getEndpointInfo() {
     return endpoints;
   }
 
@@ -94,11 +98,11 @@ public class DeclarativeDefinitionEndpoint {
         .getInboundEndpoints()
         .forEach(
             endpoint ->
-                endpoints.add(createAndAddInboundEndpoint((GenericInboundConnectorBase) endpoint)));
+                endpoints.add(createAndAddInboundEndpoint(endpoint)));
     declarationsRegistry
         .getOutboundEndpoints()
         .forEach(
             endpoint ->
-                endpoints.add(createAndAddOutboundEndpoint((GenericOutboundConnectorBase) endpoint)));
+                endpoints.add(createAndAddOutboundEndpoint(endpoint)));
   }
 }

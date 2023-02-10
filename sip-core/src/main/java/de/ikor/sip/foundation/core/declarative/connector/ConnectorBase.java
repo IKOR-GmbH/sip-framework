@@ -1,47 +1,29 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
 import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import lombok.Getter;
-import org.apache.camel.model.RouteDefinition;
+import lombok.experimental.Delegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 abstract class ConnectorBase
-        implements ConnectorDefinition<ConnectorOrchestrationInfo> {
+        implements ConnectorDefinition, Orchestrator<ConnectorOrchestrationInfo> {
 
     @Getter
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final Orchestrator<ConnectorOrchestrationInfo> orchestrator = buildConnectorOrchestrator();
+    @Delegate
+    private final Orchestrator<ConnectorOrchestrationInfo> modelTransformationOrchestrator = defineTransformationOrchestrator();
 
-    private Orchestrator<ConnectorOrchestrationInfo> buildConnectorOrchestrator() {
-        return new Orchestrator<ConnectorOrchestrationInfo>() {
-            @Override
-            public boolean canOrchestrate(final ConnectorOrchestrationInfo data) {
-                return true;
-            }
-
-            @Override
-            public void doOrchestrate(final ConnectorOrchestrationInfo data) {
-                ConnectorBase.this.defineRequestRoute(data.getRequestRouteDefinition());
-                data.getResponseRouteDefinition().ifPresent(ConnectorBase.this::defineResponseRoute);
-            }
-        };
-    }
-
-    protected abstract void defineRequestRoute(final RouteDefinition definition);
-
-    protected void defineResponseRoute(final RouteDefinition definition) {
-        getLogger().warn("IntegrationScenario {} has a return type, but no response route has been defined in connector {}", getScenarioId(), getConnectorId());
-    }
-
-    public abstract String getScenarioId();
-
-    public abstract String getConnectorId();
-
+    @Override
     public Orchestrator<ConnectorOrchestrationInfo> getOrchestrator() {
-        return orchestrator;
+        return this;
+    }
+
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+        return ConnectorOrchestrator.forConnector(this);
     }
 
 }

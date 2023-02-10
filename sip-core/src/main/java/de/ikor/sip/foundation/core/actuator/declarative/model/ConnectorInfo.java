@@ -1,10 +1,17 @@
 package de.ikor.sip.foundation.core.actuator.declarative.model;
 
-import de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup;
-import java.util.List;
-import lombok.*;
+import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-/** Class which represents POJO model for exposing {@link ConnectorGroup} */
+/**
+ * Class which represents POJO model for exposing {@link InboundConnector} and {@link
+ * OutboundConnector}
+ */
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,7 +19,8 @@ import lombok.*;
 public class ConnectorInfo {
 
   private String connectorId;
-  private String connectorDescription;
-  private List<String> inboundEndpoints;
-  private List<String> outboundEndpoints;
+  private ConnectorType connectorType;
+  private String camelEndpointUri; // TODO: Implement getting these information
+  private String connectorGroupId;
+  private String scenarioId;
 }

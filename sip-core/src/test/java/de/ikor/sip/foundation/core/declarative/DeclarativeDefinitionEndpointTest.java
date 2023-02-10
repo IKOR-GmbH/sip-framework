@@ -1,15 +1,11 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
-import de.ikor.sip.foundation.core.actuator.declarative.model.EndpointInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
 import de.ikor.sip.foundation.core.apps.declarative.SimpleAdapter;
-import java.io.IOException;
-import java.util.List;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.DisableJmx;
 import org.apache.http.HttpResponse;
@@ -21,6 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
+
+import java.io.IOException;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @CamelSpringBootTest
 @SpringBootTest(
@@ -63,8 +64,8 @@ class DeclarativeDefinitionEndpointTest {
     // act
     HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
     CollectionType collectionType =
-        mapper.getTypeFactory().constructCollectionType(List.class, ConnectorInfo.class);
-    List<ConnectorInfo> connectors =
+        mapper.getTypeFactory().constructCollectionType(List.class, ConnectorGroupInfo.class);
+    List<ConnectorGroupInfo> connectors =
         mapper.readValue(httpResponse.getEntity().getContent(), collectionType);
 
     // assert
@@ -82,8 +83,8 @@ class DeclarativeDefinitionEndpointTest {
     // act
     HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
     CollectionType collectionType =
-        mapper.getTypeFactory().constructCollectionType(List.class, EndpointInfo.class);
-    List<EndpointInfo> endpoints =
+        mapper.getTypeFactory().constructCollectionType(List.class, ConnectorInfo.class);
+    List<ConnectorInfo> endpoints =
         mapper.readValue(httpResponse.getEntity().getContent(), collectionType);
 
     // assert

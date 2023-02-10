@@ -6,12 +6,15 @@ import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
+import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
-import org.apache.camel.builder.endpoint.dsl.DirectEndpointBuilderFactory.DirectEndpointConsumerBuilder;
 import org.apache.camel.model.RouteDefinition;
 
 @SIPIntegrationAdapter
@@ -35,24 +38,28 @@ public class CDMValidationAdapter {
       responseModel = CDMResponse.class)
   public class CDMValidationScenario extends IntegrationScenarioBase {}
 
-  @InboundConnector(belongsToGroup = "SIP1", toScenario = "CDMValidation")
-  public class InboundCDMConnectorBase extends GenericInboundConnectorBase {
+  @InboundConnector(belongsToGroup = "SIP1", toScenario = "CDMValidation", requestModel = CDMRequest.class, responseModel = CDMResponse.class)
+  public class InboundCDMConnector extends GenericInboundConnectorBase {
 
     @Override
-    public DirectEndpointConsumerBuilder getInboundEndpoint() {
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
       return StaticEndpointBuilders.direct("cdm-validator");
     }
+
   }
 
-  @OutboundConnector(belongsToGroup = "SIP2", fromScenario = "CDMValidation")
+  @OutboundConnector(belongsToGroup = "SIP2", fromScenario = "CDMValidation", requestModel = CDMRequest.class, responseModel = CDMResponse.class)
   public class OutboundCDMConnector extends GenericOutboundConnectorBase {
-
     @Override
-    public EndpointProducerBuilder getOutboundEndpoint() {
+    protected EndpointProducerBuilder defineOutgoingEndpoint() {
       return StaticEndpointBuilders.log("message");
     }
 
     @Override
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this).setRequestRouteTransformer(this::configureEndpointRoute);
+    }
+
     protected void configureEndpointRoute(RouteDefinition definition) {
       definition.process(
           exchange -> {

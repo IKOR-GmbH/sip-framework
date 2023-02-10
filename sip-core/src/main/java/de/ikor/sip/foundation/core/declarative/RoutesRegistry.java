@@ -23,7 +23,7 @@ public class RoutesRegistry {
         final var idBuilder = new StringBuilder(String.format("sip-connector_%s_%s", connector.getConnectorId(), role.getRoleSuffixInRouteId()));
         Arrays.stream(suffixes).forEach(suffix -> idBuilder.append("-").append(suffix));
         final var routeId = idBuilder.toString();
-        if (connectorForRouteIdRegister.containsKey(routeId)) {
+        if (roleForRouteIdRegister.containsKey(routeId)) {
             throw new SIPFrameworkInitializationException(String.format("Can't build internal connector route with routeId '%s': routeId already exists", routeId));
         }
         connectorForRouteIdRegister.put(routeId, connector);

@@ -8,6 +8,9 @@ import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnector
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.RestConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupBase;
+import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
@@ -30,15 +33,21 @@ public class SimpleAdapter {
     @InboundConnector(
             connectorId = "appendStaticMessageProvider",
             belongsToGroup = SIP1,
-            toScenario = APPEND_STATIC_MESSAGE_SCENARIO)
+            toScenario = APPEND_STATIC_MESSAGE_SCENARIO,
+            requestModel = String.class,
+            responseModel = String.class
+            )
     public class AppendStaticMessageProvider extends GenericInboundConnectorBase {
 
         @Override
+        protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+            return ConnectorOrchestrator.forConnector(this).setRequestRouteTransformer(this::defineRequestRoute).setResponseRouteTransformer(this::defineResponseRoute);
+        }
+
         protected void defineRequestRoute(final RouteDefinition definition) {
             definition.setBody(exchange -> "PRODUCED-" + exchange.getIn().getBody());
         }
 
-        @Override
         protected void defineResponseRoute(final RouteDefinition definition) {
             definition.setBody(exchange -> exchange.getIn().getBody() + "-Handled");
         }
@@ -52,12 +61,13 @@ public class SimpleAdapter {
     @OutboundConnector(
             connectorId = "appendStaticMessageConsumer",
             belongsToGroup = SIP2,
-            fromScenario = APPEND_STATIC_MESSAGE_SCENARIO   )
+            fromScenario = APPEND_STATIC_MESSAGE_SCENARIO,
+            requestModel = String.class)
     public class AppendStaticMessageConsumer extends GenericOutboundConnectorBase {
 
         @Override
-        protected void defineRequestRoute(final RouteDefinition definition) {
-            definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED");
+        protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+            return ConnectorOrchestrator.forConnector(this).setRequestRouteTransformer(definition -> definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED"));
         }
 
         @Override
@@ -72,29 +82,27 @@ public class SimpleAdapter {
     public class RestDSLScenario extends IntegrationScenarioBase {
     }
 
-    @InboundConnector(belongsToGroup = SIP1, toScenario = "RestDSL")
+    @InboundConnector(belongsToGroup = SIP1, toScenario = "RestDSL", requestModel = String.class)
     public class RestConnectorTestBase extends RestConnectorBase {
 
         @Override
         protected void configureRest(RestDefinition definition) {
             definition.post("path").type(String.class).get("path");
         }
-
-        @Override
-        protected void defineRequestRoute(final RouteDefinition definition) {
-
-        }
     }
 
-    @OutboundConnector(belongsToGroup = SIP2, fromScenario = "RestDSL")
+    @OutboundConnector(belongsToGroup = SIP2, fromScenario = "RestDSL", requestModel = String.class, responseModel = String.class)
     public class RestScenarioConsumer extends GenericOutboundConnectorBase {
 
         @Override
+        protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+            return ConnectorOrchestrator.forConnector(this).setRequestRouteTransformer(this::defineRequestRoute).setResponseRouteTransformer(this::defineResponseRoute);
+        }
+
         protected void defineRequestRoute(final RouteDefinition definition) {
             definition.setBody(exchange -> exchange.getIn().getBody() + "-CONSUMED");
         }
 
-        @Override
         protected void defineResponseRoute(final RouteDefinition definition) {
             definition.setBody(exchange -> exchange.getIn().getBody() + "-Handled-Outbound");
         }

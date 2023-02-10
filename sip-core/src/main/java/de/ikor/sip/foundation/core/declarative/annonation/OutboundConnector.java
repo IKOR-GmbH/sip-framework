@@ -18,5 +18,9 @@ public @interface OutboundConnector {
 
     String fromScenario();
 
+    Class<?> requestModel();
+
+    Class<?> responseModel() default Void.class;
+
     String[] domains() default {};
 }

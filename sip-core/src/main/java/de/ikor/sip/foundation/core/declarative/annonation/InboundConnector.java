@@ -18,5 +18,9 @@ public @interface InboundConnector {
 
     String toScenario();
 
+    Class<?> requestModel();
+
+    Class<?> responseModel() default Void.class;
+
     String[] domains() default {};
 }
