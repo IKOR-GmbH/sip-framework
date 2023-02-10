@@ -54,10 +54,11 @@ class CDMValidationTest {
     assertThat(target.getException()).isInstanceOf(SIPFrameworkException.class);
   }
 
-//  @Test
-//  void when_CDMResponseIsNotValid_then_ExceptionOccurs() {
-//    Exchange target = template.withBody(new CDMRequest(1001)).to(direct("cdm-validator")).send();
-//
-//    assertThat(target.getException()).isInstanceOf(SIPFrameworkException.class);
-//  }
+  //  @Test
+  //  void when_CDMResponseIsNotValid_then_ExceptionOccurs() {
+  //    Exchange target = template.withBody(new
+  // CDMRequest(1001)).to(direct("cdm-validator")).send();
+  //
+  //    assertThat(target.getException()).isInstanceOf(SIPFrameworkException.class);
+  //  }
 }

@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.orchestation.ConsumerOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.io.IOException;
 import java.util.Optional;
 import org.springframework.core.io.ClassPathResource;
@@ -51,7 +52,7 @@ public abstract class IntegrationScenarioBase implements IntegrationScenarioDefi
     try (var input = resource.getInputStream()) {
       return new String(input.readAllBytes());
     } catch (IOException e) {
-      throw new RuntimeException("Failed to read documentation resource", e);
+      throw new SIPFrameworkException("Failed to read documentation resource", e);
     }
   }
 }

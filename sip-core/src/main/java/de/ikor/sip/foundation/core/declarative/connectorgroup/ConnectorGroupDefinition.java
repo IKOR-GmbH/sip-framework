@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connectorgroup;
 
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.io.IOException;
 import org.springframework.core.io.ClassPathResource;
 
@@ -19,13 +20,9 @@ public interface ConnectorGroupDefinition {
     try (var input = resource.getInputStream()) {
       return new String(input.readAllBytes());
     } catch (IOException e) {
-      throw new RuntimeException("Failed to read documentation resource", e);
+      throw new SIPFrameworkException("Failed to read documentation resource", e);
     }
   }
 
   String getID();
-
-  //  Map<String, IntegrationScenarioConsumerDefinition> getConsumedIntegrationScenarios();
-  //
-  //  Map<String, IntegrationScenarioProviderDefinition> getProvidedIntegrationScenarios();
 }
