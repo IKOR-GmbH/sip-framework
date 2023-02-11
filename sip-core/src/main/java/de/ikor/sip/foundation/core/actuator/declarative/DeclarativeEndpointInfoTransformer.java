@@ -36,8 +36,8 @@ public class DeclarativeEndpointInfoTransformer {
    * @return ConnectorGroupInfo
    */
   public static ConnectorGroupInfo createConnectorGroupInfo(
-      List<InboundConnectorDefinition> inboundConnectors,
-      List<OutboundConnectorDefinition> outboundConnectors,
+      List<? extends ConnectorDefinition> inboundConnectors,
+      List<? extends ConnectorDefinition> outboundConnectors,
       ConnectorGroupDefinition connectorGroup) {
     return ConnectorGroupInfo.builder()
         .connectorGroupId(connectorGroup.getID())

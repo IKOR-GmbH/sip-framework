@@ -25,7 +25,7 @@ public class DeclarativeDefinitionEndpoint {
   private static final String CONNECTOR_GROUPS_PATH = "connectorgroups";
   private static final String SCENARIOS_PATH = "scenarios";
   private static final String CONNECTORS_PATH = "connectors";
-  private static final String URI_FORMAT = "%s/%s";
+  //  private static final String URI_FORMAT = "%s/%s";
 
   private final DeclarationsRegistry declarationsRegistry;
   private final List<ConnectorGroupInfo> connectorGroups = new ArrayList<>();
@@ -52,12 +52,12 @@ public class DeclarativeDefinitionEndpoint {
    */
   @GetMapping
   public Map<String, List> getLinks(HttpServletRequest request) {
-    //    String basePath = StringUtils.removeEnd(request.getRequestURL().toString(), "/");
+    //        String basePath = StringUtils.removeEnd(request.getRequestURL().toString(), "/");
     //
-    //    Link connectorsUri = new Link(String.format(URI_FORMAT, basePath, CONNECTORS_PATH));
-    //    Link connectorGroupsUri = new Link(String.format(URI_FORMAT, basePath,
-    // CONNECTOR_GROUPS_PATH));
-    //    Link scenariosUri = new Link(String.format(URI_FORMAT, basePath, SCENARIOS_PATH));
+    //        Link connectorsUri = new Link(String.format(URI_FORMAT, basePath, CONNECTORS_PATH));
+    //        Link connectorGroupsUri = new Link(String.format(URI_FORMAT, basePath,
+    //     CONNECTOR_GROUPS_PATH));
+    //        Link scenariosUri = new Link(String.format(URI_FORMAT, basePath, SCENARIOS_PATH));
 
     return Map.of(
         CONNECTORS_PATH,
