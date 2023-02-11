@@ -30,7 +30,8 @@ public interface DeclarationRegistryApi {
   @SuppressWarnings("rawtypes")
   List<InboundConnectorDefinition> getInboundConnectorsByConnectorGroupId(String connectorGroupId);
 
-  List<OutboundConnectorDefinition> getOutboundEndpointsByConnectorGroupId(String connectorGroupId);
+  List<OutboundConnectorDefinition> getOutboundConnectorsByConnectorGroupId(
+      String connectorGroupId);
 
   @SuppressWarnings("rawtypes")
   List<InboundConnectorDefinition> getInboundConnectorsByScenarioId(String scenarioId);

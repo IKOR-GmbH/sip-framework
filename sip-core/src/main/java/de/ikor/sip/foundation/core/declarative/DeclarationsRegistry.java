@@ -169,7 +169,7 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
   }
 
   @Override
-  public List<OutboundConnectorDefinition> getOutboundEndpointsByConnectorGroupId(
+  public List<OutboundConnectorDefinition> getOutboundConnectorsByConnectorGroupId(
       String connectorGroupId) {
     return connectors.stream()
         .filter(connector -> connector.getConnectorGroupId().equals(connectorGroupId))

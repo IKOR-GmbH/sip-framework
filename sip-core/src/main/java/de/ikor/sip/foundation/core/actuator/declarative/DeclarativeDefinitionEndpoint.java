@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.actuator.declarative;
 
-import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeModelTransformer.*;
+import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpointInfoTransformer.*;
 
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.boot.actuate.endpoint.web.Link;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +37,7 @@ public class DeclarativeDefinitionEndpoint {
   }
 
   @PostConstruct
-  private void collectInfo() {
+  private void collectInfos() {
     initializeConnectorGroupInfos();
     initializeIntegrationScenarioInfos();
     initializeEndpointInfos();
@@ -52,20 +51,21 @@ public class DeclarativeDefinitionEndpoint {
    * @return links Map<String, Link>
    */
   @GetMapping
-  public Map<String, Link> getLinks(HttpServletRequest request) {
-    String basePath = request.getRequestURL().toString();
-
-    Link connectorsUri = new Link(String.format(URI_FORMAT, basePath, CONNECTORS_PATH));
-    Link connectorGroupsUri = new Link(String.format(URI_FORMAT, basePath, CONNECTOR_GROUPS_PATH));
-    Link scenariosUri = new Link(String.format(URI_FORMAT, basePath, SCENARIOS_PATH));
+  public Map<String, List> getLinks(HttpServletRequest request) {
+    //    String basePath = StringUtils.removeEnd(request.getRequestURL().toString(), "/");
+    //
+    //    Link connectorsUri = new Link(String.format(URI_FORMAT, basePath, CONNECTORS_PATH));
+    //    Link connectorGroupsUri = new Link(String.format(URI_FORMAT, basePath,
+    // CONNECTOR_GROUPS_PATH));
+    //    Link scenariosUri = new Link(String.format(URI_FORMAT, basePath, SCENARIOS_PATH));
 
     return Map.of(
         CONNECTORS_PATH,
-        connectorsUri,
+        getConnectorInfo(),
         CONNECTOR_GROUPS_PATH,
-        connectorGroupsUri,
+        getConnectorGroupInfo(),
         SCENARIOS_PATH,
-        scenariosUri);
+        getScenarioInfo());
   }
 
   @GetMapping("/connectorgroups")
@@ -85,7 +85,11 @@ public class DeclarativeDefinitionEndpoint {
 
   private void initializeConnectorGroupInfos() {
     for (ConnectorGroupDefinition connectorGroup : declarationsRegistry.getConnectorGroups()) {
-      connectorGroups.add(createConnectorGroupInfo(declarationsRegistry, connectorGroup));
+      connectorGroups.add(
+          createConnectorGroupInfo(
+              declarationsRegistry.getInboundConnectorsByConnectorGroupId(connectorGroup.getID()),
+              declarationsRegistry.getOutboundConnectorsByConnectorGroupId(connectorGroup.getID()),
+              connectorGroup));
     }
   }
 
