@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
+import de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
@@ -24,18 +25,16 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))
 public class SimpleAdapter {
 
-  private static final String SIP1 = "SIP1";
-  private static final String SIP2 = "SIP2";
-  private static final String APPEND_STATIC_MESSAGE_SCENARIO = "AppendStaticMessage";
-
   // ----> AppendStaticMessage SCENARIO
-  @IntegrationScenario(scenarioId = APPEND_STATIC_MESSAGE_SCENARIO, requestModel = String.class)
-  public class AppendStaticMessageScenario extends IntegrationScenarioBase {}
+  @IntegrationScenario(scenarioId = AppendStaticMessageScenario.ID, requestModel = String.class)
+  public class AppendStaticMessageScenario extends IntegrationScenarioBase {
+    public static final String ID = "AppendStaticMessage";
+  }
 
   @InboundConnector(
       connectorId = "appendStaticMessageProvider",
-      belongsToGroup = SIP1,
-      toScenario = APPEND_STATIC_MESSAGE_SCENARIO,
+      belongsToGroup = ConnectorGroupSip1.ID,
+      toScenario = AppendStaticMessageScenario.ID,
       requestModel = String.class,
       responseModel = String.class)
   public class AppendStaticMessageProvider extends GenericInboundConnectorBase {
@@ -63,8 +62,8 @@ public class SimpleAdapter {
 
   @OutboundConnector(
       connectorId = "appendStaticMessageConsumer",
-      belongsToGroup = SIP2,
-      fromScenario = APPEND_STATIC_MESSAGE_SCENARIO,
+      belongsToGroup = "SIP2",
+      fromScenario = AppendStaticMessageScenario.ID,
       requestModel = String.class)
   public class AppendStaticMessageConsumer extends GenericOutboundConnectorBase {
 
@@ -84,10 +83,15 @@ public class SimpleAdapter {
   // <---- AppendStaticMessage SCENARIO
 
   // ----> RestDSL SCENARIO
-  @IntegrationScenario(scenarioId = "RestDSL", requestModel = String.class)
-  public class RestDSLScenario extends IntegrationScenarioBase {}
+  @IntegrationScenario(scenarioId = RestDSLScenario.ID, requestModel = String.class)
+  public class RestDSLScenario extends IntegrationScenarioBase {
+    public static final String ID = "RestDSL";
+  }
 
-  @InboundConnector(belongsToGroup = SIP1, toScenario = "RestDSL", requestModel = String.class)
+  @InboundConnector(
+      belongsToGroup = ConnectorGroupSip1.ID,
+      toScenario = RestDSLScenario.ID,
+      requestModel = String.class)
   public class RestConnectorTestBase extends RestConnectorBase {
 
     @Override
@@ -107,8 +111,8 @@ public class SimpleAdapter {
   }
 
   @OutboundConnector(
-      belongsToGroup = SIP2,
-      fromScenario = "RestDSL",
+      belongsToGroup = "SIP2",
+      fromScenario = RestDSLScenario.ID,
       requestModel = String.class,
       responseModel = String.class)
   public class RestScenarioConsumer extends GenericOutboundConnectorBase {
@@ -135,9 +139,8 @@ public class SimpleAdapter {
   }
 
   // <---- RestDSL SCENARIO
-  @de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup(groupId = SIP1)
-  public class ConnectorGroupSip1 extends ConnectorGroupBase {}
-
-  @de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup(groupId = SIP2)
-  public class ConnectorGroupSip2 extends ConnectorGroupBase {}
+  @ConnectorGroup(groupId = ConnectorGroupSip1.ID)
+  public class ConnectorGroupSip1 extends ConnectorGroupBase {
+    public static final String ID = "SIP1";
+  }
 }

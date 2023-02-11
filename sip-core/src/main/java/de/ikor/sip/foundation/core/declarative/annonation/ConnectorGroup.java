@@ -21,7 +21,7 @@ public @interface ConnectorGroup {
   /**
    * Optional path to the resource (typically a markdown file) that describes this connector. If not
    * given, an attempt is made to retrieve documentation from <code>
-   * docs/connectors/&lt;connector-ID&gt;</code> automatically.
+   * document/structure/connector-groups/&lt;connector-ID&gt;</code> automatically.
    *
    * @return Optional path to documentation resource file
    */

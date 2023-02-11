@@ -48,7 +48,12 @@ class DeclarativeDefinitionEndpointTest {
 
     // assert
     assertThat(httpResponse.getStatusLine().getStatusCode()).isEqualTo(200);
-    assertThat(scenarios).hasSize(2);
+    assertThat(scenarios)
+        .anyMatch(
+            scenarioInfo ->
+                "Scenario used for testing which appends static message"
+                    .equals(scenarioInfo.getScenarioDescription()))
+        .hasSize(2);
   }
 
   @Test
@@ -67,7 +72,16 @@ class DeclarativeDefinitionEndpointTest {
 
     // assert
     assertThat(httpResponse.getStatusLine().getStatusCode()).isEqualTo(200);
-    assertThat(connectorGroups).hasSize(2);
+    assertThat(connectorGroups)
+        .anyMatch(
+            connectorGroupInfo ->
+                "Test Documentation for a connector group"
+                    .equals(connectorGroupInfo.getConnectorGroupDescription()))
+        .anyMatch(
+            connectorGroupInfo ->
+                "Test Documentation for an implicitly created connectorgroup"
+                    .equals(connectorGroupInfo.getConnectorGroupDescription()))
+        .hasSize(2);
   }
 
   @Test

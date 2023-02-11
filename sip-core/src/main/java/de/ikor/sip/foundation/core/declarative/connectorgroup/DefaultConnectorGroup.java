@@ -14,12 +14,12 @@ public class DefaultConnectorGroup implements ConnectorGroupDefinition {
   private String connectorId;
 
   @Override
-  public String getDocumentation() {
-    return readDocumentation(EMPTY_PATH);
+  public String getID() {
+    return connectorId;
   }
 
   @Override
-  public String getID() {
-    return connectorId;
+  public String getPathToDocumentationResource() {
+    return EMPTY_PATH;
   }
 }

@@ -8,9 +8,9 @@ public interface IntegrationScenarioDefinition extends Orchestratable<ConsumerOr
 
   String getID();
 
-  String getDescription();
-
   Class<?> getRequestModelClass();
 
   Optional<Class<?>> getResponseModelClass();
+
+  String getPathToDocumentationResource();
 }

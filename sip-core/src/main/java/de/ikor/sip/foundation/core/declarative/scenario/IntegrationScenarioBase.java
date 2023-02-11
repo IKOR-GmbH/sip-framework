@@ -4,10 +4,7 @@ import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.orchestation.ConsumerOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
-import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
-import java.io.IOException;
 import java.util.Optional;
-import org.springframework.core.io.ClassPathResource;
 
 public abstract class IntegrationScenarioBase implements IntegrationScenarioDefinition {
 
@@ -36,23 +33,7 @@ public abstract class IntegrationScenarioBase implements IntegrationScenarioDefi
   }
 
   @Override
-  public String getDescription() {
-    final var annotationPath = scenarioAnnotation.pathToDocumentationResource();
-    final var resourcePath =
-        annotationPath.isEmpty()
-            ? String.format("documents/structure/integration-scenarios/%s", getID())
-            : annotationPath;
-    final var resource = new ClassPathResource(resourcePath);
-
-    if (!resource.isReadable()) {
-      return String.format(
-          "No documentation has been provided for integration-scenario '%s'", getID());
-    }
-
-    try (var input = resource.getInputStream()) {
-      return new String(input.readAllBytes());
-    } catch (IOException e) {
-      throw new SIPFrameworkException("Failed to read documentation resource", e);
-    }
+  public String getPathToDocumentationResource() {
+    return scenarioAnnotation.pathToDocumentationResource();
   }
 }

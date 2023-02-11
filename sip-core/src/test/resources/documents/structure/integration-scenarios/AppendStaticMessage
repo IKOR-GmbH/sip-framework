@@ -1,0 +1,1 @@
+Scenario used for testing which appends static message

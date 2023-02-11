@@ -14,4 +14,8 @@ public class IntegrationScenarioInfo {
   private String scenarioDescription;
   private String requestModelClass;
   private String responseModelClass;
+
+  public void setIntegrationScenarioDescription(String description) {
+    scenarioDescription = description;
+  }
 }

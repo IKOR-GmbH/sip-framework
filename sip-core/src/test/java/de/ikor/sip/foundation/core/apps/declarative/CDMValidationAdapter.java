@@ -36,14 +36,16 @@ public class CDMValidationAdapter {
   }
 
   @IntegrationScenario(
-      scenarioId = "CDMValidation",
+      scenarioId = CDMValidationScenario.ID,
       requestModel = CDMRequest.class,
       responseModel = CDMResponse.class)
-  public class CDMValidationScenario extends IntegrationScenarioBase {}
+  public class CDMValidationScenario extends IntegrationScenarioBase {
+    public static final String ID = "CDMValidation";
+  }
 
   @InboundConnector(
       belongsToGroup = "SIP1",
-      toScenario = "CDMValidation",
+      toScenario = CDMValidationScenario.ID,
       requestModel = CDMRequest.class,
       responseModel = CDMResponse.class)
   public class InboundCDMConnector extends GenericInboundConnectorBase {
@@ -56,7 +58,7 @@ public class CDMValidationAdapter {
 
   @OutboundConnector(
       belongsToGroup = "SIP2",
-      fromScenario = "CDMValidation",
+      fromScenario = CDMValidationScenario.ID,
       requestModel = CDMRequest.class,
       responseModel = CDMResponse.class)
   public class OutboundCDMConnector extends GenericOutboundConnectorBase {

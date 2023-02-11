@@ -71,15 +71,20 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
 
   private void checkForUnusedScenarios() {
     scenarios.stream()
-        .filter(scenario -> getInboundConnectorsByScenarioId(scenario.getID()).isEmpty())
-        .filter(scenario -> getOutboundConnectorsByScenarioId(scenario.getID()).isEmpty())
+        .filter(
+            scenario ->
+                getInboundConnectorsByScenarioId(scenario.getID()).isEmpty()
+                    || getOutboundConnectorsByScenarioId(scenario.getID()).isEmpty())
         .map(
             scenario -> {
               throw new SIPFrameworkInitializationException(
                   String.format(
                       "There is unused integration scenario with id %s", scenario.getID()));
             })
-        .collect(Collectors.toList());
+        .forEach(
+            x -> {
+              /* don't need the result */
+            });
   }
 
   private void checkForDuplicateConnectors() {
