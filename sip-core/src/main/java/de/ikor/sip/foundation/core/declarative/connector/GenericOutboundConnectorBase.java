@@ -33,7 +33,7 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
   }
 
   @Override
-  public final String getConnectorId() {
+  public final String getId() {
     return connectorId;
   }
 
@@ -51,5 +51,10 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
   public final Optional<Class<?>> getResponseModelClass() {
     var clazz = outboundConnectorAnnotation.responseModel();
     return clazz.equals(Void.class) ? Optional.empty() : Optional.of(clazz);
+  }
+
+  @Override
+  public String getPathToDocumentationResource() {
+    return outboundConnectorAnnotation.pathToDocumentationResource();
   }
 }

@@ -23,8 +23,7 @@ public class RoutesRegistry {
       final RouteRole role, final ConnectorDefinition connector, final Object... suffixes) {
     final var idBuilder =
         new StringBuilder(
-            String.format(
-                "sip-connector_%s_%s", connector.getConnectorId(), role.getRoleSuffixInRouteId()));
+            String.format("sip-connector_%s_%s", connector.getId(), role.getRoleSuffixInRouteId()));
     Arrays.stream(suffixes).forEach(suffix -> idBuilder.append("-").append(suffix));
     final var routeId = idBuilder.toString();
     if (roleForRouteIdRegister.containsKey(routeId)) {

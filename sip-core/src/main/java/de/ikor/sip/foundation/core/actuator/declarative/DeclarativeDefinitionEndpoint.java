@@ -98,6 +98,6 @@ public class DeclarativeDefinitionEndpoint {
   private void initializeEndpointInfos() {
     declarationsRegistry
         .getConnectors()
-        .forEach(connector -> connectors.add(createAndAddEndpointInfo(connector)));
+        .forEach(connector -> connectors.add(createAndAddConnectorInfo(connector)));
   }
 }

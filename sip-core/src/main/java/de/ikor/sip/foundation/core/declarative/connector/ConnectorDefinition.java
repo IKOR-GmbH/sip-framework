@@ -6,7 +6,7 @@ import java.util.Optional;
 
 // TODO: Missing java docs, when the inheritance structure is final add this.
 public interface ConnectorDefinition extends Orchestratable<ConnectorOrchestrationInfo> {
-  String getConnectorId();
+  String getId();
 
   ConnectorType getConnectorType();
 
@@ -21,4 +21,6 @@ public interface ConnectorDefinition extends Orchestratable<ConnectorOrchestrati
   }
 
   Optional<Class<?>> getResponseModelClass();
+
+  String getPathToDocumentationResource();
 }

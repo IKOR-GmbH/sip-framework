@@ -100,6 +100,11 @@ class DeclarativeDefinitionEndpointTest {
 
     // assert
     assertThat(httpResponse.getStatusLine().getStatusCode()).isEqualTo(200);
-    assertThat(connectors).hasSize(4);
+    assertThat(connectors)
+        .anyMatch(
+            connectorInfo ->
+                "Provides messages from direct to AppendStaticMessage scenario"
+                    .equals(connectorInfo.getConnectorDescription()))
+        .hasSize(4);
   }
 }

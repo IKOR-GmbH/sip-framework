@@ -22,4 +22,6 @@ public @interface OutboundConnector {
   Class<?> responseModel() default Void.class;
 
   String[] domains() default {};
+
+  String pathToDocumentationResource() default "";
 }

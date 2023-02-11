@@ -90,7 +90,7 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
   private void checkForDuplicateConnectors() {
     Set<String> set = new HashSet<>();
     List<String> connectorIds =
-        connectors.stream().map(ConnectorDefinition::getConnectorId).collect(Collectors.toList());
+        connectors.stream().map(ConnectorDefinition::getId).collect(Collectors.toList());
     connectorIds.forEach(id -> checkIfDuplicate(set, id, CONNECTOR));
   }
 
@@ -122,7 +122,7 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
   @Override
   public Optional<ConnectorDefinition> getConnectorById(final String connectorId) {
     return connectors.stream()
-        .filter(connector -> connector.getConnectorId().equals(connectorId))
+        .filter(connector -> connector.getId().equals(connectorId))
         .findFirst();
   }
 
@@ -145,7 +145,7 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
   @Override
   public Optional<InboundConnectorDefinition> getInboundConnectorById(String connectorId) {
     return connectors.stream()
-        .filter(connector -> connector.getConnectorId().equals(connectorId))
+        .filter(connector -> connector.getId().equals(connectorId))
         .map(InboundConnectorDefinition.class::cast)
         .findFirst();
   }
@@ -153,7 +153,7 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
   @Override
   public Optional<OutboundConnectorDefinition> getOutboundConnectorById(String connectorId) {
     return connectors.stream()
-        .filter(connector -> connector.getConnectorId().equals(connectorId))
+        .filter(connector -> connector.getId().equals(connectorId))
         .map(OutboundConnectorDefinition.class::cast)
         .findFirst();
   }

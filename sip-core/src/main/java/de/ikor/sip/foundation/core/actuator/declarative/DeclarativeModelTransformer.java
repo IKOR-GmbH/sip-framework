@@ -25,6 +25,7 @@ public class DeclarativeModelTransformer {
       "documents/structure/connector-groups";
   private static final String INTEGRATION_SCENARIO_DEFAULT_DOCS_PATH =
       "documents/structure/integration-scenarios";
+  private static final String CONNECTORS_DEFAULT_DOCS_PATH = "documents/structure/connectors";
 
   private DeclarativeModelTransformer() {}
 
@@ -59,16 +60,12 @@ public class DeclarativeModelTransformer {
 
   private static List<String> fetchInboundConnectorIds(
       List<InboundConnectorDefinition> inboundConnectors) {
-    return inboundConnectors.stream()
-        .map(ConnectorDefinition::getConnectorId)
-        .collect(Collectors.toList());
+    return inboundConnectors.stream().map(ConnectorDefinition::getId).collect(Collectors.toList());
   }
 
   private static List<String> fetchOutboundConnectorIds(
       List<OutboundConnectorDefinition> outboundConnectors) {
-    return outboundConnectors.stream()
-        .map(ConnectorDefinition::getConnectorId)
-        .collect(Collectors.toList());
+    return outboundConnectors.stream().map(ConnectorDefinition::getId).collect(Collectors.toList());
   }
 
   /**
@@ -102,13 +99,20 @@ public class DeclarativeModelTransformer {
    * @param connector from which info object is created
    * @return ConnectorInfo
    */
-  public static ConnectorInfo createAndAddEndpointInfo(ConnectorDefinition connector) {
-    return ConnectorInfo.builder()
-        .connectorId(connector.getConnectorId())
-        .connectorType(connector.getConnectorType())
-        .connectorGroupId(connector.getConnectorGroupId())
-        .scenarioId(connector.getScenarioId())
-        .build();
+  public static ConnectorInfo createAndAddConnectorInfo(ConnectorDefinition connector) {
+    ConnectorInfo connectorInfo =
+        ConnectorInfo.builder()
+            .connectorId(connector.getId())
+            .connectorType(connector.getConnectorType())
+            .connectorGroupId(connector.getConnectorGroupId())
+            .scenarioId(connector.getScenarioId())
+            .build();
+    connectorInfo.setConnectorDescription(
+        readDocumentation(
+            CONNECTORS_DEFAULT_DOCS_PATH,
+            connector.getPathToDocumentationResource(),
+            connector.getId()));
+    return connectorInfo;
   }
 
   private static String readDocumentation(String defaultDocsPath, String path, String id) {

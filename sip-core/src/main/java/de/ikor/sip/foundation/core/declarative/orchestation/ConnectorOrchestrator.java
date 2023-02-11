@@ -28,7 +28,7 @@ public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestratio
         LoggingLevel.WARN,
         String.format(
             "No request transformation definition has been assigned to connector '%s' in connector-class '%s'",
-            relatedConnector.getConnectorId(), relatedConnector.getClass().getName()));
+            relatedConnector.getId(), relatedConnector.getClass().getName()));
   }
 
   private void defaultResponseTransformer(final RouteDefinition definition) {
@@ -36,7 +36,7 @@ public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestratio
         LoggingLevel.WARN,
         String.format(
             "No response transformation definition has been assigned to connector '%s' in connector-class '%s'",
-            relatedConnector.getConnectorId(), relatedConnector.getClass().getName()));
+            relatedConnector.getId(), relatedConnector.getClass().getName()));
   }
 
   @Override
