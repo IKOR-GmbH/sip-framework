@@ -24,8 +24,4 @@ public class ConnectorInfo {
   private String camelEndpointUri; // TODO: Implement getting these information
   private String connectorGroupId;
   private String scenarioId;
-
-  public void setConnectorDescription(String connectorDescription) {
-    this.connectorDescription = connectorDescription;
-  }
 }

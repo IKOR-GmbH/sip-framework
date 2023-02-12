@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.core.actuator.routes;
 
 import de.ikor.sip.foundation.core.actuator.routes.annotations.RouteIdParameter;
 import de.ikor.sip.foundation.core.actuator.routes.annotations.RouteOperationParameter;
+import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +34,7 @@ public class AdapterRouteEndpoint {
   private final CamelContext camelContext;
   private final RouteControllerLoggingDecorator routeController;
   private final ManagedCamelContext mbeanContext;
+  private final RoutesRegistry routesRegistry;
 
   /**
    * Route endpoint
@@ -40,9 +42,12 @@ public class AdapterRouteEndpoint {
    * @param camelContext - CamelContext
    */
   public AdapterRouteEndpoint(
-      CamelContext camelContext, RouteControllerLoggingDecorator routeController) {
+      CamelContext camelContext,
+      RouteControllerLoggingDecorator routeController,
+      RoutesRegistry routesRegistry) {
     this.camelContext = camelContext;
     this.routeController = routeController;
+    this.routesRegistry = routesRegistry;
     this.mbeanContext = camelContext.getExtension(ManagedCamelContext.class);
   }
 
@@ -55,7 +60,11 @@ public class AdapterRouteEndpoint {
   @Operation(summary = "Get all routes", description = "Get list of Routes from Camel Context")
   public List<AdapterRouteSummary> routes() {
     return camelContext.getRoutes().stream()
-        .map(route -> new AdapterRouteSummary(getRouteMBean(route.getRouteId())))
+        .map(
+            route ->
+                new AdapterRouteSummary(
+                    getRouteMBean(route.getRouteId()),
+                    routesRegistry.generateRouteInfo(route.getRouteId())))
         .collect(Collectors.toList());
   }
 
@@ -189,7 +198,11 @@ public class AdapterRouteEndpoint {
     Stream<Route> routeStream = filterMiddleComponentProducerRoutes(camelContext.getRoutes());
 
     Stream<AdapterRouteSummary> adapterRouteSummaryStream =
-        routeStream.map(route -> new AdapterRouteSummary(getRouteMBean(route.getRouteId())));
+        routeStream.map(
+            route ->
+                new AdapterRouteSummary(
+                    getRouteMBean(route.getRouteId()),
+                    routesRegistry.generateRouteInfo(route.getRouteId())));
 
     return adapterRouteSummaryStream.collect(Collectors.toList());
   }

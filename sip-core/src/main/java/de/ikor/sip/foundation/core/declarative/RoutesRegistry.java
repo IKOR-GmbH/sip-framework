@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import de.ikor.sip.foundation.core.actuator.declarative.model.RouteStructureInfo;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.Arrays;
@@ -36,5 +37,17 @@ public class RoutesRegistry {
     routeIdsForConnectorRegister.put(connector, routeId);
     roleForRouteIdRegister.put(routeId, role);
     return routeId;
+  }
+
+  public RouteStructureInfo generateRouteInfo(String routeId) {
+    ConnectorDefinition connectorDefinition = connectorForRouteIdRegister.get(routeId);
+    if (connectorDefinition == null) {
+      return null;
+    }
+    return RouteStructureInfo.builder()
+        .connectorGroupId(connectorDefinition.getConnectorGroupId())
+        .connectorId(connectorDefinition.getId())
+        .scenarioId(connectorDefinition.getScenarioId())
+        .build();
   }
 }

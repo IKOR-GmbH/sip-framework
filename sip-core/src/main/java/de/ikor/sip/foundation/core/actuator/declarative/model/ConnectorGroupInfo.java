@@ -18,8 +18,4 @@ public class ConnectorGroupInfo {
   private String connectorGroupDescription;
   private List<String> inboundConnectors;
   private List<String> outboundConnectors;
-
-  public void setConnectorGroupDescription(String description) {
-    connectorGroupDescription = description;
-  }
 }

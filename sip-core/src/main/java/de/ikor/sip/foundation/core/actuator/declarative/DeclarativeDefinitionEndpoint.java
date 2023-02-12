@@ -6,8 +6,6 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
-import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +23,6 @@ public class DeclarativeDefinitionEndpoint {
   private static final String CONNECTOR_GROUPS_PATH = "connectorgroups";
   private static final String SCENARIOS_PATH = "scenarios";
   private static final String CONNECTORS_PATH = "connectors";
-  //  private static final String URI_FORMAT = "%s/%s";
 
   private final DeclarationsRegistry declarationsRegistry;
   private final List<ConnectorGroupInfo> connectorGroups = new ArrayList<>();
@@ -44,20 +41,14 @@ public class DeclarativeDefinitionEndpoint {
   }
 
   /**
-   * Base endpoint which exposes other child endpoints for connectors, connector groups and
+   * Base endpoint which exposes adapter structure including connectors, connector groups and
    * scenarios.
    *
    * @param request HttpServletRequest
-   * @return links Map<String, Link>
+   * @return links Map<String, List>
    */
   @GetMapping
-  public Map<String, List> getLinks(HttpServletRequest request) {
-    //        String basePath = StringUtils.removeEnd(request.getRequestURL().toString(), "/");
-    //
-    //        Link connectorsUri = new Link(String.format(URI_FORMAT, basePath, CONNECTORS_PATH));
-    //        Link connectorGroupsUri = new Link(String.format(URI_FORMAT, basePath,
-    //     CONNECTOR_GROUPS_PATH));
-    //        Link scenariosUri = new Link(String.format(URI_FORMAT, basePath, SCENARIOS_PATH));
+  public Map<String, List> getStructure(HttpServletRequest request) {
 
     return Map.of(
         CONNECTORS_PATH,
@@ -84,19 +75,23 @@ public class DeclarativeDefinitionEndpoint {
   }
 
   private void initializeConnectorGroupInfos() {
-    for (ConnectorGroupDefinition connectorGroup : declarationsRegistry.getConnectorGroups()) {
-      connectorGroups.add(
-          createConnectorGroupInfo(
-              declarationsRegistry.getInboundConnectorsByConnectorGroupId(connectorGroup.getID()),
-              declarationsRegistry.getOutboundConnectorsByConnectorGroupId(connectorGroup.getID()),
-              connectorGroup));
-    }
+    declarationsRegistry
+        .getConnectorGroups()
+        .forEach(
+            connectorGroup ->
+                connectorGroups.add(
+                    createConnectorGroupInfo(
+                        declarationsRegistry.getInboundConnectorsByConnectorGroupId(
+                            connectorGroup.getID()),
+                        declarationsRegistry.getOutboundConnectorsByConnectorGroupId(
+                            connectorGroup.getID()),
+                        connectorGroup)));
   }
 
   private void initializeIntegrationScenarioInfos() {
-    for (IntegrationScenarioDefinition scenario : declarationsRegistry.getScenarios()) {
-      scenarios.add(createIntegrationScenarioInfo(scenario));
-    }
+    declarationsRegistry
+        .getScenarios()
+        .forEach(scenario -> scenarios.add(createIntegrationScenarioInfo(scenario)));
   }
 
   private void initializeEndpointInfos() {
