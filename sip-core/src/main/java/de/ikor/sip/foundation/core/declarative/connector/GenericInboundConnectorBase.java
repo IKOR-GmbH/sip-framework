@@ -1,16 +1,17 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
-
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
-import java.util.Optional;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Optional;
+
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
 
 public abstract class GenericInboundConnectorBase extends ConnectorBase
     implements InboundConnectorDefinition<RoutesDefinition> {
@@ -49,6 +50,11 @@ public abstract class GenericInboundConnectorBase extends ConnectorBase
   @Override
   public final String getId() {
     return connectorId;
+  }
+
+  @Override
+  public final String getEndpointUri() {
+    return defineInitiatingEndpoint().getUri();
   }
 
   @Override

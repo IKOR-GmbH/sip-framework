@@ -23,4 +23,6 @@ public interface ConnectorDefinition extends Orchestratable<ConnectorOrchestrati
   Optional<Class<?>> getResponseModelClass();
 
   String getPathToDocumentationResource();
+
+  String getEndpointUri();
 }

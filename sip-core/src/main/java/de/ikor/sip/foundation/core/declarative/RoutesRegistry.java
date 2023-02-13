@@ -3,14 +3,15 @@ package de.ikor.sip.foundation.core.declarative;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteStructureInfo;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.Synchronized;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class RoutesRegistry {
@@ -50,6 +51,19 @@ public class RoutesRegistry {
         .connectorId(connectorDefinition.getId())
         .scenarioId(connectorDefinition.getScenarioId())
         .build();
+  }
+
+  public RouteStructureInfo getInfoFromEndpointURI(String uri) {
+    ConnectorDefinition connectorDefinition = connectorForRouteIdRegister.values().stream().filter(connectorDefinition1 ->
+      connectorDefinition1.getEndpointUri().equals(uri)).findFirst().get();
+    if (connectorDefinition == null) {
+      return null;
+    }
+    return RouteStructureInfo.builder()
+            .connectorGroupId(connectorDefinition.getConnectorGroupId())
+            .connectorId(connectorDefinition.getId())
+            .scenarioId(connectorDefinition.getScenarioId())
+            .build();
   }
 
   public Collection<String> getRouteIds(ConnectorDefinition connectorDefinition) {
