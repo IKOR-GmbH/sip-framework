@@ -6,6 +6,7 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
+import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +26,15 @@ public class DeclarativeDefinitionEndpoint {
   private static final String CONNECTORS_PATH = "connectors";
 
   private final DeclarationsRegistry declarationsRegistry;
+  private final RoutesRegistry routesRegistry;
   private final List<ConnectorGroupInfo> connectorGroups = new ArrayList<>();
   private final List<IntegrationScenarioInfo> scenarios = new ArrayList<>();
   private final List<ConnectorInfo> connectors = new ArrayList<>();
 
-  public DeclarativeDefinitionEndpoint(DeclarationsRegistry declarationsRegistry) {
+  public DeclarativeDefinitionEndpoint(
+      DeclarationsRegistry declarationsRegistry, RoutesRegistry routesRegistry) {
     this.declarationsRegistry = declarationsRegistry;
+    this.routesRegistry = routesRegistry;
   }
 
   @PostConstruct
@@ -45,7 +49,7 @@ public class DeclarativeDefinitionEndpoint {
    * scenarios.
    *
    * @param request HttpServletRequest
-   * @return links Map<String, List>
+   * @return {@literal Map<String, List>}
    */
   @GetMapping
   public Map<String, List> getStructure(HttpServletRequest request) {
@@ -97,6 +101,9 @@ public class DeclarativeDefinitionEndpoint {
   private void initializeConnectorInfos() {
     declarationsRegistry
         .getConnectors()
-        .forEach(connector -> connectors.add(createAndAddConnectorInfo(connector)));
+        .forEach(
+            connector ->
+                connectors.add(
+                    createAndAddConnectorInfo(connector, routesRegistry.getRouteIds(connector))));
   }
 }

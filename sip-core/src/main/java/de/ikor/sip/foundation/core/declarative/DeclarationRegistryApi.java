@@ -8,9 +8,7 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import java.util.List;
 import java.util.Optional;
 
-/**
- * API interface for {@link DeclarationsRegistry} used within the framework structure.
- */
+/** API interface for {@link DeclarationsRegistry} used within the framework structure. */
 public interface DeclarationRegistryApi {
 
   /**

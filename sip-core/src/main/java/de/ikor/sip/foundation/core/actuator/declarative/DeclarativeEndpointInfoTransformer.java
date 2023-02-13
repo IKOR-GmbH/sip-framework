@@ -8,6 +8,7 @@ import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefi
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.core.io.ClassPathResource;
@@ -85,12 +86,14 @@ public class DeclarativeEndpointInfoTransformer {
    * @param connector from which info object is created
    * @return ConnectorInfo
    */
-  public static ConnectorInfo createAndAddConnectorInfo(ConnectorDefinition connector) {
+  public static ConnectorInfo createAndAddConnectorInfo(
+      ConnectorDefinition connector, Collection<String> routeIds) {
     return ConnectorInfo.builder()
         .connectorId(connector.getId())
         .connectorType(connector.getConnectorType())
         .connectorGroupId(connector.getConnectorGroupId())
         .scenarioId(connector.getScenarioId())
+        .routeIds(routeIds)
         .connectorDescription(
             readDocumentation(
                 CONNECTORS_DEFAULT_DOCS_PATH,
