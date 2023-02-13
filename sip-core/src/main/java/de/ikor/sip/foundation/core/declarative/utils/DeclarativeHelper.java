@@ -2,6 +2,8 @@ package de.ikor.sip.foundation.core.declarative.utils;
 
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import org.apache.camel.builder.EndpointConsumerBuilder;
+
 import java.lang.annotation.Annotation;
 
 public class DeclarativeHelper {
@@ -23,5 +25,10 @@ public class DeclarativeHelper {
   public static String formatConnectorId(
       ConnectorType type, String scenarioID, String connectorId) {
     return String.format(CONNECTOR_ID_FORMAT, type.getValue(), scenarioID, connectorId);
+  }
+
+  public static EndpointConsumerBuilder resolveEndpointProperties(EndpointConsumerBuilder endpointConsumerBuilder) {
+    endpointConsumerBuilder.doSetProperty("bridgeErrorHandler", true);
+    return endpointConsumerBuilder;
   }
 }
