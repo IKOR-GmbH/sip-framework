@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.actuator.health.ftp;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -18,7 +19,7 @@ class FtpHealthIndicatorsTests {
 
   @BeforeEach
   void setUp() {
-    endpoint = mock(RemoteFileEndpoint.class);
+    endpoint = mock(RemoteFileEndpoint.class, RETURNS_DEEP_STUBS);
   }
 
   @Test

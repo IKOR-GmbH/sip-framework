@@ -54,17 +54,20 @@ public class RoutesRegistry {
         .build();
   }
 
-  public RouteStructureInfo getInfoFromEndpointURI(String uri) {
-    ConnectorDefinition connectorDefinition = connectorForRouteIdRegister.values().stream().filter(connectorDefinition1 ->
-      connectorDefinition1.getEndpointUri().equals(uri)).findFirst().get();
+  public RouteDeclarativeStructureInfo getInfoFromEndpointURI(String uri) {
+    ConnectorDefinition connectorDefinition =
+        connectorForRouteIdRegister.values().stream()
+            .filter(connectorDefinition1 -> connectorDefinition1.getEndpointUri().equals(uri))
+            .findFirst()
+            .get();
     if (connectorDefinition == null) {
       return null;
     }
-    return RouteStructureInfo.builder()
-            .connectorGroupId(connectorDefinition.getConnectorGroupId())
-            .connectorId(connectorDefinition.getId())
-            .scenarioId(connectorDefinition.getScenarioId())
-            .build();
+    return RouteDeclarativeStructureInfo.builder()
+        .connectorGroupId(connectorDefinition.getConnectorGroupId())
+        .connectorId(connectorDefinition.getId())
+        .scenarioId(connectorDefinition.getScenarioId())
+        .build();
   }
 
   public List<RouteInfo> getRoutesInfo(ConnectorDefinition connectorDefinition) {

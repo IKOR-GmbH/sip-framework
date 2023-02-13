@@ -1,6 +1,9 @@
 package de.ikor.sip.foundation.core.actuator.health.jms;
 
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.appendMetadata;
+
 import de.ikor.sip.foundation.core.actuator.common.IntegrationManagementException;
+import java.util.HashMap;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
@@ -26,6 +29,7 @@ public class JmsHealthIndicators {
    */
   public static Health connectionManageable(Endpoint endpoint) {
     Health.Builder builder = new Health.Builder();
+    builder.withDetails(appendMetadata(endpoint, new HashMap<>()));
 
     if (!(endpoint instanceof JmsEndpoint)) {
       throw new IntegrationManagementException(

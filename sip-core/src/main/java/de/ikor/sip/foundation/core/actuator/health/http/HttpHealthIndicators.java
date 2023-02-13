@@ -1,11 +1,6 @@
 package de.ikor.sip.foundation.core.actuator.health.http;
 
-import de.ikor.sip.foundation.core.actuator.declarative.model.RouteStructureInfo;
-import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.Endpoint;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.http.HttpStatus;
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.appendMetadata;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -14,6 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.Endpoint;
+import org.springframework.boot.actuate.health.Health;
+import org.springframework.http.HttpStatus;
 
 /**
  * {@link HttpHealthIndicators} contains several functions that implement health checks for HTTP
@@ -45,19 +44,9 @@ public class HttpHealthIndicators {
   }
 
   private static Map<String, Object> createDetails(Endpoint endpoint) {
-    RouteStructureInfo structureInfo = extractMetadata(endpoint);
     Map<String, Object> details = new HashMap<>();
     details.put("url", endpoint.getEndpointKey());
-    if(structureInfo != null){
-      details.put("metadata", structureInfo);
-    }
-    return details;
-  }
-
-  private static RouteStructureInfo extractMetadata(Endpoint endpoint) {
-    return endpoint.getCamelContext().getRegistry()
-            .lookupByNameAndType("routesRegistry", RoutesRegistry.class)
-            .getInfoFromEndpointURI(endpoint.getEndpointUri());
+    return appendMetadata(endpoint, details);
   }
 
   /**
