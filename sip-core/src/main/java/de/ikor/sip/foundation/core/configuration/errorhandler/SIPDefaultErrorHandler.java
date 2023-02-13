@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.errorhandler;
+package de.ikor.sip.foundation.core.configuration.errorhandler;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteConfigurationBuilder;

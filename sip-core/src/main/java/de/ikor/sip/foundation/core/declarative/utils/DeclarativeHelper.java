@@ -26,7 +26,7 @@ public class DeclarativeHelper {
     return String.format(CONNECTOR_ID_FORMAT, type.getValue(), scenarioID, connectorId);
   }
 
-  public static EndpointConsumerBuilder resolveEndpointProperties(
+  public static EndpointConsumerBuilder enableBridgeErrorHandler(
       EndpointConsumerBuilder endpointConsumerBuilder) {
     endpointConsumerBuilder.doSetProperty("bridgeErrorHandler", true);
     return endpointConsumerBuilder;

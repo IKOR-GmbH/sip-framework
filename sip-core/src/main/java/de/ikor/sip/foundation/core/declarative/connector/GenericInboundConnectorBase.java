@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.enableBridgeErrorHandler;
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.resolveEndpointProperties;
 
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
@@ -30,7 +30,7 @@ public abstract class GenericInboundConnectorBase extends ConnectorBase
       final EndpointProducerBuilder targetToDefinition,
       final RoutesRegistry routeRegistry) {
     EndpointConsumerBuilder endpointConsumerBuilder =
-        resolveEndpointProperties(defineInitiatingEndpoint());
+        enableBridgeErrorHandler(defineInitiatingEndpoint());
     definition
         .from(endpointConsumerBuilder)
         .routeId(routeRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, this))
