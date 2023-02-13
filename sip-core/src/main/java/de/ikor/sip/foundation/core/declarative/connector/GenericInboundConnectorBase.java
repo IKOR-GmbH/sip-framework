@@ -1,18 +1,17 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.resolveEndpointProperties;
+
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import java.util.Optional;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.Optional;
-
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.resolveEndpointProperties;
 
 public abstract class GenericInboundConnectorBase extends ConnectorBase
     implements InboundConnectorDefinition<RoutesDefinition> {
@@ -30,7 +29,8 @@ public abstract class GenericInboundConnectorBase extends ConnectorBase
       final RoutesDefinition definition,
       final EndpointProducerBuilder targetToDefinition,
       final RoutesRegistry routeRegistry) {
-    EndpointConsumerBuilder endpointConsumerBuilder = resolveEndpointProperties(defineInitiatingEndpoint());
+    EndpointConsumerBuilder endpointConsumerBuilder =
+        resolveEndpointProperties(defineInitiatingEndpoint());
     definition
         .from(endpointConsumerBuilder)
         .routeId(routeRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, this))
