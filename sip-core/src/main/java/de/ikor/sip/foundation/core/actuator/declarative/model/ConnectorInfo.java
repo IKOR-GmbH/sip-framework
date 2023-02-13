@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.core.actuator.declarative.model;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
-import java.util.Collection;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,5 +25,5 @@ public class ConnectorInfo {
   private String camelEndpointUri; // TODO: Implement getting these information
   private String connectorGroupId;
   private String scenarioId;
-  private Collection<String> routeIds;
+  private List<RouteInfo> routes;
 }
