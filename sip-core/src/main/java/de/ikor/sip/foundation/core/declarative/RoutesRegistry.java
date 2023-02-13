@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.RouteStructureInfo
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Synchronized;
@@ -49,5 +50,9 @@ public class RoutesRegistry {
         .connectorId(connectorDefinition.getId())
         .scenarioId(connectorDefinition.getScenarioId())
         .build();
+  }
+
+  public Collection<String> getRouteIds(ConnectorDefinition connectorDefinition) {
+    return routeIdsForConnectorRegister.get(connectorDefinition);
   }
 }

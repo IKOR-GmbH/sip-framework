@@ -56,7 +56,6 @@ class MarkdownFilesContributorTest {
     file1.delete();
     file2.delete();
     file3.delete();
-    Files.deleteIfExists(directory);
 
     // assert
     @SuppressWarnings("unchecked")
