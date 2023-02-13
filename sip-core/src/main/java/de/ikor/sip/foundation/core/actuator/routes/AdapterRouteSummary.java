@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.actuator.routes;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import de.ikor.sip.foundation.core.actuator.declarative.model.RouteStructureInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -20,7 +20,7 @@ public class AdapterRouteSummary {
   private long exchangesInflight;
 
   @JsonInclude(Include.NON_NULL)
-  private RouteStructureInfo routeStructureInfo;
+  private RouteDeclarativeStructureInfo routeDeclarativeStructureInfo;
 
   /**
    * Initializes an AdapterRouteSummary
@@ -29,13 +29,13 @@ public class AdapterRouteSummary {
    */
   @SneakyThrows
   public AdapterRouteSummary(
-      ManagedRouteMBean managedRoute, RouteStructureInfo routeStructureInfo) {
+      ManagedRouteMBean managedRoute, RouteDeclarativeStructureInfo routeDeclarativeStructureInfo) {
     this.id = managedRoute.getRouteId();
     this.state = managedRoute.getState();
     this.exchangesTotal = managedRoute.getExchangesTotal();
     this.exchangesCompleted = managedRoute.getExchangesCompleted();
     this.exchangesFailed = managedRoute.getExchangesFailed();
     this.exchangesInflight = managedRoute.getExchangesInflight();
-    this.routeStructureInfo = routeStructureInfo;
+    this.routeDeclarativeStructureInfo = routeDeclarativeStructureInfo;
   }
 }

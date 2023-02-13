@@ -1,32 +1,33 @@
 package de.ikor.sip.foundation.core.actuator.declarative;
 
-import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpointInfoTransformer.*;
+import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpointInfoTransformer.createAndAddConnectorInfo;
+import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpointInfoTransformer.createConnectorGroupInfo;
+import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpointInfoTransformer.createIntegrationScenarioInfo;
 
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.DeclarativeStructureInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /** Actuator endpoints for exposing Connectors, Connector Groups and Integration Scenarios. */
 @Component
 @RestControllerEndpoint(id = "adapterdefinition")
+@DependsOn("adapterBuilder")
 public class DeclarativeDefinitionEndpoint {
-
-  private static final String CONNECTOR_GROUPS_PATH = "connectorgroups";
-  private static final String SCENARIOS_PATH = "scenarios";
-  private static final String CONNECTORS_PATH = "connectors";
 
   private final DeclarationsRegistry declarationsRegistry;
   private final RoutesRegistry routesRegistry;
+
   private final List<ConnectorGroupInfo> connectorGroups = new ArrayList<>();
   private final List<IntegrationScenarioInfo> scenarios = new ArrayList<>();
   private final List<ConnectorInfo> connectors = new ArrayList<>();
@@ -37,7 +38,7 @@ public class DeclarativeDefinitionEndpoint {
     this.routesRegistry = routesRegistry;
   }
 
-  @PostConstruct
+  @EventListener(ApplicationReadyEvent.class)
   private void collectInfos() {
     initializeConnectorGroupInfos();
     initializeIntegrationScenarioInfos();
@@ -48,19 +49,15 @@ public class DeclarativeDefinitionEndpoint {
    * Base endpoint which exposes adapter structure including connectors, connector groups and
    * scenarios.
    *
-   * @param request HttpServletRequest
-   * @return {@literal Map<String, List>}
+   * @return DeclarativeStructureInfo
    */
-  @GetMapping
-  public Map<String, List> getStructure(HttpServletRequest request) {
-
-    return Map.of(
-        CONNECTORS_PATH,
-        getConnectorInfo(),
-        CONNECTOR_GROUPS_PATH,
-        getConnectorGroupInfo(),
-        SCENARIOS_PATH,
-        getScenarioInfo());
+  @GetMapping("/")
+  public DeclarativeStructureInfo getStructure() {
+    return DeclarativeStructureInfo.builder()
+        .connectorgroups(getConnectorGroupInfo())
+        .connectors(getConnectorInfo())
+        .scenarios(getScenarioInfo())
+        .build();
   }
 
   @GetMapping("/connectorgroups")
@@ -104,6 +101,6 @@ public class DeclarativeDefinitionEndpoint {
         .forEach(
             connector ->
                 connectors.add(
-                    createAndAddConnectorInfo(connector, routesRegistry.getRouteIds(connector))));
+                    createAndAddConnectorInfo(connector, routesRegistry.getRoutesInfo(connector))));
   }
 }

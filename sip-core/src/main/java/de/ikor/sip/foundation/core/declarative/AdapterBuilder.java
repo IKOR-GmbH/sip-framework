@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import lombok.AllArgsConstructor;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.builder.RouteBuilder;
@@ -24,7 +22,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-@AllArgsConstructor
 public class AdapterBuilder extends RouteBuilder {
 
   private static final String SCENARIO_HANDOVER_COMPONENT = "sipmc";
@@ -32,12 +29,15 @@ public class AdapterBuilder extends RouteBuilder {
   private final RoutesRegistry routesRegistry;
 
   @SuppressWarnings("rawtypes")
-  private Map<IntegrationScenarioDefinition, List<InboundConnectorDefinition>> inboundConnectors;
+  private final Map<IntegrationScenarioDefinition, List<InboundConnectorDefinition>>
+      inboundConnectors;
 
-  private Map<IntegrationScenarioDefinition, List<OutboundConnectorDefinition>> outboundConnectors;
+  private final Map<IntegrationScenarioDefinition, List<OutboundConnectorDefinition>>
+      outboundConnectors;
 
-  @PostConstruct
-  private void fetchEndpoints() {
+  public AdapterBuilder(DeclarationsRegistry declarationsRegistry, RoutesRegistry routesRegistry) {
+    this.declarationsRegistry = declarationsRegistry;
+    this.routesRegistry = routesRegistry;
     this.inboundConnectors =
         declarationsRegistry.getInboundConnectors().stream()
             .collect(

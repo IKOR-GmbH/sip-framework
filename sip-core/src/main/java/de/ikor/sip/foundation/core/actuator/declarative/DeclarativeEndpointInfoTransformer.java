@@ -3,12 +3,12 @@ package de.ikor.sip.foundation.core.actuator.declarative;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.RouteInfo;
 import de.ikor.sip.foundation.core.declarative.connector.*;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.core.io.ClassPathResource;
@@ -87,13 +87,13 @@ public class DeclarativeEndpointInfoTransformer {
    * @return ConnectorInfo
    */
   public static ConnectorInfo createAndAddConnectorInfo(
-      ConnectorDefinition connector, Collection<String> routeIds) {
+      ConnectorDefinition connector, List<RouteInfo> routes) {
     return ConnectorInfo.builder()
         .connectorId(connector.getId())
         .connectorType(connector.getConnectorType())
         .connectorGroupId(connector.getConnectorGroupId())
         .scenarioId(connector.getScenarioId())
-        .routeIds(routeIds)
+        .routes(routes)
         .connectorDescription(
             readDocumentation(
                 CONNECTORS_DEFAULT_DOCS_PATH,
