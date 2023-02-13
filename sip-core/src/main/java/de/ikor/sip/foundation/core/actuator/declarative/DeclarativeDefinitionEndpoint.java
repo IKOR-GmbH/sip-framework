@@ -37,7 +37,7 @@ public class DeclarativeDefinitionEndpoint {
   private void collectInfos() {
     initializeConnectorGroupInfos();
     initializeIntegrationScenarioInfos();
-    initializeEndpointInfos();
+    initializeConnectorInfos();
   }
 
   /**
@@ -94,7 +94,7 @@ public class DeclarativeDefinitionEndpoint {
         .forEach(scenario -> scenarios.add(createIntegrationScenarioInfo(scenario)));
   }
 
-  private void initializeEndpointInfos() {
+  private void initializeConnectorInfos() {
     declarationsRegistry
         .getConnectors()
         .forEach(connector -> connectors.add(createAndAddConnectorInfo(connector)));
