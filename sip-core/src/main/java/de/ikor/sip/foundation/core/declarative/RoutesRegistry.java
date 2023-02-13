@@ -1,17 +1,18 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import de.ikor.sip.foundation.core.actuator.declarative.model.RouteStructureInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.RouteInfo;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.Synchronized;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class RoutesRegistry {
@@ -41,12 +42,12 @@ public class RoutesRegistry {
     return routeId;
   }
 
-  public RouteStructureInfo generateRouteInfo(String routeId) {
+  public RouteDeclarativeStructureInfo generateRouteInfo(String routeId) {
     ConnectorDefinition connectorDefinition = connectorForRouteIdRegister.get(routeId);
     if (connectorDefinition == null) {
       return null;
     }
-    return RouteStructureInfo.builder()
+    return RouteDeclarativeStructureInfo.builder()
         .connectorGroupId(connectorDefinition.getConnectorGroupId())
         .connectorId(connectorDefinition.getId())
         .scenarioId(connectorDefinition.getScenarioId())
@@ -66,7 +67,14 @@ public class RoutesRegistry {
             .build();
   }
 
-  public Collection<String> getRouteIds(ConnectorDefinition connectorDefinition) {
-    return routeIdsForConnectorRegister.get(connectorDefinition);
+  public List<RouteInfo> getRoutesInfo(ConnectorDefinition connectorDefinition) {
+    return routeIdsForConnectorRegister.get(connectorDefinition).stream()
+        .map(
+            routeId ->
+                RouteInfo.builder()
+                    .routeRole(roleForRouteIdRegister.get(routeId))
+                    .routeId(routeId)
+                    .build())
+        .collect(Collectors.toList());
   }
 }

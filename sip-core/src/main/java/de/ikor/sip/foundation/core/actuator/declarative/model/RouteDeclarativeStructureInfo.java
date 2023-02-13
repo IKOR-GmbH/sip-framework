@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class RouteStructureInfo {
+public class RouteDeclarativeStructureInfo {
   private String connectorGroupId;
   private String scenarioId;
   private String connectorId;
