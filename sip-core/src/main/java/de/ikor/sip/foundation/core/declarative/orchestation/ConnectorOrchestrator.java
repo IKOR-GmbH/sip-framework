@@ -17,10 +17,6 @@ import org.apache.camel.model.RouteDefinition;
  * connector (such as data model transformation) using Camel's DSL from the provided {@link
  * RouteDefinition} handles.
  *
- * <p>Custom transformations should be provided using the {@link
- * #setRequestRouteTransformer(Consumer)} and {@link #setResponseRouteTransformer(Consumer)} methods
- * as necessary.
- *
  * @see ConnectorOrchestrationInfo
  * @see #forConnector(ConnectorDefinition)
  */
