@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
+import org.apache.camel.EndpointAware;
 import org.apache.camel.Route;
-import org.apache.camel.processor.SendProcessor;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.springframework.stereotype.Service;
@@ -86,8 +86,8 @@ public class RoutesRegistry {
       endpointsForRouteId.put(routeId, route.getEndpoint());
       routeIdsForEndpoints.put(route.getEndpoint(), routeId);
       for (org.apache.camel.Service service : route.getServices()) {
-        if (service instanceof SendProcessor) {
-          Endpoint endpoint = ((SendProcessor) service).getEndpoint();
+        if (service instanceof EndpointAware) {
+          Endpoint endpoint = ((EndpointAware) service).getEndpoint();
           endpointsForRouteId.put(routeId, endpoint);
           routeIdsForEndpoints.put(endpoint, routeId);
         }
