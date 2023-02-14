@@ -1,6 +1,9 @@
 package de.ikor.sip.foundation.core.actuator.health.ftp;
 
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.appendMetadata;
+
 import de.ikor.sip.foundation.core.actuator.common.IntegrationManagementException;
+import java.util.HashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import org.apache.camel.Endpoint;
@@ -85,6 +88,7 @@ public class FtpHealthIndicators {
       RemoteFileOperations<?> remoteFileOperations,
       BiConsumer<RemoteFileEndpoint<?>, RemoteFileOperations<?>> healthCheck) {
     final Health.Builder builder = new Health.Builder();
+    builder.withDetails(appendMetadata(remoteFileEndpoint, new HashMap<>()));
     try (CloseableRemoteOperations remoteOps =
         new CloseableRemoteOperations(remoteFileEndpoint, remoteFileOperations)) {
       connectIfNotConnected(remoteFileEndpoint, remoteFileOperations);

@@ -4,23 +4,38 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeSt
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteInfo;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Endpoint;
+import org.apache.camel.EndpointAware;
+import org.apache.camel.Route;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class RoutesRegistry {
 
+  private final CamelContext camelContext;
   private final MultiValuedMap<ConnectorDefinition, String> routeIdsForConnectorRegister =
       new HashSetValuedHashMap<>();
   private final Map<String, ConnectorDefinition> connectorForRouteIdRegister = new HashMap<>();
   private final Map<String, RouteRole> roleForRouteIdRegister = new HashMap<>();
+  private final MultiValuedMap<String, Endpoint> endpointsForRouteId = new HashSetValuedHashMap<>();
+  private final MultiValuedMap<Endpoint, String> routeIdsForEndpoints =
+      new HashSetValuedHashMap<>();
+
+  /** On ApplicationReadyEvent trigger mapping routes and endpoints */
+  @EventListener(ApplicationReadyEvent.class)
+  private void fillRegistry() {
+    prefillEndpointRouteMappings();
+  }
 
   @Synchronized
   public String generateRouteIdForConnector(
@@ -63,5 +78,28 @@ public class RoutesRegistry {
                     .routeId(routeId)
                     .build())
         .collect(Collectors.toList());
+  }
+
+  public List<RouteDeclarativeStructureInfo> generateRouteInfoList(Endpoint endpoint) {
+    List<RouteDeclarativeStructureInfo> routeDeclarativeStructureInfoList = new ArrayList<>();
+    routeIdsForEndpoints
+        .get(endpoint)
+        .forEach(routeId -> routeDeclarativeStructureInfoList.add(generateRouteInfo(routeId)));
+    return routeDeclarativeStructureInfoList;
+  }
+
+  private void prefillEndpointRouteMappings() {
+    for (Route route : camelContext.getRoutes()) {
+      String routeId = route.getRouteId();
+      endpointsForRouteId.put(routeId, route.getEndpoint());
+      routeIdsForEndpoints.put(route.getEndpoint(), routeId);
+      for (org.apache.camel.Service service : route.getServices()) {
+        if (service instanceof EndpointAware) {
+          Endpoint endpoint = ((EndpointAware) service).getEndpoint();
+          endpointsForRouteId.put(routeId, endpoint);
+          routeIdsForEndpoints.put(endpoint, routeId);
+        }
+      }
+    }
   }
 }
