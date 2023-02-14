@@ -38,11 +38,6 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
   }
 
   @Override
-  public final String getEndpointUri() {
-    return defineOutgoingEndpoint().getUri();
-  }
-
-  @Override
   public String getConnectorGroupId() {
     return outboundConnectorAnnotation.belongsToGroup();
   }

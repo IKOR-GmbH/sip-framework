@@ -52,11 +52,6 @@ public abstract class GenericInboundConnectorBase extends ConnectorBase
   }
 
   @Override
-  public final String getEndpointUri() {
-    return defineInitiatingEndpoint().getUri();
-  }
-
-  @Override
   public final String getConnectorGroupId() {
     return inboundConnectorAnnotation.belongsToGroup();
   }
