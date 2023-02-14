@@ -4,10 +4,7 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeSt
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteInfo;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.Synchronized;
 import org.apache.commons.collections4.MultiValuedMap;
@@ -21,6 +18,11 @@ public class RoutesRegistry {
       new HashSetValuedHashMap<>();
   private final Map<String, ConnectorDefinition> connectorForRouteIdRegister = new HashMap<>();
   private final Map<String, RouteRole> roleForRouteIdRegister = new HashMap<>();
+  private final DeclarationRegistryApi declarationRegistryApi;
+
+  public RoutesRegistry(DeclarationRegistryApi declarationRegistryApi) {
+    this.declarationRegistryApi = declarationRegistryApi;
+  }
 
   @Synchronized
   public String generateRouteIdForConnector(
@@ -52,6 +54,19 @@ public class RoutesRegistry {
         .connectorId(connectorDefinition.getId())
         .scenarioId(connectorDefinition.getScenarioId())
         .build();
+  }
+
+  public String getRouteIdByConnectorId(String connectorId) {
+    Optional<ConnectorDefinition> connector = declarationRegistryApi.getConnectorById(connectorId);
+    List<RouteInfo> routeInfos = new ArrayList<>();
+    if (connector.isPresent()) {
+      routeInfos = getRoutesInfo(connector.get());
+    }
+    return routeInfos.stream()
+        .filter(routeInfo -> routeInfo.getRouteRole().equals(RouteRole.EXTERNAL_ENDPOINT))
+        .map(RouteInfo::getRouteId)
+        .findFirst()
+        .orElse(null);
   }
 
   public List<RouteInfo> getRoutesInfo(ConnectorDefinition connectorDefinition) {
