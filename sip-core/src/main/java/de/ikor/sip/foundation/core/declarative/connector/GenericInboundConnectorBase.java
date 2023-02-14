@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.enableBridgeErrorHandler;
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
 
 import de.ikor.sip.foundation.core.declarative.RouteRole;
@@ -29,10 +28,8 @@ public abstract class GenericInboundConnectorBase extends ConnectorBase
       final RoutesDefinition definition,
       final EndpointProducerBuilder targetToDefinition,
       final RoutesRegistry routeRegistry) {
-    EndpointConsumerBuilder endpointConsumerBuilder =
-        enableBridgeErrorHandler(defineInitiatingEndpoint());
     definition
-        .from(endpointConsumerBuilder)
+        .from(defineInitiatingEndpoint())
         .routeId(routeRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, this))
         .to(targetToDefinition);
   }
