@@ -8,6 +8,7 @@ import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import java.util.Collections;
+import java.util.Optional;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Route;
@@ -39,7 +40,8 @@ class AdapterRouteEndpointTest {
     ReflectionTestUtils.setField(routeControllerLoggingDecorator, "ctx", camelContext);
     routesRegistry = mock(RoutesRegistry.class, RETURNS_DEEP_STUBS);
     subject =
-        new AdapterRouteEndpoint(camelContext, routeControllerLoggingDecorator, routesRegistry);
+        new AdapterRouteEndpoint(
+            camelContext, routeControllerLoggingDecorator, Optional.of(routesRegistry));
   }
 
   @Test
