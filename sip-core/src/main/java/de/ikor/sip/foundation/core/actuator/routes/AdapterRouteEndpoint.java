@@ -5,6 +5,7 @@ import de.ikor.sip.foundation.core.actuator.routes.annotations.RouteOperationPar
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class AdapterRouteEndpoint {
   private final CamelContext camelContext;
   private final RouteControllerLoggingDecorator routeController;
   private final ManagedCamelContext mbeanContext;
-  private final RoutesRegistry routesRegistry;
+  private final Optional<RoutesRegistry> routesRegistry;
 
   /**
    * Route endpoint
@@ -44,7 +45,7 @@ public class AdapterRouteEndpoint {
   public AdapterRouteEndpoint(
       CamelContext camelContext,
       RouteControllerLoggingDecorator routeController,
-      RoutesRegistry routesRegistry) {
+      Optional<RoutesRegistry> routesRegistry) {
     this.camelContext = camelContext;
     this.routeController = routeController;
     this.routesRegistry = routesRegistry;
@@ -64,7 +65,9 @@ public class AdapterRouteEndpoint {
             route ->
                 new AdapterRouteSummary(
                     getRouteMBean(route.getRouteId()),
-                    routesRegistry.generateRouteInfo(route.getRouteId())))
+                    routesRegistry
+                        .map(registry -> registry.generateRouteInfo(route.getRouteId()))
+                        .orElse(null)))
         .collect(Collectors.toList());
   }
 
@@ -202,7 +205,9 @@ public class AdapterRouteEndpoint {
             route ->
                 new AdapterRouteSummary(
                     getRouteMBean(route.getRouteId()),
-                    routesRegistry.generateRouteInfo(route.getRouteId())));
+                    routesRegistry
+                        .map(registry -> registry.generateRouteInfo(route.getRouteId()))
+                        .orElse(null)));
 
     return adapterRouteSummaryStream.collect(Collectors.toList());
   }

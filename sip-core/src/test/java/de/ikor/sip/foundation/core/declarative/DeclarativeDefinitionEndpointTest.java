@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.DeclarativeStructureInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
 import de.ikor.sip.foundation.core.apps.declarative.SimpleAdapter;
 import java.io.IOException;
@@ -32,6 +33,29 @@ class DeclarativeDefinitionEndpointTest {
 
   @LocalServerPort private int localServerPort;
 
+  private final int CONNECTORGROUPS_IN_TEST_ADAPTER = 2;
+  private final int SCENARIOS_IN_TEST_ADAPTER = 2;
+  private final int CONNECTORS_IN_TEST_ADAPTER = 4;
+
+  @Test
+  void when_ActuatorGetAdapterDefinitionInfo_then_RetrieveFullAdapterInfo() throws IOException {
+    // arrange
+    HttpUriRequest request =
+        new HttpGet("http://localhost:" + localServerPort + "/actuator/adapterdefinition");
+
+    // act
+    HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+    DeclarativeStructureInfo declarativeStructureInfo =
+        mapper.readValue(httpResponse.getEntity().getContent(), DeclarativeStructureInfo.class);
+
+    // assert
+    assertThat(httpResponse.getStatusLine().getStatusCode()).isEqualTo(200);
+    assertThat(declarativeStructureInfo.getScenarios()).hasSize(SCENARIOS_IN_TEST_ADAPTER);
+    assertThat(declarativeStructureInfo.getConnectors()).hasSize(CONNECTORS_IN_TEST_ADAPTER);
+    assertThat(declarativeStructureInfo.getConnectorgroups())
+        .hasSize(CONNECTORGROUPS_IN_TEST_ADAPTER);
+  }
+
   @Test
   void when_ActuatorGetScenarioInfo_then_RetrieveScenarios() throws IOException {
     // arrange
@@ -53,7 +77,7 @@ class DeclarativeDefinitionEndpointTest {
             scenarioInfo ->
                 "Scenario used for testing which appends static message"
                     .equals(scenarioInfo.getScenarioDescription()))
-        .hasSize(2);
+        .hasSize(SCENARIOS_IN_TEST_ADAPTER);
   }
 
   @Test
@@ -81,7 +105,7 @@ class DeclarativeDefinitionEndpointTest {
             connectorGroupInfo ->
                 "Test Documentation for an implicitly created connectorgroup"
                     .equals(connectorGroupInfo.getConnectorGroupDescription()))
-        .hasSize(2);
+        .hasSize(CONNECTORGROUPS_IN_TEST_ADAPTER);
   }
 
   @Test
@@ -105,6 +129,9 @@ class DeclarativeDefinitionEndpointTest {
             connectorInfo ->
                 "Provides messages from direct to AppendStaticMessage scenario"
                     .equals(connectorInfo.getConnectorDescription()))
-        .hasSize(4);
+        .anyMatch(
+            connectorInfo ->
+                "Generic connector description.".equals(connectorInfo.getConnectorDescription()))
+        .hasSize(CONNECTORS_IN_TEST_ADAPTER);
   }
 }
