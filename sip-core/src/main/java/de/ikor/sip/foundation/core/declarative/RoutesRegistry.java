@@ -14,6 +14,8 @@ import org.apache.camel.EndpointAware;
 import org.apache.camel.Route;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,6 +30,12 @@ public class RoutesRegistry {
   private final MultiValuedMap<String, Endpoint> endpointsForRouteId = new HashSetValuedHashMap<>();
   private final MultiValuedMap<Endpoint, String> routeIdsForEndpoints =
       new HashSetValuedHashMap<>();
+
+  /** On ApplicationReadyEvent trigger mapping routes and endpoints */
+  @EventListener(ApplicationReadyEvent.class)
+  private void fillRegistry() {
+    prefillEndpointRouteMappings();
+  }
 
   @Synchronized
   public String generateRouteIdForConnector(
@@ -80,7 +88,7 @@ public class RoutesRegistry {
     return routeDeclarativeStructureInfoList;
   }
 
-  public void prefillEndpointRouteMappings() {
+  private void prefillEndpointRouteMappings() {
     for (Route route : camelContext.getRoutes()) {
       String routeId = route.getRouteId();
       endpointsForRouteId.put(routeId, route.getEndpoint());
