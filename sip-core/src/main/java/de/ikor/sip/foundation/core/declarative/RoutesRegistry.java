@@ -6,7 +6,6 @@ import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.*;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
@@ -19,17 +18,24 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class RoutesRegistry {
 
   private final CamelContext camelContext;
+  private final DeclarationRegistryApi declarationRegistryApi;
+
   private final MultiValuedMap<ConnectorDefinition, String> routeIdsForConnectorRegister =
       new HashSetValuedHashMap<>();
   private final Map<String, ConnectorDefinition> connectorForRouteIdRegister = new HashMap<>();
   private final Map<String, RouteRole> roleForRouteIdRegister = new HashMap<>();
+
   private final MultiValuedMap<String, Endpoint> endpointsForRouteId = new HashSetValuedHashMap<>();
   private final MultiValuedMap<Endpoint, String> routeIdsForEndpoints =
       new HashSetValuedHashMap<>();
+
+  public RoutesRegistry(DeclarationRegistryApi declarationRegistryApi, CamelContext camelContext) {
+    this.declarationRegistryApi = declarationRegistryApi;
+    this.camelContext = camelContext;
+  }
 
   /** On ApplicationReadyEvent trigger mapping routes and endpoints */
   @EventListener(ApplicationReadyEvent.class)
@@ -67,6 +73,19 @@ public class RoutesRegistry {
         .connectorId(connectorDefinition.getId())
         .scenarioId(connectorDefinition.getScenarioId())
         .build();
+  }
+
+  public String getRouteIdByConnectorId(String connectorId) {
+    Optional<ConnectorDefinition> connector = declarationRegistryApi.getConnectorById(connectorId);
+    List<RouteInfo> routeInfos = new ArrayList<>();
+    if (connector.isPresent()) {
+      routeInfos = getRoutesInfo(connector.get());
+    }
+    return routeInfos.stream()
+        .filter(routeInfo -> routeInfo.getRouteRole().equals(RouteRole.EXTERNAL_ENDPOINT))
+        .map(RouteInfo::getRouteId)
+        .findFirst()
+        .orElse(null);
   }
 
   public List<RouteInfo> getRoutesInfo(ConnectorDefinition connectorDefinition) {

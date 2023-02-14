@@ -3,10 +3,12 @@ package de.ikor.sip.foundation.testkit.config;
 import static de.ikor.sip.foundation.testkit.util.TestKitHelper.parseExchangeProperties;
 import static java.util.stream.Collectors.toList;
 
+import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseBatchDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
+import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
 import de.ikor.sip.foundation.testkit.exception.handler.ExceptionLogger;
 import de.ikor.sip.foundation.testkit.workflow.TestCase;
@@ -19,6 +21,7 @@ import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvok
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvokerFactory;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
@@ -40,6 +43,7 @@ public class TestCasesConfig {
   private final TestExecutionStatusFactory executionStatusFactory;
   private final TestCaseBatchDefinition testCaseBatchDefinition;
   private final TestCaseCollector testCaseCollector;
+  private final Optional<RoutesRegistry> routesRegistry;
 
   /** Creates test cases based on batch test cases definition. */
   @EventListener(ApplicationReadyEvent.class)
@@ -66,6 +70,8 @@ public class TestCasesConfig {
     validateTestDefinition(testCaseDefinition);
     String testName = testCaseDefinition.getTitle();
 
+    routesRegistry.ifPresent(registry -> replaceConnectorIdsWithRouteIds(testCaseDefinition));
+
     List<Mock> mocks = getMocks(testName, testCaseDefinition);
 
     TestCase testCase =
@@ -84,6 +90,20 @@ public class TestCasesConfig {
       testCase.reportExecutionException(e);
     }
     return testCase;
+  }
+
+  private void replaceConnectorIdsWithRouteIds(TestCaseDefinition definition) {
+    String connectorId = definition.getWhenExecute().getEndpoint();
+    definition
+        .getWhenExecute()
+        .setEndpoint(routesRegistry.get().getRouteIdByConnectorId(connectorId));
+    definition.getWithMocks().forEach(this::fetchAndSetRouteId);
+    definition.getThenExpect().forEach(this::fetchAndSetRouteId);
+  }
+
+  private void fetchAndSetRouteId(EndpointProperties properties) {
+    String routeId = routesRegistry.get().getRouteIdByConnectorId(properties.getEndpoint());
+    properties.setEndpoint(routeId);
   }
 
   private List<Mock> getMocks(String testName, TestCaseDefinition testCaseDefinition) {

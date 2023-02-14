@@ -22,7 +22,7 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
 
   @Override
   public final void defineOutboundEndpoints(final RouteDefinition routeDefinition) {
-    routeDefinition.to(defineOutgoingEndpoint());
+    routeDefinition.to(defineOutgoingEndpoint()).id(routeDefinition.getRouteId());
   }
 
   protected abstract EndpointProducerBuilder defineOutgoingEndpoint();
