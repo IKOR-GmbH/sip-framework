@@ -16,7 +16,7 @@ class RoutesRegistryTest {
   @BeforeEach
   void setup() {
     declarationRegistryApi = mock(DeclarationRegistryApi.class);
-    subject = new RoutesRegistry(declarationRegistryApi);
+    subject = new RoutesRegistry(declarationRegistryApi, null);
   }
 
   @Test

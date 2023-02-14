@@ -1,8 +1,7 @@
 package de.ikor.sip.foundation.core.actuator.health.http;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 import org.apache.camel.Endpoint;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +18,7 @@ class HttpHealthIndicatorsTest {
 
   @BeforeEach
   void setUp() {
-    endpoint = mock(Endpoint.class);
+    endpoint = mock(Endpoint.class, RETURNS_DEEP_STUBS);
   }
 
   @Test
