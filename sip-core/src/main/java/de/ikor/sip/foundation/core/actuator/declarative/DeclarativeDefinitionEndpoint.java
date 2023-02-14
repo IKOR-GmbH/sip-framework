@@ -41,7 +41,6 @@ public class DeclarativeDefinitionEndpoint {
     initializeConnectorGroupInfos();
     initializeIntegrationScenarioInfos();
     initializeConnectorInfos();
-    routesRegistry.prefillEndpointRouteMappings();
   }
 
   /**

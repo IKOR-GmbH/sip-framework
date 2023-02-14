@@ -29,6 +29,13 @@ public class DeclarativeHelper {
     return String.format(CONNECTOR_ID_FORMAT, type.getValue(), scenarioID, connectorId);
   }
 
+  /**
+   * Append metadata to existing map of details needed in health check
+   *
+   * @param endpoint Endpoint for which matadata is needed
+   * @param details Map with details
+   * @return Map with filled metadata details
+   */
   public static Map<String, Object> appendMetadata(Endpoint endpoint, Map<String, Object> details) {
     getRoutesRegistry(endpoint)
         .ifPresent(
