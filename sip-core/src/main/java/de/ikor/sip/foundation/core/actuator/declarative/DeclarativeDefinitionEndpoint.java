@@ -1,8 +1,6 @@
 package de.ikor.sip.foundation.core.actuator.declarative;
 
-import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpointInfoTransformer.createAndAddConnectorInfo;
-import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpointInfoTransformer.createConnectorGroupInfo;
-import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpointInfoTransformer.createIntegrationScenarioInfo;
+import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpointInfoTransformer.*;
 
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
@@ -43,6 +41,7 @@ public class DeclarativeDefinitionEndpoint {
     initializeConnectorGroupInfos();
     initializeIntegrationScenarioInfos();
     initializeConnectorInfos();
+    routesRegistry.prefillEndpointRouteMappings();
   }
 
   /**
