@@ -58,14 +58,14 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
   private void checkForDuplicateConnectorGroups() {
     Set<String> set = new HashSet<>();
     List<String> connectorGroupIds =
-        connectorGroups.stream().map(ConnectorGroupDefinition::getID).collect(Collectors.toList());
+        connectorGroups.stream().map(ConnectorGroupDefinition::getId).collect(Collectors.toList());
     connectorGroupIds.forEach(id -> checkIfDuplicate(set, id, CONNECTOR_GROUP));
   }
 
   private void checkForDuplicateScenarios() {
     Set<String> set = new HashSet<>();
     List<String> scenarioIds =
-        scenarios.stream().map(IntegrationScenarioDefinition::getID).collect(Collectors.toList());
+        scenarios.stream().map(IntegrationScenarioDefinition::getId).collect(Collectors.toList());
     scenarioIds.forEach(id -> checkIfDuplicate(set, id, SCENARIO));
   }
 
@@ -73,13 +73,13 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
     scenarios.stream()
         .filter(
             scenario ->
-                getInboundConnectorsByScenarioId(scenario.getID()).isEmpty()
-                    || getOutboundConnectorsByScenarioId(scenario.getID()).isEmpty())
+                getInboundConnectorsByScenarioId(scenario.getId()).isEmpty()
+                    || getOutboundConnectorsByScenarioId(scenario.getId()).isEmpty())
         .map(
             scenario -> {
               throw new SIPFrameworkInitializationException(
                   String.format(
-                      "There is unused integration scenario with id %s", scenario.getID()));
+                      "There is unused integration scenario with id %s", scenario.getId()));
             })
         .forEach(
             x -> {
@@ -104,14 +104,14 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
   @Override
   public Optional<ConnectorGroupDefinition> getConnectorGroupById(final String connectorGroupId) {
     return connectorGroups.stream()
-        .filter(connector -> connector.getID().equals(connectorGroupId))
+        .filter(connector -> connector.getId().equals(connectorGroupId))
         .findFirst();
   }
 
   @Override
   public IntegrationScenarioDefinition getScenarioById(final String scenarioId) {
     return scenarios.stream()
-        .filter(scenario -> scenario.getID().equals(scenarioId))
+        .filter(scenario -> scenario.getId().equals(scenarioId))
         .findFirst()
         .orElseThrow(
             () ->

@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.core.declarative.orchestation;
 
-public interface Orchestrator<ORCHESTRATION_TYPE extends OrchestrationInfo> {
+public interface Orchestrator<T extends OrchestrationInfo> {
 
-  boolean canOrchestrate(ORCHESTRATION_TYPE data);
+  boolean canOrchestrate(T data);
 
-  void doOrchestrate(ORCHESTRATION_TYPE data);
+  void doOrchestrate(T data);
 }

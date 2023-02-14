@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.core.declarative;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/** Enum containing the different roles of a route. */
 @AllArgsConstructor
 public enum RouteRole {
   EXTERNAL_ENDPOINT("externalEndpoint"),

@@ -6,6 +6,13 @@ import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import java.util.Optional;
 
+/**
+ * Base class for an integration scenario definition.
+ *
+ * <p>Adapter developers should extend this class and annotate it with @{@link IntegrationScenario}.
+ *
+ * @see IntegrationScenario
+ */
 public abstract class IntegrationScenarioBase implements IntegrationScenarioDefinition {
 
   private final IntegrationScenario scenarioAnnotation =
@@ -13,11 +20,12 @@ public abstract class IntegrationScenarioBase implements IntegrationScenarioDefi
 
   @Override
   public Orchestrator<ConsumerOrchestrationInfo> getOrchestrator() {
-    throw new UnsupportedOperationException("Not yet implemented");
+    throw new UnsupportedOperationException(
+        "Integration scenario orchestration is not yet supported");
   }
 
   @Override
-  public final String getID() {
+  public final String getId() {
     return scenarioAnnotation.scenarioId();
   }
 

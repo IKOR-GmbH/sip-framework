@@ -12,6 +12,17 @@ import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Base class for defining generic inbound connectors.
+ *
+ * <p>Adapter developers should extend this class and annotate it with @{@link InboundConnector} to
+ * specify the connector. The configuration of the inbound endpoint is done by overriding {@link
+ * #defineInitiatingEndpoint()}.
+ *
+ * @see ConnectorBase#defineTransformationOrchestrator() Infos on attaching transformation between
+ *     domain models of connector and integration scenario
+ * @see InboundConnector
+ */
 public abstract class GenericInboundConnectorBase extends ConnectorBase
     implements InboundConnectorDefinition<RoutesDefinition> {
 
@@ -34,6 +45,13 @@ public abstract class GenericInboundConnectorBase extends ConnectorBase
         .to(targetToDefinition);
   }
 
+  /**
+   * Defines the initiating endpoint for this connector.
+   *
+   * @see org.apache.camel.builder.endpoint.StaticEndpointBuilders
+   * @see org.apache.camel.builder.endpoint.dsl.FileEndpointBuilderFactory.FileEndpointBuilder
+   * @return the initiating endpoint
+   */
   protected abstract EndpointConsumerBuilder defineInitiatingEndpoint();
 
   @Override

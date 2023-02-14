@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 /**
  * Default connector which is automatically created by framework when connector is not specified by
  * user.
+ *
+ * <p><em>For internal use only.</em>
  */
 @AllArgsConstructor
 public class DefaultConnectorGroup implements ConnectorGroupDefinition {
@@ -14,7 +16,7 @@ public class DefaultConnectorGroup implements ConnectorGroupDefinition {
   private String connectorId;
 
   @Override
-  public String getID() {
+  public String getId() {
     return connectorId;
   }
 

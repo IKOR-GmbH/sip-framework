@@ -9,6 +9,17 @@ import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Base class for defining generic outbound connectors.
+ *
+ * <p>Adapter developers should extend this class and annotate it with @{@link OutboundConnector} to
+ * specify the connector. The configuration of the outbound endpoint is done by overriding {@link
+ * #defineOutgoingEndpoint()}.
+ *
+ * @see ConnectorBase#defineTransformationOrchestrator() Infos on attaching transformation between
+ *     domain models of connector and integration scenario
+ * @see OutboundConnector
+ */
 public abstract class GenericOutboundConnectorBase extends ConnectorBase
     implements OutboundConnectorDefinition {
 
@@ -25,6 +36,13 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
     routeDefinition.to(defineOutgoingEndpoint()).id(routeDefinition.getRouteId());
   }
 
+  /**
+   * Defines the outgoing endpoint for this connector.
+   *
+   * @see org.apache.camel.builder.endpoint.StaticEndpointBuilders
+   * @see org.apache.camel.builder.endpoint.dsl.FileEndpointBuilderFactory.FileEndpointBuilder
+   * @return the outgoing endpoint
+   */
   protected abstract EndpointProducerBuilder defineOutgoingEndpoint();
 
   @Override

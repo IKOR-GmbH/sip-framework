@@ -81,9 +81,9 @@ public class DeclarativeDefinitionEndpoint {
                 connectorGroups.add(
                     createConnectorGroupInfo(
                         declarationsRegistry.getInboundConnectorsByConnectorGroupId(
-                            connectorGroup.getID()),
+                            connectorGroup.getId()),
                         declarationsRegistry.getOutboundConnectorsByConnectorGroupId(
-                            connectorGroup.getID()),
+                            connectorGroup.getId()),
                         connectorGroup)));
   }
 

@@ -10,6 +10,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.model.RouteDefinition;
 
+/**
+ * Standard implementation for orchestrating connectors.
+ *
+ * <p>This relies on the connector developer to implement the necessary orchestration steps for the
+ * connector (such as data model transformation) using Camel's DSL from the provided {@link
+ * RouteDefinition} handles.
+ *
+ * <p>Custom transformations should be provided using the {@link
+ * #setRequestRouteTransformer(Consumer)} and {@link #setResponseRouteTransformer(Consumer)} methods
+ * as necessary.
+ *
+ * @see ConnectorOrchestrationInfo
+ * @see #forConnector(ConnectorDefinition)
+ */
 @Slf4j
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,6 +33,12 @@ public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestratio
   private Consumer<RouteDefinition> requestRouteTransformer = this::defaultRequestTransformer;
   private Consumer<RouteDefinition> responseRouteTransformer = this::defaultResponseTransformer;
 
+  /**
+   * Creates a new {@link ConnectorOrchestrator} for the given connector.
+   *
+   * @param connector connector to be orchestrated
+   * @return new {@link ConnectorOrchestrator} instance
+   */
   public static ConnectorOrchestrator forConnector(final ConnectorDefinition connector) {
     return new ConnectorOrchestrator(connector);
   }
@@ -47,6 +67,6 @@ public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestratio
   @Override
   public void doOrchestrate(final ConnectorOrchestrationInfo data) {
     requestRouteTransformer.accept(data.getRequestRouteDefinition());
-    data.getResponseRouteDefinition().ifPresent(responseRouteTransformer::accept);
+    data.getResponseRouteDefinition().ifPresent(responseRouteTransformer);
   }
 }

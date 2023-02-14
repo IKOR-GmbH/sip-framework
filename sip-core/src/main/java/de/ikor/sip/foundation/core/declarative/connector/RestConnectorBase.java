@@ -14,6 +14,17 @@ import org.apache.camel.model.rest.RestsDefinition;
 import org.apache.camel.model.rest.VerbDefinition;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Base class for defining inbound REST connectors via Camel's {@link RestDefinition} DSL.
+ *
+ * <p>Adapter developers should extend this class and annotate it with @{@link InboundConnector} to
+ * specify the connector. The configuration of the REST endpoint is done by overriding the {@link
+ * #configureRest(RestDefinition)}.
+ *
+ * @see ConnectorBase#defineTransformationOrchestrator() Infos on attaching transformation between
+ *     domain models of connector and integration scenario
+ * @see InboundConnector
+ */
 public abstract class RestConnectorBase extends ConnectorBase
     implements InboundConnectorDefinition<RestsDefinition> {
 
@@ -26,7 +37,7 @@ public abstract class RestConnectorBase extends ConnectorBase
           formatConnectorId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
 
   @Override
-  public void defineInboundEndpoints(
+  public final void defineInboundEndpoints(
       final RestsDefinition definition,
       final EndpointProducerBuilder targetToDefinition,
       final RoutesRegistry routeRegistry) {
@@ -41,6 +52,15 @@ public abstract class RestConnectorBase extends ConnectorBase
     }
   }
 
+  /**
+   * Configures the REST endpoint used within this connector.
+   *
+   * <p>Note that while {@link RestDefinition} supports specifing multiple verbs/endpoints, all of
+   * those will be mapped to the single integration scenario that this connector is linked with
+   * though {@link #getScenarioId()}.
+   *
+   * @param definition the REST endpoint definition
+   */
   protected abstract void configureRest(final RestDefinition definition);
 
   @Override

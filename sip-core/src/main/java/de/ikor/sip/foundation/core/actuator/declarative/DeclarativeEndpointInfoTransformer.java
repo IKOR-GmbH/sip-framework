@@ -41,14 +41,14 @@ public class DeclarativeEndpointInfoTransformer {
       List<? extends ConnectorDefinition> outboundConnectors,
       ConnectorGroupDefinition connectorGroup) {
     return ConnectorGroupInfo.builder()
-        .connectorGroupId(connectorGroup.getID())
+        .connectorGroupId(connectorGroup.getId())
         .inboundConnectors(mapConnectorsToIds(inboundConnectors))
         .outboundConnectors(mapConnectorsToIds(outboundConnectors))
         .connectorGroupDescription(
             readDocumentation(
                 CONNECTOR_GROUP_DEFAULT_DOCS_PATH,
                 connectorGroup.getPathToDocumentationResource(),
-                connectorGroup.getID()))
+                connectorGroup.getId()))
         .build();
   }
 
@@ -68,7 +68,7 @@ public class DeclarativeEndpointInfoTransformer {
   public static IntegrationScenarioInfo createIntegrationScenarioInfo(
       IntegrationScenarioDefinition scenario) {
     return IntegrationScenarioInfo.builder()
-        .scenarioId(scenario.getID())
+        .scenarioId(scenario.getId())
         .requestModelClass(scenario.getRequestModelClass().getName())
         .responseModelClass(
             scenario.getResponseModelClass().map(Class::getName).orElse(NO_RESPONSE))
@@ -76,7 +76,7 @@ public class DeclarativeEndpointInfoTransformer {
             readDocumentation(
                 INTEGRATION_SCENARIO_DEFAULT_DOCS_PATH,
                 scenario.getPathToDocumentationResource(),
-                scenario.getID()))
+                scenario.getId()))
         .build();
   }
 

@@ -39,9 +39,8 @@ public class DeclarativeHelper {
   public static Map<String, Object> appendMetadata(Endpoint endpoint, Map<String, Object> details) {
     getRoutesRegistry(endpoint)
         .ifPresent(
-            routesRegistry -> {
-              details.put("metadata", routesRegistry.generateRouteInfoList(endpoint));
-            });
+            routesRegistry ->
+                details.put("metadata", routesRegistry.generateRouteInfoList(endpoint)));
     return details;
   }
 

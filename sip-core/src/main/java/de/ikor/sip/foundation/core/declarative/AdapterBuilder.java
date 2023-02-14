@@ -20,6 +20,12 @@ import org.apache.camel.model.RoutesDefinition;
 import org.apache.camel.model.rest.RestsDefinition;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class is setting up Camel routes from the scenario- and connector-definitions specified in
+ * the adapter.
+ *
+ * <p><em>Intended for internal use only</em>
+ */
 @Component
 @Slf4j
 public class AdapterBuilder extends RouteBuilder {
@@ -52,7 +58,7 @@ public class AdapterBuilder extends RouteBuilder {
   }
 
   @Override
-  public void configure() throws Exception {
+  public void configure() {
     getCamelContext().getGlobalEndpointConfiguration().setBridgeErrorHandler(true);
     declarationsRegistry.getScenarios().forEach(this::buildScenario);
   }
@@ -98,7 +104,7 @@ public class AdapterBuilder extends RouteBuilder {
                         .getRequestModelClass())) // TODO: move validation to camel-component
             .to(
                 StaticEndpointBuilders.direct(
-                    SCENARIO_HANDOVER_COMPONENT, scenarioDefinition.getID()));
+                    SCENARIO_HANDOVER_COMPONENT, scenarioDefinition.getId()));
     scenarioDefinition
         .getResponseModelClass()
         .ifPresent(
@@ -145,7 +151,7 @@ public class AdapterBuilder extends RouteBuilder {
         routesRegistry.generateRouteIdForConnector(RouteRole.SCENARIO_TAKEOVER, outboundConnector);
 
     // Build takeover route from scenario
-    from(StaticEndpointBuilders.direct(SCENARIO_HANDOVER_COMPONENT, scenarioDefinition.getID()))
+    from(StaticEndpointBuilders.direct(SCENARIO_HANDOVER_COMPONENT, scenarioDefinition.getId()))
         .routeId(scenarioTakeoverRouteId)
         .to(StaticEndpointBuilders.direct(requestOrchestrationRouteId));
 
