@@ -53,6 +53,7 @@ public class AdapterBuilder extends RouteBuilder {
 
   @Override
   public void configure() throws Exception {
+    getCamelContext().getGlobalEndpointConfiguration().setBridgeErrorHandler(true);
     declarationsRegistry.getScenarios().forEach(this::buildScenario);
   }
 
