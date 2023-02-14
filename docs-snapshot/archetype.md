@@ -70,7 +70,7 @@ After a successful build, a project with the following structure will be created
     - validators
 - scenarios
   - models
-  - definition
+  - definitions
     
 
 More about packages and internal SIP structure you can find [here](./README.md).
