@@ -5,14 +5,19 @@ import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinit
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
+import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +25,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class DeclarationsRegistry implements DeclarationRegistryApi {
+
+  @Value
+  @Builder
+  private static class MapperPair {
+    Class<?> scenarioClass;
+    Class<?> connectorClass;
+  }
 
   private static final String CONNECTOR_GROUP = "connector group";
   private static final String SCENARIO = "integration scenario";
@@ -29,19 +41,47 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
   private final List<IntegrationScenarioDefinition> scenarios;
   private final List<ConnectorDefinition> connectors;
 
+  @Getter
+  @SuppressWarnings("rawtypes")
+  private final Map<MapperPair, ModelMapper> modelMappers;
+
   public DeclarationsRegistry(
       List<ConnectorGroupDefinition> connectorGroups,
       List<IntegrationScenarioDefinition> scenarios,
-      List<ConnectorDefinition> connectors) {
+      List<ConnectorDefinition> connectors,
+      List<ModelMapper> modelMappers) {
     this.connectorGroups = connectorGroups;
     this.scenarios = scenarios;
     this.connectors = connectors;
+    this.modelMappers = checkAndInitializeModelMappers(modelMappers);
 
-    createMissingConnectorGroups();
     checkForDuplicateConnectorGroups();
     checkForDuplicateScenarios();
     checkForUnusedScenarios();
     checkForDuplicateConnectors();
+  }
+
+  @SuppressWarnings("rawtypes")
+  private Map<MapperPair, ModelMapper> checkAndInitializeModelMappers(
+      final List<ModelMapper> mappers) {
+    final Map<MapperPair, ModelMapper> modelMappers = new HashMap<>(mappers.size());
+    mappers.forEach(
+        mapper -> {
+          final MapperPair mapperPair =
+              MapperPair.builder()
+                  .scenarioClass(mapper.getScenarioModelClass())
+                  .connectorClass(mapper.getConnectorModelClass())
+                  .build();
+          if (modelMappers.containsKey(mapperPair)) {
+            final var duplicate = modelMappers.get(mapperPair);
+            throw new SIPFrameworkInitializationException(
+                String.format(
+                    "ModelMapper implementations %s and %s share the same scenario and connector model classes",
+                    mapper.getClass().getName(), duplicate.getClass().getName()));
+          }
+          modelMappers.put(mapperPair, mapper);
+        });
+    return modelMappers;
   }
 
   private void createMissingConnectorGroups() {
@@ -194,5 +234,17 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
         .filter(OutboundConnectorDefinition.class::isInstance)
         .map(OutboundConnectorDefinition.class::cast)
         .collect(Collectors.toList());
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <C, S> Optional<ModelMapper<C, S>> getModelMapperForModels(
+      final Class<C> connectorModel, final Class<S> scenarioModel) {
+    final var mapperPair =
+        MapperPair.builder().connectorClass(connectorModel).scenarioClass(scenarioModel).build();
+    if (modelMappers.containsKey(mapperPair)) {
+      return Optional.of((ModelMapper<C, S>) modelMappers.get(mapperPair));
+    }
+    return Optional.empty();
   }
 }
