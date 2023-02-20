@@ -119,8 +119,8 @@ public class RoutesRegistry {
       endpointsForRouteId.put(routeId, route.getEndpoint());
       routeIdsForEndpoints.put(route.getEndpoint(), routeId);
       for (org.apache.camel.Service service : route.getServices()) {
-        if (service instanceof EndpointAware) {
-          Endpoint endpoint = ((EndpointAware) service).getEndpoint();
+        if (service instanceof EndpointAware endpointAware) {
+          Endpoint endpoint = endpointAware.getEndpoint();
           endpointsForRouteId.put(routeId, endpoint);
           routeIdsForEndpoints.put(endpoint, routeId);
         }

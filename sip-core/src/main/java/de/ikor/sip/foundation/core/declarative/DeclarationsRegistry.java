@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Getter
 @Slf4j
 @Service
-public class DeclarationsRegistry implements DeclarationRegistryApi {
+public final class DeclarationsRegistry implements DeclarationRegistryApi {
 
   private static final String CONNECTOR_GROUP = "connector group";
   private static final String SCENARIO = "integration scenario";

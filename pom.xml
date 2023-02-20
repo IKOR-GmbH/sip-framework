@@ -59,9 +59,9 @@
     </distributionManagement>
 
     <properties>
-        <java.version>11</java.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
 
         <!-- sip framework version, decoupled from actual version to make dependency resolution work properly in projects
              where sip-framework is the dependency. This version should always be the same as the version of sip-framework itself -->
@@ -72,8 +72,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>2.7.7</spring.boot.version>
-        <camel.version>3.18.5</camel.version>
+        <spring.boot.version>2.7.8</spring.boot.version>
+        <camel.version>3.20.2</camel.version>
         <jackson-jsr310.version>2.12.7</jackson-jsr310.version>
         <springdoc-openapi.version>1.6.14</springdoc-openapi.version>
         <snakeyaml.version>1.33</snakeyaml.version>
@@ -488,7 +488,7 @@
                             <configuration>
                                 <rules>
                                     <enforceBytecodeVersion>
-                                        <maxJdkVersion>11</maxJdkVersion>
+                                        <maxJdkVersion>17</maxJdkVersion>
                                     </enforceBytecodeVersion>
                                     <dependencyConvergence/>
                                     <banDuplicatePomDependencyVersions/>

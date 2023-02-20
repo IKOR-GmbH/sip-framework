@@ -25,8 +25,8 @@ import org.apache.camel.model.OptionalIdentifiedDefinition;
  * @see RestConnectorBase
  * @see de.ikor.sip.foundation.core.declarative.annonation.InboundConnector
  */
-public interface InboundConnectorDefinition<T extends OptionalIdentifiedDefinition<T>>
-    extends ConnectorDefinition, IntegrationScenarioProviderDefinition {
+public sealed interface InboundConnectorDefinition<T extends OptionalIdentifiedDefinition<T>>
+    extends ConnectorDefinition, IntegrationScenarioProviderDefinition permits GenericInboundConnectorBase, RestConnectorBase {
 
   /**
    * Defines the inbound endpoint(s) for the integration scenario the connector belongs to.

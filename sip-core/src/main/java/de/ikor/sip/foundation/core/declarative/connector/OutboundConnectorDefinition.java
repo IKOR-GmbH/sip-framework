@@ -20,8 +20,8 @@ import org.apache.camel.model.RouteDefinition;
  * @see GenericOutboundConnectorBase
  * @see de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector
  */
-public interface OutboundConnectorDefinition
-    extends ConnectorDefinition, IntegrationScenarioConsumerDefinition {
+public sealed interface OutboundConnectorDefinition
+    extends ConnectorDefinition, IntegrationScenarioConsumerDefinition permits GenericOutboundConnectorBase {
 
   /**
    * Defines the outbound endpoint(s) for the integration scenario the connector belongs to.

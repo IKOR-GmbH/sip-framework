@@ -23,7 +23,7 @@ import org.apache.commons.lang3.StringUtils;
  *     domain models of connector and integration scenario
  * @see InboundConnector
  */
-public abstract class GenericInboundConnectorBase extends ConnectorBase
+public abstract non-sealed class GenericInboundConnectorBase extends ConnectorBase
     implements InboundConnectorDefinition<RoutesDefinition> {
 
   private final InboundConnector inboundConnectorAnnotation =

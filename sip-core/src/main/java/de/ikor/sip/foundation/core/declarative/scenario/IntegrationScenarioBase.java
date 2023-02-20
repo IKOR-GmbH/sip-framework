@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.core.declarative.scenario;
 
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
-import de.ikor.sip.foundation.core.declarative.orchestation.ConsumerOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.ConsumerOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import java.util.Optional;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
  *
  * @see IntegrationScenario
  */
-public abstract class IntegrationScenarioBase implements IntegrationScenarioDefinition {
+public abstract non-sealed class IntegrationScenarioBase implements IntegrationScenarioDefinition {
 
   private final IntegrationScenario scenarioAnnotation =
       DeclarativeHelper.getAnnotationOrThrow(IntegrationScenario.class, this);
