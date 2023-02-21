@@ -1,7 +1,8 @@
 package de.ikor.sip.foundation.core.declarative;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import java.util.Optional;
@@ -16,7 +17,7 @@ class RoutesRegistryTest {
   @BeforeEach
   void setup() {
     declarationRegistryApi = mock(DeclarationRegistryApi.class);
-    subject = new RoutesRegistry(declarationRegistryApi, null);
+    subject = new RoutesRegistry(declarationRegistryApi);
   }
 
   @Test
