@@ -159,12 +159,9 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
   }
 
   @Override
-  public List<InboundConnectorDefinition> getInboundConnectorsByConnectorGroupId(
-      String connectorGroupId) {
+  public List<ConnectorDefinition> getConnectorsByConnectorGroupId(String connectorGroupId) {
     return connectors.stream()
         .filter(connector -> connector.getConnectorGroupId().equals(connectorGroupId))
-        .filter(InboundConnectorDefinition.class::isInstance)
-        .map(InboundConnectorDefinition.class::cast)
         .collect(Collectors.toList());
   }
 

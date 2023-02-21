@@ -66,13 +66,12 @@ public interface DeclarationRegistryApi {
   Optional<OutboundConnectorDefinition> getOutboundConnectorById(String connectorId);
 
   /**
-   * Get list of {@link InboundConnectorDefinition} by id of {@link ConnectorGroupDefinition}.
+   * Get list of {@link ConnectorDefinition} by id of {@link ConnectorGroupDefinition}.
    *
    * @param connectorGroupId is its id
    * @return inbound connectors
    */
-  @SuppressWarnings("rawtypes")
-  List<InboundConnectorDefinition> getInboundConnectorsByConnectorGroupId(String connectorGroupId);
+  List<ConnectorDefinition> getConnectorsByConnectorGroupId(String connectorGroupId);
 
   /**
    * Get list of {@link OutboundConnectorDefinition} by id of {@link ConnectorGroupDefinition}.

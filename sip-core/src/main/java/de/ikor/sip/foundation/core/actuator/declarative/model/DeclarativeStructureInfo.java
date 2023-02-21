@@ -13,5 +13,4 @@ import lombok.NoArgsConstructor;
 public class DeclarativeStructureInfo {
   private List<ConnectorGroupInfo> connectorgroups;
   private List<IntegrationScenarioInfo> scenarios;
-  private List<ConnectorInfo> connectors;
 }

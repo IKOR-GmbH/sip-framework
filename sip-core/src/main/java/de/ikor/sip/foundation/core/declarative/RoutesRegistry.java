@@ -11,12 +11,15 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.EndpointAware;
 import org.apache.camel.Route;
+import org.apache.camel.spi.CamelEvent;
+import org.apache.camel.spi.CamelEvent.CamelContextStartedEvent;
+import org.apache.camel.support.SimpleEventNotifierSupport;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RoutesRegistry {
+public class RoutesRegistry extends SimpleEventNotifierSupport {
 
   private final DeclarationRegistryApi declarationRegistryApi;
 
@@ -30,6 +33,18 @@ public class RoutesRegistry {
 
   public RoutesRegistry(DeclarationRegistryApi declarationRegistryApi) {
     this.declarationRegistryApi = declarationRegistryApi;
+  }
+
+  /** On CamelContextStartedEvent execute this class's event listener - notify() */
+  @Override
+  public boolean isEnabled(CamelEvent event) {
+    return event instanceof CamelContextStartedEvent;
+  }
+
+  /** Trigger caching of routes and endpoints mappings */
+  @Override
+  public void notify(CamelEvent event) {
+    // prefillEndpointRouteMappings();
   }
 
   @Synchronized
@@ -71,7 +86,9 @@ public class RoutesRegistry {
       routeInfos = getRoutesInfo(connector.get());
     }
     return routeInfos.stream()
-        .filter(routeInfo -> routeInfo.getRouteRole().equals(RouteRole.EXTERNAL_ENDPOINT))
+        .filter(
+            routeInfo ->
+                routeInfo.getRouteRole().equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName()))
         .map(RouteInfo::getRouteId)
         .findFirst()
         .orElse(null);
@@ -82,9 +99,20 @@ public class RoutesRegistry {
         .map(
             routeId ->
                 RouteInfo.builder()
-                    .routeRole(roleForRouteIdRegister.get(routeId))
+                    .routeRole(roleForRouteIdRegister.get(routeId).getExternalName())
                     .routeId(routeId)
                     .build())
+        .collect(Collectors.toList());
+  }
+
+  public List<Endpoint> getExternalEndpointsForConnector(ConnectorDefinition connectorDefinition) {
+    List<RouteInfo> connectorRoutes = getRoutesInfo(connectorDefinition);
+    return connectorRoutes.stream()
+        .filter(
+            routeInfo ->
+                routeInfo.getRouteRole().equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName()))
+        .map(routeInfo -> endpointsForRouteId.get(routeInfo.getRouteId()))
+        .flatMap(Collection::stream)
         .collect(Collectors.toList());
   }
 
@@ -96,7 +124,7 @@ public class RoutesRegistry {
     return routeDeclarativeStructureInfoList;
   }
 
-  public void prefillEndpointRouteMappings(CamelContext camelContext) {
+  void prefillEndpointRouteMappings(CamelContext camelContext) {
     for (Route route : camelContext.getRoutes()) {
       String routeId = route.getRouteId();
       endpointsForRouteId.put(routeId, route.getEndpoint());
