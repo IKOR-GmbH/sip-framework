@@ -5,10 +5,12 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import java.util.function.Supplier;
 import org.apache.camel.model.RouteDefinition;
 
-public class RequestMappingRouteTransformer extends BaseMappingRouteTransformer {
+public class RequestMappingRouteTransformer<C, S> extends BaseMappingRouteTransformer<C, S> {
 
-  private final Class<?> connectorRequestModel = getConnector().get().getRequestModelClass();
-  private final Class<?> scenarioRequestModel = getScenario().get().getRequestModelClass();
+  private final Class<C> connectorRequestModel =
+      (Class<C>) getConnector().get().getRequestModelClass();
+  private final Class<S> scenarioRequestModel =
+      (Class<S>) getScenario().get().getRequestModelClass();
 
   protected RequestMappingRouteTransformer(
       final Supplier<ConnectorDefinition> connector,
@@ -16,15 +18,15 @@ public class RequestMappingRouteTransformer extends BaseMappingRouteTransformer 
     super(connector, scenario);
   }
 
-  public static RequestMappingRouteTransformer forConnectorWithScenario(
+  public static <C, S> RequestMappingRouteTransformer<C, S> forConnectorWithScenario(
       final Supplier<ConnectorDefinition> connector,
       final Supplier<IntegrationScenarioDefinition> scenario) {
-    return new RequestMappingRouteTransformer(connector, scenario);
+    return new RequestMappingRouteTransformer<>(connector, scenario);
   }
 
-  public static RequestMappingRouteTransformer forConnectorWithScenario(
+  public static <C, S> RequestMappingRouteTransformer<C, S> forConnectorWithScenario(
       final ConnectorDefinition connector, final Supplier<IntegrationScenarioDefinition> scenario) {
-    return new RequestMappingRouteTransformer(() -> connector, scenario);
+    return forConnectorWithScenario(() -> connector, scenario);
   }
 
   @Override
@@ -51,14 +53,21 @@ public class RequestMappingRouteTransformer extends BaseMappingRouteTransformer 
 
   @Override
   protected void fillInConversionDefinitions(final RouteDefinition routeDefinition) {
+    final var modelMapper =
+        retrieveUsableMapper(
+                routeDefinition.getCamelContext(), connectorRequestModel, scenarioRequestModel)
+            .orElseThrow(this::getExceptionForNoMissingMapper);
+    routeDefinition.inputType(getSourceModelClass());
     switch (getConnector().get().getConnectorType()) {
       case IN:
-        getDataFormat().ifPresent(routeDefinition::unmarshal);
-        routeDefinition.convertBodyTo(getTargetModelClass());
+        routeDefinition
+            .transform()
+            .method(modelMapper, ModelMapper.CONNECTOR_TO_SCENARIO_METHOD_NAME);
         break;
       case OUT:
-        routeDefinition.convertBodyTo(getTargetModelClass());
-        getDataFormat().ifPresent(routeDefinition::marshal);
+        routeDefinition
+            .transform()
+            .method(modelMapper, ModelMapper.SCENARIO_TO_CONNECTOR_METHOD_NAME);
         break;
       default:
         forceThrowUnknownConnectorTypeException();

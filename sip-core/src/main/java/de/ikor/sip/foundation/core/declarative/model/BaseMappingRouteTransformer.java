@@ -1,23 +1,20 @@
 package de.ikor.sip.foundation.core.declarative.model;
 
-import de.ikor.sip.foundation.core.declarative.annonation.GlobalMapper;
+import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.apache.camel.CamelContext;
 import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.spi.DataFormat;
-import org.apache.camel.spi.TypeConverterRegistry;
 
-@Data
 @Accessors(chain = true)
-abstract class BaseMappingRouteTransformer implements Consumer<RouteDefinition> {
+abstract class BaseMappingRouteTransformer<C, S> implements Consumer<RouteDefinition> {
 
   @Getter(AccessLevel.PROTECTED)
   private final Supplier<ConnectorDefinition> connector;
@@ -25,9 +22,7 @@ abstract class BaseMappingRouteTransformer implements Consumer<RouteDefinition> 
   @Getter(AccessLevel.PROTECTED)
   private final Supplier<IntegrationScenarioDefinition> scenario;
 
-  private Optional<ModelMapper> mapper = Optional.empty();
-
-  private Optional<DataFormat> dataFormat = Optional.empty();
+  @Setter private Optional<ModelMapper<C, S>> mapper = Optional.empty();
 
   protected BaseMappingRouteTransformer(
       final Supplier<ConnectorDefinition> connector,
@@ -48,8 +43,18 @@ abstract class BaseMappingRouteTransformer implements Consumer<RouteDefinition> 
   }
 
   private void buildTransformerRoute(final RouteDefinition routeDefinition) {
-    prepareAndVerifyConverter(routeDefinition.getCamelContext().getTypeConverterRegistry());
     fillInConversionDefinitions(routeDefinition);
+  }
+
+  protected Optional<ModelMapper<C, S>> retrieveUsableMapper(
+      final CamelContext context, final Class<C> connectorModel, final Class<S> scenarioModel) {
+    if (mapper.isPresent()) {
+      return mapper;
+    }
+    return context
+        .getRegistry()
+        .findSingleByType(DeclarationsRegistry.class)
+        .getModelMapperForModels(connectorModel, scenarioModel);
   }
 
   protected <T> T forceThrowUnknownConnectorTypeException() {
@@ -59,17 +64,12 @@ abstract class BaseMappingRouteTransformer implements Consumer<RouteDefinition> 
             connector.get().getConnectorType(), connector.get().getId()));
   }
 
-  private void prepareAndVerifyConverter(final TypeConverterRegistry converterRegistry) {
-    mapper.ifPresent(
-        mapper -> ModelMapperHelper.registerMapperAsTypeConverters(mapper, converterRegistry));
-    if (null == converterRegistry.lookup(getTargetModelClass(), getSourceModelClass())) {
-      throw new SIPFrameworkException(
-          String.format(
-              "No ModelMapper found for connector '%s' that can map from %s to %s. Register a global mapper for these types with using the @%s annotation, or provide a specific mapper for this connector",
-              connector.get().getId(),
-              getSourceModelClass().getName(),
-              getTargetModelClass().getName(),
-              GlobalMapper.class.getSimpleName()));
-    }
+  protected IllegalStateException getExceptionForNoMissingMapper() {
+    return new IllegalStateException(
+        String.format(
+            "No usable mapper found for connector '%s' to map between %s and %s",
+            connector.get().getId(),
+            getSourceModelClass().getName(),
+            getTargetModelClass().getName()));
   }
 }

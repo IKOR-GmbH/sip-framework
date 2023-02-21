@@ -6,6 +6,7 @@ import de.ikor.sip.foundation.core.declarative.annonation.UseResponseMapping;
 import de.ikor.sip.foundation.core.declarative.model.FindAutomaticModelMapper;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
+import de.ikor.sip.foundation.core.declarative.model.ResponseMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
@@ -67,7 +68,7 @@ abstract class ConnectorBase
     DeclarativeHelper.getAnnotationIfPresent(UseRequestMapping.class, this)
         .ifPresent(
             requestAnnotation -> {
-              final Optional<ModelMapper> mapper =
+              final Optional<ModelMapper<Object, Object>> mapper =
                   FindAutomaticModelMapper.class.equals(requestAnnotation.mapper())
                       ? Optional.empty()
                       : Optional.of(DeclarativeHelper.createInstance(requestAnnotation.mapper()));
@@ -78,12 +79,12 @@ abstract class ConnectorBase
     DeclarativeHelper.getAnnotationIfPresent(UseResponseMapping.class, this)
         .ifPresent(
             respAnnotation -> {
-              final Optional<ModelMapper> mapper =
+              final Optional<ModelMapper<Object, Object>> mapper =
                   FindAutomaticModelMapper.class.equals(respAnnotation.mapper())
                       ? Optional.empty()
                       : Optional.of(DeclarativeHelper.createInstance(respAnnotation.mapper()));
               orchestrator.setRequestRouteTransformer(
-                  RequestMappingRouteTransformer.forConnectorWithScenario(this, getScenario())
+                  ResponseMappingRouteTransformer.forConnectorWithScenario(this, getScenario())
                       .setMapper(mapper));
             });
     return orchestrator;

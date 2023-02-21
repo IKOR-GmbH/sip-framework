@@ -40,31 +40,28 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
   private final List<ConnectorGroupDefinition> connectorGroups;
   private final List<IntegrationScenarioDefinition> scenarios;
   private final List<ConnectorDefinition> connectors;
-
-  @Getter
-  @SuppressWarnings("rawtypes")
-  private final Map<MapperPair, ModelMapper> modelMappers;
+  private final Map<MapperPair, ModelMapper<Object, Object>> modelMapperRegistry;
 
   public DeclarationsRegistry(
       List<ConnectorGroupDefinition> connectorGroups,
       List<IntegrationScenarioDefinition> scenarios,
       List<ConnectorDefinition> connectors,
-      List<ModelMapper> modelMappers) {
+      List<ModelMapper<Object, Object>> modelMapperRegistry) {
     this.connectorGroups = connectorGroups;
     this.scenarios = scenarios;
     this.connectors = connectors;
-    this.modelMappers = checkAndInitializeModelMappers(modelMappers);
+    this.modelMapperRegistry = checkAndInitializeModelMappers(modelMapperRegistry);
 
+    createMissingConnectorGroups();
     checkForDuplicateConnectorGroups();
     checkForDuplicateScenarios();
     checkForUnusedScenarios();
     checkForDuplicateConnectors();
   }
 
-  @SuppressWarnings("rawtypes")
-  private Map<MapperPair, ModelMapper> checkAndInitializeModelMappers(
-      final List<ModelMapper> mappers) {
-    final Map<MapperPair, ModelMapper> modelMappers = new HashMap<>(mappers.size());
+  private Map<MapperPair, ModelMapper<Object, Object>> checkAndInitializeModelMappers(
+      final List<ModelMapper<Object, Object>> mappers) {
+    final Map<MapperPair, ModelMapper<Object, Object>> modelMappers = new HashMap<>(mappers.size());
     mappers.forEach(
         mapper -> {
           final MapperPair mapperPair =
@@ -242,8 +239,8 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
       final Class<C> connectorModel, final Class<S> scenarioModel) {
     final var mapperPair =
         MapperPair.builder().connectorClass(connectorModel).scenarioClass(scenarioModel).build();
-    if (modelMappers.containsKey(mapperPair)) {
-      return Optional.of((ModelMapper<C, S>) modelMappers.get(mapperPair));
+    if (modelMapperRegistry.containsKey(mapperPair)) {
+      return Optional.of((ModelMapper<C, S>) modelMapperRegistry.get(mapperPair));
     }
     return Optional.empty();
   }

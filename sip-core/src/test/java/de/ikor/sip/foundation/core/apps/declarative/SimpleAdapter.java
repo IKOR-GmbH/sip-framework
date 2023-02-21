@@ -5,6 +5,7 @@ import de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.annonation.UseRequestMapping;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.RestConnectorBase;
@@ -66,6 +67,7 @@ public class SimpleAdapter {
       fromScenario = AppendStaticMessageScenario.ID,
       requestModel = String.class,
       pathToDocumentationResource = "documents/structure/connectors/genericDescription")
+  @UseRequestMapping
   public class AppendStaticMessageConsumer extends GenericOutboundConnectorBase {
 
     @Override

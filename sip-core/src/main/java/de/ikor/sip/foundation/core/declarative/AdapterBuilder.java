@@ -2,27 +2,22 @@ package de.ikor.sip.foundation.core.declarative;
 
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
-import de.ikor.sip.foundation.core.declarative.model.ModelMapperHelper;
 import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.validator.CDMValidator;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.OptionalIdentifiedDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.camel.model.rest.RestsDefinition;
-import org.apache.camel.spi.TypeConverterRegistry;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,7 +33,6 @@ public class AdapterBuilder extends RouteBuilder {
   private static final String SCENARIO_HANDOVER_COMPONENT = "sipmc";
   private final DeclarationsRegistry declarationsRegistry;
   private final RoutesRegistry routesRegistry;
-  private final CamelContext camelContext;
 
   @SuppressWarnings("rawtypes")
   private final Map<IntegrationScenarioDefinition, List<InboundConnectorDefinition>>
@@ -47,11 +41,7 @@ public class AdapterBuilder extends RouteBuilder {
   private final Map<IntegrationScenarioDefinition, List<OutboundConnectorDefinition>>
       outboundConnectors;
 
-  public AdapterBuilder(
-      DeclarationsRegistry declarationsRegistry,
-      RoutesRegistry routesRegistry,
-      CamelContext camelContext) {
-    this.camelContext = camelContext;
+  public AdapterBuilder(DeclarationsRegistry declarationsRegistry, RoutesRegistry routesRegistry) {
     this.declarationsRegistry = declarationsRegistry;
     this.routesRegistry = routesRegistry;
     this.inboundConnectors =
@@ -69,16 +59,8 @@ public class AdapterBuilder extends RouteBuilder {
 
   @Override
   public void configure() {
-    registerMapperAsTypeConverters(
-        declarationsRegistry.getModelMappers().values(), camelContext.getTypeConverterRegistry());
     getCamelContext().getGlobalEndpointConfiguration().setBridgeErrorHandler(true);
     declarationsRegistry.getScenarios().forEach(this::buildScenario);
-  }
-
-  private void registerMapperAsTypeConverters(
-      final Collection<ModelMapper> values, final TypeConverterRegistry typeConverterRegistry) {
-    values.forEach(
-        mapper -> ModelMapperHelper.registerMapperAsTypeConverters(mapper, typeConverterRegistry));
   }
 
   private void buildScenario(final IntegrationScenarioDefinition scenarioDefinition) {
