@@ -51,13 +51,6 @@ public class DeclarativeEndpointInfoTransformer {
         .build();
   }
 
-  private static List<String> mapConnectorsToIds(
-      List<? extends ConnectorDefinition> connectorDefinitions) {
-    return connectorDefinitions.stream()
-        .map(ConnectorDefinition::getId)
-        .collect(Collectors.toList());
-  }
-
   /**
    * Creates initialized {@link IntegrationScenarioInfo} from {@link IntegrationScenarioDefinition}
    *

@@ -12,6 +12,7 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.EndpointAware;
 import org.apache.camel.Route;
 import org.apache.camel.spi.CamelEvent;
+import org.apache.camel.spi.CamelEvent.CamelContextEvent;
 import org.apache.camel.spi.CamelEvent.CamelContextStartedEvent;
 import org.apache.camel.support.SimpleEventNotifierSupport;
 import org.apache.commons.collections4.MultiValuedMap;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoutesRegistry extends SimpleEventNotifierSupport {
 
+  public static final String SIP_ROUTE_PREFIX = "sip-connector";
   private final DeclarationRegistryApi declarationRegistryApi;
 
   private final MultiValuedMap<ConnectorDefinition, String> routeIdsForConnectorRegister =
@@ -44,7 +46,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   /** Trigger caching of routes and endpoints mappings */
   @Override
   public void notify(CamelEvent event) {
-    // prefillEndpointRouteMappings();
+    prefillEndpointRouteMappings(((CamelContextEvent) event).getContext());
   }
 
   @Synchronized
@@ -52,7 +54,8 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
       final RouteRole role, final ConnectorDefinition connector, final Object... suffixes) {
     final var idBuilder =
         new StringBuilder(
-            String.format("sip-connector_%s_%s", connector.getId(), role.getRoleSuffixInRouteId()));
+            String.format(
+                "%s_%s_%s", SIP_ROUTE_PREFIX, connector.getId(), role.getRoleSuffixInRouteId()));
     Arrays.stream(suffixes).forEach(suffix -> idBuilder.append("-").append(suffix));
     final var routeId = idBuilder.toString();
     if (roleForRouteIdRegister.containsKey(routeId)) {
@@ -111,7 +114,12 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
         .filter(
             routeInfo ->
                 routeInfo.getRouteRole().equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName()))
-        .map(routeInfo -> endpointsForRouteId.get(routeInfo.getRouteId()))
+        .map(
+            routeInfo ->
+                endpointsForRouteId.get(routeInfo.getRouteId()).stream()
+                    // filter out all of sip framework internal endpoints
+                    .filter(endpoint -> !endpoint.getEndpointKey().contains(SIP_ROUTE_PREFIX))
+                    .collect(Collectors.toList()))
         .flatMap(Collection::stream)
         .collect(Collectors.toList());
   }
