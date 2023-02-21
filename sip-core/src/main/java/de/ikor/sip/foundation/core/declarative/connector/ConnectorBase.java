@@ -16,7 +16,8 @@ import org.slf4j.LoggerFactory;
  * common domain models through the {@link #defineTransformationOrchestrator()} method.
  */
 abstract sealed class ConnectorBase
-    implements ConnectorDefinition, Orchestrator<ConnectorOrchestrationInfo> permits GenericInboundConnectorBase, GenericOutboundConnectorBase, RestConnectorBase {
+    implements ConnectorDefinition, Orchestrator<ConnectorOrchestrationInfo>
+    permits GenericInboundConnectorBase, GenericOutboundConnectorBase, RestConnectorBase {
 
   @Getter private final Logger logger = LoggerFactory.getLogger(getClass());
 

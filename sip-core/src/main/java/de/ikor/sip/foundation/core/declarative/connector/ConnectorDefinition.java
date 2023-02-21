@@ -18,7 +18,8 @@ import java.util.Optional;
  * @see InboundConnectorDefinition
  * @see OutboundConnectorDefinition
  */
-public sealed interface ConnectorDefinition extends Orchestratable<ConnectorOrchestrationInfo> permits ConnectorBase, InboundConnectorDefinition, OutboundConnectorDefinition {
+public sealed interface ConnectorDefinition extends Orchestratable<ConnectorOrchestrationInfo>
+    permits ConnectorBase, InboundConnectorDefinition, OutboundConnectorDefinition {
 
   /**
    * Returns the ID of the connector. Must be unique within the scope of the adapter.
