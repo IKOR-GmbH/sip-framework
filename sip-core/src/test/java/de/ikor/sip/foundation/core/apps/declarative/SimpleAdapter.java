@@ -65,7 +65,7 @@ public class SimpleAdapter {
       belongsToGroup = "SIP2",
       fromScenario = AppendStaticMessageScenario.ID,
       requestModel = String.class,
-      pathToDocumentationResource = "documents/structure/connectors/genericDescription")
+      pathToDocumentationResource = "documents/structure/connectors/genericDescription.txt")
   public class AppendStaticMessageConsumer extends GenericOutboundConnectorBase {
 
     @Override

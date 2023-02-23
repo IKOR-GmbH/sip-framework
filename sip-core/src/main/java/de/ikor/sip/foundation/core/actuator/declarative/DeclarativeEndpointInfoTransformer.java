@@ -11,6 +11,7 @@ import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.camel.Endpoint;
 import org.springframework.core.io.ClassPathResource;
 
 /**
@@ -37,26 +38,17 @@ public class DeclarativeEndpointInfoTransformer {
    * @return ConnectorGroupInfo
    */
   public static ConnectorGroupInfo createConnectorGroupInfo(
-      List<? extends ConnectorDefinition> inboundConnectors,
-      List<? extends ConnectorDefinition> outboundConnectors,
-      ConnectorGroupDefinition connectorGroup) {
+      List<ConnectorInfo> connectors, ConnectorGroupDefinition connectorGroup) {
+
     return ConnectorGroupInfo.builder()
         .connectorGroupId(connectorGroup.getId())
-        .inboundConnectors(mapConnectorsToIds(inboundConnectors))
-        .outboundConnectors(mapConnectorsToIds(outboundConnectors))
+        .connectors(connectors)
         .connectorGroupDescription(
             readDocumentation(
                 CONNECTOR_GROUP_DEFAULT_DOCS_PATH,
                 connectorGroup.getPathToDocumentationResource(),
                 connectorGroup.getId()))
         .build();
-  }
-
-  private static List<String> mapConnectorsToIds(
-      List<? extends ConnectorDefinition> connectorDefinitions) {
-    return connectorDefinitions.stream()
-        .map(ConnectorDefinition::getId)
-        .collect(Collectors.toList());
   }
 
   /**
@@ -87,11 +79,13 @@ public class DeclarativeEndpointInfoTransformer {
    * @return ConnectorInfo
    */
   public static ConnectorInfo createAndAddConnectorInfo(
-      ConnectorDefinition connector, List<RouteInfo> routes) {
+      ConnectorDefinition connector, List<RouteInfo> routes, List<Endpoint> endpoints) {
     return ConnectorInfo.builder()
         .connectorId(connector.getId())
         .connectorType(connector.getConnectorType())
         .connectorGroupId(connector.getConnectorGroupId())
+        .camelEndpointUris(
+            endpoints.stream().map(Endpoint::getEndpointKey).collect(Collectors.toList()))
         .scenarioId(connector.getScenarioId())
         .routes(routes)
         .connectorDescription(
@@ -99,15 +93,18 @@ public class DeclarativeEndpointInfoTransformer {
                 CONNECTORS_DEFAULT_DOCS_PATH,
                 connector.getPathToDocumentationResource(),
                 connector.getId()))
+        .requestModelClass(connector.getRequestModelClass().getName())
+        .responseModelClass(
+            connector.getResponseModelClass().map(Class::getName).orElse(NO_RESPONSE))
         .build();
   }
 
   private static String readDocumentation(String defaultDocsPath, String path, String id) {
-    final var resourcePath = path.isEmpty() ? String.format("%s/%s", defaultDocsPath, id) : path;
+    final var resourcePath = path.isEmpty() ? String.format("%s/%s.md", defaultDocsPath, id) : path;
     final var resource = new ClassPathResource(resourcePath);
 
     if (!resource.isReadable()) {
-      return String.format("No documentation has been provided for element with id: '%s'", id);
+      return null;
     }
 
     try (var input = resource.getInputStream()) {

@@ -21,12 +21,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
 @SpringBootTest(
     classes = {SimpleAdapter.class},
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisableJmx(false)
+@DirtiesContext
 class DeclarativeDefinitionEndpointTest {
 
   @Autowired private ObjectMapper mapper;
@@ -51,7 +53,12 @@ class DeclarativeDefinitionEndpointTest {
     // assert
     assertThat(httpResponse.getStatusLine().getStatusCode()).isEqualTo(200);
     assertThat(declarativeStructureInfo.getScenarios()).hasSize(SCENARIOS_IN_TEST_ADAPTER);
-    assertThat(declarativeStructureInfo.getConnectors()).hasSize(CONNECTORS_IN_TEST_ADAPTER);
+    assertThat(
+            declarativeStructureInfo.getConnectorgroups().stream()
+                .mapToInt(connectorGroupInfo -> connectorGroupInfo.getConnectors().size())
+                .sum())
+        .isEqualTo(CONNECTORS_IN_TEST_ADAPTER);
+
     assertThat(declarativeStructureInfo.getConnectorgroups())
         .hasSize(CONNECTORGROUPS_IN_TEST_ADAPTER);
   }
