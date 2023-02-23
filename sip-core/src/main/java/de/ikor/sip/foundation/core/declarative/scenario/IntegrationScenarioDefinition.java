@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.scenario;
 
-import de.ikor.sip.foundation.core.declarative.orchestation.ConsumerOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestation.Orchestratable;
+import de.ikor.sip.foundation.core.declarative.orchestration.ConsumerOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
 import java.util.Optional;
 
 /**
@@ -17,7 +17,8 @@ import java.util.Optional;
  * @see IntegrationScenarioBase
  * @see de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario
  */
-public interface IntegrationScenarioDefinition extends Orchestratable<ConsumerOrchestrationInfo> {
+public sealed interface IntegrationScenarioDefinition
+    extends Orchestratable<ConsumerOrchestrationInfo> permits IntegrationScenarioBase {
 
   /**
    * Returns the ID of the integration scenario. Must be unique within the scope of the adapter.

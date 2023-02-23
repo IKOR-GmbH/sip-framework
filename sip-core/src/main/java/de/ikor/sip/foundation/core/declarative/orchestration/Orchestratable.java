@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.orchestation;
+package de.ikor.sip.foundation.core.declarative.orchestration;
 
 /**
  * Common interface for elements that allow to be orchestrated by a matching {@link Orchestrator}.

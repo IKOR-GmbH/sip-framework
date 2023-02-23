@@ -10,6 +10,8 @@ import java.util.Optional;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.apache.camel.Endpoint;
+import org.apache.camel.builder.EndpointConsumerBuilder;
+import org.apache.camel.builder.endpoint.dsl.JmsEndpointBuilderFactory;
 
 @UtilityClass
 public class DeclarativeHelper {
@@ -64,5 +66,12 @@ public class DeclarativeHelper {
             .getRegistry()
             .lookupByNameAndType("routesRegistry", RoutesRegistry.class);
     return Optional.ofNullable(routesRegistry);
+  }
+
+  public static EndpointConsumerBuilder resolveForbiddenEndpoint(
+      EndpointConsumerBuilder endpointConsumerBuilder) {
+    if (endpointConsumerBuilder instanceof JmsEndpointBuilderFactory.JmsEndpointBuilder)
+      endpointConsumerBuilder.doSetProperty("bridgeErrorHandler", false);
+    return endpointConsumerBuilder;
   }
 }

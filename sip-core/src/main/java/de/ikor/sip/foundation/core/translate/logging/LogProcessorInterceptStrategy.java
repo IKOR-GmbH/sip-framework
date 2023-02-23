@@ -32,8 +32,7 @@ public class LogProcessorInterceptStrategy implements InterceptStrategy, Ordered
       CamelContext context, NamedNode definition, Processor target, Processor nextTarget) {
     // Target can be a Camel's wrapped processor (WrapProcessor)
     Processor originalProcessor = CamelHelper.unwrapProcessor(target);
-    if (originalProcessor instanceof LogProcessor) {
-      LogProcessor logProcessor = (LogProcessor) originalProcessor;
+    if (originalProcessor instanceof LogProcessor logProcessor) {
       target =
           (logProcessor.getExpression() == null)
               ? target

@@ -5,14 +5,13 @@ import de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
-import de.ikor.sip.foundation.core.declarative.annonation.UseRequestMapping;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.RestConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupBase;
-import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrator;
-import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
@@ -66,8 +65,7 @@ public class SimpleAdapter {
       belongsToGroup = "SIP2",
       fromScenario = AppendStaticMessageScenario.ID,
       requestModel = String.class,
-      pathToDocumentationResource = "documents/structure/connectors/genericDescription")
-  @UseRequestMapping
+      pathToDocumentationResource = "documents/structure/connectors/genericDescription.txt")
   public class AppendStaticMessageConsumer extends GenericOutboundConnectorBase {
 
     @Override

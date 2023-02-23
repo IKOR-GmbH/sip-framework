@@ -19,8 +19,8 @@ public class CamelHelper {
    */
   public static Processor unwrapProcessor(Processor wrappedProcessor) {
     Processor originalProcessor = wrappedProcessor;
-    while (originalProcessor instanceof WrapProcessor) {
-      originalProcessor = ((WrapProcessor) originalProcessor).getWrapped();
+    while (originalProcessor instanceof WrapProcessor wrapProcessor) {
+      originalProcessor = wrapProcessor.getWrapped();
     }
     return originalProcessor;
   }
