@@ -25,7 +25,9 @@ public abstract class Mock {
   /** Clear previously set behaviour for mock. */
   public abstract void clear();
 
-  /** @return ID of the Mock */
+  /**
+   * @return ID of the Mock
+   */
   public String getId() {
     return returnExchange.getProperty(ENDPOINT_ID_EXCHANGE_PROPERTY, String.class);
   }

@@ -32,7 +32,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   private final MultiValuedMap<String, Endpoint> endpointsForRouteId = new HashSetValuedHashMap<>();
   private final MultiValuedMap<Endpoint, String> routeIdsForEndpoints =
       new HashSetValuedHashMap<>();
-  
+
   public RoutesRegistry(DeclarationsRegistryApi declarationsRegistryApi) {
     this.declarationsRegistryApi = declarationsRegistryApi;
   }
