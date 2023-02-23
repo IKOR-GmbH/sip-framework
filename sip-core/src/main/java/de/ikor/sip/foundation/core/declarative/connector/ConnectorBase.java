@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrator;
-import de.ikor.sip.foundation.core.declarative.orchestation.Orchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 import org.slf4j.Logger;
@@ -15,8 +15,9 @@ import org.slf4j.LoggerFactory;
  * allows subclasses to attach an {@link Orchestrator} for the transformation between connector and
  * common domain models through the {@link #defineTransformationOrchestrator()} method.
  */
-abstract class ConnectorBase
-    implements ConnectorDefinition, Orchestrator<ConnectorOrchestrationInfo> {
+abstract sealed class ConnectorBase
+    implements ConnectorDefinition, Orchestrator<ConnectorOrchestrationInfo>
+    permits GenericInboundConnectorBase, GenericOutboundConnectorBase, RestConnectorBase {
 
   @Getter private final Logger logger = LoggerFactory.getLogger(getClass());
 

@@ -16,6 +16,5 @@ public class ConnectorGroupInfo {
 
   private String connectorGroupId;
   private String connectorGroupDescription;
-  private List<String> inboundConnectors;
-  private List<String> outboundConnectors;
+  private List<ConnectorInfo> connectors;
 }

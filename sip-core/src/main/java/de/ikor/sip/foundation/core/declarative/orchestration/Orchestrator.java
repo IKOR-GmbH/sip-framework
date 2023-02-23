@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.orchestation;
+package de.ikor.sip.foundation.core.declarative.orchestration;
 
 public interface Orchestrator<T extends OrchestrationInfo> {
 

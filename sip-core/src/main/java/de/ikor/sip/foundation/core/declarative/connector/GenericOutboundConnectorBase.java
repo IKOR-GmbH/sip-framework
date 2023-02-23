@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
  *     domain models of connector and integration scenario
  * @see OutboundConnector
  */
-public abstract class GenericOutboundConnectorBase extends ConnectorBase
+public abstract non-sealed class GenericOutboundConnectorBase extends ConnectorBase
     implements OutboundConnectorDefinition {
 
   private final OutboundConnector outboundConnectorAnnotation =

@@ -11,14 +11,19 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.EndpointAware;
 import org.apache.camel.Route;
+import org.apache.camel.spi.CamelEvent;
+import org.apache.camel.spi.CamelEvent.CamelContextEvent;
+import org.apache.camel.spi.CamelEvent.CamelContextStartedEvent;
+import org.apache.camel.support.SimpleEventNotifierSupport;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RoutesRegistry {
+public class RoutesRegistry extends SimpleEventNotifierSupport {
 
-  private final DeclarationRegistryApi declarationRegistryApi;
+  public static final String SIP_ROUTE_PREFIX = "sip-connector";
+  private final DeclarationsRegistryApi declarationsRegistryApi;
 
   private final MultiValuedMap<ConnectorDefinition, String> routeIdsForConnectorRegister =
       new HashSetValuedHashMap<>();
@@ -28,8 +33,20 @@ public class RoutesRegistry {
   private final MultiValuedMap<Endpoint, String> routeIdsForEndpoints =
       new HashSetValuedHashMap<>();
 
-  public RoutesRegistry(DeclarationRegistryApi declarationRegistryApi) {
-    this.declarationRegistryApi = declarationRegistryApi;
+  public RoutesRegistry(DeclarationsRegistryApi declarationsRegistryApi) {
+    this.declarationsRegistryApi = declarationsRegistryApi;
+  }
+
+  /** On CamelContextStartedEvent execute this class's event listener - notify() */
+  @Override
+  public boolean isEnabled(CamelEvent event) {
+    return event instanceof CamelContextStartedEvent;
+  }
+
+  /** Trigger caching of routes and endpoints mappings */
+  @Override
+  public void notify(CamelEvent event) {
+    prefillEndpointRouteMappings(((CamelContextEvent) event).getContext());
   }
 
   @Synchronized
@@ -37,7 +54,8 @@ public class RoutesRegistry {
       final RouteRole role, final ConnectorDefinition connector, final Object... suffixes) {
     final var idBuilder =
         new StringBuilder(
-            String.format("sip-connector_%s_%s", connector.getId(), role.getRoleSuffixInRouteId()));
+            String.format(
+                "%s_%s_%s", SIP_ROUTE_PREFIX, connector.getId(), role.getRoleSuffixInRouteId()));
     Arrays.stream(suffixes).forEach(suffix -> idBuilder.append("-").append(suffix));
     final var routeId = idBuilder.toString();
     if (roleForRouteIdRegister.containsKey(routeId)) {
@@ -65,13 +83,15 @@ public class RoutesRegistry {
   }
 
   public String getRouteIdByConnectorId(String connectorId) {
-    Optional<ConnectorDefinition> connector = declarationRegistryApi.getConnectorById(connectorId);
+    Optional<ConnectorDefinition> connector = declarationsRegistryApi.getConnectorById(connectorId);
     List<RouteInfo> routeInfos = new ArrayList<>();
     if (connector.isPresent()) {
       routeInfos = getRoutesInfo(connector.get());
     }
     return routeInfos.stream()
-        .filter(routeInfo -> routeInfo.getRouteRole().equals(RouteRole.EXTERNAL_ENDPOINT))
+        .filter(
+            routeInfo ->
+                routeInfo.getRouteRole().equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName()))
         .map(RouteInfo::getRouteId)
         .findFirst()
         .orElse(null);
@@ -82,9 +102,25 @@ public class RoutesRegistry {
         .map(
             routeId ->
                 RouteInfo.builder()
-                    .routeRole(roleForRouteIdRegister.get(routeId))
+                    .routeRole(roleForRouteIdRegister.get(routeId).getExternalName())
                     .routeId(routeId)
                     .build())
+        .collect(Collectors.toList());
+  }
+
+  public List<Endpoint> getExternalEndpointsForConnector(ConnectorDefinition connectorDefinition) {
+    List<RouteInfo> connectorRoutes = getRoutesInfo(connectorDefinition);
+    return connectorRoutes.stream()
+        .filter(
+            routeInfo ->
+                routeInfo.getRouteRole().equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName()))
+        .map(
+            routeInfo ->
+                endpointsForRouteId.get(routeInfo.getRouteId()).stream()
+                    // filter out all of sip framework internal endpoints
+                    .filter(endpoint -> !endpoint.getEndpointKey().contains(SIP_ROUTE_PREFIX))
+                    .collect(Collectors.toList()))
+        .flatMap(Collection::stream)
         .collect(Collectors.toList());
   }
 
@@ -96,14 +132,14 @@ public class RoutesRegistry {
     return routeDeclarativeStructureInfoList;
   }
 
-  public void prefillEndpointRouteMappings(CamelContext camelContext) {
+  void prefillEndpointRouteMappings(CamelContext camelContext) {
     for (Route route : camelContext.getRoutes()) {
       String routeId = route.getRouteId();
       endpointsForRouteId.put(routeId, route.getEndpoint());
       routeIdsForEndpoints.put(route.getEndpoint(), routeId);
       for (org.apache.camel.Service service : route.getServices()) {
-        if (service instanceof EndpointAware) {
-          Endpoint endpoint = ((EndpointAware) service).getEndpoint();
+        if (service instanceof EndpointAware endpointAware) {
+          Endpoint endpoint = endpointAware.getEndpoint();
           endpointsForRouteId.put(routeId, endpoint);
           routeIdsForEndpoints.put(endpoint, routeId);
         }

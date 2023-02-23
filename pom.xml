@@ -59,9 +59,9 @@
     </distributionManagement>
 
     <properties>
-        <java.version>11</java.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
 
         <!-- sip framework version, decoupled from actual version to make dependency resolution work properly in projects
              where sip-framework is the dependency. This version should always be the same as the version of sip-framework itself -->
@@ -72,8 +72,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>2.7.7</spring.boot.version>
-        <camel.version>3.18.5</camel.version>
+        <spring.boot.version>2.7.8</spring.boot.version>
+        <camel.version>3.20.2</camel.version>
         <jackson-jsr310.version>2.12.7</jackson-jsr310.version>
         <springdoc-openapi.version>1.6.14</springdoc-openapi.version>
         <snakeyaml.version>1.33</snakeyaml.version>
@@ -87,14 +87,14 @@
         <asm.version>9.2</asm.version>
 
         <!-- plugin versions -->
-        <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
+        <maven-enforcer-plugin.version>3.2.1</maven-enforcer-plugin.version>
         <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
         <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
         <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <fmt-maven-plugin.version>2.13</fmt-maven-plugin.version>
+        <fmt-maven-plugin.version>2.19</fmt-maven-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
         <maven-core.version>3.8.6</maven-core.version>
@@ -476,7 +476,7 @@
                         <dependency>
                             <groupId>org.codehaus.mojo</groupId>
                             <artifactId>extra-enforcer-rules</artifactId>
-                            <version>1.3</version>
+                            <version>1.6.1</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -488,7 +488,7 @@
                             <configuration>
                                 <rules>
                                     <enforceBytecodeVersion>
-                                        <maxJdkVersion>11</maxJdkVersion>
+                                        <maxJdkVersion>17</maxJdkVersion>
                                     </enforceBytecodeVersion>
                                     <dependencyConvergence/>
                                     <banDuplicatePomDependencyVersions/>
@@ -503,7 +503,7 @@
                 </plugin>
 
                 <plugin>
-                    <groupId>com.coveo</groupId>
+                    <groupId>com.spotify.fmt</groupId>
                     <artifactId>fmt-maven-plugin</artifactId>
                     <version>${fmt-maven-plugin.version}</version>
                 </plugin>

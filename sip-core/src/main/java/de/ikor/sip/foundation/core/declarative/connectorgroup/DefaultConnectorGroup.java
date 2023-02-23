@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
  * <p><em>For internal use only.</em>
  */
 @AllArgsConstructor
-public class DefaultConnectorGroup implements ConnectorGroupDefinition {
+public final class DefaultConnectorGroup implements ConnectorGroupDefinition {
 
   private static final String EMPTY_PATH = "";
 

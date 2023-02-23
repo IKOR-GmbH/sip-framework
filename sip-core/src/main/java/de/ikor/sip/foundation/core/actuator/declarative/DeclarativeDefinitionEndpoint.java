@@ -10,6 +10,7 @@ import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.DependsOn;
@@ -38,9 +39,9 @@ public class DeclarativeDefinitionEndpoint {
 
   @EventListener(ApplicationReadyEvent.class)
   private void collectInfos() {
-    initializeConnectorGroupInfos();
-    initializeIntegrationScenarioInfos();
     initializeConnectorInfos();
+    initializeIntegrationScenarioInfos();
+    initializeConnectorGroupInfos();
   }
 
   /**
@@ -53,7 +54,6 @@ public class DeclarativeDefinitionEndpoint {
   public DeclarativeStructureInfo getStructure() {
     return DeclarativeStructureInfo.builder()
         .connectorgroups(getConnectorGroupInfo())
-        .connectors(getConnectorInfo())
         .scenarios(getScenarioInfo())
         .build();
   }
@@ -73,18 +73,16 @@ public class DeclarativeDefinitionEndpoint {
     return connectors;
   }
 
-  private void initializeConnectorGroupInfos() {
+  private void initializeConnectorInfos() {
     declarationsRegistry
-        .getConnectorGroups()
+        .getConnectors()
         .forEach(
-            connectorGroup ->
-                connectorGroups.add(
-                    createConnectorGroupInfo(
-                        declarationsRegistry.getInboundConnectorsByConnectorGroupId(
-                            connectorGroup.getId()),
-                        declarationsRegistry.getOutboundConnectorsByConnectorGroupId(
-                            connectorGroup.getId()),
-                        connectorGroup)));
+            connector ->
+                connectors.add(
+                    createAndAddConnectorInfo(
+                        connector,
+                        routesRegistry.getRoutesInfo(connector),
+                        routesRegistry.getExternalEndpointsForConnector(connector))));
   }
 
   private void initializeIntegrationScenarioInfos() {
@@ -93,12 +91,20 @@ public class DeclarativeDefinitionEndpoint {
         .forEach(scenario -> scenarios.add(createIntegrationScenarioInfo(scenario)));
   }
 
-  private void initializeConnectorInfos() {
+  private void initializeConnectorGroupInfos() {
     declarationsRegistry
-        .getConnectors()
+        .getConnectorGroups()
         .forEach(
-            connector ->
-                connectors.add(
-                    createAndAddConnectorInfo(connector, routesRegistry.getRoutesInfo(connector))));
+            connectorGroup ->
+                connectorGroups.add(
+                    createConnectorGroupInfo(
+                        connectors.stream()
+                            .filter(
+                                connectorInfo ->
+                                    connectorInfo
+                                        .getConnectorGroupId()
+                                        .equals(connectorGroup.getId()))
+                            .collect(Collectors.toList()),
+                        connectorGroup)));
   }
 }

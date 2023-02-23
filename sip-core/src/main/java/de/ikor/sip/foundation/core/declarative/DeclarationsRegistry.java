@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Getter
 @Slf4j
 @Service
-public class DeclarationsRegistry implements DeclarationRegistryApi {
+public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
   private static final String CONNECTOR_GROUP = "connector group";
   private static final String SCENARIO = "integration scenario";
@@ -126,6 +126,7 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
         .findFirst();
   }
 
+  @SuppressWarnings("rawtypes")
   @Override
   public List<InboundConnectorDefinition> getInboundConnectors() {
     return connectors.stream()
@@ -142,42 +143,7 @@ public class DeclarationsRegistry implements DeclarationRegistryApi {
         .collect(Collectors.toList());
   }
 
-  @Override
-  public Optional<InboundConnectorDefinition> getInboundConnectorById(String connectorId) {
-    return connectors.stream()
-        .filter(connector -> connector.getId().equals(connectorId))
-        .map(InboundConnectorDefinition.class::cast)
-        .findFirst();
-  }
-
-  @Override
-  public Optional<OutboundConnectorDefinition> getOutboundConnectorById(String connectorId) {
-    return connectors.stream()
-        .filter(connector -> connector.getId().equals(connectorId))
-        .map(OutboundConnectorDefinition.class::cast)
-        .findFirst();
-  }
-
-  @Override
-  public List<InboundConnectorDefinition> getInboundConnectorsByConnectorGroupId(
-      String connectorGroupId) {
-    return connectors.stream()
-        .filter(connector -> connector.getConnectorGroupId().equals(connectorGroupId))
-        .filter(InboundConnectorDefinition.class::isInstance)
-        .map(InboundConnectorDefinition.class::cast)
-        .collect(Collectors.toList());
-  }
-
-  @Override
-  public List<OutboundConnectorDefinition> getOutboundConnectorsByConnectorGroupId(
-      String connectorGroupId) {
-    return connectors.stream()
-        .filter(connector -> connector.getConnectorGroupId().equals(connectorGroupId))
-        .filter(OutboundConnectorDefinition.class::isInstance)
-        .map(OutboundConnectorDefinition.class::cast)
-        .collect(Collectors.toList());
-  }
-
+  @SuppressWarnings("rawtypes")
   @Override
   public List<InboundConnectorDefinition> getInboundConnectorsByScenarioId(String scenarioId) {
     return connectors.stream()

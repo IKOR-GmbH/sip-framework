@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 /** API interface for {@link DeclarationsRegistry} used within the framework structure. */
-public interface DeclarationRegistryApi {
+public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
 
   /**
    * Get {@link ConnectorGroupDefinition} by its id.
@@ -49,39 +49,6 @@ public interface DeclarationRegistryApi {
    * @return all outbound connectors
    */
   List<OutboundConnectorDefinition> getOutboundConnectors();
-
-  /**
-   * Get list of {@link InboundConnectorDefinition} by id.
-   *
-   * @return inbound connectors
-   */
-  @SuppressWarnings("rawtypes")
-  Optional<InboundConnectorDefinition> getInboundConnectorById(String connectorId);
-
-  /**
-   * Get list of {@link OutboundConnectorDefinition} by id.
-   *
-   * @return outbound connectors
-   */
-  Optional<OutboundConnectorDefinition> getOutboundConnectorById(String connectorId);
-
-  /**
-   * Get list of {@link InboundConnectorDefinition} by id of {@link ConnectorGroupDefinition}.
-   *
-   * @param connectorGroupId is its id
-   * @return inbound connectors
-   */
-  @SuppressWarnings("rawtypes")
-  List<InboundConnectorDefinition> getInboundConnectorsByConnectorGroupId(String connectorGroupId);
-
-  /**
-   * Get list of {@link OutboundConnectorDefinition} by id of {@link ConnectorGroupDefinition}.
-   *
-   * @param connectorGroupId is its id
-   * @return outbound connectors
-   */
-  List<OutboundConnectorDefinition> getOutboundConnectorsByConnectorGroupId(
-      String connectorGroupId);
 
   /**
    * Get list of {@link InboundConnectorDefinition} by id of {@link IntegrationScenarioDefinition}.

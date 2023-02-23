@@ -14,7 +14,7 @@ import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
  *
  * <p>Adapter developers should extend this class and annotate it with @{@link ConnectorGroup}.
  */
-public class ConnectorGroupBase implements ConnectorGroupDefinition {
+public non-sealed class ConnectorGroupBase implements ConnectorGroupDefinition {
 
   private final ConnectorGroup annotation =
       DeclarativeHelper.getAnnotationOrThrow(ConnectorGroup.class, this);
