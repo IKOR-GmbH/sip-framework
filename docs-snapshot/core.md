@@ -409,3 +409,21 @@ SIP Framework offers a few types of exceptions. The base ones are:
 If there is a need for additional exceptions it is highly encouraged that they have 
 one of SIP base exceptions as parent class.
 This provides uniformed data of exception origin for easier handling.
+
+### Actuator adapter definition
+
+To see the detailed declarative structure of an adapter, containing all scenarios, connectors and connector groups,
+the "/adapterdefinition" endpoint is available through actuator.
+It will present a detailed list of all connector groups, inside which connectors with their properties are found.
+The properties include data models, routes, descriptions, etc.
+Following that, all scenarios will be presented, including their description.
+
+To enable or disable this feature the following property should be used:
+
+```yaml
+sip:
+  core:
+    actuator:
+      adapterdefinition:
+        enabled: true # enabled by default
+```
