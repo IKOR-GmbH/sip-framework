@@ -51,39 +51,6 @@ public interface DeclarationRegistryApi {
   List<OutboundConnectorDefinition> getOutboundConnectors();
 
   /**
-   * Get list of {@link InboundConnectorDefinition} by id.
-   *
-   * @return inbound connectors
-   */
-  @SuppressWarnings("rawtypes")
-  Optional<InboundConnectorDefinition> getInboundConnectorById(String connectorId);
-
-  /**
-   * Get list of {@link OutboundConnectorDefinition} by id.
-   *
-   * @return outbound connectors
-   */
-  Optional<OutboundConnectorDefinition> getOutboundConnectorById(String connectorId);
-
-  /**
-   * Get list of {@link InboundConnectorDefinition} by id of {@link ConnectorGroupDefinition}.
-   *
-   * @param connectorGroupId is its id
-   * @return inbound connectors
-   */
-  @SuppressWarnings("rawtypes")
-  List<InboundConnectorDefinition> getInboundConnectorsByConnectorGroupId(String connectorGroupId);
-
-  /**
-   * Get list of {@link OutboundConnectorDefinition} by id of {@link ConnectorGroupDefinition}.
-   *
-   * @param connectorGroupId is its id
-   * @return outbound connectors
-   */
-  List<OutboundConnectorDefinition> getOutboundConnectorsByConnectorGroupId(
-      String connectorGroupId);
-
-  /**
    * Get list of {@link InboundConnectorDefinition} by id of {@link IntegrationScenarioDefinition}.
    *
    * @param scenarioId is its id

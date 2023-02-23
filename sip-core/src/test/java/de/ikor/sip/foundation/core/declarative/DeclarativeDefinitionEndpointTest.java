@@ -53,7 +53,12 @@ class DeclarativeDefinitionEndpointTest {
     // assert
     assertThat(httpResponse.getStatusLine().getStatusCode()).isEqualTo(200);
     assertThat(declarativeStructureInfo.getScenarios()).hasSize(SCENARIOS_IN_TEST_ADAPTER);
-    assertThat(declarativeStructureInfo.getConnectors()).hasSize(CONNECTORS_IN_TEST_ADAPTER);
+    assertThat(
+            declarativeStructureInfo.getConnectorgroups().stream()
+                .mapToInt(connectorGroupInfo -> connectorGroupInfo.getConnectors().size())
+                .sum())
+        .isEqualTo(CONNECTORS_IN_TEST_ADAPTER);
+
     assertThat(declarativeStructureInfo.getConnectorgroups())
         .hasSize(CONNECTORGROUPS_IN_TEST_ADAPTER);
   }

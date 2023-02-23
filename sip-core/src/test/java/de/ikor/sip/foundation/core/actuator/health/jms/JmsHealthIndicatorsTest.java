@@ -53,10 +53,10 @@ class JmsHealthIndicatorsTest {
 
   @Test
   void Given_IncorrectEndpoint_When_connectionManageable_Then_IntegrationManagementException() {
+    // arrange
+    Endpoint genericEndpoint = mock(Endpoint.class, RETURNS_DEEP_STUBS);
     // assert
-    assertThatThrownBy(
-            () ->
-                JmsHealthIndicators.connectionManageable(mock(Endpoint.class, RETURNS_DEEP_STUBS)))
+    assertThatThrownBy(() -> JmsHealthIndicators.connectionManageable(genericEndpoint))
         .isInstanceOf(IntegrationManagementException.class);
   }
 }
