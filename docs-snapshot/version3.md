@@ -9,10 +9,9 @@ with a tool for building unified adapters.
 
 ## Concepts
 
-### Common Domain Model
+### Common Domain Model (CDM)
 
-CDM is a model which is used in connecting different non-compatible systems. 
-
+CDM is a model which is used in connecting different non-compatible systems.
 
 ### Scenario
 
@@ -25,11 +24,11 @@ Connector groups are used for grouping connectors based on the system they belon
 
 ### Connector
 
-A connector represents one integration side. 
+A connector is a holder of external endpoint and represents one integration side. 
 Its duty is to provide necessary processing and transformation into/from the common domain model.
 They can be either inbound or outbound, with inbound having rest as a subtype.
 
-## Building
+## How to build
 
 Building one adapter requires all previously mentioned concept to be implemented.
 
