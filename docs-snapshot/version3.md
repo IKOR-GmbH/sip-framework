@@ -1,0 +1,223 @@
+# SIP Adapter
+
+[TOC]
+
+## Description
+
+SIP Adapters building relies on using best practices in order to provide developers
+with a tool for building unified adapters.
+
+## Concepts
+
+### Common Domain Model
+
+CDM is a model which is used in connecting different non-compatible systems. 
+
+
+### Scenario
+
+A scenario is a means of linking connectors into one fluent flow.
+It is used for definition a specific integration flow, usually one concrete operation, between integration sides.
+
+### Connector group
+
+Connector groups are used for grouping connectors based on the system they belong to.
+
+### Connector
+
+A connector represents one integration side. 
+Its duty is to provide necessary processing and transformation into/from the common domain model.
+They can be either inbound or outbound, with inbound having rest as a subtype.
+
+## Building
+
+Building one adapter requires all previously mentioned concept to be implemented.
+
+### Scenarios
+
+In order to create a scenario first we need to extend IntegrationScenarioBase. 
+Then, annotate the class with @IntegrationScenario and fill in the required fields:
+
+- scenarioID - unique identifier of a scenario, used in connectors to link them
+- requestModel - represents the common domain model, that both integration sides communicate through
+- responseModel (optional) - represents the response, which is expected to be returned from outbound side of the flow
+- pathToDocumentationResource (optional) - provides path to scenario documentation files
+
+```java
+  @IntegrationScenario(scenarioId = DemoScenario.ID, requestModel = DemoCDMRequest.class, responseModel = DemoCDMResponse.class)
+  public class DemoScenario extends IntegrationScenarioBase {
+    public static final String ID = "Demo scenario";
+  }
+```
+
+### Connector Groups
+
+Similar to scenarios, we first need to extend ConnectorGroupBase and also annotate the class with @ConnectorGroup
+Fields that are available are:
+
+- groupId - unique connector group identifier
+- pathToDocumentationResource (optional) - provides path to documentation files
+
+```java
+  @ConnectorGroup(groupId = DemoConnectorGroup.ID)
+  public class DemoConnectorGroup extends ConnectorGroupBase {
+    public static final String ID = "SIP1";
+  }
+```
+
+### Connectors
+
+**Inbound**
+
+Inbound connectors are the entry point to an adapter. 
+They need to extend GenericInboundConnectorBase and override necessary methods, 
+but also to be annotated with @InboundConnector, with the following fields:
+
+- *connectorId* (optional) - unique identifier of a connector (automatically generated if missing)
+- *belongsToGroup* - id of the connector group it belongs to
+- *toScenario* - id of the scenario to which it provides data
+- *requestModel* - model which is expected be received on the input endpoint
+- *responseModel* (optional) - model which is expected be returned to the caller
+- *domains* (optional) - domains this connector is a part of 
+- *pathToDocumentationResource* (optional) - provides path to documentation files
+
+Defining connector behavior is done by overriding certain methods and adding custom implementation.
+
+First, *EndpointConsumerBuilder defineInitiatingEndpoint()* it is used to define the input endpoint.
+StaticEndpointBuilders can be used to provide the endpoint definition.
+
+Next is defining processing and transformation. 
+This is done in *Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator()*.
+Here an Orchestrator needs to be returned, which is available from ConnectorOrchestrator 
+and using *forConnector(this)* as a builder. 
+*setRequestRouteTransformer(Consumer<RouteDefinition> requestRouteTransformer)* is for processing and transformation,
+which occurs before providing the data to scenario, 
+while *setResponseRouteTransformer(Consumer<RouteDefinition> responseRouteTransformer)* handles the response.
+This is illustrated in the example below.
+
+```java
+@InboundConnector(
+      connectorId = "appendStaticMessageProvider",
+      belongsToGroup = DemoConnectorGroup.ID,
+      toScenario = DemoScenario.ID,
+      requestModel = InboundConnectorRequest.class,
+      responseModel = InboundConnectorResponse.class)
+  public class DemoConnector extends GenericInboundConnectorBase {
+
+    @Override
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setRequestRouteTransformer(this::defineRequestRoute)
+          .setResponseRouteTransformer(this::defineResponseRoute);
+    }
+
+    protected void defineRequestRoute(final RouteDefinition definition) {
+      definition.process(exchange -> System.out.println("Processing and transformation pre-orchestration"));
+    }
+
+    protected void defineResponseRoute(final RouteDefinition definition) {
+        definition.process(exchange -> System.out.println("Processing and transformation post-orchestration"));
+    }
+
+    // Input endpoint
+    @Override
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+      return StaticEndpointBuilders.direct("entry-point");
+    }
+  }
+```
+
+**Rest connector**
+
+Rest connectors are a subtype of inbound connectors. 
+They are used in order to define rest inbound endpoint via Apache Camel RestDSL.
+The difference is that they need to extend RestConnectorBase, but the annotation stays the same.
+
+Unlike generic inbound connectors it is required to override *void configureRest(RestDefinition definition)* method 
+and append the rest DSL to RestDefinition to define the input endpoint.
+
+```java
+ @InboundConnector(
+      belongsToGroup = DemoConnectorGroup.ID,
+      toScenario = RestDSLScenario.ID,
+      requestModel = String.class)
+  public class RestConnectorTestBase extends RestConnectorBase {
+
+    // Input endpoint defined via Rest DSl
+    @Override
+    protected void configureRest(RestDefinition definition) {
+      definition.post("user");
+    }
+
+    @Override
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setRequestRouteTransformer(this::defineRequestRoute);
+    }
+
+    protected void defineRequestRoute(final RouteDefinition definition) {
+        definition.process(exchange -> System.out.println("Processing and transformation pre-orchestration"));
+    }
+  }
+```
+
+**Outbound**
+
+Outbound connectors are used to define communication with the external systems inside the adapter.
+They need to extend GenericOutboundConnectorBase and override necessary methods,
+but also to be annotated with @OutboundConnector, with the following fields:
+
+- *connectorId* (optional) - unique identifier of a connector (automatically generated if missing)
+- *belongsToGroup* - id of the connector group it belongs to
+- *fromScenario* - id of the scenario from which it consumes data
+- *requestModel* - model which is expected be received on the input endpoint
+- *responseModel* (optional) - model which is expected be returned to the caller
+- *domains* (optional) - domains this connector is a part of
+- *pathToDocumentationResource* (optional) - provides path to documentation files
+
+Same as inbound, the behaviour is defined through overridden method implementation.
+
+*EndpointProducerBuilder defineOutgoingEndpoint()* is used to define the endpoint, 
+which executes the call to an external system.
+StaticEndpointBuilders can be used to provide the endpoint definition.
+
+Defining processing and transformation is done in *Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator()*.
+Here an Orchestrator needs to be returned, which is available from ConnectorOrchestrator
+and using *forConnector(this)* as a builder.
+*setRequestRouteTransformer(Consumer<RouteDefinition> requestRouteTransformer)* is for processing and transformation,
+which occurs before external system call,
+while *setResponseRouteTransformer(Consumer<RouteDefinition> responseRouteTransformer)* handles the response.
+This is illustrated in the example below.
+
+```java
+@OutboundConnector(
+      belongsToGroup = OtherDemoGroup.ID,
+      fromScenario = DemoScenario.ID,
+      requestModel = OutboundConnectorRequest.class,
+      responseModel = OutboundConnectorResponse.class)
+  public class DemoOutboundConnector extends GenericOutboundConnectorBase {
+
+    @Override
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setRequestRouteTransformer(this::defineRequestRoute)
+          .setResponseRouteTransformer(this::defineResponseRoute);
+    }
+
+    protected void defineRequestRoute(final RouteDefinition definition) {
+        definition.process(exchange -> System.out.println("Processing and transformation before external system call"));
+    }
+
+    protected void defineResponseRoute(final RouteDefinition definition) {
+        definition.process(exchange -> System.out.println("Processing and transformation after external system call"));
+    }
+    
+    // external endpoint definition
+    @Override
+    protected EndpointProducerBuilder defineOutgoingEndpoint() {
+      return StaticEndpointBuilders.http("localhost:8080/update");
+    }
+  }
+```
+
+
