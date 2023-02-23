@@ -73,25 +73,25 @@ The next step is to provide the TestCaseDefinition file in yaml format in the `t
 test-case-definitions:
 - TITLE: "Title of individual test"
   WHEN-execute:
-    endpoint: "id of connector under test"
+    endpoint: "id of endpoint under test"
     with:
       body: "Content that will be send as request body to the adapter endpoint (plain text, JSON String)"
       headers:
         header-key: "Value of the header"
         another-header-key: "Another value"
   WITH-mocks:
-  - endpoint: "id of connector that should be mocked"
+  - endpoint: "id of endpoint that should be mocked"
     returning:
       body: "Response message that real endpoint is expected to return"
       headers:
         header-key: "Value of the header"
   THEN-expect:
-  - endpoint: "id of connector under test" # matches endpoint under test defined in when phase
+  - endpoint: "id of endpoint under test" # matches endpoint under test defined in when phase
     having:
       body: "Regex expression (java) which will be compered to the reponse of the test"
       headers:
         header-key: "Regex expression (java) which will be compered to the value of this header key"
-  - endpoint: "id of connector that is mocked" # matches endpoint with defined or default mocked behavior
+  - endpoint: "id of endpoint that is mocked" # matches endpoint with defined or default mocked behavior
     having:
       body: "Regex expression (java) which will be compered to the request which arrived on the endpoint"
       headers:
@@ -127,7 +127,7 @@ The TestCaseDefinition file starts with `test-case-definitions` property, which 
 
 In this section a payload that should be sent to the adapter is defined.
 
-"endpoint" refers to ID of adapter's Connector to which we wish to send a test request.
+"endpoint" refers to ID (routeId in Camel routes) of the endpoint to which we wish to send a test request.
 In "with" part we define content of the request we wish to send, meaning body and headers are added here.
 The body can also be defined as plain text or JSON string, which represents a POJO.
 
@@ -140,8 +140,8 @@ The body can also be defined as plain text or JSON string, which represents a PO
 
 ## WITH-mocks
 
-This section contains a list of connectors for which we wish to have specific mocked response.
-"endpoint" is the connector ID of the mocked endpoint.
+This section contains a list of endpoints for which we wish to have specific mocked response.
+"endpoint" is the endpoint ID, (processor ID in Camel route) of the mocked endpoint.
 "returning" should have body and headers, that we expect as the response from real external call.
 
 ```yaml
@@ -153,22 +153,22 @@ This section contains a list of connectors for which we wish to have specific mo
 
 ## THEN-expect
 
-Validation of adapter response is defined by setting the "endpoint" parameter to the connector's ID of endpoint under test
+Validation of adapter response is defined by setting the "endpoint" parameter to the ID of endpoint under test
 and defining the expected body or headers.
 
 Validation of requests which outgoing endpoints received from the adapter is defined by setting the "endpoint" parameter to 
-the connector's ID of mocked endpoint and defining the expected body or headers.
+the ID of mocked endpoint and defining the expected body or headers.
 
 Body and header validation is possible by either defining regex (Java) expression or matching exact String content.
 
 ```yaml
     THEN-expect:
-      - endpoint: "rest-endpoint connector id" # matches endpoint under test
+      - endpoint: "rest-endpoint" # matches endpoint under test
         having:
           body: "response .* from service"
           headers:
             CamelHttpResponseCode: "200"
-      - endpoint: "external-service connector id" # matches endpoint with mocked behavior
+      - endpoint: "external-service" # matches endpoint with mocked behavior
         having:
           body: "body of request"
           headers:
