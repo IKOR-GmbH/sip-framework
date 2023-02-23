@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import de.ikor.sip.foundation.core.declarative.orchestation.ConnectorOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestation.Orchestratable;
+import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
 import java.util.Optional;
 
 /**
@@ -18,7 +18,8 @@ import java.util.Optional;
  * @see InboundConnectorDefinition
  * @see OutboundConnectorDefinition
  */
-public interface ConnectorDefinition extends Orchestratable<ConnectorOrchestrationInfo> {
+public sealed interface ConnectorDefinition extends Orchestratable<ConnectorOrchestrationInfo>
+    permits ConnectorBase, InboundConnectorDefinition, OutboundConnectorDefinition {
 
   /**
    * Returns the ID of the connector. Must be unique within the scope of the adapter.

@@ -209,7 +209,7 @@ public class SIPJmsTextMessage implements TextMessage {
   public String getStringProperty(String key) {
     Object o = this.getObjectProperty(key);
     if (o == null) return null;
-    else if (o instanceof String) return (String) o;
+    else if (o instanceof String str) return str;
     else return o.toString();
   }
 

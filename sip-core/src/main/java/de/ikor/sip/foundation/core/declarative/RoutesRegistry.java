@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class RoutesRegistry extends SimpleEventNotifierSupport {
 
   public static final String SIP_ROUTE_PREFIX = "sip-connector";
-  private final DeclarationRegistryApi declarationRegistryApi;
+  private final DeclarationsRegistryApi declarationsRegistryApi;
 
   private final MultiValuedMap<ConnectorDefinition, String> routeIdsForConnectorRegister =
       new HashSetValuedHashMap<>();
@@ -32,9 +32,9 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   private final MultiValuedMap<String, Endpoint> endpointsForRouteId = new HashSetValuedHashMap<>();
   private final MultiValuedMap<Endpoint, String> routeIdsForEndpoints =
       new HashSetValuedHashMap<>();
-
-  public RoutesRegistry(DeclarationRegistryApi declarationRegistryApi) {
-    this.declarationRegistryApi = declarationRegistryApi;
+  
+  public RoutesRegistry(DeclarationsRegistryApi declarationsRegistryApi) {
+    this.declarationsRegistryApi = declarationsRegistryApi;
   }
 
   /** On CamelContextStartedEvent execute this class's event listener - notify() */
@@ -83,7 +83,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   }
 
   public String getRouteIdByConnectorId(String connectorId) {
-    Optional<ConnectorDefinition> connector = declarationRegistryApi.getConnectorById(connectorId);
+    Optional<ConnectorDefinition> connector = declarationsRegistryApi.getConnectorById(connectorId);
     List<RouteInfo> routeInfos = new ArrayList<>();
     if (connector.isPresent()) {
       routeInfos = getRoutesInfo(connector.get());
@@ -138,8 +138,8 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
       endpointsForRouteId.put(routeId, route.getEndpoint());
       routeIdsForEndpoints.put(route.getEndpoint(), routeId);
       for (org.apache.camel.Service service : route.getServices()) {
-        if (service instanceof EndpointAware) {
-          Endpoint endpoint = ((EndpointAware) service).getEndpoint();
+        if (service instanceof EndpointAware endpointAware) {
+          Endpoint endpoint = endpointAware.getEndpoint();
           endpointsForRouteId.put(routeId, endpoint);
           routeIdsForEndpoints.put(endpoint, routeId);
         }

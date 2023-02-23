@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 /** API interface for {@link DeclarationsRegistry} used within the framework structure. */
-public interface DeclarationRegistryApi {
+public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
 
   /**
    * Get {@link ConnectorGroupDefinition} by its id.

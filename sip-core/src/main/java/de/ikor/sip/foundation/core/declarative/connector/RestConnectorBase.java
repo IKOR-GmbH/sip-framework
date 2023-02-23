@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
  *     domain models of connector and integration scenario
  * @see InboundConnector
  */
-public abstract class RestConnectorBase extends ConnectorBase
+public abstract non-sealed class RestConnectorBase extends ConnectorBase
     implements InboundConnectorDefinition<RestsDefinition> {
 
   private final InboundConnector inboundConnectorAnnotation =

@@ -75,8 +75,8 @@ public class ProcessorProxy extends AsyncProcessorSupport {
 
   /** @return true if this is a processor that outputs to Endpoint */
   private boolean determineEndpointProcessor() {
-    if (originalProcessor instanceof EndpointAware) {
-      Endpoint destinationEndpoint = ((EndpointAware) originalProcessor).getEndpoint();
+    if (originalProcessor instanceof EndpointAware endpointAware) {
+      Endpoint destinationEndpoint = endpointAware.getEndpoint();
       if (!StringUtils.startsWithAny(
           destinationEndpoint.getEndpointUri(), NON_OUTGOING_PROCESSOR_PREFIXES)) {
         return true;

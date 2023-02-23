@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.orchestation;
+package de.ikor.sip.foundation.core.declarative.orchestration;
 
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import java.util.List;
