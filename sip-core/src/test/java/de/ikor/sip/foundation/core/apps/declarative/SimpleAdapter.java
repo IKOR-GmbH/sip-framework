@@ -33,8 +33,8 @@ public class SimpleAdapter {
 
   @InboundConnector(
       connectorId = "appendStaticMessageProvider",
-      belongsToGroup = ConnectorGroupSip1.ID,
-      toScenario = AppendStaticMessageScenario.ID,
+      connectorGroup = ConnectorGroupSip1.ID,
+      integrationScenario = AppendStaticMessageScenario.ID,
       requestModel = String.class,
       responseModel = String.class)
   public class AppendStaticMessageProvider extends GenericInboundConnectorBase {
@@ -62,8 +62,8 @@ public class SimpleAdapter {
 
   @OutboundConnector(
       connectorId = "appendStaticMessageConsumer",
-      belongsToGroup = "SIP2",
-      fromScenario = AppendStaticMessageScenario.ID,
+      connectorGroup = "SIP2",
+      integrationScenario = AppendStaticMessageScenario.ID,
       requestModel = String.class,
       pathToDocumentationResource = "documents/structure/connectors/genericDescription.txt")
   public class AppendStaticMessageConsumer extends GenericOutboundConnectorBase {
@@ -90,8 +90,8 @@ public class SimpleAdapter {
   }
 
   @InboundConnector(
-      belongsToGroup = ConnectorGroupSip1.ID,
-      toScenario = RestDSLScenario.ID,
+      connectorGroup = ConnectorGroupSip1.ID,
+      integrationScenario = RestDSLScenario.ID,
       requestModel = String.class)
   public class RestConnectorTestBase extends RestConnectorBase {
 
@@ -112,8 +112,8 @@ public class SimpleAdapter {
   }
 
   @OutboundConnector(
-      belongsToGroup = "SIP2",
-      fromScenario = RestDSLScenario.ID,
+      connectorGroup = "SIP2",
+      integrationScenario = RestDSLScenario.ID,
       requestModel = String.class,
       responseModel = String.class)
   public class RestScenarioConsumer extends GenericOutboundConnectorBase {

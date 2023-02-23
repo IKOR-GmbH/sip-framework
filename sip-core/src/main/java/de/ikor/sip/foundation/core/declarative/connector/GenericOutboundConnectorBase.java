@@ -47,7 +47,7 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
 
   @Override
   public final String fromScenarioId() {
-    return outboundConnectorAnnotation.fromScenario();
+    return outboundConnectorAnnotation.integrationScenario();
   }
 
   @Override
@@ -62,7 +62,7 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
 
   @Override
   public final String getConnectorGroupId() {
-    return outboundConnectorAnnotation.belongsToGroup();
+    return outboundConnectorAnnotation.connectorGroup();
   }
 
   @Override

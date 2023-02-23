@@ -70,7 +70,7 @@ public abstract class RestConnectorBase extends ConnectorBase
 
   @Override
   public final String toScenarioId() {
-    return inboundConnectorAnnotation.toScenario();
+    return inboundConnectorAnnotation.integrationScenario();
   }
 
   @Override
@@ -80,7 +80,7 @@ public abstract class RestConnectorBase extends ConnectorBase
 
   @Override
   public final String getConnectorGroupId() {
-    return inboundConnectorAnnotation.belongsToGroup();
+    return inboundConnectorAnnotation.connectorGroup();
   }
 
   @Override
