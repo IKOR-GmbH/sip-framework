@@ -11,10 +11,11 @@ import org.springframework.stereotype.Component;
  * de.ikor.sip.foundation.core.declarative.model.ModelMapper} interface.
  *
  * <p>Mappers annotated with this annotation will be automatically registered and don't need to be
- * declared explicitly in the @{@link UseResponseMapper} and @{@link UseRequestMapper} annotation.
+ * declared explicitly in the @{@link UseResponseModelMapper} and @{@link UseRequestModelMapper}
+ * annotation.
  *
- * @see UseResponseMapper
- * @see UseRequestMapper
+ * @see UseResponseModelMapper
+ * @see UseRequestModelMapper
  * @see de.ikor.sip.foundation.core.declarative.model.ModelMapper
  */
 @Retention(RetentionPolicy.RUNTIME)

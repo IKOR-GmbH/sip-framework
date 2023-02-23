@@ -5,7 +5,10 @@ import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.fo
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import java.util.Optional;
+import java.util.function.Consumer;
+import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.builder.EndpointProducerBuilder;
+import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.commons.lang3.StringUtils;
 
@@ -33,7 +36,32 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
 
   @Override
   public final void defineOutboundEndpoints(final RouteDefinition routeDefinition) {
+    defineRequestMarshalling()
+        .ifPresent(marshaller -> marshaller.accept(routeDefinition.marshal()));
     routeDefinition.to(defineOutgoingEndpoint()).id(routeDefinition.getRouteId());
+    defineResponseUnmarshalling()
+        .ifPresent(unmarshaller -> unmarshaller.accept(routeDefinition.unmarshal()));
+  }
+
+  /**
+   * Handle meant to be overloaded if the definition of a marshaller for the request type is needed.
+   *
+   * @return Consumer for marshalling the request type
+   */
+  protected Optional<Consumer<DataFormatClause<ProcessorDefinition<RouteDefinition>>>>
+      defineRequestMarshalling() {
+    return Optional.empty();
+  }
+
+  /**
+   * Handle meant to be overloaded if the definition of an unmarshaller for the response type is
+   * needed.
+   *
+   * @return Consumer for unmarshalling the response type
+   */
+  protected Optional<Consumer<DataFormatClause<ProcessorDefinition<RouteDefinition>>>>
+      defineResponseUnmarshalling() {
+    return Optional.empty();
   }
 
   /**

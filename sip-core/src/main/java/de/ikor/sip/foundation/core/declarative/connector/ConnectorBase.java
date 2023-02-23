@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistryApi;
-import de.ikor.sip.foundation.core.declarative.annonation.UseRequestMapper;
-import de.ikor.sip.foundation.core.declarative.annonation.UseResponseMapper;
+import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
+import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
 import de.ikor.sip.foundation.core.declarative.model.FindAutomaticModelMapper;
 import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.model.ResponseMappingRouteTransformer;
@@ -65,13 +65,14 @@ abstract non-sealed class ConnectorBase
   }
 
   private Optional<RequestMappingRouteTransformer<Object, Object>> getRequestMapper() {
-    final var annotation = DeclarativeHelper.getAnnotationIfPresent(UseRequestMapper.class, this);
+    final var annotation =
+        DeclarativeHelper.getAnnotationIfPresent(UseRequestModelMapper.class, this);
     if (annotation.isPresent()) {
       final var transformer =
           RequestMappingRouteTransformer.forConnectorWithScenario(this, getScenario());
       if (!FindAutomaticModelMapper.class.equals(annotation.get().value())) {
         transformer.setMapper(
-            Optional.of(DeclarativeHelper.createInstance(annotation.get().value())));
+            Optional.of(DeclarativeHelper.createInstance(annotation.get().mapper())));
       }
       return Optional.of(transformer);
     }
@@ -79,13 +80,14 @@ abstract non-sealed class ConnectorBase
   }
 
   private Optional<ResponseMappingRouteTransformer<Object, Object>> getResponseMapper() {
-    final var annotation = DeclarativeHelper.getAnnotationIfPresent(UseResponseMapper.class, this);
+    final var annotation =
+        DeclarativeHelper.getAnnotationIfPresent(UseResponseModelMapper.class, this);
     if (annotation.isPresent()) {
       final var transformer =
           ResponseMappingRouteTransformer.forConnectorWithScenario(this, getScenario());
       if (!FindAutomaticModelMapper.class.equals(annotation.get().value())) {
         transformer.setMapper(
-            Optional.of(DeclarativeHelper.createInstance(annotation.get().value())));
+            Optional.of(DeclarativeHelper.createInstance(annotation.get().mapper())));
       }
       return Optional.of(transformer);
     }
