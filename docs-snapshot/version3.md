@@ -1,10 +1,10 @@
-# SIP Adapter
+# SIP Declarative Adapter
 
 [TOC]
 
 ## Description
 
-SIP Adapters building relies on using best practices in order to provide developers
+SIP Declarative Adapter building relies on using best practices in order to provide developers
 with a tool for building unified adapters.
 
 ## Concepts
@@ -27,6 +27,17 @@ Connector groups are used for grouping connectors based on the system they belon
 A connector is a holder of external endpoint and represents one integration side. 
 Its duty is to provide necessary processing and transformation into/from the common domain model.
 They can be either inbound or outbound, with inbound having rest as a subtype.
+
+## Configuration
+
+To enable or disable declarative adapter building the following configuration property is used:
+
+```yaml
+sip:
+  core:
+    declarativestructure:
+      enabled: true # enabled bu default
+```
 
 ## How to build
 
