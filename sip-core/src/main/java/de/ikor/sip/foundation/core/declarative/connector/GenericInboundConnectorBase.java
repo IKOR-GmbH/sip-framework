@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.resolveForbiddenEndpoint;
 
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
@@ -40,7 +41,7 @@ public abstract class GenericInboundConnectorBase extends ConnectorBase
       final EndpointProducerBuilder targetToDefinition,
       final RoutesRegistry routeRegistry) {
     definition
-        .from(defineInitiatingEndpoint())
+        .from(resolveForbiddenEndpoint(defineInitiatingEndpoint()))
         .routeId(routeRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, this))
         .to(targetToDefinition);
   }
