@@ -69,15 +69,15 @@ public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
   List<OutboundConnectorDefinition> getOutboundConnectorsByScenarioId(String scenarioId);
 
   /**
-   * If exists, returns a {@link ModelMapper} for the given connector and scenario model classes.
+   * If exists, returns a {@link ModelMapper} for that can map from the given <code>sourceModelClass
+   * </code> to <code>targetModelClass</code>.
    *
-   * @param connectorModel Connector model class
-   * @param scenarioModel Scenario model class
-   * @return If exists, returns a {@link ModelMapper} for the given connector and scenario model
-   *     classes
-   * @param <C> Connector model type
-   * @param <S> Scenario model type
+   * @param sourceModelClass Source model class
+   * @param targetModelClass Target model class
+   * @return If exists, returns a {@link ModelMapper} for the given model classes
+   * @param <S> Connector model type
+   * @param <T> Scenario model type
    */
-  <C, S> Optional<ModelMapper<C, S>> getModelMapperForModels(
-      Class<C> connectorModel, Class<S> scenarioModel);
+  <S, T> Optional<ModelMapper<S, T>> getModelMapperForModels(
+      Class<S> sourceModelClass, Class<T> targetModelClass);
 }

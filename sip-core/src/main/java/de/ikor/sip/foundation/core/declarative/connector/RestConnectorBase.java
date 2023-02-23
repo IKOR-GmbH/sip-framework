@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
  *     domain models of connector and integration scenario
  * @see InboundConnector
  */
-public abstract non-sealed class RestConnectorBase extends ConnectorBase
+public abstract class RestConnectorBase extends ConnectorBase
     implements InboundConnectorDefinition<RestsDefinition> {
 
   private final InboundConnector inboundConnectorAnnotation =
@@ -69,7 +69,7 @@ public abstract non-sealed class RestConnectorBase extends ConnectorBase
   }
 
   @Override
-  public String toScenarioId() {
+  public final String toScenarioId() {
     return inboundConnectorAnnotation.toScenario();
   }
 
@@ -81,6 +81,11 @@ public abstract non-sealed class RestConnectorBase extends ConnectorBase
   @Override
   public final String getConnectorGroupId() {
     return inboundConnectorAnnotation.belongsToGroup();
+  }
+
+  @Override
+  public final ConnectorType getConnectorType() {
+    return InboundConnectorDefinition.super.getConnectorType();
   }
 
   @Override
@@ -97,5 +102,10 @@ public abstract non-sealed class RestConnectorBase extends ConnectorBase
   @Override
   public String getPathToDocumentationResource() {
     return inboundConnectorAnnotation.pathToDocumentationResource();
+  }
+
+  @Override
+  public final String getScenarioId() {
+    return InboundConnectorDefinition.super.getScenarioId();
   }
 }

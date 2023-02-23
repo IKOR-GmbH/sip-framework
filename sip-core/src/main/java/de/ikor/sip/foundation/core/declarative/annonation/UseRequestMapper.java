@@ -10,7 +10,7 @@ import org.springframework.core.annotation.AliasFor;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface UseRequestMapping {
+public @interface UseRequestMapper {
 
   @AliasFor("value")
   Class<? extends ModelMapper> mapper() default FindAutomaticModelMapper.class;

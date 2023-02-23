@@ -14,7 +14,8 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.model.RouteDefinition;
 
 @Accessors(chain = true)
-abstract class BaseMappingRouteTransformer<C, S> implements Consumer<RouteDefinition> {
+abstract sealed class BaseMappingRouteTransformer<S, T> implements Consumer<RouteDefinition>
+    permits RequestMappingRouteTransformer, ResponseMappingRouteTransformer {
 
   @Getter(AccessLevel.PROTECTED)
   private final Supplier<ConnectorDefinition> connector;
@@ -22,7 +23,7 @@ abstract class BaseMappingRouteTransformer<C, S> implements Consumer<RouteDefini
   @Getter(AccessLevel.PROTECTED)
   private final Supplier<IntegrationScenarioDefinition> scenario;
 
-  @Setter private Optional<ModelMapper<C, S>> mapper = Optional.empty();
+  @Setter private Optional<ModelMapper<S, T>> mapper = Optional.empty();
 
   protected BaseMappingRouteTransformer(
       final Supplier<ConnectorDefinition> connector,
@@ -31,37 +32,49 @@ abstract class BaseMappingRouteTransformer<C, S> implements Consumer<RouteDefini
     this.scenario = scenario;
   }
 
-  protected abstract Class<?> getSourceModelClass();
-
-  protected abstract Class<?> getTargetModelClass();
-
-  protected abstract void fillInConversionDefinitions(RouteDefinition routeDefinition);
-
   @Override
   public final void accept(final RouteDefinition routeDefinition) {
     buildTransformerRoute(routeDefinition);
   }
 
   private void buildTransformerRoute(final RouteDefinition routeDefinition) {
-    fillInConversionDefinitions(routeDefinition);
+    final var modelMapper =
+        retrieveUsableMapper(
+                routeDefinition.getCamelContext(), getSourceModelClass(), getTargetModelClass())
+            .orElseThrow(this::getExceptionForNoMissingMapper);
+    verifyCompatibleTypes(modelMapper.getSourceModelClass(), getSourceModelClass());
+    verifyCompatibleTypes(modelMapper.getTargetModelClass(), getTargetModelClass());
+    switch (getConnector().get().getConnectorType()) {
+      case IN -> routeDefinition.inputType(getSourceModelClass());
+      case OUT -> routeDefinition.outputType(getSourceModelClass());
+      default -> forceThrowUnknownConnectorTypeException();
+    }
+    routeDefinition.transform().method(modelMapper, ModelMapper.MAPPING_METHOD_NAME);
   }
 
-  protected Optional<ModelMapper<C, S>> retrieveUsableMapper(
-      final CamelContext context, final Class<C> connectorModel, final Class<S> scenarioModel) {
+  protected Optional<ModelMapper<S, T>> retrieveUsableMapper(
+      final CamelContext context, final Class<S> sourceModel, final Class<T> targetModel) {
     if (mapper.isPresent()) {
       return mapper;
     }
     return context
         .getRegistry()
         .findSingleByType(DeclarationsRegistry.class)
-        .getModelMapperForModels(connectorModel, scenarioModel);
+        .getModelMapperForModels(sourceModel, targetModel);
   }
 
-  protected <T> T forceThrowUnknownConnectorTypeException() {
-    throw new IllegalStateException(
-        String.format(
-            "Unknown connector type '%s' declared in connector %s",
-            connector.get().getConnectorType(), connector.get().getId()));
+  protected abstract Class<S> getSourceModelClass();
+
+  protected abstract Class<T> getTargetModelClass();
+
+  protected final void verifyCompatibleTypes(
+      final Class<?> mapperType, final Class<?> assignedType) {
+    if (!mapperType.isAssignableFrom(assignedType)) {
+      throw new IllegalStateException(
+          String.format(
+              "Mapper '%s' is not compatible with assigned type '%s' of connector '%s'",
+              mapperType.getName(), assignedType.getName(), getConnector().get().getId()));
+    }
   }
 
   protected IllegalStateException getExceptionForNoMissingMapper() {
@@ -71,5 +84,12 @@ abstract class BaseMappingRouteTransformer<C, S> implements Consumer<RouteDefini
             connector.get().getId(),
             getSourceModelClass().getName(),
             getTargetModelClass().getName()));
+  }
+
+  protected <C> C forceThrowUnknownConnectorTypeException() {
+    throw new IllegalStateException(
+        String.format(
+            "Unknown connector type '%s' declared in connector %s",
+            connector.get().getConnectorType(), connector.get().getId()));
   }
 }

@@ -24,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
  *     domain models of connector and integration scenario
  * @see InboundConnector
  */
-public abstract non-sealed class GenericInboundConnectorBase extends ConnectorBase
+public abstract class GenericInboundConnectorBase extends ConnectorBase
     implements InboundConnectorDefinition<RoutesDefinition> {
 
   private final InboundConnector inboundConnectorAnnotation =
@@ -66,6 +66,11 @@ public abstract non-sealed class GenericInboundConnectorBase extends ConnectorBa
   }
 
   @Override
+  public final ConnectorType getConnectorType() {
+    return InboundConnectorDefinition.super.getConnectorType();
+  }
+
+  @Override
   public final String getId() {
     return connectorId;
   }
@@ -89,5 +94,10 @@ public abstract non-sealed class GenericInboundConnectorBase extends ConnectorBa
   @Override
   public String getPathToDocumentationResource() {
     return inboundConnectorAnnotation.pathToDocumentationResource();
+  }
+
+  @Override
+  public final String getScenarioId() {
+    return InboundConnectorDefinition.super.getScenarioId();
   }
 }

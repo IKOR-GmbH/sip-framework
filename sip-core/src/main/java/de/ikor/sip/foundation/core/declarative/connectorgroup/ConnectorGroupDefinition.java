@@ -21,7 +21,7 @@ import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
  * @see ConnectorGroupBase
  * @see de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup
  */
-public sealed interface ConnectorGroupDefinition permits ConnectorGroupBase, DefaultConnectorGroup {
+public interface ConnectorGroupDefinition {
 
   /**
    * Returns the ID of the connector group. Must be unique within the scope of the adapter.

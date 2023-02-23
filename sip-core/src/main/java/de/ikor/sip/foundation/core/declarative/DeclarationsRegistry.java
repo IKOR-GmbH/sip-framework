@@ -26,11 +26,26 @@ import org.springframework.stereotype.Service;
 @Service
 public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
-  @Value
-  @Builder
-  private static class MapperPair {
-    Class<?> scenarioClass;
-    Class<?> connectorClass;
+  private Map<MapperPair, ModelMapper<Object, Object>> checkAndInitializeModelMappers(
+      final List<ModelMapper<Object, Object>> mappers) {
+    final Map<MapperPair, ModelMapper<Object, Object>> modelMappers = new HashMap<>(mappers.size());
+    mappers.forEach(
+        mapper -> {
+          final MapperPair mapperPair =
+              MapperPair.builder()
+                  .sourceClass(mapper.getSourceModelClass())
+                  .targetClass(mapper.getTargetModelClass())
+                  .build();
+          if (modelMappers.containsKey(mapperPair)) {
+            final var duplicate = modelMappers.get(mapperPair);
+            throw new SIPFrameworkInitializationException(
+                String.format(
+                    "ModelMapper implementations %s and %s share the same source and target model classes",
+                    mapper.getClass().getName(), duplicate.getClass().getName()));
+          }
+          modelMappers.put(mapperPair, mapper);
+        });
+    return modelMappers;
   }
 
   private static final String CONNECTOR_GROUP = "connector group";
@@ -59,26 +74,16 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     checkForDuplicateConnectors();
   }
 
-  private Map<MapperPair, ModelMapper<Object, Object>> checkAndInitializeModelMappers(
-      final List<ModelMapper<Object, Object>> mappers) {
-    final Map<MapperPair, ModelMapper<Object, Object>> modelMappers = new HashMap<>(mappers.size());
-    mappers.forEach(
-        mapper -> {
-          final MapperPair mapperPair =
-              MapperPair.builder()
-                  .scenarioClass(mapper.getScenarioModelClass())
-                  .connectorClass(mapper.getConnectorModelClass())
-                  .build();
-          if (modelMappers.containsKey(mapperPair)) {
-            final var duplicate = modelMappers.get(mapperPair);
-            throw new SIPFrameworkInitializationException(
-                String.format(
-                    "ModelMapper implementations %s and %s share the same scenario and connector model classes",
-                    mapper.getClass().getName(), duplicate.getClass().getName()));
-          }
-          modelMappers.put(mapperPair, mapper);
-        });
-    return modelMappers;
+  @SuppressWarnings("unchecked")
+  @Override
+  public <C, S> Optional<ModelMapper<C, S>> getModelMapperForModels(
+      final Class<C> sourceModelClass, final Class<S> targetModelClass) {
+    final var mapperPair =
+        MapperPair.builder().targetClass(sourceModelClass).sourceClass(targetModelClass).build();
+    if (modelMapperRegistry.containsKey(mapperPair)) {
+      return Optional.of((ModelMapper<C, S>) modelMapperRegistry.get(mapperPair));
+    }
+    return Optional.empty();
   }
 
   private void createMissingConnectorGroups() {
@@ -199,15 +204,10 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .collect(Collectors.toList());
   }
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public <C, S> Optional<ModelMapper<C, S>> getModelMapperForModels(
-      final Class<C> connectorModel, final Class<S> scenarioModel) {
-    final var mapperPair =
-        MapperPair.builder().connectorClass(connectorModel).scenarioClass(scenarioModel).build();
-    if (modelMapperRegistry.containsKey(mapperPair)) {
-      return Optional.of((ModelMapper<C, S>) modelMapperRegistry.get(mapperPair));
-    }
-    return Optional.empty();
+  @Value
+  @Builder
+  private static class MapperPair {
+    Class<?> sourceClass;
+    Class<?> targetClass;
   }
 }

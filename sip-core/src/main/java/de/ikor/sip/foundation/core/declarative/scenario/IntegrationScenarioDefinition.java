@@ -17,8 +17,7 @@ import java.util.Optional;
  * @see IntegrationScenarioBase
  * @see de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario
  */
-public sealed interface IntegrationScenarioDefinition
-    extends Orchestratable<ConsumerOrchestrationInfo> permits IntegrationScenarioBase {
+public interface IntegrationScenarioDefinition extends Orchestratable<ConsumerOrchestrationInfo> {
 
   /**
    * Returns the ID of the integration scenario. Must be unique within the scope of the adapter.

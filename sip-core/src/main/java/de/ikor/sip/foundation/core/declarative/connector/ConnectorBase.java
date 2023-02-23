@@ -1,12 +1,26 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
+import de.ikor.sip.foundation.core.declarative.DeclarationsRegistryApi;
+import de.ikor.sip.foundation.core.declarative.annonation.UseRequestMapper;
+import de.ikor.sip.foundation.core.declarative.annonation.UseResponseMapper;
+import de.ikor.sip.foundation.core.declarative.model.FindAutomaticModelMapper;
+import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
+import de.ikor.sip.foundation.core.declarative.model.ResponseMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import java.util.Optional;
+import java.util.function.Supplier;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * Base class for connector definitions.
@@ -15,11 +29,16 @@ import org.slf4j.LoggerFactory;
  * allows subclasses to attach an {@link Orchestrator} for the transformation between connector and
  * common domain models through the {@link #defineTransformationOrchestrator()} method.
  */
-abstract sealed class ConnectorBase
-    implements ConnectorDefinition, Orchestrator<ConnectorOrchestrationInfo>
-    permits GenericInboundConnectorBase, GenericOutboundConnectorBase, RestConnectorBase {
+abstract non-sealed class ConnectorBase
+    implements ConnectorDefinition,
+        Orchestrator<ConnectorOrchestrationInfo>,
+        ApplicationContextAware {
 
-  @Getter private final Logger logger = LoggerFactory.getLogger(getClass());
+  @Getter(AccessLevel.PROTECTED)
+  private final Logger logger = LoggerFactory.getLogger(getClass());
+
+  @Getter(AccessLevel.PROTECTED)
+  private ApplicationContext applicationContext;
 
   @Delegate
   private final Orchestrator<ConnectorOrchestrationInfo> modelTransformationOrchestrator =
@@ -39,6 +58,48 @@ abstract sealed class ConnectorBase
    * @return Orchestrator for the transformation between connector and common domain models.
    */
   protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-    return ConnectorOrchestrator.forConnector(this);
+    final var orchestrator = ConnectorOrchestrator.forConnector(this);
+    getRequestMapper().ifPresent(orchestrator::setRequestRouteTransformer);
+    getResponseMapper().ifPresent(orchestrator::setResponseRouteTransformer);
+    return orchestrator;
+  }
+
+  private Optional<RequestMappingRouteTransformer<Object, Object>> getRequestMapper() {
+    final var annotation = DeclarativeHelper.getAnnotationIfPresent(UseRequestMapper.class, this);
+    if (annotation.isPresent()) {
+      final var transformer =
+          RequestMappingRouteTransformer.forConnectorWithScenario(this, getScenario());
+      if (!FindAutomaticModelMapper.class.equals(annotation.get().value())) {
+        transformer.setMapper(
+            Optional.of(DeclarativeHelper.createInstance(annotation.get().value())));
+      }
+      return Optional.of(transformer);
+    }
+    return Optional.empty();
+  }
+
+  private Optional<ResponseMappingRouteTransformer<Object, Object>> getResponseMapper() {
+    final var annotation = DeclarativeHelper.getAnnotationIfPresent(UseResponseMapper.class, this);
+    if (annotation.isPresent()) {
+      final var transformer =
+          ResponseMappingRouteTransformer.forConnectorWithScenario(this, getScenario());
+      if (!FindAutomaticModelMapper.class.equals(annotation.get().value())) {
+        transformer.setMapper(
+            Optional.of(DeclarativeHelper.createInstance(annotation.get().value())));
+      }
+      return Optional.of(transformer);
+    }
+    return Optional.empty();
+  }
+
+  public final Supplier<IntegrationScenarioDefinition> getScenario() {
+    return () ->
+        applicationContext.getBean(DeclarationsRegistryApi.class).getScenarioById(getScenarioId());
+  }
+
+  @Override
+  public final void setApplicationContext(final ApplicationContext applicationContext)
+      throws BeansException {
+    this.applicationContext = applicationContext;
   }
 }

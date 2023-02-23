@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
  *     domain models of connector and integration scenario
  * @see OutboundConnector
  */
-public abstract non-sealed class GenericOutboundConnectorBase extends ConnectorBase
+public abstract class GenericOutboundConnectorBase extends ConnectorBase
     implements OutboundConnectorDefinition {
 
   private final OutboundConnector outboundConnectorAnnotation =
@@ -56,7 +56,12 @@ public abstract non-sealed class GenericOutboundConnectorBase extends ConnectorB
   }
 
   @Override
-  public String getConnectorGroupId() {
+  public final ConnectorType getConnectorType() {
+    return OutboundConnectorDefinition.super.getConnectorType();
+  }
+
+  @Override
+  public final String getConnectorGroupId() {
     return outboundConnectorAnnotation.belongsToGroup();
   }
 
@@ -74,5 +79,10 @@ public abstract non-sealed class GenericOutboundConnectorBase extends ConnectorB
   @Override
   public String getPathToDocumentationResource() {
     return outboundConnectorAnnotation.pathToDocumentationResource();
+  }
+
+  @Override
+  public final String getScenarioId() {
+    return OutboundConnectorDefinition.super.getScenarioId();
   }
 }
