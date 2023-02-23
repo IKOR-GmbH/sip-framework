@@ -37,10 +37,11 @@ Building one adapter requires all previously mentioned concept to be implemented
 In order to create a scenario first we need to extend IntegrationScenarioBase. 
 Then, annotate the class with @IntegrationScenario and fill in the required fields:
 
-- scenarioID - unique identifier of a scenario, used in connectors to link them
-- requestModel - represents the common domain model, that both integration sides communicate through
-- responseModel (optional) - represents the response, which is expected to be returned from outbound side of the flow
-- pathToDocumentationResource (optional) - provides path to scenario documentation files
+- *scenarioId* - unique identifier of a scenario, used in connectors to link them
+- *requestModel* - represents the common domain model, that both integration sides communicate through
+- *responseModel* (optional) - represents the response, which is expected to be returned from outbound side of the flow
+- *pathToDocumentationResource* (optional) - provides path to scenario documentation files
+  By default it will look for file in "document/structure/integration-scenarios/{scenarioId}.md"
 
 ```java
   @IntegrationScenario(scenarioId = DemoScenario.ID, requestModel = DemoCDMRequest.class, responseModel = DemoCDMResponse.class)
@@ -56,8 +57,9 @@ If a connector group, but is defined in a connector, it will be automatically ge
 with the id defined in the connector.
 Fields that are available are:
 
-- groupId - unique connector group identifier
-- pathToDocumentationResource (optional) - provides path to documentation files
+- *groupId* - unique connector group identifier
+- *pathToDocumentationResource* (optional) - provides path to documentation files.
+  By default it will look for file in "document/structure/connector-groups/{groupId}.md"
 
 ```java
   @ConnectorGroup(groupId = DemoConnectorGroup.ID)
@@ -80,7 +82,8 @@ but also to be annotated with @InboundConnector, with the following fields:
 - *requestModel* - model which is expected be received on the input endpoint
 - *responseModel* (optional) - model which is expected be returned to the caller
 - *domains* (optional) - domains this connector is a part of 
-- *pathToDocumentationResource* (optional) - provides path to documentation files
+- *pathToDocumentationResource* (optional) - provides path to documentation files.
+  By default it will look for file in "document/structure/connectors/{connectorId}.md"
 
 Defining connector behavior is done by overriding certain methods and adding custom implementation.
 
@@ -174,7 +177,8 @@ but also to be annotated with @OutboundConnector, with the following fields:
 - *requestModel* - model which is expected be received on the input endpoint
 - *responseModel* (optional) - model which is expected be returned to the caller
 - *domains* (optional) - domains this connector is a part of
-- *pathToDocumentationResource* (optional) - provides path to documentation files
+- *pathToDocumentationResource* (optional) - provides path to documentation files.
+  By default it will look for file in "document/structure/connectors/{connectorId}.md"
 
 Same as inbound, the behaviour is defined through overridden method implementation.
 
