@@ -11,19 +11,19 @@ import org.junit.jupiter.api.Test;
 class RoutesRegistryTest {
 
   private RoutesRegistry subject;
-  private DeclarationRegistryApi declarationRegistryApi;
+  private DeclarationsRegistryApi declarationsRegistryApi;
 
   @BeforeEach
   void setup() {
-    declarationRegistryApi = mock(DeclarationRegistryApi.class);
-    subject = new RoutesRegistry(declarationRegistryApi, null);
+    declarationsRegistryApi = mock(DeclarationsRegistryApi.class);
+    subject = new RoutesRegistry(declarationsRegistryApi, null);
   }
 
   @Test
   void when_getRouteIdByConnectorId_then_validateConnectorsRouteId() {
     // arrange
     ConnectorDefinition connectorDefinitionMock = mock(ConnectorDefinition.class);
-    when(declarationRegistryApi.getConnectorById("connectorId"))
+    when(declarationsRegistryApi.getConnectorById("connectorId"))
         .thenReturn(Optional.of(connectorDefinitionMock));
     when(connectorDefinitionMock.getId()).thenReturn("connectorId");
     subject.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, connectorDefinitionMock);

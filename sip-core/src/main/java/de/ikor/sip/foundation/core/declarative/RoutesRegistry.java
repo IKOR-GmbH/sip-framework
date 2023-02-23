@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
 public class RoutesRegistry {
 
   private final CamelContext camelContext;
-  private final DeclarationRegistryApi declarationRegistryApi;
+  private final DeclarationsRegistryApi declarationsRegistryApi;
 
   private final MultiValuedMap<ConnectorDefinition, String> routeIdsForConnectorRegister =
       new HashSetValuedHashMap<>();
@@ -38,8 +38,8 @@ public class RoutesRegistry {
   private final MultiValuedMap<Endpoint, String> routeIdsForEndpoints =
       new HashSetValuedHashMap<>();
 
-  public RoutesRegistry(DeclarationRegistryApi declarationRegistryApi, CamelContext camelContext) {
-    this.declarationRegistryApi = declarationRegistryApi;
+  public RoutesRegistry(DeclarationsRegistryApi declarationsRegistryApi, CamelContext camelContext) {
+    this.declarationsRegistryApi = declarationsRegistryApi;
     this.camelContext = camelContext;
   }
 
@@ -82,7 +82,7 @@ public class RoutesRegistry {
   }
 
   public String getRouteIdByConnectorId(String connectorId) {
-    Optional<ConnectorDefinition> connector = declarationRegistryApi.getConnectorById(connectorId);
+    Optional<ConnectorDefinition> connector = declarationsRegistryApi.getConnectorById(connectorId);
     List<RouteInfo> routeInfos = new ArrayList<>();
     if (connector.isPresent()) {
       routeInfos = getRoutesInfo(connector.get());
