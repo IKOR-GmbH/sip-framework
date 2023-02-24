@@ -72,7 +72,7 @@ abstract non-sealed class ConnectorBase
           RequestMappingRouteTransformer.forConnectorWithScenario(this, getScenario());
       if (!FindAutomaticModelMapper.class.equals(annotation.get().value())) {
         transformer.setMapper(
-            Optional.of(DeclarativeHelper.createInstance(annotation.get().mapper())));
+            Optional.of(DeclarativeHelper.createInstance(annotation.get().value())));
       }
       return Optional.of(transformer);
     }
@@ -87,7 +87,7 @@ abstract non-sealed class ConnectorBase
           ResponseMappingRouteTransformer.forConnectorWithScenario(this, getScenario());
       if (!FindAutomaticModelMapper.class.equals(annotation.get().value())) {
         transformer.setMapper(
-            Optional.of(DeclarativeHelper.createInstance(annotation.get().mapper())));
+            Optional.of(DeclarativeHelper.createInstance(annotation.get().value())));
       }
       return Optional.of(transformer);
     }

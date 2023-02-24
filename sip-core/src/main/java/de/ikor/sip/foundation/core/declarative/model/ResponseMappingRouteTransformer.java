@@ -6,21 +6,10 @@ import java.util.function.Supplier;
 
 public final class ResponseMappingRouteTransformer<S, T> extends BaseMappingRouteTransformer<S, T> {
 
-  private final Class<?> connectorRequestModel =
-      getConnector().get().getResponseModelClass().orElseThrow();
-  private final Class<?> scenarioRequestModel =
-      getScenario().get().getResponseModelClass().orElseThrow();
-
   protected ResponseMappingRouteTransformer(
       final Supplier<ConnectorDefinition> connector,
       final Supplier<IntegrationScenarioDefinition> scenario) {
     super(connector, scenario);
-    if (!connector.get().hasResponseFlow()) {
-      throw new IllegalStateException(
-          String.format(
-              "Can't assign response mapping transformer to connector '%s', as it does not have a response flow",
-              getConnector().get().getId()));
-    }
   }
 
   public static <S, T> ResponseMappingRouteTransformer<S, T> forConnectorWithScenario(
@@ -38,8 +27,8 @@ public final class ResponseMappingRouteTransformer<S, T> extends BaseMappingRout
   @SuppressWarnings("unchecked")
   protected Class<S> getSourceModelClass() {
     return switch (getConnector().get().getConnectorType()) {
-      case IN -> (Class<S>) scenarioRequestModel;
-      case OUT -> (Class<S>) connectorRequestModel;
+      case IN -> (Class<S>) getScenario().get().getResponseModelClass().orElseThrow();
+      case OUT -> (Class<S>) getConnector().get().getResponseModelClass().orElseThrow();
     };
   }
 
@@ -47,8 +36,8 @@ public final class ResponseMappingRouteTransformer<S, T> extends BaseMappingRout
   @SuppressWarnings("unchecked")
   protected Class<T> getTargetModelClass() {
     return switch (getConnector().get().getConnectorType()) {
-      case IN -> (Class<T>) connectorRequestModel;
-      case OUT -> (Class<T>) scenarioRequestModel;
+      case IN -> (Class<T>) getConnector().get().getResponseModelClass().orElseThrow();
+      case OUT -> (Class<T>) getScenario().get().getResponseModelClass().orElseThrow();
     };
   }
 }

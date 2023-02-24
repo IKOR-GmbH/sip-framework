@@ -44,11 +44,6 @@ abstract sealed class BaseMappingRouteTransformer<S, T> implements Consumer<Rout
             .orElseThrow(this::getExceptionForNoMissingMapper);
     verifyCompatibleTypes(modelMapper.getSourceModelClass(), getSourceModelClass());
     verifyCompatibleTypes(modelMapper.getTargetModelClass(), getTargetModelClass());
-    switch (getConnector().get().getConnectorType()) {
-      case IN -> routeDefinition.inputType(getSourceModelClass());
-      case OUT -> routeDefinition.outputType(getSourceModelClass());
-      default -> forceThrowUnknownConnectorTypeException();
-    }
     routeDefinition.transform().method(modelMapper, ModelMapper.MAPPING_METHOD_NAME);
   }
 
