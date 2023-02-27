@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Value;
@@ -100,14 +99,14 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   private void checkForDuplicateConnectorGroups() {
     Set<String> set = new HashSet<>();
     List<String> connectorGroupIds =
-        connectorGroups.stream().map(ConnectorGroupDefinition::getId).collect(Collectors.toList());
+        connectorGroups.stream().map(ConnectorGroupDefinition::getId).toList();
     connectorGroupIds.forEach(id -> checkIfDuplicate(set, id, CONNECTOR_GROUP));
   }
 
   private void checkForDuplicateScenarios() {
     Set<String> set = new HashSet<>();
     List<String> scenarioIds =
-        scenarios.stream().map(IntegrationScenarioDefinition::getId).collect(Collectors.toList());
+        scenarios.stream().map(IntegrationScenarioDefinition::getId).toList();
     scenarioIds.forEach(id -> checkIfDuplicate(set, id, SCENARIO));
   }
 
@@ -131,8 +130,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
   private void checkForDuplicateConnectors() {
     Set<String> set = new HashSet<>();
-    List<String> connectorIds =
-        connectors.stream().map(ConnectorDefinition::getId).collect(Collectors.toList());
+    List<String> connectorIds = connectors.stream().map(ConnectorDefinition::getId).toList();
     connectorIds.forEach(id -> checkIfDuplicate(set, id, CONNECTOR));
   }
 
@@ -174,7 +172,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     return connectors.stream()
         .filter(InboundConnectorDefinition.class::isInstance)
         .map(InboundConnectorDefinition.class::cast)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   @Override
@@ -182,7 +180,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     return connectors.stream()
         .filter(OutboundConnectorDefinition.class::isInstance)
         .map(OutboundConnectorDefinition.class::cast)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   @SuppressWarnings("rawtypes")
@@ -192,7 +190,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .filter(connector -> connector.getScenarioId().equals(scenarioId))
         .filter(InboundConnectorDefinition.class::isInstance)
         .map(InboundConnectorDefinition.class::cast)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   @Override
@@ -201,7 +199,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .filter(connector -> connector.getScenarioId().equals(scenarioId))
         .filter(OutboundConnectorDefinition.class::isInstance)
         .map(OutboundConnectorDefinition.class::cast)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   @Value

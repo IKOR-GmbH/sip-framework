@@ -10,7 +10,6 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.camel.Endpoint;
 import org.springframework.core.io.ClassPathResource;
 
@@ -31,9 +30,10 @@ public class DeclarativeEndpointInfoTransformer {
   private DeclarativeEndpointInfoTransformer() {}
 
   /**
-   * TODO: update javadocs Creates initialized {@link ConnectorGroupInfo} from {@link
-   * ConnectorGroupDefinition}
+   * Creates initialized {@link ConnectorGroupInfo} from {@link ConnectorGroupDefinition} and a list
+   * of it's {@link ConnectorInfo connectors}
    *
+   * @param connectors that are a part of this connector group
    * @param connectorGroup from which info object is created
    * @return ConnectorGroupInfo
    */
@@ -84,8 +84,7 @@ public class DeclarativeEndpointInfoTransformer {
         .connectorId(connector.getId())
         .connectorType(connector.getConnectorType())
         .connectorGroupId(connector.getConnectorGroupId())
-        .camelEndpointUris(
-            endpoints.stream().map(Endpoint::getEndpointKey).collect(Collectors.toList()))
+        .camelEndpointUris(endpoints.stream().map(Endpoint::getEndpointKey).toList())
         .scenarioId(connector.getScenarioId())
         .routes(routes)
         .connectorDescription(

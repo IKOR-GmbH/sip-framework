@@ -6,7 +6,6 @@ import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
@@ -68,7 +67,7 @@ public class AdapterRouteEndpoint {
                     routesRegistry
                         .map(registry -> registry.generateRouteInfo(route.getRouteId()))
                         .orElse(null)))
-        .collect(Collectors.toList());
+        .toList();
   }
 
   /** Stops all routes */
@@ -209,7 +208,7 @@ public class AdapterRouteEndpoint {
                         .map(registry -> registry.generateRouteInfo(route.getRouteId()))
                         .orElse(null)));
 
-    return adapterRouteSummaryStream.collect(Collectors.toList());
+    return adapterRouteSummaryStream.toList();
   }
 
   private ManagedRouteMBean getRouteMBean(String routeId) {

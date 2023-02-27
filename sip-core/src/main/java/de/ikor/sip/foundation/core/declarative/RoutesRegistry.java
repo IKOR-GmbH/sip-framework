@@ -5,7 +5,6 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.RouteInfo;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.*;
-import java.util.stream.Collectors;
 import lombok.Synchronized;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
@@ -105,7 +104,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
                     .routeRole(roleForRouteIdRegister.get(routeId).getExternalName())
                     .routeId(routeId)
                     .build())
-        .collect(Collectors.toList());
+        .toList();
   }
 
   public List<Endpoint> getExternalEndpointsForConnector(ConnectorDefinition connectorDefinition) {
@@ -119,9 +118,9 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
                 endpointsForRouteId.get(routeInfo.getRouteId()).stream()
                     // filter out all of sip framework internal endpoints
                     .filter(endpoint -> !endpoint.getEndpointKey().contains(SIP_ROUTE_PREFIX))
-                    .collect(Collectors.toList()))
+                    .toList())
         .flatMap(Collection::stream)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   public List<RouteDeclarativeStructureInfo> generateRouteInfoList(Endpoint endpoint) {

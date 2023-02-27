@@ -22,7 +22,7 @@ public class ConnectorInfo {
   private String connectorId;
   private ConnectorType connectorType;
   private String connectorDescription;
-  private List<String> camelEndpointUris; // TODO: Implement getting these information
+  private List<String> camelEndpointUris;
   private String connectorGroupId;
   private String scenarioId;
   private List<RouteInfo> routes;

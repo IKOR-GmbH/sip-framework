@@ -10,7 +10,6 @@ import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.DependsOn;
@@ -104,7 +103,7 @@ public class DeclarativeDefinitionEndpoint {
                                     connectorInfo
                                         .getConnectorGroupId()
                                         .equals(connectorGroup.getId()))
-                            .collect(Collectors.toList()),
+                            .toList(),
                         connectorGroup)));
   }
 }
