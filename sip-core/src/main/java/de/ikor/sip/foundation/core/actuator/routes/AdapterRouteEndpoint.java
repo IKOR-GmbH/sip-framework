@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.actuator.routes.annotations.RouteIdParameter;
 import de.ikor.sip.foundation.core.actuator.routes.annotations.RouteOperationParameter;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -61,13 +63,7 @@ public class AdapterRouteEndpoint {
   @Operation(summary = "Get all routes", description = "Get list of Routes from Camel Context")
   public List<AdapterRouteSummary> routes() {
     return camelContext.getRoutes().stream()
-        .map(
-            route ->
-                new AdapterRouteSummary(
-                    getRouteMBean(route.getRouteId()),
-                    routesRegistry
-                        .map(registry -> registry.generateRouteInfo(route.getRouteId()))
-                        .orElse(null)))
+        .map(route -> generateSummary(route.getRouteId()))
         .collect(Collectors.toList());
   }
 
@@ -201,13 +197,7 @@ public class AdapterRouteEndpoint {
     Stream<Route> routeStream = filterMiddleComponentProducerRoutes(camelContext.getRoutes());
 
     Stream<AdapterRouteSummary> adapterRouteSummaryStream =
-        routeStream.map(
-            route ->
-                new AdapterRouteSummary(
-                    getRouteMBean(route.getRouteId()),
-                    routesRegistry
-                        .map(registry -> registry.generateRouteInfo(route.getRouteId()))
-                        .orElse(null)));
+        routeStream.map(route -> generateSummary(route.getRouteId()));
 
     return adapterRouteSummaryStream.collect(Collectors.toList());
   }
@@ -219,5 +209,26 @@ public class AdapterRouteEndpoint {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
     return routeMBean;
+  }
+
+  /**
+   * Get route summary for provided route ids
+   *
+   * @param ids list of route ids
+   * @return list of {@link AdapterRouteSummary} for provided ids
+   */
+  @GetMapping("/details")
+  public List<AdapterRouteSummary> details(@RequestParam(value = "ids") List<String> ids) {
+    return filterRoutesSummary(ids);
+  }
+
+  private List<AdapterRouteSummary> filterRoutesSummary(Collection<String> routeIds) {
+    return routeIds.stream().map(this::generateSummary).collect(Collectors.toList());
+  }
+
+  private AdapterRouteSummary generateSummary(String routeId) {
+    return new AdapterRouteSummary(
+        getRouteMBean(routeId),
+        routesRegistry.map(registry -> registry.generateRouteInfo(routeId)).orElse(null));
   }
 }
