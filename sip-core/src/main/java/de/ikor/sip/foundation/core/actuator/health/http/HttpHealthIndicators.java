@@ -8,7 +8,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Endpoint;
 import org.springframework.boot.actuate.health.Health;
@@ -59,17 +58,6 @@ public class HttpHealthIndicators {
    */
   public static Health urlHealthIndicator(Endpoint endpoint) {
     return urlHealthStatus(endpoint, DEFAULT_HTTP_TIMEOUT);
-  }
-
-  /**
-   * Returns health checking function using custom url along with desired timeout.
-   *
-   * @param url The URL to use when performing the health check
-   * @param timeout the timeout
-   * @return function that checks health of the HTTP endpoint
-   */
-  public static Function<Endpoint, Health> urlHealthIndicator(String url, int timeout) {
-    return endpoint -> urlHealthStatus(endpoint, timeout);
   }
 
   private static Health urlHealthStatus(Endpoint endpoint, int timeout) {

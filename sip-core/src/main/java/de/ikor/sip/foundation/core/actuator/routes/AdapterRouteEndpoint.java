@@ -217,8 +217,8 @@ public class AdapterRouteEndpoint {
    * @param ids list of route ids
    * @return list of {@link AdapterRouteSummary} for provided ids
    */
-  @GetMapping("/details")
-  public List<AdapterRouteSummary> details(@RequestParam(value = "ids") List<String> ids) {
+  @GetMapping("/summary")
+  public List<AdapterRouteSummary> summary(@RequestParam(value = "ids") List<String> ids) {
     return filterRoutesSummary(ids);
   }
 
