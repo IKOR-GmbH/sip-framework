@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
@@ -64,7 +63,7 @@ public class AdapterRouteEndpoint {
   public List<AdapterRouteSummary> routes() {
     return camelContext.getRoutes().stream()
         .map(route -> generateSummary(route.getRouteId()))
-        .collect(Collectors.toList());
+        .toList();
   }
 
   /** Stops all routes */
@@ -199,7 +198,7 @@ public class AdapterRouteEndpoint {
     Stream<AdapterRouteSummary> adapterRouteSummaryStream =
         routeStream.map(route -> generateSummary(route.getRouteId()));
 
-    return adapterRouteSummaryStream.collect(Collectors.toList());
+    return adapterRouteSummaryStream.toList();
   }
 
   private ManagedRouteMBean getRouteMBean(String routeId) {
@@ -223,7 +222,7 @@ public class AdapterRouteEndpoint {
   }
 
   private List<AdapterRouteSummary> filterRoutesSummary(Collection<String> routeIds) {
-    return routeIds.stream().map(this::generateSummary).collect(Collectors.toList());
+    return routeIds.stream().map(this::generateSummary).toList();
   }
 
   private AdapterRouteSummary generateSummary(String routeId) {
