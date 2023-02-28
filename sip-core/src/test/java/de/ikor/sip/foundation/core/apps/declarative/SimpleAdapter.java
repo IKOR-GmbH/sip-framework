@@ -97,7 +97,7 @@ public class SimpleAdapter {
 
     @Override
     protected void configureRest(RestDefinition definition) {
-      definition.post("path").type(String.class).get("path");
+      definition.bindingMode("off").post("path").type(String.class).get("path");
     }
 
     @Override
@@ -107,7 +107,7 @@ public class SimpleAdapter {
     }
 
     protected void defineRequestRoute(final RouteDefinition definition) {
-      definition.setBody(exchange -> "PRODUCED_REST-" + exchange.getIn().getBody());
+      definition.setBody(exchange -> "PRODUCED_REST-" + exchange.getIn().getBody(String.class));
     }
   }
 
