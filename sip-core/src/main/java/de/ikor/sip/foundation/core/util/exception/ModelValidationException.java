@@ -1,10 +1,7 @@
 package de.ikor.sip.foundation.core.util.exception;
 
-/** Exception which occurs when the model is invalid */
-public class ModelValidationException extends SIPAdapterException {
-  public ModelValidationException() {}
+import lombok.experimental.StandardException;
 
-  public ModelValidationException(String message) {
-    super(message);
-  }
-}
+/** Exception which occurs when the model is invalid */
+@StandardException
+public class ModelValidationException extends SIPAdapterException {}

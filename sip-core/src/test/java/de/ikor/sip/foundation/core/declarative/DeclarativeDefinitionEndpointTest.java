@@ -26,6 +26,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @CamelSpringBootTest
 @SpringBootTest(
     classes = {SimpleAdapter.class},
+    properties = {"camel.openapi.enabled=false"},
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisableJmx(false)
 @DirtiesContext

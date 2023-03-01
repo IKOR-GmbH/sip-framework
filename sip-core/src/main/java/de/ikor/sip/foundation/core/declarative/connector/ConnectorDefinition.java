@@ -61,8 +61,8 @@ public sealed interface ConnectorDefinition extends Orchestratable<ConnectorOrch
 
   /**
    * Returns whether this connector has a response flow in the connected scenario. The default
-   * imlementation returns <code>true</code> if {@link #getResponseModelClass()} returns a non-empty
-   * {@link Optional}.
+   * implementation returns <code>true</code> if {@link #getResponseModelClass()} returns a
+   * non-empty {@link Optional}.
    *
    * @return <code>true</code> if the connector has a response flow, <code>false</code> otherwise
    */

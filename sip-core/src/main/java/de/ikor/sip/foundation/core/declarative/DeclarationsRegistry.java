@@ -5,14 +5,18 @@ import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinit
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
+import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +25,28 @@ import org.springframework.stereotype.Service;
 @Service
 public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
+  private Map<MapperPair, ModelMapper<Object, Object>> checkAndInitializeModelMappers(
+      final List<ModelMapper<Object, Object>> mappers) {
+    final Map<MapperPair, ModelMapper<Object, Object>> modelMappers = new HashMap<>(mappers.size());
+    mappers.forEach(
+        mapper -> {
+          final MapperPair mapperPair =
+              MapperPair.builder()
+                  .sourceClass(mapper.getSourceModelClass())
+                  .targetClass(mapper.getTargetModelClass())
+                  .build();
+          if (modelMappers.containsKey(mapperPair)) {
+            final var duplicate = modelMappers.get(mapperPair);
+            throw new SIPFrameworkInitializationException(
+                String.format(
+                    "ModelMapper implementations %s and %s share the same source and target model classes",
+                    mapper.getClass().getName(), duplicate.getClass().getName()));
+          }
+          modelMappers.put(mapperPair, mapper);
+        });
+    return modelMappers;
+  }
+
   private static final String CONNECTOR_GROUP = "connector group";
   private static final String SCENARIO = "integration scenario";
   private static final String CONNECTOR = "connector";
@@ -28,20 +54,35 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   private final List<ConnectorGroupDefinition> connectorGroups;
   private final List<IntegrationScenarioDefinition> scenarios;
   private final List<ConnectorDefinition> connectors;
+  private final Map<MapperPair, ModelMapper<Object, Object>> modelMapperRegistry;
 
   public DeclarationsRegistry(
       List<ConnectorGroupDefinition> connectorGroups,
       List<IntegrationScenarioDefinition> scenarios,
-      List<ConnectorDefinition> connectors) {
+      List<ConnectorDefinition> connectors,
+      List<ModelMapper<Object, Object>> modelMapperRegistry) {
     this.connectorGroups = connectorGroups;
     this.scenarios = scenarios;
     this.connectors = connectors;
+    this.modelMapperRegistry = checkAndInitializeModelMappers(modelMapperRegistry);
 
     createMissingConnectorGroups();
     checkForDuplicateConnectorGroups();
     checkForDuplicateScenarios();
     checkForUnusedScenarios();
     checkForDuplicateConnectors();
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <C, S> Optional<ModelMapper<C, S>> getModelMapperForModels(
+      final Class<C> sourceModelClass, final Class<S> targetModelClass) {
+    final var mapperPair =
+        MapperPair.builder().targetClass(sourceModelClass).sourceClass(targetModelClass).build();
+    if (modelMapperRegistry.containsKey(mapperPair)) {
+      return Optional.of((ModelMapper<C, S>) modelMapperRegistry.get(mapperPair));
+    }
+    return Optional.empty();
   }
 
   private void createMissingConnectorGroups() {
@@ -58,14 +99,14 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   private void checkForDuplicateConnectorGroups() {
     Set<String> set = new HashSet<>();
     List<String> connectorGroupIds =
-        connectorGroups.stream().map(ConnectorGroupDefinition::getId).collect(Collectors.toList());
+        connectorGroups.stream().map(ConnectorGroupDefinition::getId).toList();
     connectorGroupIds.forEach(id -> checkIfDuplicate(set, id, CONNECTOR_GROUP));
   }
 
   private void checkForDuplicateScenarios() {
     Set<String> set = new HashSet<>();
     List<String> scenarioIds =
-        scenarios.stream().map(IntegrationScenarioDefinition::getId).collect(Collectors.toList());
+        scenarios.stream().map(IntegrationScenarioDefinition::getId).toList();
     scenarioIds.forEach(id -> checkIfDuplicate(set, id, SCENARIO));
   }
 
@@ -89,8 +130,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
   private void checkForDuplicateConnectors() {
     Set<String> set = new HashSet<>();
-    List<String> connectorIds =
-        connectors.stream().map(ConnectorDefinition::getId).collect(Collectors.toList());
+    List<String> connectorIds = connectors.stream().map(ConnectorDefinition::getId).toList();
     connectorIds.forEach(id -> checkIfDuplicate(set, id, CONNECTOR));
   }
 
@@ -132,7 +172,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     return connectors.stream()
         .filter(InboundConnectorDefinition.class::isInstance)
         .map(InboundConnectorDefinition.class::cast)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   @Override
@@ -140,7 +180,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     return connectors.stream()
         .filter(OutboundConnectorDefinition.class::isInstance)
         .map(OutboundConnectorDefinition.class::cast)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   @SuppressWarnings("rawtypes")
@@ -150,7 +190,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .filter(connector -> connector.getScenarioId().equals(scenarioId))
         .filter(InboundConnectorDefinition.class::isInstance)
         .map(InboundConnectorDefinition.class::cast)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   @Override
@@ -159,6 +199,13 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .filter(connector -> connector.getScenarioId().equals(scenarioId))
         .filter(OutboundConnectorDefinition.class::isInstance)
         .map(OutboundConnectorDefinition.class::cast)
-        .collect(Collectors.toList());
+        .toList();
+  }
+
+  @Value
+  @Builder
+  private static class MapperPair {
+    Class<?> sourceClass;
+    Class<?> targetClass;
   }
 }

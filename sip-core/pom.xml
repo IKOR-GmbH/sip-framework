@@ -203,7 +203,11 @@
             <artifactId>camel-http-starter</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-jackson-starter</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>de.ikor.sip.foundation</groupId>
             <artifactId>sip-middle-component</artifactId>

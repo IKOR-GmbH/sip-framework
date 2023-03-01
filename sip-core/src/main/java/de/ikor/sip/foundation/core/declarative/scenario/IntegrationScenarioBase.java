@@ -13,7 +13,7 @@ import java.util.Optional;
  *
  * @see IntegrationScenario
  */
-public abstract non-sealed class IntegrationScenarioBase implements IntegrationScenarioDefinition {
+public abstract class IntegrationScenarioBase implements IntegrationScenarioDefinition {
 
   private final IntegrationScenario scenarioAnnotation =
       DeclarativeHelper.getAnnotationOrThrow(IntegrationScenario.class, this);

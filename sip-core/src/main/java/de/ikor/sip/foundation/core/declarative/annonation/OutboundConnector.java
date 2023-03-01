@@ -32,14 +32,14 @@ public @interface OutboundConnector {
    * @see
    *     de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition#getConnectorGroupId()
    */
-  String belongsToGroup();
+  String connectorGroup();
 
   /**
    * @return Identifier of the integration scenario that the connector is consuming from.
    * @see
    *     de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition#fromScenarioId()
    */
-  String fromScenario();
+  String integrationScenario();
 
   /**
    * @return Request model base class for this connector

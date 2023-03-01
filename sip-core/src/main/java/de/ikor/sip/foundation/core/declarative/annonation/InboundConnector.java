@@ -32,13 +32,13 @@ public @interface InboundConnector {
    * @return Identifier of the connector group this connector belongs to.
    * @see InboundConnectorDefinition#getConnectorGroupId()
    */
-  String belongsToGroup();
+  String connectorGroup();
 
   /**
    * @return Identifier of the integration scenario that the connector is providing to.
    * @see InboundConnectorDefinition#toScenarioId()
    */
-  String toScenario();
+  String integrationScenario();
 
   /**
    * @return Request model base class for this connector

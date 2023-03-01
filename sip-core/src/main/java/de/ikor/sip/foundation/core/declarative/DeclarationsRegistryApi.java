@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
+import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.List;
 import java.util.Optional;
@@ -66,4 +67,17 @@ public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
    * @return outbound connectors
    */
   List<OutboundConnectorDefinition> getOutboundConnectorsByScenarioId(String scenarioId);
+
+  /**
+   * If exists, returns a {@link ModelMapper} for that can map from the given <code>sourceModelClass
+   * </code> to <code>targetModelClass</code>.
+   *
+   * @param sourceModelClass Source model class
+   * @param targetModelClass Target model class
+   * @return If exists, returns a {@link ModelMapper} for the given model classes
+   * @param <S> Connector model type
+   * @param <T> Scenario model type
+   */
+  <S, T> Optional<ModelMapper<S, T>> getModelMapperForModels(
+      Class<S> sourceModelClass, Class<T> targetModelClass);
 }

@@ -39,4 +39,41 @@ class HttpHealthIndicatorsTest {
     assertThat(subject.getStatus()).isEqualTo(Status.UNKNOWN);
     assertThat(subject.getDetails()).containsEntry(URL_KEY, ENDPOINT_URI);
   }
+
+  @Test
+  void When_urlHealthIndicator_With_ValidURL_Then_StatusUp() {
+    // arrange
+    when(endpoint.getEndpointKey()).thenReturn(ENDPOINT_URI);
+
+    // act
+    Health subject = HttpHealthIndicators.urlHealthIndicator(endpoint);
+
+    // assert
+    assertThat(subject.getStatus()).isEqualTo(Status.UP);
+    assertThat(subject.getDetails()).containsEntry(URL_KEY, ENDPOINT_URI);
+  }
+
+  @Test
+  void When_urlHealthIndicator_With_InvalidURI_Then_StatusUnknown() {
+    // arrange
+    when(endpoint.getEndpointKey()).thenReturn(ENDPOINT_URI + "/kjk");
+
+    // act
+    Health subject = HttpHealthIndicators.urlHealthIndicator(endpoint);
+
+    // assert
+    assertThat(subject.getStatus()).isEqualTo(Status.UNKNOWN);
+  }
+
+  @Test
+  void When_urlHealthIndicator_With_NonExistentURL_Then_StatusDown() {
+    // arrange
+    when(endpoint.getEndpointKey()).thenReturn("non");
+
+    // act
+    Health subject = HttpHealthIndicators.urlHealthIndicator(endpoint);
+
+    // assert
+    assertThat(subject.getStatus()).isEqualTo(Status.DOWN);
+  }
 }

@@ -8,8 +8,12 @@ import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import java.util.Optional;
+import java.util.function.Consumer;
+import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
+import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,7 +28,7 @@ import org.apache.commons.lang3.StringUtils;
  *     domain models of connector and integration scenario
  * @see InboundConnector
  */
-public abstract non-sealed class GenericInboundConnectorBase extends ConnectorBase
+public abstract class GenericInboundConnectorBase extends ConnectorBase
     implements InboundConnectorDefinition<RoutesDefinition> {
 
   private final InboundConnector inboundConnectorAnnotation =
@@ -40,10 +44,36 @@ public abstract non-sealed class GenericInboundConnectorBase extends ConnectorBa
       final RoutesDefinition definition,
       final EndpointProducerBuilder targetToDefinition,
       final RoutesRegistry routeRegistry) {
-    definition
-        .from(resolveForbiddenEndpoint(defineInitiatingEndpoint()))
-        .routeId(routeRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, this))
-        .to(targetToDefinition);
+    final var routeDef =
+        definition
+            .from(resolveForbiddenEndpoint(defineInitiatingEndpoint()))
+            .routeId(routeRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, this));
+    defineRequestUnmarshalling()
+        .ifPresent(unmarshaller -> unmarshaller.accept(routeDef.unmarshal()));
+    routeDef.to(targetToDefinition);
+    defineResponseMarshalling().ifPresent(marshaller -> marshaller.accept(routeDef.marshal()));
+  }
+
+  /**
+   * Handle meant to be overloaded if the definition of an unmarshaller for the request type is
+   * needed.
+   *
+   * @return Consumer for unmarshalling the request type
+   */
+  protected Optional<Consumer<DataFormatClause<ProcessorDefinition<RouteDefinition>>>>
+      defineRequestUnmarshalling() {
+    return Optional.empty();
+  }
+
+  /**
+   * Handle meant to be overloaded if the definition of a marshaller for the response type is
+   * needed.
+   *
+   * @return Consumer for marshalling the response type
+   */
+  protected Optional<Consumer<DataFormatClause<ProcessorDefinition<RouteDefinition>>>>
+      defineResponseMarshalling() {
+    return Optional.empty();
   }
 
   /**
@@ -62,7 +92,12 @@ public abstract non-sealed class GenericInboundConnectorBase extends ConnectorBa
 
   @Override
   public final String toScenarioId() {
-    return inboundConnectorAnnotation.toScenario();
+    return inboundConnectorAnnotation.integrationScenario();
+  }
+
+  @Override
+  public final ConnectorType getConnectorType() {
+    return InboundConnectorDefinition.super.getConnectorType();
   }
 
   @Override
@@ -72,7 +107,7 @@ public abstract non-sealed class GenericInboundConnectorBase extends ConnectorBa
 
   @Override
   public final String getConnectorGroupId() {
-    return inboundConnectorAnnotation.belongsToGroup();
+    return inboundConnectorAnnotation.connectorGroup();
   }
 
   @Override
@@ -89,5 +124,10 @@ public abstract non-sealed class GenericInboundConnectorBase extends ConnectorBa
   @Override
   public String getPathToDocumentationResource() {
     return inboundConnectorAnnotation.pathToDocumentationResource();
+  }
+
+  @Override
+  public final String getScenarioId() {
+    return InboundConnectorDefinition.super.getScenarioId();
   }
 }
