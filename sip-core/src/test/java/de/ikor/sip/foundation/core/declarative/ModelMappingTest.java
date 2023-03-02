@@ -46,7 +46,7 @@ class ModelMappingTest {
   void When_UsingPOSTScenario_With_Mappers_Then_RequestIsLoggedAndValidResponseReturned()
       throws InterruptedException {
 
-    mockedLogger.expectedBodiesReceivedInAnyOrder("{\"id\":111,\"resourceType\":\"USER\"}");
+    mockedLogger.expectedBodiesReceivedInAnyOrder("{\"id\":111,\"resourceTypeName\":\"USER\"}");
 
     // act
     HttpHeaders headers = new HttpHeaders();

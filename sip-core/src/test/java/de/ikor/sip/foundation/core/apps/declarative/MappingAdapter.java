@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
+import de.ikor.sip.foundation.core.apps.declarative.mapping.BackendTypes.BackendResourceRequest;
 import de.ikor.sip.foundation.core.apps.declarative.mapping.CommonDomainTypes.ResourceRequest;
 import de.ikor.sip.foundation.core.apps.declarative.mapping.CommonDomainTypes.ResourceResponse;
 import de.ikor.sip.foundation.core.apps.declarative.mapping.FrontEndTypes.FrontEndSystemRequestMapper;
@@ -63,16 +64,19 @@ public class MappingAdapter {
   }
 
   @OutboundConnector(
-      connectorGroup = "System2",
+      connectorGroup = "Backend",
       integrationScenario = MapDomainModelsScenario.ID,
-      requestModel = ResourceRequest.class,
+      requestModel = BackendResourceRequest.class,
       responseModel = ResourceResponse.class)
+  @UseRequestModelMapper
   public class LoggerConsumerWithReponse extends GenericOutboundConnectorBase {
 
     @Override
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
-      return ConnectorOrchestrator.forConnector(this)
-          .setResponseRouteTransformer(this::defineResponseRoute);
+      ConnectorOrchestrator orchestrator =
+          (ConnectorOrchestrator) super.defineTransformationOrchestrator();
+      orchestrator.setResponseRouteTransformer(this::defineResponseRoute);
+      return orchestrator;
     }
 
     @Override
@@ -84,7 +88,7 @@ public class MappingAdapter {
     @Override
     protected Optional<Consumer<DataFormatClause<ProcessorDefinition<RouteDefinition>>>>
         defineResponseUnmarshalling() {
-      return Optional.of(unmarshaller -> unmarshaller.json(ResourceRequest.class));
+      return Optional.of(unmarshaller -> unmarshaller.json(BackendResourceRequest.class));
     }
 
     protected void defineResponseRoute(final RouteDefinition definition) {
@@ -92,9 +96,10 @@ public class MappingAdapter {
       definition.setBody(
           exchange ->
               ResourceResponse.builder()
-                  .resourceType(exchange.getIn().getBody(ResourceRequest.class).getResourceType())
+                  .resourceType(
+                      exchange.getIn().getBody(BackendResourceRequest.class).getResourceTypeName())
                   .resourceName("TEST")
-                  .id(exchange.getIn().getBody(ResourceRequest.class).getId())
+                  .id(exchange.getIn().getBody(BackendResourceRequest.class).getId())
                   .build());
     }
 

@@ -78,6 +78,6 @@ public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
    * @param <S> Connector model type
    * @param <T> Scenario model type
    */
-  <S, T> Optional<ModelMapper<S, T>> getModelMapperForModels(
+  <S, T> Optional<ModelMapper<S, T>> getGlobalModelMapperForModels(
       Class<S> sourceModelClass, Class<T> targetModelClass);
 }

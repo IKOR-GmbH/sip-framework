@@ -55,7 +55,7 @@ abstract sealed class BaseMappingRouteTransformer<S, T> implements Consumer<Rout
     return context
         .getRegistry()
         .findSingleByType(DeclarationsRegistry.class)
-        .getModelMapperForModels(sourceModel, targetModel);
+        .getGlobalModelMapperForModels(sourceModel, targetModel);
   }
 
   protected abstract Class<S> getSourceModelClass();
