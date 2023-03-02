@@ -2,9 +2,12 @@ package de.ikor.sip.foundation.core.declarative.utils;
 
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
+import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.SneakyThrows;
@@ -39,12 +42,6 @@ public class DeclarativeHelper {
     return String.format(CONNECTOR_ID_FORMAT, type.getValue(), scenarioID, connectorId);
   }
 
-  /**
-   * Creates a concrete mapper instance for a mapper class
-   *
-   * @param clazz Which represents a mapper
-   * @return Object of a mapper class
-   */
   public static <T> T createMapperInstance(Class<T> clazz) {
     try {
       return Mappers.getMapper(clazz);
@@ -95,5 +92,21 @@ public class DeclarativeHelper {
     if (endpointConsumerBuilder instanceof JmsEndpointBuilderFactory.JmsEndpointBuilder)
       endpointConsumerBuilder.doSetProperty("bridgeErrorHandler", false);
     return endpointConsumerBuilder;
+  }
+
+  public static Method getMappingMethod(Class clazz) {
+    List<Method> candidateMethods =
+        Arrays.stream(clazz.getDeclaredMethods())
+            .filter(method -> method.getName().equals(ModelMapper.MAPPING_METHOD_NAME))
+            .filter(method -> !method.isBridge())
+            .filter(method -> method.getParameterTypes().length == 1)
+            .toList();
+    if (candidateMethods.size() != 1) {
+      throw new SIPFrameworkInitializationException(
+          String.format(
+              "Failed to automatically resolve the model classes for the Mapper: %s. Please @Override the getSourceModelClass() and getTargetModelClass() methods",
+              clazz.getName()));
+    }
+    return candidateMethods.get(0);
   }
 }

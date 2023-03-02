@@ -32,16 +32,6 @@ public class FrontEndTypes {
     public ResourceRequest mapToTargetModel(UserRequest sourceModel) {
       return ResourceRequest.builder().id(sourceModel.getUserId()).resourceType("USER").build();
     }
-
-    @Override
-    public Class<UserRequest> getSourceModelClass() {
-      return UserRequest.class;
-    }
-
-    @Override
-    public Class<ResourceRequest> getTargetModelClass() {
-      return ResourceRequest.class;
-    }
   }
 
   public static class FrontEndSystemResponseMapper
