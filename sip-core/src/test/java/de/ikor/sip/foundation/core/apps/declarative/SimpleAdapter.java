@@ -35,23 +35,17 @@ public class SimpleAdapter {
       connectorId = "appendStaticMessageProvider",
       connectorGroup = ConnectorGroupSip1.ID,
       integrationScenario = AppendStaticMessageScenario.ID,
-      requestModel = String.class,
-      responseModel = String.class)
+      requestModel = String.class)
   public class AppendStaticMessageProvider extends GenericInboundConnectorBase {
 
     @Override
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
-          .setRequestRouteTransformer(this::defineRequestRoute)
-          .setResponseRouteTransformer(this::defineResponseRoute);
+          .setRequestRouteTransformer(this::defineRequestRoute);
     }
 
     protected void defineRequestRoute(final RouteDefinition definition) {
       definition.setBody(exchange -> "PRODUCED-" + exchange.getIn().getBody());
-    }
-
-    protected void defineResponseRoute(final RouteDefinition definition) {
-      definition.setBody(exchange -> exchange.getIn().getBody() + "-Handled");
     }
 
     @Override

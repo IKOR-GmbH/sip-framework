@@ -12,6 +12,7 @@ import lombok.experimental.UtilityClass;
 import org.apache.camel.Endpoint;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.dsl.JmsEndpointBuilderFactory;
+import org.mapstruct.factory.Mappers;
 
 @UtilityClass
 public class DeclarativeHelper {
@@ -38,8 +39,29 @@ public class DeclarativeHelper {
     return String.format(CONNECTOR_ID_FORMAT, type.getValue(), scenarioID, connectorId);
   }
 
+  /**
+   * Creates a concrete mapper instance for a mapper class
+   *
+   * @param clazz Which represents a mapper
+   * @return Object of a mapper class
+   */
+  public static <T> T createMapperInstance(Class<T> clazz) {
+    try {
+      return Mappers.getMapper(clazz);
+    } catch (RuntimeException e) {
+      // swallow the exception, it's not a mapstruct mapper
+    }
+
+    return createInstance(clazz);
+  }
+
   @SneakyThrows
-  public static <T> T createInstance(Class<T> clazz, Object... parameters) {
+  private static <T> T createInstance(Class<T> clazz, Object... parameters) {
+    try {
+      return Mappers.getMapper(clazz);
+    } catch (RuntimeException e) {
+      // swallow the exception, it's not a mapstruct mapper
+    }
     Class<?>[] params = Arrays.stream(parameters).map(Object::getClass).toArray(Class[]::new);
     return clazz.getConstructor(params).newInstance(parameters);
   }

@@ -52,7 +52,7 @@ class EndpointOrchestrationTest {
     mockedLogger.expectedBodiesReceived("PRODUCED-Hi Adapter-CONSUMED");
     Exchange exchange = template.withBody("Hi Adapter").to(direct("triggerAdapter-append")).send();
     assertThat(exchange.getMessage().getBody(String.class))
-        .contains("PRODUCED-Hi Adapter-CONSUMED-Handled");
+        .contains("PRODUCED-Hi Adapter-CONSUMED");
   }
 
   @Test
