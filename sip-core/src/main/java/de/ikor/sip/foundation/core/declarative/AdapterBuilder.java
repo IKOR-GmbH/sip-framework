@@ -102,9 +102,7 @@ public class AdapterBuilder extends RouteBuilder {
                 new CDMValidator(
                     scenarioDefinition
                         .getRequestModelClass())) // TODO: move validation to camel-component
-            .to(
-                StaticEndpointBuilders.direct(
-                    SCENARIO_HANDOVER_COMPONENT, scenarioDefinition.getId()));
+            .to(buildScenarioSipmcUri(scenarioDefinition.getId()));
     scenarioDefinition
         .getResponseModelClass()
         .ifPresent(
@@ -151,7 +149,7 @@ public class AdapterBuilder extends RouteBuilder {
         routesRegistry.generateRouteIdForConnector(RouteRole.SCENARIO_TAKEOVER, outboundConnector);
 
     // Build takeover route from scenario
-    from(SCENARIO_HANDOVER_COMPONENT + ":" + scenarioDefinition.getId())
+    from(buildScenarioSipmcUri(scenarioDefinition.getId()))
         .routeId(scenarioTakeoverRouteId)
         .to(StaticEndpointBuilders.direct(requestOrchestrationRouteId));
 
@@ -197,6 +195,10 @@ public class AdapterBuilder extends RouteBuilder {
     }
     throw new SIPFrameworkInitializationException(
         String.format("Failed to resolve unknown connector definition type: %s", type.getName()));
+  }
+
+  private String buildScenarioSipmcUri(String scenarioId) {
+    return String.format("%s:%s", SCENARIO_HANDOVER_COMPONENT, scenarioId);
   }
 
   @Value
