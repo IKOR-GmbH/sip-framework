@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import de.ikor.sip.foundation.core.declarative.annonation.GlobalMapper;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
@@ -25,28 +26,6 @@ import org.springframework.stereotype.Service;
 @Service
 public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
-  private Map<MapperPair, ModelMapper<Object, Object>> checkAndInitializeModelMappers(
-      final List<ModelMapper<Object, Object>> mappers) {
-    final Map<MapperPair, ModelMapper<Object, Object>> modelMappers = new HashMap<>(mappers.size());
-    mappers.forEach(
-        mapper -> {
-          final MapperPair mapperPair =
-              MapperPair.builder()
-                  .sourceClass(mapper.getSourceModelClass())
-                  .targetClass(mapper.getTargetModelClass())
-                  .build();
-          if (modelMappers.containsKey(mapperPair)) {
-            final var duplicate = modelMappers.get(mapperPair);
-            throw new SIPFrameworkInitializationException(
-                String.format(
-                    "ModelMapper implementations %s and %s share the same source and target model classes",
-                    mapper.getClass().getName(), duplicate.getClass().getName()));
-          }
-          modelMappers.put(mapperPair, mapper);
-        });
-    return modelMappers;
-  }
-
   private static final String CONNECTOR_GROUP = "connector group";
   private static final String SCENARIO = "integration scenario";
   private static final String CONNECTOR = "connector";
@@ -54,17 +33,17 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   private final List<ConnectorGroupDefinition> connectorGroups;
   private final List<IntegrationScenarioDefinition> scenarios;
   private final List<ConnectorDefinition> connectors;
-  private final Map<MapperPair, ModelMapper<Object, Object>> modelMapperRegistry;
+  private final Map<MapperPair, ModelMapper<Object, Object>> globalModelMappersRegistry;
 
   public DeclarationsRegistry(
       List<ConnectorGroupDefinition> connectorGroups,
       List<IntegrationScenarioDefinition> scenarios,
       List<ConnectorDefinition> connectors,
-      List<ModelMapper<Object, Object>> modelMapperRegistry) {
+      List<ModelMapper<?, ?>> modelMappers) {
     this.connectorGroups = connectorGroups;
     this.scenarios = scenarios;
     this.connectors = connectors;
-    this.modelMapperRegistry = checkAndInitializeModelMappers(modelMapperRegistry);
+    this.globalModelMappersRegistry = checkAndInitializeGlobalModelMappers(modelMappers);
 
     createMissingConnectorGroups();
     checkForDuplicateConnectorGroups();
@@ -73,14 +52,38 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     checkForDuplicateConnectors();
   }
 
+  private Map<MapperPair, ModelMapper<Object, Object>> checkAndInitializeGlobalModelMappers(
+      final List<ModelMapper<?, ?>> mappers) {
+    final Map<MapperPair, ModelMapper<Object, Object>> modelMappers = new HashMap<>(mappers.size());
+    mappers.stream()
+        .filter(modelMapper -> modelMapper.getClass().isAnnotationPresent(GlobalMapper.class))
+        .forEach(
+            mapper -> {
+              final MapperPair mapperPair =
+                  MapperPair.builder()
+                      .sourceClass(mapper.getSourceModelClass())
+                      .targetClass(mapper.getTargetModelClass())
+                      .build();
+              if (modelMappers.containsKey(mapperPair)) {
+                final var duplicate = modelMappers.get(mapperPair);
+                throw new SIPFrameworkInitializationException(
+                    String.format(
+                        "ModelMapper implementations %s and %s share the same source and target model classes",
+                        mapper.getClass().getName(), duplicate.getClass().getName()));
+              }
+              modelMappers.put(mapperPair, (ModelMapper<Object, Object>) mapper);
+            });
+    return modelMappers;
+  }
+
   @SuppressWarnings("unchecked")
   @Override
-  public <C, S> Optional<ModelMapper<C, S>> getModelMapperForModels(
+  public <C, S> Optional<ModelMapper<C, S>> getGlobalModelMapperForModels(
       final Class<C> sourceModelClass, final Class<S> targetModelClass) {
     final var mapperPair =
-        MapperPair.builder().targetClass(sourceModelClass).sourceClass(targetModelClass).build();
-    if (modelMapperRegistry.containsKey(mapperPair)) {
-      return Optional.of((ModelMapper<C, S>) modelMapperRegistry.get(mapperPair));
+        MapperPair.builder().sourceClass(sourceModelClass).targetClass(targetModelClass).build();
+    if (globalModelMappersRegistry.containsKey(mapperPair)) {
+      return Optional.of((ModelMapper<C, S>) globalModelMappersRegistry.get(mapperPair));
     }
     return Optional.empty();
   }
