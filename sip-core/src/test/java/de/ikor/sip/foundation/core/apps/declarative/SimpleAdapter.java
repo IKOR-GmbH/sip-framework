@@ -7,7 +7,7 @@ import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
-import de.ikor.sip.foundation.core.declarative.connector.RestConnectorBase;
+import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupBase;
 import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrator;
@@ -87,7 +87,7 @@ public class SimpleAdapter {
       connectorGroup = ConnectorGroupSip1.ID,
       integrationScenario = RestDSLScenario.ID,
       requestModel = String.class)
-  public class RestConnectorTestBase extends RestConnectorBase {
+  public class RestInboundConnectorTestBase extends RestInboundConnectorBase {
 
     @Override
     protected void configureRest(RestDefinition definition) {

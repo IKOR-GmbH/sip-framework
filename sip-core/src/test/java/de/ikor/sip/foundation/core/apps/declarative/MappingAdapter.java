@@ -14,7 +14,7 @@ import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
-import de.ikor.sip.foundation.core.declarative.connector.RestConnectorBase;
+import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrationInfo;
@@ -50,7 +50,7 @@ public class MappingAdapter {
       responseModel = UserResponse.class)
   @UseRequestModelMapper(FrontEndSystemRequestMapper.class)
   @UseResponseModelMapper(FrontEndSystemResponseMapper.class)
-  public class RestConnectorTestBase extends RestConnectorBase {
+  public class RestInboundConnectorTestBase extends RestInboundConnectorBase {
 
     @Override
     protected void configureRest(RestDefinition definition) {
