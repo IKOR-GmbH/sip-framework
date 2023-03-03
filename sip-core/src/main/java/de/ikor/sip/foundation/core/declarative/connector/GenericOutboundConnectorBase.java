@@ -3,12 +3,11 @@ package de.ikor.sip.foundation.core.declarative.connector;
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
 
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
+import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import java.util.Optional;
-import java.util.function.Consumer;
-import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.builder.EndpointProducerBuilder;
-import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.commons.lang3.StringUtils;
 
@@ -36,20 +35,17 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
 
   @Override
   public final void defineOutboundEndpoints(final RouteDefinition routeDefinition) {
-    defineRequestMarshalling()
-        .ifPresent(marshaller -> marshaller.accept(routeDefinition.marshal()));
+    defineRequestMarshalling().ifPresent(marshaller -> marshaller.accept(routeDefinition));
     routeDefinition.to(defineOutgoingEndpoint()).id(routeDefinition.getRouteId());
-    defineResponseUnmarshalling()
-        .ifPresent(unmarshaller -> unmarshaller.accept(routeDefinition.unmarshal()));
+    defineResponseUnmarshalling().ifPresent(unmarshaller -> unmarshaller.accept(routeDefinition));
   }
 
   /**
    * Handle meant to be overloaded if the definition of a marshaller for the request type is needed.
    *
-   * @return Consumer for marshalling the request type
+   * @return Marshaller for the request type
    */
-  protected Optional<Consumer<DataFormatClause<ProcessorDefinition<RouteDefinition>>>>
-      defineRequestMarshalling() {
+  protected Optional<MarshallerDefinition> defineRequestMarshalling() {
     return Optional.empty();
   }
 
@@ -57,10 +53,9 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
    * Handle meant to be overloaded if the definition of an unmarshaller for the response type is
    * needed.
    *
-   * @return Consumer for unmarshalling the response type
+   * @return Unmarshaller for the response type
    */
-  protected Optional<Consumer<DataFormatClause<ProcessorDefinition<RouteDefinition>>>>
-      defineResponseUnmarshalling() {
+  protected Optional<UnmarshallerDefinition> defineResponseUnmarshalling() {
     return Optional.empty();
   }
 
