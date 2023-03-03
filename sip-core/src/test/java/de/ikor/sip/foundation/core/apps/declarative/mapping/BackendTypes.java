@@ -28,15 +28,5 @@ public class BackendTypes {
           .id(sourceModel.getId())
           .build();
     }
-
-    @Override
-    public Class<ResourceRequest> getSourceModelClass() {
-      return ResourceRequest.class;
-    }
-
-    @Override
-    public Class<BackendResourceRequest> getTargetModelClass() {
-      return BackendResourceRequest.class;
-    }
   }
 }
