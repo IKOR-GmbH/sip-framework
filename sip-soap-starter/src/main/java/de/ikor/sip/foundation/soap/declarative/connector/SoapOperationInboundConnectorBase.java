@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.builder.endpoint.dsl.DirectEndpointBuilderFactory;
+import org.apache.camel.converter.jaxb.JaxbDataFormat;
 
 /**
  * Base class for SOAP inbound connectors.
@@ -31,8 +32,8 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
   @Override
   protected Optional<UnmarshallerDefinition> defineRequestUnmarshalling() {
     return Optional.of(
-        UnmarshallerDefinition.forClause(
-            unmarshaller -> unmarshaller.jaxb(getJaxbContextPathForRequestModel())));
+        UnmarshallerDefinition.forDataFormat(
+            new JaxbDataFormat(getJaxbContextPathForRequestModel())));
   }
 
   /**
@@ -47,9 +48,7 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
   @Override
   protected Optional<MarshallerDefinition> defineResponseMarshalling() {
     return getJaxbContextPathForResponseModel()
-        .map(
-            contextPath ->
-                MarshallerDefinition.forClause(marshaller -> marshaller.jaxb(contextPath)));
+        .map(contextPath -> MarshallerDefinition.forDataFormat(new JaxbDataFormat(contextPath)));
   }
 
   /**
