@@ -1,14 +1,12 @@
 package de.ikor.sip.foundation.soap.declarative.connector;
 
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
+import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
+import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import java.util.Optional;
-import java.util.function.Consumer;
-import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.builder.endpoint.dsl.DirectEndpointBuilderFactory;
-import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.model.RouteDefinition;
 
 /**
  * Base class for SOAP inbound connectors.
@@ -31,9 +29,10 @@ import org.apache.camel.model.RouteDefinition;
 public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboundConnectorBase {
 
   @Override
-  protected Optional<Consumer<DataFormatClause<ProcessorDefinition<RouteDefinition>>>>
-      defineRequestUnmarshalling() {
-    return Optional.of(unmarshaller -> unmarshaller.jaxb(getJaxbContextPathForRequestModel()));
+  protected Optional<UnmarshallerDefinition> defineRequestUnmarshalling() {
+    return Optional.of(
+        UnmarshallerDefinition.forClause(
+            unmarshaller -> unmarshaller.jaxb(getJaxbContextPathForRequestModel())));
   }
 
   /**
@@ -46,10 +45,11 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
   }
 
   @Override
-  protected Optional<Consumer<DataFormatClause<ProcessorDefinition<RouteDefinition>>>>
-      defineResponseMarshalling() {
+  protected Optional<MarshallerDefinition> defineResponseMarshalling() {
     return getJaxbContextPathForResponseModel()
-        .map(contextPath -> marshaller -> marshaller.jaxb(contextPath));
+        .map(
+            contextPath ->
+                MarshallerDefinition.forClause(marshaller -> marshaller.jaxb(contextPath)));
   }
 
   /**

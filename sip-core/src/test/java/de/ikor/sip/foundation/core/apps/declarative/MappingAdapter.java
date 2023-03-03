@@ -15,16 +15,16 @@ import de.ikor.sip.foundation.core.declarative.annonation.UseRequestModelMapper;
 import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.RestConnectorBase;
+import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
+import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import java.util.Optional;
-import java.util.function.Consumer;
 import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
-import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.camel.model.rest.RestDefinition;
@@ -80,15 +80,15 @@ public class MappingAdapter {
     }
 
     @Override
-    protected Optional<Consumer<DataFormatClause<ProcessorDefinition<RouteDefinition>>>>
-        defineRequestMarshalling() {
-      return Optional.of(DataFormatClause::json);
+    protected Optional<MarshallerDefinition> defineRequestMarshalling() {
+      return Optional.of(MarshallerDefinition.forClause(DataFormatClause::json));
     }
 
     @Override
-    protected Optional<Consumer<DataFormatClause<ProcessorDefinition<RouteDefinition>>>>
-        defineResponseUnmarshalling() {
-      return Optional.of(unmarshaller -> unmarshaller.json(BackendResourceRequest.class));
+    protected Optional<UnmarshallerDefinition> defineResponseUnmarshalling() {
+      return Optional.of(
+          UnmarshallerDefinition.forClause(
+              unmarshaller -> unmarshaller.json(BackendResourceRequest.class)));
     }
 
     protected void defineResponseRoute(final RouteDefinition definition) {
