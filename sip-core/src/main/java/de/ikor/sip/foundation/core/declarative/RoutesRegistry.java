@@ -4,7 +4,13 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeSt
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteInfo;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import lombok.Synchronized;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
@@ -21,12 +27,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoutesRegistry extends SimpleEventNotifierSupport {
 
-  public static final String SIP_ROUTE_PREFIX = "sip-connector";
+  public static final String SIP_CONNECTOR_PREFIX = "sip-connector";
+  public static final String SIP_SOAP_SERVICE_PREFIX = "sip-soap-service";
   private final DeclarationsRegistryApi declarationsRegistryApi;
 
   private final MultiValuedMap<ConnectorDefinition, String> routeIdsForConnectorRegister =
       new HashSetValuedHashMap<>();
   private final Map<String, ConnectorDefinition> connectorForRouteIdRegister = new HashMap<>();
+
+  private final Map<String, String> routeIdForSoapServiceRegister = new HashMap<>();
   private final Map<String, RouteRole> roleForRouteIdRegister = new HashMap<>();
   private final MultiValuedMap<String, Endpoint> endpointsForRouteId = new HashSetValuedHashMap<>();
   private final MultiValuedMap<Endpoint, String> routeIdsForEndpoints =
@@ -54,7 +63,8 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     final var idBuilder =
         new StringBuilder(
             String.format(
-                "%s_%s_%s", SIP_ROUTE_PREFIX, connector.getId(), role.getRoleSuffixInRouteId()));
+                "%s_%s_%s",
+                SIP_CONNECTOR_PREFIX, connector.getId(), role.getRoleSuffixInRouteId()));
     Arrays.stream(suffixes).forEach(suffix -> idBuilder.append("-").append(suffix));
     final var routeId = idBuilder.toString();
     if (roleForRouteIdRegister.containsKey(routeId)) {
@@ -66,6 +76,20 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     connectorForRouteIdRegister.put(routeId, connector);
     routeIdsForConnectorRegister.put(connector, routeId);
     roleForRouteIdRegister.put(routeId, role);
+    return routeId;
+  }
+
+  @Synchronized
+  public String generateRouteIdForSoapService(final String soapServiceName) {
+    final var routeId = String.format("%s_%s", SIP_SOAP_SERVICE_PREFIX, soapServiceName);
+    if (roleForRouteIdRegister.containsKey(routeId)) {
+      throw new SIPFrameworkInitializationException(
+          String.format(
+              "Can't build internal soap-service route with routeId '%s': routeId already exists",
+              routeId));
+    }
+    routeIdForSoapServiceRegister.put(routeId, soapServiceName);
+    roleForRouteIdRegister.put(routeId, RouteRole.EXTERNAL_SOAP_SERVICE_PROXY);
     return routeId;
   }
 
@@ -117,7 +141,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
             routeInfo ->
                 endpointsForRouteId.get(routeInfo.getRouteId()).stream()
                     // filter out all of sip framework internal endpoints
-                    .filter(endpoint -> !endpoint.getEndpointKey().contains(SIP_ROUTE_PREFIX))
+                    .filter(endpoint -> !endpoint.getEndpointKey().contains(SIP_CONNECTOR_PREFIX))
                     .toList())
         .flatMap(Collection::stream)
         .toList();

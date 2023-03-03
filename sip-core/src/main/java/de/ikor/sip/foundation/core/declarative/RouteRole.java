@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum RouteRole {
   EXTERNAL_ENDPOINT("externalEndpoint", "EXTERNAL_ENDPOINT"),
+  EXTERNAL_SOAP_SERVICE_PROXY("externalSoapServiceProxy", "EXTERNAL_SOAP_SERVICE_PROXY"),
   CONNECTOR_REQUEST_ORCHESTRATION("requestOrchestration", "CONNECTOR_REQUEST_ORCHESTRATION"),
   CONNECTOR_RESPONSE_ORCHESTRATION("responseOrchestration", "CONNECTOR_RESPONSE_ORCHESTRATION"),
   SCENARIO_HANDOFF("scenarioHandoff", "SCENARIO_HANDOFF"),

@@ -84,6 +84,7 @@
         <commons-collections4.version>4.4</commons-collections4.version>
         <equalsverifier.version>3.7.1</equalsverifier.version>
         <asm.version>9.2</asm.version>
+        <cxf.version>3.5.5</cxf.version>    <!-- keep in sync with camel-dependencies cxf-version property -->
 
         <!-- plugin versions -->
         <maven-enforcer-plugin.version>3.2.1</maven-enforcer-plugin.version>
@@ -212,7 +213,11 @@
                 <groupId>de.ikor.sip.foundation</groupId>
                 <artifactId>sip-test-kit</artifactId>
                 <version>${sip-framework.version}</version>
-
+            </dependency>
+            <dependency>
+                <groupId>de.ikor.sip.foundation</groupId>
+                <artifactId>sip-soap-starter</artifactId>
+                <version>${sip-framework.version}</version>
             </dependency>
 
             <!-- apache commons -->
