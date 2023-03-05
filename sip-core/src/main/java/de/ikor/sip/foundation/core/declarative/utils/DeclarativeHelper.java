@@ -47,18 +47,12 @@ public class DeclarativeHelper {
       return Mappers.getMapper(clazz);
     } catch (RuntimeException e) {
       // swallow the exception, it's not a mapstruct mapper
+      return createInstance(clazz);
     }
-
-    return createInstance(clazz);
   }
 
   @SneakyThrows
   private static <T> T createInstance(Class<T> clazz, Object... parameters) {
-    try {
-      return Mappers.getMapper(clazz);
-    } catch (RuntimeException e) {
-      // swallow the exception, it's not a mapstruct mapper
-    }
     Class<?>[] params = Arrays.stream(parameters).map(Object::getClass).toArray(Class[]::new);
     return clazz.getConstructor(params).newInstance(parameters);
   }
