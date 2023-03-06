@@ -55,6 +55,12 @@ under the License.
         <requiredProperty key="useLombok">
             <defaultValue>${useLombokDefault}</defaultValue>
         </requiredProperty>
+        <requiredProperty key="useSoapDefault">
+            <defaultValue>n</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="useSoap">
+            <defaultValue>${useSoapDefault}</defaultValue>
+        </requiredProperty>
         <requiredProperty key="archetypeVersion"> </requiredProperty>
     </requiredProperties>
 

@@ -22,7 +22,7 @@ import org.apache.camel.model.OptionalIdentifiedDefinition;
  *     a {@link org.apache.camel.model.RoutesDefinition}.
  * @see ConnectorDefinition
  * @see GenericInboundConnectorBase
- * @see RestConnectorBase
+ * @see RestInboundConnectorBase
  * @see de.ikor.sip.foundation.core.declarative.annonation.InboundConnector
  */
 public non-sealed interface InboundConnectorDefinition<T extends OptionalIdentifiedDefinition<T>>
