@@ -4,7 +4,7 @@
 
 ## Description
 
-This archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies
+This archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies.
 
 ## How to create a SIP Adapter using SIP Archetype
 
@@ -33,19 +33,19 @@ mvn archetype:generate
 ```
 
 The parameters `-DgroupId`, `-DartifactId`, `-DprojectName` and `-Dversion` should be adjusted to better match your project,
-as they set the properties for the adapter. It is recommended to follow the maven naming convention.
+as they set the properties for the adapter. It is recommended to follow the Maven naming convention since they are going to be presented in the _pom.xml_ file of the generated adapter.
 
-After executing maven command, you will be requested to insert additional parameters about project structure:
+After executing given Maven command, you will be requested to insert additional parameters about project structure:
 
-- **packageSuffix** is used to create project package name by concatenating its value to the groupId. There is a strict validation
-  for using only lower case letters and it is meant to name the package by extending your groupId for only one word.
+- **packageSuffix** is used to create project package name by concatenating its value to the **groupId**. There is a strict validation
+  for using only lower case letters and should be a single word. This will reflect the generated package structure for the generated project files. (for example - all of the sources will be in the _de.ikor.sip.adapter.sufix_ java package) 
 - **package** (optional) is used to override previous package naming and provide full package name. This can be skipped by leaving value empty.
   It is strongly recommended to follow package naming convention, otherwise your project will be created but it will consist
   package naming errors.
-- **connectorGroup1**/**connectorGroup2** are representing names of your connector group packages inside the project.
-- **useLombokDefault**/**useLombok** are properties used for including or excluding Lombok dependency in adapter.
-  Parameter useLombokDefault is only used to include lombok by default. If you wish to exclude lombok you should set 
+- **connectorGroup1**/**connectorGroup2** are representing names of your connector group packages inside the project. It will also be reflected in the generated package structure (for example - all of the sources for connectorGroup1 will be in the _de.ikor.sip.adapter.sufix.connectorGroup1_ package)
+- **useLombok** is used for including or excluding Lombok dependency in adapter. Lombok is included by default. If you wish to exclude lombok you should set 
   useLombok to anything other than 'y' or 'Y'.
+- **useSoap** is used for including or excluding _SIP SOAP Starter_ dependency in adapter. It is useful to include this starter if the adapter is planned to use SOAP since it has pre-built bootstrap elements included. It is false by default.
 
 After a successful build, a project with the following structure will be created:
 
@@ -53,7 +53,7 @@ After a successful build, a project with the following structure will be created
 - common
   - config
   - util
-- connectors
+- connectorgroups
   - {connectorGroup1}
     - config
     - models
@@ -73,7 +73,7 @@ After a successful build, a project with the following structure will be created
   - definitions
     
 
-More about packages and internal SIP structure you can find [here](./README.md).
+More about packages and internal SIP structure can be found [here](./README.md).
 
 More information about Maven archetypes is available here:
 [Maven Archetype](https://maven.apache.org/guides/introduction/introduction-to-archetypes.html)

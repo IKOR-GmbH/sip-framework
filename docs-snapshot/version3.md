@@ -4,16 +4,16 @@
 
 ## Description
 
-SIP Declarative Adapter building relies on using best practices in order to provide developers
-with a tool for building unified adapters.
+SIP Declarative Adapter concept relies on using best practices in order to provide developers
+with a tool for building unified adapters. It is a structured approach for building integration adapters.
 
 ## Concepts
 
 ### Common Domain Model (CDM)
 
-CDM is a model which is used in connecting different non-compatible systems.
+CDM is a model which is used in connecting different non-compatible systems. It is also referred to as _Canonical Data Model_ in the standard integration patterns.
 
-### Scenario
+### Integration Scenario
 
 A scenario is a means of linking connectors into one fluent flow.
 It is used for definition a specific integration flow, usually one concrete operation, between integration sides.
@@ -26,7 +26,7 @@ Connector groups are used for grouping connectors based on the system they belon
 
 A connector is a holder of external endpoint and represents one integration side. 
 Its duty is to provide necessary processing and transformation into/from the common domain model.
-They can be either inbound or outbound, with inbound having rest as a subtype.
+They can be either Inbound or Outbound, with Inbound having Rest and SOAP as pre-built subtypes.
 
 ## Configuration
 
