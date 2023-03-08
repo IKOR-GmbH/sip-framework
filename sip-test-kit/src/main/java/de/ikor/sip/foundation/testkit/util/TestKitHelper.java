@@ -23,7 +23,7 @@ public class TestKitHelper extends SIPExchangeHelper {
    * @return route id
    */
   public static String getRouteId(Exchange exchange) {
-    return (String) exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY);
+    return (String) exchange.getProperty(Mock.CONNECTOR_ID_EXCHANGE_PROPERTY);
   }
 
   /**
@@ -78,7 +78,7 @@ public class TestKitHelper extends SIPExchangeHelper {
     ExchangeBuilder exchangeBuilder =
         anExchange(camelContext).withBody(properties.getMessage().getBody());
     properties.getMessage().getHeaders().forEach(exchangeBuilder::withHeader);
-    exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpoint());
+    exchangeBuilder.withProperty(Mock.CONNECTOR_ID_EXCHANGE_PROPERTY, properties.getConnectorId());
     return exchangeBuilder.build();
   }
 

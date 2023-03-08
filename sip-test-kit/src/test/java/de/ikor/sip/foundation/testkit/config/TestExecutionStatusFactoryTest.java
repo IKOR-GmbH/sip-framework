@@ -30,7 +30,7 @@ class TestExecutionStatusFactoryTest {
     camelContext = mock(ExtendedCamelContext.class);
     subject = new TestExecutionStatusFactory(camelContext);
     EndpointProperties whenExecute = new EndpointProperties();
-    whenExecute.setEndpoint(ENDPOINT_ID);
+    whenExecute.setConnectorId(ENDPOINT_ID);
     testCaseDefinition = new TestCaseDefinition();
     testCaseDefinition.setTitle("title");
     testCaseDefinition.setWhenExecute(whenExecute);
@@ -40,7 +40,7 @@ class TestExecutionStatusFactoryTest {
   void When_generateTestReport_With_WhenExecute_Then_ExpectedResponseExists() {
     // arrange
     EndpointProperties thenExpectResponse = new EndpointProperties();
-    thenExpectResponse.setEndpoint(ENDPOINT_ID);
+    thenExpectResponse.setConnectorId(ENDPOINT_ID);
     List<EndpointProperties> thenExpect = new ArrayList<>();
     thenExpect.add(thenExpectResponse);
     testCaseDefinition.setThenExpect(thenExpect);

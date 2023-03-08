@@ -61,7 +61,7 @@ class TestKitHelperTest {
     Endpoint expectedEndpoint = mock(Endpoint.class);
     when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
     when(route.getEndpoint()).thenReturn(expectedEndpoint);
-    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
+    when(exchange.getProperty(Mock.CONNECTOR_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
 
     // act
     Endpoint actualEndpoint = resolveEndpoint(exchange, camelContext);
@@ -83,7 +83,7 @@ class TestKitHelperTest {
     Consumer expectedConsumer = mock(Consumer.class);
     when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
     when(route.getConsumer()).thenReturn(expectedConsumer);
-    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
+    when(exchange.getProperty(Mock.CONNECTOR_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
 
     // act
     Consumer actualConsumer = resolveConsumer(exchange, camelContext);
@@ -96,7 +96,7 @@ class TestKitHelperTest {
   void GIVEN_properties_WHEN_parseExchangeProperties_THEN_expectExchangeWithValues() {
     // assert
     EndpointProperties properties = new EndpointProperties();
-    properties.setEndpoint("routeId");
+    properties.setConnectorId("routeId");
     MessageProperties messageProperties = new MessageProperties();
     messageProperties.setBody("body");
     messageProperties.setHeaders(Map.of("headerKey", "value"));

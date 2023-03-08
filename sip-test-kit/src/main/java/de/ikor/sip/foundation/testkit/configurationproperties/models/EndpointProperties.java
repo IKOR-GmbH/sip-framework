@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EndpointProperties {
-  private String endpoint;
+  private String connectorId;
 
   private MessageProperties message = new MessageProperties();
 

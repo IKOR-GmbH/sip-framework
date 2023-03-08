@@ -43,7 +43,7 @@ class RouteInvokerFactoryTest {
             jmsRouteInvoker);
     subject = new RouteInvokerFactory(invokers, camelContext);
     exchange = TestKitHelper.parseExchangeProperties(null, camelContext);
-    exchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
+    exchange.setProperty(Mock.CONNECTOR_ID_EXCHANGE_PROPERTY, ROUTE_ID);
     route = mock(Route.class);
     when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
   }

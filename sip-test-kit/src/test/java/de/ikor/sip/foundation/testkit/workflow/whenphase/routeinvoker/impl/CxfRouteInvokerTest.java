@@ -77,7 +77,7 @@ class CxfRouteInvokerTest {
   private Exchange createExchange(Map<String, Object> headers) {
     ExchangeBuilder exchangeBuilder = ExchangeBuilder.anExchange(camelContext).withBody("");
     headers.forEach(exchangeBuilder::withHeader);
-    exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
+    exchangeBuilder.withProperty(Mock.CONNECTOR_ID_EXCHANGE_PROPERTY, ROUTE_ID);
     return exchangeBuilder.build();
   }
 }

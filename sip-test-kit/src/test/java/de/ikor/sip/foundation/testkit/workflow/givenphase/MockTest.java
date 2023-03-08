@@ -14,7 +14,7 @@ class MockTest {
     Mock aMock = mock(Mock.class, CALLS_REAL_METHODS);
     String alias = "alias";
     Exchange exchange = mock(Exchange.class);
-    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, String.class)).thenReturn(alias);
+    when(exchange.getProperty(Mock.CONNECTOR_ID_EXCHANGE_PROPERTY, String.class)).thenReturn(alias);
     aMock.setReturnExchange(exchange);
 
     // act + assert

@@ -10,7 +10,7 @@ import org.apache.camel.Exchange;
 @Setter
 public abstract class Mock {
 
-  public static final String ENDPOINT_ID_EXCHANGE_PROPERTY = "connectionAlias";
+  public static final String CONNECTOR_ID_EXCHANGE_PROPERTY = "connectionAlias";
 
   protected String testName;
   protected Exchange returnExchange;
@@ -29,6 +29,6 @@ public abstract class Mock {
    * @return ID of the Mock
    */
   public String getId() {
-    return returnExchange.getProperty(ENDPOINT_ID_EXCHANGE_PROPERTY, String.class);
+    return returnExchange.getProperty(CONNECTOR_ID_EXCHANGE_PROPERTY, String.class);
   }
 }

@@ -35,7 +35,7 @@ class MailRouteInvokerTest {
     Route route = mock(Route.class);
     MailConsumer mailConsumer = mock(MailConsumer.class);
     AsyncProcessor asyncProcessor = mock(AsyncProcessor.class);
-    when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY)).thenReturn(NODE_ID);
+    when(exchange.getProperty(Mock.CONNECTOR_ID_EXCHANGE_PROPERTY)).thenReturn(NODE_ID);
     when(camelContext.getRoute(NODE_ID)).thenReturn(route);
     when(route.getConsumer()).thenReturn(mailConsumer);
     when(mailConsumer.getAsyncProcessor()).thenReturn(asyncProcessor);

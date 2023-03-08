@@ -93,17 +93,17 @@ public class TestCasesConfig {
   }
 
   private void replaceConnectorIdsWithRouteIds(TestCaseDefinition definition) {
-    String connectorId = definition.getWhenExecute().getEndpoint();
+    String connectorId = definition.getWhenExecute().getConnectorId();
     definition
         .getWhenExecute()
-        .setEndpoint(routesRegistry.get().getRouteIdByConnectorId(connectorId));
+        .setConnectorId(routesRegistry.get().getRouteIdByConnectorId(connectorId));
     definition.getWithMocks().forEach(this::fetchAndSetRouteId);
     definition.getThenExpect().forEach(this::fetchAndSetRouteId);
   }
 
   private void fetchAndSetRouteId(EndpointProperties properties) {
-    String routeId = routesRegistry.get().getRouteIdByConnectorId(properties.getEndpoint());
-    properties.setEndpoint(routeId);
+    String routeId = routesRegistry.get().getRouteIdByConnectorId(properties.getConnectorId());
+    properties.setConnectorId(routeId);
   }
 
   private List<Mock> getMocks(String testName, TestCaseDefinition testCaseDefinition) {
