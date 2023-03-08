@@ -73,29 +73,29 @@ The next step is to provide the TestCaseDefinition file in yaml format in the `t
 test-case-definitions:
 - TITLE: "Title of individual test"
   WHEN-execute:
-    endpoint: "id of connector under test"
+    connectorId: "id of connector under test"
     with:
-      body: "Content that will be send as request body to the adapter endpoint (plain text, JSON String)"
+      body: "Content that will be send as request body to the adapter inbound connector (plain text, JSON String)"
       headers:
         header-key: "Value of the header"
         another-header-key: "Another value"
   WITH-mocks:
-  - endpoint: "id of connector that should be mocked"
+  - connectorId: "id of connector that should be mocked"
     returning:
       body: "Response message that real endpoint is expected to return"
       headers:
         header-key: "Value of the header"
   THEN-expect:
-  - endpoint: "id of connector under test" # matches endpoint under test defined in when phase
+  - connectorId: "id of connector under test" # matches connectorId under test defined in when phase
     having:
       body: "Regex expression (java) which will be compered to the reponse of the test"
       headers:
         header-key: "Regex expression (java) which will be compered to the value of this header key"
-  - endpoint: "id of connector that is mocked" # matches endpoint with defined or default mocked behavior
+  - connectorId: "id of connector that is mocked" # matches connectorId with defined or default mocked behavior
     having:
-      body: "Regex expression (java) which will be compered to the request which arrived on the endpoint"
+      body: "Regex expression (java) which will be compered to the request which arrived on the connector"
       headers:
-        header-key: "Regex expression (java) which will be compered to the header key value from request which arrived on the endpoint"
+        header-key: "Regex expression (java) which will be compered to the header key value from request which arrived on the connector"
 ```
 
 Location of the TestCaseDefinition file can be provided to the Test Kit by setting the
@@ -127,13 +127,13 @@ The TestCaseDefinition file starts with `test-case-definitions` property, which 
 
 In this section a payload that should be sent to the adapter is defined.
 
-"endpoint" refers to of ID adapter's Connector to which we wish to send a test request.
+"connectorId" refers to of ID adapter's Connector to which we wish to send a test request.
 In "with" part we define content of the request we wish to send, meaning body and headers are added here.
 The body can also be defined as plain text or JSON string, which represents a POJO.
 
 ```yaml
     WHEN-execute:
-      endpoint: "rest-endpoint"
+      connectorId: "rest-endpoint"
       with:
         body: "body of request"
 ```
@@ -141,34 +141,34 @@ The body can also be defined as plain text or JSON string, which represents a PO
 ## WITH-mocks
 
 This section contains a list of connectors for which we wish to have specific mocked response.
-"endpoint" is the connector ID of the mocked endpoint.
+"connectorId" is the connector ID of the mocked outbound connector.
 "returning" should have body and headers, that we expect as the response from real external call.
 
 ```yaml
     WITH-mocks:
-      - endpoint: "external-service"
+      - connectorId: "external-service"
         returning:
           body: "response message from service"
 ```
 
 ## THEN-expect
 
-Validation of adapter response is defined by setting the "endpoint" parameter to the connector's ID of endpoint under test
-and defining the expected body or headers.
+Validation of adapter response is defined by setting the "connectorId" parameter to the connector's ID of endpoint under
+test and defining the expected body or headers.
 
-Validation of requests which outgoing endpoints received from the adapter is defined by setting the "endpoint" parameter to 
-the connector's ID of mocked endpoint and defining the expected body or headers.
+Validation of requests which outgoing endpoints received from the adapter is defined by setting the "connectorId" 
+parameter to the connector's ID of mocked endpoint and defining the expected body or headers.
 
 Body and header validation is possible by either defining regex (Java) expression or matching exact String content.
 
 ```yaml
     THEN-expect:
-      - endpoint: "rest-endpoint" # matches endpoint under test
+      - connectorId: "rest-endpoint" # matches inbound connector under test
         having:
           body: "response .* from service"
           headers:
             CamelHttpResponseCode: "200"
-      - endpoint: "external-service" # matches endpoint with mocked behavior
+      - connectorId: "external-service" # matches outbound connector with mocked behavior
         having:
           body: "body of request"
           headers:
@@ -316,20 +316,20 @@ public class SampleRestRoute extends RouteBuilder {
 ``` yaml
   - TITLE: "Test case 1"
     WHEN-execute:
-      endpoint: "rest-endpoint"
+      connectorId: "rest-endpoint"
       with:
         body: "body of request"
     WITH-mocks:
-      - endpoint: "external-service"
+      - connectorId: "external-service"
         returning:
           body: "response message from service"
     THEN-expect:
-      - endpoint: "rest-endpoint" # matches endpoint under test
+      - connectorId: "rest-endpoint" # matches endpoint under test
         having:
           body: "response .* from service"
           headers:
             CamelHttpResponseCode: "200"
-      - endpoint: "external-service"
+      - connectorId: "external-service"
         having:
           body: "body of request now looks better"
           headers:
