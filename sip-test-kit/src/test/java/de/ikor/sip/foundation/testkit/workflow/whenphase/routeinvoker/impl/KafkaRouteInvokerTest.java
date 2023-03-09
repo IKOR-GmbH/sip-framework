@@ -36,7 +36,7 @@ class KafkaRouteInvokerTest {
     subject = new KafkaRouteInvoker(camelContext);
 
     inputExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
-    inputExchange.setProperty(Mock.CONNECTOR_ID_EXCHANGE_PROPERTY, ROUTE_ID);
+    inputExchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
 
     Route route = mock(Route.class);
     KafkaConsumer kafkaConsumer = mock(KafkaConsumer.class);

@@ -35,7 +35,7 @@ class JmsRouteInvokerTest {
     subject = new JmsRouteInvoker(camelContext);
 
     inputExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
-    inputExchange.setProperty(Mock.CONNECTOR_ID_EXCHANGE_PROPERTY, ROUTE_ID);
+    inputExchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
 
     Route route = mock(Route.class);
     JmsConsumer jmsConsumer = mock(JmsConsumer.class);
