@@ -29,6 +29,11 @@
             <groupId>de.ikor.sip.foundation</groupId>
             <artifactId>sip-soap-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>wsdl4j</groupId>
+            <artifactId>wsdl4j</artifactId>
+            <version>1.6.3</version>
+        </dependency>
 #end
     </dependencies>
 
