@@ -30,7 +30,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AdapterBuilder extends RouteBuilder {
 
-  private static final String SCENARIO_HANDOVER_COMPONENT = "sipmc";
   private final DeclarationsRegistry declarationsRegistry;
   private final RoutesRegistry routesRegistry;
 
@@ -102,9 +101,7 @@ public class AdapterBuilder extends RouteBuilder {
                 new CDMValidator(
                     scenarioDefinition
                         .getRequestModelClass())) // TODO: move validation to camel-component
-            .to(
-                StaticEndpointBuilders.direct(
-                    SCENARIO_HANDOVER_COMPONENT, scenarioDefinition.getId()));
+            .to(sipMC(scenarioDefinition.getId()));
     scenarioDefinition
         .getResponseModelClass()
         .ifPresent(
@@ -151,7 +148,7 @@ public class AdapterBuilder extends RouteBuilder {
         routesRegistry.generateRouteIdForConnector(RouteRole.SCENARIO_TAKEOVER, outboundConnector);
 
     // Build takeover route from scenario
-    from(StaticEndpointBuilders.direct(SCENARIO_HANDOVER_COMPONENT, scenarioDefinition.getId()))
+    from(sipMC(scenarioDefinition.getId()))
         .routeId(scenarioTakeoverRouteId)
         .to(StaticEndpointBuilders.direct(requestOrchestrationRouteId));
 
@@ -197,6 +194,10 @@ public class AdapterBuilder extends RouteBuilder {
     }
     throw new SIPFrameworkInitializationException(
         String.format("Failed to resolve unknown connector definition type: %s", type.getName()));
+  }
+
+  private String sipMC(String scenarioId) {
+    return String.format("sipmc:%s", scenarioId);
   }
 
   @Value
