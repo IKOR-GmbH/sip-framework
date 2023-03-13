@@ -113,7 +113,6 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-
         <!-- test dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
