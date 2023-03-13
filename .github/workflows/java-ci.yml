@@ -256,6 +256,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: releases/${{ needs.do-maven-release.outputs.release-version }}
         name: SIP-Framework ${{ needs.do-maven-release.outputs.release-version }}
+        makeLatest: "true"
 
 
   do-javadoc-release:
