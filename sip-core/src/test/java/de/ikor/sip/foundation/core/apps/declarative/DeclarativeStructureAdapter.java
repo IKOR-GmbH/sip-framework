@@ -17,18 +17,19 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))
 public class DeclarativeStructureAdapter {
 
-  private static final String DUMMY_SCENARIO = "dummyScenario";
   private static final String DUMMY_GROUP1 = "DUMMY_GROUP1";
   private static final String DUMMY_GROUP2 = "DUMMY_GROUP2";
   private static final String DUMMY_GROUP3 = "DUMMY_GROUP3";
 
-  @IntegrationScenario(scenarioId = DUMMY_SCENARIO, requestModel = String.class)
-  public class DummyScenario extends IntegrationScenarioBase {}
+  @IntegrationScenario(scenarioId = DummyScenario.ID, requestModel = String.class)
+  public class DummyScenario extends IntegrationScenarioBase {
+    public static final String ID = "dummyScenario";
+  }
 
   @InboundConnector(
       connectorId = "inboundConnector",
       connectorGroup = DUMMY_GROUP1,
-      integrationScenario = DUMMY_SCENARIO,
+      integrationScenario = DummyScenario.ID,
       requestModel = String.class,
       responseModel = String.class)
   public class DummyInboundConnector extends GenericInboundConnectorBase {
@@ -41,7 +42,7 @@ public class DeclarativeStructureAdapter {
   @OutboundConnector(
       connectorId = "outboundConnectorOne",
       connectorGroup = DUMMY_GROUP2,
-      integrationScenario = DUMMY_SCENARIO,
+      integrationScenario = DummyScenario.ID,
       requestModel = String.class)
   public class OutboundConnectorOne extends GenericOutboundConnectorBase {
     @Override
@@ -53,7 +54,7 @@ public class DeclarativeStructureAdapter {
   @OutboundConnector(
       connectorId = "outboundConnectorTwo",
       connectorGroup = DUMMY_GROUP3,
-      integrationScenario = DUMMY_SCENARIO,
+      integrationScenario = DummyScenario.ID,
       requestModel = String.class)
   public class OutboundConnectorTwo extends GenericOutboundConnectorBase {
     @Override
