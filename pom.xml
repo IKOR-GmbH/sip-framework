@@ -67,8 +67,7 @@
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <commons-text.version>1.10.0</commons-text.version>
         <commons-collections4.version>4.4</commons-collections4.version>
-        <equalsverifier.version>3.7.1</equalsverifier.version>
-        <asm.version>9.2</asm.version>
+        <asm.version>9.4</asm.version>
         <cxf.version>3.5.5</cxf.version>    <!-- keep in sync with camel-dependencies cxf-version property -->
 
         <!-- plugin versions -->
@@ -89,10 +88,6 @@
         <maven-plugin-plugin.version>3.6.4</maven-plugin-plugin.version>
         <qdox.version>1.6.1</qdox.version>
         <commons-io.version>2.11.0</commons-io.version>
-        <plexus-component-annotations.version>2.1.0</plexus-component-annotations.version>
-        <plexus-container-default.version>2.1.0</plexus-container-default.version>
-        <plexus-classworlds>2.6.0</plexus-classworlds>
-        <plexus-utils>3.4.1</plexus-utils>
 
         <!-- sonar settings -->
         <sonar.organization>ikor-gmbh</sonar.organization>
@@ -247,26 +242,6 @@
 
             <!--            additional dependencies-->
             <dependency>
-                <groupId>org.codehaus.plexus</groupId>
-                <artifactId>plexus-utils</artifactId>
-                <version>${plexus-utils}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.plexus</groupId>
-                <artifactId>plexus-classworlds</artifactId>
-                <version>${plexus-classworlds}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.plexus</groupId>
-                <artifactId>plexus-container-default</artifactId>
-                <version>${plexus-container-default.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.plexus</groupId>
-                <artifactId>plexus-component-annotations</artifactId>
-                <version>${plexus-component-annotations.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jsr310</artifactId>
                 <version>${jackson-jsr310.version}</version>
@@ -280,12 +255,6 @@
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-common</artifactId>
                 <version>${springdoc-openapi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>nl.jqno.equalsverifier</groupId>
-                <artifactId>equalsverifier</artifactId>
-                <version>${equalsverifier.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>
@@ -303,8 +272,8 @@
                 <artifactId>snakeyaml</artifactId>
                 <version>${snakeyaml.version}</version>
             </dependency>
-            <!-- Spring is using 9.1, Cxf is using 9.2 -->
-            <!-- When Spring upgrades to 9.2, then explicit dependency can be removed -->
+            <!-- Spring is using 9.1, Cxf is using 9.4 -->
+            <!-- When Spring upgrades to 9.4, then explicit dependency can be removed -->
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm</artifactId>
