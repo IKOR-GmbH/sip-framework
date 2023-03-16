@@ -1,8 +1,9 @@
 package de.ikor.sip.foundation.core.declarative.scenario;
 
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
-import de.ikor.sip.foundation.core.declarative.orchestration.ConsumerOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.ScenarioOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.ScenarioOrchestrator;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import java.util.Optional;
 
@@ -19,9 +20,8 @@ public abstract class IntegrationScenarioBase implements IntegrationScenarioDefi
       DeclarativeHelper.getAnnotationOrThrow(IntegrationScenario.class, this);
 
   @Override
-  public Orchestrator<ConsumerOrchestrationInfo> getOrchestrator() {
-    throw new UnsupportedOperationException(
-        "Integration scenario orchestration is not yet supported");
+  public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
+    return ScenarioOrchestrator.forScenario(this);
   }
 
   @Override

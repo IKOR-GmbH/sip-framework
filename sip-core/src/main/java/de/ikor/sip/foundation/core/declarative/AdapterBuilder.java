@@ -1,8 +1,11 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
+
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.validator.CDMValidator;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -12,8 +15,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.OptionalIdentifiedDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
@@ -63,14 +66,26 @@ public class AdapterBuilder extends RouteBuilder {
   }
 
   private void buildScenario(final IntegrationScenarioDefinition scenarioDefinition) {
-    inboundConnectors
-        .get(scenarioDefinition)
-        .forEach(
-            connectorDefinition -> buildInboundConnector(connectorDefinition, scenarioDefinition));
-    outboundConnectors
-        .get(scenarioDefinition)
-        .forEach(
-            connectorDefinition -> buildOutboundConnector(connectorDefinition, scenarioDefinition));
+    List<InboundConnectorDefinition> scenariosInboundConnectors =
+        inboundConnectors.get(scenarioDefinition);
+    List<OutboundConnectorDefinition> scenariosOutboundConnectors =
+        outboundConnectors.get(scenarioDefinition);
+
+    scenariosInboundConnectors.forEach(
+        connectorDefinition -> buildInboundConnector(connectorDefinition, scenarioDefinition));
+
+    scenariosOutboundConnectors.forEach(
+        connectorDefinition -> buildOutboundConnector(connectorDefinition, scenarioDefinition));
+
+    ScenarioOrchestrationInfo scenarioOrchestrationInfo =
+        new ScenarioOrchestrationRoutes(
+            scenariosInboundConnectors.stream()
+                .map(connector -> from(direct(connector.getId())))
+                .toList(),
+            scenariosOutboundConnectors.stream().map(c -> direct(c.getId())).toList());
+    if (scenarioDefinition.getOrchestrator().canOrchestrate(scenarioOrchestrationInfo)) {
+      scenarioDefinition.getOrchestrator().doOrchestrate(scenarioOrchestrationInfo);
+    }
   }
 
   private <T extends OptionalIdentifiedDefinition<T>> void buildInboundConnector(
@@ -90,18 +105,18 @@ public class AdapterBuilder extends RouteBuilder {
     final var endpointDefinitionType = inboundConnector.getEndpointDefinitionTypeClass();
     inboundConnector.defineInboundEndpoints(
         resolveConnectorDefinitionType(endpointDefinitionType),
-        StaticEndpointBuilders.direct(requestOrchestrationRouteId),
+        direct(requestOrchestrationRouteId),
         routesRegistry);
 
     // Build scenario handoff and response-route
     final var handoffRouteDefinition =
-        from(StaticEndpointBuilders.direct(scenarioHandoffRouteId))
+        from(direct(scenarioHandoffRouteId))
             .routeId(scenarioHandoffRouteId)
             .process(
                 new CDMValidator(
                     scenarioDefinition
                         .getRequestModelClass())) // TODO: move validation to camel-component
-            .to(sipMC(scenarioDefinition.getId()));
+            .to(direct(inboundConnector.getId()));
     scenarioDefinition
         .getResponseModelClass()
         .ifPresent(
@@ -110,18 +125,16 @@ public class AdapterBuilder extends RouteBuilder {
                     new CDMValidator(model))); // TODO: move validation to camel-component
 
     if (inboundConnector.hasResponseFlow()) {
-      handoffRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
+      handoffRouteDefinition.to(direct(responseOrchestrationRouteId));
     }
 
     // Build orchestration route(s) to/from scenario
     final var requestRouteDefinition =
-        from(StaticEndpointBuilders.direct(requestOrchestrationRouteId))
-            .routeId(requestOrchestrationRouteId);
+        from(direct(requestOrchestrationRouteId)).routeId(requestOrchestrationRouteId);
     final Optional<RouteDefinition> responseRouteDefinition =
         inboundConnector.hasResponseFlow()
             ? Optional.of(
-                from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
-                    .routeId(responseOrchestrationRouteId))
+                from(direct(responseOrchestrationRouteId)).routeId(responseOrchestrationRouteId))
             : Optional.empty();
 
     var orchestrationInfo =
@@ -129,7 +142,7 @@ public class AdapterBuilder extends RouteBuilder {
     if (inboundConnector.getOrchestrator().canOrchestrate(orchestrationInfo)) {
       inboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
     }
-    requestRouteDefinition.to(StaticEndpointBuilders.direct(scenarioHandoffRouteId));
+    requestRouteDefinition.to(direct(scenarioHandoffRouteId));
   }
 
   private void buildOutboundConnector(
@@ -148,36 +161,34 @@ public class AdapterBuilder extends RouteBuilder {
         routesRegistry.generateRouteIdForConnector(RouteRole.SCENARIO_TAKEOVER, outboundConnector);
 
     // Build takeover route from scenario
-    from(sipMC(scenarioDefinition.getId()))
+    from(direct(outboundConnector.getId()))
         .routeId(scenarioTakeoverRouteId)
-        .to(StaticEndpointBuilders.direct(requestOrchestrationRouteId));
+        .to(direct(requestOrchestrationRouteId));
 
     // Build endpoint route that connects to external system
     final var endpointRouteDefinition =
-        from(StaticEndpointBuilders.direct(externalEndpointRouteId))
-            .routeId(externalEndpointRouteId);
+        from(direct(externalEndpointRouteId)).routeId(externalEndpointRouteId);
     outboundConnector.defineOutboundEndpoints(endpointRouteDefinition);
     if (outboundConnector.hasResponseFlow()) {
-      endpointRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
+      endpointRouteDefinition.to(direct(responseOrchestrationRouteId));
     }
 
     // Build orchestration route(s) to/from scenario
     final var requestRouteDefinition =
-        from(StaticEndpointBuilders.direct(requestOrchestrationRouteId))
-            .routeId(requestOrchestrationRouteId);
+        from(direct(requestOrchestrationRouteId)).routeId(requestOrchestrationRouteId);
     final Optional<RouteDefinition> responseRouteDefinition =
         outboundConnector.hasResponseFlow()
             ? Optional.of(
-                from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
-                    .routeId(responseOrchestrationRouteId))
+                from(direct(responseOrchestrationRouteId)).routeId(responseOrchestrationRouteId))
             : Optional.empty();
 
+    endpointRouteDefinition.setProperty("sip-connector-id").constant(outboundConnector.getId());
     var orchestrationInfo =
         new OrchestrationRoutes(requestRouteDefinition, responseRouteDefinition);
     if (outboundConnector.getOrchestrator().canOrchestrate(orchestrationInfo)) {
       outboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
     }
-    requestRouteDefinition.to(StaticEndpointBuilders.direct(externalEndpointRouteId));
+    requestRouteDefinition.to(direct(externalEndpointRouteId));
   }
 
   private <T extends OptionalIdentifiedDefinition<T>> T resolveConnectorDefinitionType(
@@ -204,5 +215,12 @@ public class AdapterBuilder extends RouteBuilder {
   private static class OrchestrationRoutes implements ConnectorOrchestrationInfo {
     RouteDefinition requestRouteDefinition;
     Optional<RouteDefinition> responseRouteDefinition;
+  }
+
+  @Value
+  private static class ScenarioOrchestrationRoutes implements ScenarioOrchestrationInfo {
+
+    List<RouteDefinition> inboundConnectorRouteEnds;
+    List<? extends EndpointProducerBuilder> outboundConnectorsStarts;
   }
 }

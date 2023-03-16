@@ -1,10 +1,12 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
 
 import de.ikor.sip.foundation.core.apps.declarative.DeclarativeStructureAdapter;
 import org.apache.camel.EndpointInject;
+import org.apache.camel.Exchange;
 import org.apache.camel.ExtendedCamelContext;
+import org.apache.camel.FluentProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.DisableJmx;
@@ -24,31 +26,32 @@ class DeclarativeStructureTest {
 
   @Autowired private ExtendedCamelContext camelContext;
 
-  @EndpointInject("mock:log:message")
-  private MockEndpoint mockedLogger;
+  @Autowired private FluentProducerTemplate template;
+
+  @EndpointInject("mock:log:messageGroup2")
+  private MockEndpoint mockedLoggerGroup2;
+
+  @EndpointInject("mock:log:messageGroup3")
+  private MockEndpoint mockedLoggerGroup3;
 
   @BeforeEach
   void setup() {
-    mockedLogger.reset();
+    mockedLoggerGroup2.reset();
+    mockedLoggerGroup3.reset();
   }
 
   @Test
-  void when_integrationScenarioWithTwoOutboundConnectors_then_checkIfTheyShareSameSipmcChannel() {
+  void when_integrationScenarioWithTwoOutboundConnectors_then_checkIfTheyShareSameSipmcChannel()
+      throws InterruptedException {
     // arrange & act
-    String sipmcUri1 =
-        camelContext
-            .getRoute("sip-connector_outboundConnectorTwo_scenarioTakeover")
-            .getConsumer()
-            .getEndpoint()
-            .getEndpointUri();
-    String sipmcUri2 =
-        camelContext
-            .getRoute("sip-connector_outboundConnectorOne_scenarioTakeover")
-            .getConsumer()
-            .getEndpoint()
-            .getEndpointUri();
+    mockedLoggerGroup2.expectedMessageCount(1);
+    mockedLoggerGroup2.expectedBodiesReceived("Hi Adapter");
+    mockedLoggerGroup3.expectedMessageCount(1);
+    mockedLoggerGroup3.expectedBodiesReceived("Hi Adapter");
 
-    // assert
-    assertThat(sipmcUri1).isEqualTo(sipmcUri2);
+    Exchange exchange = template.withBody("Hi Adapter").to(direct("dummyInput")).send();
+
+    mockedLoggerGroup2.assertIsSatisfied();
+    mockedLoggerGroup3.assertIsSatisfied();
   }
 }

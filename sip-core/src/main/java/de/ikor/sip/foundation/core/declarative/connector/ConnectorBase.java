@@ -29,10 +29,7 @@ import org.springframework.context.ApplicationContextAware;
  * allows subclasses to attach an {@link Orchestrator} for the transformation between connector and
  * common domain models through the {@link #defineTransformationOrchestrator()} method.
  */
-abstract non-sealed class ConnectorBase
-    implements ConnectorDefinition,
-        Orchestrator<ConnectorOrchestrationInfo>,
-        ApplicationContextAware {
+abstract non-sealed class ConnectorBase implements ConnectorDefinition, ApplicationContextAware {
 
   @Getter(AccessLevel.PROTECTED)
   private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -46,7 +43,7 @@ abstract non-sealed class ConnectorBase
 
   @Override
   public Orchestrator<ConnectorOrchestrationInfo> getOrchestrator() {
-    return this;
+    return modelTransformationOrchestrator;
   }
 
   /**

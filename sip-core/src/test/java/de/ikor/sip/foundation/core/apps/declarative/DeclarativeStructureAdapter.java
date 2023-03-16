@@ -47,7 +47,7 @@ public class DeclarativeStructureAdapter {
   public class OutboundConnectorOne extends GenericOutboundConnectorBase {
     @Override
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
-      return StaticEndpointBuilders.log("message");
+      return StaticEndpointBuilders.log("messageGroup2");
     }
   }
 
@@ -59,7 +59,7 @@ public class DeclarativeStructureAdapter {
   public class OutboundConnectorTwo extends GenericOutboundConnectorBase {
     @Override
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
-      return StaticEndpointBuilders.log("message");
+      return StaticEndpointBuilders.log("messageGroup3");
     }
   }
 }
