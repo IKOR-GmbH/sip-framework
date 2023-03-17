@@ -80,9 +80,9 @@ public class AdapterBuilder extends RouteBuilder {
     ScenarioOrchestrationInfo scenarioOrchestrationInfo =
         new ScenarioOrchestrationRoutes(
             scenariosInboundConnectors.stream()
-                .map(connector -> from(direct(connector.getId())))
-                .toList(),
-            scenariosOutboundConnectors.stream().map(c -> direct(c.getId())).toList());
+                .collect(Collectors.toMap(c -> c, c -> from(direct(c.getId())))),
+            scenariosOutboundConnectors.stream()
+                .collect(Collectors.toMap(c -> c, c -> direct(c.getId()))));
     if (scenarioDefinition.getOrchestrator().canOrchestrate(scenarioOrchestrationInfo)) {
       scenarioDefinition.getOrchestrator().doOrchestrate(scenarioOrchestrationInfo);
     }
@@ -220,7 +220,7 @@ public class AdapterBuilder extends RouteBuilder {
   @Value
   private static class ScenarioOrchestrationRoutes implements ScenarioOrchestrationInfo {
 
-    List<RouteDefinition> inboundConnectorRouteEnds;
-    List<? extends EndpointProducerBuilder> outboundConnectorsStarts;
+    Map<InboundConnectorDefinition, RouteDefinition> inboundConnectorRouteEnds;
+    Map<OutboundConnectorDefinition, EndpointProducerBuilder> outboundConnectorsStarts;
   }
 }
