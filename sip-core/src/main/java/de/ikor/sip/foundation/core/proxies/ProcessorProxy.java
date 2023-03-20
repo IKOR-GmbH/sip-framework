@@ -20,12 +20,12 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   private static final Logger logger = LoggerFactory.getLogger(ProcessorProxy.class);
   public static final String TEST_MODE_HEADER = "test-mode";
 
-  private static final String[] NON_OUTGOING_PROCESSOR_PREFIXES = {"seda", "direct", "sipmc"};
+  public static final String[] NON_OUTGOING_PROCESSOR_PREFIXES = {"seda", "direct", "sipmc"};
 
   private final NamedNode nodeDefinition;
   private final Processor wrappedProcessor;
   // Processor can already be wrapped by Camel so we unwrap it and store it here
-  private final Processor originalProcessor;
+  @Getter private final Processor originalProcessor;
   private final List<ProxyExtension> extensions;
   private Function<Exchange, Exchange> mockFunction;
   @Getter private final boolean endpointProcessor;

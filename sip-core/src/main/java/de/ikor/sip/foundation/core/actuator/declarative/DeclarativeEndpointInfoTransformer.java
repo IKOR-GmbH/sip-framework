@@ -10,10 +10,8 @@ import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefi
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.Endpoint;
 import org.springframework.core.io.ClassPathResource;
 
 /**
@@ -85,10 +83,7 @@ public class DeclarativeEndpointInfoTransformer {
         .connectorId(connector.getId())
         .connectorType(connector.getConnectorType())
         .connectorGroupId(connector.getConnectorGroupId())
-        .endpoints(
-            createEndpointInfos(
-                routesRegistry.getRouteIdByConnectorId(connector.getId()),
-                routesRegistry.getExternalEndpointsForConnector(connector)))
+        .endpoints(routesRegistry.getExternalEndpointInfosForConnector(connector))
         .scenarioId(connector.getScenarioId())
         .routes(routesRegistry.getRoutesInfo(connector))
         .connectorDescription(
@@ -104,13 +99,6 @@ public class DeclarativeEndpointInfoTransformer {
                 ? createJsonSchema(schemaGen, connector.getResponseModelClass().get())
                 : null)
         .build();
-  }
-
-  private static List<EndpointInfo> createEndpointInfos(String routeId, List<Endpoint> endpoints) {
-    List<EndpointInfo> endpointInfos = new ArrayList<>();
-    endpoints.forEach(
-        endpoint -> endpointInfos.add(new EndpointInfo(routeId, endpoint.getEndpointBaseUri())));
-    return endpointInfos;
   }
 
   private static String readDocumentation(String defaultDocsPath, String path, String id) {

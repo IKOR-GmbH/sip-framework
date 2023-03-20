@@ -1,8 +1,13 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.NON_OUTGOING_PROCESSOR_PREFIXES;
+
+import de.ikor.sip.foundation.core.actuator.declarative.model.EndpointInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteInfo;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
+import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
+import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,16 +17,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.Synchronized;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Endpoint;
-import org.apache.camel.EndpointAware;
-import org.apache.camel.Route;
+import org.apache.camel.*;
+import org.apache.camel.processor.SendProcessor;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.spi.CamelEvent.CamelContextEvent;
 import org.apache.camel.spi.CamelEvent.CamelContextStartedEvent;
 import org.apache.camel.support.SimpleEventNotifierSupport;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -40,6 +44,8 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   private final MultiValuedMap<String, Endpoint> endpointsForRouteId = new HashSetValuedHashMap<>();
   private final MultiValuedMap<Endpoint, String> routeIdsForEndpoints =
       new HashSetValuedHashMap<>();
+
+  private final Map<String, SendProcessor> outgoingEndpointProcessors = new HashMap<>();
 
   public RoutesRegistry(DeclarationsRegistryApi declarationsRegistryApi) {
     this.declarationsRegistryApi = declarationsRegistryApi;
@@ -131,20 +137,31 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
         .toList();
   }
 
-  public List<Endpoint> getExternalEndpointsForConnector(ConnectorDefinition connectorDefinition) {
+  public List<EndpointInfo> getExternalEndpointInfosForConnector(
+      ConnectorDefinition connectorDefinition) {
     List<RouteInfo> connectorRoutes = getRoutesInfo(connectorDefinition);
     return connectorRoutes.stream()
-        .filter(
-            routeInfo ->
-                routeInfo.getRouteRole().equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName()))
         .map(
             routeInfo ->
                 endpointsForRouteId.get(routeInfo.getRouteId()).stream()
                     // filter out all of sip framework internal endpoints
                     .filter(endpoint -> !endpoint.getEndpointKey().contains(SIP_CONNECTOR_PREFIX))
+                    .filter(
+                        endpoint ->
+                            !StringUtils.startsWithAny(
+                                endpoint.getEndpointUri(), NON_OUTGOING_PROCESSOR_PREFIXES))
+                    .map(endpoint -> createEndpointInfo(endpoint, routeInfo.getRouteId()))
                     .toList())
         .flatMap(Collection::stream)
         .toList();
+  }
+
+  private EndpointInfo createEndpointInfo(Endpoint endpoint, String routeId) {
+    SendProcessor sendProcessor = outgoingEndpointProcessors.get(endpoint.getEndpointBaseUri());
+    return EndpointInfo.builder()
+        .routeId(sendProcessor != null ? sendProcessor.getId() : routeId)
+        .camelEndpointUri(endpoint.getEndpointBaseUri())
+        .build();
   }
 
   public List<RouteDeclarativeStructureInfo> generateRouteInfoList(Endpoint endpoint) {
@@ -156,6 +173,11 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   }
 
   void prefillEndpointRouteMappings(CamelContext camelContext) {
+    ProcessorProxyRegistry proxiesRegistry =
+        camelContext.getExtension(ProcessorProxyRegistry.class);
+    proxiesRegistry
+        .getProxies()
+        .forEach((processorId, processor) -> checkAndAddProcessor(processor));
     for (Route route : camelContext.getRoutes()) {
       String routeId = route.getRouteId();
       endpointsForRouteId.put(routeId, route.getEndpoint());
@@ -167,6 +189,14 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
           routeIdsForEndpoints.put(endpoint, routeId);
         }
       }
+    }
+  }
+
+  private void checkAndAddProcessor(ProcessorProxy processor) {
+    if (processor.isEndpointProcessor()) {
+      SendProcessor sendProcessor = (SendProcessor) processor.getOriginalProcessor();
+      outgoingEndpointProcessors.put(
+          sendProcessor.getEndpoint().getEndpointBaseUri(), sendProcessor);
     }
   }
 }
