@@ -58,11 +58,16 @@ public class DeclarativeEndpointInfoTransformer {
    * @return IntegrationScenarioInfo
    */
   public static IntegrationScenarioInfo createIntegrationScenarioInfo(
-      IntegrationScenarioDefinition scenario) {
+      IntegrationScenarioDefinition scenario, JsonSchemaGenerator schemaGen) {
     return IntegrationScenarioInfo.builder()
         .scenarioId(scenario.getId())
         .requestModelClass(scenario.getRequestModelClass().getName())
+        .requestJsonForm(createJsonSchema(schemaGen, scenario.getRequestModelClass()))
         .responseModelClass(scenario.getResponseModelClass().map(Class::getName).orElse(null))
+        .responseJsonForm(
+            scenario.getResponseModelClass().isPresent()
+                ? createJsonSchema(schemaGen, scenario.getResponseModelClass().get())
+                : null)
         .scenarioDescription(
             readDocumentation(
                 INTEGRATION_SCENARIO_DEFAULT_DOCS_PATH,

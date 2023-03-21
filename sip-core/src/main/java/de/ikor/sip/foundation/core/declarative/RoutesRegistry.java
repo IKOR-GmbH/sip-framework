@@ -159,7 +159,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   private EndpointInfo createEndpointInfo(Endpoint endpoint, String routeId) {
     SendProcessor sendProcessor = outgoingEndpointProcessors.get(endpoint.getEndpointBaseUri());
     return EndpointInfo.builder()
-        .routeId(sendProcessor != null ? sendProcessor.getId() : routeId)
+        .endpointId(sendProcessor != null ? sendProcessor.getId() : routeId)
         .camelEndpointUri(endpoint.getEndpointBaseUri())
         .build();
   }

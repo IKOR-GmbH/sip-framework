@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class EndpointInfo {
 
-  private String routeId;
+  private String endpointId;
   private String camelEndpointUri;
 }

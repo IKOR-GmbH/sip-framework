@@ -97,7 +97,7 @@ public class DeclarativeDefinitionEndpoint {
   private void initializeIntegrationScenarioInfos() {
     declarationsRegistry
         .getScenarios()
-        .forEach(scenario -> scenarios.add(createIntegrationScenarioInfo(scenario)));
+        .forEach(scenario -> scenarios.add(createIntegrationScenarioInfo(scenario, schemaGen)));
   }
 
   private void initializeConnectorGroupInfos() {
