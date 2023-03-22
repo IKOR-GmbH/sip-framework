@@ -8,7 +8,10 @@ import java.util.function.UnaryOperator;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.camel.*;
+import org.apache.camel.processor.Enricher;
+import org.apache.camel.processor.PollEnricher;
 import org.apache.camel.processor.SendDynamicProcessor;
+import org.apache.camel.processor.WireTapProcessor;
 import org.apache.camel.support.AsyncProcessorSupport;
 import org.apache.camel.support.ExchangeHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -77,14 +80,22 @@ public class ProcessorProxy extends AsyncProcessorSupport {
    * @return true if this is a processor that outputs to Endpoint
    */
   private boolean determineEndpointProcessor() {
-    if (originalProcessor instanceof EndpointAware endpointAware) {
-      Endpoint destinationEndpoint = endpointAware.getEndpoint();
-      if (!StringUtils.startsWithAny(
-          destinationEndpoint.getEndpointUri(), NON_OUTGOING_PROCESSOR_PREFIXES)) {
-        return true;
-      }
+    if (originalProcessor instanceof Enricher || originalProcessor instanceof PollEnricher) {
+      return true;
+    }
+    if (originalProcessor instanceof WireTapProcessor wireTapProcessor
+        && isNotInMemoryComponent(wireTapProcessor.getUri())) {
+      return true;
+    }
+    if (originalProcessor instanceof EndpointAware endpointAware
+        && isNotInMemoryComponent(endpointAware.getEndpoint().getEndpointUri())) {
+      return true;
     }
     return originalProcessor instanceof SendDynamicProcessor;
+  }
+
+  private boolean isNotInMemoryComponent(String endpointUri) {
+    return !StringUtils.startsWithAny(endpointUri, NON_OUTGOING_PROCESSOR_PREFIXES);
   }
 
   @Override
