@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.testkit.config;
 
 import static de.ikor.sip.foundation.testkit.util.TestKitHelper.parseExchangeProperties;
-import static java.util.stream.Collectors.toList;
 
+import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -93,17 +93,16 @@ public class TestCasesConfig {
   }
 
   private void replaceConnectorIdsWithRouteIds(TestCaseDefinition definition) {
-    String connectorId = definition.getWhenExecute().getEndpoint();
-    definition
-        .getWhenExecute()
-        .setEndpoint(routesRegistry.get().getRouteIdByConnectorId(connectorId));
-    definition.getWithMocks().forEach(this::fetchAndSetRouteId);
-    definition.getThenExpect().forEach(this::fetchAndSetRouteId);
-  }
-
-  private void fetchAndSetRouteId(EndpointProperties properties) {
-    String routeId = routesRegistry.get().getRouteIdByConnectorId(properties.getEndpoint());
-    properties.setEndpoint(routeId);
+    if (definition.getWhenExecute().getConnector() != null) {
+      String connectorId = definition.getWhenExecute().getConnector();
+      definition
+          .getWhenExecute()
+          .setEndpoint(
+              routesRegistry
+                  .get()
+                  .getRouteIdByConnectorIdAndRole(
+                      connectorId, RouteRole.CONNECTOR_REQUEST_ORCHESTRATION));
+    }
   }
 
   private List<Mock> getMocks(String testName, TestCaseDefinition testCaseDefinition) {
@@ -112,12 +111,26 @@ public class TestCasesConfig {
             connectionProperties ->
                 mockFactory.newMockInstance(
                     testName, parseExchangeProperties(connectionProperties, camelContext)))
-        .collect(toList());
+        .toList();
   }
 
   private void validateTestDefinition(TestCaseDefinition testCaseDefinition) {
     if (testCaseDefinition.getWhenExecute() == null) {
       throw new SIPFrameworkException("When-execute is not defined!");
+    }
+    if (testCaseDefinition.getWhenExecute().getEndpoint() != null
+        && testCaseDefinition.getWhenExecute().getConnector() != null) {
+      throw new SIPFrameworkException(
+          "Both endpoint and connector fields are defined in When-execute!");
+    }
+    testCaseDefinition.getWithMocks().forEach(this::validateConnectorField);
+    testCaseDefinition.getThenExpect().forEach(this::validateConnectorField);
+  }
+
+  private void validateConnectorField(EndpointProperties properties) {
+    if (properties.getConnector() != null) {
+      throw new SIPFrameworkException(
+          "Connector field is not allowed out of When-execute definition!");
     }
   }
 

@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 public class EndpointProperties {
   private String endpoint;
 
+  private String connector;
+
   private MessageProperties message = new MessageProperties();
 
   public void setWith(MessageProperties message) {
