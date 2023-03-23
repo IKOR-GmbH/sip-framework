@@ -187,13 +187,14 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
 
   private void checkAndAddProcessorId(ProcessorProxy processor) {
     if (processor.isEndpointProcessor()) {
-      if (processor.getOriginalProcessor() instanceof SendProcessor sendProcessor) {
+      Processor originalProcessor = processor.getOriginalProcessor();
+      if (originalProcessor instanceof SendProcessor sendProcessor) {
         outgoingEndpointIds.put(sendProcessor.getEndpoint().getEndpointBaseUri(), sendProcessor);
       }
-      if (processor.getOriginalProcessor() instanceof SendDynamicProcessor dynamicProcessor) {
+      if (originalProcessor instanceof SendDynamicProcessor dynamicProcessor) {
         outgoingEndpointIds.put(dynamicProcessor.getUri(), dynamicProcessor);
       }
-      if (processor.getOriginalProcessor() instanceof WireTapProcessor wireTapProcessor) {
+      if (originalProcessor instanceof WireTapProcessor wireTapProcessor) {
         outgoingEndpointIds.put(wireTapProcessor.getUri(), wireTapProcessor);
       }
     }
@@ -219,12 +220,18 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
           addToEndpointUriMaps(routeId, wireTapProcessor.getUri());
         }
         if (service instanceof Enricher enricher) {
-          String enrichEndpointUri = "enrich-" + enrichCounter++;
+          String enrichEndpointUri =
+              enricher.getExpression() != null
+                  ? enricher.getExpression().toString()
+                  : String.format("enrich-%s", enrichCounter++);
           addToEndpointUriMaps(routeId, enrichEndpointUri);
           outgoingEndpointIds.put(enrichEndpointUri, enricher);
         }
         if (service instanceof PollEnricher pollEnricher) {
-          String pollEnrichEndpointUri = "pollEnrich-" + pollEnrichCounter++;
+          String pollEnrichEndpointUri =
+              pollEnricher.getExpression() != null
+                  ? pollEnricher.getExpression().toString()
+                  : String.format("pollEnrich-%s", pollEnrichCounter++);
           addToEndpointUriMaps(routeId, pollEnrichEndpointUri);
           outgoingEndpointIds.put(pollEnrichEndpointUri, pollEnricher);
         }
