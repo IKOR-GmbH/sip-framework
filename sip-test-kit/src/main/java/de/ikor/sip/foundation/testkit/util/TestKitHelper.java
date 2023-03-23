@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.testkit.util;
 
 import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_HEADER;
 import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker.TEST_NAME_HEADER;
+import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvoker.CONNECTOR_ID_EXCHANGE_PROPERTY;
 import static org.apache.camel.builder.ExchangeBuilder.anExchange;
 
 import de.ikor.sip.foundation.core.util.SIPExchangeHelper;
@@ -79,6 +80,7 @@ public class TestKitHelper extends SIPExchangeHelper {
         anExchange(camelContext).withBody(properties.getMessage().getBody());
     properties.getMessage().getHeaders().forEach(exchangeBuilder::withHeader);
     exchangeBuilder.withProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, properties.getEndpoint());
+    exchangeBuilder.withProperty(CONNECTOR_ID_EXCHANGE_PROPERTY, properties.getConnector());
     return exchangeBuilder.build();
   }
 

@@ -70,7 +70,7 @@ public class TestCasesConfig {
     validateTestDefinition(testCaseDefinition);
     String testName = testCaseDefinition.getTitle();
 
-    routesRegistry.ifPresent(registry -> replaceConnectorIdsWithRouteIds(testCaseDefinition));
+    routesRegistry.ifPresent(registry -> initTestCaseDefinitionEndpoints(testCaseDefinition));
 
     List<Mock> mocks = getMocks(testName, testCaseDefinition);
 
@@ -92,16 +92,29 @@ public class TestCasesConfig {
     return testCase;
   }
 
-  private void replaceConnectorIdsWithRouteIds(TestCaseDefinition definition) {
+  private void initTestCaseDefinitionEndpoints(TestCaseDefinition definition) {
     if (definition.getWhenExecute().getConnector() != null) {
-      String connectorId = definition.getWhenExecute().getConnector();
-      definition
-          .getWhenExecute()
-          .setEndpoint(
-              routesRegistry
-                  .get()
-                  .getRouteIdByConnectorIdAndRole(
-                      connectorId, RouteRole.CONNECTOR_REQUEST_ORCHESTRATION));
+      replaceConnectorIdsWithRouteIds(definition.getWhenExecute());
+    }
+    definition.getWithMocks().forEach(this::setEndpointBasedOnConnectorId);
+  }
+
+  private void replaceConnectorIdsWithRouteIds(EndpointProperties whenExecute) {
+    String connectorId = whenExecute.getConnector();
+    whenExecute.setEndpoint(
+        routesRegistry
+            .get()
+            .getRouteIdByConnectorIdAndRole(
+                connectorId, RouteRole.CONNECTOR_REQUEST_ORCHESTRATION));
+  }
+
+  private void setEndpointBasedOnConnectorId(EndpointProperties properties) {
+    if (properties.getConnector() != null) {
+      properties.setEndpoint(
+          routesRegistry
+              .get()
+              .getRouteIdByConnectorIdAndRole(
+                  properties.getConnector(), RouteRole.EXTERNAL_ENDPOINT));
     }
   }
 
@@ -118,13 +131,16 @@ public class TestCasesConfig {
     if (testCaseDefinition.getWhenExecute() == null) {
       throw new SIPFrameworkException("When-execute is not defined!");
     }
-    if (testCaseDefinition.getWhenExecute().getEndpoint() != null
-        && testCaseDefinition.getWhenExecute().getConnector() != null) {
+    validateEndpointAndConnectorFields(testCaseDefinition.getWhenExecute());
+    testCaseDefinition.getWithMocks().forEach(this::validateEndpointAndConnectorFields);
+    testCaseDefinition.getThenExpect().forEach(this::validateConnectorField);
+  }
+
+  private void validateEndpointAndConnectorFields(EndpointProperties properties) {
+    if (properties.getEndpoint() != null && properties.getConnector() != null) {
       throw new SIPFrameworkException(
           "Both endpoint and connector fields are defined in When-execute!");
     }
-    testCaseDefinition.getWithMocks().forEach(this::validateConnectorField);
-    testCaseDefinition.getThenExpect().forEach(this::validateConnectorField);
   }
 
   private void validateConnectorField(EndpointProperties properties) {
