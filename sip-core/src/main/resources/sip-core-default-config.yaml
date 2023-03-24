@@ -55,8 +55,10 @@ management:
 
 springdoc:
   show-actuator: true
-  api-docs.path: /api-docs
+  api-docs:
+    path: /api-docs
   swagger-ui:
+    url: /adapter/api-docs    #custom swagger docs set as default
     path: /swagger-ui.html
     disable-swagger-default-url: true
 
