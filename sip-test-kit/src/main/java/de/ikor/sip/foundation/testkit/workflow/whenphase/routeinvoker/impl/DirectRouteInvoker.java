@@ -1,10 +1,10 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import static de.ikor.sip.foundation.testkit.util.TestKitHelper.unmarshallExchangeBodyFromJson;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistryApi;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
-import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import java.util.Optional;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class DirectRouteInvoker implements RouteInvoker {
 
   public static final String CONNECTOR_ID_EXCHANGE_PROPERTY = "connectorId";
-  private static final Class<?> STRING_CLASS = String.class;
+  public static final Class<?> STRING_CLASS = String.class;
 
   private final ProducerTemplate producerTemplate;
 
@@ -51,7 +51,7 @@ public class DirectRouteInvoker implements RouteInvoker {
     Class<?> requestModelClass = getRequestModelClass(connector);
 
     if (!requestModelClass.equals(STRING_CLASS)) {
-      unmarshallToJson(inputExchange, requestModelClass);
+      unmarshallExchangeBodyFromJson(inputExchange, mapper, requestModelClass);
     }
   }
 
@@ -60,15 +60,5 @@ public class DirectRouteInvoker implements RouteInvoker {
       return connector.get().getRequestModelClass();
     }
     return STRING_CLASS;
-  }
-
-  private void unmarshallToJson(Exchange inputExchange, Class<?> requestModelClass) {
-    String jsonPayload = inputExchange.getMessage().getBody(String.class);
-    try {
-      inputExchange.getMessage().setBody(mapper.readValue(jsonPayload, requestModelClass));
-    } catch (JsonProcessingException e) {
-      throw new SIPFrameworkException(
-          String.format("Cannot convert bad json payload: %s", jsonPayload));
-    }
   }
 }

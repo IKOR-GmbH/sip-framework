@@ -5,6 +5,8 @@ import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.Rou
 import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvoker.CONNECTOR_ID_EXCHANGE_PROPERTY;
 import static org.apache.camel.builder.ExchangeBuilder.anExchange;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ikor.sip.foundation.core.util.SIPExchangeHelper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
@@ -92,5 +94,23 @@ public class TestKitHelper extends SIPExchangeHelper {
    */
   public static boolean isTestKitHeader(String key) {
     return key.equals(TEST_NAME_HEADER) || key.equals(TEST_MODE_HEADER);
+  }
+
+  /**
+   * Checks if header is Test Kit specific header
+   *
+   * @param inputExchange which body is converted from json to pojo
+   * @param mapper for json unmarshalling
+   * @param requestModelClass model of the pojo class
+   */
+  public static void unmarshallExchangeBodyFromJson(
+      Exchange inputExchange, ObjectMapper mapper, Class<?> requestModelClass) {
+    String jsonPayload = inputExchange.getMessage().getBody(String.class);
+    try {
+      inputExchange.getMessage().setBody(mapper.readValue(jsonPayload, requestModelClass));
+    } catch (JsonProcessingException e) {
+      throw new SIPFrameworkException(
+          String.format("Cannot convert bad json payload: %s", jsonPayload));
+    }
   }
 }
