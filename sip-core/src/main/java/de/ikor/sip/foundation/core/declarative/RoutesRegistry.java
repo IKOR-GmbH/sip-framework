@@ -207,18 +207,24 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
       String routeId = route.getRouteId();
       addToEndpointUriMaps(routeId, route.getEndpoint().getEndpointBaseUri());
       for (org.apache.camel.Service service : route.getServices()) {
+
+        // filter duplicated rest servlet endpoints
         if (service instanceof ServletConsumer) {
           continue;
         }
+
         if (service instanceof EndpointAware endpointAware) {
           addToEndpointUriMaps(routeId, endpointAware.getEndpoint().getEndpointBaseUri());
         }
+
         if (service instanceof SendDynamicProcessor dynamicProcessor) {
           addToEndpointUriMaps(routeId, dynamicProcessor.getUri());
         }
+
         if (service instanceof WireTapProcessor wireTapProcessor) {
           addToEndpointUriMaps(routeId, wireTapProcessor.getUri());
         }
+
         if (service instanceof Enricher enricher) {
           String enrichEndpointUri =
               enricher.getExpression() != null
@@ -227,6 +233,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
           addToEndpointUriMaps(routeId, enrichEndpointUri);
           outgoingEndpointIds.put(enrichEndpointUri, enricher);
         }
+
         if (service instanceof PollEnricher pollEnricher) {
           String pollEnrichEndpointUri =
               pollEnricher.getExpression() != null

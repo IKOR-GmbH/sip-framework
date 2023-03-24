@@ -80,17 +80,30 @@ public class ProcessorProxy extends AsyncProcessorSupport {
    * @return true if this is a processor that outputs to Endpoint
    */
   private boolean determineEndpointProcessor() {
-    if (originalProcessor instanceof Enricher || originalProcessor instanceof PollEnricher) {
+    if (originalProcessor instanceof Enricher enricher) {
+      if (enricher.getExpression() != null) {
+        return isNotInMemoryComponent(enricher.getExpression().toString());
+      }
       return true;
     }
+
+    if (originalProcessor instanceof PollEnricher pollEnricher) {
+      if (pollEnricher.getExpression() != null) {
+        return isNotInMemoryComponent(pollEnricher.getExpression().toString());
+      }
+      return true;
+    }
+
     if (originalProcessor instanceof WireTapProcessor wireTapProcessor
         && isNotInMemoryComponent(wireTapProcessor.getUri())) {
       return true;
     }
+
     if (originalProcessor instanceof EndpointAware endpointAware
         && isNotInMemoryComponent(endpointAware.getEndpoint().getEndpointUri())) {
       return true;
     }
+
     return originalProcessor instanceof SendDynamicProcessor;
   }
 
