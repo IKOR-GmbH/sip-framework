@@ -13,9 +13,23 @@
     <groupId>${groupId}</groupId>
     <artifactId>${artifactId}</artifactId>
     <version>${version}</version>
+    <description>SIP Integration adapter</description>
 
     <name>${projectName}</name>
 
+    <url/>
+    <licenses>
+        <license/>
+    </licenses>
+    <scm>
+        <connection/>
+        <developerConnection/>
+        <url/>
+    </scm>
+    <issueManagement>
+        <system/>
+        <url/>
+    </issueManagement>
 
     <dependencies>
 #if (${useLombok} == "y" || ${useLombok} == "Y")
@@ -32,7 +46,6 @@
         <dependency>
             <groupId>wsdl4j</groupId>
             <artifactId>wsdl4j</artifactId>
-            <version>1.6.3</version>
         </dependency>
 #end
     </dependencies>
