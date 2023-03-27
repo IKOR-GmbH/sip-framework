@@ -1,5 +1,8 @@
 package de.ikor.sip.foundation.core.proxies;
 
+import static de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper.determineSpecificEndpointProcessor;
+import static de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper.isNotInMemoryComponent;
+
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import de.ikor.sip.foundation.core.util.CamelHelper;
 import java.util.*;
@@ -8,13 +11,9 @@ import java.util.function.UnaryOperator;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.camel.*;
-import org.apache.camel.processor.Enricher;
-import org.apache.camel.processor.PollEnricher;
 import org.apache.camel.processor.SendDynamicProcessor;
-import org.apache.camel.processor.WireTapProcessor;
 import org.apache.camel.support.AsyncProcessorSupport;
 import org.apache.camel.support.ExchangeHelper;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +21,6 @@ import org.slf4j.LoggerFactory;
 public class ProcessorProxy extends AsyncProcessorSupport {
   private static final Logger logger = LoggerFactory.getLogger(ProcessorProxy.class);
   public static final String TEST_MODE_HEADER = "test-mode";
-
-  public static final String[] NON_OUTGOING_PROCESSOR_PREFIXES = {"seda", "direct", "sipmc"};
 
   private final NamedNode nodeDefinition;
   private final Processor wrappedProcessor;
@@ -80,22 +77,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
    * @return true if this is a processor that outputs to Endpoint
    */
   private boolean determineEndpointProcessor() {
-    if (originalProcessor instanceof Enricher enricher) {
-      if (enricher.getExpression() != null) {
-        return isNotInMemoryComponent(enricher.getExpression().toString());
-      }
-      return true;
-    }
-
-    if (originalProcessor instanceof PollEnricher pollEnricher) {
-      if (pollEnricher.getExpression() != null) {
-        return isNotInMemoryComponent(pollEnricher.getExpression().toString());
-      }
-      return true;
-    }
-
-    if (originalProcessor instanceof WireTapProcessor wireTapProcessor
-        && isNotInMemoryComponent(wireTapProcessor.getUri())) {
+    if (determineSpecificEndpointProcessor(originalProcessor)) {
       return true;
     }
 
@@ -105,10 +87,6 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     }
 
     return originalProcessor instanceof SendDynamicProcessor;
-  }
-
-  private boolean isNotInMemoryComponent(String endpointUri) {
-    return !StringUtils.startsWithAny(endpointUri, NON_OUTGOING_PROCESSOR_PREFIXES);
   }
 
   @Override

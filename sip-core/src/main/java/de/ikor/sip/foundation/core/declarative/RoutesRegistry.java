@@ -1,11 +1,13 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.NON_OUTGOING_PROCESSOR_PREFIXES;
+import static de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper.NON_OUTGOING_PROCESSOR_PREFIXES;
+import static de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper.getSpecificEndpointUri;
 
 import de.ikor.sip.foundation.core.actuator.declarative.model.EndpointInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteInfo;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -46,6 +48,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   private final MultiValuedMap<String, String> endpointsForRouteId = new HashSetValuedHashMap<>();
   private final MultiValuedMap<String, String> routeIdsForEndpoints = new HashSetValuedHashMap<>();
 
+  // Map of outgoing endpoints and their processor ids
   private final Map<String, IdAware> outgoingEndpointIds = new HashMap<>();
 
   public RoutesRegistry(DeclarationsRegistryApi declarationsRegistryApi) {
@@ -150,17 +153,31 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
                     .filter(
                         endpoint ->
                             !StringUtils.startsWithAny(endpoint, NON_OUTGOING_PROCESSOR_PREFIXES))
-                    .map(endpoint -> createEndpointInfo(endpoint, routeInfo.getRouteId()))
+                    .map(
+                        endpoint ->
+                            createEndpointInfo(
+                                endpoint,
+                                routeInfo.getRouteId(),
+                                isInputEndpoint(
+                                    connectorDefinition.getConnectorType(),
+                                    routeInfo.getRouteRole())))
                     .toList())
         .flatMap(Collection::stream)
         .toList();
   }
 
-  private EndpointInfo createEndpointInfo(String endpoint, String routeId) {
+  private boolean isInputEndpoint(ConnectorType type, String role) {
+    return type.equals(ConnectorType.IN)
+        && (role.equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName())
+            || role.equals(RouteRole.EXTERNAL_SOAP_SERVICE_PROXY.getExternalName()));
+  }
+
+  private EndpointInfo createEndpointInfo(String endpoint, String routeId, boolean inputEndpoint) {
     IdAware idAware = outgoingEndpointIds.get(endpoint);
     return EndpointInfo.builder()
         .endpointId(idAware != null ? idAware.getId() : routeId)
         .camelEndpointUri(endpoint)
+        .inputEndpoint(inputEndpoint ? true : null)
         .build();
   }
 
@@ -182,22 +199,19 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
         camelContext.getExtension(ProcessorProxyRegistry.class);
     proxiesRegistry
         .getProxies()
-        .forEach((processorId, processor) -> checkAndAddProcessorId(processor));
+        .values()
+        .forEach(
+            processorProxy -> {
+              if (processorProxy.isEndpointProcessor()) {
+                addProcessorId(processorProxy);
+              }
+            });
   }
 
-  private void checkAndAddProcessorId(ProcessorProxy processor) {
-    if (processor.isEndpointProcessor()) {
-      Processor originalProcessor = processor.getOriginalProcessor();
-      if (originalProcessor instanceof SendProcessor sendProcessor) {
-        outgoingEndpointIds.put(sendProcessor.getEndpoint().getEndpointBaseUri(), sendProcessor);
-      }
-      if (originalProcessor instanceof SendDynamicProcessor dynamicProcessor) {
-        outgoingEndpointIds.put(dynamicProcessor.getUri(), dynamicProcessor);
-      }
-      if (originalProcessor instanceof WireTapProcessor wireTapProcessor) {
-        outgoingEndpointIds.put(wireTapProcessor.getUri(), wireTapProcessor);
-      }
-    }
+  private void addProcessorId(ProcessorProxy processor) {
+    Processor originalProcessor = processor.getOriginalProcessor();
+    Optional<String> endpointUri = getSpecificEndpointUri(originalProcessor);
+    endpointUri.ifPresent(uri -> outgoingEndpointIds.put(uri, (IdAware) originalProcessor));
   }
 
   private void initEndpointsAndRouteIdsMaps(CamelContext camelContext) {
@@ -206,42 +220,49 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     for (Route route : camelContext.getRoutes()) {
       String routeId = route.getRouteId();
       addToEndpointUriMaps(routeId, route.getEndpoint().getEndpointBaseUri());
-      for (org.apache.camel.Service service : route.getServices()) {
+      searchForEndpointsInCamelCode(route.getServices(), routeId, enrichCounter, pollEnrichCounter);
+    }
+  }
 
-        // filter duplicated rest servlet endpoints
-        if (service instanceof ServletConsumer) {
-          continue;
-        }
+  private void searchForEndpointsInCamelCode(
+      List<org.apache.camel.Service> services,
+      String routeId,
+      int enrichCounter,
+      int pollEnrichCounter) {
+    for (org.apache.camel.Service service : services) {
+      // filter duplicated rest servlet endpoint
+      if (service instanceof ServletConsumer) {
+        continue;
+      }
 
-        if (service instanceof EndpointAware endpointAware) {
-          addToEndpointUriMaps(routeId, endpointAware.getEndpoint().getEndpointBaseUri());
-        }
+      if (service instanceof EndpointAware endpointAware) {
+        addToEndpointUriMaps(routeId, endpointAware.getEndpoint().getEndpointBaseUri());
+      }
 
-        if (service instanceof SendDynamicProcessor dynamicProcessor) {
-          addToEndpointUriMaps(routeId, dynamicProcessor.getUri());
-        }
+      if (service instanceof SendDynamicProcessor dynamicProcessor) {
+        addToEndpointUriMaps(routeId, dynamicProcessor.getUri());
+      }
 
-        if (service instanceof WireTapProcessor wireTapProcessor) {
-          addToEndpointUriMaps(routeId, wireTapProcessor.getUri());
-        }
+      if (service instanceof WireTapProcessor wireTapProcessor) {
+        addToEndpointUriMaps(routeId, wireTapProcessor.getUri());
+      }
 
-        if (service instanceof Enricher enricher) {
-          String enrichEndpointUri =
-              enricher.getExpression() != null
-                  ? enricher.getExpression().toString()
-                  : String.format("enrich-%s", enrichCounter++);
-          addToEndpointUriMaps(routeId, enrichEndpointUri);
-          outgoingEndpointIds.put(enrichEndpointUri, enricher);
-        }
+      if (service instanceof Enricher enricher) {
+        String enrichEndpointUri =
+            enricher.getExpression() != null
+                ? enricher.getExpression().toString()
+                : String.format("enrich-%s", enrichCounter++);
+        addToEndpointUriMaps(routeId, enrichEndpointUri);
+        outgoingEndpointIds.put(enrichEndpointUri, enricher);
+      }
 
-        if (service instanceof PollEnricher pollEnricher) {
-          String pollEnrichEndpointUri =
-              pollEnricher.getExpression() != null
-                  ? pollEnricher.getExpression().toString()
-                  : String.format("pollEnrich-%s", pollEnrichCounter++);
-          addToEndpointUriMaps(routeId, pollEnrichEndpointUri);
-          outgoingEndpointIds.put(pollEnrichEndpointUri, pollEnricher);
-        }
+      if (service instanceof PollEnricher pollEnricher) {
+        String pollEnrichEndpointUri =
+            pollEnricher.getExpression() != null
+                ? pollEnricher.getExpression().toString()
+                : String.format("pollEnrich-%s", pollEnrichCounter++);
+        addToEndpointUriMaps(routeId, pollEnrichEndpointUri);
+        outgoingEndpointIds.put(pollEnrichEndpointUri, pollEnricher);
       }
     }
   }
