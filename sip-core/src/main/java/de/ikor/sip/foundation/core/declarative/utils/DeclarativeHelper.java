@@ -38,8 +38,8 @@ public class DeclarativeHelper {
   }
 
   public static String formatConnectorId(
-      ConnectorType type, String scenarioID, String connectorId) {
-    return String.format(CONNECTOR_ID_FORMAT, type.getValue(), scenarioID, connectorId);
+      ConnectorType type, String scenarioID, String connectorGroupID) {
+    return String.format(CONNECTOR_ID_FORMAT, type.getValue(), scenarioID, connectorGroupID);
   }
 
   public static <T> T createMapperInstance(Class<T> clazz) {
