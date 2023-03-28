@@ -109,8 +109,7 @@ public class TestKitHelper extends SIPExchangeHelper {
     try {
       inputExchange.getMessage().setBody(mapper.readValue(jsonPayload, requestModelClass));
     } catch (JsonProcessingException e) {
-      throw new SIPFrameworkException(
-          String.format("Cannot convert bad json payload: %s", jsonPayload));
+      throw new SIPFrameworkException(e);
     }
   }
 }
