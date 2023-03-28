@@ -93,28 +93,22 @@ public class TestCasesConfig {
   }
 
   private void initTestCaseDefinitionEndpoints(TestCaseDefinition definition) {
-    if (definition.getWhenExecute().getConnector() != null) {
-      replaceConnectorIdsWithRouteIds(definition.getWhenExecute());
-    }
-    definition.getWithMocks().forEach(this::setEndpointBasedOnConnectorId);
+    setEndpointBasedOnConnectorId(
+        definition.getWhenExecute(), RouteRole.CONNECTOR_REQUEST_ORCHESTRATION);
+    definition
+        .getWithMocks()
+        .forEach(
+            properties -> setEndpointBasedOnConnectorId(properties, RouteRole.EXTERNAL_ENDPOINT));
+    definition
+        .getThenExpect()
+        .forEach(
+            properties -> setEndpointBasedOnConnectorId(properties, RouteRole.EXTERNAL_ENDPOINT));
   }
 
-  private void replaceConnectorIdsWithRouteIds(EndpointProperties whenExecute) {
-    String connectorId = whenExecute.getConnector();
-    whenExecute.setEndpoint(
-        routesRegistry
-            .get()
-            .getRouteIdByConnectorIdAndRole(
-                connectorId, RouteRole.CONNECTOR_REQUEST_ORCHESTRATION));
-  }
-
-  private void setEndpointBasedOnConnectorId(EndpointProperties properties) {
+  private void setEndpointBasedOnConnectorId(EndpointProperties properties, RouteRole role) {
     if (properties.getConnector() != null) {
       properties.setEndpoint(
-          routesRegistry
-              .get()
-              .getRouteIdByConnectorIdAndRole(
-                  properties.getConnector(), RouteRole.EXTERNAL_ENDPOINT));
+          routesRegistry.get().getRouteIdByConnectorIdAndRole(properties.getConnector(), role));
     }
   }
 
@@ -133,20 +127,13 @@ public class TestCasesConfig {
     }
     validateEndpointAndConnectorFields(testCaseDefinition.getWhenExecute());
     testCaseDefinition.getWithMocks().forEach(this::validateEndpointAndConnectorFields);
-    testCaseDefinition.getThenExpect().forEach(this::validateConnectorField);
+    testCaseDefinition.getThenExpect().forEach(this::validateEndpointAndConnectorFields);
   }
 
   private void validateEndpointAndConnectorFields(EndpointProperties properties) {
     if (properties.getEndpoint() != null && properties.getConnector() != null) {
       throw new SIPFrameworkException(
           "Both endpoint and connector fields are defined in When-execute!");
-    }
-  }
-
-  private void validateConnectorField(EndpointProperties properties) {
-    if (properties.getConnector() != null) {
-      throw new SIPFrameworkException(
-          "Connector field is not allowed out of When-execute definition!");
     }
   }
 
