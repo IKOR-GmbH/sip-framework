@@ -6,6 +6,7 @@ import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -102,5 +103,17 @@ public class DeclarativeHelper {
               clazz.getName()));
     }
     return candidateMethods.get(0);
+  }
+
+  public static Class<?> getClassFromGeneric(Class<?> clazz, Class<?> abstractSuperclass) {
+    return (Class<?>) traverseHierarchyTree(clazz, abstractSuperclass).getActualTypeArguments()[0];
+  }
+
+  private static ParameterizedType traverseHierarchyTree(Class<?> clazz, Class<?> superClass) {
+    if (clazz.getSuperclass().equals(superClass)) {
+      return (ParameterizedType) clazz.getGenericSuperclass();
+    } else {
+      return traverseHierarchyTree(clazz.getSuperclass(), superClass);
+    }
   }
 }
