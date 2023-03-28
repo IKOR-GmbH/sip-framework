@@ -6,18 +6,14 @@ import de.ikor.sip.foundation.core.declarative.DeclarationsRegistryApi;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.soap.declarative.connector.SoapOperationInboundConnectorBase;
+import de.ikor.sip.foundation.soap.utils.SOAPEndpointBuilder;
 import java.util.Collection;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
-import org.apache.camel.component.cxf.common.DataFormat;
 import org.apache.camel.component.cxf.common.message.CxfConstants;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
-import org.apache.camel.model.RouteDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -49,16 +45,14 @@ class SoapServiceTieInRouteBuilder extends RouteBuilder {
   private void configureAndTieCxfEndpoint(
       final Class serviceClass, final Collection<SoapOperationInboundConnectorBase> connectors) {
 
-    Map<String, CxfEndpoint> cxfEndpointBeans =
-        applicationContext.getBeansOfType(CxfEndpoint.class);
     String soapServiceName = serviceClass.getSimpleName();
-    String soapServiceQualifiedName = serviceClass.getName();
 
     final var routeChoices =
-        (cxfEndpointBeans.containsKey(soapServiceName)
-                ? generateCXFBeanEndpoint(
-                    cxfEndpointBeans, soapServiceName, soapServiceQualifiedName)
-                : generateCXFDefaultEndpoint(soapServiceName, soapServiceQualifiedName))
+        from(SOAPEndpointBuilder.generateCXFEndpoint(
+                applicationContext.getBeansOfType(CxfEndpoint.class),
+                soapServiceName,
+                serviceClass.getName(),
+                soapServiceName))
             .routeId(routesRegistry.generateRouteIdForSoapService(soapServiceName))
             .log(LoggingLevel.TRACE, "Received SOAP request for ${header.operationName}")
             .choice();
@@ -74,29 +68,9 @@ class SoapServiceTieInRouteBuilder extends RouteBuilder {
                 .to(connector.getSoapServiceTieInEndpoint()));
     routeChoices
         .otherwise()
-        .throwException(new SIPFrameworkException("Operation is not supported in this adapter"))
+        .throwException(
+            SIPFrameworkException.class,
+            "Operation ${header.operationName} is not supported in this adapter")
         .endChoice();
-  }
-
-  @SneakyThrows
-  RouteDefinition generateCXFBeanEndpoint(
-      Map<String, CxfEndpoint> cxfBeans,
-      String serviceClassName,
-      String serviceClassQualifiedName) {
-    CxfEndpoint cxfEndpoint = cxfBeans.get(serviceClassName);
-    if (cxfEndpoint.getServiceClass() == null)
-      cxfEndpoint.setServiceClass(serviceClassQualifiedName);
-    if (cxfEndpoint.getAddress() == null) cxfEndpoint.setAddress(serviceClassName);
-    // Our route building only works with payload mode
-    cxfEndpoint.setDataFormat(DataFormat.PAYLOAD);
-
-    return from(String.format("cxf:bean:%s", serviceClassName));
-  }
-
-  RouteDefinition generateCXFDefaultEndpoint(String address, String serviceClassName) {
-    return from(
-        StaticEndpointBuilders.cxf(address)
-            .serviceClass(serviceClassName)
-            .dataFormat(DataFormat.PAYLOAD));
   }
 }

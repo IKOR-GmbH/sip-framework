@@ -5,10 +5,11 @@ import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
+import de.ikor.sip.foundation.soap.utils.OutboundSOAPMarshallerDefinition;
+import de.ikor.sip.foundation.soap.utils.SOAPEndpointBuilder;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointProducerBuilder;
-import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
-import org.apache.camel.component.cxf.common.DataFormat;
+import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
 
 /**
@@ -41,17 +42,19 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
 
   @Override
   protected EndpointProducerBuilder defineOutgoingEndpoint() {
-    return StaticEndpointBuilders.cxf(getServiceAddress())
-        .serviceClass(getServiceInterfaceClass().getName())
-        .dataFormat(DataFormat.PAYLOAD)
-        .defaultOperationName(getServiceOperationName());
+
+    return SOAPEndpointBuilder.generateCXFEndpoint(
+        getApplicationContext().getBeansOfType(CxfEndpoint.class),
+        getServiceInterfaceClass().getSimpleName(),
+        getServiceInterfaceClass().getName(),
+        getServiceAddress());
   }
 
   @Override
   protected Optional<MarshallerDefinition> defineRequestMarshalling() {
     return Optional.of(
-        MarshallerDefinition.forDataFormat(
-            new JaxbDataFormat(getJaxbContextPathForRequestModel())));
+        OutboundSOAPMarshallerDefinition.forDataFormatWithOperation(
+            new JaxbDataFormat(getJaxbContextPathForRequestModel()), getServiceOperationName()));
   }
 
   @Override
