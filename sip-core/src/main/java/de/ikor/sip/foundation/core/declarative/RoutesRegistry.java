@@ -158,7 +158,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
                             createEndpointInfo(
                                 endpoint,
                                 routeInfo.getRouteId(),
-                                isInputEndpoint(
+                                isPrimaryEndpoint(
                                     connectorDefinition.getConnectorType(),
                                     routeInfo.getRouteRole())))
                     .toList())
@@ -166,18 +166,27 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
         .toList();
   }
 
-  private boolean isInputEndpoint(ConnectorType type, String role) {
+  private boolean isPrimaryEndpoint(ConnectorType type, String role) {
+    return isInboundPrimaryEndpoint(type, role) || isOutboundPrimaryEndpoint(type, role);
+  }
+
+  private boolean isInboundPrimaryEndpoint(ConnectorType type, String role) {
     return type.equals(ConnectorType.IN)
         && (role.equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName())
             || role.equals(RouteRole.EXTERNAL_SOAP_SERVICE_PROXY.getExternalName()));
   }
 
-  private EndpointInfo createEndpointInfo(String endpoint, String routeId, boolean inputEndpoint) {
+  private boolean isOutboundPrimaryEndpoint(ConnectorType type, String role) {
+    return type.equals(ConnectorType.OUT)
+        && (role.equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName()));
+  }
+
+  private EndpointInfo createEndpointInfo(String endpoint, String routeId, boolean isPrimary) {
     IdAware idAware = outgoingEndpointIds.get(endpoint);
     return EndpointInfo.builder()
         .endpointId(idAware != null ? idAware.getId() : routeId)
         .camelEndpointUri(endpoint)
-        .inputEndpoint(inputEndpoint ? true : null)
+        .primary(isPrimary ? true : null)
         .build();
   }
 

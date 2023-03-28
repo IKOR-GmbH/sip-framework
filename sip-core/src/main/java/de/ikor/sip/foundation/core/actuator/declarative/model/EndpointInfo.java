@@ -17,5 +17,5 @@ public class EndpointInfo {
   private String camelEndpointUri;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Boolean inputEndpoint = null;
+  private Boolean primary = null;
 }
