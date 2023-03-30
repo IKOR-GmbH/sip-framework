@@ -29,7 +29,7 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
 
   private Class<T> serviceClass;
 
-  public SoapOperationOutboundConnectorBase() {
+  protected SoapOperationOutboundConnectorBase() {
     try {
       this.serviceClass =
           (Class<T>)

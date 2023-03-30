@@ -9,6 +9,9 @@ import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 
 public class SOAPEndpointBuilder {
 
+  private SOAPEndpointBuilder() {
+  }
+
   @SneakyThrows
   public static CxfEndpointBuilder generateCXFEndpoint(
       Map<String, CxfEndpoint> cxfBeans,
