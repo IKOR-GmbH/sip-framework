@@ -186,7 +186,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     return EndpointInfo.builder()
         .endpointId(idAware != null ? idAware.getId() : routeId)
         .camelEndpointUri(endpoint)
-        .primary(isPrimary ? true : null)
+        .primary(isPrimary)
         .build();
   }
 
