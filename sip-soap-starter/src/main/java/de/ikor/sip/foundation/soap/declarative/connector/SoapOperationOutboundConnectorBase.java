@@ -53,8 +53,10 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
   @Override
   protected Optional<MarshallerDefinition> defineRequestMarshalling() {
     return Optional.of(
-        OutboundSOAPMarshallerDefinition.forDataFormatWithOperation(
-            new JaxbDataFormat(getJaxbContextPathForRequestModel()), getServiceOperationName()));
+        OutboundSOAPMarshallerDefinition.forDataFormatWithOperationAndAddress(
+            new JaxbDataFormat(getJaxbContextPathForRequestModel()),
+            getServiceOperationName(),
+            getServiceAddress()));
   }
 
   @Override

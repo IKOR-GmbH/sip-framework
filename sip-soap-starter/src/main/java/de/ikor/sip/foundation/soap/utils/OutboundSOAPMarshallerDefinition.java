@@ -7,11 +7,12 @@ import org.apache.camel.component.cxf.common.message.CxfConstants;
 import org.apache.camel.spi.DataFormat;
 
 public interface OutboundSOAPMarshallerDefinition extends MarshallerDefinition {
-  static MarshallerDefinition forDataFormatWithOperation(
-      final DataFormat dataFormat, String operationName) {
-    return routeBuilder ->
-        routeBuilder
+  static MarshallerDefinition forDataFormatWithOperationAndAddress(
+      final DataFormat dataFormat, String operationName, String address) {
+    return route ->
+        route
             .setHeader(CxfConstants.OPERATION_NAME, constant(operationName))
+            .setHeader(CxfConstants.DESTINATION_OVERRIDE_URL, constant(address))
             .marshal(dataFormat);
   }
 }
