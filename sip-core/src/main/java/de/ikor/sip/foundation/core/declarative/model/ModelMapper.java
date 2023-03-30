@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.core.declarative.model;
 
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 
+@SuppressWarnings("unchecked")
 public interface ModelMapper<S, T> {
 
   String MAPPING_METHOD_NAME = "mapToTargetModel";

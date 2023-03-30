@@ -43,7 +43,7 @@ public class DeclarativeHelper {
     return String.format(CONNECTOR_ID_FORMAT, type.getValue(), scenarioID, connectorGroupID);
   }
 
-  public static <T> T createMapperInstance(Class<T> clazz) {
+  public static <T extends ModelMapper> T createMapperInstance(Class<T> clazz) {
     try {
       return Mappers.getMapper(clazz);
     } catch (RuntimeException e) {

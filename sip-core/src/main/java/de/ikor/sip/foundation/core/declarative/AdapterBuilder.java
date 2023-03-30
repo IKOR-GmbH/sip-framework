@@ -62,6 +62,7 @@ public class AdapterBuilder extends RouteBuilder {
     declarationsRegistry.getScenarios().forEach(this::buildScenario);
   }
 
+  @SuppressWarnings("unchecked")
   private void buildScenario(final IntegrationScenarioDefinition scenarioDefinition) {
     inboundConnectors
         .get(scenarioDefinition)
@@ -174,6 +175,7 @@ public class AdapterBuilder extends RouteBuilder {
     requestRouteDefinition.to(StaticEndpointBuilders.direct(externalEndpointRouteId));
   }
 
+  @SuppressWarnings("unchecked")
   private <T extends OptionalIdentifiedDefinition<T>> T resolveConnectorDefinitionType(
       Class<? extends T> type) {
     if (type.equals(RoutesDefinition.class)) {

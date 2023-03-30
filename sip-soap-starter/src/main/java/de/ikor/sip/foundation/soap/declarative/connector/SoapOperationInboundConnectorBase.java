@@ -33,6 +33,7 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
 
   private Class<T> serviceClass;
 
+  @SuppressWarnings("unchecked")
   protected SoapOperationInboundConnectorBase() {
     try {
       this.serviceClass =

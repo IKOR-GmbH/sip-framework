@@ -29,6 +29,7 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
 
   private Class<T> serviceClass;
 
+  @SuppressWarnings("unchecked")
   protected SoapOperationOutboundConnectorBase() {
     try {
       this.serviceClass =
