@@ -122,7 +122,7 @@ class SoapServiceTieInRouteBuilder extends RouteBuilder {
             conn ->
                 log.warn(
                     "SIP WARNING - Inbound SOAP Connector \"{}\" implements an operation \"{}\" that doesn't exist in the Service \"{}\"",
-                    conn.getKey().getId(),
+                    conn.getKey().getClass().getName(),
                     conn.getValue(),
                     serviceInterface.getName()));
 
