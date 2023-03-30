@@ -116,14 +116,14 @@ public class TestCasesConfig {
   }
 
   private void setEndpointBasedOnConnectorId(EndpointProperties properties, RouteRole role) {
-    if (properties.getConnector() != null) {
+    if (properties.getConnectorId() != null) {
       String routeId =
-          routesRegistry.get().getRouteIdByConnectorIdAndRole(properties.getConnector(), role);
+          routesRegistry.get().getRouteIdByConnectorIdAndRole(properties.getConnectorId(), role);
       if (routeId == null) {
         throw new SIPFrameworkException(
-            String.format("There is no connector with id %s", properties.getConnector()));
+            String.format("There is no connector with id %s", properties.getConnectorId()));
       }
-      properties.setEndpoint(routeId);
+      properties.setEndpointId(routeId);
     }
   }
 
@@ -157,7 +157,7 @@ public class TestCasesConfig {
 
   private void validateEndpointAndConnectorFields(
       EndpointProperties properties, String definitionPart) {
-    if (properties.getEndpoint() != null && properties.getConnector() != null) {
+    if (properties.getEndpointId() != null && properties.getConnectorId() != null) {
       throw new SIPFrameworkException(
           String.format("Both endpoint and connector fields are defined in %s!", definitionPart));
     }
@@ -175,7 +175,7 @@ public class TestCasesConfig {
 
   private void validateConnectorType(
       EndpointProperties properties, ConnectorType type, String definitionPart) {
-    String connectorId = properties.getConnector();
+    String connectorId = properties.getConnectorId();
     if (connectorId != null
         && declarationsRegistry
             .flatMap(registry -> registry.getConnectorById(connectorId))

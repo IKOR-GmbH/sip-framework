@@ -9,21 +9,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EndpointProperties {
-  private String endpoint;
+  private String endpointId;
 
-  private String connector;
+  private String connectorId;
 
-  private MessageProperties message = new MessageProperties();
+  private MessageProperties requestMessage = new MessageProperties();
 
   public void setWith(MessageProperties message) {
-    this.setMessage(message);
+    this.setRequestMessage(message);
   }
 
   public void setReturning(MessageProperties message) {
-    this.setMessage(message);
+    this.setRequestMessage(message);
   }
 
   public void setHaving(MessageProperties message) {
-    this.setMessage(message);
+    this.setRequestMessage(message);
   }
 }
