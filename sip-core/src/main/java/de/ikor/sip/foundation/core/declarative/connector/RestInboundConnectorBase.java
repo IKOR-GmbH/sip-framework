@@ -1,18 +1,13 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
-
 import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
-import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
-import java.util.Optional;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.ToDefinition;
 import org.apache.camel.model.rest.RestDefinition;
 import org.apache.camel.model.rest.RestsDefinition;
 import org.apache.camel.model.rest.VerbDefinition;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Base class for defining inbound REST connectors via Camel's {@link RestDefinition} DSL.
@@ -25,16 +20,8 @@ import org.apache.commons.lang3.StringUtils;
  *     domain models of connector and integration scenario
  * @see InboundConnector
  */
-public abstract class RestInboundConnectorBase extends ConnectorBase
+public abstract class RestInboundConnectorBase extends InboundConnectorBase
     implements InboundConnectorDefinition<RestsDefinition> {
-
-  private final InboundConnector inboundConnectorAnnotation =
-      DeclarativeHelper.getAnnotationOrThrow(InboundConnector.class, this);
-
-  private final String connectorId =
-      StringUtils.defaultIfEmpty(
-          inboundConnectorAnnotation.connectorId(),
-          formatConnectorId(getConnectorType(), getScenarioId(), getConnectorGroupId()));
 
   @Override
   public final void defineInboundEndpoints(
@@ -70,42 +57,6 @@ public abstract class RestInboundConnectorBase extends ConnectorBase
 
   @Override
   public final String toScenarioId() {
-    return inboundConnectorAnnotation.integrationScenario();
-  }
-
-  @Override
-  public final String getId() {
-    return connectorId;
-  }
-
-  @Override
-  public final String getConnectorGroupId() {
-    return inboundConnectorAnnotation.connectorGroup();
-  }
-
-  @Override
-  public final ConnectorType getConnectorType() {
-    return InboundConnectorDefinition.super.getConnectorType();
-  }
-
-  @Override
-  public final Class<?> getRequestModelClass() {
-    return inboundConnectorAnnotation.requestModel();
-  }
-
-  @Override
-  public final Optional<Class<?>> getResponseModelClass() {
-    var clazz = inboundConnectorAnnotation.responseModel();
-    return clazz.equals(Void.class) ? Optional.empty() : Optional.of(clazz);
-  }
-
-  @Override
-  public String getPathToDocumentationResource() {
-    return inboundConnectorAnnotation.pathToDocumentationResource();
-  }
-
-  @Override
-  public final String getScenarioId() {
-    return InboundConnectorDefinition.super.getScenarioId();
+    return getIntegrationScenario();
   }
 }

@@ -97,17 +97,11 @@ public class AdapterBuilder extends RouteBuilder {
     final var handoffRouteDefinition =
         from(StaticEndpointBuilders.direct(scenarioHandoffRouteId))
             .routeId(scenarioHandoffRouteId)
-            .process(
-                new CDMValidator(
-                    scenarioDefinition
-                        .getRequestModelClass())) // TODO: move validation to camel-component
+            .process(new CDMValidator(scenarioDefinition.getRequestModelClass()))
             .to(sipMC(scenarioDefinition.getId()));
     scenarioDefinition
         .getResponseModelClass()
-        .ifPresent(
-            model ->
-                handoffRouteDefinition.process(
-                    new CDMValidator(model))); // TODO: move validation to camel-component
+        .ifPresent(model -> handoffRouteDefinition.process(new CDMValidator(model)));
 
     if (inboundConnector.hasResponseFlow()) {
       handoffRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));

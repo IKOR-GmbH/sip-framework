@@ -89,7 +89,7 @@ public class DeclarativeHelper {
     return endpointConsumerBuilder;
   }
 
-  public static Method getMappingMethod(Class clazz) {
+  public static Method getMappingMethod(Class<?> clazz) {
     List<Method> candidateMethods =
         Arrays.stream(clazz.getDeclaredMethods())
             .filter(method -> method.getName().equals(ModelMapper.MAPPING_METHOD_NAME))
