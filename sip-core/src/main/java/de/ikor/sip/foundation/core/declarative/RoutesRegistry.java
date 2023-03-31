@@ -139,8 +139,9 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
         .toList();
   }
 
-  public ConnectorDefinition getConnectorByRouteId(String routeId) {
-    return connectorForRouteIdRegister.get(routeId);
+  public String getConnectorIdByRouteId(String routeId) {
+    ConnectorDefinition connector = connectorForRouteIdRegister.get(routeId);
+    return connector != null ? connector.getId() : null;
   }
 
   public List<EndpointInfo> getExternalEndpointInfosForConnector(
