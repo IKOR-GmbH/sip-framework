@@ -1,55 +1,69 @@
 package de.ikor.sip.foundation.soap.declarative.connector;
 
-import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
+import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
+import de.ikor.sip.foundation.soap.utils.OutboundSOAPMarshallerDefinition;
+import de.ikor.sip.foundation.soap.utils.SOAPEndpointBuilder;
 import java.util.Optional;
-import org.apache.camel.builder.EndpointConsumerBuilder;
-import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
-import org.apache.camel.builder.endpoint.dsl.DirectEndpointBuilderFactory;
+import org.apache.camel.builder.EndpointProducerBuilder;
+import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
 
 /**
- * Base class for SOAP inbound connectors.
+ * Base class for SOAP outbound connectors.
  *
  * <p>This class allows to bind <em>one</em> operation of a SOAP service interface to the
  * integration scenario of the connector.
  *
- * <p>SIP will automatically create a SOAP service for the provided service interface and initiate a
- * route that will invoke this connector only if the specified operation/method is called. It is
- * possible to create multiple connectors that use the same service interface. However, no more than
- * one connector can be specified for the same service and operation pair.
- *
  * <p>The base implementation will bind JAXB marshallers automatically.
  *
- * <p>In standard cases, adapter developers need only to implement {@link
- * #getServiceInterfaceClass()} and {@link #getServiceOperationName()}.
+ * <p>In standard cases, adapter developers need only to implement {@link #getServiceAddress()} and
+ * {@link #getServiceOperationName()} optionally {@link #getServiceInterfaceClass()}
  *
  * @param <T> Service interface type
  */
-public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboundConnectorBase {
+public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutboundConnectorBase {
 
   private Class<T> serviceClass;
 
   @SuppressWarnings("unchecked")
-  protected SoapOperationInboundConnectorBase() {
+  protected SoapOperationOutboundConnectorBase() {
     try {
       this.serviceClass =
           (Class<T>)
               DeclarativeHelper.getClassFromGeneric(
-                  getClass(), SoapOperationInboundConnectorBase.class);
+                  getClass(), SoapOperationOutboundConnectorBase.class);
     } catch (Exception e) {
       this.serviceClass = null;
     }
   }
 
   @Override
-  protected Optional<UnmarshallerDefinition> defineRequestUnmarshalling() {
+  protected EndpointProducerBuilder defineOutgoingEndpoint() {
+
+    return SOAPEndpointBuilder.generateCXFEndpoint(
+        getApplicationContext().getBeansOfType(CxfEndpoint.class),
+        getServiceInterfaceClass().getSimpleName(),
+        getServiceInterfaceClass().getName(),
+        getServiceAddress());
+  }
+
+  @Override
+  protected Optional<MarshallerDefinition> defineRequestMarshalling() {
     return Optional.of(
-        UnmarshallerDefinition.forDataFormat(
-            new JaxbDataFormat(getJaxbContextPathForRequestModel())));
+        OutboundSOAPMarshallerDefinition.forDataFormatWithOperationAndAddress(
+            new JaxbDataFormat(getJaxbContextPathForRequestModel()),
+            getServiceOperationName(),
+            getServiceAddress()));
+  }
+
+  @Override
+  protected Optional<UnmarshallerDefinition> defineResponseUnmarshalling() {
+    return getJaxbContextPathForResponseModel()
+        .map(contextPath -> UnmarshallerDefinition.forDataFormat(new JaxbDataFormat(contextPath)));
   }
 
   /**
@@ -61,12 +75,6 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
     return getRequestModelClass().getPackageName();
   }
 
-  @Override
-  protected Optional<MarshallerDefinition> defineResponseMarshalling() {
-    return getJaxbContextPathForResponseModel()
-        .map(contextPath -> MarshallerDefinition.forDataFormat(new JaxbDataFormat(contextPath)));
-  }
-
   /**
    * Returns the JAXB context path for the response model.
    *
@@ -74,26 +82,6 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
    */
   protected Optional<String> getJaxbContextPathForResponseModel() {
     return getResponseModelClass().map(Class::getPackageName);
-  }
-
-  @Override
-  protected final EndpointConsumerBuilder defineInitiatingEndpoint() {
-    return getSoapServiceTieInEndpoint();
-  }
-
-  /**
-   * Returns the endpoint used for this operation of the SOAP service
-   *
-   * @return
-   */
-  public final DirectEndpointBuilderFactory.DirectEndpointBuilder getSoapServiceTieInEndpoint() {
-    return StaticEndpointBuilders.direct(buildQueueName());
-  }
-
-  private String buildQueueName() {
-    return String.format(
-        "sip-soap-service-connector-%s-%s",
-        getServiceInterfaceClass().getSimpleName(), getServiceOperationName());
   }
 
   /**
@@ -119,4 +107,6 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
    * @return Service operation name
    */
   public abstract String getServiceOperationName();
+
+  public abstract String getServiceAddress();
 }

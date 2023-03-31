@@ -62,6 +62,7 @@ public class AdapterBuilder extends RouteBuilder {
     declarationsRegistry.getScenarios().forEach(this::buildScenario);
   }
 
+  @SuppressWarnings("unchecked")
   private void buildScenario(final IntegrationScenarioDefinition scenarioDefinition) {
     inboundConnectors
         .get(scenarioDefinition)
@@ -97,17 +98,11 @@ public class AdapterBuilder extends RouteBuilder {
     final var handoffRouteDefinition =
         from(StaticEndpointBuilders.direct(scenarioHandoffRouteId))
             .routeId(scenarioHandoffRouteId)
-            .process(
-                new CDMValidator(
-                    scenarioDefinition
-                        .getRequestModelClass())) // TODO: move validation to camel-component
+            .process(new CDMValidator(scenarioDefinition.getRequestModelClass()))
             .to(sipMC(scenarioDefinition.getId()));
     scenarioDefinition
         .getResponseModelClass()
-        .ifPresent(
-            model ->
-                handoffRouteDefinition.process(
-                    new CDMValidator(model))); // TODO: move validation to camel-component
+        .ifPresent(model -> handoffRouteDefinition.process(new CDMValidator(model)));
 
     if (inboundConnector.hasResponseFlow()) {
       handoffRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
@@ -180,6 +175,7 @@ public class AdapterBuilder extends RouteBuilder {
     requestRouteDefinition.to(StaticEndpointBuilders.direct(externalEndpointRouteId));
   }
 
+  @SuppressWarnings("unchecked")
   private <T extends OptionalIdentifiedDefinition<T>> T resolveConnectorDefinitionType(
       Class<? extends T> type) {
     if (type.equals(RoutesDefinition.class)) {

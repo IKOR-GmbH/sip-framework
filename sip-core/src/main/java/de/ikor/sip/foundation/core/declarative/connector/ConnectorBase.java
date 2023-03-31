@@ -64,6 +64,7 @@ abstract non-sealed class ConnectorBase
     return orchestrator;
   }
 
+  @SuppressWarnings("unchecked")
   private Optional<RequestMappingRouteTransformer<Object, Object>> getRequestMapper() {
     final var annotation =
         DeclarativeHelper.getAnnotationIfPresent(UseRequestModelMapper.class, this);
@@ -79,6 +80,7 @@ abstract non-sealed class ConnectorBase
     return Optional.empty();
   }
 
+  @SuppressWarnings("unchecked")
   private Optional<ResponseMappingRouteTransformer<Object, Object>> getResponseMapper() {
     final var annotation =
         DeclarativeHelper.getAnnotationIfPresent(UseResponseModelMapper.class, this);

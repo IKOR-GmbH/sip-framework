@@ -2,6 +2,8 @@ package de.ikor.sip.foundation.core.actuator.declarative;
 
 import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpointInfoTransformer.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.DeclarativeStructureInfo;
@@ -26,14 +28,26 @@ public class DeclarativeDefinitionEndpoint {
   private final DeclarationsRegistry declarationsRegistry;
   private final RoutesRegistry routesRegistry;
 
+  private final JsonSchemaGenerator schemaGen;
+
   private final List<ConnectorGroupInfo> connectorGroups = new ArrayList<>();
   private final List<IntegrationScenarioInfo> scenarios = new ArrayList<>();
   private final List<ConnectorInfo> connectors = new ArrayList<>();
 
+  /**
+   * Constructor for {@link DeclarativeDefinitionEndpoint}
+   *
+   * @param declarationsRegistry {@link DeclarationsRegistry}
+   * @param routesRegistry {@link RoutesRegistry}
+   * @param mapper {@link ObjectMapper}
+   */
   public DeclarativeDefinitionEndpoint(
-      DeclarationsRegistry declarationsRegistry, RoutesRegistry routesRegistry) {
+      DeclarationsRegistry declarationsRegistry,
+      RoutesRegistry routesRegistry,
+      ObjectMapper mapper) {
     this.declarationsRegistry = declarationsRegistry;
     this.routesRegistry = routesRegistry;
+    this.schemaGen = new JsonSchemaGenerator(mapper);
   }
 
   @EventListener(ApplicationReadyEvent.class)
@@ -77,17 +91,13 @@ public class DeclarativeDefinitionEndpoint {
         .getConnectors()
         .forEach(
             connector ->
-                connectors.add(
-                    createAndAddConnectorInfo(
-                        connector,
-                        routesRegistry.getRoutesInfo(connector),
-                        routesRegistry.getExternalEndpointsForConnector(connector))));
+                connectors.add(createAndAddConnectorInfo(connector, routesRegistry, schemaGen)));
   }
 
   private void initializeIntegrationScenarioInfos() {
     declarationsRegistry
         .getScenarios()
-        .forEach(scenario -> scenarios.add(createIntegrationScenarioInfo(scenario)));
+        .forEach(scenario -> scenarios.add(createIntegrationScenarioInfo(scenario, schemaGen)));
   }
 
   private void initializeConnectorGroupInfos() {
