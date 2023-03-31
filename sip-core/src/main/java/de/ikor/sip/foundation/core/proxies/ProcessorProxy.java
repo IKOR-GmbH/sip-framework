@@ -1,5 +1,8 @@
 package de.ikor.sip.foundation.core.proxies;
 
+import static de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper.determineSpecificEndpointProcessor;
+import static de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper.isNotInMemoryComponent;
+
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import de.ikor.sip.foundation.core.util.CamelHelper;
 import java.util.*;
@@ -11,7 +14,6 @@ import org.apache.camel.*;
 import org.apache.camel.processor.SendDynamicProcessor;
 import org.apache.camel.support.AsyncProcessorSupport;
 import org.apache.camel.support.ExchangeHelper;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,12 +22,10 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   private static final Logger logger = LoggerFactory.getLogger(ProcessorProxy.class);
   public static final String TEST_MODE_HEADER = "test-mode";
 
-  private static final String[] NON_OUTGOING_PROCESSOR_PREFIXES = {"seda", "direct", "sipmc"};
-
   private final NamedNode nodeDefinition;
   private final Processor wrappedProcessor;
   // Processor can already be wrapped by Camel so we unwrap it and store it here
-  private final Processor originalProcessor;
+  @Getter private final Processor originalProcessor;
   private final List<ProxyExtension> extensions;
   private Function<Exchange, Exchange> mockFunction;
   @Getter private final boolean endpointProcessor;
@@ -77,13 +77,15 @@ public class ProcessorProxy extends AsyncProcessorSupport {
    * @return true if this is a processor that outputs to Endpoint
    */
   private boolean determineEndpointProcessor() {
-    if (originalProcessor instanceof EndpointAware endpointAware) {
-      Endpoint destinationEndpoint = endpointAware.getEndpoint();
-      if (!StringUtils.startsWithAny(
-          destinationEndpoint.getEndpointUri(), NON_OUTGOING_PROCESSOR_PREFIXES)) {
-        return true;
-      }
+    if (determineSpecificEndpointProcessor(originalProcessor)) {
+      return true;
     }
+
+    if (originalProcessor instanceof EndpointAware endpointAware
+        && isNotInMemoryComponent(endpointAware.getEndpoint().getEndpointUri())) {
+      return true;
+    }
+
     return originalProcessor instanceof SendDynamicProcessor;
   }
 

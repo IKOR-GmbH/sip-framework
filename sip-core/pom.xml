@@ -63,6 +63,11 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-endpointdsl</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-servlet</artifactId>
+        </dependency>
+
         <!-- Camel Integration -->
         <dependency>
             <groupId>org.apache.camel</groupId>
@@ -134,6 +139,10 @@
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jsonSchema</artifactId>
         </dependency>
 
         <!-- Test dependencies-->
