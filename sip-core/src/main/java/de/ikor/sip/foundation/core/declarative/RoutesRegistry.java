@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import static de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper.NON_OUTGOING_PROCESSOR_PREFIXES;
 import static de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper.getSpecificEndpointUri;
 
 import de.ikor.sip.foundation.core.actuator.declarative.model.EndpointInfo;
@@ -10,6 +9,7 @@ import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
+import de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +29,6 @@ import org.apache.camel.spi.IdAware;
 import org.apache.camel.support.SimpleEventNotifierSupport;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -150,9 +149,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
                 endpointsForRouteId.get(routeInfo.getRouteId()).stream()
                     // filter out all of sip framework internal endpoints
                     .filter(endpoint -> !endpoint.contains(SIP_CONNECTOR_PREFIX))
-                    .filter(
-                        endpoint ->
-                            !StringUtils.startsWithAny(endpoint, NON_OUTGOING_PROCESSOR_PREFIXES))
+                    .filter(SpecificCamelProcessorsHelper::isNotInMemoryComponent)
                     .map(
                         endpoint ->
                             createEndpointInfo(

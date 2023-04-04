@@ -59,15 +59,13 @@ public class DeclarativeEndpointInfoTransformer {
    */
   public static IntegrationScenarioInfo createIntegrationScenarioInfo(
       IntegrationScenarioDefinition scenario, JsonSchemaGenerator schemaGen) {
+    Class<?> responseModelClass = scenario.getResponseModelClass().orElse(null);
     return IntegrationScenarioInfo.builder()
         .scenarioId(scenario.getId())
         .requestModelClass(scenario.getRequestModelClass().getName())
         .requestJsonForm(createJsonSchema(schemaGen, scenario.getRequestModelClass()))
         .responseModelClass(scenario.getResponseModelClass().map(Class::getName).orElse(null))
-        .responseJsonForm(
-            scenario.getResponseModelClass().isPresent()
-                ? createJsonSchema(schemaGen, scenario.getResponseModelClass().get())
-                : null)
+        .responseJsonForm(createJsonSchema(schemaGen, responseModelClass))
         .scenarioDescription(
             readDocumentation(
                 INTEGRATION_SCENARIO_DEFAULT_DOCS_PATH,
@@ -84,6 +82,7 @@ public class DeclarativeEndpointInfoTransformer {
    */
   public static ConnectorInfo createAndAddConnectorInfo(
       ConnectorDefinition connector, RoutesRegistry routesRegistry, JsonSchemaGenerator schemaGen) {
+    Class<?> responseModelClass = connector.getResponseModelClass().orElse(null);
     return ConnectorInfo.builder()
         .connectorId(connector.getId())
         .connectorType(connector.getConnectorType())
@@ -99,10 +98,7 @@ public class DeclarativeEndpointInfoTransformer {
         .requestModelClass(connector.getRequestModelClass().getName())
         .requestJsonForm(createJsonSchema(schemaGen, connector.getRequestModelClass()))
         .responseModelClass(connector.getResponseModelClass().map(Class::getName).orElse(null))
-        .responseJsonForm(
-            connector.getResponseModelClass().isPresent()
-                ? createJsonSchema(schemaGen, connector.getResponseModelClass().get())
-                : null)
+        .responseJsonForm(createJsonSchema(schemaGen, responseModelClass))
         .build();
   }
 
@@ -122,6 +118,9 @@ public class DeclarativeEndpointInfoTransformer {
   }
 
   private static JsonSchema createJsonSchema(JsonSchemaGenerator schemaGen, Class<?> classModel) {
+    if (classModel == null) {
+      return null;
+    }
     try {
       return schemaGen.generateSchema(classModel);
     } catch (JsonMappingException e) {

@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 @UtilityClass
 public class SpecificCamelProcessorsHelper {
 
-  public static final String[] NON_OUTGOING_PROCESSOR_PREFIXES = {"seda", "direct", "sipmc"};
+  private static final String[] NON_OUTGOING_PROCESSOR_PREFIXES = {"seda", "direct", "sipmc"};
 
   public static boolean determineSpecificEndpointProcessor(Processor originalProcessor) {
     if (originalProcessor instanceof Enricher enricher) {
@@ -28,12 +28,8 @@ public class SpecificCamelProcessorsHelper {
       return true;
     }
 
-    if (originalProcessor instanceof WireTapProcessor wireTapProcessor
-        && isNotInMemoryComponent(wireTapProcessor.getUri())) {
-      return true;
-    }
-
-    return false;
+    return originalProcessor instanceof WireTapProcessor wireTapProcessor
+        && isNotInMemoryComponent(wireTapProcessor.getUri());
   }
 
   public static boolean isNotInMemoryComponent(String endpointUri) {

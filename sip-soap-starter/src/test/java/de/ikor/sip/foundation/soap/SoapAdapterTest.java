@@ -20,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
     webEnvironment = WebEnvironment.RANDOM_PORT)
 @DisableJmx(false)
 @MockEndpoints("log:message*")
-public class SoapAdapterTest {
+class SoapAdapterTest {
 
   @Autowired private FluentProducerTemplate template;
 
