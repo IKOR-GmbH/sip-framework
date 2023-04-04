@@ -7,8 +7,6 @@ import com.example.customerservice.GetCustomersByNameResponse;
 import org.apache.camel.Exchange;
 import org.apache.camel.FluentProducerTemplate;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
-import org.apache.camel.test.spring.junit5.DisableJmx;
-import org.apache.camel.test.spring.junit5.MockEndpoints;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,8 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 @SpringBootTest(
     classes = {SOAPAdapter.class},
     webEnvironment = WebEnvironment.RANDOM_PORT)
-@DisableJmx(false)
-@MockEndpoints("log:message*")
 class SoapAdapterTest {
 
   @Autowired private FluentProducerTemplate template;

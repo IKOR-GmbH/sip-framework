@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
+import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -30,6 +31,15 @@ import org.springframework.core.env.Environment;
 @SIPIntegrationAdapter
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))
 public class SOAPAdapter {
+
+  private static final String SOAP_ADDRESS = "customAddress";
+
+  @Bean("CustomerService")
+  public CxfEndpoint createCustomerServiceEndpoint() throws ClassNotFoundException {
+    CxfEndpoint serviceEndpoint = new CxfEndpoint();
+    serviceEndpoint.setAddress(SOAP_ADDRESS);
+    return serviceEndpoint;
+  }
 
   @IntegrationScenario(
       scenarioId = GetCustomerByNameFrontEnd.ID,
@@ -83,8 +93,8 @@ public class SOAPAdapter {
     @Override
     public String getServiceAddress() {
       return String.format(
-          "http://localhost:%s/soap-ws/CustomerService",
-          environment.getProperty("local.server.port"));
+          "http://localhost:%s/soap-ws/%s",
+          environment.getProperty("local.server.port"), SOAP_ADDRESS);
     }
   }
 
