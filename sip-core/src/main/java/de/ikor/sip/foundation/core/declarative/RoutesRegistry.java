@@ -50,6 +50,12 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   // Map of outgoing endpoints and their processor ids
   private final Map<String, IdAware> outgoingEndpointIds = new HashMap<>();
 
+  // Counter for creating unified endpoint uri for enrich processor which have no expression
+  private int enrichCounter = 1;
+
+  // Counter for creating unified endpoint uri for pollEnrich processor which have no expression
+  private int pollEnrichCounter = 1;
+
   public RoutesRegistry(DeclarationsRegistryApi declarationsRegistryApi) {
     this.declarationsRegistryApi = declarationsRegistryApi;
   }
@@ -221,20 +227,15 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   }
 
   private void initEndpointsAndRouteIdsMaps(CamelContext camelContext) {
-    int enrichCounter = 1;
-    int pollEnrichCounter = 1;
     for (Route route : camelContext.getRoutes()) {
       String routeId = route.getRouteId();
       addToEndpointUriMaps(routeId, route.getEndpoint().getEndpointBaseUri());
-      searchForEndpointsInCamelCode(route.getServices(), routeId, enrichCounter, pollEnrichCounter);
+      searchForEndpointsInCamelCode(route.getServices(), routeId);
     }
   }
 
   private void searchForEndpointsInCamelCode(
-      List<org.apache.camel.Service> services,
-      String routeId,
-      int enrichCounter,
-      int pollEnrichCounter) {
+      List<org.apache.camel.Service> services, String routeId) {
     for (org.apache.camel.Service service : services) {
       // filter duplicated rest servlet endpoint
       if (service instanceof ServletConsumer) {
@@ -255,18 +256,14 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
 
       if (service instanceof Enricher enricher) {
         String enrichEndpointUri =
-            enricher.getExpression() != null
-                ? enricher.getExpression().toString()
-                : String.format("enrich-%s", enrichCounter++);
+            getEnrichExpressionUri(enricher.getExpression(), "enrich", enrichCounter++);
         addToEndpointUriMaps(routeId, enrichEndpointUri);
         outgoingEndpointIds.put(enrichEndpointUri, enricher);
       }
 
       if (service instanceof PollEnricher pollEnricher) {
         String pollEnrichEndpointUri =
-            pollEnricher.getExpression() != null
-                ? pollEnricher.getExpression().toString()
-                : String.format("pollEnrich-%s", pollEnrichCounter++);
+            getEnrichExpressionUri(pollEnricher.getExpression(), "pollEnrich", pollEnrichCounter++);
         addToEndpointUriMaps(routeId, pollEnrichEndpointUri);
         outgoingEndpointIds.put(pollEnrichEndpointUri, pollEnricher);
       }
@@ -276,5 +273,11 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   private void addToEndpointUriMaps(String routeId, String endpointUri) {
     endpointsForRouteId.put(routeId, endpointUri);
     routeIdsForEndpoints.put(endpointUri, routeId);
+  }
+
+  private String getEnrichExpressionUri(Expression expression, String processorName, int counter) {
+    return expression != null
+        ? expression.toString()
+        : String.format("%s-%s", processorName, counter);
   }
 }
