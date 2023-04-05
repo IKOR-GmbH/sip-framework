@@ -5,6 +5,7 @@ import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
@@ -48,12 +49,26 @@ public class DeclarativeHelper {
       return Mappers.getMapper(clazz);
     } catch (RuntimeException e) {
       // swallow the exception, it's not a mapstruct mapper
-      return createInstance(clazz);
+      try {
+        return createInstance(clazz);
+      } catch (NoSuchMethodException ex) {
+        throw new SIPFrameworkInitializationException(
+            String.format(
+                "Mapper %s needs to have a no-arg constructor, please define one.",
+                clazz.getName()));
+      } catch (InvocationTargetException
+          | InstantiationException
+          | IllegalAccessException exception) {
+        throw new SIPFrameworkInitializationException(
+            String.format("SIP couldn't create a Mapper %s.", clazz.getName()), exception);
+      }
     }
   }
 
   @SneakyThrows
-  private static <T> T createInstance(Class<T> clazz, Object... parameters) {
+  private static <T> T createInstance(Class<T> clazz, Object... parameters)
+      throws NoSuchMethodException, InvocationTargetException, InstantiationException,
+          IllegalAccessException {
     Class<?>[] params = Arrays.stream(parameters).map(Object::getClass).toArray(Class[]::new);
     return clazz.getConstructor(params).newInstance(parameters);
   }

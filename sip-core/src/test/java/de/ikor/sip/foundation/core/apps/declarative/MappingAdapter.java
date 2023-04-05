@@ -1,13 +1,13 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
-import de.ikor.sip.foundation.core.apps.declarative.mapping.BackendTypes.BackendResourceRequest;
-import de.ikor.sip.foundation.core.apps.declarative.mapping.CommonDomainTypes.ResourceRequest;
-import de.ikor.sip.foundation.core.apps.declarative.mapping.CommonDomainTypes.ResourceResponse;
-import de.ikor.sip.foundation.core.apps.declarative.mapping.FrontEndTypes.FrontEndSystemRequestMapper;
-import de.ikor.sip.foundation.core.apps.declarative.mapping.FrontEndTypes.FrontEndSystemResponseMapper;
-import de.ikor.sip.foundation.core.apps.declarative.mapping.FrontEndTypes.UserRequest;
-import de.ikor.sip.foundation.core.apps.declarative.mapping.FrontEndTypes.UserResponse;
+import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.BackendTypes.BackendResourceRequest;
+import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.CommonDomainTypes.ResourceRequest;
+import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.CommonDomainTypes.ResourceResponse;
+import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.FrontEndSystemResponseMapper;
+import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.FrontEndTypes.FrontEndSystemRequestMapper;
+import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.FrontEndTypes.UserRequest;
+import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.FrontEndTypes.UserResponse;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
