@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import static de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper.getSpecificEndpointUri;
+import static de.ikor.sip.foundation.core.util.CamelProcessorsHelper.getEndpointUri;
 
 import de.ikor.sip.foundation.core.actuator.declarative.model.EndpointInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
@@ -9,7 +9,7 @@ import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
-import de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper;
+import de.ikor.sip.foundation.core.util.CamelProcessorsHelper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -155,7 +155,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
                 endpointsForRouteId.get(routeInfo.getRouteId()).stream()
                     // filter out all of sip framework internal endpoints
                     .filter(endpoint -> !endpoint.contains(SIP_CONNECTOR_PREFIX))
-                    .filter(SpecificCamelProcessorsHelper::isNotInMemoryComponent)
+                    .filter(CamelProcessorsHelper::isNotInMemoryComponent)
                     .map(
                         endpoint ->
                             createEndpointInfo(
@@ -222,7 +222,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
 
   private void addProcessorId(ProcessorProxy processor) {
     Processor originalProcessor = processor.getOriginalProcessor();
-    Optional<String> endpointUri = getSpecificEndpointUri(originalProcessor);
+    Optional<String> endpointUri = getEndpointUri(originalProcessor);
     endpointUri.ifPresent(uri -> outgoingEndpointIds.put(uri, (IdAware) originalProcessor));
   }
 

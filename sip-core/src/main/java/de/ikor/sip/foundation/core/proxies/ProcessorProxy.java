@@ -1,17 +1,15 @@
 package de.ikor.sip.foundation.core.proxies;
 
-import static de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper.determineSpecificEndpointProcessor;
-import static de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper.isNotInMemoryComponent;
 
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import de.ikor.sip.foundation.core.util.CamelHelper;
+import de.ikor.sip.foundation.core.util.CamelProcessorsHelper;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.camel.*;
-import org.apache.camel.processor.SendDynamicProcessor;
 import org.apache.camel.support.AsyncProcessorSupport;
 import org.apache.camel.support.ExchangeHelper;
 import org.slf4j.Logger;
@@ -77,16 +75,7 @@ public class ProcessorProxy extends AsyncProcessorSupport {
    * @return true if this is a processor that outputs to Endpoint
    */
   private boolean determineEndpointProcessor() {
-    if (determineSpecificEndpointProcessor(originalProcessor)) {
-      return true;
-    }
-
-    if (originalProcessor instanceof EndpointAware endpointAware
-        && isNotInMemoryComponent(endpointAware.getEndpoint().getEndpointUri())) {
-      return true;
-    }
-
-    return originalProcessor instanceof SendDynamicProcessor;
+    return CamelProcessorsHelper.isEndpointProcessor(originalProcessor);
   }
 
   @Override

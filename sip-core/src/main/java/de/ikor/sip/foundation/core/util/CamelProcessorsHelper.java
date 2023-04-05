@@ -9,11 +9,11 @@ import org.apache.commons.lang3.StringUtils;
 
 /** Utility class to help working with specific Camel's processors. */
 @UtilityClass
-public class SpecificCamelProcessorsHelper {
+public class CamelProcessorsHelper {
 
   private static final String[] NON_OUTGOING_PROCESSOR_PREFIXES = {"seda", "direct", "sipmc"};
 
-  public static boolean determineSpecificEndpointProcessor(Processor originalProcessor) {
+  public static boolean isEndpointProcessor(Processor originalProcessor) {
     if (originalProcessor instanceof Enricher enricher) {
       if (enricher.getExpression() != null) {
         return isNotInMemoryComponent(enricher.getExpression().toString());
@@ -28,15 +28,23 @@ public class SpecificCamelProcessorsHelper {
       return true;
     }
 
-    return originalProcessor instanceof WireTapProcessor wireTapProcessor
-        && isNotInMemoryComponent(wireTapProcessor.getUri());
+    if (originalProcessor instanceof WireTapProcessor wireTapProcessor) {
+      return isNotInMemoryComponent(wireTapProcessor.getUri());
+    }
+
+    if (originalProcessor instanceof EndpointAware endpointAware
+        && isNotInMemoryComponent(endpointAware.getEndpoint().getEndpointUri())) {
+      return true;
+    }
+
+    return originalProcessor instanceof SendDynamicProcessor;
   }
 
   public static boolean isNotInMemoryComponent(String endpointUri) {
     return !StringUtils.startsWithAny(endpointUri, NON_OUTGOING_PROCESSOR_PREFIXES);
   }
 
-  public static Optional<String> getSpecificEndpointUri(Processor processor) {
+  public static Optional<String> getEndpointUri(Processor processor) {
     if (processor instanceof EndpointAware endpointAware) {
       return Optional.of(endpointAware.getEndpoint().getEndpointBaseUri());
     }
