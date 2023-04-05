@@ -22,7 +22,7 @@ class YamlPropertySourceFactoryTest {
   @Test
   void WHEN_createPropertySource_WITH_validResource_THEN_propertySourceReturned() throws Exception {
     // arrange
-    Resource resource = new ClassPathResource("test-factory.yaml");
+    Resource resource = new ClassPathResource("test-yaml-property-source-factory.yaml");
     EncodedResource encodedResource = new EncodedResource(resource);
 
     // act

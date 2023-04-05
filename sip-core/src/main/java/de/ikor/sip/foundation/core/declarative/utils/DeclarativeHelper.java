@@ -6,6 +6,7 @@ import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class DeclarativeHelper {
     return String.format(CONNECTOR_ID_FORMAT, type.getValue(), scenarioID, connectorGroupID);
   }
 
-  public static <T> T createMapperInstance(Class<T> clazz) {
+  public static <T extends ModelMapper> T createMapperInstance(Class<T> clazz) {
     try {
       return Mappers.getMapper(clazz);
     } catch (RuntimeException e) {
@@ -88,7 +89,7 @@ public class DeclarativeHelper {
     return endpointConsumerBuilder;
   }
 
-  public static Method getMappingMethod(Class clazz) {
+  public static Method getMappingMethod(Class<?> clazz) {
     List<Method> candidateMethods =
         Arrays.stream(clazz.getDeclaredMethods())
             .filter(method -> method.getName().equals(ModelMapper.MAPPING_METHOD_NAME))
@@ -102,5 +103,17 @@ public class DeclarativeHelper {
               clazz.getName()));
     }
     return candidateMethods.get(0);
+  }
+
+  public static Class<?> getClassFromGeneric(Class<?> clazz, Class<?> abstractSuperclass) {
+    return (Class<?>) traverseHierarchyTree(clazz, abstractSuperclass).getActualTypeArguments()[0];
+  }
+
+  private static ParameterizedType traverseHierarchyTree(Class<?> clazz, Class<?> superClass) {
+    if (clazz.getSuperclass().equals(superClass)) {
+      return (ParameterizedType) clazz.getGenericSuperclass();
+    } else {
+      return traverseHierarchyTree(clazz.getSuperclass(), superClass);
+    }
   }
 }

@@ -3,6 +3,8 @@ package de.ikor.sip.foundation.soap.declarative.connector;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
+import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
@@ -28,6 +30,20 @@ import org.apache.camel.converter.jaxb.JaxbDataFormat;
  * @param <T> Service interface type
  */
 public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboundConnectorBase {
+
+  private Class<T> serviceClass;
+
+  @SuppressWarnings("unchecked")
+  protected SoapOperationInboundConnectorBase() {
+    try {
+      this.serviceClass =
+          (Class<T>)
+              DeclarativeHelper.getClassFromGeneric(
+                  getClass(), SoapOperationInboundConnectorBase.class);
+    } catch (Exception e) {
+      this.serviceClass = null;
+    }
+  }
 
   @Override
   protected Optional<UnmarshallerDefinition> defineRequestUnmarshalling() {
@@ -87,7 +103,15 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
    *
    * @return Service interface class
    */
-  public abstract Class<T> getServiceInterfaceClass();
+  public Class<T> getServiceInterfaceClass() {
+    if (serviceClass == null) {
+      throw new SIPFrameworkException(
+          String.format(
+              "SIP Framework can't infer Service class of %s SOAP Connector. Please @Override getServiceInterfaceClass() method.",
+              getClass().getName()));
+    }
+    return serviceClass;
+  }
 
   /**
    * Returns the name of the operation that should be bound to the connector/integration scenario

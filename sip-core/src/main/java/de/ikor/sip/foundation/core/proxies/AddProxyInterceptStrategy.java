@@ -21,7 +21,7 @@ public class AddProxyInterceptStrategy implements InterceptStrategy {
       CamelContext context, NamedNode definition, Processor target, Processor nextTarget)
       throws Exception {
     String processorId = definition.getId();
-    log.info("sip.core.proxy.register.info_{}", processorId);
+    log.debug("sip.core.proxy.register.info_{}", processorId);
 
     ProcessorProxy processorProxy = new ProcessorProxy(definition, target, extensions);
     proxyRegistry.register(processorId, processorProxy);

@@ -1,2 +1,4 @@
 cxf:
-  path: /soap-ws
+  servlet:
+    enabled: true
+  path: /soap-ws/

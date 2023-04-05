@@ -17,12 +17,9 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Value;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Getter
-@Slf4j
 @Service
 public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
@@ -52,6 +49,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     checkForDuplicateConnectors();
   }
 
+  @SuppressWarnings("unchecked")
   private Map<MapperPair, ModelMapper<Object, Object>> checkAndInitializeGlobalModelMappers(
       final List<ModelMapper<?, ?>> mappers) {
     final Map<MapperPair, ModelMapper<Object, Object>> modelMappers = new HashMap<>(mappers.size());
@@ -205,10 +203,6 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .toList();
   }
 
-  @Value
   @Builder
-  private static class MapperPair {
-    Class<?> sourceClass;
-    Class<?> targetClass;
-  }
+  private record MapperPair(Class<?> sourceClass, Class<?> targetClass) {}
 }
