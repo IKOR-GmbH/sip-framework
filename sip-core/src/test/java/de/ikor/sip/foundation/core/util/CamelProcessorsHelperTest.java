@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.apache.camel.Expression;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.ExpressionBuilder;
 import org.apache.camel.processor.Enricher;
@@ -57,5 +58,17 @@ class CamelProcessorsHelperTest {
     assertThat(CamelProcessorsHelper.isEndpointProcessor(pollEnrichProcessor)).isFalse();
     assertThat(CamelProcessorsHelper.isEndpointProcessor(wireTapProcessor)).isFalse();
     assertThat(CamelProcessorsHelper.isEndpointProcessor(sendDynamicProcessor)).isFalse();
+  }
+
+  @Test
+  void
+      GIVEN_specificProcessorsWithEndpointsAndWithoutExpressions_WHEN_isEndpointProcessor_then_expectTrue() {
+    // arrange
+    Processor enrichProcessor = new Enricher(null);
+    Processor pollEnrichProcessor = new PollEnricher((Expression) null, 0);
+
+    // act & assert
+    assertThat(CamelProcessorsHelper.isEndpointProcessor(enrichProcessor)).isTrue();
+    assertThat(CamelProcessorsHelper.isEndpointProcessor(pollEnrichProcessor)).isTrue();
   }
 }
