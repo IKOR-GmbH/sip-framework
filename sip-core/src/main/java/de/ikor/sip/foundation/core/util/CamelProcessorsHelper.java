@@ -52,7 +52,7 @@ public class CamelProcessorsHelper {
    * Method for getting endpointUri from specific Camel processors
    *
    * @param processor is certain type of Camel processor
-   * @return Optional<String> with the endpoint uri
+   * @return Optional string with the endpoint uri
    */
   public static Optional<String> getEndpointUri(Processor processor) {
     if (processor instanceof EndpointAware endpointAware) {
