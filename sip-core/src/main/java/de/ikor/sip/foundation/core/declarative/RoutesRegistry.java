@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative;
 
 import static de.ikor.sip.foundation.core.util.CamelProcessorsHelper.getEndpointUri;
+import static de.ikor.sip.foundation.core.util.CamelProcessorsHelper.isInMemoryUri;
 
 import de.ikor.sip.foundation.core.actuator.declarative.model.EndpointInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
@@ -9,7 +10,6 @@ import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
-import de.ikor.sip.foundation.core.util.CamelProcessorsHelper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,11 +29,14 @@ import org.apache.camel.spi.IdAware;
 import org.apache.camel.support.SimpleEventNotifierSupport;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RoutesRegistry extends SimpleEventNotifierSupport {
 
+  private static final String ENRICH = "enrich";
+  private static final String POLL_ENRICH = "pollEnrich";
   public static final String SIP_CONNECTOR_PREFIX = "sip-connector";
   public static final String SIP_SOAP_SERVICE_PREFIX = "sip-soap-service";
   private final DeclarationsRegistryApi declarationsRegistryApi;
@@ -155,7 +158,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
                 endpointsForRouteId.get(routeInfo.getRouteId()).stream()
                     // filter out all of sip framework internal endpoints
                     .filter(endpoint -> !endpoint.contains(SIP_CONNECTOR_PREFIX))
-                    .filter(CamelProcessorsHelper::isNotInMemoryComponent)
+                    .filter(endpoint -> !isInMemoryUri(endpoint))
                     .map(
                         endpoint ->
                             createEndpointInfo(
@@ -256,14 +259,20 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
 
       if (service instanceof Enricher enricher) {
         String enrichEndpointUri =
-            getEnrichExpressionUri(enricher.getExpression(), "enrich", enrichCounter++);
+            getEnrichExpressionUri(enricher.getExpression(), ENRICH, enrichCounter);
+        if (StringUtils.startsWith(enrichEndpointUri, ENRICH)) {
+          enrichCounter++;
+        }
         addToEndpointUriMaps(routeId, enrichEndpointUri);
         outgoingEndpointIds.put(enrichEndpointUri, enricher);
       }
 
       if (service instanceof PollEnricher pollEnricher) {
         String pollEnrichEndpointUri =
-            getEnrichExpressionUri(pollEnricher.getExpression(), "pollEnrich", pollEnrichCounter++);
+            getEnrichExpressionUri(pollEnricher.getExpression(), POLL_ENRICH, pollEnrichCounter);
+        if (StringUtils.startsWith(pollEnrichEndpointUri, POLL_ENRICH)) {
+          pollEnrichCounter++;
+        }
         addToEndpointUriMaps(routeId, pollEnrichEndpointUri);
         outgoingEndpointIds.put(pollEnrichEndpointUri, pollEnricher);
       }
