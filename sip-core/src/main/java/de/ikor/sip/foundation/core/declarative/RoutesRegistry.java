@@ -233,49 +233,48 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     for (Route route : camelContext.getRoutes()) {
       String routeId = route.getRouteId();
       addToEndpointUriMaps(routeId, route.getEndpoint().getEndpointBaseUri());
-      searchForEndpointsInCamelCode(route.getServices(), routeId);
+      for (org.apache.camel.Service service : route.getServices()) {
+        checkForExternalEndpoint(service, routeId);
+      }
     }
   }
 
-  private void searchForEndpointsInCamelCode(
-      List<org.apache.camel.Service> services, String routeId) {
-    for (org.apache.camel.Service service : services) {
-      // filter duplicated rest servlet endpoint
-      if (service instanceof ServletConsumer) {
-        continue;
-      }
+  private void checkForExternalEndpoint(org.apache.camel.Service service, String routeId) {
+    // filter duplicated rest servlet endpoint
+    if (service instanceof ServletConsumer) {
+      return;
+    }
 
-      if (service instanceof EndpointAware endpointAware) {
-        addToEndpointUriMaps(routeId, endpointAware.getEndpoint().getEndpointBaseUri());
-      }
+    if (service instanceof EndpointAware endpointAware) {
+      addToEndpointUriMaps(routeId, endpointAware.getEndpoint().getEndpointBaseUri());
+    }
 
-      if (service instanceof SendDynamicProcessor dynamicProcessor) {
-        addToEndpointUriMaps(routeId, dynamicProcessor.getUri());
-      }
+    if (service instanceof SendDynamicProcessor dynamicProcessor) {
+      addToEndpointUriMaps(routeId, dynamicProcessor.getUri());
+    }
 
-      if (service instanceof WireTapProcessor wireTapProcessor) {
-        addToEndpointUriMaps(routeId, wireTapProcessor.getUri());
-      }
+    if (service instanceof WireTapProcessor wireTapProcessor) {
+      addToEndpointUriMaps(routeId, wireTapProcessor.getUri());
+    }
 
-      if (service instanceof Enricher enricher) {
-        String enrichEndpointUri =
-            getEnrichExpressionUri(enricher.getExpression(), ENRICH, enrichCounter);
-        if (StringUtils.startsWith(enrichEndpointUri, ENRICH)) {
-          enrichCounter++;
-        }
-        addToEndpointUriMaps(routeId, enrichEndpointUri);
-        outgoingEndpointIds.put(enrichEndpointUri, enricher);
+    if (service instanceof Enricher enricher) {
+      String enrichEndpointUri =
+          getEnrichExpressionUri(enricher.getExpression(), ENRICH, enrichCounter);
+      if (StringUtils.startsWith(enrichEndpointUri, ENRICH)) {
+        enrichCounter++;
       }
+      addToEndpointUriMaps(routeId, enrichEndpointUri);
+      outgoingEndpointIds.put(enrichEndpointUri, enricher);
+    }
 
-      if (service instanceof PollEnricher pollEnricher) {
-        String pollEnrichEndpointUri =
-            getEnrichExpressionUri(pollEnricher.getExpression(), POLL_ENRICH, pollEnrichCounter);
-        if (StringUtils.startsWith(pollEnrichEndpointUri, POLL_ENRICH)) {
-          pollEnrichCounter++;
-        }
-        addToEndpointUriMaps(routeId, pollEnrichEndpointUri);
-        outgoingEndpointIds.put(pollEnrichEndpointUri, pollEnricher);
+    if (service instanceof PollEnricher pollEnricher) {
+      String pollEnrichEndpointUri =
+          getEnrichExpressionUri(pollEnricher.getExpression(), POLL_ENRICH, pollEnrichCounter);
+      if (StringUtils.startsWith(pollEnrichEndpointUri, POLL_ENRICH)) {
+        pollEnrichCounter++;
       }
+      addToEndpointUriMaps(routeId, pollEnrichEndpointUri);
+      outgoingEndpointIds.put(pollEnrichEndpointUri, pollEnricher);
     }
   }
 
