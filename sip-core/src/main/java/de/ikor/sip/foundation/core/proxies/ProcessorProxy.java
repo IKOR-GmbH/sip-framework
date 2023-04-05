@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.core.proxies;
 
-
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import de.ikor.sip.foundation.core.util.CamelHelper;
 import de.ikor.sip.foundation.core.util.CamelProcessorsHelper;
