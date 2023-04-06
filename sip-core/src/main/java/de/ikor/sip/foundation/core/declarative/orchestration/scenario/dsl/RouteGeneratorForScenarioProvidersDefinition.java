@@ -30,11 +30,11 @@ public class RouteGeneratorForScenarioProvidersDefinition extends RouteGenerator
   }
 
   private Set<IntegrationScenarioProviderDefinition> resolveAndVerifyHandledProviders() {
-    final var handledProviders = resolveHandledProviders();
+    final var providers = resolveHandledProviders();
 
     // verify that given providers are registered with scenario
     final var unregisteredProviders =
-        handledProviders.stream().filter(handled -> !scenarioProviders.contains(handled)).toList();
+        providers.stream().filter(handled -> !scenarioProviders.contains(handled)).toList();
     if (!unregisteredProviders.isEmpty()) {
       throw new SIPFrameworkInitializationException(
           String.format(
@@ -47,9 +47,7 @@ public class RouteGeneratorForScenarioProvidersDefinition extends RouteGenerator
 
     // verify that given providers are not already handled
     final var doubleHandledProviders =
-        handledProviders.stream()
-            .filter(handled -> !overallUnhandledProviders.contains(handled))
-            .toList();
+        providers.stream().filter(handled -> !overallUnhandledProviders.contains(handled)).toList();
     if (!doubleHandledProviders.isEmpty()) {
       throw new SIPFrameworkInitializationException(
           String.format(
@@ -60,7 +58,7 @@ public class RouteGeneratorForScenarioProvidersDefinition extends RouteGenerator
                   .collect(Collectors.joining(","))));
     }
 
-    return handledProviders;
+    return providers;
   }
 
   private Set<IntegrationScenarioProviderDefinition> resolveHandledProviders() {
@@ -69,7 +67,7 @@ public class RouteGeneratorForScenarioProvidersDefinition extends RouteGenerator
     } else if (providerDefinition
         instanceof ForScenarioProvidersWithConnectorIdDefinition element) {
       return resolveProvidersFromConnectorIds(element);
-    } else if (providerDefinition instanceof ForScenarioProvidersCatchAllDefinition element) {
+    } else if (providerDefinition instanceof ForScenarioProvidersCatchAllDefinition) {
       return overallUnhandledProviders;
     } else {
       throw new SIPFrameworkInitializationException(

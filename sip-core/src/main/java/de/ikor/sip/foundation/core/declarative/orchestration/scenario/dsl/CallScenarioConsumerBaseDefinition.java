@@ -24,7 +24,7 @@ public abstract class CallScenarioConsumerBaseDefinition<
     super(dslReturnDefinition, integrationScenario);
   }
 
-  public <T> S withRequestPreparation(final ScenarioStepRequestExtractor<M> requestPreparation) {
+  public S withRequestPreparation(final ScenarioStepRequestExtractor<M> requestPreparation) {
     this.requestPreparation = Optional.of(requestPreparation);
     return self();
   }

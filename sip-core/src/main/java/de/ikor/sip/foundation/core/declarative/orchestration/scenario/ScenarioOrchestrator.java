@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.scenario;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioOrchestrationDefinition;
 import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ScenarioOrchestrator implements Orchestrator<ScenarioOrchestrationInfo> {
 
   private final Consumer<ScenarioOrchestrationInfo> orchestrationConsumer;
-  @Setter private Function<ScenarioOrchestrationInfo, Boolean> canOrchestrate = info -> true;
+  @Setter private Predicate<ScenarioOrchestrationInfo> canOrchestrate = info -> true;
 
   public static <M> ScenarioOrchestrator forOrchestrationDsl(
       final Consumer<ScenarioOrchestrationDefinition<M>> dslDefinition) {
@@ -35,7 +35,7 @@ public class ScenarioOrchestrator implements Orchestrator<ScenarioOrchestrationI
 
   @Override
   public boolean canOrchestrate(final ScenarioOrchestrationInfo data) {
-    return canOrchestrate.apply(data);
+    return canOrchestrate.test(data);
   }
 
   @Override

@@ -10,7 +10,7 @@ public abstract class DslDefinitionBase<S extends DslDefinitionBase<S, R>, R> {
   @Getter(AccessLevel.PROTECTED)
   private final R dslReturnDefinition;
 
-  protected <S> S self() {
+  protected S self() {
     return (S) this;
   }
 }
