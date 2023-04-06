@@ -1,6 +1,7 @@
-package de.ikor.sip.foundation.core.declarative.orchestration;
+package de.ikor.sip.foundation.core.declarative.orchestration.connector;
 
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import lombok.AccessLevel;

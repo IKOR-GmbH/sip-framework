@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.scenario;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
-import de.ikor.sip.foundation.core.declarative.orchestration.ScenarioOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import java.util.Optional;
 
 /**
@@ -52,4 +52,14 @@ public interface IntegrationScenarioDefinition extends Orchestratable<ScenarioOr
    * @return Path to the documentation resource
    */
   String getPathToDocumentationResource();
+
+  /**
+   * Returns whether the scenario has a response flow. The default implementation returns <code>true
+   * </code> if a response-model is set.
+   *
+   * @return True if the scenario has a response flow, false otherwise
+   */
+  default boolean hasResponseFlow() {
+    return getResponseModelClass().isPresent();
+  }
 }

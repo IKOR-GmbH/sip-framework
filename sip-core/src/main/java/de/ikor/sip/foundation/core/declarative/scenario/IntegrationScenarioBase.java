@@ -2,8 +2,9 @@ package de.ikor.sip.foundation.core.declarative.scenario;
 
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
-import de.ikor.sip.foundation.core.declarative.orchestration.ScenarioOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.ScenarioOrchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.AutoMagicScenarioOrchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.StandardScenarioOrchestrators;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import java.util.Optional;
 
@@ -21,7 +22,9 @@ public abstract class IntegrationScenarioBase implements IntegrationScenarioDefi
 
   @Override
   public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
-    return ScenarioOrchestrator.forScenario(this);
+    return new AutoMagicScenarioOrchestrator(
+        StandardScenarioOrchestrators.ANY_TO_ONE,
+        StandardScenarioOrchestrators.ANY_TO_ANY_WITHOUT_RESPONSE);
   }
 
   @Override

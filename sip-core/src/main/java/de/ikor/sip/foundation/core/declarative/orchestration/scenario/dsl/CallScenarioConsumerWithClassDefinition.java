@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.orchestration.dsl.scenario;
+package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -12,7 +12,7 @@ public class CallScenarioConsumerWithClassDefinition<R, M>
   @Getter(AccessLevel.PACKAGE)
   private final Class<? extends IntegrationScenarioConsumerDefinition> connectorClass;
 
-  protected CallScenarioConsumerWithClassDefinition(
+  CallScenarioConsumerWithClassDefinition(
       final R dslReturnDefinition,
       final IntegrationScenarioDefinition integrationScenario,
       final Class<? extends IntegrationScenarioConsumerDefinition> connectorClass) {

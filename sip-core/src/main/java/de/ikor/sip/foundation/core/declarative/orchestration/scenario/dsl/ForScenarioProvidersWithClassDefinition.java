@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.orchestration.dsl.scenario;
+package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
@@ -14,7 +14,7 @@ public class ForScenarioProvidersWithClassDefinition<R, M>
   @Getter(AccessLevel.PACKAGE)
   private final Set<Class<? extends IntegrationScenarioProviderDefinition>> providerClasses;
 
-  protected ForScenarioProvidersWithClassDefinition(
+  ForScenarioProvidersWithClassDefinition(
       final R dslReturnDefinition,
       final IntegrationScenarioDefinition integrationScenario,
       final Set<Class<? extends IntegrationScenarioProviderDefinition>> providerClasses) {

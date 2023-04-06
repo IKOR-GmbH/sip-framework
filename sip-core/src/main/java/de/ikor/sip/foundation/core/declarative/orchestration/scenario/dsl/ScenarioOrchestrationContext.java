@@ -1,6 +1,6 @@
-package de.ikor.sip.foundation.core.declarative.orchestration.dsl.scenario;
+package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
-import de.ikor.sip.foundation.core.declarative.orchestration.dsl.OrchestrationContext;
+import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.OrchestrationContext;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 

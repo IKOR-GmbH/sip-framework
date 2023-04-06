@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.declarative;
 
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.validator.CDMValidator;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;

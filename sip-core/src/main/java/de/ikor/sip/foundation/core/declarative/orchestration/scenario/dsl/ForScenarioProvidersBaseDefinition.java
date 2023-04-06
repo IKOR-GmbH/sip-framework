@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.orchestration.dsl.scenario;
+package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
@@ -16,7 +16,7 @@ public abstract class ForScenarioProvidersBaseDefinition<
   private final List<CallScenarioConsumerBaseDefinition<?, ?, M>> scenarioConsumerDefinitions =
       new ArrayList<>();
 
-  protected ForScenarioProvidersBaseDefinition(
+  ForScenarioProvidersBaseDefinition(
       final R dslReturnDefinition, final IntegrationScenarioDefinition integrationScenario) {
     super(dslReturnDefinition, integrationScenario);
   }
@@ -42,6 +42,14 @@ public abstract class ForScenarioProvidersBaseDefinition<
     final CallScenarioConsumerWithClassDefinition<S, M> def =
         new CallScenarioConsumerWithClassDefinition<>(
             self(), getIntegrationScenario(), consumerClass);
+    scenarioConsumerDefinitions.add(def);
+    return def;
+  }
+
+  public CallScenarioConsumerCatchAllDefinition<R, M> callAnyUnspecifiedConsumer() {
+    final CallScenarioConsumerCatchAllDefinition<R, M> def =
+        new CallScenarioConsumerCatchAllDefinition<>(
+            getDslReturnDefinition(), getIntegrationScenario());
     scenarioConsumerDefinitions.add(def);
     return def;
   }

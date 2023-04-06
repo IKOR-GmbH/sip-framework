@@ -1,5 +1,6 @@
-package de.ikor.sip.foundation.core.declarative.orchestration;
+package de.ikor.sip.foundation.core.declarative.orchestration.connector;
 
+import de.ikor.sip.foundation.core.declarative.orchestration.OrchestrationInfo;
 import java.util.Optional;
 import org.apache.camel.model.RouteDefinition;
 

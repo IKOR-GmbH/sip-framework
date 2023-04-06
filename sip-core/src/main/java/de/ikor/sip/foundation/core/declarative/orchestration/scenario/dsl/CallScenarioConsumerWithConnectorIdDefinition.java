@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.orchestration.dsl.scenario;
+package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import lombok.AccessLevel;
@@ -11,7 +11,7 @@ public class CallScenarioConsumerWithConnectorIdDefinition<R, M>
   @Getter(AccessLevel.PACKAGE)
   private final String connectorId;
 
-  protected CallScenarioConsumerWithConnectorIdDefinition(
+  CallScenarioConsumerWithConnectorIdDefinition(
       final R dslReturnDefinition,
       final IntegrationScenarioDefinition integrationScenario,
       final String connectorId) {

@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.orchestration.dsl.scenario;
+package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -47,7 +47,7 @@ public class ScenarioOrchestrationDefinition<M>
   private void verifyNoCatchAllOrThrow() {
     if (catchAllAdded) {
       throw new SIPFrameworkException(
-          "Catch-all definition already added via method forAllRemainingScenarioProviders. No further definitions allowed.");
+          "Catch-all definition already added via method forAnyUnspecifiedProvider(). No further definitions allowed.");
     }
   }
 

@@ -20,7 +20,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 @Getter
-@Service
+@Service(DeclarationsRegistryApi.BEAN_NAME)
 public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
   private static final String CONNECTOR_GROUP = "connector group";

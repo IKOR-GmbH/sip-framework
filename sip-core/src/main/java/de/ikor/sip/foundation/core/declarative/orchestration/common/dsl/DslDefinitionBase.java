@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.orchestration.dsl;
+package de.ikor.sip.foundation.core.declarative.orchestration.common.dsl;
 
 import lombok.AccessLevel;
 import lombok.Getter;

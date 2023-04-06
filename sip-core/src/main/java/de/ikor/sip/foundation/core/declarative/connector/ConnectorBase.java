@@ -6,9 +6,9 @@ import de.ikor.sip.foundation.core.declarative.annonation.UseResponseModelMapper
 import de.ikor.sip.foundation.core.declarative.model.FindAutomaticModelMapper;
 import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.model.ResponseMappingRouteTransformer;
-import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import java.util.Optional;

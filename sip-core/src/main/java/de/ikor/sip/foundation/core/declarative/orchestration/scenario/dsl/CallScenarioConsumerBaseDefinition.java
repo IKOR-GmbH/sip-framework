@@ -1,6 +1,6 @@
-package de.ikor.sip.foundation.core.declarative.orchestration.dsl.scenario;
+package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
-import de.ikor.sip.foundation.core.declarative.orchestration.dsl.StepResultCloner;
+import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.Optional;
 import lombok.AccessLevel;
@@ -11,20 +11,20 @@ public abstract class CallScenarioConsumerBaseDefinition<
     extends ScenarioDslDefinitionBase<S, R, M> {
 
   @Getter(AccessLevel.PACKAGE)
-  private Optional<ScenarioRequestPreparation<M>> requestPreparation = Optional.empty();
+  private Optional<ScenarioStepRequestExtractor<M>> requestPreparation = Optional.empty();
 
   @Getter(AccessLevel.PACKAGE)
-  private Optional<ScenarioResponseAggregator<M>> responseAggregator = Optional.empty();
+  private Optional<ScenarioStepResponseConsumer<M>> responseConsumer = Optional.empty();
 
   @Getter(AccessLevel.PACKAGE)
   private Optional<StepResultCloner<M>> stepResultCloner = Optional.empty();
 
-  protected CallScenarioConsumerBaseDefinition(
+  CallScenarioConsumerBaseDefinition(
       final R dslReturnDefinition, final IntegrationScenarioDefinition integrationScenario) {
     super(dslReturnDefinition, integrationScenario);
   }
 
-  public <T> S withRequestPreparation(final ScenarioRequestPreparation<M> requestPreparation) {
+  public <T> S withRequestPreparation(final ScenarioStepRequestExtractor<M> requestPreparation) {
     this.requestPreparation = Optional.of(requestPreparation);
     return self();
   }
@@ -33,8 +33,16 @@ public abstract class CallScenarioConsumerBaseDefinition<
     return getDslReturnDefinition();
   }
 
-  public R aggregateResponse(final ScenarioResponseAggregator<M> responseAggregator) {
-    this.responseAggregator = Optional.of(responseAggregator);
+  public R andAggregateResponse(final ScenarioStepResponseAggregator<M> responseAggregator) {
+    return andHandleResponse(
+        (latestResponse, context) ->
+            context.setAggregatedResponse(
+                responseAggregator.aggregateResponse(
+                    latestResponse, context.getAggregatedResponse())));
+  }
+
+  public R andHandleResponse(final ScenarioStepResponseConsumer<M> responseConsumer) {
+    this.responseConsumer = Optional.of(responseConsumer);
     return getDslReturnDefinition();
   }
 
