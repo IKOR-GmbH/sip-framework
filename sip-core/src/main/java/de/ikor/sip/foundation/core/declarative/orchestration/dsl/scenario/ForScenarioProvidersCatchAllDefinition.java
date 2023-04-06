@@ -1,9 +1,12 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.dsl.scenario;
 
-public class ForScenarioProvidersCatchAllDefinition<R>
-    extends ForScenarioProvidersBaseDefinition<ForScenarioProvidersCatchAllDefinition<R>, R> {
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 
-  protected ForScenarioProvidersCatchAllDefinition(final R dslReturn) {
-    super(dslReturn);
+public class ForScenarioProvidersCatchAllDefinition<R, M>
+    extends ForScenarioProvidersBaseDefinition<ForScenarioProvidersCatchAllDefinition<R, M>, R, M> {
+
+  protected ForScenarioProvidersCatchAllDefinition(
+      final R dslReturnDefinition, final IntegrationScenarioDefinition integrationScenario) {
+    super(dslReturnDefinition, integrationScenario);
   }
 }

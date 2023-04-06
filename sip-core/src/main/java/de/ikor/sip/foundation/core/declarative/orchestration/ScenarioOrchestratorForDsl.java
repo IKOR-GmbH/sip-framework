@@ -5,9 +5,9 @@ import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ScenarioOrchestratorForDsl implements Orchestrator<ScenarioOrchestrationInfo> {
+public class ScenarioOrchestratorForDsl<M> implements Orchestrator<ScenarioOrchestrationInfo> {
 
-  private final Consumer<ScenarioOrchestrationDefinition> dslConsumer;
+  private final Consumer<ScenarioOrchestrationDefinition<M>> dslConsumer;
 
   @Override
   public boolean canOrchestrate(final ScenarioOrchestrationInfo data) {
@@ -16,7 +16,8 @@ public class ScenarioOrchestratorForDsl implements Orchestrator<ScenarioOrchestr
 
   @Override
   public void doOrchestrate(final ScenarioOrchestrationInfo data) {
-    final var orchestrationDef = new ScenarioOrchestrationDefinition();
+    final var orchestrationDef =
+        new ScenarioOrchestrationDefinition<M>(data.getIntegrationScenario());
     dslConsumer.accept(orchestrationDef);
   }
 }

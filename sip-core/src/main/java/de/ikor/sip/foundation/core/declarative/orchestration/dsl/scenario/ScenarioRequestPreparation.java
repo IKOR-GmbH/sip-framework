@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.dsl.scenario;
 
 @FunctionalInterface
-public interface ScenarioRequestPreparation<T> {
+public interface ScenarioRequestPreparation<M> {
 
-  T getPreparedRequest(final ScenarioOrchestrationContext context);
+  M getPreparedRequest(final ScenarioOrchestrationContext context);
 }
