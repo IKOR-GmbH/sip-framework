@@ -29,7 +29,7 @@ public abstract class CallScenarioConsumerBaseDefinition<
     return self();
   }
 
-  public R withNoResponseHandling() {
+  public R andNoResponseHandling() {
     return getDslReturnDefinition();
   }
 

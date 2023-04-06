@@ -15,7 +15,10 @@ public enum StandardScenarioOrchestrators
   ANY_TO_ANY_WITHOUT_RESPONSE(
       () ->
           ScenarioOrchestrator.forOrchestrationDsl(
-                  dsl -> dsl.forAnyUnspecifiedProvider().callAnyUnspecifiedConsumer())
+                  dsl ->
+                      dsl.forAnyUnspecifiedProvider()
+                          .callAnyUnspecifiedConsumer()
+                          .andNoResponseHandling())
               .setCanOrchestrate(info -> !info.getIntegrationScenario().hasResponseFlow()));
 
   private final Supplier<Orchestrator<ScenarioOrchestrationInfo>> delegate;
