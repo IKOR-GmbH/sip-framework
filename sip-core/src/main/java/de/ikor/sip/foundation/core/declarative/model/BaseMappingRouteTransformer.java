@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.core.declarative.model;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -41,9 +42,15 @@ abstract sealed class BaseMappingRouteTransformer<S, T> implements Consumer<Rout
     final var modelMapper =
         retrieveUsableMapper(
                 routeDefinition.getCamelContext(), getSourceModelClass(), getTargetModelClass())
-            .orElseThrow(this::getExceptionForNoMissingMapper);
-    verifyCompatibleTypes(modelMapper.getSourceModelClass(), getSourceModelClass());
-    verifyCompatibleTypes(modelMapper.getTargetModelClass(), getTargetModelClass());
+            .orElseThrow(this::getExceptionForMissingMapper);
+
+    if (notCompatibleTypes(modelMapper.getSourceModelClass(), getSourceModelClass()))
+      throw newExceptionForIncompatibleTypes(
+          modelMapper, "source", modelMapper.getSourceModelClass(), getSourceModelClass());
+    if (notCompatibleTypes(modelMapper.getTargetModelClass(), getTargetModelClass()))
+      throw newExceptionForIncompatibleTypes(
+          modelMapper, "target", modelMapper.getTargetModelClass(), getTargetModelClass());
+
     routeDefinition.transform().method(modelMapper, ModelMapper.MAPPING_METHOD_NAME);
   }
 
@@ -62,29 +69,31 @@ abstract sealed class BaseMappingRouteTransformer<S, T> implements Consumer<Rout
 
   protected abstract Class<T> getTargetModelClass();
 
-  protected final void verifyCompatibleTypes(
-      final Class<?> mapperType, final Class<?> assignedType) {
-    if (!mapperType.isAssignableFrom(assignedType)) {
-      throw new IllegalStateException(
-          String.format(
-              "Mapper '%s' is not compatible with assigned type '%s' of connector '%s'",
-              mapperType.getName(), assignedType.getName(), getConnector().get().getId()));
-    }
+  private boolean notCompatibleTypes(final Class<?> mapperType, final Class<?> assignedType) {
+    return !mapperType.isAssignableFrom(assignedType);
   }
 
-  protected IllegalStateException getExceptionForNoMissingMapper() {
-    return new IllegalStateException(
+  private SIPFrameworkInitializationException newExceptionForIncompatibleTypes(
+      ModelMapper<?, ?> modelMapper,
+      String direction,
+      Class<?> mapperType,
+      final Class<?> assignedType) {
+    return new SIPFrameworkInitializationException(
         String.format(
-            "No usable mapper found for connector '%s' to map between %s and %s",
+            "Mapper '%s' %s type '%s' is not compatible with assigned type '%s' of connector '%s'",
+            modelMapper.getClass().getName(),
+            direction,
+            mapperType.getName(),
+            assignedType.getName(),
+            connector.get().getId()));
+  }
+
+  protected SIPFrameworkInitializationException getExceptionForMissingMapper() {
+    return new SIPFrameworkInitializationException(
+        String.format(
+            "No compatible Mapper found for Connector '%s' to map between %s and %s",
             connector.get().getId(),
             getSourceModelClass().getName(),
             getTargetModelClass().getName()));
-  }
-
-  protected <C> C forceThrowUnknownConnectorTypeException() {
-    throw new IllegalStateException(
-        String.format(
-            "Unknown connector type '%s' declared in connector %s",
-            connector.get().getConnectorType(), connector.get().getId()));
   }
 }
