@@ -116,4 +116,23 @@ public class DeclarativeHelper {
       return traverseHierarchyTree(clazz.getSuperclass(), superClass);
     }
   }
+
+  @SneakyThrows
+  @SuppressWarnings("unchecked")
+  public static <T> T invokeMethod(
+      final Object instance, final String methodName, final Object... params) {
+    return (T)
+        instance
+            .getClass()
+            .getMethod(
+                methodName, Arrays.stream(params).map(Object::getClass).toArray(Class[]::new))
+            .invoke(instance, params);
+  }
+
+  @SneakyThrows
+  public static <T> T invokeConstructor(final Class<T> clazz, final Object... params) {
+    return clazz
+        .getConstructor(Arrays.stream(params).map(Object::getClass).toArray(Class[]::new))
+        .newInstance(params);
+  }
 }
