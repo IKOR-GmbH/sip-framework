@@ -89,7 +89,9 @@ class DeclarationsRegistryTest {
                   new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers);
             })
         .isInstanceOf(SIPFrameworkInitializationException.class)
-        .hasMessage("There is a duplicate %s id: %s", "integration scenario", SCENARIO_ID);
+        .hasMessage(
+            "There is a duplicate %s id %s in class %s",
+            "integration scenario", SCENARIO_ID, secondScenario.getClass().getName());
   }
 
   @Test
