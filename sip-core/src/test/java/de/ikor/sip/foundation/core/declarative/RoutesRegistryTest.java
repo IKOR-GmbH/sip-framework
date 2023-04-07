@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static de.ikor.sip.foundation.core.declarative.RoutesRegistry.SIP_SOAP_SERVICE_PREFIX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
@@ -23,6 +24,9 @@ class RoutesRegistryTest {
 
   private static final String CONNECTOR_ID = "connectorId";
   private static final String GENERATED_ROUTE_ID = "sip-connector_connectorId_externalEndpoint";
+  private static final String SOAP_SERVICE_NAME = "customer";
+  private static final String GENERATED_SOAP_ROUTE_ID =
+      String.format("%s_%s", SIP_SOAP_SERVICE_PREFIX, SOAP_SERVICE_NAME);
   private static final String BASE_HTTP_URI = "http://baseUri";
   private RoutesRegistry subject;
   private DeclarationsRegistry declarationsRegistry;
@@ -87,6 +91,32 @@ class RoutesRegistryTest {
         .hasMessage(
             "Can't build internal connector route with routeId '%s': routeId already exists",
             GENERATED_ROUTE_ID);
+  }
+
+  @Test
+  void GIVEN_soapService_WHEN_generateRouteIdForSoapService_THEN_getProperRouteId() {
+    // act
+    String actualRouteId = subject.generateRouteIdForSoapService(SOAP_SERVICE_NAME);
+
+    // assert
+    assertThat(actualRouteId).isEqualTo(GENERATED_SOAP_ROUTE_ID);
+  }
+
+  @Test
+  void
+      GIVEN_existingSoapService_WHEN_generateRouteIdForSoapService_THEN_SIPFrameworkInitializationException() {
+    // arrange
+    subject.generateRouteIdForSoapService(SOAP_SERVICE_NAME);
+
+    // act & assert
+    assertThatThrownBy(
+            () -> {
+              subject.generateRouteIdForSoapService(SOAP_SERVICE_NAME);
+            })
+        .isInstanceOf(SIPFrameworkInitializationException.class)
+        .hasMessage(
+            "Can't build internal soap-service route with routeId '%s': routeId already exists",
+            GENERATED_SOAP_ROUTE_ID);
   }
 
   @Test
