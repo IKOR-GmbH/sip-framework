@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.utils;
 
+import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
@@ -130,5 +131,20 @@ public class DeclarativeHelper {
     } else {
       return traverseHierarchyTree(clazz.getSuperclass(), superClass);
     }
+  }
+
+  public static boolean isPrimaryEndpoint(ConnectorType type, String role) {
+    return isInboundPrimaryEndpoint(type, role) || isOutboundPrimaryEndpoint(type, role);
+  }
+
+  private static boolean isInboundPrimaryEndpoint(ConnectorType type, String role) {
+    return type.equals(ConnectorType.IN)
+        && (role.equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName())
+            || role.equals(RouteRole.EXTERNAL_SOAP_SERVICE_PROXY.getExternalName()));
+  }
+
+  private static boolean isOutboundPrimaryEndpoint(ConnectorType type, String role) {
+    return type.equals(ConnectorType.OUT)
+        && (role.equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName()));
   }
 }

@@ -2,7 +2,10 @@ package de.ikor.sip.foundation.core.declarative.utils;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+import de.ikor.sip.foundation.core.declarative.RouteRole;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelperTestModels.ExceptionThrowingConstructorMapper;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelperTestModels.MultipleMethodsMapper;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelperTestModels.MyExtendedIntegerList;
@@ -89,5 +92,69 @@ class DeclarativeHelperTest {
 
     // assert
     assertThat(genericClass.getTypeName()).isEqualTo("java.lang.Integer");
+  }
+
+  @Test
+  void WHEN_isPrimaryEndpointWithGoodValues_THEN_true() {
+    assertAll(
+        () ->
+            assertThat(
+                    DeclarativeHelper.isPrimaryEndpoint(
+                        ConnectorType.IN, RouteRole.EXTERNAL_ENDPOINT.getExternalName()))
+                .isTrue(),
+        () ->
+            assertThat(
+                    DeclarativeHelper.isPrimaryEndpoint(
+                        ConnectorType.IN, RouteRole.EXTERNAL_SOAP_SERVICE_PROXY.getExternalName()))
+                .isTrue(),
+        () ->
+            assertThat(
+                    DeclarativeHelper.isPrimaryEndpoint(
+                        ConnectorType.OUT, RouteRole.EXTERNAL_ENDPOINT.getExternalName()))
+                .isTrue());
+  }
+
+  @Test
+  void WHEN_isPrimaryEndpointWithBadValues_THEN_false() {
+    assertAll(
+        () ->
+            assertThat(
+                    DeclarativeHelper.isPrimaryEndpoint(
+                        ConnectorType.IN,
+                        RouteRole.CONNECTOR_REQUEST_ORCHESTRATION.getExternalName()))
+                .isFalse(),
+        () ->
+            assertThat(
+                    DeclarativeHelper.isPrimaryEndpoint(
+                        ConnectorType.IN,
+                        RouteRole.CONNECTOR_RESPONSE_ORCHESTRATION.getExternalName()))
+                .isFalse(),
+        () ->
+            assertThat(
+                    DeclarativeHelper.isPrimaryEndpoint(
+                        ConnectorType.IN, RouteRole.SCENARIO_HANDOFF.getExternalName()))
+                .isFalse(),
+        () ->
+            assertThat(
+                    DeclarativeHelper.isPrimaryEndpoint(
+                        ConnectorType.OUT,
+                        RouteRole.CONNECTOR_REQUEST_ORCHESTRATION.getExternalName()))
+                .isFalse(),
+        () ->
+            assertThat(
+                    DeclarativeHelper.isPrimaryEndpoint(
+                        ConnectorType.OUT,
+                        RouteRole.CONNECTOR_RESPONSE_ORCHESTRATION.getExternalName()))
+                .isFalse(),
+        () ->
+            assertThat(
+                    DeclarativeHelper.isPrimaryEndpoint(
+                        ConnectorType.OUT, RouteRole.SCENARIO_HANDOFF.getExternalName()))
+                .isFalse(),
+        () ->
+            assertThat(
+                    DeclarativeHelper.isPrimaryEndpoint(
+                        ConnectorType.OUT, RouteRole.EXTERNAL_SOAP_SERVICE_PROXY.getExternalName()))
+                .isFalse());
   }
 }

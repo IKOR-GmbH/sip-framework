@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.isPrimaryEndpoint;
 import static de.ikor.sip.foundation.core.util.CamelProcessorsHelper.getEndpointUri;
 import static de.ikor.sip.foundation.core.util.CamelProcessorsHelper.isInMemoryUri;
 
@@ -7,7 +8,6 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.EndpointInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteInfo;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -170,21 +170,6 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
                     .toList())
         .flatMap(Collection::stream)
         .toList();
-  }
-
-  private boolean isPrimaryEndpoint(ConnectorType type, String role) {
-    return isInboundPrimaryEndpoint(type, role) || isOutboundPrimaryEndpoint(type, role);
-  }
-
-  private boolean isInboundPrimaryEndpoint(ConnectorType type, String role) {
-    return type.equals(ConnectorType.IN)
-        && (role.equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName())
-            || role.equals(RouteRole.EXTERNAL_SOAP_SERVICE_PROXY.getExternalName()));
-  }
-
-  private boolean isOutboundPrimaryEndpoint(ConnectorType type, String role) {
-    return type.equals(ConnectorType.OUT)
-        && (role.equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName()));
   }
 
   private EndpointInfo createEndpointInfo(String endpoint, String routeId, boolean isPrimary) {
