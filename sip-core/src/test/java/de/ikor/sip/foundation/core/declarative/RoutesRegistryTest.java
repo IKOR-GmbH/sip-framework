@@ -128,7 +128,7 @@ class RoutesRegistryTest {
   @Test
   void
       GIVEN_endpointAndSpecificProcessors_WHEN_generateRouteInfoList_THEN_expectValidRouteDeclarativeStructureInfo() {
-    // arrange
+    // ARRANGE
     subject.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, connector);
     CamelEvent.CamelContextEvent event = mock(CamelEvent.CamelContextEvent.class);
     CamelContext camelContext = mock(ExtendedCamelContext.class);
@@ -145,30 +145,53 @@ class RoutesRegistryTest {
     when(endpoint.getEndpointBaseUri()).thenReturn(BASE_HTTP_URI);
 
     // Enricher case
-    Endpoint enricherEndpoint = mock(Endpoint.class);
-    when(enricherEndpoint.getEndpointBaseUri()).thenReturn("uriForEnricher");
-    Enricher enricher = mock(Enricher.class);
-    when(enricher.getExpression()).thenReturn(ExpressionBuilder.simpleExpression("uriForEnricher"));
+    Endpoint enricherEndpoint1 = mock(Endpoint.class);
+    when(enricherEndpoint1.getEndpointBaseUri()).thenReturn("uriForEnricher");
+    Enricher enricher1 = mock(Enricher.class);
+    when(enricher1.getExpression())
+        .thenReturn(ExpressionBuilder.simpleExpression("uriForEnricher"));
 
-    // PollEnricher case (without expression)
-    Endpoint pollEnricherEndpoint = mock(Endpoint.class);
-    when(pollEnricherEndpoint.getEndpointBaseUri()).thenReturn("pollEnrich-1");
-    PollEnricher pollEnricher = mock(PollEnricher.class);
+    // Enricher case (without expression and with generated uri)
+    Endpoint enricherEndpoint2 = mock(Endpoint.class);
+    when(enricherEndpoint2.getEndpointBaseUri()).thenReturn("enrich-1");
+    Enricher enricher2 = mock(Enricher.class);
 
-    List<Service> services = List.of(enricher, pollEnricher);
+    // PollEnricher case
+    Endpoint pollEnricherEndpoint1 = mock(Endpoint.class);
+    when(pollEnricherEndpoint1.getEndpointBaseUri()).thenReturn("uriForPollEnricher");
+    PollEnricher pollEnricher1 = mock(PollEnricher.class);
+    when(pollEnricher1.getExpression())
+        .thenReturn(ExpressionBuilder.simpleExpression("uriForPollEnricher"));
+
+    // PollEnricher case (without expression and with generated uri)
+    Endpoint pollEnricherEndpoint2 = mock(Endpoint.class);
+    when(pollEnricherEndpoint2.getEndpointBaseUri()).thenReturn("pollEnrich-1");
+    PollEnricher pollEnricher2 = mock(PollEnricher.class);
+
+    List<Service> services = List.of(enricher1, enricher2, pollEnricher1, pollEnricher2);
     when(route.getServices()).thenReturn(services);
     routes.add(route);
     when(camelContext.getRoutes()).thenReturn(routes);
 
-    // act
+    // ACT
     subject.notify(event);
-    List<RouteDeclarativeStructureInfo> actualEnricher =
-        subject.generateRouteInfoList(pollEnricherEndpoint);
-    List<RouteDeclarativeStructureInfo> actualPollEnricher =
-        subject.generateRouteInfoList(pollEnricherEndpoint);
+    // Enricher case
+    List<RouteDeclarativeStructureInfo> actualEnricher1 =
+        subject.generateRouteInfoList(enricherEndpoint1);
+    // Enricher case (without expression and with generated uri)
+    List<RouteDeclarativeStructureInfo> actualEnricher2 =
+        subject.generateRouteInfoList(enricherEndpoint2);
+    // PollEnricher case
+    List<RouteDeclarativeStructureInfo> actualPollEnricher1 =
+        subject.generateRouteInfoList(pollEnricherEndpoint1);
+    // PollEnricher case (without expression and with generated uri)
+    List<RouteDeclarativeStructureInfo> actualPollEnricher2 =
+        subject.generateRouteInfoList(pollEnricherEndpoint2);
 
-    // assert
-    assertThat(actualEnricher.get(0).getConnectorId()).isEqualTo(CONNECTOR_ID);
-    assertThat(actualPollEnricher.get(0).getConnectorId()).isEqualTo(CONNECTOR_ID);
+    // ASSERT
+    assertThat(actualEnricher1.get(0).getConnectorId()).isEqualTo(CONNECTOR_ID);
+    assertThat(actualEnricher2.get(0).getConnectorId()).isEqualTo(CONNECTOR_ID);
+    assertThat(actualPollEnricher1.get(0).getConnectorId()).isEqualTo(CONNECTOR_ID);
+    assertThat(actualPollEnricher2.get(0).getConnectorId()).isEqualTo(CONNECTOR_ID);
   }
 }
