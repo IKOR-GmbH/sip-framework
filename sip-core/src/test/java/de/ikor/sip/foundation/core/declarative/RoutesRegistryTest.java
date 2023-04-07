@@ -11,6 +11,7 @@ import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationExce
 import java.util.*;
 import org.apache.camel.*;
 import org.apache.camel.component.servlet.ServletConsumer;
+import org.apache.camel.processor.SendProcessor;
 import org.apache.camel.spi.CamelEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -106,7 +107,10 @@ class RoutesRegistryTest {
     when(route.getEndpoint()).thenReturn(endpoint);
     when(endpoint.getEndpointBaseUri()).thenReturn("http://baseUri");
 
-    List<Service> services = Arrays.asList(mock(ServletConsumer.class), endpoint);
+    SendProcessor sendProcessor = mock(SendProcessor.class);
+    when(sendProcessor.getEndpoint()).thenReturn(endpoint);
+
+    List<Service> services = Arrays.asList(mock(ServletConsumer.class), sendProcessor);
     when(route.getServices()).thenReturn(services);
     routes.add(route);
     when(camelContext.getRoutes()).thenReturn(routes);
