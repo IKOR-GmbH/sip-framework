@@ -6,12 +6,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
-import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.*;
 import org.apache.camel.*;
-import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.component.servlet.ServletConsumer;
 import org.apache.camel.spi.CamelEvent;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,21 +25,13 @@ class RoutesRegistryTest {
 
   private DeclarationsRegistry declarationsRegistry;
 
-  private ConnectorMock connector;
-
-  private class ConnectorMock extends GenericInboundConnectorBase {
-
-    @Override
-    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
-      return null;
-    }
-  }
+  private DeclarationsRegistryTest.InboundConnectorMock connector;
 
   @BeforeEach
   void setup() {
     declarationsRegistry = mock(DeclarationsRegistry.class);
     subject = new RoutesRegistry(declarationsRegistry);
-    connector = mock(ConnectorMock.class);
+    connector = mock(DeclarationsRegistryTest.InboundConnectorMock.class);
     when(connector.getId()).thenReturn(CONNECTOR_ID);
   }
 

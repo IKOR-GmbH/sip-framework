@@ -204,5 +204,5 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   }
 
   @Builder
-  private record MapperPair(Class<?> sourceClass, Class<?> targetClass) {}
+  record MapperPair(Class<?> sourceClass, Class<?> targetClass) {}
 }
