@@ -113,5 +113,4 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
   protected String getServiceAddress() {
     return StringUtils.EMPTY;
   }
-  ;
 }
