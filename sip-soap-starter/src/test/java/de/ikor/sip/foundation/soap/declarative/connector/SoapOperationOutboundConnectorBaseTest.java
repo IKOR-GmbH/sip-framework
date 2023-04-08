@@ -36,7 +36,7 @@ class SoapOperationOutboundConnectorBaseTest {
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             String.format(
-                "SIP Framework can't infer Service class of %s Outbound mvn com.spotify.fmt:fmt-maven-plugin:formatSOAP Connector. Please @Override getServiceInterfaceClass() method.",
+                "SIP Framework can't infer Service class of %s Outbound SOAP Connector. Please @Override getServiceInterfaceClass() method.",
                 SOAPOutboundConnector.class.getName()));
   }
 }
