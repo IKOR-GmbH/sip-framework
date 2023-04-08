@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.soap.declarative.connector;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
