@@ -29,11 +29,6 @@ public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestratio
   private Consumer<RouteDefinition> requestRouteTransformer = this::defaultRequestTransformer;
   private Consumer<RouteDefinition> responseRouteTransformer = this::defaultResponseTransformer;
 
-  public static ConnectorOrchestrator forConnector(
-      final Supplier<ConnectorDefinition> relatedConnector) {
-    return new ConnectorOrchestrator(relatedConnector);
-  }
-
   public static ConnectorOrchestrator forConnector(final ConnectorDefinition relatedConnector) {
     return new ConnectorOrchestrator(() -> relatedConnector);
   }

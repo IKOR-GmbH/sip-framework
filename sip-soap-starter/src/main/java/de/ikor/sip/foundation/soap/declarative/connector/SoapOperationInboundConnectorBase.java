@@ -4,7 +4,7 @@ import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnector
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
-import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
@@ -105,9 +105,9 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
    */
   public Class<T> getServiceInterfaceClass() {
     if (serviceClass == null) {
-      throw new SIPFrameworkException(
+      throw new SIPFrameworkInitializationException(
           String.format(
-              "SIP Framework can't infer Service class of %s SOAP Connector. Please @Override getServiceInterfaceClass() method.",
+              "SIP Framework can't infer Service class of %s Inbound SOAP Connector. Please @Override getServiceInterfaceClass() method.",
               getClass().getName()));
     }
     return serviceClass;

@@ -60,6 +60,7 @@ class SoapServiceTieInRouteBuilder extends RouteBuilder {
 
     final var routeChoices =
         from(SOAPEndpointBuilder.generateCXFEndpoint(
+                soapServiceName,
                 applicationContext.getBeansOfType(CxfEndpoint.class),
                 soapServiceName,
                 serviceClass.getName(),
