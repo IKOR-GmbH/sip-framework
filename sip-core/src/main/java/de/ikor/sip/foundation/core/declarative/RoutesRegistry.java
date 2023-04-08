@@ -230,16 +230,9 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
       return;
     }
 
-    if (service instanceof EndpointAware endpointAware) {
-      addToEndpointUriMaps(routeId, endpointAware.getEndpoint().getEndpointBaseUri());
-    }
-
-    if (service instanceof SendDynamicProcessor dynamicProcessor) {
-      addToEndpointUriMaps(routeId, dynamicProcessor.getUri());
-    }
-
-    if (service instanceof WireTapProcessor wireTapProcessor) {
-      addToEndpointUriMaps(routeId, wireTapProcessor.getUri());
+    if (service instanceof Processor processorService) {
+      getEndpointUri(processorService)
+          .ifPresent(endpointUri -> addToEndpointUriMaps(routeId, endpointUri));
     }
 
     if (service instanceof Enricher enricher) {
