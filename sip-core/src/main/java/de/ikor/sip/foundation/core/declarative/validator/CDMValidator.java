@@ -6,19 +6,15 @@ import org.apache.camel.Processor;
 
 public class CDMValidator implements Processor {
 
-  public static final String REQUEST_EXCEPTION_MESSAGE =
-      "Wrong data type in exchange body when sending request to central domain. Body type was %s, but type should be same as request model in integration scenario: %s";
+  private final String scenario;
 
-  public static final String RESPONSE_EXCEPTION_MESSAGE =
-      "Wrong data type in exchange body when sending response to central domain. Body type was %s, but type should be same as response model in integration scenario: %s";
-
+  private final String connector;
   private final Class<?> centralDomainModel;
 
-  private final String message;
-
-  public CDMValidator(Class<?> centralDomainModel, String message) {
+  public CDMValidator(String scenario, String connector, Class<?> centralDomainModel) {
+    this.scenario = scenario;
+    this.connector = connector;
     this.centralDomainModel = centralDomainModel;
-    this.message = message;
   }
 
   @Override
@@ -26,8 +22,10 @@ public class CDMValidator implements Processor {
     if (!centralDomainModel.isInstance(exchange.getMessage().getBody())) {
       throw new SIPFrameworkException(
           String.format(
-              message,
+              "Wrong data type in connector %s. Body type was %s, but when sending to integration scenario %s, body type should be %s",
+              connector,
               exchange.getMessage().getBody().getClass().getName(),
+              scenario,
               centralDomainModel.getName()));
     }
   }
