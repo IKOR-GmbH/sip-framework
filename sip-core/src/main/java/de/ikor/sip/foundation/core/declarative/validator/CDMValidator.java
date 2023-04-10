@@ -15,10 +15,9 @@ public class CDMValidator implements Processor {
   public void process(Exchange exchange) throws Exception {
     if (!centralModelRequest.isInstance(exchange.getMessage().getBody())) {
       throw new SIPFrameworkException(
-          "Wrong data type. Expected: "
-              + centralModelRequest.getName()
-              + ", but was: "
-              + exchange.getMessage().getBody().getClass().getName());
+          String.format(
+              "Wrong data type. Expected: %s, but was:  %s",
+              centralModelRequest.getName(), exchange.getMessage().getBody().getClass().getName()));
     }
   }
 }
