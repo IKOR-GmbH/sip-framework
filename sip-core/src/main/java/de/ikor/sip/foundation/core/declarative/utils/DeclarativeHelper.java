@@ -28,9 +28,8 @@ public class DeclarativeHelper {
   public static <A extends Annotation> A getAnnotationOrThrow(Class<A> annotation, Object from) {
     var ann = from.getClass().getAnnotation(annotation);
     if (null == ann) {
-      throw new SIPFrameworkInitializationException(
-          String.format(
-              "Annotation @%s required on class %s", annotation.getSimpleName(), from.getClass()));
+      throw SIPFrameworkInitializationException.initException(
+          "Annotation @%s required on class %s", annotation.getSimpleName(), from.getClass());
     }
     return ann;
   }
@@ -53,15 +52,13 @@ public class DeclarativeHelper {
       try {
         return createInstance(clazz);
       } catch (NoSuchMethodException ex) {
-        throw new SIPFrameworkInitializationException(
-            String.format(
-                "Mapper %s needs to have a no-arg constructor, please define one.",
-                clazz.getName()));
+        throw SIPFrameworkInitializationException.initException(
+            "Mapper %s needs to have a no-arg constructor, please define one.", clazz.getName());
       } catch (InvocationTargetException
           | InstantiationException
           | IllegalAccessException exception) {
-        throw new SIPFrameworkInitializationException(
-            String.format("SIP couldn't create a Mapper %s.", clazz.getName()), exception);
+        throw SIPFrameworkInitializationException.initException(
+            exception, "SIP couldn't create a Mapper %s.", clazz.getName());
       }
     }
   }
@@ -113,10 +110,9 @@ public class DeclarativeHelper {
             .filter(method -> method.getParameterTypes().length == 1)
             .toList();
     if (candidateMethods.size() != 1) {
-      throw new SIPFrameworkInitializationException(
-          String.format(
-              "Failed to automatically resolve the model classes for the Mapper: %s. Please @Override the getSourceModelClass() and getTargetModelClass() methods",
-              clazz.getName()));
+      throw SIPFrameworkInitializationException.initException(
+          "Failed to automatically resolve the model classes for the Mapper: %s. Please @Override the getSourceModelClass() and getTargetModelClass() methods",
+          clazz.getName());
     }
     return candidateMethods.get(0);
   }

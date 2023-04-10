@@ -59,8 +59,7 @@ public class AutoTestCaseLoading {
     try {
       return resourcePatternResolver.getResources(path);
     } catch (IOException e) {
-      throw new SIPFrameworkInitializationException(
-          String.format("File not found for path %s", path));
+      throw SIPFrameworkInitializationException.initException("File not found for path %s", path);
     }
   }
 

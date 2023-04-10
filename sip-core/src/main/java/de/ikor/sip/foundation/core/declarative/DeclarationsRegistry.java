@@ -64,10 +64,9 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                       .build();
               if (modelMappers.containsKey(mapperPair)) {
                 final var duplicate = modelMappers.get(mapperPair);
-                throw new SIPFrameworkInitializationException(
-                    String.format(
-                        "ModelMapper implementations %s and %s share the same source and target model classes",
-                        mapper.getClass().getName(), duplicate.getClass().getName()));
+                throw SIPFrameworkInitializationException.initException(
+                    "ModelMapper implementations %s and %s share the same source and target model classes",
+                    mapper.getClass().getName(), duplicate.getClass().getName());
               }
               modelMappers.put(mapperPair, (ModelMapper<Object, Object>) mapper);
             });
@@ -122,9 +121,8 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   private void checkIfDuplicate(
       Set<String> set, String id, String className, String declarativeElement) {
     if (!set.add(id)) {
-      throw new SIPFrameworkInitializationException(
-          String.format(
-              "There is a duplicate %s id %s in class %s", declarativeElement, id, className));
+      throw SIPFrameworkInitializationException.initException(
+          "There is a duplicate %s id %s in class %s", declarativeElement, id, className);
     }
   }
 
@@ -136,9 +134,8 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                     || getOutboundConnectorsByScenarioId(scenario.getId()).isEmpty())
         .map(
             scenario -> {
-              throw new SIPFrameworkInitializationException(
-                  String.format(
-                      "There is unused integration scenario with id %s", scenario.getId()));
+              throw SIPFrameworkInitializationException.initException(
+                  "There is unused integration scenario with id %s", scenario.getId());
             })
         .forEach(
             x -> {
@@ -160,8 +157,8 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .findFirst()
         .orElseThrow(
             () ->
-                new SIPFrameworkInitializationException(
-                    String.format("There is no integration scenario with id: %s", scenarioId)));
+                SIPFrameworkInitializationException.initException(
+                    "There is no integration scenario with id: %s", scenarioId));
   }
 
   @Override

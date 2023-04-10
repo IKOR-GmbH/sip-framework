@@ -195,8 +195,8 @@ public class AdapterBuilder extends RouteBuilder {
       restCollection.setCamelContext(getCamelContext());
       return (T) restCollection;
     }
-    throw new SIPFrameworkInitializationException(
-        String.format("Failed to resolve unknown connector definition type: %s", type.getName()));
+    throw SIPFrameworkInitializationException.initException(
+        "Failed to resolve unknown connector definition type: %s", type.getName());
   }
 
   private String sipMC(String scenarioId) {

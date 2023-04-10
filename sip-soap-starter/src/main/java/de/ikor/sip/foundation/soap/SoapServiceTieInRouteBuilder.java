@@ -112,10 +112,9 @@ class SoapServiceTieInRouteBuilder extends RouteBuilder {
         .map(Map.Entry::getKey)
         .forEach(
             op -> {
-              throw new SIPFrameworkInitializationException(
-                  String.format(
-                      "There are multiple Inbound SOAP Connectors implementing operation \"%s\" for Service \"%s\"",
-                      op, serviceInterface.getName()));
+              throw SIPFrameworkInitializationException.initException(
+                  "There are multiple Inbound SOAP Connectors implementing operation \"%s\" for Service \"%s\"",
+                  op, serviceInterface.getName());
             });
     connectorImplementedOperations.entrySet().stream()
         .filter(conn -> !serviceClassOperations.contains(conn.getValue()))

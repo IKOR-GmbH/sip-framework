@@ -26,20 +26,18 @@ public class SOAPEndpointBuilder {
         try {
           cxfEndpoint.setServiceClass(serviceClassQualifiedName);
         } catch (ClassNotFoundException e) {
-          throw new SIPFrameworkInitializationException(
-              String.format(
-                  "Service class '%s' used in the soap connector '%s' can not be found",
-                  serviceClassQualifiedName, connectorID),
-              e);
+          throw SIPFrameworkInitializationException.initException(
+              e,
+              "Service class '%s' used in the soap connector '%s' can not be found",
+              serviceClassQualifiedName,
+              connectorID);
         }
       }
       if (StringUtils.isBlank(cxfEndpoint.getAddress())) {
         if (StringUtils.isBlank(address)) {
-          throw new SIPFrameworkInitializationException(
-              String.format(
-                  "CXFEndpoint bean '%s' is defined but the SOAP address is undefined. "
-                      + "Please use 'setAddress()' in the CXFEndpoint bean or @Override the 'getServiceAddress()' method in the connector '%s'",
-                  serviceClassName, connectorID));
+          throw SIPFrameworkInitializationException.initException(
+              "CXFEndpoint bean '%s' is defined but the SOAP address is undefined. Please use 'setAddress()' in the CXFEndpoint bean or @Override the 'getServiceAddress()' method in the connector '%s'",
+              serviceClassName, connectorID);
         }
         cxfEndpoint.setAddress(address);
       }
@@ -50,11 +48,9 @@ public class SOAPEndpointBuilder {
     } else {
 
       if (StringUtils.isBlank(address)) {
-        throw new SIPFrameworkInitializationException(
-            String.format(
-                "Connector '%s' doesn't have a defined address. Please @Override the 'getServiceAddress()' method"
-                    + " or define a CXFBean with name '%s'",
-                connectorID, serviceClassName));
+        throw SIPFrameworkInitializationException.initException(
+            "Connector '%s' doesn't have a defined address. Please @Override the 'getServiceAddress()' method or define a CXFBean with name '%s'",
+            connectorID, serviceClassName);
       }
       return StaticEndpointBuilders.cxf(address)
           .serviceClass(serviceClassQualifiedName)
