@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static de.ikor.sip.foundation.core.declarative.validator.CDMValidator.*;
+
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrationInfo;
@@ -98,11 +100,16 @@ public class AdapterBuilder extends RouteBuilder {
     final var handoffRouteDefinition =
         from(StaticEndpointBuilders.direct(scenarioHandoffRouteId))
             .routeId(scenarioHandoffRouteId)
-            .process(new CDMValidator(scenarioDefinition.getRequestModelClass()))
+            .process(
+                new CDMValidator(
+                    scenarioDefinition.getRequestModelClass(), REQUEST_EXCEPTION_MESSAGE))
             .to(sipMC(scenarioDefinition.getId()));
     scenarioDefinition
         .getResponseModelClass()
-        .ifPresent(model -> handoffRouteDefinition.process(new CDMValidator(model)));
+        .ifPresent(
+            model ->
+                handoffRouteDefinition.process(
+                    new CDMValidator(model, RESPONSE_EXCEPTION_MESSAGE)));
 
     if (inboundConnector.hasResponseFlow()) {
       handoffRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
