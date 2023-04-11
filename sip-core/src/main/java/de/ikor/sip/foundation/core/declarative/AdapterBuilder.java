@@ -9,6 +9,12 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.declarative.validator.CDMValidator;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.builder.EndpointConsumerBuilder;
@@ -21,13 +27,6 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.camel.model.rest.RestsDefinition;
 import org.springframework.stereotype.Component;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * This class is setting up Camel routes from the scenario- and connector-definitions specified in
@@ -222,7 +221,6 @@ public class AdapterBuilder extends RouteBuilder {
     requestRouteDefinition.to(StaticEndpointBuilders.direct(externalEndpointRouteId));
   }
 
-
   @SuppressWarnings("unchecked")
   private <T extends OptionalIdentifiedDefinition<T>> T resolveConnectorDefinitionType(
       Class<? extends T> type) {
@@ -250,8 +248,7 @@ public class AdapterBuilder extends RouteBuilder {
   private class ScenarioOrchestrationValues implements ScenarioOrchestrationInfo {
     IntegrationScenarioDefinition integrationScenario;
     RoutesDefinition routesDefinition;
-    Map<IntegrationScenarioProviderDefinition, ? extends EndpointConsumerBuilder>  providerEndpoints;
-    Map<IntegrationScenarioConsumerDefinition, ? extends EndpointProducerBuilder>  consumerEndpoints;
+    Map<IntegrationScenarioProviderDefinition, ? extends EndpointConsumerBuilder> providerEndpoints;
+    Map<IntegrationScenarioConsumerDefinition, ? extends EndpointProducerBuilder> consumerEndpoints;
   }
-
 }
