@@ -248,7 +248,7 @@ public class AdapterBuilder extends RouteBuilder {
   private class ScenarioOrchestrationValues implements ScenarioOrchestrationInfo {
     IntegrationScenarioDefinition integrationScenario;
     RoutesDefinition routesDefinition;
-    Map<IntegrationScenarioProviderDefinition, ? extends EndpointConsumerBuilder> providerEndpoints;
-    Map<IntegrationScenarioConsumerDefinition, ? extends EndpointProducerBuilder> consumerEndpoints;
+    Map<IntegrationScenarioProviderDefinition, EndpointConsumerBuilder> providerEndpoints;
+    Map<IntegrationScenarioConsumerDefinition, EndpointProducerBuilder> consumerEndpoints;
   }
 }
