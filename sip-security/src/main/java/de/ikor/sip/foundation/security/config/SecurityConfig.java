@@ -64,14 +64,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(AuthenticationManagerBuilder authManagerBuilder)
       throws IllegalStateException {
-    List<? extends Class<?>> autowiredAuthProviders =
-        authProviders.stream().map(Object::getClass).toList();
+    List<Class<?>> autowiredAuthProviders =
+        List.copyOf(authProviders.stream().map(Object::getClass).toList());
 
-    List<? extends Class<?>> providersUnavailableAtRuntime =
-        config.getAuthProviders().stream()
-            .map(AuthProviderSettings::getClassname)
-            .filter(a -> !autowiredAuthProviders.contains(a))
-            .toList();
+    List<Class<?>> providersUnavailableAtRuntime =
+        List.copyOf(
+            config.getAuthProviders().stream()
+                .map(AuthProviderSettings::getClassname)
+                .filter(a -> !autowiredAuthProviders.contains(a))
+                .toList());
 
     if (!providersUnavailableAtRuntime.isEmpty()) {
       throw SIPFrameworkException.initException(
