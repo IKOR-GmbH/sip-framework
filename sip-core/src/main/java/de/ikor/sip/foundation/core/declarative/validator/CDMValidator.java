@@ -20,13 +20,12 @@ public class CDMValidator implements Processor {
   @Override
   public void process(Exchange exchange) throws Exception {
     if (!centralDomainModel.isInstance(exchange.getMessage().getBody())) {
-      throw new SIPFrameworkException(
-          String.format(
-              "Wrong data type in connector %s. Body type was %s, but when sending to integration scenario %s, body type should be %s",
-              connector,
-              exchange.getMessage().getBody().getClass().getName(),
-              scenario,
-              centralDomainModel.getName()));
+      throw SIPFrameworkException.initException(
+          "Missing data type transformation in connector %s. Body type was %s, but when sending to integration scenario %s, body type should be %s",
+          connector,
+          exchange.getMessage().getBody().getClass().getName(),
+          scenario,
+          centralDomainModel.getName());
     }
   }
 }

@@ -75,10 +75,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .collect(Collectors.toList());
 
     if (!providersUnavailableAtRuntime.isEmpty()) {
-      throw new SIPFrameworkException(
-          String.format(
-              "Some providers declared in the config are not available in runtime: %s",
-              providersUnavailableAtRuntime));
+      throw SIPFrameworkException.initException(
+          "Some providers declared in the config are not available in runtime: %s",
+          providersUnavailableAtRuntime);
     }
 
     if (configHasDuplicateAuthProviders()) {

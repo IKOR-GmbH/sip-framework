@@ -31,27 +31,24 @@ public class TokenExtractors {
    */
   public void addMapping(Class<?> providerClassName, SIPTokenExtractor<?> tokenExtraction) {
     if (providerToExtractorMapping.containsKey(providerClassName)) {
-      throw new SIPFrameworkException(
-          String.format(
-              "Token extractor mapping for this provider exists already: %s", providerClassName));
+      throw SIPFrameworkException.initException(
+          "Token extractor mapping for this provider exists already: %s", providerClassName);
     }
 
     if (providerToExtractorMapping.values().stream()
         .map(Object::getClass)
         .anyMatch(tokenExtraction.getClass()::equals)) {
-      throw new SIPFrameworkException(
-          String.format(
-              "Token extractor mapping for this extractor exists already: %s",
-              tokenExtraction.getClass()));
+      throw SIPFrameworkException.initException(
+          "Token extractor mapping for this extractor exists already: %s",
+          tokenExtraction.getClass());
     }
 
     if (providerToExtractorMapping.values().stream()
         .map(SIPTokenExtractor::getTokenType)
         .anyMatch(tokenExtraction.getTokenType()::equals)) {
-      throw new SIPFrameworkException(
-          String.format(
-              "A token extractor mapping for an extractor with the same token type already exists: %s",
-              tokenExtraction.getTokenType()));
+      throw SIPFrameworkException.initException(
+          "A token extractor mapping for an extractor with the same token type already exists: %s",
+          tokenExtraction.getTokenType());
     }
 
     providerToExtractorMapping.put(providerClassName, tokenExtraction);
