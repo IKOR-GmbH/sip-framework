@@ -51,13 +51,20 @@ class CDMValidationTest {
   void when_CDMRequestIsNotValid_then_ExceptionOccurs() {
     Exchange target = template.withBody("String").to(direct("cdm-validator")).send();
 
-    assertThat(target.getException()).isInstanceOf(SIPFrameworkException.class);
+    assertThat(target.getException())
+        .isInstanceOf(SIPFrameworkException.class)
+        .hasMessage(
+            "Data type mismatch in Connector 'in-CDMValidation-SIP1'. Message Type was 'java.lang.String', but the integration scenario 'CDMValidation' requires Type 'de.ikor.sip.foundation.core.apps.declarative.CDMValidationAdapter$CDMRequest'");
   }
 
   @Test
   void when_CDMResponseIsNotValid_then_ExceptionOccurs() {
     Exchange target = template.withBody(new CDMRequest(1001)).to(direct("cdm-validator")).send();
 
-    assertThat(target.getException()).isInstanceOf(SIPFrameworkException.class);
+    assertThat(target.getException())
+        .isInstanceOf(SIPFrameworkException.class)
+        .hasMessage(
+            "Data type mismatch in Connector 'out-CDMValidation-SIP2'. Message Type was 'java.lang.String', but the integration scenario 'CDMValidation' requires Type 'de.ikor.sip.foundation.core.apps.declarative.CDMValidationAdapter$CDMResponse'");
+    ;
   }
 }

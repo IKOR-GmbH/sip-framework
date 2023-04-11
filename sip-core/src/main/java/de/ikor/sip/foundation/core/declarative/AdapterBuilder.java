@@ -107,18 +107,18 @@ public class AdapterBuilder extends RouteBuilder {
                     scenarioDefinition.getRequestModelClass(),
                     TO_CDM_EXCEPTION_MESSAGE))
             .to(sipMC(scenarioDefinition.getId()));
-    scenarioDefinition
-        .getResponseModelClass()
-        .ifPresent(
-            model ->
-                handoffRouteDefinition.process(
-                    new CDMValidator(
-                        scenarioDefinition.getId(),
-                        inboundConnector.getId(),
-                        model,
-                        FROM_CDM_EXCEPTION_MESSAGE)));
 
     if (inboundConnector.hasResponseFlow()) {
+      scenarioDefinition
+          .getResponseModelClass()
+          .ifPresent(
+              cdmModel ->
+                  handoffRouteDefinition.process(
+                      new CDMValidator(
+                          scenarioDefinition.getId(),
+                          inboundConnector.getId(),
+                          cdmModel,
+                          FROM_CDM_EXCEPTION_MESSAGE)));
       handoffRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
     }
 
@@ -159,6 +159,12 @@ public class AdapterBuilder extends RouteBuilder {
     // Build takeover route from scenario
     from(sipMC(scenarioDefinition.getId()))
         .routeId(scenarioTakeoverRouteId)
+        .process(
+            new CDMValidator(
+                scenarioDefinition.getId(),
+                outboundConnector.getId(),
+                scenarioDefinition.getRequestModelClass(),
+                FROM_CDM_EXCEPTION_MESSAGE))
         .to(StaticEndpointBuilders.direct(requestOrchestrationRouteId));
 
     // Build endpoint route that connects to external system
@@ -187,6 +193,19 @@ public class AdapterBuilder extends RouteBuilder {
       outboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
     }
     requestRouteDefinition.to(StaticEndpointBuilders.direct(externalEndpointRouteId));
+
+    scenarioDefinition
+        .getResponseModelClass()
+        .ifPresent(
+            cdmModel ->
+                responseRouteDefinition.ifPresent(
+                    route ->
+                        route.process(
+                            new CDMValidator(
+                                scenarioDefinition.getId(),
+                                outboundConnector.getId(),
+                                cdmModel,
+                                TO_CDM_EXCEPTION_MESSAGE))));
   }
 
   @SuppressWarnings("unchecked")

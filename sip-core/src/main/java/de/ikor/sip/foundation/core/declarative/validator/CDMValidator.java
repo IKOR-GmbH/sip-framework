@@ -7,10 +7,10 @@ import org.apache.camel.Processor;
 public class CDMValidator implements Processor {
 
   public static final String TO_CDM_EXCEPTION_MESSAGE =
-      "Missing data transformation in connector %s. Body type was %s, but when sending to integration scenario %s, body type should be %s";
+      "Data type mismatch in Connector '%s'. Message Type was '%s', but the integration scenario '%s' requires Type '%s'";
 
   public static final String FROM_CDM_EXCEPTION_MESSAGE =
-      "Missing data transformation in connector %s. Body type was %s, but when receiving from integration scenario %s, body type should be %s";
+      "Data type mismatch in Connector '%s'. Message Type was '%s', but the integration scenario '%s' provided Type '%s'";
 
   private final String scenario;
 
