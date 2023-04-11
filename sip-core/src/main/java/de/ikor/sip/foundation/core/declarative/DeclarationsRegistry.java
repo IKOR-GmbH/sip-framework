@@ -225,7 +225,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
       List<IntegrationScenarioDefinition> scenarios,
       List<ConnectorGroupDefinition> connectorGroups) {
     return connector -> {
-      if (connector.getClass().isAnnotationPresent(Disabled.class)) return true;
+      if (isDisabled().test(connector)) return true;
 
       Optional<IntegrationScenarioDefinition> scenarioDefinition =
           scenarios.stream()
