@@ -1,35 +1,22 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.isPrimaryEndpoint;
-import static de.ikor.sip.foundation.core.util.CamelProcessorsHelper.getEndpointUri;
-import static de.ikor.sip.foundation.core.util.CamelProcessorsHelper.isInMemoryUri;
-
 import de.ikor.sip.foundation.core.actuator.declarative.model.EndpointInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteInfo;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import lombok.Synchronized;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
-import org.apache.camel.EndpointAware;
+import org.apache.camel.Expression;
 import org.apache.camel.Processor;
 import org.apache.camel.Route;
 import org.apache.camel.component.servlet.ServletConsumer;
 import org.apache.camel.processor.Enricher;
 import org.apache.camel.processor.PollEnricher;
-import org.apache.camel.processor.SendDynamicProcessor;
-import org.apache.camel.processor.WireTapProcessor;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.spi.CamelEvent.CamelContextEvent;
 import org.apache.camel.spi.CamelEvent.CamelContextStartedEvent;
@@ -39,6 +26,18 @@ import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.isPrimaryEndpoint;
+import static de.ikor.sip.foundation.core.util.CamelProcessorsHelper.getEndpointUri;
+import static de.ikor.sip.foundation.core.util.CamelProcessorsHelper.isInMemoryUri;
 
 @Service(RoutesRegistry.BEAN_NAME)
 public class RoutesRegistry extends SimpleEventNotifierSupport {
