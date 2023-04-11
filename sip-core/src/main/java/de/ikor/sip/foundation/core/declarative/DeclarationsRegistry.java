@@ -1,5 +1,8 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static java.util.function.Predicate.not;
+
+import de.ikor.sip.foundation.core.declarative.annonation.Disabled;
 import de.ikor.sip.foundation.core.declarative.annonation.GlobalMapper;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
@@ -15,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
@@ -33,13 +38,21 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   private final Map<MapperPair, ModelMapper<Object, Object>> globalModelMappersRegistry;
 
   public DeclarationsRegistry(
-      List<ConnectorGroupDefinition> connectorGroups,
-      List<IntegrationScenarioDefinition> scenarios,
-      List<ConnectorDefinition> connectors,
+      List<ConnectorGroupDefinition> autowiredConnectorGroups,
+      List<IntegrationScenarioDefinition> autowiredScenarios,
+      List<ConnectorDefinition> autowiredConnectors,
       List<ModelMapper<?, ?>> modelMappers) {
-    this.connectorGroups = connectorGroups;
-    this.scenarios = scenarios;
-    this.connectors = connectors;
+
+    this.connectorGroups =
+        autowiredConnectorGroups.stream().filter(not(isDisabled())).collect(Collectors.toList());
+
+    this.scenarios = autowiredScenarios.stream().filter(not(isDisabled())).toList();
+
+    this.connectors =
+        autowiredConnectors.stream()
+            .filter(not(isDisabled(autowiredScenarios, autowiredConnectorGroups)))
+            .toList();
+
     this.globalModelMappersRegistry = checkAndInitializeGlobalModelMappers(modelMappers);
 
     createMissingConnectorGroups();
@@ -202,6 +215,33 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .filter(OutboundConnectorDefinition.class::isInstance)
         .map(OutboundConnectorDefinition.class::cast)
         .toList();
+  }
+
+  private Predicate<Object> isDisabled() {
+    return elem -> elem.getClass().isAnnotationPresent(Disabled.class);
+  }
+
+  private Predicate<ConnectorDefinition> isDisabled(
+      List<IntegrationScenarioDefinition> scenarios,
+      List<ConnectorGroupDefinition> connectorGroups) {
+    return connector -> {
+      if (isDisabled().test(connector)) return true;
+
+      Optional<IntegrationScenarioDefinition> scenarioDefinition =
+          scenarios.stream()
+              .filter(scenario -> scenario.getId().equals(connector.getScenarioId()))
+              .findFirst();
+      if (scenarioDefinition.isPresent() && isDisabled().test(scenarioDefinition.get())) {
+        return true;
+      }
+
+      Optional<ConnectorGroupDefinition> connectorGroupDefinition =
+          connectorGroups.stream()
+              .filter(group -> group.getId().equals(connector.getConnectorGroupId()))
+              .findFirst();
+      return connectorGroupDefinition.isPresent()
+          && isDisabled().test(connectorGroupDefinition.get());
+    };
   }
 
   @Builder
