@@ -118,6 +118,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     return routeId;
   }
 
+  @Synchronized
   public String generateRouteIdForScenarioOrchestrator(
       final IntegrationScenarioDefinition scenario, final String suffix, final String... suffixes) {
     final var idBuilder = new StringBuilder(SIP_SCENARIO_ORCHESTRATOR_PREFIX);
