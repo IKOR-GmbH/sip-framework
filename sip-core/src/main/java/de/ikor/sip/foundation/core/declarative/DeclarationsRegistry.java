@@ -64,10 +64,9 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                       .build();
               if (modelMappers.containsKey(mapperPair)) {
                 final var duplicate = modelMappers.get(mapperPair);
-                throw new SIPFrameworkInitializationException(
-                    String.format(
-                        "ModelMapper implementations %s and %s share the same source and target model classes",
-                        mapper.getClass().getName(), duplicate.getClass().getName()));
+                throw SIPFrameworkInitializationException.initException(
+                    "ModelMapper implementations %s and %s share the same source and target model classes",
+                    mapper.getClass().getName(), duplicate.getClass().getName());
               }
               modelMappers.put(mapperPair, (ModelMapper<Object, Object>) mapper);
             });
@@ -99,16 +98,32 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
   private void checkForDuplicateConnectorGroups() {
     Set<String> set = new HashSet<>();
-    List<String> connectorGroupIds =
-        connectorGroups.stream().map(ConnectorGroupDefinition::getId).toList();
-    connectorGroupIds.forEach(id -> checkIfDuplicate(set, id, CONNECTOR_GROUP));
+    connectorGroups.forEach(
+        connectorGroup ->
+            checkIfDuplicate(
+                set, connectorGroup.getId(), connectorGroup.getClass().getName(), CONNECTOR_GROUP));
   }
 
   private void checkForDuplicateScenarios() {
     Set<String> set = new HashSet<>();
-    List<String> scenarioIds =
-        scenarios.stream().map(IntegrationScenarioDefinition::getId).toList();
-    scenarioIds.forEach(id -> checkIfDuplicate(set, id, SCENARIO));
+    scenarios.forEach(
+        scenario ->
+            checkIfDuplicate(set, scenario.getId(), scenario.getClass().getName(), SCENARIO));
+  }
+
+  private void checkForDuplicateConnectors() {
+    Set<String> set = new HashSet<>();
+    connectors.forEach(
+        connector ->
+            checkIfDuplicate(set, connector.getId(), connector.getClass().getName(), CONNECTOR));
+  }
+
+  private void checkIfDuplicate(
+      Set<String> set, String id, String className, String declarativeElement) {
+    if (!set.add(id)) {
+      throw SIPFrameworkInitializationException.initException(
+          "There is a duplicate %s id %s in class %s", declarativeElement, id, className);
+    }
   }
 
   private void checkForUnusedScenarios() {
@@ -119,27 +134,13 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                     || getOutboundConnectorsByScenarioId(scenario.getId()).isEmpty())
         .map(
             scenario -> {
-              throw new SIPFrameworkInitializationException(
-                  String.format(
-                      "There is unused integration scenario with id %s", scenario.getId()));
+              throw SIPFrameworkInitializationException.initException(
+                  "There is unused integration scenario with id %s", scenario.getId());
             })
         .forEach(
             x -> {
               /* don't need the result */
             });
-  }
-
-  private void checkForDuplicateConnectors() {
-    Set<String> set = new HashSet<>();
-    List<String> connectorIds = connectors.stream().map(ConnectorDefinition::getId).toList();
-    connectorIds.forEach(id -> checkIfDuplicate(set, id, CONNECTOR));
-  }
-
-  private void checkIfDuplicate(Set<String> set, String id, String declarativeElement) {
-    if (!set.add(id)) {
-      throw new SIPFrameworkInitializationException(
-          String.format("There is a duplicate %s id: %s", declarativeElement, id));
-    }
   }
 
   @Override
@@ -156,8 +157,8 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .findFirst()
         .orElseThrow(
             () ->
-                new SIPFrameworkInitializationException(
-                    String.format("There is no integration scenario with id: %s", scenarioId)));
+                SIPFrameworkInitializationException.initException(
+                    "There is no integration scenario with id: %s", scenarioId));
   }
 
   @Override
@@ -204,5 +205,5 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   }
 
   @Builder
-  private record MapperPair(Class<?> sourceClass, Class<?> targetClass) {}
+  record MapperPair(Class<?> sourceClass, Class<?> targetClass) {}
 }

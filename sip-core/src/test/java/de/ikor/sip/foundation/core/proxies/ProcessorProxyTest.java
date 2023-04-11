@@ -40,6 +40,7 @@ class ProcessorProxyTest {
     outgoingProcessor = mock(SendProcessor.class);
     outgoingEndpoint = mock(Endpoint.class);
     when(outgoingProcessor.getEndpoint()).thenReturn(outgoingEndpoint);
+    when(outgoingEndpoint.getEndpointBaseUri()).thenReturn("endpointUri");
     processorProxySubjectOutgoing =
         new ProcessorProxy(namedNode, outgoingProcessor, proxyExtensions);
   }
@@ -158,7 +159,7 @@ class ProcessorProxyTest {
   @Test
   void WHEN_igoredEndpointProcessor_THEN_expectIsEndpointProcessorFalse() throws Exception {
     // arrange
-    when(outgoingEndpoint.getEndpointUri()).thenReturn("sipmc:middleComponent");
+    when(outgoingEndpoint.getEndpointBaseUri()).thenReturn("sipmc:middleComponent");
     processorProxySubjectOutgoing =
         new ProcessorProxy(namedNode, outgoingProcessor, proxyExtensions);
 

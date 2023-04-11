@@ -4,13 +4,14 @@ import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnecto
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
-import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import de.ikor.sip.foundation.soap.utils.OutboundSOAPMarshallerDefinition;
 import de.ikor.sip.foundation.soap.utils.SOAPEndpointBuilder;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Base class for SOAP outbound connectors.
@@ -45,6 +46,7 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
   protected EndpointProducerBuilder defineOutgoingEndpoint() {
 
     return SOAPEndpointBuilder.generateCXFEndpoint(
+        getId(),
         getApplicationContext().getBeansOfType(CxfEndpoint.class),
         getServiceInterfaceClass().getSimpleName(),
         getServiceInterfaceClass().getName(),
@@ -93,10 +95,9 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
    */
   public Class<T> getServiceInterfaceClass() {
     if (serviceClass == null) {
-      throw new SIPFrameworkException(
-          String.format(
-              "SIP Framework can't infer Service class of %s SOAP Connector. Please @Override getServiceInterfaceClass() method.",
-              getClass().getName()));
+      throw SIPFrameworkInitializationException.initException(
+          "SIP Framework can't infer Service class of %s Outbound SOAP Connector. Please @Override getServiceInterfaceClass() method.",
+          getClass().getName());
     }
     return serviceClass;
   }
@@ -108,5 +109,7 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
    */
   public abstract String getServiceOperationName();
 
-  public abstract String getServiceAddress();
+  protected String getServiceAddress() {
+    return StringUtils.EMPTY;
+  }
 }

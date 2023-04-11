@@ -1,6 +1,6 @@
-package de.ikor.sip.foundation.core.apps.declarative.mapping;
+package de.ikor.sip.foundation.core.apps.declarative.mappingadapter;
 
-import de.ikor.sip.foundation.core.apps.declarative.mapping.CommonDomainTypes.ResourceRequest;
+import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.CommonDomainTypes.ResourceRequest;
 import de.ikor.sip.foundation.core.declarative.annonation.GlobalMapper;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import lombok.Builder;

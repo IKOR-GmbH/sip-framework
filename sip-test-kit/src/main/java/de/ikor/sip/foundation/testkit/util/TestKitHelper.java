@@ -36,7 +36,8 @@ public class TestKitHelper extends SIPExchangeHelper {
   public static Endpoint resolveEndpoint(Exchange exchange, CamelContext camelContext) {
     Route route = resolveRoute(exchange, camelContext);
     if (route == null) {
-      throw new SIPFrameworkException("Route with id " + getRouteId(exchange) + " was not found");
+      throw SIPFrameworkException.initException(
+          "Route with id %s was not found", getRouteId(exchange));
     }
     return route.getEndpoint();
   }

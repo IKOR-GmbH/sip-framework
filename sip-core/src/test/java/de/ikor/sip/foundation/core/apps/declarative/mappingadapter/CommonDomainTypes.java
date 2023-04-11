@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.apps.declarative.mapping;
+package de.ikor.sip.foundation.core.apps.declarative.mappingadapter;
 
 import lombok.Builder;
 import lombok.Data;

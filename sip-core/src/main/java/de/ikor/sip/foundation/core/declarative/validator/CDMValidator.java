@@ -5,20 +5,27 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
 public class CDMValidator implements Processor {
-  private final Class<?> centralModelRequest;
 
-  public CDMValidator(Class<?> centralModelRequest) {
-    this.centralModelRequest = centralModelRequest;
+  private final String scenario;
+
+  private final String connector;
+  private final Class<?> centralDomainModel;
+
+  public CDMValidator(String scenario, String connector, Class<?> centralDomainModel) {
+    this.scenario = scenario;
+    this.connector = connector;
+    this.centralDomainModel = centralDomainModel;
   }
 
   @Override
   public void process(Exchange exchange) throws Exception {
-    if (!centralModelRequest.isInstance(exchange.getMessage().getBody())) {
-      throw new SIPFrameworkException(
-          "Wrong data type. Expected: "
-              + centralModelRequest.getName()
-              + ", but was: "
-              + exchange.getMessage().getBody().getClass().getName());
+    if (!centralDomainModel.isInstance(exchange.getMessage().getBody())) {
+      throw SIPFrameworkException.initException(
+          "Missing data type transformation in connector %s. Body type was %s, but when sending to integration scenario %s, body type should be %s",
+          connector,
+          exchange.getMessage().getBody().getClass().getName(),
+          scenario,
+          centralDomainModel.getName());
     }
   }
 }

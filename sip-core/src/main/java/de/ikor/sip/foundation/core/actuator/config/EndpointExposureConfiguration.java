@@ -73,7 +73,7 @@ public class EndpointExposureConfiguration
     try {
       return resourcePatternResolver.getResources(path);
     } catch (IOException e) {
-      throw new SIPFrameworkException(String.format("File not found for path %s", path));
+      throw SIPFrameworkException.initException("File not found for path %s", path);
     }
   }
 }

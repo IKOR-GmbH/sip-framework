@@ -1,10 +1,12 @@
 package de.ikor.sip.foundation.core.declarative.utils;
 
+import de.ikor.sip.foundation.core.declarative.RouteRole;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
@@ -26,9 +28,8 @@ public class DeclarativeHelper {
   public static <A extends Annotation> A getAnnotationOrThrow(Class<A> annotation, Object from) {
     var ann = from.getClass().getAnnotation(annotation);
     if (null == ann) {
-      throw new SIPFrameworkInitializationException(
-          String.format(
-              "Annotation @%s required on class %s", annotation.getSimpleName(), from.getClass()));
+      throw SIPFrameworkInitializationException.initException(
+          "Annotation @%s required on class %s", annotation.getSimpleName(), from.getClass());
     }
     return ann;
   }
@@ -48,12 +49,24 @@ public class DeclarativeHelper {
       return Mappers.getMapper(clazz);
     } catch (RuntimeException e) {
       // swallow the exception, it's not a mapstruct mapper
-      return createInstance(clazz);
+      try {
+        return createInstance(clazz);
+      } catch (NoSuchMethodException ex) {
+        throw SIPFrameworkInitializationException.initException(
+            "Mapper %s needs to have a no-arg constructor, please define one.", clazz.getName());
+      } catch (InvocationTargetException
+          | InstantiationException
+          | IllegalAccessException exception) {
+        throw SIPFrameworkInitializationException.initException(
+            exception, "SIP couldn't create a Mapper %s.", clazz.getName());
+      }
     }
   }
 
   @SneakyThrows
-  private static <T> T createInstance(Class<T> clazz, Object... parameters) {
+  private static <T> T createInstance(Class<T> clazz, Object... parameters)
+      throws NoSuchMethodException, InvocationTargetException, InstantiationException,
+          IllegalAccessException {
     Class<?>[] params = Arrays.stream(parameters).map(Object::getClass).toArray(Class[]::new);
     return clazz.getConstructor(params).newInstance(parameters);
   }
@@ -97,10 +110,9 @@ public class DeclarativeHelper {
             .filter(method -> method.getParameterTypes().length == 1)
             .toList();
     if (candidateMethods.size() != 1) {
-      throw new SIPFrameworkInitializationException(
-          String.format(
-              "Failed to automatically resolve the model classes for the Mapper: %s. Please @Override the getSourceModelClass() and getTargetModelClass() methods",
-              clazz.getName()));
+      throw SIPFrameworkInitializationException.initException(
+          "Failed to automatically resolve the model classes for the Mapper: %s. Please @Override the getSourceModelClass() and getTargetModelClass() methods",
+          clazz.getName());
     }
     return candidateMethods.get(0);
   }
@@ -134,5 +146,20 @@ public class DeclarativeHelper {
     return clazz
         .getConstructor(Arrays.stream(params).map(Object::getClass).toArray(Class[]::new))
         .newInstance(params);
+  }
+
+  public static boolean isPrimaryEndpoint(ConnectorType type, String role) {
+    return isInboundPrimaryEndpoint(type, role) || isOutboundPrimaryEndpoint(type, role);
+  }
+
+  private static boolean isInboundPrimaryEndpoint(ConnectorType type, String role) {
+    return type.equals(ConnectorType.IN)
+        && (role.equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName())
+            || role.equals(RouteRole.EXTERNAL_SOAP_SERVICE_PROXY.getExternalName()));
+  }
+
+  private static boolean isOutboundPrimaryEndpoint(ConnectorType type, String role) {
+    return type.equals(ConnectorType.OUT)
+        && (role.equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName()));
   }
 }

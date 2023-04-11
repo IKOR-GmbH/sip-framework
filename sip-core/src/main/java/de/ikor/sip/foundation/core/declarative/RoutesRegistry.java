@@ -1,16 +1,16 @@
 package de.ikor.sip.foundation.core.declarative;
 
-import static de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper.getSpecificEndpointUri;
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.isPrimaryEndpoint;
+import static de.ikor.sip.foundation.core.util.CamelProcessorsHelper.getEndpointUri;
+import static de.ikor.sip.foundation.core.util.CamelProcessorsHelper.isInMemoryUri;
 
 import de.ikor.sip.foundation.core.actuator.declarative.model.EndpointInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteInfo;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
-import de.ikor.sip.foundation.core.util.SpecificCamelProcessorsHelper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,15 +37,18 @@ import org.apache.camel.spi.IdAware;
 import org.apache.camel.support.SimpleEventNotifierSupport;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service(RoutesRegistry.BEAN_NAME)
 public class RoutesRegistry extends SimpleEventNotifierSupport {
 
   public static final String BEAN_NAME = "de.ikor.sip.foundation.core.declarative.RoutesRegistry";
-  private static final String SIP_CONNECTOR_PREFIX = "sip-connector";
-  private static final String SIP_SCENARIO_ORCHESTRATOR_PREFIX = "sip-connector";
-  private static final String SIP_SOAP_SERVICE_PREFIX = "sip-soap-service";
+  private static final String ENRICH = "enrich";
+  private static final String POLL_ENRICH = "pollEnrich";
+  public static final String SIP_CONNECTOR_PREFIX = "sip-connector";
+  public static final String SIP_SOAP_SERVICE_PREFIX = "sip-soap-service";
+  public static final String SIP_SCENARIO_ORCHESTRATOR_PREFIX = "sip-connector";
   private final DeclarationsRegistryApi declarationsRegistryApi;
 
   private final MultiValuedMap<ConnectorDefinition, String> routeIdsForConnectorRegister =
@@ -60,6 +63,12 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
 
   // Map of outgoing endpoints and their processor ids
   private final Map<String, IdAware> outgoingEndpointIds = new HashMap<>();
+
+  // Counter for creating unified endpoint uri for enrich processor which have no expression
+  private int enrichCounter = 1;
+
+  // Counter for creating unified endpoint uri for pollEnrich processor which have no expression
+  private int pollEnrichCounter = 1;
 
   public RoutesRegistry(DeclarationsRegistryApi declarationsRegistryApi) {
     this.declarationsRegistryApi = declarationsRegistryApi;
@@ -88,10 +97,9 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     Arrays.stream(suffixes).forEach(suffix -> idBuilder.append("-").append(suffix));
     final var routeId = idBuilder.toString();
     if (roleForRouteIdRegister.containsKey(routeId)) {
-      throw new SIPFrameworkInitializationException(
-          String.format(
-              "Can't build internal connector route with routeId '%s': routeId already exists",
-              routeId));
+      throw SIPFrameworkInitializationException.initException(
+          "Can't build internal connector route with routeId '%s': routeId already exists",
+          routeId);
     }
     connectorForRouteIdRegister.put(routeId, connector);
     routeIdsForConnectorRegister.put(connector, routeId);
@@ -103,10 +111,9 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   public String generateRouteIdForSoapService(final String soapServiceName) {
     final var routeId = String.format("%s_%s", SIP_SOAP_SERVICE_PREFIX, soapServiceName);
     if (roleForRouteIdRegister.containsKey(routeId)) {
-      throw new SIPFrameworkInitializationException(
-          String.format(
-              "Can't build internal soap-service route with routeId '%s': routeId already exists",
-              routeId));
+      throw SIPFrameworkInitializationException.initException(
+          "Can't build internal soap-service route with routeId '%s': routeId already exists",
+          routeId);
     }
     routeIdForSoapServiceRegister.put(routeId, soapServiceName);
     roleForRouteIdRegister.put(routeId, RouteRole.EXTERNAL_SOAP_SERVICE_PROXY);
@@ -177,7 +184,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
                 endpointsForRouteId.get(routeInfo.getRouteId()).stream()
                     // filter out all of sip framework internal endpoints
                     .filter(endpoint -> !endpoint.contains(SIP_CONNECTOR_PREFIX))
-                    .filter(SpecificCamelProcessorsHelper::isNotInMemoryComponent)
+                    .filter(endpoint -> !isInMemoryUri(endpoint))
                     .map(
                         endpoint ->
                             createEndpointInfo(
@@ -189,21 +196,6 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
                     .toList())
         .flatMap(Collection::stream)
         .toList();
-  }
-
-  private boolean isPrimaryEndpoint(ConnectorType type, String role) {
-    return isInboundPrimaryEndpoint(type, role) || isOutboundPrimaryEndpoint(type, role);
-  }
-
-  private boolean isInboundPrimaryEndpoint(ConnectorType type, String role) {
-    return type.equals(ConnectorType.IN)
-        && (role.equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName())
-            || role.equals(RouteRole.EXTERNAL_SOAP_SERVICE_PROXY.getExternalName()));
-  }
-
-  private boolean isOutboundPrimaryEndpoint(ConnectorType type, String role) {
-    return type.equals(ConnectorType.OUT)
-        && (role.equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName()));
   }
 
   private EndpointInfo createEndpointInfo(String endpoint, String routeId, boolean isPrimary) {
@@ -244,65 +236,60 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
 
   private void addProcessorId(ProcessorProxy processor) {
     Processor originalProcessor = processor.getOriginalProcessor();
-    Optional<String> endpointUri = getSpecificEndpointUri(originalProcessor);
+    Optional<String> endpointUri = getEndpointUri(originalProcessor);
     endpointUri.ifPresent(uri -> outgoingEndpointIds.put(uri, (IdAware) originalProcessor));
   }
 
   private void initEndpointsAndRouteIdsMaps(CamelContext camelContext) {
-    int enrichCounter = 1;
-    int pollEnrichCounter = 1;
     for (Route route : camelContext.getRoutes()) {
       String routeId = route.getRouteId();
       addToEndpointUriMaps(routeId, route.getEndpoint().getEndpointBaseUri());
-      searchForEndpointsInCamelCode(route.getServices(), routeId, enrichCounter, pollEnrichCounter);
+      for (org.apache.camel.Service service : route.getServices()) {
+        checkForExternalEndpoint(service, routeId);
+      }
     }
   }
 
-  private void searchForEndpointsInCamelCode(
-      List<org.apache.camel.Service> services,
-      String routeId,
-      int enrichCounter,
-      int pollEnrichCounter) {
-    for (org.apache.camel.Service service : services) {
-      // filter duplicated rest servlet endpoint
-      if (service instanceof ServletConsumer) {
-        continue;
-      }
+  private void checkForExternalEndpoint(org.apache.camel.Service service, String routeId) {
+    // filter duplicated rest servlet endpoint
+    if (service instanceof ServletConsumer) {
+      return;
+    }
 
-      if (service instanceof EndpointAware endpointAware) {
-        addToEndpointUriMaps(routeId, endpointAware.getEndpoint().getEndpointBaseUri());
-      }
+    if (service instanceof Processor processorService) {
+      getEndpointUri(processorService)
+          .ifPresent(endpointUri -> addToEndpointUriMaps(routeId, endpointUri));
+    }
 
-      if (service instanceof SendDynamicProcessor dynamicProcessor) {
-        addToEndpointUriMaps(routeId, dynamicProcessor.getUri());
+    if (service instanceof Enricher enricher) {
+      String enrichEndpointUri =
+          getEnrichExpressionUri(enricher.getExpression(), ENRICH, enrichCounter);
+      if (StringUtils.startsWith(enrichEndpointUri, ENRICH)) {
+        enrichCounter++;
       }
+      addToEndpointUriMaps(routeId, enrichEndpointUri);
+      outgoingEndpointIds.put(enrichEndpointUri, enricher);
+    }
 
-      if (service instanceof WireTapProcessor wireTapProcessor) {
-        addToEndpointUriMaps(routeId, wireTapProcessor.getUri());
+    if (service instanceof PollEnricher pollEnricher) {
+      String pollEnrichEndpointUri =
+          getEnrichExpressionUri(pollEnricher.getExpression(), POLL_ENRICH, pollEnrichCounter);
+      if (StringUtils.startsWith(pollEnrichEndpointUri, POLL_ENRICH)) {
+        pollEnrichCounter++;
       }
-
-      if (service instanceof Enricher enricher) {
-        String enrichEndpointUri =
-            enricher.getExpression() != null
-                ? enricher.getExpression().toString()
-                : String.format("enrich-%s", enrichCounter++);
-        addToEndpointUriMaps(routeId, enrichEndpointUri);
-        outgoingEndpointIds.put(enrichEndpointUri, enricher);
-      }
-
-      if (service instanceof PollEnricher pollEnricher) {
-        String pollEnrichEndpointUri =
-            pollEnricher.getExpression() != null
-                ? pollEnricher.getExpression().toString()
-                : String.format("pollEnrich-%s", pollEnrichCounter++);
-        addToEndpointUriMaps(routeId, pollEnrichEndpointUri);
-        outgoingEndpointIds.put(pollEnrichEndpointUri, pollEnricher);
-      }
+      addToEndpointUriMaps(routeId, pollEnrichEndpointUri);
+      outgoingEndpointIds.put(pollEnrichEndpointUri, pollEnricher);
     }
   }
 
   private void addToEndpointUriMaps(String routeId, String endpointUri) {
     endpointsForRouteId.put(routeId, endpointUri);
     routeIdsForEndpoints.put(endpointUri, routeId);
+  }
+
+  private String getEnrichExpressionUri(Expression expression, String processorName, int counter) {
+    return expression != null
+        ? expression.toString()
+        : String.format("%s-%s", processorName, counter);
   }
 }

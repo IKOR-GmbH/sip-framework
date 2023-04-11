@@ -136,11 +136,18 @@ public class AdapterBuilder extends RouteBuilder {
     final var handoffRouteDefinition =
         from(StaticEndpointBuilders.direct(scenarioHandoffRouteId))
             .routeId(scenarioHandoffRouteId)
-            .process(new CDMValidator(scenarioDefinition.getRequestModelClass()))
+            .process(
+                new CDMValidator(
+                    scenarioDefinition.getId(),
+                    inboundConnector.getId(),
+                    scenarioDefinition.getRequestModelClass()))
             .to(handoffToEndpoint);
     scenarioDefinition
         .getResponseModelClass()
-        .ifPresent(model -> handoffRouteDefinition.process(new CDMValidator(model)));
+        .ifPresent(
+            model ->
+                handoffRouteDefinition.process(
+                    new CDMValidator(scenarioDefinition.getId(), inboundConnector.getId(), model)));
 
     if (inboundConnector.hasResponseFlow()) {
       handoffRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
@@ -258,8 +265,8 @@ public class AdapterBuilder extends RouteBuilder {
       restCollection.setCamelContext(getCamelContext());
       return (T) restCollection;
     }
-    throw new SIPFrameworkInitializationException(
-        String.format("Failed to resolve unknown connector definition type: %s", type.getName()));
+    throw SIPFrameworkInitializationException.initException(
+        "Failed to resolve unknown connector definition type: %s", type.getName());
   }
 
   private String sipMC(String scenarioId) {

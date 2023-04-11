@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.core.declarative;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.ikor.sip.foundation.core.apps.declarative.MappingAdapter;
-import de.ikor.sip.foundation.core.apps.declarative.mapping.FrontEndTypes;
+import de.ikor.sip.foundation.core.apps.declarative.mappingadapter.FrontEndTypes;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
