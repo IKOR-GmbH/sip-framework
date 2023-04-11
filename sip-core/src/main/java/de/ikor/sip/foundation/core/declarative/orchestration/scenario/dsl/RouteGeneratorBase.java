@@ -1,7 +1,9 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistryApi;
+import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,4 +23,19 @@ abstract class RouteGeneratorBase {
           .getCamelContext()
           .getRegistry()
           .lookupByNameAndType(DeclarationsRegistryApi.BEAN_NAME, DeclarationsRegistryApi.class);
+
+  @Getter(value = AccessLevel.PROTECTED, lazy = true)
+  private final RoutesRegistry routesRegistry =
+      getRoutesDefinition()
+          .getCamelContext()
+          .getRegistry()
+          .lookupByNameAndType(RoutesRegistry.BEAN_NAME, RoutesRegistry.class);
+
+  protected String getIntegrationScenarioId() {
+    return getIntegrationScenario().getId();
+  }
+
+  protected IntegrationScenarioDefinition getIntegrationScenario() {
+    return getOrchestrationInfo().getIntegrationScenario();
+  }
 }

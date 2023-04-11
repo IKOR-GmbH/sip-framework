@@ -1,8 +1,10 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 
 @SuppressWarnings("rawtypes")
 public class RouteGeneratorForScenarioOrchestrationDefinition<M> extends RouteGeneratorBase
@@ -21,6 +23,7 @@ public class RouteGeneratorForScenarioOrchestrationDefinition<M> extends RouteGe
   public void run() {
     final var scenarioProvidersOverall = getOrchestrationInfo().getProviderEndpoints().keySet();
     final var unhandledProvidersOverall = new HashSet<>(scenarioProvidersOverall);
+    final List<RouteGeneratorForScenarioProvidersDefinition> providerBuilders = new ArrayList<>();
 
     for (ForScenarioProvidersBaseDefinition providerDefinition :
         scenarioOrchestrationDefinition.getScenarioProviderDefinitions()) {
@@ -29,13 +32,15 @@ public class RouteGeneratorForScenarioOrchestrationDefinition<M> extends RouteGe
           new RouteGeneratorForScenarioProvidersDefinition(
               getOrchestrationInfo(),
               providerDefinition,
-              Collections.unmodifiableSet(unhandledProvidersOverall),
-              Collections.unmodifiableSet(scenarioProvidersOverall));
+              Collections.unmodifiableSet(unhandledProvidersOverall));
 
       if (builder.getHandledProviders().isEmpty()) {
         continue;
       }
       unhandledProvidersOverall.removeAll(builder.getHandledProviders());
+      providerBuilders.add(builder);
     }
+
+    providerBuilders.forEach(builder -> builder.generateRoutes(getRoutesDefinition()));
   }
 }

@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.RouteGeneratorForScenarioOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioOrchestrationDefinition;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -25,6 +26,7 @@ public class ScenarioOrchestrator implements Orchestrator<ScenarioOrchestrationI
           final var orchestrationDef =
               new ScenarioOrchestrationDefinition<M>(info.getIntegrationScenario());
           dslDefinition.accept(orchestrationDef);
+          new RouteGeneratorForScenarioOrchestrationDefinition<>(info, orchestrationDef).run();
         });
   }
 

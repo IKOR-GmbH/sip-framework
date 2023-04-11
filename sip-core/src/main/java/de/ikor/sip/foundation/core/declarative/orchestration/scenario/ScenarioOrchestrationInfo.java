@@ -14,7 +14,9 @@ public interface ScenarioOrchestrationInfo extends OrchestrationInfo {
 
   RoutesDefinition getRoutesDefinition();
 
-  Map<IntegrationScenarioProviderDefinition, EndpointConsumerBuilder> getProviderEndpoints();
+  Map<IntegrationScenarioProviderDefinition, ? extends EndpointConsumerBuilder>
+      getProviderEndpoints();
 
-  Map<IntegrationScenarioConsumerDefinition, EndpointProducerBuilder> getConsumerEndpoints();
+  Map<IntegrationScenarioConsumerDefinition, ? extends EndpointProducerBuilder>
+      getConsumerEndpoints();
 }

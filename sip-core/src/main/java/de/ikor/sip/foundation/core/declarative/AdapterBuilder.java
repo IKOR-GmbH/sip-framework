@@ -3,17 +3,25 @@ package de.ikor.sip.foundation.core.declarative;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.declarative.validator.CDMValidator;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.builder.EndpointConsumerBuilder;
+import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
+import org.apache.camel.builder.endpoint.dsl.DirectEndpointBuilderFactory;
 import org.apache.camel.model.OptionalIdentifiedDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
@@ -30,15 +38,22 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AdapterBuilder extends RouteBuilder {
 
-  private final DeclarationsRegistry declarationsRegistry;
-  private final RoutesRegistry routesRegistry;
-
   @SuppressWarnings("rawtypes")
   private final Map<IntegrationScenarioDefinition, List<InboundConnectorDefinition>>
       inboundConnectors;
 
+  private final DeclarationsRegistry declarationsRegistry;
+  private final RoutesRegistry routesRegistry;
   private final Map<IntegrationScenarioDefinition, List<OutboundConnectorDefinition>>
       outboundConnectors;
+
+  @Override
+  public void configure() {
+    getCamelContext().getGlobalEndpointConfiguration().setBridgeErrorHandler(true);
+    getCamelContext().setTracing(true);
+    getCamelContext().setDumpRoutes(true);
+    declarationsRegistry.getScenarios().forEach(this::buildScenario);
+  }
 
   public AdapterBuilder(DeclarationsRegistry declarationsRegistry, RoutesRegistry routesRegistry) {
     this.declarationsRegistry = declarationsRegistry;
@@ -56,27 +71,50 @@ public class AdapterBuilder extends RouteBuilder {
                         declarationsRegistry.getScenarioById(connectors.fromScenarioId())));
   }
 
-  @Override
-  public void configure() {
-    getCamelContext().getGlobalEndpointConfiguration().setBridgeErrorHandler(true);
-    declarationsRegistry.getScenarios().forEach(this::buildScenario);
-  }
-
   @SuppressWarnings("unchecked")
   private void buildScenario(final IntegrationScenarioDefinition scenarioDefinition) {
-    inboundConnectors
-        .get(scenarioDefinition)
-        .forEach(
-            connectorDefinition -> buildInboundConnector(connectorDefinition, scenarioDefinition));
-    outboundConnectors
-        .get(scenarioDefinition)
-        .forEach(
-            connectorDefinition -> buildOutboundConnector(connectorDefinition, scenarioDefinition));
+    final Map<
+            IntegrationScenarioProviderDefinition,
+            DirectEndpointBuilderFactory.DirectEndpointBuilder>
+        providerHandoffEndpoints = new HashMap<>();
+    final Map<
+            IntegrationScenarioConsumerDefinition,
+            DirectEndpointBuilderFactory.DirectEndpointBuilder>
+        consumerHandonEndpoints = new HashMap<>();
+
+    for (final var provider : inboundConnectors.get(scenarioDefinition)) {
+      final var endpoint =
+          StaticEndpointBuilders.direct(String.format("sip-scenario-handoff-%s", provider.getId()));
+      providerHandoffEndpoints.put(provider, endpoint);
+      buildInboundConnector(provider, scenarioDefinition, endpoint);
+    }
+
+    for (final var consumer : outboundConnectors.get(scenarioDefinition)) {
+      final var endpoint =
+          StaticEndpointBuilders.direct(String.format("sip-scenario-handon-%s", consumer.getId()));
+      consumerHandonEndpoints.put(consumer, endpoint);
+      buildOutboundConnector(consumer, scenarioDefinition, endpoint);
+    }
+
+    final var orchestrationInfo =
+        new ScenarioOrchestrationValues(
+            scenarioDefinition,
+            getRouteCollection(),
+            providerHandoffEndpoints,
+            consumerHandonEndpoints);
+    if (!scenarioDefinition.getOrchestrator().canOrchestrate(orchestrationInfo)) {
+      throw new SIPFrameworkInitializationException(
+          String.format(
+              "Orchestrator assigned to scenario '%s' declares being unable to orchestrate the scenario layout as it is defined",
+              scenarioDefinition.getId()));
+    }
+    scenarioDefinition.getOrchestrator().doOrchestrate(orchestrationInfo);
   }
 
   private <T extends OptionalIdentifiedDefinition<T>> void buildInboundConnector(
       final InboundConnectorDefinition<T> inboundConnector,
-      final IntegrationScenarioDefinition scenarioDefinition) {
+      final IntegrationScenarioDefinition scenarioDefinition,
+      final EndpointProducerBuilder handoffToEndpoint) {
 
     final var requestOrchestrationRouteId =
         routesRegistry.generateRouteIdForConnector(
@@ -99,7 +137,7 @@ public class AdapterBuilder extends RouteBuilder {
         from(StaticEndpointBuilders.direct(scenarioHandoffRouteId))
             .routeId(scenarioHandoffRouteId)
             .process(new CDMValidator(scenarioDefinition.getRequestModelClass()))
-            .to(sipMC(scenarioDefinition.getId()));
+            .to(handoffToEndpoint);
     scenarioDefinition
         .getResponseModelClass()
         .ifPresent(model -> handoffRouteDefinition.process(new CDMValidator(model)));
@@ -129,7 +167,8 @@ public class AdapterBuilder extends RouteBuilder {
 
   private void buildOutboundConnector(
       final OutboundConnectorDefinition outboundConnector,
-      final IntegrationScenarioDefinition scenarioDefinition) {
+      final IntegrationScenarioDefinition scenarioDefinition,
+      final EndpointConsumerBuilder handonEndpoint) {
 
     final var externalEndpointRouteId =
         routesRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, outboundConnector);
@@ -143,7 +182,7 @@ public class AdapterBuilder extends RouteBuilder {
         routesRegistry.generateRouteIdForConnector(RouteRole.SCENARIO_TAKEOVER, outboundConnector);
 
     // Build takeover route from scenario
-    from(sipMC(scenarioDefinition.getId()))
+    from(handonEndpoint)
         .routeId(scenarioTakeoverRouteId)
         .to(StaticEndpointBuilders.direct(requestOrchestrationRouteId));
 
@@ -173,6 +212,37 @@ public class AdapterBuilder extends RouteBuilder {
       outboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
     }
     requestRouteDefinition.to(StaticEndpointBuilders.direct(externalEndpointRouteId));
+  }
+
+  private record ScenarioOrchestrationValues(
+      IntegrationScenarioDefinition integrationScenario,
+      RoutesDefinition routesDefinition,
+      Map<IntegrationScenarioProviderDefinition, ? extends EndpointConsumerBuilder>
+          providerEndpoints,
+      Map<IntegrationScenarioConsumerDefinition, ? extends EndpointProducerBuilder>
+          consumerEndpoints)
+      implements ScenarioOrchestrationInfo {
+    @Override
+    public IntegrationScenarioDefinition getIntegrationScenario() {
+      return integrationScenario;
+    }
+
+    @Override
+    public RoutesDefinition getRoutesDefinition() {
+      return routesDefinition;
+    }
+
+    @Override
+    public Map<IntegrationScenarioProviderDefinition, ? extends EndpointConsumerBuilder>
+        getProviderEndpoints() {
+      return Collections.unmodifiableMap(providerEndpoints);
+    }
+
+    @Override
+    public Map<IntegrationScenarioConsumerDefinition, ? extends EndpointProducerBuilder>
+        getConsumerEndpoints() {
+      return Collections.unmodifiableMap(consumerEndpoints);
+    }
   }
 
   @SuppressWarnings("unchecked")

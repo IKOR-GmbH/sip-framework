@@ -10,13 +10,13 @@ public class CallScenarioConsumerWithClassDefinition<R, M>
         CallScenarioConsumerWithClassDefinition<R, M>, R, M> {
 
   @Getter(AccessLevel.PACKAGE)
-  private final Class<? extends IntegrationScenarioConsumerDefinition> connectorClass;
+  private final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass;
 
   CallScenarioConsumerWithClassDefinition(
       final R dslReturnDefinition,
       final IntegrationScenarioDefinition integrationScenario,
-      final Class<? extends IntegrationScenarioConsumerDefinition> connectorClass) {
+      final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass) {
     super(dslReturnDefinition, integrationScenario);
-    this.connectorClass = connectorClass;
+    this.consumerClass = consumerClass;
   }
 }
