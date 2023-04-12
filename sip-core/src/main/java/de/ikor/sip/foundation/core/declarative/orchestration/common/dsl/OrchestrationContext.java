@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.common.dsl;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.AccessLevel;
@@ -24,8 +25,8 @@ public abstract class OrchestrationContext<O extends Orchestratable<?>, S> {
 
   @Getter private final O orchestratedElement;
   private final Object originalRequest;
-  private final List<OrchestrationStepResponse<S, ?>> orchestrationStepResponses =
-      new ArrayList<>();
+  private final List<OrchestrationStepResponse<S, Object>> orchestrationStepResponses =
+      Collections.synchronizedList(new ArrayList<>());
   private Optional<Object> aggregatedResponse = Optional.empty();
 
   public <T> T getOriginalRequest() {
@@ -59,6 +60,10 @@ public abstract class OrchestrationContext<O extends Orchestratable<?>, S> {
     final R maybeClonedResponse = cloner.map(c -> c.apply(response)).orElse(response);
     orchestrationStepResponses.add(new OrchestrationStepResponse<>(step, maybeClonedResponse));
     return maybeClonedResponse;
+  }
+
+  public List<OrchestrationStepResponse<S, Object>> getOrchestrationStepResponses() {
+    return Collections.unmodifiableList(orchestrationStepResponses);
   }
 
   public record OrchestrationStepResponse<S, R>(S orchestrationStep, R result) {}

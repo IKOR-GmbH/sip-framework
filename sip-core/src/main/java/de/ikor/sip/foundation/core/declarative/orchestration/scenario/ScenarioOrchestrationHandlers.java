@@ -52,7 +52,6 @@ public class ScenarioOrchestrationHandlers {
   }
 
   static class ConsumerRequestHandler<M> {
-
     private final ScenarioStepRequestExtractor<M> requestPreparation;
 
     private ConsumerRequestHandler(
@@ -73,17 +72,15 @@ public class ScenarioOrchestrationHandlers {
 
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
   static class ConsumerResponseHandler<M> {
-
     private final IntegrationScenarioConsumerDefinition consumer;
     private final Optional<StepResultCloner<M>> stepResultCloner;
     private final Optional<ScenarioStepResponseConsumer<M>> responseConsumer;
 
+    @Handler
     public Object handleResponse(final M body, final Exchange exchange) {
       final var context = retrieveOrchestrationContext(exchange);
       context.addResponseForStep(consumer, body, stepResultCloner);
-
       responseConsumer.ifPresent(c -> c.consumeResponse(body, context));
-
       return context.getAggregatedResponse().orElse(body);
     }
   }

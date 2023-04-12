@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.Exchange;
-import org.apache.camel.Handler;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RouteDefinition;
 
@@ -124,9 +122,6 @@ public class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGen
                   definitionElement.getResponseConsumer()));
     }
   }
-
-  @Handler
-  public <T> void doTransformNew(T body, Exchange exchange) {}
 
   private EndpointProducerBuilder getEndpointForConsumer(
       final IntegrationScenarioConsumerDefinition consumer) {
