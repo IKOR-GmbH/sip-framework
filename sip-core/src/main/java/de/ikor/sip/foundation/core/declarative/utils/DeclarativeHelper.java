@@ -28,7 +28,7 @@ public class DeclarativeHelper {
   public static <A extends Annotation> A getAnnotationOrThrow(Class<A> annotation, Object from) {
     var ann = from.getClass().getAnnotation(annotation);
     if (null == ann) {
-      throw SIPFrameworkInitializationException.initException(
+      throw SIPFrameworkInitializationException.init(
           "Annotation @%s required on class %s", annotation.getSimpleName(), from.getClass());
     }
     return ann;
@@ -52,12 +52,12 @@ public class DeclarativeHelper {
       try {
         return createInstance(clazz);
       } catch (NoSuchMethodException ex) {
-        throw SIPFrameworkInitializationException.initException(
+        throw SIPFrameworkInitializationException.init(
             "Mapper %s needs to have a no-arg constructor, please define one.", clazz.getName());
       } catch (InvocationTargetException
           | InstantiationException
           | IllegalAccessException exception) {
-        throw SIPFrameworkInitializationException.initException(
+        throw SIPFrameworkInitializationException.init(
             exception, "SIP couldn't create a Mapper %s.", clazz.getName());
       }
     }
@@ -110,7 +110,7 @@ public class DeclarativeHelper {
             .filter(method -> method.getParameterTypes().length == 1)
             .toList();
     if (candidateMethods.size() != 1) {
-      throw SIPFrameworkInitializationException.initException(
+      throw SIPFrameworkInitializationException.init(
           "Failed to automatically resolve the model classes for the Mapper: %s. Please @Override the getSourceModelClass() and getTargetModelClass() methods",
           clazz.getName());
     }

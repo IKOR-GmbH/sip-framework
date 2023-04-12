@@ -78,7 +78,7 @@ abstract sealed class BaseMappingRouteTransformer<S, T> implements Consumer<Rout
       String direction,
       Class<?> mapperType,
       final Class<?> assignedType) {
-    return SIPFrameworkInitializationException.initException(
+    return SIPFrameworkInitializationException.init(
         "Mapper '%s' %s type '%s' is not compatible with assigned type '%s' of connector '%s'",
         modelMapper.getClass().getName(),
         direction,
@@ -88,7 +88,7 @@ abstract sealed class BaseMappingRouteTransformer<S, T> implements Consumer<Rout
   }
 
   protected SIPFrameworkInitializationException getExceptionForMissingMapper() {
-    return SIPFrameworkInitializationException.initException(
+    return SIPFrameworkInitializationException.init(
         "No compatible Mapper found for Connector '%s' to map between %s and %s",
         connector.get().getId(), getSourceModelClass().getName(), getTargetModelClass().getName());
   }

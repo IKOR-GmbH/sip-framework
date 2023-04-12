@@ -26,7 +26,7 @@ public class SOAPEndpointBuilder {
         try {
           cxfEndpoint.setServiceClass(serviceClassQualifiedName);
         } catch (ClassNotFoundException e) {
-          throw SIPFrameworkInitializationException.initException(
+          throw SIPFrameworkInitializationException.init(
               e,
               "Service class '%s' used in the soap connector '%s' can not be found",
               serviceClassQualifiedName,
@@ -35,7 +35,7 @@ public class SOAPEndpointBuilder {
       }
       if (StringUtils.isBlank(cxfEndpoint.getAddress())) {
         if (StringUtils.isBlank(address)) {
-          throw SIPFrameworkInitializationException.initException(
+          throw SIPFrameworkInitializationException.init(
               "CXFEndpoint bean '%s' is defined but the SOAP address is undefined. Please use 'setAddress()' in the CXFEndpoint bean or @Override the 'getServiceAddress()' method in the connector '%s'",
               serviceClassName, connectorID);
         }
@@ -48,7 +48,7 @@ public class SOAPEndpointBuilder {
     } else {
 
       if (StringUtils.isBlank(address)) {
-        throw SIPFrameworkInitializationException.initException(
+        throw SIPFrameworkInitializationException.init(
             "Connector '%s' doesn't have a defined address. Please @Override the 'getServiceAddress()' method or define a CXFBean with name '%s'",
             connectorID, serviceClassName);
       }

@@ -88,8 +88,8 @@ public class ProcessorProxyMock extends Mock {
           unmarshallExchangeBodyFromJson(exchange, mapper, responseModelClass.get());
         }
       } else {
-        throw new SIPFrameworkException(
-            String.format("Response model class is not defined for connector: %s", connectorId));
+        throw SIPFrameworkException.init(
+            "Response model class is not defined for connector: %s", connectorId);
       }
     }
   }

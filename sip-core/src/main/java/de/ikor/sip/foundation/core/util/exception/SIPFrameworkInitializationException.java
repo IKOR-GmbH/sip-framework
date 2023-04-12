@@ -13,8 +13,7 @@ public class SIPFrameworkInitializationException extends SIPFrameworkException {
    * @param args arguments for message pattern
    * @return initialized SIPFrameworkInitializationException
    */
-  public static SIPFrameworkInitializationException initException(
-      String messagePattern, Object... args) {
+  public static SIPFrameworkInitializationException init(String messagePattern, Object... args) {
     return new SIPFrameworkInitializationException(String.format(messagePattern, args));
   }
 
@@ -26,7 +25,7 @@ public class SIPFrameworkInitializationException extends SIPFrameworkException {
    * @param args arguments for message pattern
    * @return initialized SIPFrameworkInitializationException
    */
-  public static SIPFrameworkInitializationException initException(
+  public static SIPFrameworkInitializationException init(
       Throwable cause, String messagePattern, Object... args) {
     return new SIPFrameworkInitializationException(String.format(messagePattern, args), cause);
   }

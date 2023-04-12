@@ -77,7 +77,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                       .build();
               if (modelMappers.containsKey(mapperPair)) {
                 final var duplicate = modelMappers.get(mapperPair);
-                throw SIPFrameworkInitializationException.initException(
+                throw SIPFrameworkInitializationException.init(
                     "ModelMapper implementations %s and %s share the same source and target model classes",
                     mapper.getClass().getName(), duplicate.getClass().getName());
               }
@@ -134,7 +134,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   private void checkIfDuplicate(
       Set<String> set, String id, String className, String declarativeElement) {
     if (!set.add(id)) {
-      throw SIPFrameworkInitializationException.initException(
+      throw SIPFrameworkInitializationException.init(
           "There is a duplicate %s id %s in class %s", declarativeElement, id, className);
     }
   }
@@ -147,7 +147,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                     || getOutboundConnectorsByScenarioId(scenario.getId()).isEmpty())
         .map(
             scenario -> {
-              throw SIPFrameworkInitializationException.initException(
+              throw SIPFrameworkInitializationException.init(
                   "There is unused integration scenario with id %s", scenario.getId());
             })
         .forEach(
@@ -170,7 +170,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .findFirst()
         .orElseThrow(
             () ->
-                SIPFrameworkInitializationException.initException(
+                SIPFrameworkInitializationException.init(
                     "There is no integration scenario with id: %s", scenarioId));
   }
 

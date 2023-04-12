@@ -95,7 +95,7 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
    */
   public Class<T> getServiceInterfaceClass() {
     if (serviceClass == null) {
-      throw SIPFrameworkInitializationException.initException(
+      throw SIPFrameworkInitializationException.init(
           "SIP Framework can't infer Service class of %s Outbound SOAP Connector. Please @Override getServiceInterfaceClass() method.",
           getClass().getName());
     }

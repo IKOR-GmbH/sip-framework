@@ -30,7 +30,7 @@ public class CDMValidator implements Processor {
   @Override
   public void process(Exchange exchange) throws Exception {
     if (!centralDomainModel.isInstance(exchange.getMessage().getBody())) {
-      throw SIPFrameworkException.initException(
+      throw SIPFrameworkException.init(
           exceptionMessage,
           connector,
           exchange.getMessage().getBody().getClass().getName(),
