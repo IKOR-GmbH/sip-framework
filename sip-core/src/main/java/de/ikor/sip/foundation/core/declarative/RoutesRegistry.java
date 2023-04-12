@@ -38,10 +38,9 @@ import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-@Service(RoutesRegistry.BEAN_NAME)
+@Service
 public class RoutesRegistry extends SimpleEventNotifierSupport {
 
-  public static final String BEAN_NAME = "de.ikor.sip.foundation.core.declarative.RoutesRegistry";
   private static final String ENRICH = "enrich";
   private static final String POLL_ENRICH = "pollEnrich";
   public static final String SIP_CONNECTOR_PREFIX = "sip-connector";

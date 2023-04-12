@@ -2,12 +2,12 @@ package de.ikor.sip.foundation.core.declarative.orchestration.common.dsl;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 
 /**
  * Class managing the context of an orchestration process for orchestration-rules defined via
@@ -25,21 +25,26 @@ public abstract class OrchestrationContext<O extends Orchestratable<?>, S> {
   @Getter private final O orchestratedElement;
   private final Object originalRequest;
   private final List<OrchestrationStepResponse<S, ?>> orchestrationStepResponses =
-      Collections.synchronizedList(new ArrayList<>());
+      new ArrayList<>();
   private Optional<Object> aggregatedResponse = Optional.empty();
 
   public <T> T getOriginalRequest() {
     return (T) originalRequest;
   }
 
+  @Synchronized
   public <T> Optional<T> getAggregatedResponse() {
     return (Optional<T>) aggregatedResponse;
   }
 
-  public <T> void setAggregatedResponse(final T response) {
-    this.aggregatedResponse = Optional.of(response);
+  @Synchronized
+  public <T> T setAggregatedResponse(final T response, final Optional<StepResultCloner<T>> cloner) {
+    final T maybeClonedResponse = cloner.map(c -> c.apply(response)).orElse(response);
+    this.aggregatedResponse = Optional.of(maybeClonedResponse);
+    return maybeClonedResponse;
   }
 
+  @Synchronized
   public <T> Optional<OrchestrationStepResponse<S, T>> getResponseForLatestStep() {
     return orchestrationStepResponses.isEmpty()
         ? Optional.empty()
@@ -48,11 +53,12 @@ public abstract class OrchestrationContext<O extends Orchestratable<?>, S> {
                 orchestrationStepResponses.get(orchestrationStepResponses.size() - 1));
   }
 
-  protected <R> void addResponseForStep(
+  @Synchronized
+  public <R> R addResponseForStep(
       final S step, final R response, final Optional<StepResultCloner<R>> cloner) {
-    orchestrationStepResponses.add(
-        new OrchestrationStepResponse<>(
-            step, cloner.isPresent() ? cloner.get().apply(response) : response));
+    final R maybeClonedResponse = cloner.map(c -> c.apply(response)).orElse(response);
+    orchestrationStepResponses.add(new OrchestrationStepResponse<>(step, maybeClonedResponse));
+    return maybeClonedResponse;
   }
 
   public record OrchestrationStepResponse<S, R>(S orchestrationStep, R result) {}

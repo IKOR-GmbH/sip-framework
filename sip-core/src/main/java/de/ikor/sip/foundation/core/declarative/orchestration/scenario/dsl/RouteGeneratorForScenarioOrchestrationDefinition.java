@@ -29,7 +29,7 @@ public class RouteGeneratorForScenarioOrchestrationDefinition<M> extends RouteGe
         scenarioOrchestrationDefinition.getScenarioProviderDefinitions()) {
 
       final var builder =
-          new RouteGeneratorForScenarioProvidersDefinition(
+          new RouteGeneratorForScenarioProvidersDefinition<M>(
               getOrchestrationInfo(),
               providerDefinition,
               Collections.unmodifiableSet(unhandledProvidersOverall));

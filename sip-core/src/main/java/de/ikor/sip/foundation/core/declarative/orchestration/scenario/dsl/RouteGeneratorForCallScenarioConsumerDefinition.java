@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -11,14 +12,16 @@ import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.Exchange;
+import org.apache.camel.Handler;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RouteDefinition;
 
 @Slf4j
 @SuppressWarnings("rawtypes")
-public class RouteGeneratorForCallScenarioConsumerDefinition extends RouteGeneratorBase {
+public class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGeneratorBase {
 
-  private final CallScenarioConsumerBaseDefinition definitionElement;
+  private final CallScenarioConsumerBaseDefinition<?, ?, M> definitionElement;
 
   private final Set<IntegrationScenarioConsumerDefinition> overallUnhandledConsumers;
 
@@ -103,9 +106,27 @@ public class RouteGeneratorForCallScenarioConsumerDefinition extends RouteGenera
 
   public void generateRoutes(final RouteDefinition routeDefinition) {
     for (final var consumer : getHandledConsumers()) {
-      routeDefinition.to(getEndpointForConsumer(consumer));
+      // prepare request for consumer (as response might still be on the body) and call it
+      routeDefinition
+          .transform()
+          .method(
+              ScenarioOrchestrationHandlers.buildHandlerForConsumerRequestInitialization(
+                  definitionElement.getRequestPreparation()))
+          .to(getEndpointForConsumer(consumer));
+
+      // store / aggregate the response and place it on the body
+      routeDefinition
+          .transform()
+          .method(
+              ScenarioOrchestrationHandlers.buildHandlerForConsumerResponseAggregation(
+                  consumer,
+                  definitionElement.getStepResultCloner(),
+                  definitionElement.getResponseConsumer()));
     }
   }
+
+  @Handler
+  public <T> void doTransformNew(T body, Exchange exchange) {}
 
   private EndpointProducerBuilder getEndpointForConsumer(
       final IntegrationScenarioConsumerDefinition consumer) {

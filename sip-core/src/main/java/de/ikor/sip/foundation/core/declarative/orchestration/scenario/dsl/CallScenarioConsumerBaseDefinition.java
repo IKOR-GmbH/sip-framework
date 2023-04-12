@@ -38,7 +38,8 @@ public abstract class CallScenarioConsumerBaseDefinition<
         (latestResponse, context) ->
             context.setAggregatedResponse(
                 responseAggregator.aggregateResponse(
-                    latestResponse, context.getAggregatedResponse())));
+                    latestResponse, context.getAggregatedResponse()),
+                getStepResultCloner()));
   }
 
   public R andHandleResponse(final ScenarioStepResponseConsumer<M> responseConsumer) {

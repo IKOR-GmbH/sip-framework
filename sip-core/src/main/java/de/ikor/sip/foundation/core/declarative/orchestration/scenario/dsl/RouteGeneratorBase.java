@@ -22,14 +22,11 @@ abstract class RouteGeneratorBase {
       getRoutesDefinition()
           .getCamelContext()
           .getRegistry()
-          .lookupByNameAndType(DeclarationsRegistryApi.BEAN_NAME, DeclarationsRegistryApi.class);
+          .findSingleByType(DeclarationsRegistryApi.class);
 
   @Getter(value = AccessLevel.PROTECTED, lazy = true)
   private final RoutesRegistry routesRegistry =
-      getRoutesDefinition()
-          .getCamelContext()
-          .getRegistry()
-          .lookupByNameAndType(RoutesRegistry.BEAN_NAME, RoutesRegistry.class);
+      getRoutesDefinition().getCamelContext().getRegistry().findSingleByType(RoutesRegistry.class);
 
   protected String getIntegrationScenarioId() {
     return getIntegrationScenario().getId();

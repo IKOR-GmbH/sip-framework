@@ -8,6 +8,8 @@ public class ScenarioOrchestrationContext
     extends OrchestrationContext<
         IntegrationScenarioDefinition, IntegrationScenarioConsumerDefinition> {
 
+  public static final String PROPERTY_NAME = "SipScenarioOrchestrationContext";
+
   public <R> ScenarioOrchestrationContext(
       final IntegrationScenarioDefinition integrationScenario, final R originalRequest) {
     super(integrationScenario, originalRequest);

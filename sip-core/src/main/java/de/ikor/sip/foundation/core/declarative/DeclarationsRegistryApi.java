@@ -12,8 +12,6 @@ import java.util.Optional;
 /** API interface for {@link DeclarationsRegistry} used within the framework structure. */
 public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
 
-  String BEAN_NAME = "de.ikor.sip.foundation.core.declarative.DeclarationsRegistry";
-
   /**
    * Get {@link ConnectorGroupDefinition} by its id.
    *
