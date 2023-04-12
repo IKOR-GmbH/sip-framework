@@ -36,7 +36,7 @@ To enable or disable declarative adapter building the following configuration pr
 sip:
   core:
     declarativestructure:
-      enabled: true # enabled bu default
+      enabled: true # enabled by default
 ```
 
 ## How to build

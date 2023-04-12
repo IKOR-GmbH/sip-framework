@@ -29,7 +29,7 @@ class ProcessorProxyMockTest {
     proxy = mock(ProcessorProxy.class);
     proxyRegistry = mock(ProcessorProxyRegistry.class);
     returnExchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
-    subject = new ProcessorProxyMock(proxyRegistry, null, mock(ObjectMapper.class));
+    subject = new ProcessorProxyMock(proxyRegistry, mock(ObjectMapper.class), null);
     subject.setReturnExchange(returnExchange);
     when(returnExchange.getProperty("connectionAlias", String.class)).thenReturn(PROXY_ID);
     when(returnExchange.getMessage().getBody()).thenReturn("body");
