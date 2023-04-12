@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.testkit.workflow.givenphase;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
 import de.ikor.sip.foundation.testkit.exception.TestCaseInitializationException;
@@ -28,7 +29,7 @@ class ProcessorProxyMockTest {
     proxy = mock(ProcessorProxy.class);
     proxyRegistry = mock(ProcessorProxyRegistry.class);
     returnExchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
-    subject = new ProcessorProxyMock(proxyRegistry);
+    subject = new ProcessorProxyMock(proxyRegistry, null, mock(ObjectMapper.class));
     subject.setReturnExchange(returnExchange);
     when(returnExchange.getProperty("connectionAlias", String.class)).thenReturn(PROXY_ID);
     when(returnExchange.getMessage().getBody()).thenReturn("body");

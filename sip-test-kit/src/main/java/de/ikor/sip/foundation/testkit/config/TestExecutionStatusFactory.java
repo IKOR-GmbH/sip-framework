@@ -37,30 +37,30 @@ public class TestExecutionStatusFactory {
     expectedEndpointResponses.forEach(
         endpointProperty ->
             reportMap.put(
-                endpointProperty.getEndpoint(),
+                endpointProperty.getEndpointId(),
                 new MockReport()
                     .setExpected(parseExchangeProperties(endpointProperty, camelContext))));
     return reportMap;
   }
 
   private Exchange getExpectedAdapterResponse(TestCaseDefinition testCaseDefinition) {
-    String startingEndpoint = testCaseDefinition.getWhenExecute().getEndpoint();
+    String startingEndpoint = testCaseDefinition.getWhenExecute().getEndpointId();
     EndpointProperties endpointProperties =
         IterableUtils.find(
             testCaseDefinition.getThenExpect(),
-            endpoint -> endpoint.getEndpoint().equals(startingEndpoint));
+            endpoint -> endpoint.getEndpointId().equals(startingEndpoint));
     return parseExchangeProperties(endpointProperties, camelContext);
   }
 
   private List<EndpointProperties> expectedEndpointResponses(
       TestCaseDefinition testCaseDefinition) {
-    String expectedAdapterResponseId = testCaseDefinition.getWhenExecute().getEndpoint();
+    String expectedAdapterResponseId = testCaseDefinition.getWhenExecute().getEndpointId();
     return testCaseDefinition.getThenExpect().isEmpty()
         ? new ArrayList<>()
         : testCaseDefinition.getThenExpect().stream()
             .filter(
                 endpointProperties ->
-                    !endpointProperties.getEndpoint().equals(expectedAdapterResponseId))
+                    !endpointProperties.getEndpointId().equals(expectedAdapterResponseId))
             .collect(toList());
   }
 }

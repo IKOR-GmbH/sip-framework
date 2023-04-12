@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static de.ikor.sip.foundation.core.declarative.validator.CDMValidator.*;
+
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
@@ -138,16 +140,21 @@ public class AdapterBuilder extends RouteBuilder {
                 new CDMValidator(
                     scenarioDefinition.getId(),
                     inboundConnector.getId(),
-                    scenarioDefinition.getRequestModelClass()))
+                    scenarioDefinition.getRequestModelClass(),
+                    TO_CDM_EXCEPTION_MESSAGE))
             .to(handoffToEndpoint);
-    scenarioDefinition
-        .getResponseModelClass()
-        .ifPresent(
-            model ->
-                handoffRouteDefinition.process(
-                    new CDMValidator(scenarioDefinition.getId(), inboundConnector.getId(), model)));
 
     if (inboundConnector.hasResponseFlow()) {
+      scenarioDefinition
+          .getResponseModelClass()
+          .ifPresent(
+              cdmModel ->
+                  handoffRouteDefinition.process(
+                      new CDMValidator(
+                          scenarioDefinition.getId(),
+                          inboundConnector.getId(),
+                          cdmModel,
+                          FROM_CDM_EXCEPTION_MESSAGE)));
       handoffRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
     }
 
@@ -189,6 +196,12 @@ public class AdapterBuilder extends RouteBuilder {
     // Build takeover route from scenario
     from(handonEndpoint)
         .routeId(scenarioTakeoverRouteId)
+        .process(
+            new CDMValidator(
+                scenarioDefinition.getId(),
+                outboundConnector.getId(),
+                scenarioDefinition.getRequestModelClass(),
+                FROM_CDM_EXCEPTION_MESSAGE))
         .to(StaticEndpointBuilders.direct(requestOrchestrationRouteId));
 
     // Build endpoint route that connects to external system
@@ -217,6 +230,19 @@ public class AdapterBuilder extends RouteBuilder {
       outboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
     }
     requestRouteDefinition.to(StaticEndpointBuilders.direct(externalEndpointRouteId));
+
+    scenarioDefinition
+        .getResponseModelClass()
+        .ifPresent(
+            cdmModel ->
+                responseRouteDefinition.ifPresent(
+                    route ->
+                        route.process(
+                            new CDMValidator(
+                                scenarioDefinition.getId(),
+                                outboundConnector.getId(),
+                                cdmModel,
+                                TO_CDM_EXCEPTION_MESSAGE))));
   }
 
   @SuppressWarnings("unchecked")

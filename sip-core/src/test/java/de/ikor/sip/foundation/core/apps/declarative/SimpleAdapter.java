@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup;
+import de.ikor.sip.foundation.core.declarative.annonation.Disabled;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
@@ -137,5 +138,45 @@ public class SimpleAdapter {
   @ConnectorGroup(groupId = ConnectorGroupSip1.ID)
   public class ConnectorGroupSip1 extends ConnectorGroupBase {
     public static final String ID = "SIP1";
+  }
+
+  // <---- DISABLED ELEMENTS
+  @Disabled
+  @ConnectorGroup(groupId = DisabledConnectorGroup.ID)
+  public class DisabledConnectorGroup extends ConnectorGroupBase {
+    public static final String ID = "DisabledGroup";
+  }
+
+  @Disabled
+  @IntegrationScenario(scenarioId = DisabledScenario.ID, requestModel = String.class)
+  public class DisabledScenario extends IntegrationScenarioBase {
+    public static final String ID = "DisabledScenario";
+  }
+
+  @Disabled
+  @InboundConnector(
+      integrationScenario = DisabledScenario.ID,
+      connectorGroup = DisabledConnectorGroup.ID,
+      requestModel = String.class)
+  public class DisabledInConnector extends GenericInboundConnectorBase {
+    public static final String ID = "DisabledInConnector";
+
+    @Override
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+      return StaticEndpointBuilders.direct("message");
+    }
+  }
+
+  @OutboundConnector(
+      integrationScenario = DisabledScenario.ID,
+      connectorGroup = DisabledConnectorGroup.ID,
+      requestModel = String.class)
+  public class DisabledOutConnector extends GenericOutboundConnectorBase {
+    public static final String ID = "DisabledOutConnector";
+
+    @Override
+    protected EndpointProducerBuilder defineOutgoingEndpoint() {
+      return StaticEndpointBuilders.log("log");
+    }
   }
 }

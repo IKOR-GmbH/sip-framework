@@ -148,16 +148,14 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
         .build();
   }
 
-  public String getRouteIdByConnectorId(String connectorId) {
+  public String getRouteIdByConnectorIdAndRole(String connectorId, RouteRole role) {
     Optional<ConnectorDefinition> connector = declarationsRegistryApi.getConnectorById(connectorId);
     List<RouteInfo> routeInfos = new ArrayList<>();
     if (connector.isPresent()) {
       routeInfos = getRoutesInfo(connector.get());
     }
     return routeInfos.stream()
-        .filter(
-            routeInfo ->
-                routeInfo.getRouteRole().equals(RouteRole.EXTERNAL_ENDPOINT.getExternalName()))
+        .filter(routeInfo -> routeInfo.getRouteRole().equals(role.getExternalName()))
         .map(RouteInfo::getRouteId)
         .findFirst()
         .orElse(null);
@@ -172,6 +170,11 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
                     .routeId(routeId)
                     .build())
         .toList();
+  }
+
+  public String getConnectorIdByRouteId(String routeId) {
+    ConnectorDefinition connector = connectorForRouteIdRegister.get(routeId);
+    return connector != null ? connector.getId() : null;
   }
 
   public List<EndpointInfo> getExternalEndpointInfosForConnector(
