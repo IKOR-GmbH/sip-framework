@@ -50,8 +50,6 @@ public class AdapterBuilder extends RouteBuilder {
   @Override
   public void configure() {
     getCamelContext().getGlobalEndpointConfiguration().setBridgeErrorHandler(true);
-    getCamelContext().setTracing(true);
-    getCamelContext().setDumpRoutes(true);
     declarationsRegistry.getScenarios().forEach(this::buildScenario);
   }
 
