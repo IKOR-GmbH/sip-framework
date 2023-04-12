@@ -30,7 +30,7 @@ public class AutoMagicScenarioOrchestrator implements Orchestrator<ScenarioOrche
         .orElseThrow(
             () ->
                 SIPFrameworkInitializationException.init(
-                    "Unable to automatically orchestrate scenario '%s'. Please specify an orchestrator.",
+                    "Unable to automatically orchestrate scenario '%s'. Please specify an orchestrator by overriding 'getOrchestrator()' method.",
                     data.getIntegrationScenario().getId()));
   }
 

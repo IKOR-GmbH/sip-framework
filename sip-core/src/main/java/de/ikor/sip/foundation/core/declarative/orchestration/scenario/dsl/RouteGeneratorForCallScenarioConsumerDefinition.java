@@ -1,11 +1,13 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,44 +64,47 @@ public class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGen
       return Set.copyOf(overallUnhandledConsumers);
     }
 
-    throw new SIPFrameworkInitializationException(
-        String.format(
-            "Unhandled scenario-consumer definition subclass: %s",
-            definitionElement.getClass().getName()));
+    throw SIPFrameworkInitializationException.init(
+        "Unhandled scenario-consumer definition subclass: %s",
+        definitionElement.getClass().getName());
   }
 
   private OutboundConnectorDefinition retrieveConsumerFromClassDefinition(
       final CallScenarioConsumerWithClassDefinition element) {
-    return getDeclarationsRegistry()
-        .getOutboundConnectorsByScenarioId(getIntegrationScenarioId())
-        .stream()
+    return getOutboundConnectors().stream()
         .filter(
             outboundConnectorDefinition ->
                 element.getConsumerClass().equals(outboundConnectorDefinition.getClass()))
         .findFirst()
         .orElseThrow(
             () ->
-                new IllegalStateException(
-                    String.format(
-                        "Consumer-class '%s' is used on orchestration for integration-scenario '%s', but not registered with that scenario",
-                        element.getConsumerClass().getName(), getIntegrationScenarioId())));
+                SIPFrameworkInitializationException.init(
+                    "Consumer-class '%s' is used on orchestration for integration scenario '%s', but it is not registered with that scenario. Registered outbound connector classes are %s",
+                    element.getConsumerClass().getName(),
+                    getIntegrationScenarioId(),
+                    getOutboundConnectors().stream()
+                        .map(conn -> conn.getClass().getName())
+                        .toList()));
   }
 
   private OutboundConnectorDefinition retrieveConsumerFromConnectorIdDefinition(
       final CallScenarioConsumerWithConnectorIdDefinition element) {
-    return getDeclarationsRegistry()
-        .getOutboundConnectorsByScenarioId(getIntegrationScenarioId())
-        .stream()
+    return getOutboundConnectors().stream()
         .filter(
             outboundConnectorDefinition ->
                 element.getConnectorId().equals(outboundConnectorDefinition.getId()))
         .findFirst()
         .orElseThrow(
             () ->
-                new IllegalStateException(
-                    String.format(
-                        "Connector ID '%s' is used in orchestration for integration-scenario '%s', but is not registered with that scenario",
-                        element.getConnectorId(), getIntegrationScenarioId())));
+                SIPFrameworkInitializationException.init(
+                    "Connector ID '%s' is used in orchestration for integration scenario '%s', but it is not registered with that scenario. Registered outbound connectors are %s",
+                    element.getConnectorId(),
+                    getIntegrationScenarioId(),
+                    getOutboundConnectors().stream().map(ConnectorDefinition::getId).toList()));
+  }
+
+  private List<OutboundConnectorDefinition> getOutboundConnectors() {
+    return getDeclarationsRegistry().getOutboundConnectorsByScenarioId(getIntegrationScenarioId());
   }
 
   public void generateRoutes(final RouteDefinition routeDefinition) {
