@@ -108,7 +108,7 @@ public class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGen
       routeDefinition
           .transform()
           .method(
-              ScenarioOrchestrationHandlers.buildHandlerForConsumerRequestInitialization(
+              ScenarioOrchestrationHandlers.handleRequestToConsumer(
                   definitionElement.getRequestPreparation()))
           .to(getEndpointForConsumer(consumer));
 
@@ -116,7 +116,7 @@ public class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGen
       routeDefinition
           .transform()
           .method(
-              ScenarioOrchestrationHandlers.buildHandlerForConsumerResponseAggregation(
+              ScenarioOrchestrationHandlers.handleResponseFromConsumer(
                   consumer,
                   definitionElement.getStepResultCloner(),
                   definitionElement.getResponseConsumer()));

@@ -17,17 +17,17 @@ import org.apache.camel.Handler;
 @UtilityClass
 public class ScenarioOrchestrationHandlers {
 
-  public static ContextInitializer buildHandlerForScenarioContextInitialization(
+  public static ContextInitializer handleContextInitialization(
       final IntegrationScenarioDefinition scenario) {
     return new ContextInitializer(scenario);
   }
 
-  public static <M> ConsumerRequestHandler<M> buildHandlerForConsumerRequestInitialization(
+  public static <M> ConsumerRequestHandler<M> handleRequestToConsumer(
       final Optional<ScenarioStepRequestExtractor<M>> requestPreparation) {
     return new ConsumerRequestHandler<>(requestPreparation);
   }
 
-  public static <M> Object buildHandlerForConsumerResponseAggregation(
+  public static <M> Object handleResponseFromConsumer(
       final IntegrationScenarioConsumerDefinition consumer,
       final Optional<StepResultCloner<M>> stepResultCloner,
       final Optional<ScenarioStepResponseConsumer<M>> responseConsumer) {

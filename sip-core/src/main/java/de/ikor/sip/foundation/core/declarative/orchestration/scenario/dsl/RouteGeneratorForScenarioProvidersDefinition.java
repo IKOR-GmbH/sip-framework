@@ -157,8 +157,7 @@ public class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenera
     routeStart
         .setProperty(ScenarioOrchestrationContext.PROPERTY_NAME)
         .method(
-            ScenarioOrchestrationHandlers.buildHandlerForScenarioContextInitialization(
-                getIntegrationScenario()));
+            ScenarioOrchestrationHandlers.handleContextInitialization(getIntegrationScenario()));
     consumerBuilders.forEach(consumerBuilder -> consumerBuilder.generateRoutes(routeStart));
   }
 
