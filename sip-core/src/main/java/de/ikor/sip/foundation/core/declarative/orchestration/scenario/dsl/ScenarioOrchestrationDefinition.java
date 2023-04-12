@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.EndOfDsl;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
@@ -12,7 +13,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 public class ScenarioOrchestrationDefinition<M>
-    extends ScenarioDslDefinitionBase<ScenarioOrchestrationDefinition<M>, Void, M> {
+    extends ScenarioDslDefinitionBase<ScenarioOrchestrationDefinition<M>, EndOfDsl, M> {
 
   @Getter(AccessLevel.PACKAGE)
   private final List<ForScenarioProvidersBaseDefinition<?, ?, M>> scenarioProviderDefinitions =
@@ -63,12 +64,11 @@ public class ScenarioOrchestrationDefinition<M>
     return def;
   }
 
-  public ForScenarioProvidersCatchAllDefinition<ScenarioOrchestrationDefinition<M>, M>
-      forAnyUnspecifiedProvider() {
+  public ForScenarioProvidersCatchAllDefinition<EndOfDsl, M> forAnyUnspecifiedProvider() {
     verifyNoCatchAllOrThrow();
     catchAllAdded = true;
-    final ForScenarioProvidersCatchAllDefinition<ScenarioOrchestrationDefinition<M>, M> def =
-        new ForScenarioProvidersCatchAllDefinition<>(self(), getIntegrationScenario());
+    final ForScenarioProvidersCatchAllDefinition<EndOfDsl, M> def =
+        new ForScenarioProvidersCatchAllDefinition<>(EndOfDsl.INSTANCE, getIntegrationScenario());
     scenarioProviderDefinitions.add(def);
     return def;
   }
