@@ -80,7 +80,7 @@ public class AdapterBuilder extends RouteBuilder {
     final Map<
             IntegrationScenarioConsumerDefinition,
             DirectEndpointBuilderFactory.DirectEndpointBuilder>
-        consumerHandonEndpoints = new HashMap<>();
+        consumerTakeoverEndpoints = new HashMap<>();
 
     for (final var provider : inboundConnectors.get(scenarioDefinition)) {
       final var endpoint =
@@ -91,8 +91,9 @@ public class AdapterBuilder extends RouteBuilder {
 
     for (final var consumer : outboundConnectors.get(scenarioDefinition)) {
       final var endpoint =
-          StaticEndpointBuilders.direct(String.format("sip-scenario-handon-%s", consumer.getId()));
-      consumerHandonEndpoints.put(consumer, endpoint);
+          StaticEndpointBuilders.direct(
+              String.format("sip-scenario-takeover-%s", consumer.getId()));
+      consumerTakeoverEndpoints.put(consumer, endpoint);
       buildOutboundConnector(consumer, scenarioDefinition, endpoint);
     }
 
@@ -101,7 +102,7 @@ public class AdapterBuilder extends RouteBuilder {
             scenarioDefinition,
             getRouteCollection(),
             Collections.unmodifiableMap(providerHandoffEndpoints),
-            Collections.unmodifiableMap(consumerHandonEndpoints));
+            Collections.unmodifiableMap(consumerTakeoverEndpoints));
     if (!scenarioDefinition.getOrchestrator().canOrchestrate(orchestrationInfo)) {
       throw new SIPFrameworkInitializationException(
           String.format(
@@ -180,7 +181,7 @@ public class AdapterBuilder extends RouteBuilder {
   private void buildOutboundConnector(
       final OutboundConnectorDefinition outboundConnector,
       final IntegrationScenarioDefinition scenarioDefinition,
-      final EndpointConsumerBuilder handonEndpoint) {
+      final EndpointConsumerBuilder takeoverFromEndpoint) {
 
     final var externalEndpointRouteId =
         routesRegistry.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, outboundConnector);
@@ -194,7 +195,7 @@ public class AdapterBuilder extends RouteBuilder {
         routesRegistry.generateRouteIdForConnector(RouteRole.SCENARIO_TAKEOVER, outboundConnector);
 
     // Build takeover route from scenario
-    from(handonEndpoint)
+    from(takeoverFromEndpoint)
         .routeId(scenarioTakeoverRouteId)
         .process(
             new CDMValidator(
@@ -269,7 +270,7 @@ public class AdapterBuilder extends RouteBuilder {
   }
 
   @Value
-  private class ScenarioOrchestrationValues implements ScenarioOrchestrationInfo {
+  private static class ScenarioOrchestrationValues implements ScenarioOrchestrationInfo {
     IntegrationScenarioDefinition integrationScenario;
     RoutesDefinition routesDefinition;
     Map<IntegrationScenarioProviderDefinition, EndpointConsumerBuilder> providerEndpoints;

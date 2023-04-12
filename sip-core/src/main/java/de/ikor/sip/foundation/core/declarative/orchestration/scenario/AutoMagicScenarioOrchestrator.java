@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
-import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.List;
 
 public class AutoMagicScenarioOrchestrator implements Orchestrator<ScenarioOrchestrationInfo> {
@@ -29,10 +29,9 @@ public class AutoMagicScenarioOrchestrator implements Orchestrator<ScenarioOrche
         .findFirst()
         .orElseThrow(
             () ->
-                new SIPFrameworkException(
-                    String.format(
-                        "Unable to automatically orchestrate scenario '%s'. Please specify an orchestrator.",
-                        data.getIntegrationScenario().getId())));
+                SIPFrameworkInitializationException.init(
+                    "Unable to automatically orchestrate scenario '%s'. Please specify an orchestrator.",
+                    data.getIntegrationScenario().getId()));
   }
 
   @Override
