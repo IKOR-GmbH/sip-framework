@@ -96,11 +96,11 @@ class TestKitHelperTest {
   void GIVEN_properties_WHEN_parseExchangeProperties_THEN_expectExchangeWithValues() {
     // assert
     EndpointProperties properties = new EndpointProperties();
-    properties.setEndpoint("routeId");
+    properties.setEndpointId("routeId");
     MessageProperties messageProperties = new MessageProperties();
     messageProperties.setBody("body");
     messageProperties.setHeaders(Map.of("headerKey", "value"));
-    properties.setMessage(messageProperties);
+    properties.setRequestMessage(messageProperties);
 
     // act
     Exchange actual = parseExchangeProperties(properties, camelContext);

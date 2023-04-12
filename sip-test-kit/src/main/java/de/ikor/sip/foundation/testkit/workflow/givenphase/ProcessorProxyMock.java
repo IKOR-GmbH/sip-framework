@@ -1,10 +1,19 @@
 package de.ikor.sip.foundation.testkit.workflow.givenphase;
 
+import static de.ikor.sip.foundation.testkit.util.TestKitHelper.unmarshallExchangeBodyFromJson;
+import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvoker.CONNECTOR_ID_EXCHANGE_PROPERTY;
+import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvoker.STRING_CLASS;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.ikor.sip.foundation.core.declarative.DeclarationsRegistryApi;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.testkit.exception.ExceptionType;
 import de.ikor.sip.foundation.testkit.exception.TestCaseInitializationException;
 import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +29,10 @@ import org.springframework.stereotype.Component;
 public class ProcessorProxyMock extends Mock {
   private ProcessorProxy proxy;
   private final ProcessorProxyRegistry proxyRegistry;
+
+  private final DeclarationsRegistryApi declarationsRegistry;
+
+  private final ObjectMapper mapper;
 
   /**
    * Sets a mock operation on a proxy
@@ -54,8 +67,30 @@ public class ProcessorProxyMock extends Mock {
   private UnaryOperator<Exchange> createOperation(Exchange returnExchange) {
     return exchange -> {
       returnExchange.getMessage().getHeaders().forEach(exchange.getMessage()::setHeader);
-      exchange.getMessage().setBody(returnExchange.getMessage().getBody());
+      String mockingPayload = returnExchange.getMessage().getBody(String.class);
+      exchange.getMessage().setBody(mockingPayload);
+
+      String connectorId = (String) returnExchange.getProperty(CONNECTOR_ID_EXCHANGE_PROPERTY);
+      if (connectorId != null) {
+        unmarshallFromJson(exchange, connectorId);
+      }
+
       return exchange;
     };
+  }
+
+  private void unmarshallFromJson(Exchange exchange, String connectorId) {
+    Optional<ConnectorDefinition> connector = declarationsRegistry.getConnectorById(connectorId);
+    if (connector.isPresent()) {
+      Optional<Class<?>> responseModelClass = connector.get().getResponseModelClass();
+      if (responseModelClass.isPresent()) {
+        if (!responseModelClass.get().equals(STRING_CLASS)) {
+          unmarshallExchangeBodyFromJson(exchange, mapper, responseModelClass.get());
+        }
+      } else {
+        throw new SIPFrameworkException(
+            String.format("Response model class is not defined for connector: %s", connectorId));
+      }
+    }
   }
 }
