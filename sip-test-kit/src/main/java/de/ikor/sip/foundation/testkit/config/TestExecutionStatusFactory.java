@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.testkit.config;
 
 import static de.ikor.sip.foundation.testkit.util.TestKitHelper.parseExchangeProperties;
-import static java.util.stream.Collectors.toList;
 
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
@@ -61,6 +60,6 @@ public class TestExecutionStatusFactory {
             .filter(
                 endpointProperties ->
                     !endpointProperties.getEndpointId().equals(expectedAdapterResponseId))
-            .collect(toList());
+            .toList();
   }
 }

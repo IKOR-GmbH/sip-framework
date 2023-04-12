@@ -120,8 +120,8 @@ public class TestCasesConfig {
       String routeId =
           routesRegistry.get().getRouteIdByConnectorIdAndRole(properties.getConnectorId(), role);
       if (routeId == null) {
-        throw new SIPFrameworkException(
-            String.format("There is no connector with id %s", properties.getConnectorId()));
+        throw SIPFrameworkException.init(
+            "There is no connector with id %s", properties.getConnectorId());
       }
       properties.setEndpointId(routeId);
     }
@@ -158,8 +158,8 @@ public class TestCasesConfig {
   private void validateEndpointAndConnectorFields(
       EndpointProperties properties, String definitionPart) {
     if (properties.getEndpointId() != null && properties.getConnectorId() != null) {
-      throw new SIPFrameworkException(
-          String.format("Both endpoint and connector fields are defined in %s!", definitionPart));
+      throw SIPFrameworkException.init(
+          "Both endpoint and connector fields are defined in %s!", definitionPart);
     }
   }
 
@@ -176,17 +176,14 @@ public class TestCasesConfig {
   private void validateConnectorType(
       EndpointProperties properties, ConnectorType type, String definitionPart) {
     String connectorId = properties.getConnectorId();
-    if (connectorId != null
-        && declarationsRegistry
-            .flatMap(registry -> registry.getConnectorById(connectorId))
-            .isPresent()) {
-      ConnectorDefinition connector =
-          declarationsRegistry.get().getConnectorById(connectorId).get();
+    Optional<ConnectorDefinition> connectorOpt =
+        declarationsRegistry.flatMap(registry -> registry.getConnectorById(connectorId));
+    if (connectorId != null && connectorOpt.isPresent()) {
+      ConnectorDefinition connector = connectorOpt.get();
       if (!connector.getConnectorType().equals(type)) {
-        throw new SIPFrameworkException(
-            String.format(
-                "Connector id %s with wrong connector type (%s) used in %s. Use connector with type: (%s)",
-                connectorId, connector.getConnectorType(), definitionPart, type));
+        throw SIPFrameworkException.init(
+            "Connector id %s with wrong connector type (%s) used in %s. Use connector with type: (%s)",
+            connectorId, connector.getConnectorType(), definitionPart, type);
       }
     }
   }

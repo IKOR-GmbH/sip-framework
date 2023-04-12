@@ -95,7 +95,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     Arrays.stream(suffixes).forEach(suffix -> idBuilder.append("-").append(suffix));
     final var routeId = idBuilder.toString();
     if (roleForRouteIdRegister.containsKey(routeId)) {
-      throw SIPFrameworkInitializationException.initException(
+      throw SIPFrameworkInitializationException.init(
           "Can't build internal connector route with routeId '%s': routeId already exists",
           routeId);
     }
@@ -109,7 +109,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   public String generateRouteIdForSoapService(final String soapServiceName) {
     final var routeId = String.format("%s_%s", SIP_SOAP_SERVICE_PREFIX, soapServiceName);
     if (roleForRouteIdRegister.containsKey(routeId)) {
-      throw SIPFrameworkInitializationException.initException(
+      throw SIPFrameworkInitializationException.init(
           "Can't build internal soap-service route with routeId '%s': routeId already exists",
           routeId);
     }

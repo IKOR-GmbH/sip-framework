@@ -48,8 +48,7 @@ public class ReportActivityProxyExtension implements ProxyExtension {
     Optional<TestCase> tc =
         testCases.stream().filter(testCase -> testCase.getTestName().equals(testName)).findFirst();
     if (tc.isEmpty()) {
-      throw SIPFrameworkException.initException(
-          "Test case with name %s could not be found!", testName);
+      throw SIPFrameworkException.init("Test case with name %s could not be found!", testName);
     }
     return tc.get().getTestExecutionStatus();
   }

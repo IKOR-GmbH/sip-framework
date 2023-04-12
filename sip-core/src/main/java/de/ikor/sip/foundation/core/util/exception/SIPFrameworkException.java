@@ -13,7 +13,7 @@ public class SIPFrameworkException extends RuntimeException {
    * @param args arguments for message pattern
    * @return initialized SIPFrameworkException
    */
-  public static SIPFrameworkException initException(String messagePattern, Object... args) {
+  public static SIPFrameworkException init(String messagePattern, Object... args) {
     return new SIPFrameworkException(String.format(messagePattern, args));
   }
 
@@ -25,8 +25,7 @@ public class SIPFrameworkException extends RuntimeException {
    * @param args arguments for message pattern
    * @return initialized SIPFrameworkException
    */
-  public static SIPFrameworkException initException(
-      Throwable cause, String messagePattern, Object... args) {
+  public static SIPFrameworkException init(Throwable cause, String messagePattern, Object... args) {
     return new SIPFrameworkException(String.format(messagePattern, args), cause);
   }
 
