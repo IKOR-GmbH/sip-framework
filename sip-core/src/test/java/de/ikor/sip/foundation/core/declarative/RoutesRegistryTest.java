@@ -48,7 +48,8 @@ class RoutesRegistryTest {
         .thenReturn(Optional.ofNullable(connector));
 
     // act
-    String actualRouteId = subject.getRouteIdByConnectorId(CONNECTOR_ID);
+    String actualRouteId =
+        subject.getRouteIdByConnectorIdAndRole(CONNECTOR_ID, RouteRole.EXTERNAL_ENDPOINT);
 
     // assert
     assertThat(actualRouteId).isEqualTo(GENERATED_ROUTE_ID);
@@ -61,7 +62,8 @@ class RoutesRegistryTest {
         .thenReturn(Optional.ofNullable(connector));
 
     // act
-    String actualRouteId = subject.getRouteIdByConnectorId(CONNECTOR_ID);
+    String actualRouteId =
+        subject.getRouteIdByConnectorIdAndRole(CONNECTOR_ID, RouteRole.EXTERNAL_ENDPOINT);
 
     // assert
     assertThat(actualRouteId).isNull();
@@ -70,7 +72,8 @@ class RoutesRegistryTest {
   @Test
   void GIVEN_nonExistentConnector_WHEN_getRouteIdByConnectorId_THEN_expectNull() {
     // act
-    String actualRouteId = subject.getRouteIdByConnectorId(CONNECTOR_ID);
+    String actualRouteId =
+        subject.getRouteIdByConnectorIdAndRole(CONNECTOR_ID, RouteRole.EXTERNAL_ENDPOINT);
 
     // assert
     assertThat(actualRouteId).isNull();
