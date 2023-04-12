@@ -7,6 +7,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.Scenar
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +37,10 @@ public class ScenarioOrchestrationHandlers {
 
   private static ScenarioOrchestrationContext retrieveOrchestrationContext(
       final Exchange exchange) {
-    return exchange.getProperty(
-        ScenarioOrchestrationContext.PROPERTY_NAME, ScenarioOrchestrationContext.class);
+    return Objects.requireNonNull(
+        exchange.getProperty(
+            ScenarioOrchestrationContext.PROPERTY_NAME, ScenarioOrchestrationContext.class),
+        "Orchestration context for scenario-orchestration could not be retrieved from exchange");
   }
 
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
