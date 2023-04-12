@@ -3,15 +3,19 @@ package de.ikor.sip.foundation.testkit.util;
 import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_HEADER;
 import static de.ikor.sip.foundation.testkit.util.TestKitHelper.*;
 import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker.TEST_NAME_HEADER;
+import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvokerTest.PAYLOAD_BODY;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
+import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvokerTest;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.camel.*;
@@ -131,5 +135,35 @@ class TestKitHelperTest {
   void GIVEN_customHeader_WHEN_isTestKitHeader_THEN_expectFalse() {
     // act + assert
     assertThat(isTestKitHeader("customHeaderKey")).isFalse();
+  }
+
+  @Test
+  void GIVEN_PersonJsonRequestModel_WHEN_unmarshallExchangeBodyFromJson_THEN_expectPersonPojo() {
+    // arrange
+    Exchange exchange = TestKitHelper.parseExchangeProperties(null, camelContext);
+    exchange.getMessage().setBody(PAYLOAD_BODY);
+
+    // act
+    unmarshallExchangeBodyFromJson(
+        exchange, new ObjectMapper(), DirectRouteInvokerTest.Person.class);
+
+    // assert
+    assertThat(exchange.getMessage().getBody()).isInstanceOf(DirectRouteInvokerTest.Person.class);
+  }
+
+  @Test
+  void
+      GIVEN_NoJsonRequestModel_WHEN_unmarshallExchangeBodyFromJson_THEN_expectSIPFrameworkException() {
+    // arrange
+    Exchange exchange = TestKitHelper.parseExchangeProperties(null, camelContext);
+    exchange.getMessage().setBody("string value");
+
+    // act && assert
+    assertThatThrownBy(
+            () -> {
+              unmarshallExchangeBodyFromJson(
+                  exchange, new ObjectMapper(), DirectRouteInvokerTest.Person.class);
+            })
+        .isInstanceOf(SIPFrameworkException.class);
   }
 }

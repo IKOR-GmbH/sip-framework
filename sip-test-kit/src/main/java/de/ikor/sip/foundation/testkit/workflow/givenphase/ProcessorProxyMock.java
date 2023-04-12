@@ -29,10 +29,8 @@ import org.springframework.stereotype.Component;
 public class ProcessorProxyMock extends Mock {
   private ProcessorProxy proxy;
   private final ProcessorProxyRegistry proxyRegistry;
-
-  private final DeclarationsRegistryApi declarationsRegistry;
-
   private final ObjectMapper mapper;
+  private final Optional<DeclarationsRegistryApi> declarationsRegistry;
 
   /**
    * Sets a mock operation on a proxy
@@ -71,7 +69,7 @@ public class ProcessorProxyMock extends Mock {
       exchange.getMessage().setBody(mockingPayload);
 
       String connectorId = (String) returnExchange.getProperty(CONNECTOR_ID_EXCHANGE_PROPERTY);
-      if (connectorId != null) {
+      if (connectorId != null && declarationsRegistry.isPresent()) {
         unmarshallFromJson(exchange, connectorId);
       }
 
@@ -80,7 +78,8 @@ public class ProcessorProxyMock extends Mock {
   }
 
   private void unmarshallFromJson(Exchange exchange, String connectorId) {
-    Optional<ConnectorDefinition> connector = declarationsRegistry.getConnectorById(connectorId);
+    Optional<ConnectorDefinition> connector =
+        declarationsRegistry.flatMap(registry -> registry.getConnectorById(connectorId));
     if (connector.isPresent()) {
       Optional<Class<?>> responseModelClass = connector.get().getResponseModelClass();
       if (responseModelClass.isPresent()) {

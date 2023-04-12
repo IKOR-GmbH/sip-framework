@@ -11,6 +11,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.*;
 import org.apache.camel.component.direct.DirectEndpoint;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
+@ConditionalOnProperty(value = "sip.core.declarativestructure.enabled", havingValue = "true")
 public class DirectRouteInvoker implements RouteInvoker {
 
   public static final String CONNECTOR_ID_EXCHANGE_PROPERTY = "connectorId";
