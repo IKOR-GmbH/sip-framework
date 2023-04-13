@@ -1,5 +1,5 @@
 {
   "author": "nikolag-ikor",
   "pullrequestId": "182",
-  "message": "Add actuator endpoints which provide meta-structure components (endpoints, connectors, scenarios)"
+  "message": "Actuator endpoints which expose declarative structure components (endpoints, connectors, scenarios, groups)"
 }
