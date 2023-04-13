@@ -36,50 +36,79 @@ class ScenarioOrchestrationTest {
   @EndpointInject("mock:log:messageConnector2")
   private MockEndpoint mockedLoggerConnector2;
 
+  @EndpointInject("mock:log:messageConnector3")
+  private MockEndpoint mockedLoggerConnector3;
+
   @BeforeEach
   void setup() {
     mockedLoggerConnector1.reset();
     mockedLoggerConnector2.reset();
+    mockedLoggerConnector3.reset();
   }
 
   @AfterEach
   void assertLoggers() throws InterruptedException {
     mockedLoggerConnector1.assertIsSatisfied();
     mockedLoggerConnector2.assertIsSatisfied();
+    mockedLoggerConnector3.assertIsSatisfied();
   }
 
   @Test
-  void WHEN_callingFirstInboundConnector_THEN_OnlyFirstOutboundConnectorReceivesAMessage() {
+  void WHEN_callingFirstOrSecondInboundConnector_THEN_OnlyFirstOutboundConnectorReceivesAMessage() {
     // arrange
-    mockedLoggerConnector1.expectedMessageCount(1);
-    mockedLoggerConnector1.expectedBodiesReceived("Hi Adapter-scenarioprepared");
+    mockedLoggerConnector1.expectedBodiesReceivedInAnyOrder(
+        "Hi Adapter-scenarioprepared", "Hi Adapter-scenarioprepared");
     mockedLoggerConnector2.expectedMessageCount(0);
+    mockedLoggerConnector3.expectedMessageCount(0);
 
     // act
-    Exchange exchange = template.withBody("Hi Adapter").to(direct("dummyInputOne")).send();
+    Exchange exchangeFirstConnector =
+        template.withBody("Hi Adapter").to(direct("dummyInputOne")).send();
+    ScenarioResponse responseFirstConnector =
+        exchangeFirstConnector.getMessage().getBody(ScenarioResponse.class);
+    Exchange exchangeSecondConnector =
+        template.withBody("Hi Adapter").to(direct("dummyInputTwo")).send();
+    ScenarioResponse responseSecondConnector =
+        exchangeSecondConnector.getMessage().getBody(ScenarioResponse.class);
 
     // assert
-    assertThat(exchange.getMessage().getBody()).isInstanceOf(ScenarioResponse.class);
-    assertThat(exchange.getMessage().getBody(ScenarioResponse.class).getValue()).isEqualTo(1);
+    assertThat(responseFirstConnector).isInstanceOf(ScenarioResponse.class);
+    assertThat(responseFirstConnector.getValue()).isEqualTo(1);
+    assertThat(responseSecondConnector).isEqualTo(responseFirstConnector);
   }
 
   @Test
   void
       WHEN_callingSecondInboundConnector_THEN_OutboundConnector1And2ReceiveAMessageAndResponseIsAggregated() {
     // arrange
-    mockedLoggerConnector1.expectedMessageCount(1);
     mockedLoggerConnector1.expectedBodiesReceived("Hi Adapter");
-    mockedLoggerConnector2.expectedMessageCount(1);
     mockedLoggerConnector2.expectedBodiesReceived("Hi Adapter-scenarioprepared");
 
     // act
-    Exchange exchange = template.withBody("Hi Adapter").to(direct("dummyInputTwo")).send();
+    Exchange exchange = template.withBody("Hi Adapter").to(direct("dummyInputThree")).send();
 
     // assert
     assertThat(exchange.getMessage().getBody()).isInstanceOf(ScenarioResponse.class);
-    assertThat(exchange.getMessage().getBody(ScenarioResponse.class).getValue()).isEqualTo(120);
-    assertThat(exchange.getMessage().getBody(ScenarioResponse.class).getId())
-        .isEqualTo("scenario-handled-response");
+    ScenarioResponse response = exchange.getMessage().getBody(ScenarioResponse.class);
+    assertThat(response.getValue()).isEqualTo(3120);
+    assertThat(response.getId()).isEqualTo("scenario-handled-response");
+  }
+
+  @Test
+  void WHEN_callingUsnpecifiedInboundConnector_THEN_ResponseIsAggregated() {
+    // arrange
+    mockedLoggerConnector1.expectedBodiesReceived("Hi Adapter");
+    mockedLoggerConnector2.expectedBodiesReceived("Hi Adapter");
+    mockedLoggerConnector3.expectedBodiesReceived("Hi Adapter");
+
+    // act
+    Exchange exchange = template.withBody("Hi Adapter").to(direct("dummyInputFour")).send();
+
+    // assert
+    assertThat(exchange.getMessage().getBody()).isInstanceOf(ScenarioResponse.class);
+    ScenarioResponse response = exchange.getMessage().getBody(ScenarioResponse.class);
+    assertThat(response.getValue()).isEqualTo(6);
+    assertThat(response.getId()).isEqualTo("scenario-aggregated-response");
   }
 
   @Test

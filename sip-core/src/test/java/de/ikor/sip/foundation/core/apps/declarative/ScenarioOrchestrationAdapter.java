@@ -1,18 +1,22 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
+import de.ikor.sip.foundation.core.apps.declarative.ScenarioOrchestrationAdapter.ScenarioResponse;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
+import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +35,20 @@ public class ScenarioOrchestrationAdapter {
   // <-- ORCHESTRATED SCENARIO START
   @Data
   @AllArgsConstructor
-  public static class ScenarioResponse {
+  public static class ScenarioResponse implements Serializable, Cloneable {
+
+    public ScenarioResponse(ScenarioResponse response) {
+      this.id = response.id;
+      this.value = response.value;
+    }
+
+    @Override
+    public ScenarioResponse clone() throws CloneNotSupportedException {
+      ScenarioResponse response = (ScenarioResponse) super.clone();
+      response.setId(id);
+      response.setValue(value);
+      return response;
+    }
 
     private String id;
 
@@ -51,13 +68,19 @@ public class ScenarioOrchestrationAdapter {
       return ScenarioOrchestrator.forOrchestrationDslWithResponse(
           ScenarioResponse.class,
           dsl -> {
-            dsl.forInboundConnectors(InboundConnectorOne.ID)
+            // first connector only calls first outbound connector
+            dsl.forInboundConnectors(InboundConnectorOne.class, InboundConnectorTwo.class)
                 .callOutboundConnector(OutboundConnectorOne.ID)
                 .withRequestPreparation(
                     context -> context.getOriginalRequest() + "-scenarioprepared")
                 .andNoResponseHandling();
-            dsl.forInboundConnectors(InboundConnectorTwo.class)
+
+            // second connectors calls second, first and third outbound connectors and sums the
+            // results. Sum also depends on the order of the connectors (first one is multiplied by
+            // 10, second one by 100, third by 1000)
+            dsl.forInboundConnectors(InboundConnectorThree.ID)
                 .callOutboundConnector(OutboundConnectorTwo.class)
+                .withResponseCloner(StepResultCloner.forCloneable())
                 .withRequestPreparation(
                     context -> context.getOriginalRequest() + "-scenarioprepared")
                 .andNoResponseHandling()
@@ -72,8 +95,35 @@ public class ScenarioOrchestrationAdapter {
                           IntStream.range(0, valueResponses.size())
                               .map(i -> valueResponses.get(i) * (int) Math.pow(10, i + 1))
                               .sum();
-                      latestResponse.setValue(sum);
-                      latestResponse.setId("scenario-handled-response");
+                      context.setAggregatedResponse(
+                          new ScenarioResponse("scenario-handled-response", sum),
+                          Optional.of(StepResultCloner.forSerializable()));
+                    })
+                .callOutboundConnector(OutboundConnectorThree.class)
+                .withResponseCloner(StepResultCloner.forCopyConstructor())
+                .andAggregateResponse(
+                    (latestResponse, previousOverallResponse) -> {
+                      if (previousOverallResponse.isEmpty()) {
+                        return new ScenarioResponse(
+                            latestResponse.getId(), latestResponse.getValue() * 1000);
+                      }
+                      ScenarioResponse previous = previousOverallResponse.get();
+                      return new ScenarioResponse(
+                          previous.getId(), previous.getValue() + latestResponse.getValue() * 1000);
+                    });
+
+            // any unspecified connector (provider) calls any unspecified connector (consumer) and
+            // aggregates all responses in a sum
+            dsl.forAnyUnspecifiedScenarioProvider()
+                .callAnyUnspecifiedScenarioConsumer()
+                .andAggregateResponse(
+                    (latestResponse, previousOverallResponse) -> {
+                      ScenarioResponse response =
+                          new ScenarioResponse(
+                              "scenario-aggregated-response", latestResponse.getValue());
+                      previousOverallResponse.ifPresent(
+                          previous -> response.setValue(response.getValue() + previous.getValue()));
+                      return response;
                     });
           });
     }
@@ -108,6 +158,38 @@ public class ScenarioOrchestrationAdapter {
     @Override
     protected EndpointConsumerBuilder defineInitiatingEndpoint() {
       return StaticEndpointBuilders.direct("dummyInputTwo");
+    }
+  }
+
+  @InboundConnector(
+      connectorId = InboundConnectorThree.ID,
+      connectorGroup = GROUP_ID,
+      integrationScenario = CustomOrchestrationScenario.ID,
+      requestModel = String.class,
+      responseModel = ScenarioResponse.class)
+  public class InboundConnectorThree extends GenericInboundConnectorBase {
+
+    public static final String ID = "inboundConnectorThree";
+
+    @Override
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+      return StaticEndpointBuilders.direct("dummyInputThree");
+    }
+  }
+
+  @InboundConnector(
+      connectorId = InboundConnectorFour.ID,
+      connectorGroup = GROUP_ID,
+      integrationScenario = CustomOrchestrationScenario.ID,
+      requestModel = String.class,
+      responseModel = ScenarioResponse.class)
+  public class InboundConnectorFour extends GenericInboundConnectorBase {
+
+    public static final String ID = "inboundConnectorFour";
+
+    @Override
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+      return StaticEndpointBuilders.direct("dummyInputFour");
     }
   }
 
@@ -158,10 +240,36 @@ public class ScenarioOrchestrationAdapter {
                   routeDefinition.setBody().constant(new ScenarioResponse("testTwo", 2)));
     }
   }
+
+  @OutboundConnector(
+      connectorId = OutboundConnectorThree.ID,
+      connectorGroup = GROUP_ID,
+      integrationScenario = CustomOrchestrationScenario.ID,
+      requestModel = String.class,
+      responseModel = ScenarioResponse.class)
+  public class OutboundConnectorThree extends GenericOutboundConnectorBase {
+
+    public static final String ID = "outboundConnectorThree";
+
+    @Override
+    protected EndpointProducerBuilder defineOutgoingEndpoint() {
+      return StaticEndpointBuilders.log("messageConnector3");
+    }
+
+    @Override
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setResponseRouteTransformer(
+              routeDefinition ->
+                  routeDefinition.setBody().constant(new ScenarioResponse("testThree", 3)));
+    }
+  }
   // <-- ORCHESTRATED SCENARIO END
+
   // <-- AUTO ORCHESTRATED SCENARIO START
   @IntegrationScenario(scenarioId = AutoOrchestratedScenario.ID, requestModel = String.class)
   public class AutoOrchestratedScenario extends IntegrationScenarioBase {
+
     public static final String ID = "autoOrchestratedScenario";
   }
 
