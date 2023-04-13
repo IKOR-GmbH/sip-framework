@@ -154,10 +154,8 @@ public class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenera
     }
 
     final var routeStart = generateRouteStart(routesDefinition);
-    routeStart
-        .setProperty(ScenarioOrchestrationContext.PROPERTY_NAME)
-        .method(
-            ScenarioOrchestrationHandlers.handleContextInitialization(getIntegrationScenario()));
+    routeStart.bean(
+        ScenarioOrchestrationHandlers.handleContextInitialization(getIntegrationScenario()));
     consumerBuilders.forEach(consumerBuilder -> consumerBuilder.generateRoutes(routeStart));
   }
 

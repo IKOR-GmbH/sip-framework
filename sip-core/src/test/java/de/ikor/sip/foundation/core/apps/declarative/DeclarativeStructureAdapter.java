@@ -47,7 +47,8 @@ public class DeclarativeStructureAdapter {
 
     @Override
     public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
-      return ScenarioOrchestrator.forOrchestrationDsl(
+      return ScenarioOrchestrator.forOrchestrationDslWithResponse(
+          ScenarioResponse.class,
           dsl -> {
             dsl.forInboundConnectors(InboundConnectorOne.ID)
                 .callOutboundConnector(OutboundConnectorOne.ID)
@@ -64,14 +65,14 @@ public class DeclarativeStructureAdapter {
                     (latestResponse, context) -> {
                       List<Integer> valueResponses =
                           context.getOrchestrationStepResponses().stream()
-                              .map(step -> ((ScenarioResponse) step.result()).getValue())
+                              .map(step -> step.result().getValue())
                               .toList();
                       Integer sum =
                           IntStream.range(0, valueResponses.size())
                               .map(i -> valueResponses.get(i) * (int) Math.pow(10, i + 1))
                               .sum();
-                      ((ScenarioResponse) latestResponse).setValue(sum);
-                      ((ScenarioResponse) latestResponse).setId("scenario-handled-response");
+                      latestResponse.setValue(sum);
+                      latestResponse.setId("scenario-handled-response");
                     });
           });
     }

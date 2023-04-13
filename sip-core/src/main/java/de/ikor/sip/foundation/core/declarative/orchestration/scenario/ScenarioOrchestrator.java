@@ -19,12 +19,19 @@ public class ScenarioOrchestrator implements Orchestrator<ScenarioOrchestrationI
   private final Consumer<ScenarioOrchestrationInfo> orchestrationConsumer;
   @Setter private Predicate<ScenarioOrchestrationInfo> canOrchestrate = info -> true;
 
-  public static <M> ScenarioOrchestrator forOrchestrationDsl(
-      final Consumer<ScenarioOrchestrationDefinition<M>> dslDefinition) {
+  public static ScenarioOrchestrator forOrchestrationDslWithoutResponse(
+      final Consumer<ScenarioOrchestrationDefinition<Void>> dslDefinition) {
+    return forOrchestrationDslWithResponse(Void.class, dslDefinition);
+  }
+
+  @SuppressWarnings("java:S1172")
+  public static <T> ScenarioOrchestrator forOrchestrationDslWithResponse(
+      final Class<T> responseType,
+      final Consumer<ScenarioOrchestrationDefinition<T>> dslDefinition) {
     return forOrchestrationConsumer(
         info -> {
           final var orchestrationDef =
-              new ScenarioOrchestrationDefinition<M>(info.getIntegrationScenario());
+              new ScenarioOrchestrationDefinition<T>(info.getIntegrationScenario());
           dslDefinition.accept(orchestrationDef);
           new RouteGeneratorForScenarioOrchestrationDefinition<>(info, orchestrationDef).run();
         });

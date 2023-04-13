@@ -1,8 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario;
 
-import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.OrchestrationContext;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
-import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioOrchestrationContext;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioStepRequestExtractor;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
@@ -28,14 +26,14 @@ public class ScenarioOrchestrationHandlers {
     return new ConsumerRequestHandler<>(requestPreparation);
   }
 
-  public static <M> Object handleResponseFromConsumer(
+  public static <M> ConsumerResponseHandler<M> handleResponseFromConsumer(
       final IntegrationScenarioConsumerDefinition consumer,
       final Optional<StepResultCloner<M>> stepResultCloner,
       final Optional<ScenarioStepResponseConsumer<M>> responseConsumer) {
     return new ConsumerResponseHandler<>(consumer, stepResultCloner, responseConsumer);
   }
 
-  private static ScenarioOrchestrationContext retrieveOrchestrationContext(
+  private static <M> ScenarioOrchestrationContext<M> retrieveOrchestrationContext(
       final Exchange exchange) {
     return Objects.requireNonNull(
         exchange.getProperty(
@@ -49,8 +47,10 @@ public class ScenarioOrchestrationHandlers {
     private final IntegrationScenarioDefinition integrationScenario;
 
     @Handler
-    public <T> ScenarioOrchestrationContext initializeOrchestrationContext(final T body) {
-      return new ScenarioOrchestrationContext(integrationScenario, body);
+    public <T> void initializeOrchestrationContext(final T body, Exchange exchange) {
+      exchange.setProperty(
+          ScenarioOrchestrationContext.PROPERTY_NAME,
+          new ScenarioOrchestrationContext<T>(integrationScenario, body));
     }
   }
 
@@ -64,11 +64,11 @@ public class ScenarioOrchestrationHandlers {
     }
 
     private static <M> ScenarioStepRequestExtractor<M> defaultRequestExtractor() {
-      return OrchestrationContext::getOriginalRequest;
+      return ScenarioOrchestrationContext::getOriginalRequest;
     }
 
     @Handler
-    public <T> M extractRequest(final T body, final Exchange exchange) {
+    public <T> Object extractRequest(final T body, final Exchange exchange) {
       return requestPreparation.extractStepRequest(retrieveOrchestrationContext(exchange));
     }
   }
@@ -80,8 +80,8 @@ public class ScenarioOrchestrationHandlers {
     private final Optional<ScenarioStepResponseConsumer<M>> responseConsumer;
 
     @Handler
-    public Object handleResponse(final M body, final Exchange exchange) {
-      final var context = retrieveOrchestrationContext(exchange);
+    public M handleResponse(final M body, final Exchange exchange) {
+      final ScenarioOrchestrationContext<M> context = retrieveOrchestrationContext(exchange);
       context.addResponseForStep(consumer, body, stepResultCloner);
       responseConsumer.ifPresent(c -> c.consumeResponse(body, context));
       return context.getAggregatedResponse().orElse(body);

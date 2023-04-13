@@ -6,9 +6,8 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -26,21 +25,18 @@ public class ScenarioOrchestrationDefinition<M>
     super(null, integrationScenario);
   }
 
-  public <T extends InboundConnectorDefinition<?>>
-      ForScenarioProvidersWithClassDefinition<ScenarioOrchestrationDefinition<M>, M>
-          forInboundConnectors(final Class<T>... connectorClass) {
+  public ForScenarioProvidersWithClassDefinition<ScenarioOrchestrationDefinition<M>, M>
+      forInboundConnectors(final Class<? extends InboundConnectorDefinition<?>>... connectorClass) {
     return forScenarioProviders(connectorClass);
   }
 
-  public <T extends IntegrationScenarioProviderDefinition>
-      ForScenarioProvidersWithClassDefinition<ScenarioOrchestrationDefinition<M>, M>
-          forScenarioProviders(final Class<T>... providerClass) {
+  public ForScenarioProvidersWithClassDefinition<ScenarioOrchestrationDefinition<M>, M>
+      forScenarioProviders(
+          final Class<? extends IntegrationScenarioProviderDefinition>... providerClass) {
     verifyNoCatchAllOrThrow();
     final ForScenarioProvidersWithClassDefinition<ScenarioOrchestrationDefinition<M>, M> def =
         new ForScenarioProvidersWithClassDefinition<>(
-            self(),
-            getIntegrationScenario(),
-            Arrays.stream(providerClass).collect(Collectors.toSet()));
+            self(), getIntegrationScenario(), Set.of(providerClass));
     scenarioProviderDefinitions.add(def);
     return def;
   }
@@ -57,14 +53,12 @@ public class ScenarioOrchestrationDefinition<M>
     verifyNoCatchAllOrThrow();
     final ForScenarioProvidersWithConnectorIdDefinition<ScenarioOrchestrationDefinition<M>, M> def =
         new ForScenarioProvidersWithConnectorIdDefinition<>(
-            self(),
-            getIntegrationScenario(),
-            Arrays.stream(inboundConnectorId).collect(Collectors.toSet()));
+            self(), getIntegrationScenario(), Set.of(inboundConnectorId));
     scenarioProviderDefinitions.add(def);
     return def;
   }
 
-  public ForScenarioProvidersCatchAllDefinition<EndOfDsl, M> forAnyUnspecifiedProvider() {
+  public ForScenarioProvidersCatchAllDefinition<EndOfDsl, M> forAnyUnspecifiedScenarioProvider() {
     verifyNoCatchAllOrThrow();
     catchAllAdded = true;
     final ForScenarioProvidersCatchAllDefinition<EndOfDsl, M> def =

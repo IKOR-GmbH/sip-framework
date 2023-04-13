@@ -9,15 +9,17 @@ public enum StandardScenarioOrchestrators
     implements Supplier<Orchestrator<ScenarioOrchestrationInfo>> {
   ANY_TO_ONE(
       () ->
-          ScenarioOrchestrator.forOrchestrationDsl(
-                  dsl -> dsl.forAnyUnspecifiedProvider().callAnyUnspecifiedConsumer())
+          ScenarioOrchestrator.forOrchestrationDslWithResponse(
+                  Object.class,
+                  dsl ->
+                      dsl.forAnyUnspecifiedScenarioProvider().callAnyUnspecifiedScenarioConsumer())
               .setCanOrchestrate(info -> info.getConsumerEndpoints().size() == 1)),
   ANY_TO_ANY_WITHOUT_RESPONSE(
       () ->
-          ScenarioOrchestrator.forOrchestrationDsl(
+          ScenarioOrchestrator.forOrchestrationDslWithoutResponse(
                   dsl ->
-                      dsl.forAnyUnspecifiedProvider()
-                          .callAnyUnspecifiedConsumer()
+                      dsl.forAnyUnspecifiedScenarioProvider()
+                          .callAnyUnspecifiedScenarioConsumer()
                           .andNoResponseHandling())
               .setCanOrchestrate(info -> !info.getIntegrationScenario().hasResponseFlow()));
 

@@ -30,15 +30,13 @@ public abstract class ForScenarioProvidersBaseDefinition<
     return def;
   }
 
-  public <T extends OutboundConnectorDefinition>
-      CallScenarioConsumerWithClassDefinition<S, M> callOutboundConnector(
-          final Class<T> connectorClass) {
+  public CallScenarioConsumerWithClassDefinition<S, M> callOutboundConnector(
+      final Class<? extends OutboundConnectorDefinition> connectorClass) {
     return callScenarioConsumer(connectorClass);
   }
 
-  public <T extends IntegrationScenarioConsumerDefinition>
-      CallScenarioConsumerWithClassDefinition<S, M> callScenarioConsumer(
-          final Class<T> consumerClass) {
+  public CallScenarioConsumerWithClassDefinition<S, M> callScenarioConsumer(
+      final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass) {
     final CallScenarioConsumerWithClassDefinition<S, M> def =
         new CallScenarioConsumerWithClassDefinition<>(
             self(), getIntegrationScenario(), consumerClass);
@@ -46,7 +44,7 @@ public abstract class ForScenarioProvidersBaseDefinition<
     return def;
   }
 
-  public CallScenarioConsumerCatchAllDefinition<R, M> callAnyUnspecifiedConsumer() {
+  public CallScenarioConsumerCatchAllDefinition<R, M> callAnyUnspecifiedScenarioConsumer() {
     final CallScenarioConsumerCatchAllDefinition<R, M> def =
         new CallScenarioConsumerCatchAllDefinition<>(
             getDslReturnDefinition(), getIntegrationScenario());

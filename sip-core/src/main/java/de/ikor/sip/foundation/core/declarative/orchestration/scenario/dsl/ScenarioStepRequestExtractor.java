@@ -1,7 +1,9 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationContext;
+
 @FunctionalInterface
 public interface ScenarioStepRequestExtractor<M> {
 
-  M extractStepRequest(final ScenarioOrchestrationContext context);
+  Object extractStepRequest(final ScenarioOrchestrationContext<M> context);
 }
