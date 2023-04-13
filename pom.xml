@@ -30,6 +30,15 @@
         <url>https://ikor.one</url>
     </organization>
 
+    <developers>
+        <developer>
+            <name>SIP Development Team</name>
+            <email>info-finsure@ikor.one</email>
+            <organization>IKOR</organization>
+            <organizationUrl>https://ikor.one/</organizationUrl>
+        </developer>
+    </developers>
+
     <issueManagement>
         <system>GitHub Issues</system>
         <url>https://github.com/IKOR-GmbH/sip-framework/issues</url>

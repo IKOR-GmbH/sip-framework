@@ -40,7 +40,12 @@
     </organization>
 
     <developers>
-        <developer/>
+        <developer>
+            <name>SIP Development Team</name>
+            <email>info-finsure@ikor.one</email>
+            <organization>IKOR</organization>
+            <organizationUrl>https://ikor.one/</organizationUrl>
+        </developer>
     </developers>
 
     <issueManagement>
