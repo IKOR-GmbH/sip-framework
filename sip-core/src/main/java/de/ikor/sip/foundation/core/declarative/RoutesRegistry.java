@@ -8,6 +8,7 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.EndpointInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteInfo;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -19,9 +20,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.Synchronized;
-import org.apache.camel.*;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Endpoint;
+import org.apache.camel.Expression;
+import org.apache.camel.Processor;
+import org.apache.camel.Route;
 import org.apache.camel.component.servlet.ServletConsumer;
-import org.apache.camel.processor.*;
+import org.apache.camel.processor.Enricher;
+import org.apache.camel.processor.PollEnricher;
 import org.apache.camel.spi.CamelEvent;
 import org.apache.camel.spi.CamelEvent.CamelContextEvent;
 import org.apache.camel.spi.CamelEvent.CamelContextStartedEvent;
@@ -39,12 +45,14 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   private static final String POLL_ENRICH = "pollEnrich";
   public static final String SIP_CONNECTOR_PREFIX = "sip-connector";
   public static final String SIP_SOAP_SERVICE_PREFIX = "sip-soap-service";
+  public static final String SIP_SCENARIO_ORCHESTRATOR_PREFIX = "sip-connector";
   private final DeclarationsRegistryApi declarationsRegistryApi;
 
   private final MultiValuedMap<ConnectorDefinition, String> routeIdsForConnectorRegister =
       new HashSetValuedHashMap<>();
+  private final MultiValuedMap<IntegrationScenarioDefinition, String>
+      routeIdsForScenarioOrchestrationRegister = new HashSetValuedHashMap<>();
   private final Map<String, ConnectorDefinition> connectorForRouteIdRegister = new HashMap<>();
-
   private final Map<String, String> routeIdForSoapServiceRegister = new HashMap<>();
   private final Map<String, RouteRole> roleForRouteIdRegister = new HashMap<>();
   private final MultiValuedMap<String, String> endpointsForRouteId = new HashSetValuedHashMap<>();
@@ -106,6 +114,24 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     }
     routeIdForSoapServiceRegister.put(routeId, soapServiceName);
     roleForRouteIdRegister.put(routeId, RouteRole.EXTERNAL_SOAP_SERVICE_PROXY);
+    return routeId;
+  }
+
+  @Synchronized
+  public String generateRouteIdForScenarioOrchestrator(
+      final IntegrationScenarioDefinition scenario, final String suffix, final String... suffixes) {
+    final var idBuilder = new StringBuilder(SIP_SCENARIO_ORCHESTRATOR_PREFIX);
+    idBuilder.append("_").append(scenario.getId()).append("_").append(suffix);
+    Arrays.stream(suffixes).forEach(additional -> idBuilder.append("_").append(additional));
+    final var routeId = idBuilder.toString();
+    if (roleForRouteIdRegister.containsKey(routeId)) {
+      throw new SIPFrameworkInitializationException(
+          String.format(
+              "Can't build internal scenario orchestrator route with routeId '%s': routeId already exists",
+              routeId));
+    }
+    roleForRouteIdRegister.put(routeId, RouteRole.SCENARIO_ORCHESTRATION);
+    routeIdsForScenarioOrchestrationRegister.put(scenario, routeId);
     return routeId;
   }
 

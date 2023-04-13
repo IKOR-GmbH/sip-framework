@@ -10,9 +10,9 @@ import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnector
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupBase;
-import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;

@@ -17,9 +17,9 @@ import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnecto
 import de.ikor.sip.foundation.core.declarative.connector.RestInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
-import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import java.util.Optional;
 import org.apache.camel.builder.DataFormatClause;

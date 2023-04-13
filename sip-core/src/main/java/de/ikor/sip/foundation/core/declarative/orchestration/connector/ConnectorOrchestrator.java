@@ -1,6 +1,7 @@
-package de.ikor.sip.foundation.core.declarative.orchestration;
+package de.ikor.sip.foundation.core.declarative.orchestration.connector;
 
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import lombok.AccessLevel;
@@ -50,13 +51,13 @@ public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestratio
   }
 
   @Override
-  public boolean canOrchestrate(final ConnectorOrchestrationInfo data) {
+  public boolean canOrchestrate(final ConnectorOrchestrationInfo info) {
     return true;
   }
 
   @Override
-  public void doOrchestrate(final ConnectorOrchestrationInfo data) {
-    requestRouteTransformer.accept(data.getRequestRouteDefinition());
-    data.getResponseRouteDefinition().ifPresent(responseRouteTransformer);
+  public void doOrchestrate(final ConnectorOrchestrationInfo info) {
+    requestRouteTransformer.accept(info.getRequestRouteDefinition());
+    info.getResponseRouteDefinition().ifPresent(responseRouteTransformer);
   }
 }

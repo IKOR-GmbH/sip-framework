@@ -1,8 +1,24 @@
 package de.ikor.sip.foundation.core.declarative.orchestration;
 
+/**
+ * Generic Interface for orchestrators that can orchestrate an element with help of information
+ * provided through {@link OrchestrationInfo}.
+ */
 public interface Orchestrator<T extends OrchestrationInfo> {
 
-  boolean canOrchestrate(T data);
+  /**
+   * Specified whether the given <code>info</code> is sufficient for the orchestrator to fulfill the
+   * orchestration
+   *
+   * @param info Orchestration info
+   * @return Orchestration possible based on given info
+   */
+  boolean canOrchestrate(T info);
 
-  void doOrchestrate(T data);
+  /**
+   * Initiates the orchestration
+   *
+   * @param info Info provided to the orchestrator
+   */
+  void doOrchestrate(T info);
 }

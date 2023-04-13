@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
-import de.ikor.sip.foundation.core.declarative.orchestration.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
+import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import java.util.Optional;
 
 /**
