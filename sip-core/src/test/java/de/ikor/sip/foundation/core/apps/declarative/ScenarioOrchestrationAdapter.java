@@ -157,14 +157,11 @@ public class ScenarioOrchestrationAdapter {
                   routeDefinition.setBody().constant(new ScenarioResponse("testTwo", 2)));
     }
   }
-// <-- ORCHESTRATED SCENARIO END
-// <-- AUTO ORCHESTRATED SCENARIO START
-  @IntegrationScenario(
-      scenarioId = AutoOrchestratedScenario.ID,
-      requestModel = String.class)
+  // <-- ORCHESTRATED SCENARIO END
+  // <-- AUTO ORCHESTRATED SCENARIO START
+  @IntegrationScenario(scenarioId = AutoOrchestratedScenario.ID, requestModel = String.class)
   public class AutoOrchestratedScenario extends IntegrationScenarioBase {
     public static final String ID = "autoOrchestratedScenario";
-
   }
 
   @InboundConnector(
@@ -195,8 +192,7 @@ public class ScenarioOrchestrationAdapter {
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(
-              routeDefinition ->
-                  routeDefinition.setBody(e-> e.getIn().getBody()+ ID));
+              routeDefinition -> routeDefinition.setBody(e -> e.getIn().getBody() + ID));
     }
 
     @Override
@@ -223,8 +219,7 @@ public class ScenarioOrchestrationAdapter {
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
           .setRequestRouteTransformer(
-              routeDefinition ->
-                  routeDefinition.setBody(e-> e.getIn().getBody()+ ID));
+              routeDefinition -> routeDefinition.setBody(e -> e.getIn().getBody() + ID));
     }
   }
 

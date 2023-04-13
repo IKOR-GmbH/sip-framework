@@ -9,7 +9,6 @@ import de.ikor.sip.foundation.core.apps.declarative.ScenarioOrchestrationAdapter
 import de.ikor.sip.foundation.core.apps.declarative.ScenarioOrchestrationAdapter.ScenarioResponse;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
-import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.FluentProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
@@ -28,7 +27,6 @@ import org.springframework.test.annotation.DirtiesContext;
 @MockEndpoints("log:message*")
 @DirtiesContext
 class ScenarioOrchestrationTest {
-
 
   @Autowired private FluentProducerTemplate template;
 
@@ -85,25 +83,26 @@ class ScenarioOrchestrationTest {
   }
 
   @Test
-  void
-  WHEN_callingAutoOrchestratedScenario_THEN_MessagesAreProperlyReceived() {
+  void WHEN_callingAutoOrchestratedScenario_THEN_MessagesAreProperlyReceived() {
 
     // arrange
     String payload = "Hi Adapter-";
     mockedLoggerConnector1.expectedMessageCount(1);
-    mockedLoggerConnector1.expectedBodiesReceived(payload + AutoOrchestratedOutboundConnectorOne.ID);
+    mockedLoggerConnector1.expectedBodiesReceived(
+        payload + AutoOrchestratedOutboundConnectorOne.ID);
     mockedLoggerConnector2.expectedMessageCount(1);
-    mockedLoggerConnector2.expectedBodiesReceived(payload + AutoOrchestratedOutboundConnectorTwo.ID);
-
-    //act
-    Exchange exchange = template.withBody(payload).to(direct("autoOrchestratedInput")).send();
-
-    //assert
-    //TODO : should this be left on the exchange?
-    assertThat(exchange.getMessage().getBody()).isInstanceOf(String.class);
-    assertThat(exchange.getMessage().getBody(String.class)).isIn(
-        payload + AutoOrchestratedOutboundConnectorOne.ID,
+    mockedLoggerConnector2.expectedBodiesReceived(
         payload + AutoOrchestratedOutboundConnectorTwo.ID);
 
+    // act
+    Exchange exchange = template.withBody(payload).to(direct("autoOrchestratedInput")).send();
+
+    // assert
+    // TODO : should this be left on the exchange?
+    assertThat(exchange.getMessage().getBody()).isInstanceOf(String.class);
+    assertThat(exchange.getMessage().getBody(String.class))
+        .isIn(
+            payload + AutoOrchestratedOutboundConnectorOne.ID,
+            payload + AutoOrchestratedOutboundConnectorTwo.ID);
   }
 }
