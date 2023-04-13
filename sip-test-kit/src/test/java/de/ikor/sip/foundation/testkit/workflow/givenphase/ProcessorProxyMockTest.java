@@ -158,6 +158,22 @@ class ProcessorProxyMockTest {
     }
 
     @Test
+    void
+        GIVEN_missingConnectorInDeclarationsRegistry_WHEN_processorProxyProcess_Expect_sameBodyWithoutUnmarshalling() {
+      // arrange
+      actualExchange.setProperty(CONNECTOR_ID_EXCHANGE_PROPERTY, CONNECTOR_ID);
+      actualExchange.getMessage().setBody(STRING_BODY);
+
+      when(declarationsRegistry.getConnectorById(CONNECTOR_ID)).thenReturn(Optional.empty());
+
+      // act
+      proxySubject.process(actualExchange, mock(AsyncCallback.class));
+
+      // assert
+      assertThat(actualExchange.getMessage().getBody()).isEqualTo(STRING_BODY);
+    }
+
+    @Test
     void GIVEN_NoResponseModel_WHEN_processorProxyProcess_Expect_SIPFrameworkException() {
       // arrange
       actualExchange.setProperty(CONNECTOR_ID_EXCHANGE_PROPERTY, CONNECTOR_ID);
