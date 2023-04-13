@@ -24,10 +24,11 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 
 @SIPIntegrationAdapter
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))
-public class DeclarativeStructureAdapter {
+public class ScenarioOrchestrationAdapter {
 
   private final String GROUP_ID = "group";
 
+  // <-- ORCHESTRATED SCENARIO START
   @Data
   @AllArgsConstructor
   public static class ScenarioResponse {
@@ -38,10 +39,10 @@ public class DeclarativeStructureAdapter {
   }
 
   @IntegrationScenario(
-      scenarioId = Scenario.ID,
+      scenarioId = CustomOrchestrationScenario.ID,
       requestModel = String.class,
       responseModel = ScenarioResponse.class)
-  public class Scenario extends IntegrationScenarioBase {
+  public class CustomOrchestrationScenario extends IntegrationScenarioBase {
 
     public static final String ID = "TestScenario";
 
@@ -81,7 +82,7 @@ public class DeclarativeStructureAdapter {
   @InboundConnector(
       connectorId = InboundConnectorOne.ID,
       connectorGroup = GROUP_ID,
-      integrationScenario = Scenario.ID,
+      integrationScenario = CustomOrchestrationScenario.ID,
       requestModel = String.class,
       responseModel = ScenarioResponse.class)
   public class InboundConnectorOne extends GenericInboundConnectorBase {
@@ -97,7 +98,7 @@ public class DeclarativeStructureAdapter {
   @InboundConnector(
       connectorId = InboundConnectorTwo.ID,
       connectorGroup = GROUP_ID,
-      integrationScenario = Scenario.ID,
+      integrationScenario = CustomOrchestrationScenario.ID,
       requestModel = String.class,
       responseModel = ScenarioResponse.class)
   public class InboundConnectorTwo extends GenericInboundConnectorBase {
@@ -113,7 +114,7 @@ public class DeclarativeStructureAdapter {
   @OutboundConnector(
       connectorId = OutboundConnectorOne.ID,
       connectorGroup = GROUP_ID,
-      integrationScenario = Scenario.ID,
+      integrationScenario = CustomOrchestrationScenario.ID,
       requestModel = String.class,
       responseModel = ScenarioResponse.class)
   public class OutboundConnectorOne extends GenericOutboundConnectorBase {
@@ -137,7 +138,7 @@ public class DeclarativeStructureAdapter {
   @OutboundConnector(
       connectorId = OutboundConnectorTwo.ID,
       connectorGroup = GROUP_ID,
-      integrationScenario = Scenario.ID,
+      integrationScenario = CustomOrchestrationScenario.ID,
       requestModel = String.class,
       responseModel = ScenarioResponse.class)
   public class OutboundConnectorTwo extends GenericOutboundConnectorBase {
@@ -157,4 +158,71 @@ public class DeclarativeStructureAdapter {
                   routeDefinition.setBody().constant(new ScenarioResponse("testTwo", 2)));
     }
   }
+  // <-- ORCHESTRATED SCENARIO END
+  // <-- AUTO ORCHESTRATED SCENARIO START
+  @IntegrationScenario(scenarioId = AutoOrchestratedScenario.ID, requestModel = String.class)
+  public class AutoOrchestratedScenario extends IntegrationScenarioBase {
+    public static final String ID = "autoOrchestratedScenario";
+  }
+
+  @InboundConnector(
+      connectorId = AutoOrchestratedInboundConnector.ID,
+      connectorGroup = GROUP_ID,
+      integrationScenario = AutoOrchestratedScenario.ID,
+      requestModel = String.class)
+  public class AutoOrchestratedInboundConnector extends GenericInboundConnectorBase {
+
+    public static final String ID = "autoOrchestratedInboundConnector";
+
+    @Override
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+      return StaticEndpointBuilders.direct("autoOrchestratedInput");
+    }
+  }
+
+  @OutboundConnector(
+      connectorId = AutoOrchestratedOutboundConnectorOne.ID,
+      connectorGroup = GROUP_ID,
+      integrationScenario = AutoOrchestratedScenario.ID,
+      requestModel = String.class)
+  public class AutoOrchestratedOutboundConnectorOne extends GenericOutboundConnectorBase {
+
+    public static final String ID = "autoOrchestratedOutboundConnectorOne";
+
+    @Override
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setRequestRouteTransformer(
+              routeDefinition -> routeDefinition.setBody(e -> e.getIn().getBody() + ID));
+    }
+
+    @Override
+    protected EndpointProducerBuilder defineOutgoingEndpoint() {
+      return StaticEndpointBuilders.log("messageConnector1");
+    }
+  }
+
+  @OutboundConnector(
+      connectorId = AutoOrchestratedOutboundConnectorTwo.ID,
+      connectorGroup = GROUP_ID,
+      integrationScenario = AutoOrchestratedScenario.ID,
+      requestModel = String.class)
+  public class AutoOrchestratedOutboundConnectorTwo extends GenericOutboundConnectorBase {
+
+    public static final String ID = "autoOrchestratedOutboundConnectorTwo";
+
+    @Override
+    protected EndpointProducerBuilder defineOutgoingEndpoint() {
+      return StaticEndpointBuilders.log("messageConnector2");
+    }
+
+    @Override
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setRequestRouteTransformer(
+              routeDefinition -> routeDefinition.setBody(e -> e.getIn().getBody() + ID));
+    }
+  }
+
+  // <-- AUTO ORCHESTRATED SCENARIO END
 }
