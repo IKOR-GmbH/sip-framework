@@ -1,8 +1,7 @@
 package de.ikor.sip.foundation.core.actuator.health.http;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 import org.apache.camel.Endpoint;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +18,7 @@ class HttpHealthIndicatorsTest {
 
   @BeforeEach
   void setUp() {
-    endpoint = mock(Endpoint.class);
+    endpoint = mock(Endpoint.class, RETURNS_DEEP_STUBS);
   }
 
   @Test
@@ -42,7 +41,7 @@ class HttpHealthIndicatorsTest {
   }
 
   @Test
-  void Given_EndpointIsConnectedAndReturnsStatus2xx_When_urlHealthIndicator_Then_StatusUp() {
+  void When_urlHealthIndicator_With_ValidURL_Then_StatusUp() {
     // arrange
     when(endpoint.getEndpointKey()).thenReturn(ENDPOINT_URI);
 
@@ -52,5 +51,29 @@ class HttpHealthIndicatorsTest {
     // assert
     assertThat(subject.getStatus()).isEqualTo(Status.UP);
     assertThat(subject.getDetails()).containsEntry(URL_KEY, ENDPOINT_URI);
+  }
+
+  @Test
+  void When_urlHealthIndicator_With_InvalidURI_Then_StatusUnknown() {
+    // arrange
+    when(endpoint.getEndpointKey()).thenReturn(ENDPOINT_URI + "/kjk");
+
+    // act
+    Health subject = HttpHealthIndicators.urlHealthIndicator(endpoint);
+
+    // assert
+    assertThat(subject.getStatus()).isEqualTo(Status.UNKNOWN);
+  }
+
+  @Test
+  void When_urlHealthIndicator_With_NonExistentURL_Then_StatusDown() {
+    // arrange
+    when(endpoint.getEndpointKey()).thenReturn("non");
+
+    // act
+    Health subject = HttpHealthIndicators.urlHealthIndicator(endpoint);
+
+    // assert
+    assertThat(subject.getStatus()).isEqualTo(Status.DOWN);
   }
 }

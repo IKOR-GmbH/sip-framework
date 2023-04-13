@@ -13,7 +13,7 @@
 
     <artifactId>sip-integration-starter</artifactId>
     <name>SIP Integration Starter</name>
-    <description>Starter project adding necessary predefined depenencies for integration adapters</description>
+    <description>Starter project adding necessary predefined dependencies for integration adapters</description>
 
     <dependencies>
         <!-- ikor dependencies -->
@@ -68,10 +68,6 @@
                 <exclusion>
                     <groupId>org.yaml</groupId>
                     <artifactId>snakeyaml</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-core</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>io.swagger.parser.v3</groupId>

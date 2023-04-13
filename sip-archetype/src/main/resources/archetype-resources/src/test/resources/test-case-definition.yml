@@ -7,7 +7,7 @@ test-case-definitions:
     # Definition of test request which should be sent to the adapter (required)
     when-execute:
       # Id of endpoint under test
-      endpoint:
+      endpointId:
       with:
         # Add content that should be sent as request body to the adapter endpoint (plain text, JSON String)
         body:
@@ -18,7 +18,7 @@ test-case-definitions:
     # Definition of mocked endpoint's behavior (optional)
     with-mocks:
       # Id of processor with external endpoint
-      - endpoint:
+      - endpointId:
         returning:
           # Place response message that real endpoint is expected to return
           body:
@@ -31,7 +31,7 @@ test-case-definitions:
       # ------------
       # Response validation
       # Id of endpoint under test, matches endpoint under test defined in when phase
-      - endpoint:
+      - endpointId:
         having:
           # Add regex expression (java) which will be compared to the response of the test
           body:
@@ -41,7 +41,7 @@ test-case-definitions:
       # ------------
       # Request validation
       # Id of endpoint that is mocked, matches endpoint with defined or default mocked behavior
-      - endpoint:
+      - endpointId:
         having:
           # Add regex expression (java) which will be compared to he body
           body:

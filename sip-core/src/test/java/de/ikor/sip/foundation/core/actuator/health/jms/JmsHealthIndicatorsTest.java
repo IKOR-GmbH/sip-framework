@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.core.actuator.health.jms;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.core.actuator.common.IntegrationManagementException;
 import javax.jms.Connection;
@@ -22,7 +22,7 @@ class JmsHealthIndicatorsTest {
 
   @BeforeEach
   void setUp() {
-    endpoint = mock(JmsEndpoint.class);
+    endpoint = mock(JmsEndpoint.class, RETURNS_DEEP_STUBS);
     JmsComponent component = mock(JmsComponent.class);
     connectionFactory = mock(ConnectionFactory.class);
 
@@ -53,8 +53,10 @@ class JmsHealthIndicatorsTest {
 
   @Test
   void Given_IncorrectEndpoint_When_connectionManageable_Then_IntegrationManagementException() {
+    // arrange
+    Endpoint genericEndpoint = mock(Endpoint.class, RETURNS_DEEP_STUBS);
     // assert
-    assertThatThrownBy(() -> JmsHealthIndicators.connectionManageable(mock(Endpoint.class)))
+    assertThatThrownBy(() -> JmsHealthIndicators.connectionManageable(genericEndpoint))
         .isInstanceOf(IntegrationManagementException.class);
   }
 }

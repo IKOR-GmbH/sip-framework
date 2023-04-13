@@ -18,8 +18,10 @@ sip.core:
       showExchangeId: true
     log: true
   actuator:
-    endpoints: adapter-routes,tracing
+    endpoints: adapter-routes,adapterdefinition,tracing
     adapter-routes:
+      enabled: true
+    adapterdefinition:
       enabled: true
     extensions:
       info:
@@ -34,9 +36,8 @@ sip.core:
       scheduler:
         fixed-delay: 900000
         initial-delay: 5000
-sip.adapter:
-  camel-endpoint-context-path: ${server.servlet.context-path}${camel.servlet.mapping.context-path}
-  camel-cxf-endpoint-context-path: ${server.servlet.context-path}${cxf.path}
+  declarativestructure:
+    enabled: true
 server:
   servlet:
     context-path:
@@ -54,8 +55,10 @@ management:
 
 springdoc:
   show-actuator: true
-  api-docs.path: /api-docs
+  api-docs:
+    path: /api-docs
   swagger-ui:
+    url: /adapter/api-docs    #custom swagger docs set as default
     path: /swagger-ui.html
     disable-swagger-default-url: true
 
@@ -64,7 +67,3 @@ camel:
   servlet:
     mapping:
       context-path: /adapter/*
-cxf:
-  servlet:
-    enabled: true
-  path: /services

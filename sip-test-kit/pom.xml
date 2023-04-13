@@ -13,7 +13,6 @@
 
     <artifactId>sip-test-kit</artifactId>
     <name>SIP Test Kit</name>
-    <version>2.4.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>

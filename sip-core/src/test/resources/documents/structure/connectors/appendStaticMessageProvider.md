@@ -1,0 +1,1 @@
+Provides messages from direct to AppendStaticMessage scenario

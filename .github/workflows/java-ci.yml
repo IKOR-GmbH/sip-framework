@@ -84,7 +84,7 @@ jobs:
       with:
         gpg-key: ${{ secrets.MVN_GPG_PRIVATE_KEY }}
     - name: "check formatting"
-      run: mvn ${MAVEN_ARGS} com.coveo:fmt-maven-plugin:check
+      run: mvn ${MAVEN_ARGS} com.spotify.fmt:fmt-maven-plugin:check
 
 
   check-javadocs:

@@ -1,10 +1,13 @@
 package de.ikor.sip.foundation.core.actuator.health.http;
 
+import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.appendMetadata;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Endpoint;
 import org.springframework.boot.actuate.health.Health;
@@ -36,7 +39,13 @@ public class HttpHealthIndicators {
    * @return Returns health status UNKNOWN for every detected endpoint if not further specified
    */
   public static Health alwaysUnknown(Endpoint endpoint) {
-    return new Health.Builder().withDetail("url", endpoint.getEndpointKey()).unknown().build();
+    return new Health.Builder().withDetails(createDetails(endpoint)).unknown().build();
+  }
+
+  private static Map<String, Object> createDetails(Endpoint endpoint) {
+    Map<String, Object> details = new HashMap<>();
+    details.put("url", endpoint.getEndpointKey());
+    return appendMetadata(endpoint, details);
   }
 
   /**
@@ -48,23 +57,13 @@ public class HttpHealthIndicators {
    *     response code is not 2xx, or DOWN if request fails for any other reason.
    */
   public static Health urlHealthIndicator(Endpoint endpoint) {
-    return urlHealthStatus(endpoint.getEndpointKey(), DEFAULT_HTTP_TIMEOUT);
+    return urlHealthStatus(endpoint, DEFAULT_HTTP_TIMEOUT);
   }
 
-  /**
-   * Returns health checking function using custom url along with desired timeout.
-   *
-   * @param url The URL to use when performing the health check
-   * @param timeout the timeout
-   * @return function that checks health of the HTTP endpoint
-   */
-  public static Function<Endpoint, Health> urlHealthIndicator(String url, int timeout) {
-    return endpoint -> urlHealthStatus(url, timeout);
-  }
-
-  private static Health urlHealthStatus(String url, int timeout) {
+  private static Health urlHealthStatus(Endpoint endpoint, int timeout) {
+    String url = endpoint.getEndpointKey();
     Health.Builder builder = new Health.Builder();
-    builder.withDetail("url", url);
+    builder.withDetails(createDetails(endpoint));
     try {
       HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
       connection.setConnectTimeout(timeout);

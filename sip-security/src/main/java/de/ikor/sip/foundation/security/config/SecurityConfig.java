@@ -8,7 +8,6 @@ import de.ikor.sip.foundation.security.config.SecurityConfigProperties.AuthProvi
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,18 +65,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(AuthenticationManagerBuilder authManagerBuilder)
       throws IllegalStateException {
     List<Class<?>> autowiredAuthProviders =
-        authProviders.stream().map(Object::getClass).collect(Collectors.toList());
+        List.copyOf(authProviders.stream().map(Object::getClass).toList());
 
     List<Class<?>> providersUnavailableAtRuntime =
-        config.getAuthProviders().stream()
-            .map(AuthProviderSettings::getClassname)
-            .filter(a -> !autowiredAuthProviders.contains(a))
-            .collect(Collectors.toList());
+        List.copyOf(
+            config.getAuthProviders().stream()
+                .map(AuthProviderSettings::getClassname)
+                .filter(a -> !autowiredAuthProviders.contains(a))
+                .toList());
 
     if (!providersUnavailableAtRuntime.isEmpty()) {
-      throw new SIPFrameworkException(
-          "Some providers declared in the config are not available in runtime: "
-              + providersUnavailableAtRuntime);
+      throw SIPFrameworkException.init(
+          "Some providers declared in the config are not available in runtime: %s",
+          providersUnavailableAtRuntime);
     }
 
     if (configHasDuplicateAuthProviders()) {

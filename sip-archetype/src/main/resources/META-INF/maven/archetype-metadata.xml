@@ -34,11 +34,11 @@ under the License.
         <requiredProperty key="version">
             <defaultValue>1.0.0-SNAPSHOT</defaultValue>
         </requiredProperty>
-        <requiredProperty key="systemConnector1">
+        <requiredProperty key="connectorGroup1">
             <validationRegex>^[a-z0-9_]+$
             </validationRegex>
         </requiredProperty>
-        <requiredProperty key="systemConnector2">
+        <requiredProperty key="connectorGroup2">
             <validationRegex>^[a-z0-9_]+$
             </validationRegex>
         </requiredProperty>
@@ -54,6 +54,12 @@ under the License.
         </requiredProperty>
         <requiredProperty key="useLombok">
             <defaultValue>${useLombokDefault}</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="useSoapDefault">
+            <defaultValue>n</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="useSoap">
+            <defaultValue>${useSoapDefault}</defaultValue>
         </requiredProperty>
         <requiredProperty key="archetypeVersion"> </requiredProperty>
     </requiredProperties>
@@ -89,6 +95,7 @@ under the License.
                 <include>**/*.yaml</include>
                 <include>**/*.yml</include>
                 <include>**/*.md</include>
+                <include>**/*.keep</include>
             </includes>
         </fileSet>
         <fileSet filtered="true" encoding="UTF-8">

@@ -10,12 +10,16 @@ public final class AnalyzeResult {
   private final List<BannedImportRecords> srcMatches;
   private final List<BannedImportRecords> testMatches;
 
-  /** @return discovered {@link BannedImportGroup} in the source code files */
+  /**
+   * @return discovered {@link BannedImportGroup} in the source code files
+   */
   public List<BannedImportRecords> srcBanMatches() {
     return srcMatches;
   }
 
-  /** @return discovered {@link BannedImportGroup} in the test code files */
+  /**
+   * @return discovered {@link BannedImportGroup} in the test code files
+   */
   public List<BannedImportRecords> testBanMatches() {
     return testMatches;
   }

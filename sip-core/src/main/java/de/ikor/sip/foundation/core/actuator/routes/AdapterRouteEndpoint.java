@@ -2,9 +2,11 @@ package de.ikor.sip.foundation.core.actuator.routes;
 
 import de.ikor.sip.foundation.core.actuator.routes.annotations.RouteIdParameter;
 import de.ikor.sip.foundation.core.actuator.routes.annotations.RouteOperationParameter;
+import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -33,6 +36,7 @@ public class AdapterRouteEndpoint {
   private final CamelContext camelContext;
   private final RouteControllerLoggingDecorator routeController;
   private final ManagedCamelContext mbeanContext;
+  private final Optional<RoutesRegistry> routesRegistry;
 
   /**
    * Route endpoint
@@ -40,9 +44,12 @@ public class AdapterRouteEndpoint {
    * @param camelContext - CamelContext
    */
   public AdapterRouteEndpoint(
-      CamelContext camelContext, RouteControllerLoggingDecorator routeController) {
+      CamelContext camelContext,
+      RouteControllerLoggingDecorator routeController,
+      Optional<RoutesRegistry> routesRegistry) {
     this.camelContext = camelContext;
     this.routeController = routeController;
+    this.routesRegistry = routesRegistry;
     this.mbeanContext = camelContext.getExtension(ManagedCamelContext.class);
   }
 
@@ -55,8 +62,8 @@ public class AdapterRouteEndpoint {
   @Operation(summary = "Get all routes", description = "Get list of Routes from Camel Context")
   public List<AdapterRouteSummary> routes() {
     return camelContext.getRoutes().stream()
-        .map(route -> new AdapterRouteSummary(getRouteMBean(route.getRouteId())))
-        .collect(Collectors.toList());
+        .map(route -> generateSummary(route.getRouteId()))
+        .toList();
   }
 
   /** Stops all routes */
@@ -189,9 +196,9 @@ public class AdapterRouteEndpoint {
     Stream<Route> routeStream = filterMiddleComponentProducerRoutes(camelContext.getRoutes());
 
     Stream<AdapterRouteSummary> adapterRouteSummaryStream =
-        routeStream.map(route -> new AdapterRouteSummary(getRouteMBean(route.getRouteId())));
+        routeStream.map(route -> generateSummary(route.getRouteId()));
 
-    return adapterRouteSummaryStream.collect(Collectors.toList());
+    return adapterRouteSummaryStream.toList();
   }
 
   private ManagedRouteMBean getRouteMBean(String routeId) {
@@ -201,5 +208,26 @@ public class AdapterRouteEndpoint {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
     return routeMBean;
+  }
+
+  /**
+   * Get route summary for provided route ids
+   *
+   * @param ids list of route ids
+   * @return list of {@link AdapterRouteSummary} for provided ids
+   */
+  @GetMapping("/summary")
+  public List<AdapterRouteSummary> summary(@RequestParam(value = "ids") List<String> ids) {
+    return filterRoutesSummary(ids);
+  }
+
+  private List<AdapterRouteSummary> filterRoutesSummary(Collection<String> routeIds) {
+    return routeIds.stream().map(this::generateSummary).toList();
+  }
+
+  private AdapterRouteSummary generateSummary(String routeId) {
+    return new AdapterRouteSummary(
+        getRouteMBean(routeId),
+        routesRegistry.map(registry -> registry.generateRouteInfo(routeId)).orElse(null));
   }
 }

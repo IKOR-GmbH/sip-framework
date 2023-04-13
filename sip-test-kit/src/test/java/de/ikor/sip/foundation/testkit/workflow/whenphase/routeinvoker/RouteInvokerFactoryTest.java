@@ -4,12 +4,15 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
 import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.*;
 import java.util.Set;
 import org.apache.camel.*;
+import org.apache.camel.component.direct.DirectEndpoint;
 import org.apache.camel.component.file.FileEndpoint;
 import org.apache.camel.component.file.remote.RemoteFileEndpoint;
 import org.apache.camel.component.jms.JmsEndpoint;
@@ -29,18 +32,22 @@ class RouteInvokerFactoryTest {
   @BeforeEach
   void setup() {
     ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
-    RestRouteInvoker restRouteInvoker =
-        new RestRouteInvoker(mock(ProducerTemplate.class), camelContext);
+    ProducerTemplate producerTemplate = mock(ProducerTemplate.class);
+    RestRouteInvoker restRouteInvoker = new RestRouteInvoker(producerTemplate, camelContext);
     FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);
     FtpRouteInvoker ftpRouteInvoker = new FtpRouteInvoker(camelContext);
     JmsRouteInvoker jmsRouteInvoker = new JmsRouteInvoker(camelContext);
+    DirectRouteInvoker directRouteInvoker =
+        new DirectRouteInvoker(
+            producerTemplate, camelContext, mock(DeclarationsRegistry.class), new ObjectMapper());
     Set<RouteInvoker> invokers =
         Set.of(
             restRouteInvoker,
             mock(CxfRouteInvoker.class),
             fileRouteInvoker,
             ftpRouteInvoker,
-            jmsRouteInvoker);
+            jmsRouteInvoker,
+            directRouteInvoker);
     subject = new RouteInvokerFactory(invokers, camelContext);
     exchange = TestKitHelper.parseExchangeProperties(null, camelContext);
     exchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
@@ -102,6 +109,20 @@ class RouteInvokerFactoryTest {
 
     // assert
     assertThat(actual).isInstanceOf(JmsRouteInvoker.class);
+  }
+
+  @Test
+  void GIVEN_directEndpoint_WHEN_resolveAndInvoke_THEN_getDirectRouteInvoker()
+      throws NoRouteInvokerException {
+    // arrange
+    endpoint = mock(DirectEndpoint.class);
+    when(route.getEndpoint()).thenReturn(endpoint);
+
+    // act
+    RouteInvoker actual = subject.getInstance(exchange);
+
+    // assert
+    assertThat(actual).isInstanceOf(DirectRouteInvoker.class);
   }
 
   @Test

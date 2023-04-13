@@ -8,8 +8,8 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <!-- Attention! We need to keep this in sync with the spring-boot version set in sip-framework,
              which is transitively referenced in sip-integration-starter specified in the dependencymanagement section -->
-        <version>2.7.7</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>2.7.9</version>
+    <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>de.ikor.sip.foundation</groupId>
@@ -19,6 +19,7 @@
     <name>SIP Starter Parent</name>
     <description>Parent pom providing dependency and plugin management for SIP integration adapters built with Maven
     </description>
+    <url>https://github.com/IKOR-GmbH/sip-framework</url>
 
     <scm>
         <connection>scm:git:git://github.com/IKOR-GmbH/sip-framework.git</connection>
@@ -39,18 +40,7 @@
     </organization>
 
     <developers>
-        <developer>
-            <name>Thomas Stieglmaier</name>
-            <email>thomas.stieglmaier@ikor.de</email>
-            <organization>IKOR</organization>
-            <organizationUrl>http://ikor.one</organizationUrl>
-        </developer>
-        <developer>
-            <name>Vladimir Tucakovic</name>
-            <email>vladimir.tucakovic@ikor.de</email>
-            <organization>IKOR</organization>
-            <organizationUrl>http://ikor.one</organizationUrl>
-        </developer>
+        <developer/>
     </developers>
 
     <issueManagement>
@@ -58,42 +48,73 @@
         <url>https://github.com/IKOR-GmbH/sip-framework/issues</url>
     </issueManagement>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>maven-central</id>
-            <name>GitHub Packages</name>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <properties>
-        <sip-framework.version>2.4.1-SNAPSHOT</sip-framework.version>
-        <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
+        <sip-framework.version>2.4.1-SNAPSHOT</sip-framework.version>               <!-- keep in sync with framework version -->
+        <mapstruct.version>1.5.3.Final</mapstruct.version>                          <!-- keep in sync with mapstruct version in framework pom -->
+        <lombok.version>1.18.24</lombok.version>                                    <!-- keep in sync with lombok version in framework pom -->
+        <snakeyaml.version>1.33</snakeyaml.version>                                 <!-- overrides Spring's value, should be removed once Spring bumps to a needed version -->
+        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>                  <!-- keep in sync with framework, for maven central deployment -->
+        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>  <!-- keep in sync with framework, for maven central deployment -->
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>de.ikor.sip.foundation</groupId>
+            <artifactId>sip-integration-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-servlet-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-openapi-java-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.swagger.parser.v3</groupId>
+                    <artifactId>swagger-parser-v3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.swagger.core.v3</groupId>
+                    <artifactId>swagger-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-http-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-bindy-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-bean-validator-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+
+        <!-- runtime dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-bindy-starter</artifactId>
-        </dependency>
         <!-- test dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.yaml</groupId>
-                    <artifactId>snakeyaml</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 
@@ -124,38 +145,6 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>${maven-gpg-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>sign-artifacts</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>sign</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <gpgArguments>
-                            <arg>--pinentry-mode</arg>
-                            <arg>loopback</arg>
-                        </gpgArguments>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>${nexus-staging-maven-plugin.version}</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <serverId>maven-central</serverId>
-                        <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -163,15 +152,45 @@
     <profiles>
         <profile>
             <id>package-deployment</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>maven-central</id>
+                    <name>GitHub Packages</name>
+                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+            </distributionManagement>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>${nexus-staging-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>maven-central</serverId>
+                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

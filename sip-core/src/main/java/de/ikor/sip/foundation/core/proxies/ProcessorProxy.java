@@ -2,16 +2,15 @@ package de.ikor.sip.foundation.core.proxies;
 
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
 import de.ikor.sip.foundation.core.util.CamelHelper;
+import de.ikor.sip.foundation.core.util.CamelProcessorsHelper;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.camel.*;
-import org.apache.camel.processor.SendDynamicProcessor;
 import org.apache.camel.support.AsyncProcessorSupport;
 import org.apache.camel.support.ExchangeHelper;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,12 +19,10 @@ public class ProcessorProxy extends AsyncProcessorSupport {
   private static final Logger logger = LoggerFactory.getLogger(ProcessorProxy.class);
   public static final String TEST_MODE_HEADER = "test-mode";
 
-  private static final String[] NON_OUTGOING_PROCESSOR_PREFIXES = {"seda", "direct", "sipmc"};
-
   private final NamedNode nodeDefinition;
   private final Processor wrappedProcessor;
   // Processor can already be wrapped by Camel so we unwrap it and store it here
-  private final Processor originalProcessor;
+  @Getter private final Processor originalProcessor;
   private final List<ProxyExtension> extensions;
   private Function<Exchange, Exchange> mockFunction;
   @Getter private final boolean endpointProcessor;
@@ -73,16 +70,11 @@ public class ProcessorProxy extends AsyncProcessorSupport {
     this.extensions.add(proxyExtension);
   }
 
-  /** @return true if this is a processor that outputs to Endpoint */
+  /**
+   * @return true if this is a processor that outputs to Endpoint
+   */
   private boolean determineEndpointProcessor() {
-    if (originalProcessor instanceof EndpointAware) {
-      Endpoint destinationEndpoint = ((EndpointAware) originalProcessor).getEndpoint();
-      if (!StringUtils.startsWithAny(
-          destinationEndpoint.getEndpointUri(), NON_OUTGOING_PROCESSOR_PREFIXES)) {
-        return true;
-      }
-    }
-    return originalProcessor instanceof SendDynamicProcessor;
+    return CamelProcessorsHelper.isEndpointProcessor(originalProcessor);
   }
 
   @Override

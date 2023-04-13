@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.testkit.config;
 
 import static de.ikor.sip.foundation.testkit.util.TestKitHelper.parseExchangeProperties;
-import static java.util.stream.Collectors.toList;
 
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
@@ -37,30 +36,30 @@ public class TestExecutionStatusFactory {
     expectedEndpointResponses.forEach(
         endpointProperty ->
             reportMap.put(
-                endpointProperty.getEndpoint(),
+                endpointProperty.getEndpointId(),
                 new MockReport()
                     .setExpected(parseExchangeProperties(endpointProperty, camelContext))));
     return reportMap;
   }
 
   private Exchange getExpectedAdapterResponse(TestCaseDefinition testCaseDefinition) {
-    String startingEndpoint = testCaseDefinition.getWhenExecute().getEndpoint();
+    String startingEndpoint = testCaseDefinition.getWhenExecute().getEndpointId();
     EndpointProperties endpointProperties =
         IterableUtils.find(
             testCaseDefinition.getThenExpect(),
-            endpoint -> endpoint.getEndpoint().equals(startingEndpoint));
+            endpoint -> endpoint.getEndpointId().equals(startingEndpoint));
     return parseExchangeProperties(endpointProperties, camelContext);
   }
 
   private List<EndpointProperties> expectedEndpointResponses(
       TestCaseDefinition testCaseDefinition) {
-    String expectedAdapterResponseId = testCaseDefinition.getWhenExecute().getEndpoint();
+    String expectedAdapterResponseId = testCaseDefinition.getWhenExecute().getEndpointId();
     return testCaseDefinition.getThenExpect().isEmpty()
         ? new ArrayList<>()
         : testCaseDefinition.getThenExpect().stream()
             .filter(
                 endpointProperties ->
-                    !endpointProperties.getEndpoint().equals(expectedAdapterResponseId))
-            .collect(toList());
+                    !endpointProperties.getEndpointId().equals(expectedAdapterResponseId))
+            .toList();
   }
 }
