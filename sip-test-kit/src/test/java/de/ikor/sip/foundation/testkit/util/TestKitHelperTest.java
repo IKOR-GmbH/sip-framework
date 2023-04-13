@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.testkit.util;
 import static de.ikor.sip.foundation.core.proxies.ProcessorProxy.TEST_MODE_HEADER;
 import static de.ikor.sip.foundation.testkit.util.TestKitHelper.*;
 import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker.TEST_NAME_HEADER;
-import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvokerTest.PAYLOAD_BODY;
+import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.DirectRouteInvokerTest.JSON_MODEL_PAYLOAD_BODY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -141,7 +141,7 @@ class TestKitHelperTest {
   void GIVEN_PersonJsonRequestModel_WHEN_unmarshallExchangeBodyFromJson_THEN_expectPersonPojo() {
     // arrange
     Exchange exchange = TestKitHelper.parseExchangeProperties(null, camelContext);
-    exchange.getMessage().setBody(PAYLOAD_BODY);
+    exchange.getMessage().setBody(JSON_MODEL_PAYLOAD_BODY);
 
     // act
     unmarshallExchangeBodyFromJson(

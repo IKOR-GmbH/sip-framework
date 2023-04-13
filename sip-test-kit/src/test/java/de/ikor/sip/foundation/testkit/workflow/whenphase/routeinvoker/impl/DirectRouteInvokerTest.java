@@ -20,7 +20,7 @@ public class DirectRouteInvokerTest {
 
   private static final String ROUTE_ID = "routeId";
   private static final String CONNECTOR_ID = "connectorId";
-  public static final String PAYLOAD_BODY = "{\"name\":\"Freddy\",\"years\":42}";
+  public static final String JSON_MODEL_PAYLOAD_BODY = "{\"name\":\"Freddy\",\"years\":42}";
 
   public record Person(String name, int years) {}
 
@@ -59,7 +59,7 @@ public class DirectRouteInvokerTest {
     inputExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
     inputExchange.setProperty(CONNECTOR_ID_EXCHANGE_PROPERTY, CONNECTOR_ID);
     inputExchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
-    inputExchange.getMessage().setBody(PAYLOAD_BODY);
+    inputExchange.getMessage().setBody(JSON_MODEL_PAYLOAD_BODY);
 
     connector = mock(ConnectorMock.class);
     when(producerTemplate.send(endpoint, inputExchange)).thenReturn(inputExchange);
