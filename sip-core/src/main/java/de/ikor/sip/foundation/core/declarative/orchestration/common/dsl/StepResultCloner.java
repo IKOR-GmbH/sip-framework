@@ -5,6 +5,14 @@ import java.io.Serializable;
 import java.util.function.Function;
 import org.apache.commons.lang3.SerializationUtils;
 
+/**
+ * Interface for cloning a step-result (response) during an orchestration process.
+ *
+ * <p>Default implementations for common use-cases are provided via {@link #forCloneable()}, {@link
+ * #forSerializable()}, and {@link #forCopyConstructor()}.
+ *
+ * @param <T> Type of the element to be cloned
+ */
 @FunctionalInterface
 public interface StepResultCloner<T> extends Function<T, T> {
 

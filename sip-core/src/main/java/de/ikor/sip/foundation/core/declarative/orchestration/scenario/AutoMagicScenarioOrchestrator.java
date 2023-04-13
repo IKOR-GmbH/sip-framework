@@ -1,9 +1,16 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.List;
 
+/**
+ * Orchestrator that tries to automatically attach the first usable of a list of given orchestrators
+ * for an integration scenario.
+ *
+ * @see IntegrationScenarioBase#getOrchestrator()
+ */
 public class AutoMagicScenarioOrchestrator implements Orchestrator<ScenarioOrchestrationInfo> {
 
   private final List<StandardScenarioOrchestrators> automaticCandidates;
@@ -14,11 +21,11 @@ public class AutoMagicScenarioOrchestrator implements Orchestrator<ScenarioOrche
   }
 
   @Override
-  public boolean canOrchestrate(final ScenarioOrchestrationInfo data) {
+  public boolean canOrchestrate(final ScenarioOrchestrationInfo info) {
     if (matchingOrchestrator == null) {
-      matchingOrchestrator = findMatchOrThrow(data);
+      matchingOrchestrator = findMatchOrThrow(info);
     }
-    return matchingOrchestrator.canOrchestrate(data);
+    return matchingOrchestrator.canOrchestrate(info);
   }
 
   private Orchestrator<ScenarioOrchestrationInfo> findMatchOrThrow(
@@ -35,10 +42,10 @@ public class AutoMagicScenarioOrchestrator implements Orchestrator<ScenarioOrche
   }
 
   @Override
-  public void doOrchestrate(final ScenarioOrchestrationInfo data) {
+  public void doOrchestrate(final ScenarioOrchestrationInfo info) {
     if (matchingOrchestrator == null) {
-      matchingOrchestrator = findMatchOrThrow(data);
+      matchingOrchestrator = findMatchOrThrow(info);
     }
-    matchingOrchestrator.doOrchestrate(data);
+    matchingOrchestrator.doOrchestrate(info);
   }
 }

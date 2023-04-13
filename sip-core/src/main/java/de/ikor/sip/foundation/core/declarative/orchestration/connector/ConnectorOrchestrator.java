@@ -51,13 +51,13 @@ public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestratio
   }
 
   @Override
-  public boolean canOrchestrate(final ConnectorOrchestrationInfo data) {
+  public boolean canOrchestrate(final ConnectorOrchestrationInfo info) {
     return true;
   }
 
   @Override
-  public void doOrchestrate(final ConnectorOrchestrationInfo data) {
-    requestRouteTransformer.accept(data.getRequestRouteDefinition());
-    data.getResponseRouteDefinition().ifPresent(responseRouteTransformer);
+  public void doOrchestrate(final ConnectorOrchestrationInfo info) {
+    requestRouteTransformer.accept(info.getRequestRouteDefinition());
+    info.getResponseRouteDefinition().ifPresent(responseRouteTransformer);
   }
 }

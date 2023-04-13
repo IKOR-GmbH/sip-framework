@@ -4,9 +4,19 @@ import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Enum of default orchestrator implementations that can be used with an integration scenario.
+ *
+ * @see ScenarioOrchestrator
+ */
 @RequiredArgsConstructor
 public enum StandardScenarioOrchestrators
     implements Supplier<Orchestrator<ScenarioOrchestrationInfo>> {
+
+  /**
+   * Orchestrator that supports scenarios with just one consumer. If that consumer provides a
+   * response, it is passed through without any modification.
+   */
   ANY_TO_ONE(
       () ->
           ScenarioOrchestrator.forOrchestrationDslWithResponse(
@@ -14,6 +24,9 @@ public enum StandardScenarioOrchestrators
                   dsl ->
                       dsl.forAnyUnspecifiedScenarioProvider().callAnyUnspecifiedScenarioConsumer())
               .setCanOrchestrate(info -> info.getConsumerEndpoints().size() == 1)),
+  /**
+   * Orchestrator that supports multiple consumers for a scenario that doesn't expect any response
+   */
   ANY_TO_ANY_WITHOUT_RESPONSE(
       () ->
           ScenarioOrchestrator.forOrchestrationDslWithoutResponse(
