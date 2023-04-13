@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="IKOR" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>SIP Declarative Adapter - SIP Framework Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "SIP Declarative Adapter";
+        var mkdocs_page_input_path = "version3.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> SIP Framework Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation Guide</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../archetype/">Archetype</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../core/">Core</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../middle-component/">Middle Component</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../integration-starter/">Integration Starter</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../starter-parent/">Starter Parent</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../security/">Security</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../test-kit/">Test Kit</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../framework_version_upgrade/">Framework Version Upgrade</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING/">Contribution Guidelines</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../CODE_OF_CONDUCT/">Code Of Conduct</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../changelog/">Changelog</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/3.0.0/index.html">JavaDoc 3.0.0</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/2.4.0/index.html">JavaDoc 2.4.0</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/2.3.0/index.html">JavaDoc 2.3.0</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/2.2.0/index.html">JavaDoc 2.2.0</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/2.1.0/index.html">JavaDoc 2.1.0</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/2.0.2/index.html">JavaDoc 2.0.2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/2.0.0/index.html">JavaDoc 2.0.0</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/1.0.0/index.html">JavaDoc 1.0.0</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="https://ikor.one/produkt/system-integration-platform">Find out more about IKOR</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="https://ikor.one/impressum/">Impressum</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">SIP Framework Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>SIP Declarative Adapter</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/version3.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="sip-declarative-adapter">SIP Declarative Adapter<a class="headerlink" href="#sip-declarative-adapter" title="Permanent link">&para;</a></h1>
+<div class="toc">
+<ul>
+<li><a href="#sip-declarative-adapter">SIP Declarative Adapter</a><ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#concepts">Concepts</a><ul>
+<li><a href="#common-domain-model-cdm">Common Domain Model (CDM)</a></li>
+<li><a href="#integration-scenario">Integration Scenario</a></li>
+<li><a href="#connector-group">Connector group</a></li>
+<li><a href="#connector">Connector</a></li>
+</ul>
+</li>
+<li><a href="#configuration">Configuration</a></li>
+<li><a href="#how-to-build">How to build</a><ul>
+<li><a href="#integration-scenarios">Integration Scenarios</a></li>
+<li><a href="#connector-groups">Connector Groups</a></li>
+<li><a href="#connectors">Connectors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
+<p>SIP Declarative Adapter concept relies on using best practices in order to provide developers
+with a tool for building unified adapters. It is a structured approach for building integration adapters.</p>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">&para;</a></h2>
+<h3 id="common-domain-model-cdm">Common Domain Model (CDM)<a class="headerlink" href="#common-domain-model-cdm" title="Permanent link">&para;</a></h3>
+<p>CDM is a model which is used in connecting different non-compatible systems. It is also referred to as <em>Canonical Data Model</em> in the standard integration patterns. It is the shared data model that needs to be understood by all <strong>Connectors</strong> participating in an <strong>Integration scenario</strong>. Each <strong>Integration scenario</strong> specifies the CDM that is used for it, while the <strong>Connectors</strong> participating in the scenario act as interpreters and translate between the CDM and the model used by the external system they are connecting to.</p>
+<h3 id="integration-scenario">Integration Scenario<a class="headerlink" href="#integration-scenario" title="Permanent link">&para;</a></h3>
+<p>A scenario is a means of linking connectors into one fluent flow.
+It is used for definition a specific integration flow, usually one concrete operation, between integration sides. Each adapter contains one or more scenarios that are related to the scope of the adapter itself.</p>
+<h3 id="connector-group">Connector group<a class="headerlink" href="#connector-group" title="Permanent link">&para;</a></h3>
+<p>Connector groups are used for grouping connectors based on the system they belong to.</p>
+<h3 id="connector">Connector<a class="headerlink" href="#connector" title="Permanent link">&para;</a></h3>
+<p>A connector is a holder of <strong>external</strong> endpoint and represents one integration side. One connector would typically only talk to multiple external systems if they form a dependent unit - otherwise, for independent systems, separate connectors should be chosen, one for each individual system. 
+Its duty is to provide necessary processing and transformation into/from the common domain model. 
+They can be either Inbound or Outbound, with Inbound having Rest and SOAP as pre-built subtypes.</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<p>To enable or disable declarative adapter building the following configuration property is used:</p>
+<pre class="highlight"><code class="language-yaml">sip:
+  core:
+    declarativestructure:
+      enabled: true # enabled by default</code></pre>
+<h2 id="how-to-build">How to build<a class="headerlink" href="#how-to-build" title="Permanent link">&para;</a></h2>
+<p>Building one adapter requires all previously mentioned concept to be implemented.</p>
+<h3 id="integration-scenarios">Integration Scenarios<a class="headerlink" href="#integration-scenarios" title="Permanent link">&para;</a></h3>
+<p>In order to create a scenario first we need to extend IntegrationScenarioBase. 
+Then, annotate the class with @IntegrationScenario and fill in the required fields:</p>
+<ul>
+<li><em>scenarioId</em> - unique identifier of a scenario, used in connectors to link them</li>
+<li><em>requestModel</em> - represents the common domain model, that both integration sides communicate through</li>
+<li><em>responseModel</em> (optional) - represents the response domain model, which is expected to be returned from outbound side of the flow</li>
+<li><em>pathToDocumentationResource</em> (optional) - provides path to scenario documentation files
+  (By default it will look for file in <em>document/structure/integration-scenarios/{scenarioId}.md</em>)</li>
+</ul>
+<pre class="highlight"><code class="language-java">  @IntegrationScenario(scenarioId = DemoScenario.ID, requestModel = DemoCDMRequest.class, responseModel = DemoCDMResponse.class)
+  public class DemoScenario extends IntegrationScenarioBase {
+    public static final String ID = "Demo scenario";
+  }</code></pre>
+<h3 id="connector-groups">Connector Groups<a class="headerlink" href="#connector-groups" title="Permanent link">&para;</a></h3>
+<p>Similar to scenarios, we first need to extend ConnectorGroupBase and also annotate the class with @ConnectorGroup.
+Defining connector group is optional. If a connector group is not represented in code, but is used in a connector, it will be automatically generated by the framework
+with the ID declared in the connector.
+Fields that are available are:</p>
+<ul>
+<li><em>groupId</em> - unique connector group identifier</li>
+<li><em>pathToDocumentationResource</em> (optional) - provides path to documentation files.
+  (By default it will look for file in <em>document/structure/connector-groups/{groupId}.md</em>)</li>
+</ul>
+<pre class="highlight"><code class="language-java">  @ConnectorGroup(groupId = DemoConnectorGroup.ID)
+  public class DemoConnectorGroup extends ConnectorGroupBase {
+    public static final String ID = "SIP1";
+  }</code></pre>
+<h3 id="connectors">Connectors<a class="headerlink" href="#connectors" title="Permanent link">&para;</a></h3>
+<p><strong>Inbound</strong></p>
+<p>Inbound connectors are the entry point to an adapter. 
+They need to extend <em>GenericInboundConnectorBase</em> and override necessary methods, 
+but also to be annotated with @InboundConnector, with the following fields:</p>
+<ul>
+<li><em>connectorId</em> (optional) - unique identifier of a connector (automatically generated if missing)</li>
+<li><em>belongsToGroup</em> - id of the connector group it belongs to</li>
+<li><em>toScenario</em> - id of the scenario to which it provides data</li>
+<li><em>requestModel</em> - model which is expected be received on the input endpoint</li>
+<li><em>responseModel</em> (optional) - model which is expected be returned to the caller</li>
+<li><em>domains</em> (optional) - list of domains this connector is a part of </li>
+<li><em>pathToDocumentationResource</em> (optional) - provides path to documentation files.
+  (By default it will look for file in <em>document/structure/connectors/{connectorId}.md</em>)</li>
+</ul>
+<p>Defining connector behavior is done by overriding certain methods and adding custom implementation.</p>
+<p>First, <em>EndpointConsumerBuilder defineInitiatingEndpoint()</em> it is used to define the input endpoint.
+StaticEndpointBuilders can be used to provide the endpoint definition. Under the hood connector uses <strong>Apache Camel</strong> endpoints.</p>
+<p>Next is defining processing and transformation. 
+This is done in <em>Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator()</em>.
+Here an Orchestrator needs to be returned, which is available from ConnectorOrchestrator 
+and using <em>forConnector(this)</em> as a builder. 
+<em>setRequestRouteTransformer(Consumer<RouteDefinition> requestRouteTransformer)</em> is for processing and transformation,
+which occurs before providing the data to scenario, 
+while <em>setResponseRouteTransformer(Consumer<RouteDefinition> responseRouteTransformer)</em> handles the response.
+This is illustrated in the example below.</p>
+<pre class="highlight"><code class="language-java">@InboundConnector(
+      connectorId = "appendStaticMessageProvider",
+      belongsToGroup = DemoConnectorGroup.ID,
+      toScenario = DemoScenario.ID,
+      requestModel = InboundConnectorRequest.class,
+      responseModel = InboundConnectorResponse.class)
+  public class DemoConnector extends GenericInboundConnectorBase {
+
+    @Override
+    protected Orchestrator&lt;ConnectorOrchestrationInfo&gt; defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setRequestRouteTransformer(this::defineRequestRoute)
+          .setResponseRouteTransformer(this::defineResponseRoute);
+    }
+
+    protected void defineRequestRoute(final RouteDefinition definition) {
+      definition.process(exchange -&gt; System.out.println("Processing and transformation pre-orchestration"));
+    }
+
+    protected void defineResponseRoute(final RouteDefinition definition) {
+        definition.process(exchange -&gt; System.out.println("Processing and transformation post-orchestration"));
+    }
+
+    // Input endpoint
+    @Override
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+      return StaticEndpointBuilders.direct("entry-point");
+    }
+  }</code></pre>
+<p><strong>Rest connector</strong></p>
+<p>Rest connectors are a subtype of inbound connectors. 
+They are used in order to define REST inbound endpoint via Apache Camel RestDSL.
+The difference is that they need to extend <em>RestConnectorBase</em>, but the annotation stays the same.</p>
+<p>Unlike generic inbound connectors it is required to override <em>void configureRest(RestDefinition definition)</em> method 
+and append the rest DSL to RestDefinition to define the input endpoint.</p>
+<pre class="highlight"><code class="language-java"> @InboundConnector(
+      belongsToGroup = DemoConnectorGroup.ID,
+      toScenario = RestDSLScenario.ID,
+      requestModel = String.class)
+  public class RestConnectorTestBase extends RestConnectorBase {
+
+    // Input endpoint defined via Rest DSl
+    @Override
+    protected void configureRest(RestDefinition definition) {
+      definition.post("user");
+    }
+
+    @Override
+    protected Orchestrator&lt;ConnectorOrchestrationInfo&gt; defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setRequestRouteTransformer(this::defineRequestRoute);
+    }
+
+    protected void defineRequestRoute(final RouteDefinition definition) {
+        definition.process(exchange -&gt; System.out.println("Processing and transformation pre-orchestration"));
+    }
+  }</code></pre>
+<p><strong>Outbound</strong></p>
+<p>Outbound connectors are used to define communication with the external systems inside the adapter.
+They need to extend <em>GenericOutboundConnectorBase</em> and override necessary methods,
+but also to be annotated with @OutboundConnector, with the following fields:</p>
+<ul>
+<li><em>connectorId</em> (optional) - unique identifier of a connector (automatically generated if missing)</li>
+<li><em>belongsToGroup</em> - id of the connector group it belongs to</li>
+<li><em>fromScenario</em> - id of the scenario from which it consumes data</li>
+<li><em>requestModel</em> - model which is expected be received on the input endpoint</li>
+<li><em>responseModel</em> (optional) - model which is expected be returned to the caller</li>
+<li><em>domains</em> (optional) - domains this connector is a part of</li>
+<li><em>pathToDocumentationResource</em> (optional) - provides path to documentation files.
+  (By default it will look for file in <em>document/structure/connectors/{connectorId}.md</em>)</li>
+</ul>
+<p>Same as inbound, the behaviour is defined through overridden method implementation.</p>
+<p><em>EndpointProducerBuilder defineOutgoingEndpoint()</em> is used to define the endpoint, 
+which executes the call to an external system.
+StaticEndpointBuilders can be used to provide the endpoint definition. <strong>Apache Camel</strong> is used in the Outbound endpoints as well.</p>
+<p>Defining processing and transformation is done in <em>Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator()</em>.
+Here an Orchestrator needs to be returned, which is available from ConnectorOrchestrator
+and using <em>forConnector(this)</em> as a builder.
+<em>setRequestRouteTransformer(Consumer<RouteDefinition> requestRouteTransformer)</em> is for processing and transformation,
+which occurs before external system call,
+while <em>setResponseRouteTransformer(Consumer<RouteDefinition> responseRouteTransformer)</em> handles the response.
+This is illustrated in the example below.</p>
+<pre class="highlight"><code class="language-java">@OutboundConnector(
+      belongsToGroup = OtherDemoGroup.ID,
+      fromScenario = DemoScenario.ID,
+      requestModel = OutboundConnectorRequest.class,
+      responseModel = OutboundConnectorResponse.class)
+  public class DemoOutboundConnector extends GenericOutboundConnectorBase {
+
+    @Override
+    protected Orchestrator&lt;ConnectorOrchestrationInfo&gt; defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setRequestRouteTransformer(this::defineRequestRoute)
+          .setResponseRouteTransformer(this::defineResponseRoute);
+    }
+
+    protected void defineRequestRoute(final RouteDefinition definition) {
+        definition.process(exchange -&gt; System.out.println("Processing and transformation before external system call"));
+    }
+
+    protected void defineResponseRoute(final RouteDefinition definition) {
+        definition.process(exchange -&gt; System.out.println("Processing and transformation after external system call"));
+    }
+
+    // external endpoint definition
+    @Override
+    protected EndpointProducerBuilder defineOutgoingEndpoint() {
+      return StaticEndpointBuilders.http("localhost:8080/update");
+    }
+  }</code></pre>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>© Copyright 2021, <a href="https://ikor.one">IKOR GmbH</a> & contributors</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/IKOR-GmbH/sip-framework" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../javascript/javadoc_menu_dropdown.js" defer></script>
+      <script src="../javascript/copy_to_clipboard.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

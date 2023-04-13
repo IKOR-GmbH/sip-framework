@@ -74,6 +74,10 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#sip-details-in-actuator-info-endpoint">SIP Details in actuator info endpoint</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#exception-handling">Exception handling</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#actuator-adapter-definition">Actuator adapter definition</a>
+    </li>
         </ul>
     </li>
     </ul>
@@ -121,6 +125,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/3.0.0/index.html">JavaDoc 3.0.0</a>
                 </li>
               </ul>
               <ul>
@@ -196,6 +204,8 @@
 <li><a href="#changing-log-level-programmatically">Changing log level programmatically</a></li>
 <li><a href="#exchange-tracing">Exchange tracing</a></li>
 <li><a href="#sip-details-in-actuator-info-endpoint">SIP Details in actuator info endpoint</a></li>
+<li><a href="#exception-handling">Exception handling</a></li>
+<li><a href="#actuator-adapter-definition">Actuator adapter definition</a></li>
 </ul>
 </li>
 </ul>
@@ -465,6 +475,27 @@ or new IntelliJ repository used.</p>
 If option 'Clear output directory on rebuild' is enabled, the entire contents of directories where generated sources
 are stored WILL BE CLEARED on rebuild."</p>
 <p><img alt="Image of SIP connected systems" src="./img/intellij_setting_clear_on_rebuild.png" title="IntelliJ rebuild settings" /></p>
+<h3 id="exception-handling">Exception handling<a class="headerlink" href="#exception-handling" title="Permanent link">&para;</a></h3>
+<p>SIP Framework offers a few types of exceptions. The base ones are:
+- SIPFrameworkException - used for exceptions that may occur in the framework
+- SIPAdapterException - used in adapter development, all custom exceptions should be extended from it
+  - ModelValidationException - derived from SIPAdapterException, should be thrown for invalid models
+  - ModelTransformationException - derived from SIPAdapterException, should be thrown for unsuccessful model transformation</p>
+<p>If there is a need for additional exceptions it is highly encouraged that they have 
+one of SIP base exceptions as parent class.
+This provides uniformed data of exception origin for easier handling.</p>
+<h3 id="actuator-adapter-definition">Actuator adapter definition<a class="headerlink" href="#actuator-adapter-definition" title="Permanent link">&para;</a></h3>
+<p>To see the detailed declarative structure of an adapter, containing all scenarios, connectors and connector groups,
+the "/adapterdefinition" endpoint is available through actuator.
+It will present a detailed list of all connector groups, inside which connectors with their properties are found.
+The properties include data models, routes, descriptions, etc.
+Following that, all scenarios will be presented, including their description.</p>
+<p>To enable or disable this feature the following property should be used:</p>
+<pre class="highlight"><code class="language-yaml">sip:
+  core:
+    actuator:
+      adapterdefinition:
+        enabled: true # enabled by default</code></pre>
               
             </div>
           </div><footer>
