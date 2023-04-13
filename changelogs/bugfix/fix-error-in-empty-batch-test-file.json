@@ -1,5 +1,5 @@
 {
   "author": "Nemikor",
   "pullrequestId": "183",
-  "message": "Fix an issue where spring test tries to load empty test kit tests."
+  "message": "Fixed an issue where spring test tries to load empty test kit tests."
 }
