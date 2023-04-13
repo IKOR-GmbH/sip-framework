@@ -3,8 +3,10 @@ package de.ikor.sip.foundation.core.declarative;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import de.ikor.sip.foundation.core.apps.declarative.DeclarativeStructureAdapter;
-import de.ikor.sip.foundation.core.apps.declarative.DeclarativeStructureAdapter.ScenarioResponse;
+import de.ikor.sip.foundation.core.apps.declarative.ScenarioOrchestrationAdapter;
+import de.ikor.sip.foundation.core.apps.declarative.ScenarioOrchestrationAdapter.AutoOrchestratedOutboundConnectorOne;
+import de.ikor.sip.foundation.core.apps.declarative.ScenarioOrchestrationAdapter.AutoOrchestratedOutboundConnectorTwo;
+import de.ikor.sip.foundation.core.apps.declarative.ScenarioOrchestrationAdapter.ScenarioResponse;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExtendedCamelContext;
@@ -21,13 +23,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @CamelSpringBootTest
-@SpringBootTest(classes = {DeclarativeStructureAdapter.class})
+@SpringBootTest(classes = {ScenarioOrchestrationAdapter.class})
 @DisableJmx(false)
 @MockEndpoints("log:message*")
 @DirtiesContext
-class DeclarativeStructureTest {
+class ScenarioOrchestrationTest {
 
-  @Autowired private ExtendedCamelContext camelContext;
 
   @Autowired private FluentProducerTemplate template;
 
@@ -51,13 +52,15 @@ class DeclarativeStructureTest {
 
   @Test
   void WHEN_callingFirstInboundConnector_THEN_OnlyFirstOutboundConnectorReceivesAMessage() {
-    // arrange & act
+    // arrange
     mockedLoggerConnector1.expectedMessageCount(1);
     mockedLoggerConnector1.expectedBodiesReceived("Hi Adapter-scenarioprepared");
     mockedLoggerConnector2.expectedMessageCount(0);
 
+    // act
     Exchange exchange = template.withBody("Hi Adapter").to(direct("dummyInputOne")).send();
 
+    // assert
     assertThat(exchange.getMessage().getBody()).isInstanceOf(ScenarioResponse.class);
     assertThat(exchange.getMessage().getBody(ScenarioResponse.class).getValue()).isEqualTo(1);
   }
@@ -65,17 +68,42 @@ class DeclarativeStructureTest {
   @Test
   void
       WHEN_callingSecondInboundConnector_THEN_OutboundConnector1And2ReceiveAMessageAndResponseIsAggregated() {
-    // arrange & act
+    // arrange
     mockedLoggerConnector1.expectedMessageCount(1);
     mockedLoggerConnector1.expectedBodiesReceived("Hi Adapter");
     mockedLoggerConnector2.expectedMessageCount(1);
     mockedLoggerConnector2.expectedBodiesReceived("Hi Adapter-scenarioprepared");
 
+    // act
     Exchange exchange = template.withBody("Hi Adapter").to(direct("dummyInputTwo")).send();
 
+    // assert
     assertThat(exchange.getMessage().getBody()).isInstanceOf(ScenarioResponse.class);
     assertThat(exchange.getMessage().getBody(ScenarioResponse.class).getValue()).isEqualTo(120);
     assertThat(exchange.getMessage().getBody(ScenarioResponse.class).getId())
         .isEqualTo("scenario-handled-response");
+  }
+
+  @Test
+  void
+  WHEN_callingAutoOrchestratedScenario_THEN_MessagesAreProperlyReceived() {
+
+    // arrange
+    String payload = "Hi Adapter-";
+    mockedLoggerConnector1.expectedMessageCount(1);
+    mockedLoggerConnector1.expectedBodiesReceived(payload + AutoOrchestratedOutboundConnectorOne.ID);
+    mockedLoggerConnector2.expectedMessageCount(1);
+    mockedLoggerConnector2.expectedBodiesReceived(payload + AutoOrchestratedOutboundConnectorTwo.ID);
+
+    //act
+    Exchange exchange = template.withBody(payload).to(direct("autoOrchestratedInput")).send();
+
+    //assert
+    //TODO : should this be left on the exchange?
+    assertThat(exchange.getMessage().getBody()).isInstanceOf(String.class);
+    assertThat(exchange.getMessage().getBody(String.class)).isIn(
+        payload + AutoOrchestratedOutboundConnectorOne.ID,
+        payload + AutoOrchestratedOutboundConnectorTwo.ID);
+
   }
 }
