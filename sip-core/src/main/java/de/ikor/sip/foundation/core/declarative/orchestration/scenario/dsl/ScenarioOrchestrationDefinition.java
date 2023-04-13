@@ -11,6 +11,11 @@ import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 
+/**
+ * DSL class for specifying orchestration of scenario providers
+ *
+ * @param <M> The response model type of the integration scenario
+ */
 public class ScenarioOrchestrationDefinition<M>
     extends ScenarioDslDefinitionBase<ScenarioOrchestrationDefinition<M>, EndOfDsl, M> {
 
@@ -21,15 +26,40 @@ public class ScenarioOrchestrationDefinition<M>
   @Getter(AccessLevel.PACKAGE)
   private boolean catchAllAdded = false;
 
+  /**
+   * Constructor
+   *
+   * <p><em>For internal use only</em>
+   *
+   * @param integrationScenario Integration scenario
+   */
   public ScenarioOrchestrationDefinition(final IntegrationScenarioDefinition integrationScenario) {
     super(null, integrationScenario);
   }
 
+  /**
+   * Specifies inbound connectors that should be orchestrated further by their class.
+   *
+   * <p>No order of execution is guaranteed if more than one class is provided - call this function
+   * multiple times if this is necessary.
+   *
+   * @param connectorClass The class(es) of the inbound connector
+   * @return DSL handle for specifying consumer calls
+   */
   public ForScenarioProvidersWithClassDefinition<ScenarioOrchestrationDefinition<M>, M>
       forInboundConnectors(final Class<? extends InboundConnectorDefinition<?>>... connectorClass) {
     return forScenarioProviders(connectorClass);
   }
 
+  /**
+   * Specifies scenario providers that should be orchestrated further by their connector class.
+   *
+   * <p>No order of execution is guaranteed if more than one class is provided - call this function
+   * multiple times if this is necessary.
+   *
+   * @param providerClass The class(es) of the inbound connector
+   * @return DSL handle for specifying consumer calls
+   */
   public ForScenarioProvidersWithClassDefinition<ScenarioOrchestrationDefinition<M>, M>
       forScenarioProviders(
           final Class<? extends IntegrationScenarioProviderDefinition>... providerClass) {
@@ -48,6 +78,15 @@ public class ScenarioOrchestrationDefinition<M>
     }
   }
 
+  /**
+   * Specifies inbound connectors that should be orchestrated further by their connector ID.
+   *
+   * <p>No order of execution is guaranteed if more than one ID is provided - call this function
+   * multiple times if this is necessary.
+   *
+   * @param inboundConnectorId The ID(s) of the inbound connector
+   * @return DSL handle for specifying consumer calls
+   */
   public ForScenarioProvidersWithConnectorIdDefinition<ScenarioOrchestrationDefinition<M>, M>
       forInboundConnectors(final String... inboundConnectorId) {
     verifyNoCatchAllOrThrow();
@@ -58,6 +97,15 @@ public class ScenarioOrchestrationDefinition<M>
     return def;
   }
 
+  /**
+   * Allows to specify orchestration for all scenario providers (which includes inbound connectors)
+   * that are not specifically declared before.
+   *
+   * <p>This is a terminal operation for the provider definitions, so it needs to be the * last call
+   * in the list and no additional provider definitions can be specified afterwards.
+   *
+   * @return DSL handle for specifying consumer calls
+   */
   public ForScenarioProvidersCatchAllDefinition<EndOfDsl, M> forAnyUnspecifiedScenarioProvider() {
     verifyNoCatchAllOrThrow();
     catchAllAdded = true;

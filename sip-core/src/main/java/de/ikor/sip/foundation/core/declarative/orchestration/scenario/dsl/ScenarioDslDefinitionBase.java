@@ -5,10 +5,8 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import lombok.Getter;
 
 /**
- * Base class for a scenario DSL definitions
+ * Base element for DSL classes used to orchestrate in integration scenario
  *
- * @param <S> type of the concrete DSL definition class
- * @param <R> type of the return definition
  * @param <M> type of the integration scenario's response model
  */
 public abstract class ScenarioDslDefinitionBase<S extends ScenarioDslDefinitionBase<S, R, M>, R, M>

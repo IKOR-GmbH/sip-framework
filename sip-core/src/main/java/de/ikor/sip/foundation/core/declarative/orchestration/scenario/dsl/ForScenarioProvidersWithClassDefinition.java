@@ -5,6 +5,7 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProvi
 import java.util.Collections;
 import java.util.Set;
 
+/** DSL class specifying all a scenario provider specified by its class */
 public class ForScenarioProvidersWithClassDefinition<R, M>
     extends ForScenarioProvidersBaseDefinition<
         ForScenarioProvidersWithClassDefinition<R, M>, R, M> {

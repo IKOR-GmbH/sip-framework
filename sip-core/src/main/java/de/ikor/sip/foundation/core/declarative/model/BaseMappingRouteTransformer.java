@@ -14,6 +14,14 @@ import lombok.experimental.Accessors;
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.RouteDefinition;
 
+/**
+ * Base class for transformers based on {@link ModelMapper}
+ *
+ * <p><em>For internal use only</em>
+ *
+ * @param <S> Source model type
+ * @param <T> Target model type
+ */
 @Accessors(chain = true)
 abstract sealed class BaseMappingRouteTransformer<S, T> implements Consumer<RouteDefinition>
     permits RequestMappingRouteTransformer, ResponseMappingRouteTransformer {

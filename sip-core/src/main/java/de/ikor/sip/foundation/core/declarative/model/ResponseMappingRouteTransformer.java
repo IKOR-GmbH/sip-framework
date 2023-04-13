@@ -4,6 +4,11 @@ import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.function.Supplier;
 
+/**
+ * Response Model transformer used in conjunction with a {@link ModelMapper}.
+ *
+ * <p><em>For internal use only</em>
+ */
 public final class ResponseMappingRouteTransformer<S, T> extends BaseMappingRouteTransformer<S, T> {
 
   protected ResponseMappingRouteTransformer(

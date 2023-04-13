@@ -6,6 +6,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * Class for generating Camel routes for scenario orchestration via DSL
+ *
+ * <p><em>For internal use only</em>
+ */
 @SuppressWarnings("rawtypes")
 public class RouteGeneratorForScenarioOrchestrationDefinition<M> extends RouteGeneratorBase
     implements Runnable {

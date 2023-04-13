@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import lombok.AccessLevel;
 import lombok.Getter;
 
+/** DSL class for calling an outbound connector specified by its ID */
 public class CallScenarioConsumerWithConnectorIdDefinition<R, M>
     extends CallScenarioConsumerBaseDefinition<
         CallScenarioConsumerWithConnectorIdDefinition<R, M>, R, M> {

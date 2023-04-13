@@ -6,6 +6,7 @@ import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 
+/** DSL class specifying all an inbound connector specified by its connector ID */
 public class ForScenarioProvidersWithConnectorIdDefinition<R, M>
     extends ForScenarioProvidersBaseDefinition<
         ForScenarioProvidersWithConnectorIdDefinition<R, M>, R, M> {

@@ -9,6 +9,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.model.RoutesDefinition;
 
+/**
+ * Base class for generating Camel routes from a DSL
+ *
+ * <p><em>For internal use only</em>
+ */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 abstract class RouteGeneratorBase {
   @Getter(AccessLevel.PROTECTED)

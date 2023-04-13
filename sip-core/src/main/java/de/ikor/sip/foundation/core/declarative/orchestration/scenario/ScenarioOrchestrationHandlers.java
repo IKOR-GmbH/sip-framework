@@ -13,6 +13,11 @@ import lombok.experimental.UtilityClass;
 import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
 
+/**
+ * Various handlers use in scenario orchestration *
+ *
+ * <p><em>For internal use only</em>
+ */
 @UtilityClass
 public class ScenarioOrchestrationHandlers {
 

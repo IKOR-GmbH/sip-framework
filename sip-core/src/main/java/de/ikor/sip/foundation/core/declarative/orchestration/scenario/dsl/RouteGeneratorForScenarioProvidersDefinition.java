@@ -20,6 +20,11 @@ import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 
+/**
+ * Class for generating Camel routes for scenario providers via DSL
+ *
+ * <p><em>For internal use only</em>
+ */
 @Slf4j
 @SuppressWarnings("rawtypes")
 public class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGeneratorBase {

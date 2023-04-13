@@ -17,6 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RouteDefinition;
 
+/**
+ * Class for generating Camel routes for scenario consumer calls from a DSL
+ *
+ * <p><em>For internal use only</em>
+ */
 @Slf4j
 @SuppressWarnings("rawtypes")
 public class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGeneratorBase {

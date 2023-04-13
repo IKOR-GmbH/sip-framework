@@ -9,6 +9,8 @@ import java.util.List;
  * Orchestrator that tries to automatically attach the first usable of a list of given orchestrators
  * for an integration scenario.
  *
+ * <p><em>For internal use only</em>
+ *
  * @see IntegrationScenarioBase#getOrchestrator()
  */
 public class AutoMagicScenarioOrchestrator implements Orchestrator<ScenarioOrchestrationInfo> {

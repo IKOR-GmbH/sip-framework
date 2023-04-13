@@ -5,6 +5,7 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import lombok.AccessLevel;
 import lombok.Getter;
 
+/** DSL class for calling a scenario consumer specified by it's class */
 public class CallScenarioConsumerWithClassDefinition<R, M>
     extends CallScenarioConsumerBaseDefinition<
         CallScenarioConsumerWithClassDefinition<R, M>, R, M> {
