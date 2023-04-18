@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "183",
-  "message": "Fixed an issue where spring test tries to load empty test kit tests."
-}

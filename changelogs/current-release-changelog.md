@@ -1,19 +1,19 @@
-## 2.4.0 - 2023-01-16
+## 3.0.0 - 2023-04-13
+
+### 🚀 Major Changes
+- Declarative structure [#215](https://github.com/IKOR-GmbH/sip-framework/pull/215) by [IKOR-GmbH](https://github.com/IKOR-GmbH)
 
 ### ⭐ Features
-- Add possibility to test camel routes, which use email component, with TestKit. [#147](https://github.com/IKOR-GmbH/sip-framework/pull/147) by [Nemikor](https://github.com/Nemikor)
-- Add implementation for supporting jms component in Test Kit. [#146](https://github.com/IKOR-GmbH/sip-framework/pull/146) by [nikolag-ikor](https://github.com/nikolag-ikor)
-- Add implementation for supporting kafka component in Test Kit. [#150](https://github.com/IKOR-GmbH/sip-framework/pull/150) by [nikolag-ikor](https://github.com/nikolag-ikor)
-- Add TestKit invoker runtime exception [#151](https://github.com/IKOR-GmbH/sip-framework/pull/151) by [nikolag-ikor](https://github.com/nikolag-ikor)
-- Add mechanism which will automatically include SIP Actuator endpoints to configured list of Actuator endpoints [#149](https://github.com/IKOR-GmbH/sip-framework/pull/149) by [Nemikor](https://github.com/Nemikor)
-- Refactor tracing mechanism to improve performance when logging trace messages is disabled. [#174](https://github.com/IKOR-GmbH/sip-framework/pull/174) by [Nemikor](https://github.com/Nemikor)
-- Update version of commons-text to 1.10.0 [#152](https://github.com/IKOR-GmbH/sip-framework/pull/152) by [Nemikor](https://github.com/Nemikor)
-- Update Camel version to 3.18.4 and SpringBoot version to 2.7.6 [#171](https://github.com/IKOR-GmbH/sip-framework/pull/171) by [nikolag-ikor](https://github.com/nikolag-ikor)
+- Actuator endpoints which expose declarative structure components (endpoints, connectors, scenarios, groups) [#182](https://github.com/IKOR-GmbH/sip-framework/pull/182) by [nikolag-ikor](https://github.com/nikolag-ikor)
+- Connector and integration scenario Orchestrations [#214](https://github.com/IKOR-GmbH/sip-framework/pull/214) by [MartinBuchheimIkor](https://github.com/MartinBuchheimIkor)
+- Custom base SIP exceptions [#179](https://github.com/IKOR-GmbH/sip-framework/pull/179) by [nikolag-ikor](https://github.com/nikolag-ikor)
+- SOAP Connector base for declarative structure [#204](https://github.com/IKOR-GmbH/sip-framework/pull/204) by [MartinBuchheimIkor](https://github.com/MartinBuchheimIkor)
+- Support for Connectors (declarative structure) in the Test Kit [#209](https://github.com/IKOR-GmbH/sip-framework/pull/209) by [nikolag-ikor](https://github.com/nikolag-ikor)
+- Declarative structure & SOAP support in the Archetype and Maven clean-up [#215](https://github.com/IKOR-GmbH/sip-framework/pull/215) by [LetoBukarica](https://github.com/LetoBukarica)
 
 ### 🐞 Bugfixes
-- Add suppress warnings for unchecked casts which are safe. [#155](https://github.com/IKOR-GmbH/sip-framework/pull/155) by [nikolag-ikor](https://github.com/nikolag-ikor)
-- Add possibility to include headers in a response from a mocked processor for Test Kit tests. [#148](https://github.com/IKOR-GmbH/sip-framework/pull/148) by [Nemikor](https://github.com/Nemikor)
-- Fixed coupling of Interceptor strategy ordering. [#145](https://github.com/IKOR-GmbH/sip-framework/pull/145) by [LetoBukarica](https://github.com/LetoBukarica)
-- Removed carriage returns in the validation phase. [#144](https://github.com/IKOR-GmbH/sip-framework/pull/144) by [LetoBukarica](https://github.com/LetoBukarica)
-- Remove in memory tracing functionality and api. Add possibility to turn off console logs through configuration while tracing is active. [#139](https://github.com/IKOR-GmbH/sip-framework/pull/139) by [Nemikor](https://github.com/Nemikor)
+- Updated the Developer tags in the pom.xml [#216](https://github.com/IKOR-GmbH/sip-framework/pull/216) by [LetoBukarica](https://github.com/LetoBukarica)
+- Updated dependencies with vulnerabilities [#178](https://github.com/IKOR-GmbH/sip-framework/pull/178) by [Nemikor](https://github.com/Nemikor)
+- Fixed an issue where spring test tries to load empty test kit tests. [#183](https://github.com/IKOR-GmbH/sip-framework/pull/183) by [Nemikor](https://github.com/Nemikor)
+- Added Unicode/ICU License check [#205](https://github.com/IKOR-GmbH/sip-framework/pull/205) by [nikolag-ikor](https://github.com/nikolag-ikor)
 
