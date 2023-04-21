@@ -26,7 +26,7 @@ Adding specific behavior for each endpoint can be done in test case definition i
 ## Validation
 
 Validation is one of key properties to any testing system. SIP Test Kit supports validation for batch testing.
-Validation is configured trough than-expect section of test case definition, by setting expected properties of endpoint
+Validation is configured trough `then-expect` section of test case definition, by setting expected properties of endpoint
 we want to validate. It could be the entering endpoint of the adapter, for example we want to validate HTTP response of the
 adapter, or it could be any external system (mocked) endpoint, where we can validate the input that mocked endpoint has received;
 this way we could validate, for instance, if a properly transformed file reached the outgoing FTP endpoint.  
@@ -41,17 +41,17 @@ on the mock will not apply and behavior produced by them is not possible to veri
 
 Each test case will be executed as its own unit test, so for each a test report will be generated
 and printed in console.
-First part of report is for the response. It will display the validated body and headers, as well as expected ones.
-The following endpoints part is for mocked endpoint reports, with similar data as in the first part.
+First section of report shows the response. It will display the validated body and headers, as well as expected ones.
+The following `endpoints` section is for mocked endpoint reports, with similar data as in the first section.
 
 ## Endpoint reports
 
 Reports for all mocked endpoints will be provided, both with default (set by Test Kit) and user defined behavior.
-For each test report in the 'Endpoints' section there will be an overview of request that each received.
+For each test report in the `endpoints` section there will be an overview of request that each received.
 
 # How to use
 
-Test kit is enabled by default when the adapter is generated from archetype.
+Test kit is enabled by default when the adapter is generated from SIP archetype.
 
 A test class needs to be created inside test package of the adapter, which extends SIPBatchTest. 
 Running this class would execute the test, but also it will be executed in the testing step during build time.
@@ -73,46 +73,40 @@ The next step is to provide the TestCaseDefinition file in yaml format in the `t
 test-case-definitions:
 - TITLE: "Title of individual test"
   WHEN-execute:
-    endpoint: "id of route under test"
-    connector: "id of connector under test"
+    endpointId: "id of starting route under test"
     with:
-      body: "Content that will be send as request body to the adapter inbound connector (plain text, JSON String)"
+      body: "Content that will be send as request body to the adapter input endpoint (plain text, JSON String)"
       headers:
         header-key: "Value of the header"
         another-header-key: "Another value"
   WITH-mocks:
-  - connectorId: "id of connector that should be mocked"
+  - endpointId: "id of Camel processor having out endpoint, the one that should be mocked"
     returning:
-      body: "Response message that real endpoint is expected to return"
+      body: "Response message that real out endpoint is expected to return"
       headers:
         header-key: "Value of the header"
   THEN-expect:
-  - connectorId: "id of connector under test" # matches connectorId under test defined in when phase
+  - endpointId: "id of starting route under test"   # matches endpointId under test defined in WHEN-execute phase
     having:
       body: "Regex expression (java) which will be compered to the reponse of the test"
       headers:
         header-key: "Regex expression (java) which will be compered to the value of this header key"
-  - connectorId: "id of connector that is mocked" # matches connectorId with defined or default mocked behavior
+  - endpointId: "endpointId of mocked endpoint"     # matches endpointId with defined or default mocked behavior
     having:
-      body: "Regex expression (java) which will be compered to the request which arrived on the connector"
+      body: "Regex expression (java) which will be compered to the request which arrived on the adapter"
       headers:
-        header-key: "Regex expression (java) which will be compered to the header key value from request which arrived on the connector"
+        header-key: "Regex expression (java) which will be compered to the header key value from request which arrived on the adapter"
 ```
 
-Either `endpoint` or `connector` field can be used in `WHEN-execute` part of the definition. When using `endpoint`, 
-test payload is sent from the beginning of the integration and it goes through the adapter's entry point which is Camel 
-consumer component. Value of `routeId` should be specified.
+The default file for placing your test case definitions is `test-case-definition.yml` which can be found under
+`test/resources` path within the SIP archetype generated adapter. When using default file, you can avoid any additional 
+setting.
 
-When using `connector` field, value of `connectorId` should be specified and testing payload skips the adapter's entry 
-point (Camel consumer component). It goes directly to the inbound connector's request orchestration part in the integration.
-
-Location of the TestCaseDefinition file can be provided to the Test Kit by setting the
-following property inside adapter configuration:
+If filename or location needs to be customized, location of the TestCaseDefinition file can be provided to the Test Kit 
+by setting the following property inside adapter configuration:
 `sip.testkit.test-cases-path: myTests.yml`
-The default value is _test-case-definition.yml_, so you can place your test case description using that filename, 
-and avoid additional setting.
 
-Each test case will execute as a separate unit test with its own report displayed.
+Each test case definition will execute as a separate unit test with its own name and report displayed.
 
 ![alt-text](./img/ConsoleReport.png)
 
@@ -124,66 +118,85 @@ sip:
 ```
 
 
-Development note:
-_To be able to fully utilize the Test Kit, all the endpoints used in the test case need to have a defined ID which will 
-be referenced in the _endpoint_ parameter of the test case._
+### Important development note!
+To be able to fully utilize the Test Kit and write test case definitions properly, all the endpoints written with 
+Camel code need to have a defined ID which will be referenced in the endpoint parameter of the test case.
+
+**How to initialize `endpointId` for input endpoints in Camel code?**
+
+```
+from("rest:POST:/say/hello")      // Adapters input endpoint
+    .routeId("say_hello_id")      // Providing endpointId for endpoint
+                                  // Value 'say_hello_id' is endpointId which is used in test case definition
+```
+
+**How to initialize `endpointId` for output endpoints in  Camel code?**
+
+Providing endpointId for output endpoints is done through simple Camel mechanism, just by providing id for the Camel 
+processor which is calling the external endpoint.
+
+```
+from("...")
+    .
+    .
+    .
+    .to(http://otherSystem/hi)   // Adapter calling output endpoint
+    .id("other_system_hi_id")    // Providing endpointId for endpoint
+    .                            // Value 'other_system_hi_id' is endpointId which is used in test case definition
+    .
+    .
+```
 
 # Defining a Test Case
 
-The TestCaseDefinition file starts with `test-case-definitions` property, which consists of a list of test cases
+The TestCaseDefinition file starts with `test-case-definitions` property, which consists of a list of test cases.
 
 ## WHEN-execute
 
 In this section a payload that should be sent to the adapter is defined.
 
-`endpoint` refers to routeId of first route in adapter's Inbound Connector to which we wish to send a test request.
-In "with" part we define content of the request we wish to send, meaning body and headers are added here.
-The body can also be defined as plain text or JSON string, which represents a POJO.
-
-`connector` refers to inbound connector id. It allows to skip the Camel component which is adapter's entry point.
-Instead, it sends the payload directly to the request orchestration part within the Inbound Connector.
-
-Either `endpoint` or `connector` should be use. Using both in the same test is not possible.
+`endpointId` refers to `routeId` of the starting route in adapter integration to which Test Kit sends a test request.
+In `with` part you define content of the request you wish to send, meaning body and headers are added here.
+The body can also be defined as plain text or JSON string, which matches appropriate POJO model.
 
 ```yaml
     WHEN-execute:
-      endpoint: "rest-endpoint"
-      connector: "id of the inbound connector"
+      endpointId: "rest-endpoint"
       with:
         body: "body of request"
 ```
 
 ## WITH-mocks
 
-This section contains a list of connectors for which we wish to have specific mocked response.
-"endpoint" is the endpoint in connector of the mocked outbound connector.
-"returning" should have body and headers, that we expect as the response from real external call.
+This section contains a list of endpoints for which we wish to have specific mocked response.
+`endpointId` matches the endpoint which will be mocked.
+`returning` should have body and headers, that we expect as the response from real call of external endpoint.
 
 ```yaml
     WITH-mocks:
-      - endpoint: "external-service"
+      - endpointId: "external-service"
         returning:
           body: "response message from service"
 ```
 
 ## THEN-expect
 
-Validation of adapter response is defined by setting the "endpoint" parameter to the endpoint's ID of endpoint under
-test and defining the expected body or headers.
+Validation of adapter response is defined by setting the `endpointId` of endpoint under test and defining the expected
+body or headers.
 
-Validation of requests which outgoing endpoints received from the adapter is defined by setting the "connectorId" 
-parameter to the connector's ID of mocked endpoint and defining the expected body or headers.
+Validation of requests which outgoing endpoints received from the adapter is defined by setting the `endpointId` 
+parameter to the endpoint's ID of mocked endpoint and defining the expected body or headers.
 
 Body and header validation is possible by either defining regex (Java) expression or matching exact String content.
 
 ```yaml
     THEN-expect:
-      - endpoint: "rest-endpoint" # matches endpoint under test
+      - endpointId: "rest-endpoint"                 # matches endpoint under test
         having:
           body: "response .* from service"
           headers:
             CamelHttpResponseCode: "200"
-      - endpoint: "external-service" # matches endpoint with mocked behavior
+      - endpointId: "external-service"              # matches endpoint with mocked behavior
         having:
           body: "body of request"
           headers:
@@ -192,7 +205,7 @@ Body and header validation is possible by either defining regex (Java) expressio
 
 # Supported Camel components
 
-Following Camel components support testing with Test Kit:
+Following Camel components are supported for testing with Test Kit:
 
 - REST
 - SOAP (by using CXF)
@@ -202,7 +215,7 @@ Following Camel components support testing with Test Kit:
 - Mail (imap, imaps, pop3, pop3s, smtp, smtps)
 - Kafka
 
-Please check the special conditions for these components in following chapters. since there are some special conditions
+Please check the special notes for these components in following chapters, since there are some special conditions
 which must be met.
 
 ### REST
@@ -320,7 +333,7 @@ public class SampleRestRoute extends RouteBuilder {
                 .routeId("http-route")
                 .setHeader("Authorization", constant("Basic am9obkBleGFtcGxlLmNvbTphYmMxMjM="))
                 .transform(body().append(" now looks better"))
-                // Mocked endpoint
+                // Mocked output endpoint
                 .to("http:localhost:8081/hello?bridgeEndpoint=true")
                 .id("external-service");
     }
@@ -339,12 +352,12 @@ public class SampleRestRoute extends RouteBuilder {
         returning:
           body: "response message from service"
     THEN-expect:
-      - endpoint: "rest-endpoint" # matches endpoint under test
+      - endpoint: "rest-endpoint"                           # matches the endpoint under test
         having:
           body: "response .* from service"
           headers:
             CamelHttpResponseCode: "200"
-      - endpoint: "external-service"
+      - endpoint: "external-service"                        # matches the already mocked endpoint within test
         having:
           body: "body of request now looks better"
           headers:
