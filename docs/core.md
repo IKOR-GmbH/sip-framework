@@ -410,13 +410,32 @@ If there is a need for additional exceptions it is highly encouraged that they h
 one of SIP base exceptions as parent class.
 This provides uniformed data of exception origin for easier handling.
 
-### Actuator adapter definition
+### Declarative Structure in actuator adapter definition endpoint
 
-To see the detailed declarative structure of an adapter, containing all scenarios, connectors and connector groups,
-the "/adapterdefinition" endpoint is available through actuator.
-It will present a detailed list of all connector groups, inside which connectors with their properties are found.
-The properties include data models, routes, descriptions, etc.
-Following that, all scenarios will be presented, including their description.
+To see the detailed Declarative Structure of an adapter, containing all elements: `Integration Scenarios`, `Connectors` and 
+`Connector groups`, there is a following endpoint exposed through actuator:
+
+```
+# all types
+GET /adapterdefinition
+
+# specific endpoints for each of the 3 types:
+GET /adapterdefinition/scenarios
+GET /adapterdefinition/connectors
+GET /adapterdefinition/connectorgroups
+```
+
+It will present a list of all Declarative Structure elements with details and relations between them.
+Following details are presented:
+
+- `Connectors` - connector request and response data models, Camel routes, connector descriptions, 
+necessary information for creating 
+[SIP Test Kit Declarative](https://ikor-gmbh.github.io/sip-framework/test-kit-declarative/) tests.
+
+- `Integration Scenarios` - central domain request and response models description.
+
+- `Connector groups` - all connectors belonging to that connector group 
+
 
 To enable or disable this feature the following property should be used:
 
@@ -425,5 +444,5 @@ sip:
   core:
     actuator:
       adapterdefinition:
-        enabled: true # enabled by default
+        enabled: true       # enabled by default
 ```

@@ -98,9 +98,11 @@ documentation.
 - **[Changing log level programmatically](./core.md#changing-log-level-programmatically)** - Dynamical changing of log level.
 - **[Exchange tracing](./core.md#exchange-tracing)** - Tracing and storing exchanges on Camel Processor level.
 - **[OpenAPI Descriptor](./core.md#openapi-descriptor)** - Built-in OpenAPI.
+- **[Declarative Structure in actuator adapter definition endpoint](./core.md#declarative-structure-in-actuator-adapter-definition-endpoint)** - Detailed view of Declarative Structure.
 - **[SIP Middle component publish-subscribe](./middle-component.md#description)** - Multiple consumers on middle component.
 - **[SIP Security](./security.md)** - Includes SSL setup, base and x509 authentication
 - **[SIP Test Kit](./test-kit.md)** - Provides ability to run integration tests inside SIP adapters, define mocks for endpoints and generate test reports.
+- **[SIP Test Kit Declarative](./test-kit-declarative.md)** - Run integration tests inside SIP adapters in Declarative Structure.
 
 ## Getting started
 
