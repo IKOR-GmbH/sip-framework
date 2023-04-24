@@ -1,4 +1,4 @@
-# IKOR SIP Archetype
+# SIP Archetype
 
 [TOC]
 

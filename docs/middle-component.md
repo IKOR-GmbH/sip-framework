@@ -1,4 +1,4 @@
-# IKOR SIP Middle Component
+# SIP Middle Component
 
 [TOC]
 

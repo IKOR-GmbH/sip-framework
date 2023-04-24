@@ -1,12 +1,14 @@
-# IKOR SIP Test Kit (version 3)
+# SIP Test Kit (with Declarative Structure)
 
 [TOC]
 
 # Description
 
-Content of this file is extension of base Test Kit file `test-kit.md` which explains Test Kit in general and its usage
-with SIP framework version 2. In this file only additions from Test Kit version 3 are going to be explained. 
-Knowledge and understanding from previous version is **prerequisite**!
+Using Test Kit with **Declarative Structure** is explained here and the content of this file should be treated as 
+extension of base documentation
+[SIP Test Kit](https://ikor-gmbh.github.io/sip-framework/test-kit/).
+
+Understanding from suggested link is **prerequisite**!
 
 # Features
 

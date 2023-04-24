@@ -1,4 +1,4 @@
-# IKOR SIP Framework Core
+# SIP Framework Core
 
 [TOC]
 

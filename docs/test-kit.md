@@ -1,4 +1,4 @@
-# IKOR SIP Test Kit
+# SIP Test Kit
 
 [TOC]
 
