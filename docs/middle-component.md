@@ -31,6 +31,13 @@ sipmc:channelName
 The channel name is an arbitrary String value, but it should relate to one integration topic, e.q. partner.
 Multiple sipmc routes may exist with different channel names.
 
+## Middle Component with Declarative Structure
+
+When building adapter by using Declarative Structure sipmc is embedded and explicit usage is not necessary. 
+Sipmc is placed in Integration Scenario, and acts as a Camel route connection between Inbound and Outbound Connectors.
+
+Since the sipmc is already embedded, 
+
 ## Examples
 
 **1 to 1:**
