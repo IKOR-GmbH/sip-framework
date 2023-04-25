@@ -120,7 +120,7 @@ sip:
 
 ### Important development note!
 To be able to fully utilize the Test Kit and write test case definitions properly, all the endpoints written with 
-Camel code need to have a defined ID which will be referenced in the endpoint parameter of the test case.
+Camel code need to have a defined ID which will be referenced in the endpointId parameter of the test case.
 
 **How to initialize `endpointId` for input endpoints in Camel code?**
 
@@ -132,7 +132,7 @@ from("rest:POST:/say/hello")      // Adapters input endpoint
 
 **How to initialize `endpointId` for output endpoints in  Camel code?**
 
-Providing endpointId for output endpoints is done through simple Camel mechanism, just by providing id for the Camel 
+Providing `endpointId` for output endpoints is done through simple Camel mechanism, just by providing id for the Camel 
 processor which is calling the external endpoint.
 
 ```
@@ -344,20 +344,20 @@ public class SampleRestRoute extends RouteBuilder {
 ``` yaml
   - TITLE: "Test case 1"
     WHEN-execute:
-      endpoint: "rest-endpoint"
+      endpointId: "rest-endpoint"
       with:
         body: "body of request"
     WITH-mocks:
-      - endpoint: "external-service"
+      - endpointId: "external-service"
         returning:
           body: "response message from service"
     THEN-expect:
-      - endpoint: "rest-endpoint"                           # matches the endpoint under test
+      - endpointId: "rest-endpoint"                           # matches the endpoint under test
         having:
           body: "response .* from service"
           headers:
             CamelHttpResponseCode: "200"
-      - endpoint: "external-service"                        # matches the already mocked endpoint within test
+      - endpointId: "external-service"                        # matches the already mocked endpoint within test
         having:
           body: "body of request now looks better"
           headers:
