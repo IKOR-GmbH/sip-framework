@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.validator;
 
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
+import java.util.Objects;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
@@ -33,7 +34,7 @@ public class CDMValidator implements Processor {
       throw SIPFrameworkException.init(
           exceptionMessage,
           connector,
-          exchange.getMessage().getBody().getClass().getName(),
+          Objects.nonNull(exchange.getMessage().getBody()) ? exchange.getMessage().getBody().getClass().getName() : "NULL",
           scenario,
           centralDomainModel.getName());
     }
