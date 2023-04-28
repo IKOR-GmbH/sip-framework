@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.testkit.config.configurationproperties;
 
 import static de.ikor.sip.foundation.testkit.config.TestCasesConfig.*;
 import static de.ikor.sip.foundation.testkit.configurationproperties.TestCaseBatchDefinition.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
@@ -29,6 +30,27 @@ class TestCaseBatchDefinitionTest {
     subject = new TestCaseBatchDefinition();
     testCaseDefinition = createValidTestCaseDefinition();
     subject.setTestCaseDefinitions(List.of(testCaseDefinition));
+  }
+
+  @Test
+  void WHEN_classTypeIsTestCaseBatchDefinition_THEN_expectTrue() {
+    // arrange, act & assert
+    assertThat(subject.supports(TestCaseBatchDefinition.class)).isTrue();
+  }
+
+  @Test
+  void WHEN_classTypeIsNotTestCaseBatchDefinition_THEN_expectFalse() {
+    // arrange, act & assert
+    assertThat(subject.supports(Object.class)).isFalse();
+  }
+
+  @Test
+  void WHEN_validTestCaseDefinition_THEN_noException() {
+    // act
+    subject.validate(subject, mock(Errors.class));
+
+    // assert
+    assertThat(subject.getTestCaseDefinitions()).hasSize(1);
   }
 
   @Test
@@ -80,7 +102,7 @@ class TestCaseBatchDefinitionTest {
   @Test
   void WHEN_noEndpointIdAndNoConnectorIdForWithMocksSection_THEN_SIPFrameworkException() {
     // arrange
-    EndpointProperties endpointProperties = new EndpointProperties(null, "", null);
+    EndpointProperties endpointProperties = new EndpointProperties("", null, null);
     testCaseDefinition.setWithMocks(List.of(endpointProperties));
 
     // act & assert
