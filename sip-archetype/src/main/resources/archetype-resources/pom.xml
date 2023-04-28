@@ -61,7 +61,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <annotationProcessorPaths>
-                        #if (${useLombok} == "y" || ${useLombok} == "Y")
+#if (${useLombok} == "y" || ${useLombok} == "Y")
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
@@ -72,7 +72,7 @@
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>${lombok-mapstruct-binding.version}</version>
                         </path>
-                        #end
+#end
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
@@ -96,7 +96,7 @@
                         </goals>
                         <configuration>
                             <additionalProperties>
-                                <sipFrameworkVersion>${archetypeVersion}</sipFrameworkVersion>
+                                <sipFrameworkVersion>${parent.version}</sipFrameworkVersion>
                             </additionalProperties>
                         </configuration>
                     </execution>

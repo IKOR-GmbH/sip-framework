@@ -93,10 +93,7 @@ class BaseMappingRouteTransformerTest {
     inboundResponseTransformerUnderTest.setMapper(Optional.of(integerModelMapper));
 
     // act&assert
-    assertThatThrownBy(
-            () -> {
-              inboundResponseTransformerUnderTest.accept(routeDefinition);
-            })
+    assertThatThrownBy(() -> inboundResponseTransformerUnderTest.accept(routeDefinition))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             "Mapper '%s' %s type '%s' is not compatible with assigned type '%s' of connector '%s'",
@@ -113,10 +110,7 @@ class BaseMappingRouteTransformerTest {
     outboundResponseTransformerUnderTest.setMapper(Optional.of(integerModelMapper));
 
     // act&assert
-    assertThatThrownBy(
-            () -> {
-              outboundResponseTransformerUnderTest.accept(routeDefinition);
-            })
+    assertThatThrownBy(() -> outboundResponseTransformerUnderTest.accept(routeDefinition))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             "Mapper '%s' %s type '%s' is not compatible with assigned type '%s' of connector '%s'",
@@ -133,10 +127,7 @@ class BaseMappingRouteTransformerTest {
     inboundResponseTransformerUnderTest.setMapper(Optional.empty());
 
     // act&assert
-    assertThatThrownBy(
-            () -> {
-              inboundResponseTransformerUnderTest.accept(routeDefinition);
-            })
+    assertThatThrownBy(() -> inboundResponseTransformerUnderTest.accept(routeDefinition))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             "No compatible Mapper found for Connector '%s' to map between %s and %s",
