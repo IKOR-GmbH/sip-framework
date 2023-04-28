@@ -34,7 +34,9 @@ public class CDMValidator implements Processor {
       throw SIPFrameworkException.init(
           exceptionMessage,
           connector,
-          Objects.nonNull(exchange.getMessage().getBody()) ? exchange.getMessage().getBody().getClass().getName() : "NULL",
+          Objects.nonNull(exchange.getMessage().getBody())
+              ? exchange.getMessage().getBody().getClass().getName()
+              : "NULL",
           scenario,
           centralDomainModel.getName());
     }
