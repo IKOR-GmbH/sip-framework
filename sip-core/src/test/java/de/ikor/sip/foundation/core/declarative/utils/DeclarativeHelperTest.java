@@ -22,10 +22,7 @@ class DeclarativeHelperTest {
 
   @Test
   void WHEN_annotationNotPresent_THEN_throwSIPFrameworkException() {
-    assertThatThrownBy(
-            () -> {
-              DeclarativeHelper.getAnnotationOrThrow(Test.class, new Random());
-            })
+    assertThatThrownBy(() -> DeclarativeHelper.getAnnotationOrThrow(Test.class, new Random()))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             "Annotation @%s required on class %s", Test.class.getSimpleName(), Random.class);
@@ -34,10 +31,7 @@ class DeclarativeHelperTest {
   @Test
   void WHEN_createMapperWithoutNoArgConstructor_THEN_throwSIPException() {
 
-    assertThatThrownBy(
-            () -> {
-              DeclarativeHelper.createMapperInstance(NoArgsConstructorMapper.class);
-            })
+    assertThatThrownBy(() -> DeclarativeHelper.createMapperInstance(NoArgsConstructorMapper.class))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             "Mapper %s needs to have a no-arg constructor, please define one.",
@@ -48,9 +42,7 @@ class DeclarativeHelperTest {
   void WHEN_createMapperWhichThrowsError_THEN_throwSIPExceptionWhichWrapsRuntimeException() {
 
     assertThatThrownBy(
-            () -> {
-              DeclarativeHelper.createMapperInstance(ExceptionThrowingConstructorMapper.class);
-            })
+            () -> DeclarativeHelper.createMapperInstance(ExceptionThrowingConstructorMapper.class))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             "SIP couldn't create a Mapper %s.", ExceptionThrowingConstructorMapper.class.getName())
@@ -60,10 +52,7 @@ class DeclarativeHelperTest {
 
   @Test
   void WHEN_mapperHasMoreThanOneMappingMethod_THEN_throwSIPException() {
-    assertThatThrownBy(
-            () -> {
-              DeclarativeHelper.getMappingMethod(MultipleMethodsMapper.class);
-            })
+    assertThatThrownBy(() -> DeclarativeHelper.getMappingMethod(MultipleMethodsMapper.class))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             "Failed to automatically resolve the model classes for the Mapper: %s. Please @Override the getSourceModelClass() and getTargetModelClass() methods",

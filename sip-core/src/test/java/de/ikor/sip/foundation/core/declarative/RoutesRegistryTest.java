@@ -87,9 +87,7 @@ class RoutesRegistryTest {
 
     // act & assert
     assertThatThrownBy(
-            () -> {
-              subject.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, connector);
-            })
+            () -> subject.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, connector))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             "Can't build internal connector route with routeId '%s': routeId already exists",
@@ -112,10 +110,7 @@ class RoutesRegistryTest {
     subject.generateRouteIdForSoapService(SOAP_SERVICE_NAME);
 
     // act & assert
-    assertThatThrownBy(
-            () -> {
-              subject.generateRouteIdForSoapService(SOAP_SERVICE_NAME);
-            })
+    assertThatThrownBy(() -> subject.generateRouteIdForSoapService(SOAP_SERVICE_NAME))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             "Can't build internal soap-service route with routeId '%s': routeId already exists",

@@ -8,12 +8,10 @@ import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorType;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
-import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseBatchDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
-import de.ikor.sip.foundation.testkit.exception.handler.ExceptionLogger;
 import de.ikor.sip.foundation.testkit.workflow.TestCase;
 import de.ikor.sip.foundation.testkit.workflow.TestCaseCollector;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
@@ -39,9 +37,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TestCasesConfig {
 
-  private static final String WHEN_EXECUTE = "when-execute";
-  private static final String WITH_MOCKS = "with-mocks";
-  private static final String THEN_EXPECT = "then-expect";
+  public static final String WHEN_EXECUTE = "when-execute";
+  public static final String WITH_MOCKS = "with-mocks";
+  public static final String THEN_EXPECT = "then-expect";
 
   private final RouteInvokerFactory routeInvokerFactory;
   private final MockFactory mockFactory;
@@ -59,13 +57,8 @@ public class TestCasesConfig {
   public void generateTestCases() {
     List<TestCase> testCases = new LinkedList<>();
     for (TestCaseDefinition testCaseDefinition : testCaseBatchDefinition.getTestCaseDefinitions()) {
-      try {
-        testCases.add(generateTestCase(testCaseDefinition));
-      } catch (Exception e) {
-        ExceptionLogger.logTestCaseException(e, testCaseDefinition.getTitle());
-      }
+      testCases.add(generateTestCase(testCaseDefinition));
     }
-    validateTestCaseInitializations(testCases);
     testCaseCollector.setTestCases(testCases);
   }
 
@@ -76,7 +69,6 @@ public class TestCasesConfig {
    * @return a new test case {@link TestCase}
    */
   public TestCase generateTestCase(TestCaseDefinition testCaseDefinition) {
-    validateTestDefinition(testCaseDefinition);
     String testName = testCaseDefinition.getTitle();
 
     declarationsRegistry.ifPresent(registry -> validateConnectors(testCaseDefinition));
@@ -134,33 +126,6 @@ public class TestCasesConfig {
                 mockFactory.newMockInstance(
                     testName, parseExchangeProperties(connectionProperties, camelContext)))
         .toList();
-  }
-
-  private void validateTestCaseInitializations(List<TestCase> testCases) {
-    if (testCases.size() != testCaseBatchDefinition.getTestCaseDefinitions().size()) {
-      throw new SIPFrameworkInitializationException("Some test cases were not created.");
-    }
-  }
-
-  private void validateTestDefinition(TestCaseDefinition testCaseDefinition) {
-    if (testCaseDefinition.getWhenExecute() == null) {
-      throw new SIPFrameworkException("When-execute is not defined!");
-    }
-    validateEndpointAndConnectorFields(testCaseDefinition.getWhenExecute(), WHEN_EXECUTE);
-    testCaseDefinition
-        .getWithMocks()
-        .forEach(properties -> validateEndpointAndConnectorFields(properties, WITH_MOCKS));
-    testCaseDefinition
-        .getThenExpect()
-        .forEach(properties -> validateEndpointAndConnectorFields(properties, THEN_EXPECT));
-  }
-
-  private void validateEndpointAndConnectorFields(
-      EndpointProperties properties, String definitionPart) {
-    if (properties.getEndpointId() != null && properties.getConnectorId() != null) {
-      throw SIPFrameworkException.init(
-          "Both endpoint and connector fields are defined in %s!", definitionPart);
-    }
   }
 
   private void validateConnectors(TestCaseDefinition testCaseDefinition) {
