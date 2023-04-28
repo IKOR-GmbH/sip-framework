@@ -58,7 +58,6 @@ de.ikor.sip.foundation.testkit.config
 de.ikor.sip.foundation.testkit.configurationproperties
 de.ikor.sip.foundation.testkit.configurationproperties.models
 de.ikor.sip.foundation.testkit.exception
-de.ikor.sip.foundation.testkit.exception.handler
 de.ikor.sip.foundation.testkit.util
 de.ikor.sip.foundation.testkit.workflow
 de.ikor.sip.foundation.testkit.workflow.givenphase
