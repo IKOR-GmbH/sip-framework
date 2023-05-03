@@ -8,7 +8,7 @@ Using Test Kit with **Declarative Structure** is explained here and the content 
 extension of base documentation
 [SIP Test Kit](https://ikor-gmbh.github.io/sip-framework/test-kit/).
 
-Understanding from suggested link is **prerequisite**!
+Understanding material from the suggested link is a **prerequisite**!
 
 # Features
 
@@ -16,10 +16,10 @@ Understanding from suggested link is **prerequisite**!
 
 Main addition is expansion of test case definition. In version 2 is possible to write test definitions only by using
 `endpointId`. Version 3 introduced **Declarative Structure** and **Connectors** which are wrapping input and output endpoints.
-In that manner, it is natural for Test Kit to provide creating test definitions with `connectorId` as well. But keep in
+In that manner, it is natural for Test Kit to enable creating test definitions with `connectorId` as well. Keep in
 mind that using `connectorId` is possible only if **Declarative Structure** is enabled.
 
-Both approaches can be used and combined within one test case definition, but always for different endpoints!
+Both approaches can be used and combined within one test case definition, but for different endpoints!
 
 That means you have to provide either `endpointId` or `connectorId` for one element within any of the test definition 
 sections (`when-execute`, `with-mocks`, `then-expect`).

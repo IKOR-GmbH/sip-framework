@@ -81,8 +81,9 @@ Each connector will have the following structure:
 - **[sip-archetype](./archetype.md)** - Archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies. Project is created by executing single maven command.
 - **[sip-core](./core.md)** - Core project for base SIP functionalities.
 - **[sip-middle-component](./middle-component.md)** - Custom Camel component used as abstracted connector between different integration sides.
-- **[sip-integration-starter](./integration-starter.md)** - Starter project adding necessary predefined dependencies for integration adapters.
 - **[sip-starter-parent](./starter-parent.md)** - This project takes care of versions for Spring Boot and Camel dependencies.
+- **[sip-integration-starter](./integration-starter.md)** - Starter project adding necessary predefined dependencies for integration adapters.
+- **[sip-soap-starter](./soap-starter.md)** - Starter dependency for adapter that use SOAP.
 - **[sip-security](./security.md)** - Security in SIP framework.
 - **[sip-test-kit](./test-kit.md)** - Tool for integration testing.
 

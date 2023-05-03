@@ -4,7 +4,7 @@
 
 ## Description
 
-This archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies.
+This Maven Archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies.
 
 ## How to create a SIP Adapter using SIP Archetype
 
@@ -13,7 +13,7 @@ In order to make setting up a new integration adapter project an easy task, we h
 You can create a SIP Adapter by using the following Maven command:
 
 ```shell
-  mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=<latest.sip-archetype.version> -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT
+  mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=<latest.sip-framework.version> -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT
 ```
 
 
@@ -40,7 +40,7 @@ After executing given Maven command, you will be requested to insert additional 
 - **packageSuffix** is used to create project package name by concatenating its value to the **groupId**. There is a strict validation
   for using only lower case letters and should be a single word. This will reflect the generated package structure for the generated project files. (for example - all of the sources will be in the _de.ikor.sip.adapter.sufix_ java package) 
 - **package** (optional) is used to override previous package naming and provide full package name. This can be skipped by leaving value empty.
-  It is strongly recommended to follow package naming convention, otherwise your project will be created but it will consist
+  It is strongly recommended to follow package naming convention, otherwise your project will be created but it will have
   package naming errors.
 - **connectorGroup1**/**connectorGroup2** are representing names of your connector group packages inside the project. It will also be reflected in the generated package structure (for example - all of the sources for connectorGroup1 will be in the _de.ikor.sip.adapter.sufix.connectorGroup1_ package)
 - **useLombok** is used for including or excluding Lombok dependency in adapter. Lombok is included by default. If you wish to exclude lombok you should set 

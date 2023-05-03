@@ -2,6 +2,9 @@
 
 [TOC]
 
+## Upgrade from 2.0.0 to 3.0.0
+Version 3.0.0 is backwards compatible with version 2.0.0. All of the adapters written in version 2.0.0 will work with version 3.0.0 without any changes, but it's highly encouraged to use v3.0.0 concepts (Declarative structure).
+
 ## Upgrade from 1.0.0 to 2.0.0
 
 The following text represents the complete guide how to update SIP framework version in your adapter from version 
