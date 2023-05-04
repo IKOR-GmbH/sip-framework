@@ -7,9 +7,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.Synchronized;
+import org.apache.camel.Exchange;
 
 /**
  * Context used during the orchestration of an integration-scenario.
@@ -23,8 +27,19 @@ import lombok.Synchronized;
  *
  * @param <M> The response model type of the orchestrated scenario
  */
-@RequiredArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 public class ScenarioOrchestrationContext<M> {
+
+  /**
+   * Record that holds the response for a single orchestration step
+   *
+   * @param consumer Consumer that was called
+   * @param result Response as received by that consumer
+   * @param <M> Response model type as defined by the integration scenario
+   */
+  public record OrchestrationStepResponse<M>(
+      IntegrationScenarioConsumerDefinition consumer, M result) {}
 
   public static final String PROPERTY_NAME = "SipScenarioOrchestrationContext";
 
@@ -32,7 +47,12 @@ public class ScenarioOrchestrationContext<M> {
   private final Object originalRequest;
   private final List<OrchestrationStepResponse<M>> orchestrationStepResponses =
       Collections.synchronizedList(new ArrayList<>());
+
   private M aggregatedResponse;
+
+  @Getter
+  @Setter(AccessLevel.PACKAGE)
+  private Exchange exchange;
 
   /**
    * Returns the request as retrieved from the provider that initiated the integration call.
@@ -40,6 +60,7 @@ public class ScenarioOrchestrationContext<M> {
    * @return the original request
    * @param <T> Type of the request-model
    */
+  @SuppressWarnings("unchecked")
   public <T> T getOriginalRequest() {
     return (T) originalRequest;
   }
@@ -109,12 +130,55 @@ public class ScenarioOrchestrationContext<M> {
   }
 
   /**
-   * Record that holds the response for a single orchestration step
+   * Retrieves the <em>first</em> response returned by the integration-scenario consumer specified
+   * by its <code>consumerClass</code>.
    *
-   * @param consumer Consumer that was called
-   * @param result Response as received by that consumer
-   * @param <M> Response model type as defined by the integration scenario
+   * @param consumerClass Class of the consumer for which to retrieve consumer
+   * @return Optional first response of this consumer
    */
-  public record OrchestrationStepResponse<M>(
-      IntegrationScenarioConsumerDefinition consumer, M result) {}
+  public Optional<OrchestrationStepResponse<M>> getFirstResponseFromConsumer(
+      final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass) {
+    return orchestrationStepResponses.stream()
+        .filter(step -> consumerClass.isInstance(step.consumer()))
+        .findFirst();
+  }
+
+  /**
+   * Retrieves the <em>last</em> response returned by the integration-scenario consumer specified by
+   * its <code>consumerClass</code>.
+   *
+   * @param consumerClass Class of the consumer for which to retrieve consumer
+   * @return Optional last response of this consumer
+   */
+  public Optional<OrchestrationStepResponse<M>> getLastResponseFromConsumer(
+      final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass) {
+    return orchestrationStepResponses.stream()
+        .filter(step -> consumerClass.isInstance(step.consumer()))
+        .reduce((first, second) -> second);
+  }
+
+  /**
+   * Returns the current message body in the requested type, if it exists
+   *
+   * @param type Body type class
+   * @return Optional containing the body if it exists
+   * @param <T> Body type
+   * @see org.apache.camel.Message#getBody(Class)
+   */
+  public <T> Optional<T> getBody(final Class<T> type) {
+    return Optional.ofNullable(getExchange().getMessage().getBody(type));
+  }
+
+  /**
+   * Returns the header with the given name and type, if it exists
+   *
+   * @param name Name of the header to retrieve
+   * @param type Header type class
+   * @return Optional containing the header if it exists
+   * @param <T> Header type
+   * @see org.apache.camel.Message#getHeader(String, Class)
+   */
+  public <T> Optional<T> getHeader(final String name, final Class<T> type) {
+    return Optional.ofNullable(getExchange().getMessage().getHeader(name, type));
+  }
 }

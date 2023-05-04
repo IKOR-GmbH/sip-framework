@@ -51,13 +51,12 @@ public class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenera
     final var doubleHandledProviders =
         providers.stream().filter(handled -> !overallUnhandledProviders.contains(handled)).toList();
     if (!doubleHandledProviders.isEmpty()) {
-      throw new SIPFrameworkInitializationException(
-          String.format(
-              "The following providers are used more than once in orchestration for scenario '%s': %s",
-              getIntegrationScenarioId(),
-              doubleHandledProviders.stream()
-                  .map(obj -> obj.getClass().getName())
-                  .collect(Collectors.joining(","))));
+      throw SIPFrameworkInitializationException.init(
+          "The following providers are used more than once in orchestration for scenario '%s': %s",
+          getIntegrationScenarioId(),
+          doubleHandledProviders.stream()
+              .map(obj -> obj.getClass().getName())
+              .collect(Collectors.joining(",")));
     }
 
     return providers;
@@ -72,9 +71,8 @@ public class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenera
     } else if (providerDefinition instanceof ForScenarioProvidersCatchAllDefinition) {
       return Set.copyOf(overallUnhandledProviders);
     }
-    throw new SIPFrameworkInitializationException(
-        String.format(
-            "Unhandled scenario-provider subclass: %s", providerDefinition.getClass().getName()));
+    throw SIPFrameworkInitializationException.init(
+        "Unhandled scenario-provider subclass: %s", providerDefinition.getClass().getName());
   }
 
   private Set<IntegrationScenarioProviderDefinition> resolveProvidersFromClasses(
@@ -92,10 +90,9 @@ public class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenera
             .map(ele -> ele.getClass().getName())
             .toList();
     if (!unknownProviderNames.isEmpty()) {
-      throw new SIPFrameworkInitializationException(
-          String.format(
-              "The following provider-classes are used in orchestration for scenario '%s', but not registered with that scenario: %s",
-              getIntegrationScenarioId(), String.join(",", unknownProviderNames)));
+      throw SIPFrameworkInitializationException.init(
+          "The following provider-classes are used in orchestration for scenario '%s', but not registered with that scenario: %s",
+          getIntegrationScenarioId(), String.join(",", unknownProviderNames));
     }
     return providerClasses.stream().map(scenarioProviderMap::get).collect(Collectors.toSet());
   }
@@ -111,10 +108,9 @@ public class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenera
     final var unknownIds =
         connectorIds.stream().filter(id -> !scenarioIdMap.containsKey(id)).toList();
     if (!unknownIds.isEmpty()) {
-      throw new SIPFrameworkInitializationException(
-          String.format(
-              "The following connector-IDs are used in orchestration for scenario '%s', but not registered with that scenario: %s",
-              getIntegrationScenarioId(), String.join(",", unknownIds)));
+      throw SIPFrameworkInitializationException.init(
+          "The following connector-IDs are used in orchestration for scenario '%s', but not registered with that scenario: %s",
+          getIntegrationScenarioId(), String.join(",", unknownIds));
     }
     return connectorIds.stream().map(scenarioIdMap::get).collect(Collectors.toSet());
   }

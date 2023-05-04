@@ -40,10 +40,13 @@ public class ScenarioOrchestrationHandlers {
 
   private static <M> ScenarioOrchestrationContext<M> retrieveOrchestrationContext(
       final Exchange exchange) {
-    return Objects.requireNonNull(
-        exchange.getProperty(
-            ScenarioOrchestrationContext.PROPERTY_NAME, ScenarioOrchestrationContext.class),
-        "Orchestration context for scenario-orchestration could not be retrieved from exchange");
+    final var context =
+        Objects.requireNonNull(
+            exchange.getProperty(
+                ScenarioOrchestrationContext.PROPERTY_NAME, ScenarioOrchestrationContext.class),
+            "Orchestration context for scenario-orchestration could not be retrieved from exchange");
+    context.setExchange(exchange);
+    return context;
   }
 
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -52,10 +55,14 @@ public class ScenarioOrchestrationHandlers {
     private final IntegrationScenarioDefinition integrationScenario;
 
     @Handler
-    public <T> void initializeOrchestrationContext(final T body, Exchange exchange) {
+    public <T> void initializeOrchestrationContext(final T body, final Exchange exchange) {
       exchange.setProperty(
           ScenarioOrchestrationContext.PROPERTY_NAME,
-          new ScenarioOrchestrationContext<T>(integrationScenario, body));
+          ScenarioOrchestrationContext.builder()
+              .integrationScenario(integrationScenario)
+              .originalRequest(body)
+              .exchange(exchange)
+              .build());
     }
   }
 
