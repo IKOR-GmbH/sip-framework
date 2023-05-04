@@ -12,7 +12,7 @@ import java.util.List;
  * <p><em>For internal use only</em>
  */
 @SuppressWarnings("rawtypes")
-public class RouteGeneratorForScenarioOrchestrationDefinition<M> extends RouteGeneratorBase
+public final class RouteGeneratorForScenarioOrchestrationDefinition<M> extends RouteGeneratorBase
     implements Runnable {
 
   private final ScenarioOrchestrationDefinition<M> scenarioOrchestrationDefinition;

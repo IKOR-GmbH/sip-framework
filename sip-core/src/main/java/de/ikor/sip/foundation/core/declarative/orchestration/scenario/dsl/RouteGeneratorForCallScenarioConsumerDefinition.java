@@ -15,7 +15,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.builder.EndpointProducerBuilder;
-import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.ProcessorDefinition;
 
 /**
  * Class for generating Camel routes for scenario consumer calls from a DSL
@@ -24,7 +24,7 @@ import org.apache.camel.model.RouteDefinition;
  */
 @Slf4j
 @SuppressWarnings("rawtypes")
-public class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGeneratorBase {
+final class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGeneratorBase {
 
   private final CallScenarioConsumerBaseDefinition<?, ?, M> definitionElement;
 
@@ -47,13 +47,13 @@ public class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGen
     final var consumers = resolveHandledConsumers();
 
     // verify that given providers are not already handled
-    final var doubleHandledProviders =
+    final var doubleHandledConsumers =
         consumers.stream().filter(handled -> !overallUnhandledConsumers.contains(handled)).toList();
-    if (!doubleHandledProviders.isEmpty()) {
+    if (!doubleHandledConsumers.isEmpty()) {
       log.warn(
           "The following consumers are used more than once in orchestration for scenario '{}': {}",
           getIntegrationScenarioId(),
-          doubleHandledProviders.stream()
+          doubleHandledConsumers.stream()
               .map(obj -> obj.getClass().getName())
               .collect(Collectors.joining(",")));
     }
@@ -61,9 +61,9 @@ public class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGen
   }
 
   private Set<IntegrationScenarioConsumerDefinition> resolveHandledConsumers() {
-    if (definitionElement instanceof CallScenarioConsumerWithClassDefinition element) {
+    if (definitionElement instanceof CallScenarioConsumerByClassDefinition element) {
       return Collections.singleton(retrieveConsumerFromClassDefinition(element));
-    } else if (definitionElement instanceof CallScenarioConsumerWithConnectorIdDefinition element) {
+    } else if (definitionElement instanceof CallScenarioConsumerByConnectorIdDefinition element) {
       return Collections.singleton(retrieveConsumerFromConnectorIdDefinition(element));
     } else if (definitionElement instanceof CallScenarioConsumerCatchAllDefinition) {
       return Set.copyOf(overallUnhandledConsumers);
@@ -75,7 +75,7 @@ public class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGen
   }
 
   private OutboundConnectorDefinition retrieveConsumerFromClassDefinition(
-      final CallScenarioConsumerWithClassDefinition element) {
+      final CallScenarioConsumerByClassDefinition element) {
     return getOutboundConnectors().stream()
         .filter(
             outboundConnectorDefinition ->
@@ -93,7 +93,7 @@ public class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGen
   }
 
   private OutboundConnectorDefinition retrieveConsumerFromConnectorIdDefinition(
-      final CallScenarioConsumerWithConnectorIdDefinition element) {
+      final CallScenarioConsumerByConnectorIdDefinition element) {
     return getOutboundConnectors().stream()
         .filter(
             outboundConnectorDefinition ->
@@ -112,14 +112,14 @@ public class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGen
     return getDeclarationsRegistry().getOutboundConnectorsByScenarioId(getIntegrationScenarioId());
   }
 
-  public void generateRoutes(final RouteDefinition routeDefinition) {
+  <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
     for (final var consumer : getHandledConsumers()) {
       // prepare request for consumer (as response might still be on the body) and call it
       routeDefinition
           .transform()
           .method(
               ScenarioOrchestrationHandlers.handleRequestToConsumer(
-                  definitionElement.getRequestPreparation()))
+                  consumer, definitionElement.getRequestPreparation()))
           .to(getEndpointForConsumer(consumer));
 
       // store / aggregate the response and place it on the body
@@ -130,6 +130,8 @@ public class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGen
                   consumer,
                   definitionElement.getStepResultCloner(),
                   definitionElement.getResponseConsumer()));
+
+      overallUnhandledConsumers.remove(consumer);
     }
   }
 

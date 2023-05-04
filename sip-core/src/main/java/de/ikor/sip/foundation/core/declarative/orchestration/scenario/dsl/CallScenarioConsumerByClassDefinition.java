@@ -6,14 +6,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /** DSL class for calling a scenario consumer specified by it's class */
-public class CallScenarioConsumerWithClassDefinition<R, M>
-    extends CallScenarioConsumerBaseDefinition<
-        CallScenarioConsumerWithClassDefinition<R, M>, R, M> {
+public final class CallScenarioConsumerByClassDefinition<R, M>
+    extends CallScenarioConsumerBaseDefinition<CallScenarioConsumerByClassDefinition<R, M>, R, M> {
 
   @Getter(AccessLevel.PACKAGE)
   private final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass;
 
-  CallScenarioConsumerWithClassDefinition(
+  CallScenarioConsumerByClassDefinition(
       final R dslReturnDefinition,
       final IntegrationScenarioDefinition integrationScenario,
       final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass) {

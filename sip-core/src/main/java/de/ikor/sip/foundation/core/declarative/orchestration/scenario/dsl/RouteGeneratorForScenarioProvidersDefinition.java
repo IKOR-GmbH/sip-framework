@@ -6,10 +6,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOr
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,7 +24,7 @@ import org.apache.camel.model.RoutesDefinition;
  */
 @Slf4j
 @SuppressWarnings("rawtypes")
-public class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGeneratorBase {
+final class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGeneratorBase {
   private final ForScenarioProvidersBaseDefinition<?, ?, M> providerDefinition;
   private final Set<IntegrationScenarioProviderDefinition> overallUnhandledProviders;
 
@@ -63,10 +60,9 @@ public class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenera
   }
 
   private Set<IntegrationScenarioProviderDefinition> resolveHandledProviders() {
-    if (providerDefinition instanceof ForScenarioProvidersWithClassDefinition element) {
+    if (providerDefinition instanceof ForScenarioProvidersByClassDefinition element) {
       return resolveProvidersFromClasses(element);
-    } else if (providerDefinition
-        instanceof ForScenarioProvidersWithConnectorIdDefinition element) {
+    } else if (providerDefinition instanceof ForScenarioProvidersByConnectorIdDefinition element) {
       return resolveProvidersFromConnectorIds(element);
     } else if (providerDefinition instanceof ForScenarioProvidersCatchAllDefinition) {
       return Set.copyOf(overallUnhandledProviders);
@@ -76,7 +72,7 @@ public class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenera
   }
 
   private Set<IntegrationScenarioProviderDefinition> resolveProvidersFromClasses(
-      final ForScenarioProvidersWithClassDefinition element) {
+      final ForScenarioProvidersByClassDefinition element) {
     final Set<Class<? extends IntegrationScenarioProviderDefinition>> providerClasses =
         element.getProviderClasses();
     final var scenarioProviderMap =
@@ -98,7 +94,7 @@ public class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenera
   }
 
   private Set<IntegrationScenarioProviderDefinition> resolveProvidersFromConnectorIds(
-      final ForScenarioProvidersWithConnectorIdDefinition<?, M> element) {
+      final ForScenarioProvidersByConnectorIdDefinition<?, M> element) {
     final Set<String> connectorIds = element.getConnectorIds();
     final var scenarioIdMap =
         getDeclarationsRegistry()
@@ -124,24 +120,30 @@ public class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenera
       return;
     }
 
-    final var consumerDefinitions =
-        providerDefinition.getConsumerCallsDelegate().getScenarioConsumerDefinitions();
     final var overallUnhandledScenarioConsumers =
         new HashSet<>(getOrchestrationInfo().getConsumerEndpoints().keySet());
-    final List<RouteGeneratorForCallScenarioConsumerDefinition> consumerBuilders =
-        new ArrayList<>();
-    for (final var consumerDef : consumerDefinitions) {
-      final var consumerBuilder =
-          new RouteGeneratorForCallScenarioConsumerDefinition<M>(
-              getOrchestrationInfo(),
-              consumerDef,
-              Collections.unmodifiableSet(overallUnhandledScenarioConsumers));
-      if (consumerBuilder.getHandledConsumers().isEmpty()) {
-        continue;
+
+    final var routeDef = generateRouteStart(routesDefinition);
+    routeDef.bean(
+        ScenarioOrchestrationHandlers.handleContextInitialization(getIntegrationScenario()));
+
+    for (final var element : providerDefinition.getNodes()) {
+      if (element instanceof CallScenarioConsumerBaseDefinition callDef) {
+        new RouteGeneratorForCallScenarioConsumerDefinition<M>(
+                getOrchestrationInfo(), callDef, overallUnhandledScenarioConsumers)
+            .generateRoute(routeDef);
+      } else if (element instanceof ConditionalCallScenarioConsumerDefinition condDef) {
+        new RouteGeneratorForConditionalCallScenarioConsumerDefinition<M>(
+                getOrchestrationInfo(), condDef, overallUnhandledScenarioConsumers)
+            .generateRoute(routeDef);
+      } else {
+        throw SIPFrameworkInitializationException.init(
+            "No handling defined for type %s used in orchestration for scenario %s",
+            element.getClass().getName(), getIntegrationScenarioId());
       }
-      overallUnhandledScenarioConsumers.removeAll(consumerBuilder.getHandledConsumers());
-      consumerBuilders.add(consumerBuilder);
     }
+
+    routeDef.bean(ScenarioOrchestrationHandlers.handleErrorThrownIfNoConsumerWasCalled());
 
     if (!overallUnhandledScenarioConsumers.isEmpty()) {
       log.warn(
@@ -154,11 +156,6 @@ public class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenera
               .map(provider -> provider.getClass().getSimpleName())
               .collect(Collectors.joining(",")));
     }
-
-    final var routeStart = generateRouteStart(routesDefinition);
-    routeStart.bean(
-        ScenarioOrchestrationHandlers.handleContextInitialization(getIntegrationScenario()));
-    consumerBuilders.forEach(consumerBuilder -> consumerBuilder.generateRoutes(routeStart));
   }
 
   private RouteDefinition generateRouteStart(final RoutesDefinition routesDefinition) {

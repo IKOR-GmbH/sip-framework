@@ -5,14 +5,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /** DSL class for calling an outbound connector specified by its ID */
-public class CallScenarioConsumerWithConnectorIdDefinition<R, M>
+public final class CallScenarioConsumerByConnectorIdDefinition<R, M>
     extends CallScenarioConsumerBaseDefinition<
-        CallScenarioConsumerWithConnectorIdDefinition<R, M>, R, M> {
+        CallScenarioConsumerByConnectorIdDefinition<R, M>, R, M> {
 
   @Getter(AccessLevel.PACKAGE)
   private final String connectorId;
 
-  CallScenarioConsumerWithConnectorIdDefinition(
+  CallScenarioConsumerByConnectorIdDefinition(
       final R dslReturnDefinition,
       final IntegrationScenarioDefinition integrationScenario,
       final String connectorId) {
