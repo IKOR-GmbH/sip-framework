@@ -124,7 +124,8 @@ public class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenera
       return;
     }
 
-    final var consumerDefinitions = providerDefinition.getScenarioConsumerDefinitions();
+    final var consumerDefinitions =
+        providerDefinition.getConsumerCallsDelegate().getScenarioConsumerDefinitions();
     final var overallUnhandledScenarioConsumers =
         new HashSet<>(getOrchestrationInfo().getConsumerEndpoints().keySet());
     final List<RouteGeneratorForCallScenarioConsumerDefinition> consumerBuilders =
