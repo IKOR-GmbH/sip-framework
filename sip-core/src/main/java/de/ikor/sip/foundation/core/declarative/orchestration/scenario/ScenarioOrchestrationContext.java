@@ -55,14 +55,38 @@ public class ScenarioOrchestrationContext<M> {
   private Exchange exchange;
 
   /**
+   * Returns the request as retrieved from the provider that initiated the integration call with the given type.
+   *
+   * @param requestType Request model class
+   * @return Original request
+   * @param <T> Type of the request-model
+   */
+  public <T> T getOriginalRequest(final Class<T> requestType) {
+    return getOriginalRequest();
+  }
+
+  /**
    * Returns the request as retrieved from the provider that initiated the integration call.
    *
-   * @return the original request
+   * @return Original request
    * @param <T> Type of the request-model
    */
   @SuppressWarnings("unchecked")
   public <T> T getOriginalRequest() {
     return (T) originalRequest;
+  }
+
+  /**
+   * Returns the current response payload following this logic:
+   * <ul>
+   *     <li>If {@link #getAggregatedResponse()} contains a response, it is returned</li>
+   *     <li>Otherwise the resposne from the latest step is returned using {@link #getResponseForLatestStep()}</li>
+   * </ul>
+   * @return Current response
+   */
+  @Synchronized
+  public Optional<M> getResponse() {
+    return getAggregatedResponse().or(() -> getResponseForLatestStep().map(OrchestrationStepResponse::result));
   }
 
   /**
