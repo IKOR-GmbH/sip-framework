@@ -55,7 +55,8 @@ public class ScenarioOrchestrationContext<M> {
   private Exchange exchange;
 
   /**
-   * Returns the request as retrieved from the provider that initiated the integration call with the given type.
+   * Returns the request as retrieved from the provider that initiated the integration call with the
+   * given type.
    *
    * @param requestType Request model class
    * @return Original request
@@ -78,15 +79,19 @@ public class ScenarioOrchestrationContext<M> {
 
   /**
    * Returns the current response payload following this logic:
+   *
    * <ul>
-   *     <li>If {@link #getAggregatedResponse()} contains a response, it is returned</li>
-   *     <li>Otherwise the resposne from the latest step is returned using {@link #getResponseForLatestStep()}</li>
+   *   <li>If {@link #getAggregatedResponse()} contains a response, it is returned
+   *   <li>Otherwise the resposne from the latest step is returned using {@link
+   *       #getResponseForLatestStep()}
    * </ul>
+   *
    * @return Current response
    */
   @Synchronized
   public Optional<M> getResponse() {
-    return getAggregatedResponse().or(() -> getResponseForLatestStep().map(OrchestrationStepResponse::result));
+    return getAggregatedResponse()
+        .or(() -> getResponseForLatestStep().map(OrchestrationStepResponse::result));
   }
 
   /**

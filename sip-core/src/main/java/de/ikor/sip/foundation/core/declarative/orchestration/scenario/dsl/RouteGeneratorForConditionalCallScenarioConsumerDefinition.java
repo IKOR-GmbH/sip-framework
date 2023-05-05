@@ -4,10 +4,8 @@ import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOr
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.model.ChoiceDefinition;
 import org.apache.camel.model.ProcessorDefinition;
 
 @SuppressWarnings("rawtypes")
@@ -34,7 +32,7 @@ final class RouteGeneratorForConditionalCallScenarioConsumerDefinition<M>
           getIntegrationScenarioId());
     }
 
-    var optChoice = Optional.<ChoiceDefinition>empty();
+    final var choiceDef = routeDefinition.choice();
     for (final var branch : conditionalDefinition.getConditionalStatements()) {
       if (branch.statements().isEmpty()) {
         var branchIndex = conditionalDefinition.getConditionalStatements().indexOf(branch) + 1;
@@ -42,11 +40,7 @@ final class RouteGeneratorForConditionalCallScenarioConsumerDefinition<M>
             "Orchestration for integration-scenario {} contains a conditional-statement that does not specify any actions in branch #{}",
             getIntegrationScenarioId(),
             branchIndex);
-        continue;
-      } else if (optChoice.isEmpty()) {
-        optChoice = Optional.of(routeDefinition.choice());
       }
-      final var choiceDef = optChoice.orElseThrow();
       choiceDef
           .when()
           .method(ScenarioOrchestrationHandlers.handleContextPredicate(branch.predicate()));
@@ -55,22 +49,14 @@ final class RouteGeneratorForConditionalCallScenarioConsumerDefinition<M>
     }
 
     if (!conditionalDefinition.getUnconditionalStatements().isEmpty()) {
-      if (optChoice.isEmpty()) {
-        // if there is no ChoiceDefinition at this point, there was no filled condition at all - in
-        // this case we can just attach the statements to the RouteBuilder directly
-        conditionalDefinition
-            .getUnconditionalStatements()
-            .forEach(statement -> buildRouteForStatement(routeDefinition, statement));
-      } else {
-        final var choiceDef = optChoice.orElseThrow();
-        choiceDef.otherwise();
-        conditionalDefinition
-            .getUnconditionalStatements()
-            .forEach(statement -> buildRouteForStatement(choiceDef, statement));
-        choiceDef.endChoice();
-      }
+      choiceDef.otherwise();
+      conditionalDefinition
+          .getUnconditionalStatements()
+          .forEach(statement -> buildRouteForStatement(choiceDef, statement));
+      choiceDef.endChoice();
     }
-    optChoice.ifPresent(ChoiceDefinition::end);
+
+    choiceDef.end();
   }
 
   private <T extends ProcessorDefinition<T>> void buildRouteForStatement(

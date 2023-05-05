@@ -1,8 +1,10 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationContext;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Delegate;
@@ -24,10 +26,10 @@ public final class ConditionalCallScenarioConsumerDefinition<R, M>
   }
 
   /**
-   * @see Branch#elseIfCase(ScenarioContextPredicate)
+   * @see Branch#elseIfCase(Predicate)
    */
   Branch<ConditionalCallScenarioConsumerDefinition<R, M>> elseIfCase(
-      final ScenarioContextPredicate<M> predicate) {
+      final Predicate<ScenarioOrchestrationContext<M>> predicate) {
     final var branch = new BranchStatements<>(predicate, new ArrayList<>());
     conditionalStatements.add(branch);
     return new Branch<>(branch.statements, self(), getIntegrationScenario());
@@ -49,7 +51,8 @@ public final class ConditionalCallScenarioConsumerDefinition<R, M>
   }
 
   record BranchStatements<M>(
-      ScenarioContextPredicate<M> predicate, List<CallableWithinProviderDefinition> statements) {}
+      Predicate<ScenarioOrchestrationContext<M>> predicate,
+      List<CallableWithinProviderDefinition> statements) {}
 
   /**
    * Class representing on branch of a conditional statement:
@@ -57,8 +60,8 @@ public final class ConditionalCallScenarioConsumerDefinition<R, M>
    * <ul>
    *   <li>Allows to add consumer-calls to this conditional branch using the statements defined in
    *       {@link ScenarioConsumerCalls}
-   *   <li>Can spawn alternative branches for the condition via {@link
-   *       #elseIfCase(ScenarioContextPredicate)} and {@link #elseCase()}
+   *   <li>Can spawn alternative branches for the condition via {@link #elseIfCase(Predicate)} and
+   *       {@link #elseCase()}
    * </ul>
    */
   public final class Branch<I> extends ScenarioDslDefinitionBase<Branch<I>, I, M>
@@ -84,7 +87,7 @@ public final class ConditionalCallScenarioConsumerDefinition<R, M>
      * @return The conditional branch
      */
     public Branch<ConditionalCallScenarioConsumerDefinition<R, M>> elseIfCase(
-        final ScenarioContextPredicate<M> predicate) {
+        final Predicate<ScenarioOrchestrationContext<M>> predicate) {
       return ConditionalCallScenarioConsumerDefinition.this.elseIfCase(predicate);
     }
 
@@ -93,7 +96,7 @@ public final class ConditionalCallScenarioConsumerDefinition<R, M>
      * matched.
      *
      * <p>Needs to be the last statement of the condition - all conditional branches should be
-     * attached previously to using this method via {@link #elseIfCase(ScenarioContextPredicate)}.
+     * attached previously to using this method via {@link #elseIfCase(Predicate)}.
      *
      * @return The unconditional branch
      */

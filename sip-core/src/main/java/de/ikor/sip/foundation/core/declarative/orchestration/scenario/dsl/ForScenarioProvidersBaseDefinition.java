@@ -1,8 +1,10 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationContext;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Delegate;
@@ -40,14 +42,14 @@ public abstract sealed class ForScenarioProvidersBaseDefinition<
    * ConditionalCallScenarioConsumerDefinition.Branch#endCases()}.
    *
    * @see ConditionalCallScenarioConsumerDefinition.Branch
-   * @see ConditionalCallScenarioConsumerDefinition.Branch#elseIfCase(ScenarioContextPredicate)
+   * @see ConditionalCallScenarioConsumerDefinition.Branch#elseIfCase(Predicate)
    * @see ConditionalCallScenarioConsumerDefinition.Branch#elseCase()
    * @param predicate Predicate to test for execution of branch statmeents
    * @return The conditional branch
    */
   public ConditionalCallScenarioConsumerDefinition<S, M>.Branch<
           ConditionalCallScenarioConsumerDefinition<S, M>>
-      ifCase(final ScenarioContextPredicate<M> predicate) {
+      ifCase(final Predicate<ScenarioOrchestrationContext<M>> predicate) {
     final var def =
         new ConditionalCallScenarioConsumerDefinition<S, M>(self(), getIntegrationScenario());
     nodes.add(def);

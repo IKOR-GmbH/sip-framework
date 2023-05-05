@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
-import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioContextPredicate;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioStepRequestExtractor;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
@@ -12,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +50,7 @@ public class ScenarioOrchestrationHandlers {
   }
 
   public static <M> ContextPredicateHandler<M> handleContextPredicate(
-      final ScenarioContextPredicate<M> predicate) {
+      final Predicate<ScenarioOrchestrationContext<M>> predicate) {
     return new ContextPredicateHandler<>(predicate);
   }
 
@@ -136,7 +136,7 @@ public class ScenarioOrchestrationHandlers {
 
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
   static class ContextPredicateHandler<M> {
-    private final ScenarioContextPredicate<M> predicate;
+    private final Predicate<ScenarioOrchestrationContext<M>> predicate;
 
     @Handler
     public boolean testPredicate(final Exchange exchange) {
