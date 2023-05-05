@@ -13,10 +13,10 @@ public final class ConditionalCallScenarioConsumerDefinition<R, M>
     implements CallableWithinProviderDefinition {
 
   @Getter(AccessLevel.PACKAGE)
-  private final List<BranchStatements<M>> branchStatements = new ArrayList<>();
+  private final List<BranchStatements<M>> conditionalStatements = new ArrayList<>();
 
   @Getter(AccessLevel.PACKAGE)
-  private final List<CallableWithinProviderDefinition> otherwiseStatements = new ArrayList<>();
+  private final List<CallableWithinProviderDefinition> unconditionalStatements = new ArrayList<>();
 
   ConditionalCallScenarioConsumerDefinition(
       final R dslReturnDefinition, final IntegrationScenarioDefinition integrationScenario) {
@@ -24,26 +24,27 @@ public final class ConditionalCallScenarioConsumerDefinition<R, M>
   }
 
   /**
-   * @see Branch#otherwiseIfCondition(ScenarioContextPredicate)
+   * @see Branch#elseIfCase(ScenarioContextPredicate)
    */
-  Branch<ConditionalCallScenarioConsumerDefinition<R, M>> otherwiseIfCondition(
+  Branch<ConditionalCallScenarioConsumerDefinition<R, M>> elseIfCase(
       final ScenarioContextPredicate<M> predicate) {
     final var branch = new BranchStatements<>(predicate, new ArrayList<>());
-    branchStatements.add(branch);
+    conditionalStatements.add(branch);
     return new Branch<>(branch.statements, self(), getIntegrationScenario());
   }
 
   /**
-   * @see Branch#otherwise()
+   * @see Branch#elseCase()
    */
-  Branch<R> otherwise() {
-    return new Branch<>(otherwiseStatements, getDslReturnDefinition(), getIntegrationScenario());
+  Branch<R> elseCase() {
+    return new Branch<>(
+        unconditionalStatements, getDslReturnDefinition(), getIntegrationScenario());
   }
 
   /**
-   * @see Branch#endIfCondition()
+   * @see Branch#endCases()
    */
-  R endIfCondition() {
+  R endCases() {
     return getDslReturnDefinition();
   }
 
@@ -57,7 +58,7 @@ public final class ConditionalCallScenarioConsumerDefinition<R, M>
    *   <li>Allows to add consumer-calls to this conditional branch using the statements defined in
    *       {@link ScenarioConsumerCalls}
    *   <li>Can spawn alternative branches for the condition via {@link
-   *       #otherwiseIfCondition(ScenarioContextPredicate)} and {@link #otherwise()}
+   *       #elseIfCase(ScenarioContextPredicate)} and {@link #elseCase()}
    * </ul>
    */
   public final class Branch<I> extends ScenarioDslDefinitionBase<Branch<I>, I, M>
@@ -82,9 +83,9 @@ public final class ConditionalCallScenarioConsumerDefinition<R, M>
      * @param predicate Predicate to test for execution of the branch
      * @return The conditional branch
      */
-    public Branch<ConditionalCallScenarioConsumerDefinition<R, M>> otherwiseIfCondition(
+    public Branch<ConditionalCallScenarioConsumerDefinition<R, M>> elseIfCase(
         final ScenarioContextPredicate<M> predicate) {
-      return ConditionalCallScenarioConsumerDefinition.this.otherwiseIfCondition(predicate);
+      return ConditionalCallScenarioConsumerDefinition.this.elseIfCase(predicate);
     }
 
     /**
@@ -92,13 +93,12 @@ public final class ConditionalCallScenarioConsumerDefinition<R, M>
      * matched.
      *
      * <p>Needs to be the last statement of the condition - all conditional branches should be
-     * attached previously to using this method via {@link
-     * #otherwiseIfCondition(ScenarioContextPredicate)}.
+     * attached previously to using this method via {@link #elseIfCase(ScenarioContextPredicate)}.
      *
      * @return The unconditional branch
      */
-    public Branch<R> otherwise() {
-      return ConditionalCallScenarioConsumerDefinition.this.otherwise();
+    public Branch<R> elseCase() {
+      return ConditionalCallScenarioConsumerDefinition.this.elseCase();
     }
 
     /**
@@ -106,8 +106,8 @@ public final class ConditionalCallScenarioConsumerDefinition<R, M>
      *
      * @return Previous scope of the orchestration definition
      */
-    public R endIfCondition() {
-      return ConditionalCallScenarioConsumerDefinition.this.endIfCondition();
+    public R endCases() {
+      return ConditionalCallScenarioConsumerDefinition.this.endCases();
     }
   }
 }

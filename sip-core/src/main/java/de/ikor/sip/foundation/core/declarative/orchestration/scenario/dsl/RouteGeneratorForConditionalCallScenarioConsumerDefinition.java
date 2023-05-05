@@ -28,16 +28,16 @@ final class RouteGeneratorForConditionalCallScenarioConsumerDefinition<M>
   }
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
-    if (conditionalDefinition.getBranchStatements().isEmpty()) {
+    if (conditionalDefinition.getConditionalStatements().isEmpty()) {
       SIPFrameworkInitializationException.init(
           "Empty conditional statement attached in orchestration for integration-scenario %s",
           getIntegrationScenarioId());
     }
 
     var optChoice = Optional.<ChoiceDefinition>empty();
-    for (final var branch : conditionalDefinition.getBranchStatements()) {
+    for (final var branch : conditionalDefinition.getConditionalStatements()) {
       if (branch.statements().isEmpty()) {
-        var branchIndex = conditionalDefinition.getBranchStatements().indexOf(branch) + 1;
+        var branchIndex = conditionalDefinition.getConditionalStatements().indexOf(branch) + 1;
         log.warn(
             "Orchestration for integration-scenario {} contains a conditional-statement that does not specify any actions in branch #{}",
             getIntegrationScenarioId(),
@@ -54,18 +54,18 @@ final class RouteGeneratorForConditionalCallScenarioConsumerDefinition<M>
       choiceDef.endChoice();
     }
 
-    if (!conditionalDefinition.getOtherwiseStatements().isEmpty()) {
+    if (!conditionalDefinition.getUnconditionalStatements().isEmpty()) {
       if (optChoice.isEmpty()) {
         // if there is no ChoiceDefinition at this point, there was no filled condition at all - in
         // this case we can just attach the statements to the RouteBuilder directly
         conditionalDefinition
-            .getOtherwiseStatements()
+            .getUnconditionalStatements()
             .forEach(statement -> buildRouteForStatement(routeDefinition, statement));
       } else {
         final var choiceDef = optChoice.orElseThrow();
         choiceDef.otherwise();
         conditionalDefinition
-            .getOtherwiseStatements()
+            .getUnconditionalStatements()
             .forEach(statement -> buildRouteForStatement(choiceDef, statement));
         choiceDef.endChoice();
       }

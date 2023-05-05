@@ -37,22 +37,21 @@ public abstract sealed class ForScenarioProvidersBaseDefinition<
    * attach additional (conditional) branches similar to <code>else if</code> and <code>else</code>.
    *
    * <p>To leave the conditional statement and return to the current scope, use {@link
-   * ConditionalCallScenarioConsumerDefinition.Branch#endIfCondition()}.
+   * ConditionalCallScenarioConsumerDefinition.Branch#endCases()}.
    *
    * @see ConditionalCallScenarioConsumerDefinition.Branch
-   * @see
-   *     ConditionalCallScenarioConsumerDefinition.Branch#otherwiseIfCondition(ScenarioContextPredicate)
-   * @see ConditionalCallScenarioConsumerDefinition.Branch#otherwise()
+   * @see ConditionalCallScenarioConsumerDefinition.Branch#elseIfCase(ScenarioContextPredicate)
+   * @see ConditionalCallScenarioConsumerDefinition.Branch#elseCase()
    * @param predicate Predicate to test for execution of branch statmeents
    * @return The conditional branch
    */
   public ConditionalCallScenarioConsumerDefinition<S, M>.Branch<
           ConditionalCallScenarioConsumerDefinition<S, M>>
-      ifCondition(final ScenarioContextPredicate<M> predicate) {
+      ifCase(final ScenarioContextPredicate<M> predicate) {
     final var def =
         new ConditionalCallScenarioConsumerDefinition<S, M>(self(), getIntegrationScenario());
     nodes.add(def);
-    return def.otherwiseIfCondition(predicate);
+    return def.elseIfCase(predicate);
   }
 
   /**
