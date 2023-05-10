@@ -35,7 +35,7 @@
           <a href=".." class="icon icon-home"> SIP Framework Documentation
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -154,7 +154,7 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
       <li>SIP Declarative Adapter</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/version3.md" class="icon icon-github"> Edit on GitHub</a>
@@ -246,8 +246,8 @@ They need to extend <em>GenericInboundConnectorBase</em> and override necessary 
 but also to be annotated with @InboundConnector, with the following fields:</p>
 <ul>
 <li><em>connectorId</em> (optional) - unique identifier of a connector (automatically generated if missing)</li>
-<li><em>belongsToGroup</em> - id of the connector group it belongs to</li>
-<li><em>toScenario</em> - id of the scenario to which it provides data</li>
+<li><em>connectorGroup</em> - id of the connector group it belongs to</li>
+<li><em>integrationScenario</em> - id of the scenario to which it provides data</li>
 <li><em>requestModel</em> - model which is expected be received on the input endpoint</li>
 <li><em>responseModel</em> (optional) - model which is expected be returned to the caller</li>
 <li><em>domains</em> (optional) - list of domains this connector is a part of </li>
@@ -267,8 +267,8 @@ while <em>setResponseRouteTransformer(Consumer<RouteDefinition> responseRouteTra
 This is illustrated in the example below.</p>
 <pre class="highlight"><code class="language-java">@InboundConnector(
       connectorId = "appendStaticMessageProvider",
-      belongsToGroup = DemoConnectorGroup.ID,
-      toScenario = DemoScenario.ID,
+      connectorGroup = DemoConnectorGroup.ID,
+      integrationScenario = DemoScenario.ID,
       requestModel = InboundConnectorRequest.class,
       responseModel = InboundConnectorResponse.class)
   public class DemoConnector extends GenericInboundConnectorBase {
@@ -301,8 +301,8 @@ The difference is that they need to extend <em>RestConnectorBase</em>, but the a
 <p>Unlike generic inbound connectors it is required to override <em>void configureRest(RestDefinition definition)</em> method 
 and append the rest DSL to RestDefinition to define the input endpoint.</p>
 <pre class="highlight"><code class="language-java"> @InboundConnector(
-      belongsToGroup = DemoConnectorGroup.ID,
-      toScenario = RestDSLScenario.ID,
+      connectorGroup = DemoConnectorGroup.ID,
+      integrationScenario = RestDSLScenario.ID,
       requestModel = String.class)
   public class RestConnectorTestBase extends RestConnectorBase {
 
@@ -328,8 +328,8 @@ They need to extend <em>GenericOutboundConnectorBase</em> and override necessary
 but also to be annotated with @OutboundConnector, with the following fields:</p>
 <ul>
 <li><em>connectorId</em> (optional) - unique identifier of a connector (automatically generated if missing)</li>
-<li><em>belongsToGroup</em> - id of the connector group it belongs to</li>
-<li><em>fromScenario</em> - id of the scenario from which it consumes data</li>
+<li><em>connectorGroup</em> - id of the connector group it belongs to</li>
+<li><em>integrationScenario</em> - id of the scenario from which it consumes data</li>
 <li><em>requestModel</em> - model which is expected be received on the input endpoint</li>
 <li><em>responseModel</em> (optional) - model which is expected be returned to the caller</li>
 <li><em>domains</em> (optional) - domains this connector is a part of</li>
@@ -348,8 +348,8 @@ which occurs before external system call,
 while <em>setResponseRouteTransformer(Consumer<RouteDefinition> responseRouteTransformer)</em> handles the response.
 This is illustrated in the example below.</p>
 <pre class="highlight"><code class="language-java">@OutboundConnector(
-      belongsToGroup = OtherDemoGroup.ID,
-      fromScenario = DemoScenario.ID,
+      connectorGroup = OtherDemoGroup.ID,
+      integrationScenario = DemoScenario.ID,
       requestModel = OutboundConnectorRequest.class,
       responseModel = OutboundConnectorResponse.class)
   public class DemoOutboundConnector extends GenericOutboundConnectorBase {
