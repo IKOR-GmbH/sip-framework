@@ -64,19 +64,19 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#actuator-health-check-and-metrics">Actuator health check and metrics</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#working-with-routes-in-runtime">Working with routes in runtime</a>
+    <li class="toctree-l3"><a class="reference internal" href="#adapter-lifecycle-manipulation-in-runtime">Adapter lifecycle manipulation in runtime</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#logging-translation">Logging Translation</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#changing-log-level-programmatically">Changing log level programmatically</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#exchange-tracing">Exchange tracing</a>
+    <li class="toctree-l3"><a class="reference internal" href="#tracing">Tracing</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#sip-details-in-actuator-info-endpoint">SIP Details in actuator info endpoint</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#exception-handling">Exception handling</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#actuator-adapter-definition">Actuator adapter definition</a>
+    <li class="toctree-l3"><a class="reference internal" href="#declarative-structure-in-actuator-adapter-definition-endpoint">Declarative Structure in actuator adapter definition endpoint</a>
     </li>
         </ul>
     </li>
@@ -191,21 +191,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="ikor-sip-framework-core">IKOR SIP Framework Core<a class="headerlink" href="#ikor-sip-framework-core" title="Permanent link">&para;</a></h1>
+                <h1 id="sip-framework-core">SIP Framework Core<a class="headerlink" href="#sip-framework-core" title="Permanent link">&para;</a></h1>
 <div class="toc">
 <ul>
-<li><a href="#ikor-sip-framework-core">IKOR SIP Framework Core</a><ul>
+<li><a href="#sip-framework-core">SIP Framework Core</a><ul>
 <li><a href="#description">Description</a></li>
 <li><a href="#usage">Usage</a></li>
 <li><a href="#features">Features</a><ul>
 <li><a href="#actuator-health-check-and-metrics">Actuator health check and metrics</a></li>
-<li><a href="#working-with-routes-in-runtime">Working with routes in runtime</a></li>
+<li><a href="#adapter-lifecycle-manipulation-in-runtime">Adapter lifecycle manipulation in runtime</a></li>
 <li><a href="#logging-translation">Logging Translation</a></li>
 <li><a href="#changing-log-level-programmatically">Changing log level programmatically</a></li>
-<li><a href="#exchange-tracing">Exchange tracing</a></li>
+<li><a href="#tracing">Tracing</a></li>
 <li><a href="#sip-details-in-actuator-info-endpoint">SIP Details in actuator info endpoint</a></li>
 <li><a href="#exception-handling">Exception handling</a></li>
-<li><a href="#actuator-adapter-definition">Actuator adapter definition</a></li>
+<li><a href="#declarative-structure-in-actuator-adapter-definition-endpoint">Declarative Structure in actuator adapter definition endpoint</a></li>
 </ul>
 </li>
 </ul>
@@ -215,10 +215,11 @@
 <h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
 <p>Core project for base SIP functionalities</p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<p>To enable SIP Core features use @SIPIntegrationAdapter to annotate the Spring Boot entry class.</p>
+<p>To enable SIP Core features use @SIPIntegrationAdapter to annotate the Spring Boot entry class (no need to add @SpringBootApplication, it's included in the @SIPIntegrationAdapter)</p>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
 <h3 id="actuator-health-check-and-metrics">Actuator health check and metrics<a class="headerlink" href="#actuator-health-check-and-metrics" title="Permanent link">&para;</a></h3>
-<p>SIP Core provides out-of-the-box health checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.</p>
+<p>SIP Core out-of-the-box information about health status of the adapter and the status of external systems with which it communicates.
+ Provided checks are for HTTP(S), JMS and FTP (SFTP/FTPS) endpoints.</p>
 <p>The health check functions will be executed periodically on a set interval and will only be available if actuator's
 HealthEndpoint is enabled.</p>
 <p>Actuator can be accessed from {base_url}/actuator</p>
@@ -267,24 +268,24 @@ thrown and application will not be able to start.</p>
 <p><strong>Warning:</strong> Only one health indicator may exist for an exact endpoint URI.</p>
 <p>It is worth noting that the HTTP(S) Health Check lists all existing HTTP(S) endpoints by default, but sets the status to UNKNOWN.
 The reason for this is that for detected HTTP(S) endpoints a GET request is executed which may cause an unintended change of state
-of the system to be invoked. Thus this behavior does not occur, health checks should be added explicitly.
+of the system to be invoked. Thus, for this behavior to not occur, health checks should be added explicitly.
 To add an explicit Health Check for a URL it can be done in the following way.</p>
 <pre class="highlight"><code class="language-java">@Bean
 EndpointHealthConfigurer enableHttpHealthCheckForIKOR() {
   return registry -&gt; registry.register("https://www.ikor.de",
          HttpHealthIndicators::urlHealthIndicator);
 }</code></pre>
-<p>In case the URL https://www.ikor.de/kontakt.html is requested by the adapter, then on the one hand the explicit URL could be passed as
+<p>In case the URL https://ikor.one/kontakt/ is requested by the adapter, then on the one hand the explicit URL could be passed as
 a parameter to <code>register()</code> or wildcards could be used to add a Health Check for this URL and at the same
-time also matches https://www.ikor.de/karriere.html. The passed argument to <code>register()</code> would look like this <code>https://www.ikor.de/**</code>.
+time also matches https://ikor.one/karriere/. The passed argument to <code>register()</code> would look like this <code>https://www.ikor.one/**</code>.
 However, HTTP(S) Health Checks can only be added for URLs that have also been detected in the adapter. In order to find out
 what URLs have been discovered one could inspect the result of <code>{base_url}/actuator/health</code>.</p>
 <p><strong>How to configure endpoint health checks:</strong></p>
 <p>To inspect the health of Camel endpoints in an integration adapter, one needs to:</p>
 <p>Make sure that this project uses sip-integration-starter maven dependency.
 Instead of using @SpringBootApplication, use Java annotation @SIPIntegrationAdapter to annotate the Spring Boot entry class.
-Configure the application actuator's Health endpoint to display details of health, as shown below.
-All prerequisites from above are met if you create an integration adapter using SIP archetype.</p>
+Configure the application actuator's Health endpoint to display details of health, as shown below.</p>
+<p><em>All prerequisites from above are met if you create an integration adapter using SIP archetype.</em></p>
 <p>Spring Boot Actuator:</p>
 <pre class="highlight"><code class="language-yaml">#configuring health endpoint
 management:
@@ -299,8 +300,9 @@ By default, it is named <code>sip.core.metrics.health</code>, but can be changed
   core:
     metrics:
       gauge: "sip.core.metrics.health"</code></pre>
-<h3 id="working-with-routes-in-runtime">Working with routes in runtime<a class="headerlink" href="#working-with-routes-in-runtime" title="Permanent link">&para;</a></h3>
-<p>All routes with basic info can be listed by using the following URI:</p>
+<h3 id="adapter-lifecycle-manipulation-in-runtime">Adapter lifecycle manipulation in runtime<a class="headerlink" href="#adapter-lifecycle-manipulation-in-runtime" title="Permanent link">&para;</a></h3>
+<p>SIP Core provides a possibility to manipulate adapter lifecycle in runtime by controlling registered Camel routes.</p>
+<p>All registered routes with basic info can be listed by using the following URI:</p>
 <pre class="highlight"><code>GET /actuator/adapter-routes</code></pre>
 <p>Getting only routes with sip middle component consumer:</p>
 <pre class="highlight"><code>GET /actuator/adapter-routes/sipmc</code></pre>
@@ -327,7 +329,7 @@ When using suspend or stop operation on route that has middle component as a con
 timeout will be used. Keep in mind that if route is not started for next 30 seconds after sending data to middle
 component, data could be lost.</p>
 <h3 id="logging-translation">Logging Translation<a class="headerlink" href="#logging-translation" title="Permanent link">&para;</a></h3>
-<p>Adds possibility to translate log messages</p>
+<p>Adds possibility to translate log messages. This is achieved by using a custom logging encoder, which is able to translate log messages.</p>
 <p>By default, translation service is not activated, thus in order to use it a logback.xml file should be provided in
 resources. In this file we can specify that the adapter uses a custom logging encoder, which provides translations.</p>
 <pre class="highlight"><code class="language-xml">&lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
@@ -337,7 +339,7 @@ resources. In this file we can specify that the adapter uses a custom logging en
         &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}: %msg%n&lt;/pattern&gt;
     &lt;/encoder&gt;
 &lt;/appender&gt;</code></pre>
-<p>Files for defining translation values, should be created inside translate directory as a bundle of .property files,
+<p>Files for defining translation values should be created inside 'translations' directory as a bundle of .property files,
 under a common name, which should be extended by a suffix in following format _{language}.</p>
 <p>Each file consists of keys, shared in the bundle, followed by its value as a phrase in the language used.</p>
 <p><strong>Warning:</strong>
@@ -377,8 +379,8 @@ Body: {
 open logback.xml in target directory* and edit the log levels on loggers defined there.</p>
 <pre class="highlight"><code class="language-xml">&lt;configuration scan="true" scanPeriod="30 seconds"/&gt;</code></pre>
 <p>This works for all loggers except the ones on Camel routes.</p>
-<h3 id="exchange-tracing">Exchange tracing<a class="headerlink" href="#exchange-tracing" title="Permanent link">&para;</a></h3>
-<p>SIP Core offers usage of Camel's built-in Tracer for tracing and logging information about all processor
+<h3 id="tracing">Tracing<a class="headerlink" href="#tracing" title="Permanent link">&para;</a></h3>
+<p>SIP Core extends Camel's built-in Tracer for tracing and logging information about all processors
 an exchange went through.
 Configuration of the Tracer is enabled by adapting ExchangeFormatter.</p>
 <p>Tracing functionality is set to false by default. In order to enable it, the following configuration should be added to
@@ -403,11 +405,11 @@ the application.yml:</p>
  ```
 
 Exchanges will contain the "traceSet" header, which appears as a list of ordered exchange Ids,
-appended based on EIP used in a route and separated by a coma.
+appended based on EIP used in a route and separated by a coma. This allows to easily track the path of an message.
 
 ### OpenAPI Descriptor
 
-Framework provides an Open API description of all custom or Spring provided endpoints within your adapter.
+Framework provides an Open API description of all custom, Camel's RestDSL or Spring provided endpoints within your adapter.
 Endpoints are created as extension of Spring's actuator.
 
 By using a sip-archetype code generator, you receive an adapter with a default setup for OpenAPI.
@@ -484,18 +486,37 @@ are stored WILL BE CLEARED on rebuild."</p>
 <p>If there is a need for additional exceptions it is highly encouraged that they have 
 one of SIP base exceptions as parent class.
 This provides uniformed data of exception origin for easier handling.</p>
-<h3 id="actuator-adapter-definition">Actuator adapter definition<a class="headerlink" href="#actuator-adapter-definition" title="Permanent link">&para;</a></h3>
-<p>To see the detailed declarative structure of an adapter, containing all scenarios, connectors and connector groups,
-the "/adapterdefinition" endpoint is available through actuator.
-It will present a detailed list of all connector groups, inside which connectors with their properties are found.
-The properties include data models, routes, descriptions, etc.
-Following that, all scenarios will be presented, including their description.</p>
+<h3 id="declarative-structure-in-actuator-adapter-definition-endpoint">Declarative Structure in actuator adapter definition endpoint<a class="headerlink" href="#declarative-structure-in-actuator-adapter-definition-endpoint" title="Permanent link">&para;</a></h3>
+<p>To see the detailed Declarative Structure of an adapter, containing all elements: <code>Integration Scenarios</code>, <code>Connectors</code> and 
+<code>Connector groups</code>, there is a following endpoint exposed through actuator:</p>
+<pre class="highlight"><code># all types
+GET /adapterdefinition
+
+# specific endpoints for each of the 3 types:
+GET /adapterdefinition/scenarios
+GET /adapterdefinition/connectors
+GET /adapterdefinition/connectorgroups</code></pre>
+<p>It will present a list of all Declarative Structure elements with details and relations between them.
+Following details are presented:</p>
+<ul>
+<li>
+<p><code>Connectors</code> - connector request and response data models, Camel routes, connector descriptions, and 
+necessary information for creating 
+<a href="https://ikor-gmbh.github.io/sip-framework/test-kit-declarative/">SIP Test Kit Declarative</a> tests.</p>
+</li>
+<li>
+<p><code>Integration Scenarios</code> - contain common domain request and response models description.</p>
+</li>
+<li>
+<p><code>Connector groups</code> - connectors belonging to that connector group </p>
+</li>
+</ul>
 <p>To enable or disable this feature the following property should be used:</p>
 <pre class="highlight"><code class="language-yaml">sip:
   core:
     actuator:
       adapterdefinition:
-        enabled: true # enabled by default</code></pre>
+        enabled: true       # enabled by default</code></pre>
               
             </div>
           </div><footer>

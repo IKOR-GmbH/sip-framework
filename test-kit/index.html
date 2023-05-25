@@ -167,10 +167,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="ikor-sip-test-kit">IKOR SIP Test Kit<a class="headerlink" href="#ikor-sip-test-kit" title="Permanent link">&para;</a></h1>
+                <h1 id="sip-test-kit">SIP Test Kit<a class="headerlink" href="#sip-test-kit" title="Permanent link">&para;</a></h1>
 <div class="toc">
 <ul>
-<li><a href="#ikor-sip-test-kit">IKOR SIP Test Kit</a></li>
+<li><a href="#sip-test-kit">SIP Test Kit</a></li>
 <li><a href="#description">Description</a></li>
 <li><a href="#features">Features</a><ul>
 <li><a href="#external-endpoint-mocking">External endpoint mocking</a></li>
@@ -179,7 +179,10 @@
 <li><a href="#endpoint-reports">Endpoint reports</a></li>
 </ul>
 </li>
-<li><a href="#how-to-use">How to use</a></li>
+<li><a href="#how-to-use">How to use</a><ul>
+<li><a href="#important-development-note">Important development note!</a></li>
+</ul>
+</li>
 <li><a href="#defining-a-test-case">Defining a Test Case</a><ul>
 <li><a href="#when-execute">WHEN-execute</a></li>
 <li><a href="#with-mocks">WITH-mocks</a></li>
@@ -218,7 +221,7 @@ It will provide default behavior (forwarding the request without processing it) 
 Adding specific behavior for each endpoint can be done in test case definition in 'with-mocks' section.</p>
 <h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
 <p>Validation is one of key properties to any testing system. SIP Test Kit supports validation for batch testing.
-Validation is configured trough than-expect section of test case definition, by setting expected properties of endpoint
+Validation is configured trough <code>then-expect</code> section of test case definition, by setting expected properties of endpoint
 we want to validate. It could be the entering endpoint of the adapter, for example we want to validate HTTP response of the
 adapter, or it could be any external system (mocked) endpoint, where we can validate the input that mocked endpoint has received;
 this way we could validate, for instance, if a properly transformed file reached the outgoing FTP endpoint.<br />
@@ -230,13 +233,13 @@ on the mock will not apply and behavior produced by them is not possible to veri
 <h2 id="reports">Reports<a class="headerlink" href="#reports" title="Permanent link">&para;</a></h2>
 <p>Each test case will be executed as its own unit test, so for each a test report will be generated
 and printed in console.
-First part of report is for the response. It will display the validated body and headers, as well as expected ones.
-The following endpoints part is for mocked endpoint reports, with similar data as in the first part.</p>
+First section of report shows the response. It will display the validated body and headers, as well as expected ones.
+The following <code>endpoints</code> section is for mocked endpoint reports, with similar data as in the first section.</p>
 <h2 id="endpoint-reports">Endpoint reports<a class="headerlink" href="#endpoint-reports" title="Permanent link">&para;</a></h2>
 <p>Reports for all mocked endpoints will be provided, both with default (set by Test Kit) and user defined behavior.
-For each test report in the 'Endpoints' section there will be an overview of request that each received.</p>
+For each test report in the <code>endpoints</code> section there will be an overview of request that each received.</p>
 <h1 id="how-to-use">How to use<a class="headerlink" href="#how-to-use" title="Permanent link">&para;</a></h1>
-<p>Test kit is enabled by default when the adapter is generated from archetype.</p>
+<p>Test kit is enabled by default when the adapter is generated from SIP archetype.</p>
 <p>A test class needs to be created inside test package of the adapter, which extends SIPBatchTest. 
 Running this class would execute the test, but also it will be executed in the testing step during build time.</p>
 <pre class="highlight"><code class="language-java">public class TFWTest extends SIPBatchTest { }</code></pre>
@@ -249,91 +252,98 @@ Running this class would execute the test, but also it will be executed in the t
 <pre class="highlight"><code class="language-yaml">test-case-definitions:
 - TITLE: "Title of individual test"
   WHEN-execute:
-    endpoint: "id of route under test"
-    connector: "id of connector under test"
+    endpointId: "id of starting route under test"
     with:
-      body: "Content that will be send as request body to the adapter inbound connector (plain text, JSON String)"
+      body: "Content that will be send as request body to the adapter input endpoint (plain text, JSON String)"
       headers:
         header-key: "Value of the header"
         another-header-key: "Another value"
   WITH-mocks:
-  - connectorId: "id of connector that should be mocked"
+  - endpointId: "id of Camel processor having out endpoint, the one that should be mocked"
     returning:
-      body: "Response message that real endpoint is expected to return"
+      body: "Response message that real out endpoint is expected to return"
       headers:
         header-key: "Value of the header"
   THEN-expect:
-  - connectorId: "id of connector under test" # matches connectorId under test defined in when phase
+  - endpointId: "id of starting route under test"   # matches endpointId under test defined in WHEN-execute phase
     having:
       body: "Regex expression (java) which will be compered to the reponse of the test"
       headers:
         header-key: "Regex expression (java) which will be compered to the value of this header key"
-  - connectorId: "id of connector that is mocked" # matches connectorId with defined or default mocked behavior
+  - endpointId: "endpointId of mocked endpoint"     # matches endpointId with defined or default mocked behavior
     having:
-      body: "Regex expression (java) which will be compered to the request which arrived on the connector"
+      body: "Regex expression (java) which will be compered to the request which arrived on the adapter"
       headers:
-        header-key: "Regex expression (java) which will be compered to the header key value from request which arrived on the connector"</code></pre></p>
-<p>Either <code>endpoint</code> or <code>connector</code> field can be used in <code>WHEN-execute</code> part of the definition. When using <code>endpoint</code>, 
-test payload is sent from the beginning of the integration and it goes through the adapter's entry point which is Camel 
-consumer component. Value of <code>routeId</code> should be specified.</p>
-<p>When using <code>connector</code> field, value of <code>connectorId</code> should be specified and testing payload skips the adapter's entry 
-point (Camel consumer component). It goes directly to the inbound connector's request orchestration part in the integration.</p>
-<p>Location of the TestCaseDefinition file can be provided to the Test Kit by setting the
-following property inside adapter configuration:
-<code>sip.testkit.test-cases-path: myTests.yml</code>
-The default value is <em>test-case-definition.yml</em>, so you can place your test case description using that filename, 
-and avoid additional setting.</p>
-<p>Each test case will execute as a separate unit test with its own report displayed.</p>
+        header-key: "Regex expression (java) which will be compered to the header key value from request which arrived on the adapter"</code></pre></p>
+<p>The default file for placing your test case definitions is <code>test-case-definition.yml</code> which can be found under
+<code>test/resources</code> path within the SIP archetype generated adapter. When using default file, you can avoid any additional 
+setting.</p>
+<p>If filename or location needs to be customized, location of the TestCaseDefinition file can be provided to the Test Kit 
+by setting the following property inside adapter configuration:
+<code>sip.testkit.test-cases-path: myTests.yml</code></p>
+<p>Each test case definition will execute as a separate unit test with its own name and report displayed.</p>
 <p><img alt="alt-text" src="../img/ConsoleReport.png" /></p>
 <p>To disable SIP Test Kit, use the following configuration:
 <pre class="highlight"><code class="language-yaml">sip:
   testkit:
     enabled: false</code></pre></p>
-<p>Development note:
-<em>To be able to fully utilize the Test Kit, all the endpoints used in the test case need to have a defined ID which will 
-be referenced in the _endpoint</em> parameter of the test case._</p>
+<h3 id="important-development-note">Important development note!<a class="headerlink" href="#important-development-note" title="Permanent link">&para;</a></h3>
+<p>To be able to fully utilize the Test Kit and write test case definitions properly, all the endpoints written with 
+Camel code need to have a defined ID which will be referenced in the endpointId parameter of the test case.</p>
+<p><strong>How to initialize <code>endpointId</code> for input endpoints in Camel code?</strong></p>
+<pre class="highlight"><code>from("rest:POST:/say/hello")      // Adapters input endpoint
+    .routeId("say_hello_id")      // Providing endpointId for endpoint
+                                  // Value 'say_hello_id' is endpointId which is used in test case definition</code></pre>
+<p><strong>How to initialize <code>endpointId</code> for output endpoints in  Camel code?</strong></p>
+<p>Providing <code>endpointId</code> for output endpoints is done through simple Camel mechanism, just by providing id for the Camel 
+processor which is calling the external endpoint.</p>
+<pre class="highlight"><code>from("...")
+    .
+    .
+    .
+    .to(http://otherSystem/hi)   // Adapter calling output endpoint
+    .id("other_system_hi_id")    // Providing endpointId for endpoint
+    .                            // Value 'other_system_hi_id' is endpointId which is used in test case definition
+    .
+    .</code></pre>
 <h1 id="defining-a-test-case">Defining a Test Case<a class="headerlink" href="#defining-a-test-case" title="Permanent link">&para;</a></h1>
-<p>The TestCaseDefinition file starts with <code>test-case-definitions</code> property, which consists of a list of test cases</p>
+<p>The TestCaseDefinition file starts with <code>test-case-definitions</code> property, which consists of a list of test cases.</p>
 <h2 id="when-execute">WHEN-execute<a class="headerlink" href="#when-execute" title="Permanent link">&para;</a></h2>
 <p>In this section a payload that should be sent to the adapter is defined.</p>
-<p><code>endpoint</code> refers to routeId of first route in adapter's Inbound Connector to which we wish to send a test request.
-In "with" part we define content of the request we wish to send, meaning body and headers are added here.
-The body can also be defined as plain text or JSON string, which represents a POJO.</p>
-<p><code>connector</code> refers to inbound connector id. It allows to skip the Camel component which is adapter's entry point.
-Instead, it sends the payload directly to the request orchestration part within the Inbound Connector.</p>
-<p>Either <code>endpoint</code> or <code>connector</code> should be use. Using both in the same test is not possible.</p>
+<p><code>endpointId</code> refers to <code>routeId</code> of the starting route in adapter integration to which Test Kit sends a test request.
+In <code>with</code> part you define content of the request you wish to send, meaning body and headers are added here.
+The body can also be defined as plain text or JSON string, which matches appropriate POJO model.</p>
 <pre class="highlight"><code class="language-yaml">    WHEN-execute:
-      endpoint: "rest-endpoint"
-      connector: "id of the inbound connector"
+      endpointId: "rest-endpoint"
       with:
         body: "body of request"</code></pre>
 <h2 id="with-mocks">WITH-mocks<a class="headerlink" href="#with-mocks" title="Permanent link">&para;</a></h2>
-<p>This section contains a list of connectors for which we wish to have specific mocked response.
-"endpoint" is the endpoint in connector of the mocked outbound connector.
-"returning" should have body and headers, that we expect as the response from real external call.</p>
+<p>This section contains a list of endpoints for which we wish to have specific mocked response.
+<code>endpointId</code> matches the endpoint which will be mocked.
+<code>returning</code> should have body and headers, that we expect as the response from real call of external endpoint.</p>
 <pre class="highlight"><code class="language-yaml">    WITH-mocks:
-      - endpoint: "external-service"
+      - endpointId: "external-service"
         returning:
           body: "response message from service"</code></pre>
 <h2 id="then-expect">THEN-expect<a class="headerlink" href="#then-expect" title="Permanent link">&para;</a></h2>
-<p>Validation of adapter response is defined by setting the "endpoint" parameter to the endpoint's ID of endpoint under
-test and defining the expected body or headers.</p>
-<p>Validation of requests which outgoing endpoints received from the adapter is defined by setting the "connectorId" 
-parameter to the connector's ID of mocked endpoint and defining the expected body or headers.</p>
+<p>Validation of adapter response is defined by setting the <code>endpointId</code> of endpoint under test and defining the expected
+body or headers.</p>
+<p>Validation of requests which outgoing endpoints received from the adapter is defined by setting the <code>endpointId</code> 
+parameter to the endpoint's ID of mocked endpoint and defining the expected body or headers.</p>
 <p>Body and header validation is possible by either defining regex (Java) expression or matching exact String content.</p>
 <pre class="highlight"><code class="language-yaml">    THEN-expect:
-      - endpoint: "rest-endpoint" # matches endpoint under test
+      - endpointId: "rest-endpoint"                 # matches endpoint under test
         having:
           body: "response .* from service"
           headers:
             CamelHttpResponseCode: "200"
-      - endpoint: "external-service" # matches endpoint with mocked behavior
+      - endpointId: "external-service"              # matches endpoint with mocked behavior
         having:
           body: "body of request"
           headers:
             Authorization: "Basic .*"</code></pre>
 <h1 id="supported-camel-components">Supported Camel components<a class="headerlink" href="#supported-camel-components" title="Permanent link">&para;</a></h1>
-<p>Following Camel components support testing with Test Kit:</p>
+<p>Following Camel components are supported for testing with Test Kit:</p>
 <ul>
 <li>REST</li>
 <li>SOAP (by using CXF)</li>
@@ -343,7 +353,7 @@ parameter to the connector's ID of mocked endpoint and defining the expected bod
 <li>Mail (imap, imaps, pop3, pop3s, smtp, smtps)</li>
 <li>Kafka</li>
 </ul>
-<p>Please check the special conditions for these components in following chapters. since there are some special conditions
+<p>Please check the special notes for these components in following chapters, since there are some special conditions
 which must be met.</p>
 <h3 id="rest">REST<a class="headerlink" href="#rest" title="Permanent link">&para;</a></h3>
 <p>Running Test Kit tests with REST component is straightforward. Keep in mind that REST headers could be provided in 
@@ -426,7 +436,7 @@ supported.</p>
                 .routeId("http-route")
                 .setHeader("Authorization", constant("Basic am9obkBleGFtcGxlLmNvbTphYmMxMjM="))
                 .transform(body().append(" now looks better"))
-                // Mocked endpoint
+                // Mocked output endpoint
                 .to("http:localhost:8081/hello?bridgeEndpoint=true")
                 .id("external-service");
     }
@@ -434,20 +444,20 @@ supported.</p>
 <p><strong>Sample test case definition</strong>
 <pre class="highlight"><code class="language-yaml">  - TITLE: "Test case 1"
     WHEN-execute:
-      endpoint: "rest-endpoint"
+      endpointId: "rest-endpoint"
       with:
         body: "body of request"
     WITH-mocks:
-      - endpoint: "external-service"
+      - endpointId: "external-service"
         returning:
           body: "response message from service"
     THEN-expect:
-      - endpoint: "rest-endpoint" # matches endpoint under test
+      - endpointId: "rest-endpoint"                           # matches the endpoint under test
         having:
           body: "response .* from service"
           headers:
             CamelHttpResponseCode: "200"
-      - endpoint: "external-service"
+      - endpointId: "external-service"                        # matches the already mocked endpoint within test
         having:
           body: "body of request now looks better"
           headers:

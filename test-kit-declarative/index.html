@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="IKOR" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Middle Component - SIP Framework Documentation</title>
+    <title>SIP Test Kit (with Declarative Structure) - SIP Framework Documentation</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Middle Component";
-        var mkdocs_page_input_path = "middle-component.md";
+        var mkdocs_page_name = "SIP Test Kit (with Declarative Structure)";
+        var mkdocs_page_input_path = "test-kit-declarative.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -57,20 +57,8 @@
                 <li class="toctree-l1"><a class="reference internal" href="../core/">Core</a>
                 </li>
               </ul>
-              <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="./">Middle Component</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#description">Description</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#how-to-use">How to use</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#middle-component-with-declarative-structure">Middle Component with Declarative Structure</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#unit-testing-with-sipmc">Unit testing with sipmc</a>
-    </li>
-    </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../middle-component/">Middle Component</a>
                 </li>
               </ul>
               <ul>
@@ -167,9 +155,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
-      <li>Middle Component</li>
+      <li>SIP Test Kit (with Declarative Structure)</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/middle-component.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/test-kit-declarative.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -177,91 +165,105 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="sip-middle-component">SIP Middle Component<a class="headerlink" href="#sip-middle-component" title="Permanent link">&para;</a></h1>
+                <h1 id="sip-test-kit-with-declarative-structure">SIP Test Kit (with Declarative Structure)<a class="headerlink" href="#sip-test-kit-with-declarative-structure" title="Permanent link">&para;</a></h1>
 <div class="toc">
 <ul>
-<li><a href="#sip-middle-component">SIP Middle Component</a><ul>
+<li><a href="#sip-test-kit-with-declarative-structure">SIP Test Kit (with Declarative Structure)</a></li>
 <li><a href="#description">Description</a></li>
-<li><a href="#how-to-use">How to use</a></li>
-<li><a href="#middle-component-with-declarative-structure">Middle Component with Declarative Structure</a></li>
-<li><a href="#examples">Examples</a></li>
-<li><a href="#unit-testing-with-sipmc">Unit testing with sipmc</a></li>
+<li><a href="#features">Features</a><ul>
+<li><a href="#new-test-case-definition-parameter-connectorid">New test case definition parameter (connectorId)</a></li>
+<li><a href="#automatic-conversion-to-pojo-data-model-in-connectors">Automatic conversion to POJO data model in Connectors</a></li>
+<li><a href="#skip-camel-input-component">Skip Camel input component</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
-<p>SIP middle component relates to the key SIP concept - splitting integration logic into submodules (connectors).
-Combining connectors into one data flow is quite easy with Camel and can be done in many ways. However, if we
-do it with one of Camel's existing component, we couldn't be sure if it represents connection between connectors or just
-some intermediate routing within the single connector. If we (properly) use sipmc component,
-it provides a clear functional and visual distinction between a connector's ending or beginning.
-With it, adapter routes become more standardized and manageable.
-Middle component is also a point of higher control over Apache Camel flow, as it provides a placeholder for future customizations
-which will make it easier to bridge connectors in different ways, e.g. by using JMS broker implicitly if configured.</p>
-<p>Middle component hides connecting technology and makes connection of two sub-systems abstract and simple. Current version
-supports only in-memory connection channel implemented on top of Camel's SEDA component. It provides 1 to 1 and
-publish-subscribe patterns and can support many channels in single adapter. Middle component can automatically determine
-the number of consumers for a specific channel and autoconfigure itself accordingly, as a 1 to 1 or publish-subscribe connector.
-In any case it will be autoconfigured with waitForTaskToComplete=always, meaning that it will wait for all asynchronous <br />
-processors to finish before it continues route execution. </p>
-<h2 id="how-to-use">How to use<a class="headerlink" href="#how-to-use" title="Permanent link">&para;</a></h2>
-<p>Middle component is used like any other Camel component, but has a simple URI pattern:</p>
-<pre class="highlight"><code>sipmc:channelName</code></pre>
-<p>The channel name is an arbitrary String value, but it should relate to one integration topic, e.q. partner.
-Multiple sipmc routes may exist with different channel names.</p>
-<h2 id="middle-component-with-declarative-structure">Middle Component with Declarative Structure<a class="headerlink" href="#middle-component-with-declarative-structure" title="Permanent link">&para;</a></h2>
-<p>When building adapter by using Declarative Structure sipmc is embedded and explicit usage is not necessary. 
-Sipmc is placed in Integration Scenario, and acts as a Camel route connection between Inbound and Outbound Connectors.</p>
-<p>Since the sipmc is already embedded, </p>
-<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
-<p><strong>1 to 1:</strong>
-In this scenario response provided by "mock:output" should be propagated back to the caller - "mock:input"</p>
-<pre class="highlight"><code class="language-java"> from("mock:input")
-    .to("sipmc:foo");
-
- from("sipmc:foo")
-    .to("mock:output");</code></pre>
-<p><strong>Publish subscribe:</strong>
-With publish-subscribe pattern the caller (mock-input) does not know how many consumers are registered. Middle component
-makes sure the message is delivered to all of them. Notice that the URIs do not differ too much from the ones in
-previous case.</p>
-<pre class="highlight"><code class="language-java"> from("mock:input")
-    .to("sipmc:foo");
-
-from("sipmc:foo")
-    .to("mock:output1");
-from("sipmc:foo")
-    .to("mock:output2");</code></pre>
-<h2 id="unit-testing-with-sipmc">Unit testing with sipmc<a class="headerlink" href="#unit-testing-with-sipmc" title="Permanent link">&para;</a></h2>
-<p>Middle Component, as any custom Camel component, should be mocked within unit tests which test and cover Camel routes.
-Otherwise, running the test will run the route within Camel context without Middle component and test will fail running.</p>
-<p>When doing Camel testing, if you use Camel's <code>CamelTestSupport</code> class, Middle component can be mocked by using 
-AdwiceWith inside your test. Following code and methods within Advice can be used for mocking sipmc: </p>
-<pre class="highlight"><code class="language-java">@Test
-void test() throws Exception {
-    // arrange
-    AdviceWith.adviceWith(context.getRouteDefinitions().get(0), context, new AdviceWithRouteBuilder() {
-        @Override
-        public void configure() throws Exception {
-
-            // replace sipmc consumer with mocking seda
-            replaceFromWith("seda:mockConsumer");
-
-            // replace sipmc producer with mocking seda
-            weaveByToUri("sipmc:someChannel").replace().to("seda:mockProducer");
-        }
-    });
-
-    context().start();
+<h1 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h1>
+<p>Using Test Kit with <strong>Declarative Structure</strong> is explained here and the content of this file should be treated as 
+extension of base documentation
+<a href="https://ikor-gmbh.github.io/sip-framework/test-kit/">SIP Test Kit</a>.</p>
+<p>Understanding material from the suggested link is a <strong>prerequisite</strong>!</p>
+<h1 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h1>
+<h3 id="new-test-case-definition-parameter-connectorid">New test case definition parameter (connectorId)<a class="headerlink" href="#new-test-case-definition-parameter-connectorid" title="Permanent link">&para;</a></h3>
+<p>Main addition is expansion of test case definition. In version 2 is possible to write test definitions only by using
+<code>endpointId</code>. Version 3 introduced <strong>Declarative Structure</strong> and <strong>Connectors</strong> which are wrapping input and output endpoints.
+In that manner, it is natural for Test Kit to enable creating test definitions with <code>connectorId</code> as well. Keep in
+mind that using <code>connectorId</code> is possible only if <strong>Declarative Structure</strong> is enabled.</p>
+<p>Both approaches can be used and combined within one test case definition, but for different endpoints!</p>
+<p>That means you have to provide either <code>endpointId</code> or <code>connectorId</code> for one element within any of the test definition 
+sections (<code>when-execute</code>, <code>with-mocks</code>, <code>then-expect</code>).</p>
+<p>For example, this is possible:</p>
+<pre class="highlight"><code class="language-yaml">{
+   "title": "Correct test case definition example",
+   "when-execute": {
+      "connectorId": "rest_connector",                  # input connector which targets its input endpoint
+      "with": {
+        "body": "Hello World"
+      }
+   },
+   "with-mocks": [
+      {
+         "endpointId": "custom_processor_endpoint_id",
+         "returning": {
+            "body": "Good afternoon World"
+         }
+      }
+   ],
+   then-expect:
+     - connectorId: "rest_connector"
+       having:
+         body: "Good afternoon World"
 }</code></pre>
+<p>But, using both parameters <code>endpointId</code> and <code>connectorId</code> for same element is not possible:</p>
+<pre class="highlight"><code class="language-yaml">{
+   "title": "Correct test case definition example",
+   "when-execute": {
+      "connectorId": "rest_connector",                          # wrong, choose only one
+      "endpointId": "endpoint_id",                              # wrong, choose only one
+      "with": {
+        "body": "Hello World"
+      }
+   },
+   "with-mocks": [
+      {
+        "connectorId": "jms_connector",                         # wrong, choose only one
+         "endpointId": "custom_processor_endpoint_id",          # wrong, choose only one
+         "returning": {
+            "body": "Good afternoon World"
+         }
+      }
+   ],
+   then-expect:
+     - endpointId: "rest_connector_endpoint_id"
+       having:
+         body: "Good afternoon World"
+}</code></pre>
+<p><strong>Important note:</strong></p>
+<p>If some external endpoints are written directly in Camel code and without using appropriate Connector, these endpoints
+can be approached from test case definition only directly by using <code>endpointId</code>.</p>
+<h3 id="automatic-conversion-to-pojo-data-model-in-connectors">Automatic conversion to POJO data model in Connectors<a class="headerlink" href="#automatic-conversion-to-pojo-data-model-in-connectors" title="Permanent link">&para;</a></h3>
+<p>There is automatic conversion of given String JSON payload to the POJO object of <strong>Connector's</strong> data model. That is 
+possible only for test case definition parts which are specified by using <code>connectorId</code>.
+It is expected that correct format of JSON and correct payload are provided.</p>
+<p>When using automatic conversions to POJO, different models are expected for different test definition sections:</p>
+<ol>
+<li>In <code>when-execute</code> section your JSON payload should match with InboundConnector <code>requestModel</code>.</li>
+<li>In <code>with-mocks</code> section your JSON payload should match with OutboundConnector <code>responseModel</code>.</li>
+<li>In <code>then-expect</code> section your JSON payload should match with InboundConnector <code>responseModel</code> when validating final
+response or with OutboundConnector <code>requestModel</code> when validating payload on mocks.</li>
+</ol>
+<h3 id="skip-camel-input-component">Skip Camel input component<a class="headerlink" href="#skip-camel-input-component" title="Permanent link">&para;</a></h3>
+<p>There is one more specific difference when using <code>endpointId</code> or <code>connectorId</code>, but only related to the
+<code>when-execute</code> section.</p>
+<p>When <code>endpointId</code> is used, testing payload is sent to the Camel consumer component (adapter's entry point) in 
+InboundConnector. For this option, in most cases raw data payload should be sent, or data format which matches your 
+Camel component transformation.</p>
+<p>When <code>connectorId</code> is used, Camel consumer component (adapter's entry point) is skipped and testing payload is sent 
+directly to the first processor of starting route in InboundConnector. For this option, in most cases matching 
+JSON String payload should be sent.</p>
               
             </div>
           </div><footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../core/" class="btn btn-neutral float-left" title="Core"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../integration-starter/" class="btn btn-neutral float-right" title="Integration Starter">Next <span class="icon icon-circle-arrow-right"></span></a>
-    </div>
 
   <hr/>
 
@@ -288,10 +290,6 @@ void test() throws Exception {
         </span>
     
     
-      <span><a href="../core/" style="color: #fcfcfc">&laquo; Previous</a></span>
-    
-    
-      <span><a href="../integration-starter/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

@@ -171,10 +171,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="ikor-sip-archetype">IKOR SIP Archetype<a class="headerlink" href="#ikor-sip-archetype" title="Permanent link">&para;</a></h1>
+                <h1 id="sip-archetype">SIP Archetype<a class="headerlink" href="#sip-archetype" title="Permanent link">&para;</a></h1>
 <div class="toc">
 <ul>
-<li><a href="#ikor-sip-archetype">IKOR SIP Archetype</a><ul>
+<li><a href="#sip-archetype">SIP Archetype</a><ul>
 <li><a href="#description">Description</a></li>
 <li><a href="#how-to-create-a-sip-adapter-using-sip-archetype">How to create a SIP Adapter using SIP Archetype</a></li>
 </ul>
@@ -182,11 +182,11 @@
 </ul>
 </div>
 <h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
-<p>This archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies.</p>
+<p>This Maven Archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies.</p>
 <h2 id="how-to-create-a-sip-adapter-using-sip-archetype">How to create a SIP Adapter using SIP Archetype<a class="headerlink" href="#how-to-create-a-sip-adapter-using-sip-archetype" title="Permanent link">&para;</a></h2>
 <p>In order to make setting up a new integration adapter project an easy task, we have created a dedicated SIP (Adapter) Maven archetype, that gives the ability to quickly bootstrap a new integration adapter, along with all needed Maven dependencies and goodies, as well as the recommended, preferred organization of the project.</p>
 <p>You can create a SIP Adapter by using the following Maven command:</p>
-<pre class="highlight"><code class="language-shell">  mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=&lt;latest.sip-archetype.version&gt; -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT</code></pre>
+<pre class="highlight"><code class="language-shell">  mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=&lt;latest.sip-framework.version&gt; -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT</code></pre>
 <p>When executing the command, pay attention to use the latest archetype version for the <code>-DarchetypeVersion</code> parameter.
 Check available versions <a href="https://search.maven.org/search?q=de.ikor.sip.foundation">here</a>.</p>
 <p><strong>Overview of the command</strong>
@@ -205,7 +205,7 @@ as they set the properties for the adapter. It is recommended to follow the Mave
 <li><strong>packageSuffix</strong> is used to create project package name by concatenating its value to the <strong>groupId</strong>. There is a strict validation
   for using only lower case letters and should be a single word. This will reflect the generated package structure for the generated project files. (for example - all of the sources will be in the <em>de.ikor.sip.adapter.sufix</em> java package) </li>
 <li><strong>package</strong> (optional) is used to override previous package naming and provide full package name. This can be skipped by leaving value empty.
-  It is strongly recommended to follow package naming convention, otherwise your project will be created but it will consist
+  It is strongly recommended to follow package naming convention, otherwise your project will be created but it will have
   package naming errors.</li>
 <li><strong>connectorGroup1</strong>/<strong>connectorGroup2</strong> are representing names of your connector group packages inside the project. It will also be reflected in the generated package structure (for example - all of the sources for connectorGroup1 will be in the <em>de.ikor.sip.adapter.sufix.connectorGroup1</em> package)</li>
 <li><strong>useLombok</strong> is used for including or excluding Lombok dependency in adapter. Lombok is included by default. If you wish to exclude lombok you should set 
