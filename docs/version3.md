@@ -88,8 +88,8 @@ They need to extend _GenericInboundConnectorBase_ and override necessary methods
 but also to be annotated with @InboundConnector, with the following fields:
 
 - *connectorId* (optional) - unique identifier of a connector (automatically generated if missing)
-- *belongsToGroup* - id of the connector group it belongs to
-- *toScenario* - id of the scenario to which it provides data
+- *connectorGroup* - id of the connector group it belongs to
+- *integrationScenario* - id of the scenario to which it provides data
 - *requestModel* - model which is expected be received on the input endpoint
 - *responseModel* (optional) - model which is expected be returned to the caller
 - *domains* (optional) - list of domains this connector is a part of 
@@ -113,8 +113,8 @@ This is illustrated in the example below.
 ```java
 @InboundConnector(
       connectorId = "appendStaticMessageProvider",
-      belongsToGroup = DemoConnectorGroup.ID,
-      toScenario = DemoScenario.ID,
+      connectorGroup = DemoConnectorGroup.ID,
+      integrationScenario = DemoScenario.ID,
       requestModel = InboundConnectorRequest.class,
       responseModel = InboundConnectorResponse.class)
   public class DemoConnector extends GenericInboundConnectorBase {
@@ -153,8 +153,8 @@ and append the rest DSL to RestDefinition to define the input endpoint.
 
 ```java
  @InboundConnector(
-      belongsToGroup = DemoConnectorGroup.ID,
-      toScenario = RestDSLScenario.ID,
+      connectorGroup = DemoConnectorGroup.ID,
+      integrationScenario = RestDSLScenario.ID,
       requestModel = String.class)
   public class RestConnectorTestBase extends RestConnectorBase {
 
@@ -183,8 +183,8 @@ They need to extend _GenericOutboundConnectorBase_ and override necessary method
 but also to be annotated with @OutboundConnector, with the following fields:
 
 - *connectorId* (optional) - unique identifier of a connector (automatically generated if missing)
-- *belongsToGroup* - id of the connector group it belongs to
-- *fromScenario* - id of the scenario from which it consumes data
+- *connectorGroup* - id of the connector group it belongs to
+- *integrationScenario* - id of the scenario from which it consumes data
 - *requestModel* - model which is expected be received on the input endpoint
 - *responseModel* (optional) - model which is expected be returned to the caller
 - *domains* (optional) - domains this connector is a part of
@@ -207,8 +207,8 @@ This is illustrated in the example below.
 
 ```java
 @OutboundConnector(
-      belongsToGroup = OtherDemoGroup.ID,
-      fromScenario = DemoScenario.ID,
+      connectorGroup = OtherDemoGroup.ID,
+      integrationScenario = DemoScenario.ID,
       requestModel = OutboundConnectorRequest.class,
       responseModel = OutboundConnectorResponse.class)
   public class DemoOutboundConnector extends GenericOutboundConnectorBase {

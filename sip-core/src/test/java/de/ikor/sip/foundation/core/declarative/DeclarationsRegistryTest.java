@@ -132,10 +132,7 @@ class DeclarationsRegistryTest {
     subject = new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers);
 
     // act & assert
-    assertThatThrownBy(
-            () -> {
-              subject.getScenarioById(SECOND_SCENARIO_ID);
-            })
+    assertThatThrownBy(() -> subject.getScenarioById(SECOND_SCENARIO_ID))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage("There is no integration scenario with id: %s", SECOND_SCENARIO_ID);
   }
