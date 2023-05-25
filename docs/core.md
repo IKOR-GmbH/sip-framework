@@ -1,4 +1,4 @@
-# IKOR SIP Framework Core
+# SIP Framework Core
 
 [TOC]
 
@@ -8,13 +8,14 @@ Core project for base SIP functionalities
 
 ## Usage
 
-To enable SIP Core features use @SIPIntegrationAdapter to annotate the Spring Boot entry class.
+To enable SIP Core features use @SIPIntegrationAdapter to annotate the Spring Boot entry class (no need to add @SpringBootApplication, it's included in the @SIPIntegrationAdapter)
 
 ## Features
 
 ### Actuator health check and metrics
 
-SIP Core provides out-of-the-box health checks for HTTP(S), JMS and FTP, SFTP and FTPS endpoints.
+SIP Core out-of-the-box information about health status of the adapter and the status of external systems with which it communicates.
+ Provided checks are for HTTP(S), JMS and FTP (SFTP/FTPS) endpoints.
 
 The health check functions will be executed periodically on a set interval and will only be available if actuator's
 HealthEndpoint is enabled.
@@ -77,7 +78,7 @@ thrown and application will not be able to start.
 
 It is worth noting that the HTTP(S) Health Check lists all existing HTTP(S) endpoints by default, but sets the status to UNKNOWN.
 The reason for this is that for detected HTTP(S) endpoints a GET request is executed which may cause an unintended change of state
-of the system to be invoked. Thus this behavior does not occur, health checks should be added explicitly.
+of the system to be invoked. Thus, for this behavior to not occur, health checks should be added explicitly.
 To add an explicit Health Check for a URL it can be done in the following way.
 
 ```java
@@ -88,9 +89,9 @@ EndpointHealthConfigurer enableHttpHealthCheckForIKOR() {
 }
 ```
 
-In case the URL https://www.ikor.de/kontakt.html is requested by the adapter, then on the one hand the explicit URL could be passed as
+In case the URL https://ikor.one/kontakt/ is requested by the adapter, then on the one hand the explicit URL could be passed as
 a parameter to `register()` or wildcards could be used to add a Health Check for this URL and at the same
-time also matches https://www.ikor.de/karriere.html. The passed argument to `register()` would look like this `https://www.ikor.de/**`.
+time also matches https://ikor.one/karriere/. The passed argument to `register()` would look like this `https://www.ikor.one/**`.
 However, HTTP(S) Health Checks can only be added for URLs that have also been detected in the adapter. In order to find out
 what URLs have been discovered one could inspect the result of `{base_url}/actuator/health`.
 
@@ -101,7 +102,8 @@ To inspect the health of Camel endpoints in an integration adapter, one needs to
 Make sure that this project uses sip-integration-starter maven dependency.
 Instead of using @SpringBootApplication, use Java annotation @SIPIntegrationAdapter to annotate the Spring Boot entry class.
 Configure the application actuator's Health endpoint to display details of health, as shown below.
-All prerequisites from above are met if you create an integration adapter using SIP archetype.
+
+_All prerequisites from above are met if you create an integration adapter using SIP archetype._
 
 Spring Boot Actuator:
 
@@ -126,9 +128,11 @@ sip:
       gauge: "sip.core.metrics.health"
 ```
 
-### Working with routes in runtime
+### Adapter lifecycle manipulation in runtime 
 
-All routes with basic info can be listed by using the following URI:
+SIP Core provides a possibility to manipulate adapter lifecycle in runtime by controlling registered Camel routes.
+
+All registered routes with basic info can be listed by using the following URI:
 
 ```
 GET /actuator/adapter-routes
@@ -181,7 +185,7 @@ component, data could be lost.
 
 ### Logging Translation
 
-Adds possibility to translate log messages
+Adds possibility to translate log messages. This is achieved by using a custom logging encoder, which is able to translate log messages.
 
 By default, translation service is not activated, thus in order to use it a logback.xml file should be provided in
 resources. In this file we can specify that the adapter uses a custom logging encoder, which provides translations.
@@ -196,7 +200,7 @@ resources. In this file we can specify that the adapter uses a custom logging en
 </appender>
 ```
 
-Files for defining translation values, should be created inside translate directory as a bundle of .property files,
+Files for defining translation values should be created inside 'translations' directory as a bundle of .property files,
 under a common name, which should be extended by a suffix in following format \_{language}.
 
 Each file consists of keys, shared in the bundle, followed by its value as a phrase in the language used.
@@ -267,9 +271,9 @@ open logback.xml in target directory\* and edit the log levels on loggers define
 
 This works for all loggers except the ones on Camel routes.
 
-### Exchange tracing
+### Tracing
 
-SIP Core offers usage of Camel's built-in Tracer for tracing and logging information about all processor
+SIP Core extends Camel's built-in Tracer for tracing and logging information about all processors
 an exchange went through.
 Configuration of the Tracer is enabled by adapting ExchangeFormatter.
 
@@ -302,11 +306,11 @@ sip:
  ```
 
 Exchanges will contain the "traceSet" header, which appears as a list of ordered exchange Ids,
-appended based on EIP used in a route and separated by a coma.
+appended based on EIP used in a route and separated by a coma. This allows to easily track the path of an message.
 
 ### OpenAPI Descriptor
 
-Framework provides an Open API description of all custom or Spring provided endpoints within your adapter.
+Framework provides an Open API description of all custom, Camel's RestDSL or Spring provided endpoints within your adapter.
 Endpoints are created as extension of Spring's actuator.
 
 By using a sip-archetype code generator, you receive an adapter with a default setup for OpenAPI.
@@ -410,13 +414,32 @@ If there is a need for additional exceptions it is highly encouraged that they h
 one of SIP base exceptions as parent class.
 This provides uniformed data of exception origin for easier handling.
 
-### Actuator adapter definition
+### Declarative Structure in actuator adapter definition endpoint
 
-To see the detailed declarative structure of an adapter, containing all scenarios, connectors and connector groups,
-the "/adapterdefinition" endpoint is available through actuator.
-It will present a detailed list of all connector groups, inside which connectors with their properties are found.
-The properties include data models, routes, descriptions, etc.
-Following that, all scenarios will be presented, including their description.
+To see the detailed Declarative Structure of an adapter, containing all elements: `Integration Scenarios`, `Connectors` and 
+`Connector groups`, there is a following endpoint exposed through actuator:
+
+```
+# all types
+GET /adapterdefinition
+
+# specific endpoints for each of the 3 types:
+GET /adapterdefinition/scenarios
+GET /adapterdefinition/connectors
+GET /adapterdefinition/connectorgroups
+```
+
+It will present a list of all Declarative Structure elements with details and relations between them.
+Following details are presented:
+
+- `Connectors` - connector request and response data models, Camel routes, connector descriptions, and 
+necessary information for creating 
+[SIP Test Kit Declarative](https://ikor-gmbh.github.io/sip-framework/test-kit-declarative/) tests.
+
+- `Integration Scenarios` - contain common domain request and response models description.
+
+- `Connector groups` - connectors belonging to that connector group 
+
 
 To enable or disable this feature the following property should be used:
 
@@ -425,5 +448,5 @@ sip:
   core:
     actuator:
       adapterdefinition:
-        enabled: true # enabled by default
+        enabled: true       # enabled by default
 ```

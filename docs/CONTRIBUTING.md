@@ -40,7 +40,7 @@ To get your adaptions merged you need to create a pull request. You have to comp
 
 ## Guidelines
 
-We welcome everyones work and engagement to evolve SIP. To make our life easier and we defined a couple of guidelines to follow while working on the code and we ask everyone to adhere to these points. During the pull request process the reviewer will check if the pull request adheres to the following rules. The rules are questions you should answer before creating a pull request:
+We welcome everyone's work and engagement to evolve SIP. To make our life easier we defined a couple of guidelines to follow while working on the code, and we ask everyone to adhere to these points. During the pull request process the reviewer will check if the pull request adheres to the following rules. The rules are questions you should answer before creating a pull request:
 
 ### Coding
 
