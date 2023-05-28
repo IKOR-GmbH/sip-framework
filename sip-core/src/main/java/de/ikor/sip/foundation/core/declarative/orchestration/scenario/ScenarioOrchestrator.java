@@ -4,6 +4,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.RouteGeneratorForScenarioOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import lombok.AccessLevel;
@@ -27,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ScenarioOrchestrator implements Orchestrator<ScenarioOrchestrationInfo> {
 
   private final Consumer<ScenarioOrchestrationInfo> orchestrationConsumer;
-  @Setter private Predicate<ScenarioOrchestrationInfo> canOrchestrate = info -> true;
+  @Setter private Predicate<ScenarioOrchestrationInfo> canOrchestrate = Objects::nonNull;
 
   /**
    * Creates a new orchestrator specified via orchestration-DSL for scenarios that do not

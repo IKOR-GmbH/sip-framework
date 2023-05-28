@@ -1,5 +1,5 @@
 {
   "author": "nikolag-ikor",
   "pullrequestId": "218",
-  "message": "Fix bad indentation problem. Improve automatic resolving value of pom.xml sipFrameworkVersion field."
+  "message": "Fixed bad indentation problems. Improved automatic resolving of value sipFrameworkVersion in pom.xml."
 }

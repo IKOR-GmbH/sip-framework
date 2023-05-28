@@ -7,9 +7,12 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /** DSL base class for specifying the call to an integration scenario consumer */
-public abstract class CallScenarioConsumerBaseDefinition<
+public abstract sealed class CallScenarioConsumerBaseDefinition<
         S extends CallScenarioConsumerBaseDefinition<S, R, M>, R, M>
-    extends ScenarioDslDefinitionBase<S, R, M> {
+    extends ScenarioDslDefinitionBase<S, R, M> implements CallableWithinProviderDefinition
+    permits CallScenarioConsumerCatchAllDefinition,
+        CallScenarioConsumerByClassDefinition,
+        CallScenarioConsumerByConnectorIdDefinition {
 
   @Getter(AccessLevel.PACKAGE)
   private Optional<ScenarioStepRequestExtractor<M>> requestPreparation = Optional.empty();

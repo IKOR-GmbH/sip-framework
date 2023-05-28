@@ -46,7 +46,7 @@ public class ScenarioOrchestrationDefinition<M>
    * @param connectorClass The class(es) of the inbound connector
    * @return DSL handle for specifying consumer calls
    */
-  public ForScenarioProvidersWithClassDefinition<ScenarioOrchestrationDefinition<M>, M>
+  public ForScenarioProvidersByClassDefinition<ScenarioOrchestrationDefinition<M>, M>
       forInboundConnectors(final Class<? extends InboundConnectorDefinition<?>>... connectorClass) {
     return forScenarioProviders(connectorClass);
   }
@@ -60,12 +60,12 @@ public class ScenarioOrchestrationDefinition<M>
    * @param providerClass The class(es) of the inbound connector
    * @return DSL handle for specifying consumer calls
    */
-  public ForScenarioProvidersWithClassDefinition<ScenarioOrchestrationDefinition<M>, M>
+  public ForScenarioProvidersByClassDefinition<ScenarioOrchestrationDefinition<M>, M>
       forScenarioProviders(
           final Class<? extends IntegrationScenarioProviderDefinition>... providerClass) {
     verifyNoCatchAllOrThrow();
-    final ForScenarioProvidersWithClassDefinition<ScenarioOrchestrationDefinition<M>, M> def =
-        new ForScenarioProvidersWithClassDefinition<>(
+    final ForScenarioProvidersByClassDefinition<ScenarioOrchestrationDefinition<M>, M> def =
+        new ForScenarioProvidersByClassDefinition<>(
             self(), getIntegrationScenario(), Set.of(providerClass));
     scenarioProviderDefinitions.add(def);
     return def;
@@ -87,11 +87,11 @@ public class ScenarioOrchestrationDefinition<M>
    * @param inboundConnectorId The ID(s) of the inbound connector
    * @return DSL handle for specifying consumer calls
    */
-  public ForScenarioProvidersWithConnectorIdDefinition<ScenarioOrchestrationDefinition<M>, M>
+  public ForScenarioProvidersByConnectorIdDefinition<ScenarioOrchestrationDefinition<M>, M>
       forInboundConnectors(final String... inboundConnectorId) {
     verifyNoCatchAllOrThrow();
-    final ForScenarioProvidersWithConnectorIdDefinition<ScenarioOrchestrationDefinition<M>, M> def =
-        new ForScenarioProvidersWithConnectorIdDefinition<>(
+    final ForScenarioProvidersByConnectorIdDefinition<ScenarioOrchestrationDefinition<M>, M> def =
+        new ForScenarioProvidersByConnectorIdDefinition<>(
             self(), getIntegrationScenario(), Set.of(inboundConnectorId));
     scenarioProviderDefinitions.add(def);
     return def;

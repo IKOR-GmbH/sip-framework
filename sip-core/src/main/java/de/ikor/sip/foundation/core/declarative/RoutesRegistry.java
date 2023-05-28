@@ -125,10 +125,9 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     Arrays.stream(suffixes).forEach(additional -> idBuilder.append("_").append(additional));
     final var routeId = idBuilder.toString();
     if (roleForRouteIdRegister.containsKey(routeId)) {
-      throw new SIPFrameworkInitializationException(
-          String.format(
-              "Can't build internal scenario orchestrator route with routeId '%s': routeId already exists",
-              routeId));
+      throw SIPFrameworkInitializationException.init(
+          "Can't build internal scenario orchestrator route with routeId '%s': routeId already exists",
+          routeId);
     }
     roleForRouteIdRegister.put(routeId, RouteRole.SCENARIO_ORCHESTRATION);
     routeIdsForScenarioOrchestrationRegister.put(scenario, routeId);

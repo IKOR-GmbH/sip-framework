@@ -7,14 +7,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /** DSL class specifying all an inbound connector specified by its connector ID */
-public class ForScenarioProvidersWithConnectorIdDefinition<R, M>
+public final class ForScenarioProvidersByConnectorIdDefinition<R, M>
     extends ForScenarioProvidersBaseDefinition<
-        ForScenarioProvidersWithConnectorIdDefinition<R, M>, R, M> {
+        ForScenarioProvidersByConnectorIdDefinition<R, M>, R, M> {
 
   @Getter(AccessLevel.PACKAGE)
   private final Set<String> connectorIds;
 
-  ForScenarioProvidersWithConnectorIdDefinition(
+  ForScenarioProvidersByConnectorIdDefinition(
       final R dslReturnDefinition,
       final IntegrationScenarioDefinition integrationScenario,
       final Set<String> connectorIds) {
