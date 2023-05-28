@@ -1,21 +1,30 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
-import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
+import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationContext;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.experimental.Delegate;
 
 /** DSL base class for specifying which consumers should be called for a scenario provider. */
-public abstract class ForScenarioProvidersBaseDefinition<
+public abstract sealed class ForScenarioProvidersBaseDefinition<
         S extends ForScenarioProvidersBaseDefinition<S, R, M>, R, M>
-    extends ScenarioDslDefinitionBase<S, R, M> {
+    extends ScenarioDslDefinitionBase<S, R, M> implements ScenarioConsumerCalls<S, R, M>
+    permits ForScenarioProvidersCatchAllDefinition,
+        ForScenarioProvidersByClassDefinition,
+        ForScenarioProvidersByConnectorIdDefinition {
 
   @Getter(AccessLevel.PACKAGE)
-  private final List<CallScenarioConsumerBaseDefinition<?, ?, M>> scenarioConsumerDefinitions =
-      new ArrayList<>();
+  private final List<CallableWithinProviderDefinition> nodes = new ArrayList<>();
+
+  @Delegate
+  @Getter(AccessLevel.PACKAGE)
+  private final ScenarioConsumerCallsDelegate<S, R, M> consumerCallsDelegate =
+      new ScenarioConsumerCallsDelegate<>(
+          nodes, self(), getDslReturnDefinition(), getIntegrationScenario());
 
   ForScenarioProvidersBaseDefinition(
       final R dslReturnDefinition, final IntegrationScenarioDefinition integrationScenario) {
@@ -23,46 +32,28 @@ public abstract class ForScenarioProvidersBaseDefinition<
   }
 
   /**
-   * Specifies that the outbound connector with the given <code>connectorId</code> should be called.
+   * Attaches and changes scope to a conditional branch that is only executed if the given <code>
+   * predicate</code> matches at runtime for an integration call of the underlying scenario.
    *
-   * @param connectorId Id of the outbound connector
-   * @return DSL handle for further call instructions
-   */
-  public CallScenarioConsumerWithConnectorIdDefinition<S, M> callOutboundConnector(
-      final String connectorId) {
-    final CallScenarioConsumerWithConnectorIdDefinition<S, M> def =
-        new CallScenarioConsumerWithConnectorIdDefinition<>(
-            self(), getIntegrationScenario(), connectorId);
-    scenarioConsumerDefinitions.add(def);
-    return def;
-  }
-
-  /**
-   * Specifies that the outbound connector with the given <code>connectorClass</code> should be
-   * called.
+   * <p>This can be compared to a Java <code>if</code>-statement, and the returned branch allows to
+   * attach additional (conditional) branches similar to <code>else if</code> and <code>else</code>.
    *
-   * @param connectorClass Class of the outbound connector
-   * @return DSL handle for further call instructions
-   */
-  public CallScenarioConsumerWithClassDefinition<S, M> callOutboundConnector(
-      final Class<? extends OutboundConnectorDefinition> connectorClass) {
-    return callScenarioConsumer(connectorClass);
-  }
-
-  /**
-   * Specifies that the scenario consumer with the given <code>consumerClass</code> should be
-   * called.
+   * <p>To leave the conditional statement and return to the current scope, use {@link
+   * ConditionalCallScenarioConsumerDefinition.Branch#endCases()}.
    *
-   * @param consumerClass Class of the consumer
-   * @return DSL handle for further call instructions
+   * @see ConditionalCallScenarioConsumerDefinition.Branch
+   * @see ConditionalCallScenarioConsumerDefinition.Branch#elseIfCase(Predicate)
+   * @see ConditionalCallScenarioConsumerDefinition.Branch#elseCase()
+   * @param predicate Predicate to test for execution of branch statmeents
+   * @return The conditional branch
    */
-  public CallScenarioConsumerWithClassDefinition<S, M> callScenarioConsumer(
-      final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass) {
-    final CallScenarioConsumerWithClassDefinition<S, M> def =
-        new CallScenarioConsumerWithClassDefinition<>(
-            self(), getIntegrationScenario(), consumerClass);
-    scenarioConsumerDefinitions.add(def);
-    return def;
+  public ConditionalCallScenarioConsumerDefinition<S, M>.Branch<
+          ConditionalCallScenarioConsumerDefinition<S, M>>
+      ifCase(final Predicate<ScenarioOrchestrationContext<M>> predicate) {
+    final var def =
+        new ConditionalCallScenarioConsumerDefinition<S, M>(self(), getIntegrationScenario());
+    nodes.add(def);
+    return def.elseIfCase(predicate);
   }
 
   /**
@@ -70,7 +61,7 @@ public abstract class ForScenarioProvidersBaseDefinition<
    * the integration scenario but not explicitly defined above will be called.
    *
    * <p>This is a terminal operation for the consumer call specifications, so it needs to be the
-   * last call in the list and no additional consumers calls can be specified afterwards.
+   * last call in the list and no additional consumers calls can be specified afterward.
    *
    * @return DSL handle for further call instructions
    */
@@ -78,16 +69,16 @@ public abstract class ForScenarioProvidersBaseDefinition<
     final CallScenarioConsumerCatchAllDefinition<R, M> def =
         new CallScenarioConsumerCatchAllDefinition<>(
             getDslReturnDefinition(), getIntegrationScenario());
-    scenarioConsumerDefinitions.add(def);
+    nodes.add(def);
     return def;
   }
 
   /**
-   * Terminal operation that returns the DSL to the previous scope
+   * Ends the orchestration-definitions for this provider and returns to the previous scope
    *
-   * @return DSL handle
+   * @return Previous scope
    */
-  public R endConsumerCalls() {
+  public R endDefinitionForThisProvider() {
     return getDslReturnDefinition();
   }
 }

@@ -72,6 +72,8 @@ class ScenarioOrchestrationTest {
         exchangeSecondConnector.getMessage().getBody(ScenarioResponse.class);
 
     // assert
+    assertThat(exchangeFirstConnector.getException()).isNull();
+    assertThat(exchangeSecondConnector.getException()).isNull();
     assertThat(responseFirstConnector).isInstanceOf(ScenarioResponse.class);
     assertThat(responseFirstConnector.getValue()).isEqualTo(1);
     assertThat(responseSecondConnector).isEqualTo(responseFirstConnector);
@@ -88,6 +90,7 @@ class ScenarioOrchestrationTest {
     Exchange exchange = template.withBody("Hi Adapter").to(direct("dummyInputThree")).send();
 
     // assert
+    assertThat(exchange.getException()).isNull();
     assertThat(exchange.getMessage().getBody()).isInstanceOf(ScenarioResponse.class);
     ScenarioResponse response = exchange.getMessage().getBody(ScenarioResponse.class);
     assertThat(response.getValue()).isEqualTo(3120);
@@ -105,6 +108,7 @@ class ScenarioOrchestrationTest {
     Exchange exchange = template.withBody("Hi Adapter").to(direct("dummyInputFour")).send();
 
     // assert
+    assertThat(exchange.getException()).isNull();
     assertThat(exchange.getMessage().getBody()).isInstanceOf(ScenarioResponse.class);
     ScenarioResponse response = exchange.getMessage().getBody(ScenarioResponse.class);
     assertThat(response.getValue()).isEqualTo(6);
@@ -128,6 +132,7 @@ class ScenarioOrchestrationTest {
 
     // assert
     // TODO : should this be left on the exchange?
+    assertThat(exchange.getException()).isNull();
     assertThat(exchange.getMessage().getBody()).isInstanceOf(String.class);
     assertThat(exchange.getMessage().getBody(String.class))
         .isIn(

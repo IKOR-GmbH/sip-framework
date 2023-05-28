@@ -104,10 +104,9 @@ public class AdapterBuilder extends RouteBuilder {
             Collections.unmodifiableMap(providerHandoffEndpoints),
             Collections.unmodifiableMap(consumerTakeoverEndpoints));
     if (!scenarioDefinition.getOrchestrator().canOrchestrate(orchestrationInfo)) {
-      throw new SIPFrameworkInitializationException(
-          String.format(
-              "Orchestrator assigned to scenario '%s' declares being unable to orchestrate the scenario layout as it is defined",
-              scenarioDefinition.getId()));
+      throw SIPFrameworkInitializationException.init(
+          "Orchestrator assigned to scenario '%s' declares being unable to orchestrate the scenario layout as it is defined",
+          scenarioDefinition.getId());
     }
     scenarioDefinition.getOrchestrator().doOrchestrate(orchestrationInfo);
   }

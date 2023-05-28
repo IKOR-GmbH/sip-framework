@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.DslDefinitionBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import lombok.AccessLevel;
 import lombok.Getter;
 
 /**
@@ -12,7 +13,8 @@ import lombok.Getter;
 public abstract class ScenarioDslDefinitionBase<S extends ScenarioDslDefinitionBase<S, R, M>, R, M>
     extends DslDefinitionBase<S, R> {
 
-  @Getter private final IntegrationScenarioDefinition integrationScenario;
+  @Getter(AccessLevel.PACKAGE)
+  private final IntegrationScenarioDefinition integrationScenario;
 
   ScenarioDslDefinitionBase(
       final R dslReturnDefinition, final IntegrationScenarioDefinition integrationScenario) {
