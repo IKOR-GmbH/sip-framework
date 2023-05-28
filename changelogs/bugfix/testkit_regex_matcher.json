@@ -1,0 +1,5 @@
+{
+  "author": "vladiIkor",
+  "pullrequestId": "224",
+  "message": "Updated testkit regex matcher to use DOTALL pattern."
+}
