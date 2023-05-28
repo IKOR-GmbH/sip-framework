@@ -8,7 +8,7 @@ Before getting started to develop a first adapter with SIP the following require
 
 ### Java Virtual Machine
 
-- Recommendation for using Java 11 or higher <https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html>
+- Mandatory usage of Java 17 or higher <https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html>
 
 ### Maven
 
@@ -16,6 +16,8 @@ Before getting started to develop a first adapter with SIP the following require
 - For the Maven documentation see <https://maven.apache.org/guides/>
 
 ### IDE
+
+Both Intellij and Eclipse are supported.
 
 - IntelliJ - Download from <https://www.jetbrains.com/idea/download/#section=windows>
 - Eclipse - Download from <https://www.eclipse.org/downloads/>
