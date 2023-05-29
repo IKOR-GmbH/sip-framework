@@ -19,6 +19,8 @@ public class TestCaseDefinitionValidator {
   public static final String BOTH_PARAMETERS_PROVIDED_EXCEPTION_MSG =
       "Both endpointId and connectorId parameters are defined in %s for test: %s (only one is allowed)";
 
+  private TestCaseDefinitionValidator() {}
+
   public static void validate(TestCaseDefinition definition) {
     String testName = definition.getTitle();
 
