@@ -10,7 +10,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 @SpringBootTest(
     properties = {"sip.testkit.test-cases-path:test-tcd.yml", "sip.testkit.batch-test:true"},
     classes = ConfigurableEnvironment.class)
-class AutoTestCaseLoadingTest {
+class AutoBatchTestCaseLoadingTest {
 
   private static final String ROUTE_CONTROLLER_SUPERVISE =
       "camel.springboot.routeControllerSuperviseEnabled";
@@ -20,7 +20,7 @@ class AutoTestCaseLoadingTest {
   @Test
   void GIVEN_necessaryInputProperties_WHEN_prepareTestingEnvironment_THEN_getExpectedProperties() {
     // arrange
-    AutoTestCaseLoading subject = new AutoTestCaseLoading();
+    AutoBatchTestCaseLoading subject = new AutoBatchTestCaseLoading();
 
     // act
     subject.prepareTestingEnvironment(environment);

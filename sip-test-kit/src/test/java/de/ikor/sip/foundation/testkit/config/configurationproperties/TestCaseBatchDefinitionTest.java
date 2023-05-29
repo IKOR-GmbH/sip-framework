@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.testkit.config.configurationproperties;
 
 import static de.ikor.sip.foundation.testkit.config.TestCasesConfig.*;
-import static de.ikor.sip.foundation.testkit.configurationproperties.TestCaseBatchDefinition.*;
+import static de.ikor.sip.foundation.testkit.util.TestCaseDefinitionValidator.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.mock;

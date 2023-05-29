@@ -24,7 +24,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 @EnableConfigurationProperties
 @Profile("test")
 @ConditionalOnProperty(value = SIP_BATCH_TEST, havingValue = "true")
-public class AutoTestCaseLoading {
+public class AutoBatchTestCaseLoading {
 
   private static final String YML_TEST_CASES_PATH_PROPERTY = "sip.testkit.test-cases-path";
   private static final String DEFAULT_TEST_CASES_LOCATION = "test-case-definition.yml";
@@ -53,7 +53,7 @@ public class AutoTestCaseLoading {
   }
 
   private static Resource[] getResources(String path) {
-    ClassLoader classLoader = AutoTestCaseLoading.class.getClassLoader();
+    ClassLoader classLoader = AutoBatchTestCaseLoading.class.getClassLoader();
     ResourcePatternResolver resourcePatternResolver =
         new PathMatchingResourcePatternResolver(classLoader);
     try {

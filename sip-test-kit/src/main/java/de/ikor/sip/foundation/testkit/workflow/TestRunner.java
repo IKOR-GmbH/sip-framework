@@ -41,7 +41,7 @@ public class TestRunner {
   }
 
   private void handleTestException(TestCase testCase, Exception e) {
-    log.error("sip.testkit.workflow.testrunerror_{}", testCase.getTestName());
+    log.error("sip.testkit.workflow.testrunerror_{}_{}", testCase.getTestName(), e.getMessage());
     testCase.reportExecutionException(e);
   }
 }
