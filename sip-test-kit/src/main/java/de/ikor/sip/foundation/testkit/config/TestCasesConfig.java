@@ -46,7 +46,7 @@ public class TestCasesConfig {
   private final CamelContext camelContext;
   private final TestCaseValidator testCaseValidator;
   private final TestExecutionStatusFactory executionStatusFactory;
-  private final TestCaseBatchDefinition testCaseBatchDefinition;
+  private final Optional<TestCaseBatchDefinition> testCaseBatchDefinition;
   private final TestCaseCollector testCaseCollector;
   private final Optional<RoutesRegistry> routesRegistry;
 
@@ -56,8 +56,11 @@ public class TestCasesConfig {
   @EventListener(ApplicationReadyEvent.class)
   public void generateTestCases() {
     List<TestCase> testCases = new LinkedList<>();
-    for (TestCaseDefinition testCaseDefinition : testCaseBatchDefinition.getTestCaseDefinitions()) {
-      testCases.add(generateTestCase(testCaseDefinition));
+    if (testCaseBatchDefinition.isPresent()) {
+      for (TestCaseDefinition testCaseDefinition :
+          testCaseBatchDefinition.get().getTestCaseDefinitions()) {
+        testCases.add(generateTestCase(testCaseDefinition));
+      }
     }
     testCaseCollector.setTestCases(testCases);
   }
