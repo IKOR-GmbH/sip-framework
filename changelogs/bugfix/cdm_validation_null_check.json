@@ -1,5 +1,0 @@
-{
-  "author": "LetoBukarica",
-  "pullrequestId": "220",
-  "message": "Added a null check on SIP validator and updated the message."
-}
