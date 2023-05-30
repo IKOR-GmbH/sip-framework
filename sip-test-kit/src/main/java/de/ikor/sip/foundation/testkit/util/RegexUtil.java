@@ -35,7 +35,7 @@ public class RegexUtil {
     }
     String expectedPattern = reformatEscapeCharacter(removeCarriageReturns(expected));
     String actualFormatted = removeCarriageReturns(Objects.requireNonNull(actual));
-    return Pattern.compile(expectedPattern).matcher(actualFormatted).find();
+    return Pattern.compile(expectedPattern, Pattern.DOTALL).matcher(actualFormatted).find();
   }
 
   /**
