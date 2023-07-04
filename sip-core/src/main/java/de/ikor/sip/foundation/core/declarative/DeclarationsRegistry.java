@@ -4,7 +4,10 @@ import static java.util.function.Predicate.not;
 
 import de.ikor.sip.foundation.core.declarative.annonation.Disabled;
 import de.ikor.sip.foundation.core.declarative.annonation.GlobalMapper;
+import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
@@ -22,6 +25,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 @Getter
@@ -36,17 +40,20 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   private final List<IntegrationScenarioDefinition> scenarios;
   private final List<ConnectorDefinition> connectors;
   private final Map<MapperPair, ModelMapper<Object, Object>> globalModelMappersRegistry;
+  private final ApplicationContext applicationContext;
 
   public DeclarationsRegistry(
       List<ConnectorGroupDefinition> autowiredConnectorGroups,
       List<IntegrationScenarioDefinition> autowiredScenarios,
       List<ConnectorDefinition> autowiredConnectors,
-      List<ModelMapper<?, ?>> modelMappers) {
+      List<ModelMapper<?, ?>> modelMappers,
+      ApplicationContext applicationContext) {
 
     this.connectorGroups =
         autowiredConnectorGroups.stream().filter(not(isDisabled())).collect(Collectors.toList());
 
     this.scenarios = autowiredScenarios.stream().filter(not(isDisabled())).toList();
+    this.applicationContext = applicationContext;
 
     this.connectors =
         autowiredConnectors.stream()
@@ -58,8 +65,35 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     createMissingConnectorGroups();
     checkForDuplicateConnectorGroups();
     checkForDuplicateScenarios();
+    checkForMissingConnectorParent();
     checkForUnusedScenarios();
     checkForDuplicateConnectors();
+  }
+
+  private void checkForMissingConnectorParent() {
+    applicationContext
+        .getBeansWithAnnotation(InboundConnector.class)
+        .values()
+        .forEach(
+            o -> {
+              if (!(o instanceof InboundConnectorBase)) {
+                throw SIPFrameworkInitializationException.init(
+                    "Annotated InboundConnector %s is missing InboundConnectorBase parent class.",
+                    o.getClass().getName());
+              }
+            });
+
+    applicationContext
+        .getBeansWithAnnotation(OutboundConnector.class)
+        .values()
+        .forEach(
+            o -> {
+              if (!(o instanceof OutboundConnectorDefinition)) {
+                throw SIPFrameworkInitializationException.init(
+                    "Annotated OutboundConnector %s is missing OutboundConnectorDefinition parent class.",
+                    o.getClass().getName());
+              }
+            });
   }
 
   @SuppressWarnings("unchecked")
@@ -135,7 +169,8 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
       Set<String> set, String id, String className, String declarativeElement) {
     if (!set.add(id)) {
       throw SIPFrameworkInitializationException.init(
-          "There is a duplicate %s id %s in class %s", declarativeElement, id, className);
+          "There is a duplicate %s id %s in class %s. A unique connectorId should be provided in the connector's annotation.",
+          declarativeElement, id, className);
     }
   }
 
