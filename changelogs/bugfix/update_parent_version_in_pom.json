@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "228",
+  "message": "Change deprecated parent.version into project.parent.version in pom.xml of new adapters."
+}
