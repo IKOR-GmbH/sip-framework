@@ -36,6 +36,8 @@ while read line; do
       [[ $line == *"(The BSD License)"* ]] ||
       [[ $line == *"(EDL 1.0)"* ]] ||
       [[ $line == *"(EPL 2.0)"* ]] ||
+      [[ $line == *"(Eclipse Public License v. 2.0)"* ]] ||
+      [[ $line == *"(Eclipse Public License 2.0)"* ]] ||
       [[ $line == *"(CDDL/GPLv2+CE)"* ]] ||
       [[ $line == *"(CDDL+GPL License)"* ]] ||
       [[ $line == *"(CDDL + GPLv2 with classpath exception)"* ]] ||
@@ -43,6 +45,7 @@ while read line; do
       [[ $line == *"(The MIT License (MIT))"* ]] ||
       [[ $line == *"(The MIT License)"* ]] ||
       [[ $line == *"(MIT License)"* ]] ||
+      [[ $line == *"(MIT license)"* ]] ||
       [[ $line == *"(MIT)"* ]] ||
       [[ $line == *"(Unicode/ICU License)"* ]] ||
       [[ $line == *"(Public Domain)"* ]] ||
