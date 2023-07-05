@@ -54,9 +54,6 @@ class TestExecutionStatusFactoryTest {
 
   @Test
   void When_generateTestReport_With_missingWhenExecute_Then_emptyExchange() {
-    // arrange
-    //    Exchange expected = createEmptyExchange(camelContext);
-
     // act
     TestExecutionStatus testExecutionStatus = subject.generateTestReport(testCaseDefinition);
 
@@ -68,9 +65,4 @@ class TestExecutionStatusFactoryTest {
             testExecutionStatus.getAdapterReport().getExpectedResponse().getMessage().getHeaders())
         .isEmpty();
   }
-
-  //  private Exchange createEmptyExchange(CamelContext camelContext) {
-  //    ExchangeBuilder exchangeBuilder = ExchangeBuilder.anExchange(camelContext);
-  //    return exchangeBuilder.build();
-  //  }
 }
