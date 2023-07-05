@@ -62,8 +62,9 @@ public class AdapterRouteEndpoint {
   @GetMapping
   @Operation(summary = "Get all routes", description = "Get list of Routes from Camel Context")
   public List<AdapterRouteSummary> routes() {
-    return ((CamelContext) camelContext)
-        .getRoutes().stream().map(route -> generateSummary(route.getRouteId())).toList();
+    return camelContext.getRoutes().stream()
+        .map(route -> generateSummary(route.getRouteId()))
+        .toList();
   }
 
   /** Stops all routes */
