@@ -81,6 +81,7 @@ Each connector will have the following structure:
 
 - **[sip-archetype](./archetype.md)** - Archetype creates a basic SIP Adapter project with a defined structure and necessary dependencies. Project is created by executing single maven command.
 - **[sip-core](./core.md)** - Core project for base SIP functionalities.
+- **[sip-middle-component](./middle-component.md)** - Custom Camel component used as abstracted connector between different integration sides.
 - **[sip-starter-parent](./starter-parent.md)** - This project takes care of versions for Spring Boot and Camel dependencies.
 - **[sip-integration-starter](./integration-starter.md)** - Starter project adding necessary predefined dependencies for integration adapters.
 - **[sip-soap-starter](./soap-starter.md)** - Starter dependency for adapter that use SOAP.
@@ -300,3 +301,10 @@ sip.security.ssl.client.key-store-password | Password of client keystore | Strin
 sip.security.ssl.client.key-store-type | Type of client keystore file | String | / |
 sip.security.ssl.client.key-alias | The alias (or name) under which the key is stored in the client keystore | String | / |
 sip.security.ssl.client.key-password | Password of the client key | String | / |
+
+
+### SIP Middle Component
+
+[SIP Middle Component](./middle-component.md) (sipmc) is a custom camel component used by the SIP Framework
+as a communication device between connectors.
+Currently, sipmc can be seen as part of integration scenarios as a tool for its lifecycle manipulation.
