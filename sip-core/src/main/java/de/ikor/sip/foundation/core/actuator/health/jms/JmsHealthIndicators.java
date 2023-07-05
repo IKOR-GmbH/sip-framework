@@ -3,10 +3,10 @@ package de.ikor.sip.foundation.core.actuator.health.jms;
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.appendMetadata;
 
 import de.ikor.sip.foundation.core.actuator.common.IntegrationManagementException;
+import jakarta.jms.Connection;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.JMSException;
 import java.util.HashMap;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
 import org.apache.camel.Endpoint;
 import org.apache.camel.component.jms.JmsComponent;
 import org.apache.camel.component.jms.JmsEndpoint;

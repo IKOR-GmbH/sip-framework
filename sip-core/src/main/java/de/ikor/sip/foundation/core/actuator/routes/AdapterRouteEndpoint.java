@@ -50,7 +50,8 @@ public class AdapterRouteEndpoint {
     this.camelContext = camelContext;
     this.routeController = routeController;
     this.routesRegistry = routesRegistry;
-    this.mbeanContext = camelContext.getExtension(ManagedCamelContext.class);
+    this.mbeanContext =
+        camelContext.getCamelContextExtension().getContextPlugin(ManagedCamelContext.class);
   }
 
   /**
@@ -61,9 +62,8 @@ public class AdapterRouteEndpoint {
   @GetMapping
   @Operation(summary = "Get all routes", description = "Get list of Routes from Camel Context")
   public List<AdapterRouteSummary> routes() {
-    return camelContext.getRoutes().stream()
-        .map(route -> generateSummary(route.getRouteId()))
-        .toList();
+    return ((CamelContext) camelContext)
+        .getRoutes().stream().map(route -> generateSummary(route.getRouteId())).toList();
   }
 
   /** Stops all routes */

@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.proxies;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
@@ -21,6 +21,8 @@ public class ProcessorProxyConfiguration {
   @PostConstruct
   public void addProxyRegistryToCamelContext() {
     log.info("Configuring dynamic processors as extension in the camel context");
-    camelContext.setExtension(ProcessorProxyRegistry.class, proxyRegistry);
+    camelContext
+        .getCamelContextExtension()
+        .addContextPlugin(ProcessorProxyRegistry.class, proxyRegistry);
   }
 }

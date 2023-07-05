@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.security.authentication.x509;
 
 import de.ikor.sip.foundation.security.authentication.common.extractors.SIPTokenExtractor;
+import jakarta.servlet.http.HttpServletRequest;
 import java.security.cert.X509Certificate;
-import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 

@@ -31,7 +31,7 @@ class RouteInvokerFactoryTest {
 
   @BeforeEach
   void setup() {
-    ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
+    CamelContext camelContext = mock(CamelContext.class);
     ProducerTemplate producerTemplate = mock(ProducerTemplate.class);
     RestRouteInvoker restRouteInvoker = new RestRouteInvoker(producerTemplate, camelContext);
     FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);

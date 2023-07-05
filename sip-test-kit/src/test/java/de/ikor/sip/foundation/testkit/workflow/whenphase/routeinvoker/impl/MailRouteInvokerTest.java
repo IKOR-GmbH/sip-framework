@@ -18,11 +18,12 @@ class MailRouteInvokerTest {
 
   private static final String NODE_ID = "nodeId";
   MailRouteInvoker subject;
-  ExtendedCamelContext camelContext;
+  CamelContext camelContext;
 
   @BeforeEach
   void setup() {
-    camelContext = mock(ExtendedCamelContext.class);
+    camelContext = mock(CamelContext.class);
+    when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
     subject = new MailRouteInvoker(camelContext);
   }
 

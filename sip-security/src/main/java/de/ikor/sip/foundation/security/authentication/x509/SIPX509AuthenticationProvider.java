@@ -4,7 +4,7 @@ import de.ikor.sip.foundation.security.authentication.ConditionalOnSIPAuthProvid
 import de.ikor.sip.foundation.security.authentication.SIPAuthenticationProvider;
 import de.ikor.sip.foundation.security.authentication.common.extractors.TokenExtractors;
 import de.ikor.sip.foundation.security.authentication.common.validators.SIPTokenValidator;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

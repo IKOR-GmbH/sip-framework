@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.security.config;
 
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
-import de.ikor.sip.foundation.security.authentication.CompositeAuthenticationFilter;
 import de.ikor.sip.foundation.security.authentication.SIPAuthenticationProvider;
 import de.ikor.sip.foundation.security.authentication.common.extractors.TokenExtractors;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties.AuthProviderSettings;
@@ -9,16 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+// import
+// org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
  * Central place of all config related stuff for spring-security settings regarding the sip
@@ -26,9 +18,9 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
  *
  * @author thomas.stieglmaier
  */
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+// @Configuration
+// @EnableWebSecurity
+public class SecurityConfig { // extends WebSecurityConfigurerAdapter
 
   private final List<SIPAuthenticationProvider<?>> authProviders;
 
@@ -55,13 +47,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   /** Register Spring-security provided authenticationManager as a @Bean */
-  @Bean
-  @Override
-  public AuthenticationManager authenticationManagerBean() throws Exception {
-    return super.authenticationManagerBean();
-  }
+  //  @Bean
+  //  @Override
+  //  public AuthenticationManager authenticationManagerBean() throws Exception {
+  //    return super.authenticationManagerBean();
+  //  }
 
-  @Override
+  //  @Override
   protected void configure(AuthenticationManagerBuilder authManagerBuilder)
       throws IllegalStateException {
     List<Class<?>> autowiredAuthProviders =
@@ -103,29 +95,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .count();
   }
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    // disable sessions completely
-    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-    // add our composite authentication Filter for all requests (besides the ones ignored separately
-    // in the WebSecurity configure method
-    http.addFilterAt(
-            new CompositeAuthenticationFilter(tokenExtractors, config, authenticationManagerBean()),
-            BasicAuthenticationFilter.class)
-        .authorizeRequests()
-        .anyRequest()
-        .authenticated();
-
-    if (config.isDisableCsrf()) {
-      http.csrf().disable();
-    }
-  }
+  //  @Override
+  //  protected void configure(HttpSecurity http) throws Exception {
+  //    // disable sessions completely
+  //    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+  //
+  //    // add our composite authentication Filter for all requests (besides the ones ignored
+  // separately
+  //    // in the WebSecurity configure method
+  //    http.addFilterAt(
+  //            new CompositeAuthenticationFilter(tokenExtractors, config,
+  // authenticationManagerBean()),
+  //            BasicAuthenticationFilter.class)
+  //        .authorizeRequests()
+  //        .anyRequest()
+  //        .authenticated();
+  //
+  //    if (config.isDisableCsrf()) {
+  //      http.csrf().disable();
+  //    }
+  //
+  //  }
 
   /** Set globally ignored endpoints from config */
-  @Override
-  public void configure(WebSecurity web) {
-    final WebSecurity.IgnoredRequestConfigurer ignoredRequestConfigurer = web.ignoring();
-    config.getIgnoredEndpoints().forEach(ignoredRequestConfigurer::antMatchers);
-  }
+  //  @Override
+  //  public void configure(WebSecurity web) {
+  //    final WebSecurity.IgnoredRequestConfigurer ignoredRequestConfigurer = web.ignoring();
+  //    config.getIgnoredEndpoints().forEach(ignoredRequestConfigurer::antMatchers);
+  //  }
 }

@@ -35,7 +35,7 @@ class ProcessorProxyTest {
     proxyExtension = mock(ProxyExtension.class);
     proxyExtensions = List.of(proxyExtension);
     callback = mock(AsyncCallback.class);
-    exchange = mock(ExtendedExchange.class, RETURNS_DEEP_STUBS);
+    exchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
     processorProxySubject = new ProcessorProxy(namedNode, processor, proxyExtensions);
     outgoingProcessor = mock(SendProcessor.class);
     outgoingEndpoint = mock(Endpoint.class);

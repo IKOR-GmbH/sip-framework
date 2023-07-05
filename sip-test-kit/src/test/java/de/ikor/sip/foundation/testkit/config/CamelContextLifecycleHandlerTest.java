@@ -29,7 +29,7 @@ class CamelContextLifecycleHandlerTest {
 
   @BeforeEach
   void setup() {
-    camelContext = mock(ExtendedCamelContext.class);
+    camelContext = mock(CamelContext.class);
     defaultRouteController = mock(DefaultRouteController.class);
     when(camelContext.getRouteController()).thenReturn(defaultRouteController);
     List<Route> routes = new ArrayList<>();

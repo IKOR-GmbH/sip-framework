@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.security.authentication.common.extractors;
 import de.ikor.sip.foundation.security.authentication.CompositeAuthenticationFilter;
 import de.ikor.sip.foundation.security.authentication.SIPAuthenticationProvider;
 import de.ikor.sip.foundation.security.authentication.SIPAuthenticationToken;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.BadCredentialsException;
 
 /**

@@ -2,9 +2,9 @@ package de.ikor.sip.foundation.testkit.configurationproperties;
 
 import de.ikor.sip.foundation.testkit.config.AutoBatchTestCaseLoading;
 import de.ikor.sip.foundation.testkit.util.TestCaseDefinitionValidator;
+import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

@@ -26,7 +26,7 @@ class CustomTracerTest {
   private static final String EXCHANGE_ID = "exchangeId";
   private static final String ROUTE_ID = "routeId";
   @Autowired CustomTracer subject;
-  @Autowired ExtendedCamelContext camelContext;
+  @Autowired CamelContext camelContext;
   @Autowired SIPTraceConfig sipTraceConfig;
   ListAppender<ILoggingEvent> listAppender;
   Exchange exchange;

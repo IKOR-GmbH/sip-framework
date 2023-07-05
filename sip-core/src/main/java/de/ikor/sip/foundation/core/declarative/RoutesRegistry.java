@@ -20,11 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.Synchronized;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Endpoint;
-import org.apache.camel.Expression;
-import org.apache.camel.Processor;
-import org.apache.camel.Route;
+import org.apache.camel.*;
 import org.apache.camel.component.servlet.ServletConsumer;
 import org.apache.camel.processor.Enricher;
 import org.apache.camel.processor.PollEnricher;
@@ -222,7 +218,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
 
   private void initOutgoingEndpointIds(CamelContext camelContext) {
     ProcessorProxyRegistry proxiesRegistry =
-        camelContext.getExtension(ProcessorProxyRegistry.class);
+        camelContext.getCamelContextExtension().getContextPlugin(ProcessorProxyRegistry.class);
     proxiesRegistry
         .getProxies()
         .values()

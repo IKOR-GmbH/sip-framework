@@ -14,7 +14,7 @@ class RestRouteInvokerTest {
   @Test
   void GIVEN_mockedExchangeAndEndpoint_WHEN_executeTask_THEN_verifySendingToGoodEndpointUri() {
     // arrange
-    ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
+    CamelContext camelContext = mock(CamelContext.class);
     ProducerTemplate producerTemplate = mock(ProducerTemplate.class);
     RestRouteInvoker subject = new RestRouteInvoker(producerTemplate, camelContext);
     RestEndpoint restEndpoint = mock(RestEndpoint.class);

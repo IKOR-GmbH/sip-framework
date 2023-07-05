@@ -30,11 +30,12 @@ class TestKitHelperTest {
   private static final String ROUTE_ID = "routeId";
 
   private Exchange exchange;
-  private ExtendedCamelContext camelContext;
+  private CamelContext camelContext;
 
   @BeforeEach
   void setup() {
-    camelContext = mock(ExtendedCamelContext.class);
+    camelContext = mock(CamelContext.class);
+    when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
     exchange = mock(Exchange.class);
     Map<String, Object> headers = new HashMap<>();
     Message message = mock(Message.class);
