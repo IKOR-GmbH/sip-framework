@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.LoggingLevel;
 import org.apache.camel.model.RouteDefinition;
 
 /**
@@ -35,19 +34,17 @@ public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestratio
   }
 
   private void defaultRequestTransformer(final RouteDefinition definition) {
-    definition.log(
-        LoggingLevel.WARN,
-        String.format(
-            "No request transformation definition has been assigned to connector '%s' in connector-class '%s'",
-            relatedConnector.get().getId(), relatedConnector.getClass().getName()));
+    log.warn(
+        "No request transformation definition has been assigned to connector '%s' in connector-class '%s'",
+        relatedConnector.get().getId(), relatedConnector.getClass().getName());
+    definition.process(exchange -> {});
   }
 
   private void defaultResponseTransformer(final RouteDefinition definition) {
-    definition.log(
-        LoggingLevel.WARN,
-        String.format(
-            "No response transformation definition has been assigned to connector '%s' in connector-class '%s'",
-            relatedConnector.get().getId(), relatedConnector.getClass().getName()));
+    log.warn(
+        "No response transformation definition has been assigned to connector '%s' in connector-class '%s'",
+        relatedConnector.get().getId(), relatedConnector.getClass().getName());
+    definition.process(exchange -> {});
   }
 
   @Override

@@ -11,8 +11,6 @@ import de.ikor.sip.foundation.core.declarative.orchestration.connector.Connector
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
-import java.util.Optional;
-import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Delegate;
@@ -22,6 +20,9 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 /**
  * Base class for connector definitions.
  *
@@ -29,7 +30,8 @@ import org.springframework.context.ApplicationContextAware;
  * allows subclasses to attach an {@link Orchestrator} for the transformation between connector and
  * common domain models through the {@link #defineTransformationOrchestrator()} method.
  */
-abstract non-sealed class ConnectorBase implements ConnectorDefinition, ApplicationContextAware {
+public abstract non-sealed class ConnectorBase
+    implements ConnectorDefinition, ApplicationContextAware {
 
   @Getter(AccessLevel.PROTECTED)
   private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -40,6 +42,9 @@ abstract non-sealed class ConnectorBase implements ConnectorDefinition, Applicat
   @Delegate
   private final Orchestrator<ConnectorOrchestrationInfo> modelTransformationOrchestrator =
       defineTransformationOrchestrator();
+
+  private Optional<RequestMappingRouteTransformer<Object, Object>> requestMapper;
+  private Optional<ResponseMappingRouteTransformer<Object, Object>> responseMapper;
 
   @Override
   public Orchestrator<ConnectorOrchestrationInfo> getOrchestrator() {
@@ -62,7 +67,13 @@ abstract non-sealed class ConnectorBase implements ConnectorDefinition, Applicat
   }
 
   @SuppressWarnings("unchecked")
-  private Optional<RequestMappingRouteTransformer<Object, Object>> getRequestMapper() {
+  public Optional<RequestMappingRouteTransformer<Object, Object>> getRequestMapper() {
+    if (requestMapper == null) {
+      requestMapper = Optional.empty();
+    }
+    if (requestMapper.isPresent()) {
+      return requestMapper;
+    }
     final var annotation =
         DeclarativeHelper.getAnnotationIfPresent(UseRequestModelMapper.class, this);
     if (annotation.isPresent()) {
@@ -72,13 +83,19 @@ abstract non-sealed class ConnectorBase implements ConnectorDefinition, Applicat
         transformer.setMapper(
             Optional.of(DeclarativeHelper.createMapperInstance(annotation.get().value())));
       }
-      return Optional.of(transformer);
+      requestMapper = Optional.of(transformer);
     }
-    return Optional.empty();
+    return requestMapper;
   }
 
   @SuppressWarnings("unchecked")
-  private Optional<ResponseMappingRouteTransformer<Object, Object>> getResponseMapper() {
+  public Optional<ResponseMappingRouteTransformer<Object, Object>> getResponseMapper() {
+    if (responseMapper == null) {
+      responseMapper = Optional.empty();
+    }
+    if (responseMapper.isPresent()) {
+      return responseMapper;
+    }
     final var annotation =
         DeclarativeHelper.getAnnotationIfPresent(UseResponseModelMapper.class, this);
     if (annotation.isPresent()) {
@@ -88,9 +105,9 @@ abstract non-sealed class ConnectorBase implements ConnectorDefinition, Applicat
         transformer.setMapper(
             Optional.of(DeclarativeHelper.createMapperInstance(annotation.get().value())));
       }
-      return Optional.of(transformer);
+      responseMapper = Optional.of(transformer);
     }
-    return Optional.empty();
+    return responseMapper;
   }
 
   public final Supplier<IntegrationScenarioDefinition> getScenario() {

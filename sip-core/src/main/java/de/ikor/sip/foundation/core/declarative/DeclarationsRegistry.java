@@ -4,6 +4,7 @@ import static java.util.function.Predicate.not;
 
 import de.ikor.sip.foundation.core.declarative.annonation.Disabled;
 import de.ikor.sip.foundation.core.declarative.annonation.GlobalMapper;
+import de.ikor.sip.foundation.core.declarative.connector.*;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
@@ -13,23 +14,23 @@ import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefini
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
+import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
+import de.ikor.sip.foundation.core.declarative.model.ResponseMappingRouteTransformer;
+import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 @Getter
 @Service
+@Slf4j
 public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
   private static final String CONNECTOR_GROUP = "connector group";
@@ -64,10 +65,53 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
     createMissingConnectorGroups();
     checkForDuplicateConnectorGroups();
+    checkForUnusedMappers();
     checkForDuplicateScenarios();
     checkForMissingConnectorParent();
     checkForUnusedScenarios();
     checkForDuplicateConnectors();
+  }
+
+  private void checkForUnusedMappers() {
+    connectors.forEach(
+        connectorDefinition -> {
+          if (connectorDefinition instanceof ConnectorBase base) {
+            base.getRequestMapper()
+                .ifPresent(
+                    mapper -> {
+                      if (isRequestMappingOverridden(connectorDefinition, mapper)) {
+                        throw SIPFrameworkInitializationException.init(
+                            "Request mapping in connector '%s' is defined, but overridden",
+                            connectorDefinition.getId());
+                      }
+                    });
+            base.getResponseMapper()
+                .ifPresent(
+                    mapper -> {
+                      if (isResponseMappingOverridden(connectorDefinition, mapper)) {
+                        throw SIPFrameworkInitializationException.init(
+                            "Response mapping in connector '%s' is defined, but overridden",
+                            connectorDefinition.getId());
+                      }
+                    });
+          }
+        });
+  }
+
+  private boolean isRequestMappingOverridden(
+      ConnectorDefinition connectorDefinition,
+      RequestMappingRouteTransformer<Object, Object> mapper) {
+    return connectorDefinition.getOrchestrator()
+            instanceof ConnectorOrchestrator connectorOrchestrator
+        && (!mapper.equals(connectorOrchestrator.getRequestRouteTransformer()));
+  }
+
+  private boolean isResponseMappingOverridden(
+      ConnectorDefinition connectorDefinition,
+      ResponseMappingRouteTransformer<Object, Object> mapper) {
+    return connectorDefinition.getOrchestrator()
+            instanceof ConnectorOrchestrator connectorOrchestrator
+        && (!mapper.equals(connectorOrchestrator.getResponseRouteTransformer()));
   }
 
   private void checkForMissingConnectorParent() {
