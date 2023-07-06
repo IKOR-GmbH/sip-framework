@@ -11,6 +11,8 @@ import de.ikor.sip.foundation.core.declarative.orchestration.connector.Connector
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import java.util.Optional;
+import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Delegate;
@@ -19,9 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-
-import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * Base class for connector definitions.

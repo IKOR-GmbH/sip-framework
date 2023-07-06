@@ -44,6 +44,8 @@ class DeclarationsRegistryTest {
   private final List<ConnectorDefinition> connectors = new ArrayList<>();
   private final List<ModelMapper<?, ?>> modelMappers = new ArrayList<>();
 
+  private ApplicationContext applicationContext = mock(ApplicationContext.class);
+
   public static class ScenarioMock extends IntegrationScenarioBase {}
 
   public static class InboundConnectorMock extends GenericInboundConnectorBase {
@@ -160,8 +162,8 @@ class DeclarationsRegistryTest {
   }
 
   @Test
-  void no_annotation() {
-    ApplicationContext applicationContext = mock(ApplicationContext.class);
+  void
+      When_CheckAnnotatedInboundConnector_With_NoParent_Then_SIPFrameworkInitializationExceptionThrown() {
     when(applicationContext.getBeansWithAnnotation(InboundConnector.class))
         .thenReturn(Map.of("key", new Object()));
     assertThatThrownBy(
@@ -176,8 +178,8 @@ class DeclarationsRegistryTest {
   }
 
   @Test
-  void no_annotationout() {
-    ApplicationContext applicationContext = mock(ApplicationContext.class);
+  void
+      When_CheckAnnotatedOutboundConnector_With_NoParent_Then_SIPFrameworkInitializationExceptionThrown() {
     when(applicationContext.getBeansWithAnnotation(OutboundConnector.class))
         .thenReturn(Map.of("key", new Object()));
     assertThatThrownBy(
@@ -220,7 +222,8 @@ class DeclarationsRegistryTest {
     assertThatThrownBy(
             () ->
                 subject =
-                    new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers))
+                    new DeclarationsRegistry(
+                        connectorGroups, scenarios, connectors, modelMappers, applicationContext))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage("Request mapping in connector 'mockConnector' is defined, but overridden");
   }
@@ -234,7 +237,9 @@ class DeclarationsRegistryTest {
     // assert
     assertDoesNotThrow(
         () -> {
-          subject = new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers);
+          subject =
+              new DeclarationsRegistry(
+                  connectorGroups, scenarios, connectors, modelMappers, applicationContext);
         });
   }
 
@@ -259,7 +264,9 @@ class DeclarationsRegistryTest {
     // assert
     assertDoesNotThrow(
         () -> {
-          subject = new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers);
+          subject =
+              new DeclarationsRegistry(
+                  connectorGroups, scenarios, connectors, modelMappers, applicationContext);
         });
   }
 
@@ -292,7 +299,8 @@ class DeclarationsRegistryTest {
     assertThatThrownBy(
             () ->
                 subject =
-                    new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers))
+                    new DeclarationsRegistry(
+                        connectorGroups, scenarios, connectors, modelMappers, applicationContext))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage("Response mapping in connector 'mockConnector' is defined, but overridden");
   }
