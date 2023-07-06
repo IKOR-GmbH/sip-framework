@@ -57,7 +57,7 @@ class MailRouteInvokerTest {
   @Test
   void When_isApplicable_Expect_True() {
     // arrange
-    MailEndpoint endpoint = mock(MailEndpoint.class);
+    MailEndpoint endpoint = new MailEndpoint();
 
     // act + assert
     assertThat(subject.isApplicable(endpoint)).isTrue();
