@@ -10,7 +10,7 @@ nav:
     - Installation Guide: installation.md
     - Archetype: archetype.md
     - Core: core.md
-    - Declarative Structure: version3.md
+    - Declarative Structure: declarative.md
     - Integration Starter: integration-starter.md
     - Starter Parent: starter-parent.md
     - Security: security.md

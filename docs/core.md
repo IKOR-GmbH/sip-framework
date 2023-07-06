@@ -303,7 +303,7 @@ sip:
         showExchangeId: true
         showProperties: true
         maxChars: 100
- ```
+```
 
 Exchanges will contain the "traceSet" header, which appears as a list of ordered exchange Ids,
 appended based on EIP used in a route and separated by a coma. This allows to easily track the path of an message.
