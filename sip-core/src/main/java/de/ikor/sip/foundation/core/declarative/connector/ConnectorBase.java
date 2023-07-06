@@ -42,8 +42,8 @@ public abstract non-sealed class ConnectorBase
   private final Orchestrator<ConnectorOrchestrationInfo> modelTransformationOrchestrator =
       defineTransformationOrchestrator();
 
-  private Optional<RequestMappingRouteTransformer<Object, Object>> requestMapper;
-  private Optional<ResponseMappingRouteTransformer<Object, Object>> responseMapper;
+  private ResponseMappingRouteTransformer<Object, Object> responseMappingRouteTransformer;
+  private RequestMappingRouteTransformer<Object, Object> requestMappingRouteTransformer;
 
   @Override
   public Orchestrator<ConnectorOrchestrationInfo> getOrchestrator() {
@@ -67,46 +67,40 @@ public abstract non-sealed class ConnectorBase
 
   @SuppressWarnings("unchecked")
   public Optional<RequestMappingRouteTransformer<Object, Object>> getRequestMapper() {
-    if (requestMapper == null) {
-      requestMapper = Optional.empty();
-    }
-    if (requestMapper.isPresent()) {
-      return requestMapper;
+    if (requestMappingRouteTransformer != null) {
+      return Optional.of(requestMappingRouteTransformer);
     }
     final var annotation =
         DeclarativeHelper.getAnnotationIfPresent(UseRequestModelMapper.class, this);
     if (annotation.isPresent()) {
-      final var transformer =
+      requestMappingRouteTransformer =
           RequestMappingRouteTransformer.forConnectorWithScenario(this, getScenario());
       if (!FindAutomaticModelMapper.class.equals(annotation.get().value())) {
-        transformer.setMapper(
+        requestMappingRouteTransformer.setMapper(
             Optional.of(DeclarativeHelper.createMapperInstance(annotation.get().value())));
       }
-      requestMapper = Optional.of(transformer);
+      return Optional.of(requestMappingRouteTransformer);
     }
-    return requestMapper;
+    return Optional.empty();
   }
 
   @SuppressWarnings("unchecked")
   public Optional<ResponseMappingRouteTransformer<Object, Object>> getResponseMapper() {
-    if (responseMapper == null) {
-      responseMapper = Optional.empty();
-    }
-    if (responseMapper.isPresent()) {
-      return responseMapper;
+    if (responseMappingRouteTransformer != null) {
+      return Optional.of(responseMappingRouteTransformer);
     }
     final var annotation =
         DeclarativeHelper.getAnnotationIfPresent(UseResponseModelMapper.class, this);
     if (annotation.isPresent()) {
-      final var transformer =
+      responseMappingRouteTransformer =
           ResponseMappingRouteTransformer.forConnectorWithScenario(this, getScenario());
       if (!FindAutomaticModelMapper.class.equals(annotation.get().value())) {
-        transformer.setMapper(
+        responseMappingRouteTransformer.setMapper(
             Optional.of(DeclarativeHelper.createMapperInstance(annotation.get().value())));
       }
-      responseMapper = Optional.of(transformer);
+      return Optional.of(responseMappingRouteTransformer);
     }
-    return responseMapper;
+    return Optional.empty();
   }
 
   public final Supplier<IntegrationScenarioDefinition> getScenario() {
