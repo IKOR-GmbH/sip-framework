@@ -77,7 +77,7 @@
         <commons-text.version>1.10.0</commons-text.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <asm.version>9.4</asm.version>
-        <cxf.version>4.0.0</cxf.version>    <!-- keep in sync with camel-dependencies cxf-version property -->
+        <cxf.version>4.0.2</cxf.version>    <!-- keep in sync with camel-dependencies cxf-version property -->
 
         <!-- maven dependancies -->
         <maven-core.version>3.8.6</maven-core.version>
