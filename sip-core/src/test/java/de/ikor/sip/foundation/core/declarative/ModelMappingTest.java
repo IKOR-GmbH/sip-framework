@@ -26,7 +26,7 @@ import org.springframework.test.annotation.DirtiesContext;
     properties = {
       "camel.rest.binding-mode=auto",
       "camel.openapi.enabled=false",
-      "camel.component.servlet.servlet-name=ModelMappingServlet"
+      "camel.servlet.mapping.servlet-name=ModelMappingServlet"
     },
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisableJmx(false)
