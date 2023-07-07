@@ -138,7 +138,7 @@ All registered routes with basic info can be listed by using the following URI:
 GET /actuator/adapter-routes
 ```
 
-Getting only routes with sip middle component consumer:
+Getting only routes with sip middle component consumer (including all outbound connectors):
 
 ```
 GET /actuator/adapter-routes/sipmc
@@ -171,8 +171,9 @@ This can be achieved by using following URI:
 POST /actuator/adapter-routes/{routeId}/{operation}
 ```
 
-Executing desired operation on the routes without providing route id is possible on sip middle component. By specifying
-operation on the following URI, operation will be executed for all routes which has sip middle component as a consumer:
+It is also possible to execute desired operation on integration scenarios level via sip middle component. 
+By specifying the operation in the following URI, 
+it will be executed for all outgoing connectors inside the adapter, and any other consumer using sipmc:
 
 ```
 POST /actuator/adapter-routes/sipmc/{operation}
