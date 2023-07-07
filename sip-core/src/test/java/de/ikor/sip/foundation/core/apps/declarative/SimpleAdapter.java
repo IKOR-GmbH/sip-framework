@@ -18,7 +18,6 @@ import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.camel.model.rest.RestDefinition;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
@@ -93,7 +92,7 @@ public class SimpleAdapter {
 
     @Override
     protected void configureRest(RestDefinition definition) {
-      definition.bindingMode(RestBindingMode.off).post("path").type(String.class).get("path");
+      definition.bindingMode("off").post("path").type(String.class).get("path");
     }
 
     @Override
