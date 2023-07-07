@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
@@ -44,7 +46,7 @@ class DeclarationsRegistryTest {
   private final List<ConnectorDefinition> connectors = new ArrayList<>();
   private final List<ModelMapper<?, ?>> modelMappers = new ArrayList<>();
 
-  private ApplicationContext applicationContext = mock(ApplicationContext.class);
+  private final ApplicationContext applicationContext = mock(ApplicationContext.class);
 
   public static class ScenarioMock extends IntegrationScenarioBase {}
 
@@ -191,6 +193,38 @@ class DeclarationsRegistryTest {
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             "Annotated OutboundConnector java.lang.Object is missing OutboundConnectorDefinition parent class.");
+  }
+
+  @Test
+  void
+      When_CheckAnnotatedIntegrationScenario_With_NoParent_Then_SIPFrameworkInitializationExceptionThrown() {
+    when(applicationContext.getBeansWithAnnotation(IntegrationScenario.class))
+        .thenReturn(Map.of("key", new Object()));
+    assertThatThrownBy(
+            () -> {
+              subject =
+                  new DeclarationsRegistry(
+                      connectorGroups, scenarios, connectors, modelMappers, applicationContext);
+            })
+        .isInstanceOf(SIPFrameworkInitializationException.class)
+        .hasMessage(
+            "Annotated IntegrationScenario java.lang.Object is missing IntegrationScenarioBase parent class.");
+  }
+
+  @Test
+  void
+      When_CheckAnnotatedConnectorGroup_With_NoParent_Then_SIPFrameworkInitializationExceptionThrown() {
+    when(applicationContext.getBeansWithAnnotation(ConnectorGroup.class))
+        .thenReturn(Map.of("key", new Object()));
+    assertThatThrownBy(
+            () -> {
+              subject =
+                  new DeclarationsRegistry(
+                      connectorGroups, scenarios, connectors, modelMappers, applicationContext);
+            })
+        .isInstanceOf(SIPFrameworkInitializationException.class)
+        .hasMessage(
+            "Annotated ConnectorGroup java.lang.Object is missing ConnectorGroupBase parent class.");
   }
 
   @Test

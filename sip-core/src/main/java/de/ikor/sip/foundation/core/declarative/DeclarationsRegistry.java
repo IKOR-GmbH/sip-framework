@@ -2,21 +2,16 @@ package de.ikor.sip.foundation.core.declarative;
 
 import static java.util.function.Predicate.not;
 
-import de.ikor.sip.foundation.core.declarative.annonation.Disabled;
-import de.ikor.sip.foundation.core.declarative.annonation.GlobalMapper;
-import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
-import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
+import de.ikor.sip.foundation.core.declarative.annonation.*;
 import de.ikor.sip.foundation.core.declarative.connector.*;
-import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorBase;
-import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
+import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupBase;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.model.ResponseMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.*;
@@ -65,8 +60,10 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
     createMissingConnectorGroups();
     checkForDuplicateConnectorGroups();
+    checkForMissingConnectorGroupParent();
     checkForUnusedMappers();
     checkForDuplicateScenarios();
+    checkForMissingScenarioParent();
     checkForMissingConnectorParent();
     checkForUnusedScenarios();
     checkForDuplicateConnectors();
@@ -112,6 +109,34 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     return connectorDefinition.getOrchestrator()
             instanceof ConnectorOrchestrator connectorOrchestrator
         && (!mapper.equals(connectorOrchestrator.getResponseRouteTransformer()));
+  }
+
+  private void checkForMissingScenarioParent() {
+    applicationContext
+        .getBeansWithAnnotation(IntegrationScenario.class)
+        .values()
+        .forEach(
+            o -> {
+              if (!(o instanceof IntegrationScenarioBase)) {
+                throw SIPFrameworkInitializationException.init(
+                    "Annotated IntegrationScenario %s is missing IntegrationScenarioBase parent class.",
+                    o.getClass().getName());
+              }
+            });
+  }
+
+  private void checkForMissingConnectorGroupParent() {
+    applicationContext
+        .getBeansWithAnnotation(ConnectorGroup.class)
+        .values()
+        .forEach(
+            o -> {
+              if (!(o instanceof ConnectorGroupBase)) {
+                throw SIPFrameworkInitializationException.init(
+                    "Annotated ConnectorGroup %s is missing ConnectorGroupBase parent class.",
+                    o.getClass().getName());
+              }
+            });
   }
 
   private void checkForMissingConnectorParent() {
