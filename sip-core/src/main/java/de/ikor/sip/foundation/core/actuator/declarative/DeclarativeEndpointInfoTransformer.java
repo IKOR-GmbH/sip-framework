@@ -11,9 +11,6 @@ import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -25,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * Util transformer class with methods for transforming framework declarative objects to their
@@ -129,10 +128,8 @@ public class DeclarativeEndpointInfoTransformer {
       Optional<Path> file =
           resources.stream()
               .filter(
-                  resource -> resource
-                      .getFileName()
-                      .toString()
-                      .equalsIgnoreCase(id + MARKDOWN_EXTENSION))
+                  resource ->
+                      resource.getFileName().toString().equalsIgnoreCase(id + MARKDOWN_EXTENSION))
               .findFirst();
 
       if (file.isPresent()) {

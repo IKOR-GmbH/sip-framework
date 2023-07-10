@@ -1,5 +1,5 @@
 {
   "author": "Nemikor",
-  "pullrequestId": "227",
-  "message": "Improve validation for inputs related to package naming in order to follow java conventions."
+  "pullrequestId": "232",
+  "message": "Use case insensitive ids to find docs for Scenarios, Connectors and Groups."
 }
