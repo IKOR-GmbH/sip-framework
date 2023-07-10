@@ -4,17 +4,14 @@
 
 ## Description
 
-SIP middle component relates to the key SIP concept - splitting integration logic into submodules (connectors).
-Combining connectors into one data flow is quite easy with Camel and can be done in many ways. However, if we
-do it with one of Camel's existing component, we couldn't be sure if it represents connection between connectors or just
-some intermediate routing within the single connector. If we (properly) use sipmc component,
-it provides a clear functional and visual distinction between a connector's ending or beginning.
-With it, adapter routes become more standardized and manageable.
-Middle component is also a point of higher control over Apache Camel flow, as it provides a placeholder for future customizations
-which will make it easier to bridge connectors in different ways, e.g. by using JMS broker implicitly if configured.
+SIP middle component is a tool used by the SIP framework to link connectors inside adapters. 
+It's built as a custom Apache Camel component, used inside integration scenarios, 
+but it's also available to adapter developers. 
+The goal was to represent where one integration side ends and the other begins
+through clear functional and visual distinction (via graphical interface).
 
-Middle component hides connecting technology and makes connection of two sub-systems abstract and simple. Current version
-supports only in-memory connection channel implemented on top of Camel's SEDA component. It provides 1 to 1 and
+Middle component hides connecting technology and makes connection of two sub-systems abstract and simple. 
+It supports only in-memory connection channel implemented on top of Camel's SEDA component. It provides 1 to 1 and
 publish-subscribe patterns and can support many channels in single adapter. Middle component can automatically determine
 the number of consumers for a specific channel and autoconfigure itself accordingly, as a 1 to 1 or publish-subscribe connector.
 In any case it will be autoconfigured with waitForTaskToComplete=always, meaning that it will wait for all asynchronous   
@@ -35,8 +32,7 @@ Multiple sipmc routes may exist with different channel names.
 
 When building adapter by using Declarative Structure sipmc is embedded and explicit usage is not necessary. 
 Sipmc is placed in Integration Scenario, and acts as a Camel route connection between Inbound and Outbound Connectors.
-
-Since the sipmc is already embedded, 
+This means all inbound connectors will end with sipmc, while outbound connectors will start with sipmc.
 
 ## Examples
 

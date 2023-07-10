@@ -10,11 +10,12 @@ nav:
     - Installation Guide: installation.md
     - Archetype: archetype.md
     - Core: core.md
-    - Middle Component: middle-component.md
+    - Declarative Structure: declarative.md
     - Integration Starter: integration-starter.md
     - Starter Parent: starter-parent.md
     - Security: security.md
     - Test Kit: test-kit.md
+    - Middle Component: middle-component.md
     - Framework Version Upgrade: framework_version_upgrade.md
     - License: license.md
     - Contribution Guidelines: CONTRIBUTING.md
