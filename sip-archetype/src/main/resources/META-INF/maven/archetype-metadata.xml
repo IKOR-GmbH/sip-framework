@@ -35,18 +35,20 @@ under the License.
             <defaultValue>1.0.0-SNAPSHOT</defaultValue>
         </requiredProperty>
         <requiredProperty key="connectorGroup1">
-            <validationRegex>^[a-z0-9_]+$
+            <validationRegex>^[a-z][a-z0-9]*$
             </validationRegex>
         </requiredProperty>
         <requiredProperty key="connectorGroup2">
-            <validationRegex>^[a-z0-9_]+$
+            <validationRegex>^[a-z][a-z0-9]*$
             </validationRegex>
         </requiredProperty>
         <requiredProperty key="package">
+            <validationRegex>^[a-z][a-z0-9]*(?:\.[a-z][a-z0-9]*)*$
+            </validationRegex>
             <defaultValue>${groupId}.${packageSuffix}</defaultValue>
         </requiredProperty>
         <requiredProperty key="packageSuffix">
-            <validationRegex>^[a-z0-9_]+$
+            <validationRegex>^[a-z][a-z0-9]*$
             </validationRegex>
         </requiredProperty>
         <requiredProperty key="useLombokDefault">
