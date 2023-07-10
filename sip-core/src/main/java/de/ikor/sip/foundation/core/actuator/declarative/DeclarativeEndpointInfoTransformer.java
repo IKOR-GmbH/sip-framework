@@ -10,8 +10,7 @@ import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import lombok.extern.slf4j.Slf4j;
-
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -23,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * Util transformer class with methods for transforming framework declarative objects to their
@@ -36,6 +37,7 @@ public class DeclarativeEndpointInfoTransformer {
   private static final String INTEGRATION_SCENARIO_DEFAULT_DOCS_PATH =
       "documents/structure/integration-scenarios";
   private static final String CONNECTORS_DEFAULT_DOCS_PATH = "documents/structure/connectors";
+  private static final String MARKDOWN_EXTENSION = ".md";
 
   private DeclarativeEndpointInfoTransformer() {}
 
@@ -113,39 +115,49 @@ public class DeclarativeEndpointInfoTransformer {
   }
 
   private static String readDocumentation(String defaultDocsPath, String path, String id) {
-//    final var resourcePath = path.isEmpty() ? String.format("%s/%s.md", defaultDocsPath, id) : path;
-//    final var resource = new ClassPathResource(resourcePath);
-//
-//    if (!resource.isReadable()) {
-//      return null;
-//    }
-//
-//    try (var input = resource.getInputStream()) {
-//      return new String(input.readAllBytes());
-//    } catch (IOException e) {
-//      throw new SIPFrameworkException("Failed to read documentation resource", e);
-//    }
+    if (path.isEmpty()) {
+      return findFileByIdAndGetContent(defaultDocsPath, id);
+    }
+    return getSpecifiedFileContent(path);
+  }
+
+  private static String findFileByIdAndGetContent(String defaultDocsPath, String id) {
     try {
-    List<Path> resources = getResourcesFromClasspath(defaultDocsPath);
+      List<Path> resources = getResourcesFromClasspath(defaultDocsPath);
 
-    // Find the file using case-insensitive comparison
-    Optional<Path> file = resources.stream()
-            .filter(path1 -> {
-              return path1.getFileName().toString().equalsIgnoreCase(id + ".md");
-            })
-            .findFirst();
+      Optional<Path> file =
+          resources.stream()
+              .filter(
+                  resource -> {
+                    return resource
+                        .getFileName()
+                        .toString()
+                        .equalsIgnoreCase(id + MARKDOWN_EXTENSION);
+                  })
+              .findFirst();
 
-    if (file.isPresent()) {
-      Path filePath = file.get();
-      String fileContent = Files.readString(filePath);
-      return fileContent;
-    } else {
-      System.out.println("File not found.");
-    }
+      if (file.isPresent()) {
+        Path filePath = file.get();
+        return Files.readString(filePath);
+      }
+      return null;
     } catch (IOException | URISyntaxException e) {
-
+      throw SIPFrameworkException.init("Failed to read documentation resource", e);
     }
-    return "";
+  }
+
+  private static String getSpecifiedFileContent(String resourcePath) {
+    final var resource = new ClassPathResource(resourcePath);
+
+    if (!resource.isReadable()) {
+      return null;
+    }
+
+    try (var input = resource.getInputStream()) {
+      return new String(input.readAllBytes());
+    } catch (IOException e) {
+      throw SIPFrameworkException.init("Failed to read documentation resource", e);
+    }
   }
 
   private static JsonSchema createJsonSchema(JsonSchemaGenerator schemaGen, Class<?> classModel) {
@@ -160,16 +172,17 @@ public class DeclarativeEndpointInfoTransformer {
     return null;
   }
 
-  private static List<Path> getResourcesFromClasspath(String path) throws IOException, URISyntaxException {
+  private static List<Path> getResourcesFromClasspath(String defaultPath)
+      throws IOException, URISyntaxException {
     List<Path> resources = new ArrayList<>();
 
     ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-    Enumeration<URL> urls = classLoader.getResources(path);
+    Enumeration<URL> urls = classLoader.getResources(defaultPath);
     while (urls.hasMoreElements()) {
       URL url = urls.nextElement();
       if (url.getProtocol().equals("file")) {
-        Path path1 = Paths.get(url.toURI());
-        resources.addAll(getAllFiles(path1));
+        Path path = Paths.get(url.toURI());
+        resources.addAll(getAllFiles(path));
       }
     }
 
