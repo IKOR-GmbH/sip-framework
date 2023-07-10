@@ -9,18 +9,23 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import de.ikor.sip.foundation.core.CoreTestApplication;
-import java.util.*;
-import org.apache.camel.*;
+import java.util.List;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.NamedNode;
+import org.apache.camel.NamedRoute;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(
     classes = CoreTestApplication.class,
     properties = {"sip.core.tracing.enabled=true", "sip.core.tracing.log=true"})
+@DirtiesContext
 class CustomTracerTest {
 
   private static final String EXCHANGE_ID = "exchangeId";
