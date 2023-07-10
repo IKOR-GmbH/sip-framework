@@ -57,20 +57,8 @@
                 <li class="toctree-l1"><a class="reference internal" href="../core/">Core</a>
                 </li>
               </ul>
-              <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="./">Middle Component</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#description">Description</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#how-to-use">How to use</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#middle-component-with-declarative-structure">Middle Component with Declarative Structure</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#unit-testing-with-sipmc">Unit testing with sipmc</a>
-    </li>
-    </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../declarative/">Declarative Structure</a>
                 </li>
               </ul>
               <ul>
@@ -87,6 +75,22 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../test-kit/">Test Kit</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Middle Component</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-to-use">How to use</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#middle-component-with-declarative-structure">Middle Component with Declarative Structure</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#unit-testing-with-sipmc">Unit testing with sipmc</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
@@ -195,16 +199,13 @@
 </ul>
 </div>
 <h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
-<p>SIP middle component relates to the key SIP concept - splitting integration logic into submodules (connectors).
-Combining connectors into one data flow is quite easy with Camel and can be done in many ways. However, if we
-do it with one of Camel's existing component, we couldn't be sure if it represents connection between connectors or just
-some intermediate routing within the single connector. If we (properly) use sipmc component,
-it provides a clear functional and visual distinction between a connector's ending or beginning.
-With it, adapter routes become more standardized and manageable.
-Middle component is also a point of higher control over Apache Camel flow, as it provides a placeholder for future customizations
-which will make it easier to bridge connectors in different ways, e.g. by using JMS broker implicitly if configured.</p>
-<p>Middle component hides connecting technology and makes connection of two sub-systems abstract and simple. Current version
-supports only in-memory connection channel implemented on top of Camel's SEDA component. It provides 1 to 1 and
+<p>SIP middle component is a tool used by the SIP framework to link connectors inside adapters. 
+It's built as a custom Apache Camel component, used inside integration scenarios, 
+but it's also available to adapter developers. 
+The goal was to represent where one integration side ends and the other begins
+through clear functional and visual distinction (via graphical interface).</p>
+<p>Middle component hides connecting technology and makes connection of two sub-systems abstract and simple. 
+It supports only in-memory connection channel implemented on top of Camel's SEDA component. It provides 1 to 1 and
 publish-subscribe patterns and can support many channels in single adapter. Middle component can automatically determine
 the number of consumers for a specific channel and autoconfigure itself accordingly, as a 1 to 1 or publish-subscribe connector.
 In any case it will be autoconfigured with waitForTaskToComplete=always, meaning that it will wait for all asynchronous <br />
@@ -216,8 +217,8 @@ processors to finish before it continues route execution. </p>
 Multiple sipmc routes may exist with different channel names.</p>
 <h2 id="middle-component-with-declarative-structure">Middle Component with Declarative Structure<a class="headerlink" href="#middle-component-with-declarative-structure" title="Permanent link">&para;</a></h2>
 <p>When building adapter by using Declarative Structure sipmc is embedded and explicit usage is not necessary. 
-Sipmc is placed in Integration Scenario, and acts as a Camel route connection between Inbound and Outbound Connectors.</p>
-<p>Since the sipmc is already embedded, </p>
+Sipmc is placed in Integration Scenario, and acts as a Camel route connection between Inbound and Outbound Connectors.
+This means all inbound connectors will end with sipmc, while outbound connectors will start with sipmc.</p>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
 <p><strong>1 to 1:</strong>
 In this scenario response provided by "mock:output" should be propagated back to the caller - "mock:input"</p>
@@ -263,8 +264,8 @@ void test() throws Exception {
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../core/" class="btn btn-neutral float-left" title="Core"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../integration-starter/" class="btn btn-neutral float-right" title="Integration Starter">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../test-kit/" class="btn btn-neutral float-left" title="Test Kit"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../framework_version_upgrade/" class="btn btn-neutral float-right" title="Framework Version Upgrade">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -292,10 +293,10 @@ void test() throws Exception {
         </span>
     
     
-      <span><a href="../core/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../test-kit/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../integration-starter/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../framework_version_upgrade/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

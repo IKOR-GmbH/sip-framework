@@ -58,15 +58,15 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#framework-version-upgrade">Framework version upgrade</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#how-and-why-to-use-sip-middle-component">How and why to use SIP Middle Component</a>
-    </li>
     <li class="toctree-l3"><a class="reference internal" href="#adding-additional-camel-starters-to-the-project">Adding additional Camel starters to the project</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#adding-new-system-connectors">Adding new System Connectors</a>
+    <li class="toctree-l3"><a class="reference internal" href="#adding-new-connector-groups">Adding new Connector Groups</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#development-tips">Development Tips</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#configuration-properties">Configuration properties</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#sip-middle-component">SIP Middle Component</a>
     </li>
         </ul>
     </li>
@@ -86,7 +86,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="middle-component/">Middle Component</a>
+                <li class="toctree-l1"><a class="reference internal" href="declarative/">Declarative Structure</a>
                 </li>
               </ul>
               <ul>
@@ -103,6 +103,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="test-kit/">Test Kit</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="middle-component/">Middle Component</a>
                 </li>
               </ul>
               <ul>
@@ -217,11 +221,11 @@ approach for all adapters.</p>
 </li>
 <li><a href="#getting-started">Getting started</a><ul>
 <li><a href="#framework-version-upgrade">Framework version upgrade</a></li>
-<li><a href="#how-and-why-to-use-sip-middle-component">How and why to use SIP Middle Component</a></li>
 <li><a href="#adding-additional-camel-starters-to-the-project">Adding additional Camel starters to the project</a></li>
-<li><a href="#adding-new-system-connectors">Adding new System Connectors</a></li>
+<li><a href="#adding-new-connector-groups">Adding new Connector Groups</a></li>
 <li><a href="#development-tips">Development Tips</a></li>
 <li><a href="#configuration-properties">Configuration properties</a></li>
+<li><a href="#sip-middle-component">SIP Middle Component</a></li>
 </ul>
 </li>
 </ul>
@@ -247,18 +251,19 @@ systems, but all the principles apply equally to such scenarios.</p>
 <p>The integration logic is divided into different packages: </p>
 <p><strong>Common</strong></p>
 <p>The <strong>Common</strong> package provides the common data model inside domain for both systems and common util functionalities.</p>
-<p><strong>Domain</strong></p>
-<p><strong>Domain</strong> package should contain only simple Java objects representing the respective domain
+<p><strong>Models</strong></p>
+<p><strong>Models</strong> package should contain only simple Java objects representing the respective domain
 in which the system connectors of an adapter operate, and should not contain any integration logic.
 All connectors should adapt the data models of their systems to or from this common model, 
 depending on data flow, due to their incompatibilities. 
 The domain can be seen as a kind of contract between the different system connectors,
 which ensures that they can communicate with each other. 
 It contains common data model which uniforms the data models from all integration sides.</p>
-<p><strong>Connectors</strong></p>
-<p>Each <strong>Connector</strong> is designed to communicate with the associated external systems, thus all classes found in a connector
-should only relate to their integration side. To enable this, their local domain objects are aligned with the API of an
-external systems they communicate with. In order to send a message from one system connector
+<p><strong>Connector groups</strong></p>
+<p>Each <strong>Connector group</strong> is designed to contain connectors which communicate with the associated external systems, 
+thus all classes found in a connector group should only relate to their integration side. 
+To enable this, their local domain objects are aligned with the API of an
+external systems they communicate with. In order to send a message from one system 
 to another, the local domain objects must be mapped to the shared domain object. Furthermore, this means that a message
 from system A is mapped to the shared domain object and then from the shared domain object to the model of system B and
 vice versa, due to their bidirectional nature.
@@ -269,9 +274,9 @@ since integrated systems use the same communication data model sometimes.</p>
 <p>Each connector will have the following structure:</p>
 <ul>
 <li><code>config</code> - a place for any configuration classes</li>
-<li><code>sink</code> - here we should define Camel routes</li>
+<li><code>connectors</code> - here we should define inbound and outbound connectors</li>
 <li><code>transformers</code> - it should contain classes for adapting the connector model to common domain model.</li>
-<li><code>domain</code> - (optional) it may contain the data model of the system.</li>
+<li><code>models</code> - (optional) it may contain the data model of the system.</li>
 <li><code>processors</code> - camel processors</li>
 <li><code>validators</code> - camel validators</li>
 </ul>
@@ -309,11 +314,11 @@ documentation.</p>
 <p>Once you have your adapter you can do the following steps:</p>
 <ul>
 <li>Run <code>mvn clean install</code></li>
-<li>Create common Data Model inside domain package</li>
+<li>Create common Data Models inside models package</li>
 <li>Add necessary dependencies</li>
-<li>Add RouteBuilders inside "sink" package in connectors</li>
-<li>Add classes which transform system data models to or from common domain model in "transformers" package in connectors (if needed)</li>
-<li>Add any configuration classes for a specific system inside "config" package in connectors</li>
+<li>Add Connectors inside "connectors" package in connector groups</li>
+<li>Add classes which transform system data models to or from common domain model in "transformers" package in connector groups (if needed)</li>
+<li>Add any configuration classes for a specific system inside "config" package in connector groups</li>
 <li>Add general integration configuration in application.yml found inside resources</li>
 <li>Run SIPApplication found inside base package</li>
 <li>After the application is up and running you can check SIP's management API under <a href="http://localhost:8080/swagger-ui.html">localhost:8080/swagger-ui.html</a></li>
@@ -321,13 +326,6 @@ documentation.</p>
 <h3 id="framework-version-upgrade">Framework version upgrade<a class="headerlink" href="#framework-version-upgrade" title="Permanent link">&para;</a></h3>
 <p>If you need to upgrade your adapter to a newer SIP Framework version, please follow this 
 <a href="framework_version_upgrade/">guide</a>.</p>
-<h3 id="how-and-why-to-use-sip-middle-component">How and why to use SIP Middle Component<a class="headerlink" href="#how-and-why-to-use-sip-middle-component" title="Permanent link">&para;</a></h3>
-<p><a href="middle-component/">SIP Middle Component</a> (sipmc) is a key concept of SIP Framework.
-As such it is used as a communication device between connectors.
-To make a clear distinction between connectors, the point of separation can be seen with sipmc.
-It marks the end or beginning of integration sides.
-Currently, sipmc works as either 1 to 1 connector or publish subscribe,
-based on the number of consumers, without any additional configuration.</p>
 <h3 id="adding-additional-camel-starters-to-the-project">Adding additional Camel starters to the project<a class="headerlink" href="#adding-additional-camel-starters-to-the-project" title="Permanent link">&para;</a></h3>
 <p>The Maven dependency management techniques implemented in the SIP archetype give you the ability to easily add new
 camel-starter dependencies to integration adapters.</p>
@@ -342,31 +340,34 @@ of the SIP integration adapter.</p>
 <p>The same stands for adding Spring Boot starters - as they are managed in the parent Maven module they too can be added
 without explicitly stating version numbers. As a matter of fact, the overall dependency management performed by the
 Spring Boot is in place in integration adapters too.</p>
-<h3 id="adding-new-system-connectors">Adding new System Connectors<a class="headerlink" href="#adding-new-system-connectors" title="Permanent link">&para;</a></h3>
-<p>By using the SIP archetype to create a new SIP adapter, by default there are two system connectors, designed to make it
+<h3 id="adding-new-connector-groups">Adding new Connector Groups<a class="headerlink" href="#adding-new-connector-groups" title="Permanent link">&para;</a></h3>
+<p>By using the SIP archetype to create a new SIP adapter, by default there are two connector groups, designed to make it
 more convenient to integrate systems. In case there are more than two systems, which need to be integrated, you need to add
-additional package to the project structure.</p>
+additional connector groups to the project structure.</p>
 <p>The project structure usually looks like this:</p>
 <pre class="highlight"><code class="language-text">fancy-sip-adapter
 ├───src/main/java/&lt;package-path&gt;
 │   ├───common
-│   │   ├───domain
+│   │   ├───config
 │   │   └───util
-│   ├───connectors
-│   │   ├───connector1
+│   ├───connectorgroups
+│   │   ├───connectorGroup1
 │   │   │   ├───config
 │   │   │   ├───transformer
 │   │   │   ├───processors
-│   │   │   ├───sink
+│   │   │   ├───connectors
 │   │   │   ├───validators
-│   │   │   └───domain
-│   │   └───connector2
+│   │   │   └───models
+│   │   └───connectorGroup2
 │   │       ├───config
 │   │       ├───transformer
 │   │       ├───processors
-│   │       ├───sink
+│   │       ├───connectors
 │   │       ├───validators
-│   │       └───domain
+│   │       └───models
+│   ├───scenarios
+│   │   ├───models
+│   │   └───definitions
 │   └───SIPApplication.java
 └───pom.xml</code></pre>
 <p>Easiest way would be just copying an existing connector package which contains the pre-made structure.
@@ -656,6 +657,10 @@ file with desired values.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="sip-middle-component">SIP Middle Component<a class="headerlink" href="#sip-middle-component" title="Permanent link">&para;</a></h3>
+<p><a href="middle-component/">SIP Middle Component</a> (sipmc) is a custom camel component used by the SIP Framework
+as a communication device between connectors.
+Currently, sipmc can be seen as part of integration scenarios as a tool for its lifecycle manipulation.</p>
               
             </div>
           </div><footer>
@@ -710,5 +715,5 @@ file with desired values.</p>
 
 <!--
 MkDocs version : 1.4.3
-Build Date UTC : 2023-05-30 11:31:11.094219+00:00
+Build Date UTC : 2023-07-10 08:52:34.630556+00:00
 -->
