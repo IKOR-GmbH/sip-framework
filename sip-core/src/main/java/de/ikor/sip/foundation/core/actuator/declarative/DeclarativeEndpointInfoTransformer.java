@@ -3,16 +3,26 @@ package de.ikor.sip.foundation.core.actuator.declarative;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
-import de.ikor.sip.foundation.core.actuator.declarative.model.*;
+import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
-import de.ikor.sip.foundation.core.declarative.connector.*;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
-import java.io.IOException;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Util transformer class with methods for transforming framework declarative objects to their
@@ -103,18 +113,39 @@ public class DeclarativeEndpointInfoTransformer {
   }
 
   private static String readDocumentation(String defaultDocsPath, String path, String id) {
-    final var resourcePath = path.isEmpty() ? String.format("%s/%s.md", defaultDocsPath, id) : path;
-    final var resource = new ClassPathResource(resourcePath);
+//    final var resourcePath = path.isEmpty() ? String.format("%s/%s.md", defaultDocsPath, id) : path;
+//    final var resource = new ClassPathResource(resourcePath);
+//
+//    if (!resource.isReadable()) {
+//      return null;
+//    }
+//
+//    try (var input = resource.getInputStream()) {
+//      return new String(input.readAllBytes());
+//    } catch (IOException e) {
+//      throw new SIPFrameworkException("Failed to read documentation resource", e);
+//    }
+    try {
+    List<Path> resources = getResourcesFromClasspath(defaultDocsPath);
 
-    if (!resource.isReadable()) {
-      return null;
-    }
+    // Find the file using case-insensitive comparison
+    Optional<Path> file = resources.stream()
+            .filter(path1 -> {
+              return path1.getFileName().toString().equalsIgnoreCase(id + ".md");
+            })
+            .findFirst();
 
-    try (var input = resource.getInputStream()) {
-      return new String(input.readAllBytes());
-    } catch (IOException e) {
-      throw new SIPFrameworkException("Failed to read documentation resource", e);
+    if (file.isPresent()) {
+      Path filePath = file.get();
+      String fileContent = Files.readString(filePath);
+      return fileContent;
+    } else {
+      System.out.println("File not found.");
     }
+    } catch (IOException | URISyntaxException e) {
+
+    }
+    return "";
   }
 
   private static JsonSchema createJsonSchema(JsonSchemaGenerator schemaGen, Class<?> classModel) {
@@ -127,5 +158,35 @@ public class DeclarativeEndpointInfoTransformer {
       log.debug("sip.core.runtimetest.json.schema_{}", classModel);
     }
     return null;
+  }
+
+  private static List<Path> getResourcesFromClasspath(String path) throws IOException, URISyntaxException {
+    List<Path> resources = new ArrayList<>();
+
+    ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+    Enumeration<URL> urls = classLoader.getResources(path);
+    while (urls.hasMoreElements()) {
+      URL url = urls.nextElement();
+      if (url.getProtocol().equals("file")) {
+        Path path1 = Paths.get(url.toURI());
+        resources.addAll(getAllFiles(path1));
+      }
+    }
+
+    return resources;
+  }
+
+  private static List<Path> getAllFiles(Path directory) throws IOException {
+    List<Path> files = new ArrayList<>();
+    try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
+      for (Path path : stream) {
+        if (Files.isDirectory(path)) {
+          files.addAll(getAllFiles(path));
+        } else {
+          files.add(path);
+        }
+      }
+    }
+    return files;
   }
 }
