@@ -11,20 +11,18 @@ import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
-
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * Util transformer class with methods for transforming framework declarative objects to their
@@ -123,13 +121,14 @@ public class DeclarativeEndpointInfoTransformer {
   }
 
   private static String findFileByIdAndGetContent(String defaultDocsPath, String id) {
-    String fileName = id + MARKDOWN_EXTENSION;
     try {
       List<Path> resources = getResourcesFromClasspath(defaultDocsPath);
 
       Optional<Path> file =
           resources.stream()
-              .filter(resource -> resource.getFileName().toString().equalsIgnoreCase(fileName))
+              .filter(
+                  resource ->
+                      resource.getFileName().toString().equalsIgnoreCase(id + MARKDOWN_EXTENSION))
               .findFirst();
 
       if (file.isPresent()) {
@@ -137,9 +136,9 @@ public class DeclarativeEndpointInfoTransformer {
         return Files.readString(filePath);
       }
       return null;
-    } catch (IOException | URISyntaxException e) {
+    } catch (IOException e) {
       throw SIPFrameworkException.init(
-          "Failed to read documentation resource for file '%s'", fileName);
+          "Failed to read documentation resource for element id '%s'", id);
     }
   }
 
@@ -170,16 +169,15 @@ public class DeclarativeEndpointInfoTransformer {
     return null;
   }
 
-  private static List<Path> getResourcesFromClasspath(String defaultPath)
-      throws IOException, URISyntaxException {
+  private static List<Path> getResourcesFromClasspath(String defaultPath) throws IOException {
     List<Path> resources = new ArrayList<>();
 
     ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-    Enumeration<URL> urls = classLoader.getResources(defaultPath);
-    while (urls.hasMoreElements()) {
-      URL url = urls.nextElement();
-      if (url.getProtocol().equals("file")) {
-        Path path = Paths.get(url.toURI());
+    PathMatchingResourcePatternResolver resourcePatternResolver =
+        new PathMatchingResourcePatternResolver(classLoader);
+    for (Resource resource : resourcePatternResolver.getResources(defaultPath)) {
+      if (resource.exists()) {
+        Path path = Paths.get(resource.getURI());
         resources.addAll(getAllFiles(path));
       }
     }
