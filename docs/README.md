@@ -42,9 +42,9 @@ The integration logic is divided into different packages:
 
 The **Common** package provides the common data model inside domain for both systems and common util functionalities.
 
-**Domain**
+**Models**
 
-**Domain** package should contain only simple Java objects representing the respective domain
+**Models** package should contain only simple Java objects representing the respective domain
 in which the system connectors of an adapter operate, and should not contain any integration logic.
 All connectors should adapt the data models of their systems to or from this common model, 
 depending on data flow, due to their incompatibilities. 
@@ -52,11 +52,12 @@ The domain can be seen as a kind of contract between the different system connec
 which ensures that they can communicate with each other. 
 It contains common data model which uniforms the data models from all integration sides.
 
-**Connectors**
+**Connector groups**
 
-Each **Connector** is designed to communicate with the associated external systems, thus all classes found in a connector
-should only relate to their integration side. To enable this, their local domain objects are aligned with the API of an
-external systems they communicate with. In order to send a message from one system connector
+Each **Connector group** is designed to contain connectors which communicate with the associated external systems, 
+thus all classes found in a connector group should only relate to their integration side. 
+To enable this, their local domain objects are aligned with the API of an
+external systems they communicate with. In order to send a message from one system 
 to another, the local domain objects must be mapped to the shared domain object. Furthermore, this means that a message
 from system A is mapped to the shared domain object and then from the shared domain object to the model of system B and
 vice versa, due to their bidirectional nature.
@@ -68,9 +69,9 @@ since integrated systems use the same communication data model sometimes.
 Each connector will have the following structure:
 
 - `config` - a place for any configuration classes
-- `sink` - here we should define Camel routes
+- `connectors` - here we should define inbound and outbound connectors
 - `transformers` - it should contain classes for adapting the connector model to common domain model.
-- `domain` - (optional) it may contain the data model of the system.
+- `models` - (optional) it may contain the data model of the system.
 - `processors` - camel processors
 - `validators` - camel validators
 
@@ -112,11 +113,11 @@ Before development, check the following [Installation guide](installation.md).
 Once you have your adapter you can do the following steps:
 
 - Run `mvn clean install`
-- Create common Data Model inside domain package
+- Create common Data Models inside models package
 - Add necessary dependencies
-- Add RouteBuilders inside "sink" package in connectors
-- Add classes which transform system data models to or from common domain model in "transformers" package in connectors (if needed)
-- Add any configuration classes for a specific system inside "config" package in connectors
+- Add Connectors inside "connectors" package in connector groups
+- Add classes which transform system data models to or from common domain model in "transformers" package in connector groups (if needed)
+- Add any configuration classes for a specific system inside "config" package in connector groups
 - Add general integration configuration in application.yml found inside resources
 - Run SIPApplication found inside base package
 - After the application is up and running you can check SIP's management API under [localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
@@ -125,15 +126,6 @@ Once you have your adapter you can do the following steps:
 
 If you need to upgrade your adapter to a newer SIP Framework version, please follow this 
 [guide](./framework_version_upgrade.md).
-
-### How and why to use SIP Middle Component
-
-[SIP Middle Component](./middle-component.md) (sipmc) is a key concept of SIP Framework.
-As such it is used as a communication device between connectors.
-To make a clear distinction between connectors, the point of separation can be seen with sipmc.
-It marks the end or beginning of integration sides.
-Currently, sipmc works as either 1 to 1 connector or publish subscribe,
-based on the number of consumers, without any additional configuration.
 
 ### Adding additional Camel starters to the project
 
@@ -157,11 +149,11 @@ The same stands for adding Spring Boot starters - as they are managed in the par
 without explicitly stating version numbers. As a matter of fact, the overall dependency management performed by the
 Spring Boot is in place in integration adapters too.
 
-### Adding new System Connectors
+### Adding new Connector Groups
 
-By using the SIP archetype to create a new SIP adapter, by default there are two system connectors, designed to make it
+By using the SIP archetype to create a new SIP adapter, by default there are two connector groups, designed to make it
 more convenient to integrate systems. In case there are more than two systems, which need to be integrated, you need to add
-additional package to the project structure.
+additional connector groups to the project structure.
 
 The project structure usually looks like this:
 
@@ -169,23 +161,26 @@ The project structure usually looks like this:
 fancy-sip-adapter
 ├───src/main/java/<package-path>
 │   ├───common
-│   │   ├───domain
+│   │   ├───config
 │   │   └───util
-│   ├───connectors
-│   │   ├───connector1
+│   ├───connectorgroups
+│   │   ├───connectorGroup1
 │   │   │   ├───config
 │   │   │   ├───transformer
 │   │   │   ├───processors
-│   │   │   ├───sink
+│   │   │   ├───connectors
 │   │   │   ├───validators
-│   │   │   └───domain
-│   │   └───connector2
+│   │   │   └───models
+│   │   └───connectorGroup2
 │   │       ├───config
 │   │       ├───transformer
 │   │       ├───processors
-│   │       ├───sink
+│   │       ├───connectors
 │   │       ├───validators
-│   │       └───domain
+│   │       └───models
+│   ├───scenarios
+│   │   ├───models
+│   │   └───definitions
 │   └───SIPApplication.java
 └───pom.xml
 ```
@@ -306,3 +301,10 @@ sip.security.ssl.client.key-store-password | Password of client keystore | Strin
 sip.security.ssl.client.key-store-type | Type of client keystore file | String | / |
 sip.security.ssl.client.key-alias | The alias (or name) under which the key is stored in the client keystore | String | / |
 sip.security.ssl.client.key-password | Password of the client key | String | / |
+
+
+### SIP Middle Component
+
+[SIP Middle Component](./middle-component.md) (sipmc) is a custom camel component used by the SIP Framework
+as a communication device between connectors.
+Currently, sipmc can be seen as part of integration scenarios as a tool for its lifecycle manipulation.
