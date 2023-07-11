@@ -11,6 +11,9 @@ import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -22,8 +25,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * Util transformer class with methods for transforming framework declarative objects to their
@@ -122,14 +123,13 @@ public class DeclarativeEndpointInfoTransformer {
   }
 
   private static String findFileByIdAndGetContent(String defaultDocsPath, String id) {
+    String fileName = id + MARKDOWN_EXTENSION;
     try {
       List<Path> resources = getResourcesFromClasspath(defaultDocsPath);
 
       Optional<Path> file =
           resources.stream()
-              .filter(
-                  resource ->
-                      resource.getFileName().toString().equalsIgnoreCase(id + MARKDOWN_EXTENSION))
+              .filter(resource -> resource.getFileName().toString().equalsIgnoreCase(fileName))
               .findFirst();
 
       if (file.isPresent()) {
@@ -138,7 +138,8 @@ public class DeclarativeEndpointInfoTransformer {
       }
       return null;
     } catch (IOException | URISyntaxException e) {
-      throw SIPFrameworkException.init("Failed to read documentation resource", e);
+      throw SIPFrameworkException.init(
+          "Failed to read documentation resource for file '%s'", fileName);
     }
   }
 
@@ -152,7 +153,8 @@ public class DeclarativeEndpointInfoTransformer {
     try (var input = resource.getInputStream()) {
       return new String(input.readAllBytes());
     } catch (IOException e) {
-      throw SIPFrameworkException.init("Failed to read documentation resource", e);
+      throw SIPFrameworkException.init(
+          "Failed to read documentation resource from path %s", resourcePath);
     }
   }
 
