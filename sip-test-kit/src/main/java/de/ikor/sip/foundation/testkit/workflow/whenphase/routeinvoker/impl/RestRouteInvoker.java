@@ -3,6 +3,8 @@ package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
@@ -20,9 +22,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
-
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /** Invoker class for triggering Camel REST route */
 @Slf4j
