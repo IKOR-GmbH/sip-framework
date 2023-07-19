@@ -13,6 +13,8 @@ import org.springframework.util.MultiValueMap;
 /** Helper class with common methods for rest and soap invokers */
 public class HttpInvokerHelper {
 
+  private HttpInvokerHelper() {}
+
   /**
    * Creates headers for test kit execution
    *

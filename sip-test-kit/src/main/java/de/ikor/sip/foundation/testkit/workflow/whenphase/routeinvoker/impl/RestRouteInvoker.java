@@ -37,18 +37,18 @@ public class RestRouteInvoker implements RouteInvoker {
   @Override
   public Optional<Exchange> invoke(Exchange inputExchange) {
     Endpoint endpoint = TestKitHelper.resolveEndpoint(inputExchange, camelContext);
-    HttpEntity<String> request =
+    HttpEntity<String> testRequest =
         new HttpEntity<>(
             inputExchange.getMessage().getBody(String.class), prepareHeaders(inputExchange));
-    log.trace("sip.testkit.workflow.whenphase.routeinvoker.rest.request_{}", request);
+    log.trace("sip.testkit.workflow.whenphase.routeinvoker.rest.request_{}", testRequest);
 
     ResponseEntity<String> response =
         restTemplateBuilder
             .build()
             .exchange(
-                createAddressUri(endpoint),
+                createUri(endpoint),
                 HttpMethod.POST,
-                request,
+                testRequest,
                 new ParameterizedTypeReference<>() {});
     log.trace("sip.testkit.workflow.whenphase.routeinvoker.rest.response_{}", response);
 
@@ -60,7 +60,7 @@ public class RestRouteInvoker implements RouteInvoker {
     return endpoint instanceof RestEndpoint;
   }
 
-  private String createAddressUri(Endpoint endpoint) {
+  private String createUri(Endpoint endpoint) {
     return String.format(
         "http://localhost:%s%s/%s",
         environment.getProperty("local.server.port"),
