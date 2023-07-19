@@ -1,16 +1,11 @@
 package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.testkit.exception.NoRouteInvokerException;
 import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.*;
-import java.util.Set;
 import org.apache.camel.*;
 import org.apache.camel.component.direct.DirectEndpoint;
 import org.apache.camel.component.file.FileEndpoint;
@@ -19,6 +14,15 @@ import org.apache.camel.component.jms.JmsEndpoint;
 import org.apache.camel.component.rest.RestEndpoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.env.Environment;
+
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class RouteInvokerFactoryTest {
 
@@ -32,14 +36,18 @@ class RouteInvokerFactoryTest {
   @BeforeEach
   void setup() {
     ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
-    ProducerTemplate producerTemplate = mock(ProducerTemplate.class);
-    RestRouteInvoker restRouteInvoker = new RestRouteInvoker(producerTemplate, camelContext);
+    RestTemplateBuilder restTemplateBuilder = mock(RestTemplateBuilder.class);
+    RestRouteInvoker restRouteInvoker =
+        new RestRouteInvoker(camelContext, mock(Environment.class), restTemplateBuilder);
     FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);
     FtpRouteInvoker ftpRouteInvoker = new FtpRouteInvoker(camelContext);
     JmsRouteInvoker jmsRouteInvoker = new JmsRouteInvoker(camelContext);
     DirectRouteInvoker directRouteInvoker =
         new DirectRouteInvoker(
-            producerTemplate, camelContext, mock(DeclarationsRegistry.class), new ObjectMapper());
+            mock(ProducerTemplate.class),
+            camelContext,
+            mock(DeclarationsRegistry.class),
+            new ObjectMapper());
     Set<RouteInvoker> invokers =
         Set.of(
             restRouteInvoker,

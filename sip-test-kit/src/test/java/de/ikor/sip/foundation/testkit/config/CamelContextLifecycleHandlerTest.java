@@ -1,13 +1,8 @@
 package de.ikor.sip.foundation.testkit.config;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
-
 import de.ikor.sip.foundation.testkit.exception.UnsuspendedRouteException;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl.*;
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.camel.*;
 import org.apache.camel.component.file.FileConsumer;
 import org.apache.camel.component.jms.JmsConsumer;
@@ -17,6 +12,14 @@ import org.apache.camel.component.kafka.KafkaEndpoint;
 import org.apache.camel.impl.engine.DefaultRouteController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.env.Environment;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 class CamelContextLifecycleHandlerTest {
 
@@ -37,7 +40,8 @@ class CamelContextLifecycleHandlerTest {
     routes.add(route);
 
     RestRouteInvoker restRouteInvoker =
-        new RestRouteInvoker(mock(ProducerTemplate.class), camelContext);
+        new RestRouteInvoker(
+            camelContext, mock(Environment.class), mock(RestTemplateBuilder.class));
     FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);
     FtpRouteInvoker ftpRouteInvoker = new FtpRouteInvoker(camelContext);
     JmsRouteInvoker jmsRouteInvoker = new JmsRouteInvoker(camelContext);
