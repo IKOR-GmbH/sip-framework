@@ -3,7 +3,6 @@ package de.ikor.sip.foundation.core.declarative.composite.orchestration;
 import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.EndOfDsl;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +49,7 @@ public class CompositeScenarioOrchestrationDefinition<M>
    */
   public ForCompositeScenarioProvidersByClassDefinition<
           CompositeScenarioOrchestrationDefinition<M>, M>
-      forScenarioProviders(
-          final Class<? extends IntegrationScenarioDefinition>... providerClass) {
+      forScenarioProviders(final Class<? extends IntegrationScenarioDefinition>... providerClass) {
     verifyNoCatchAllOrThrow();
     final ForCompositeScenarioProvidersByClassDefinition<
             CompositeScenarioOrchestrationDefinition<M>, M>

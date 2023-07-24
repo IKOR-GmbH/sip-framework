@@ -1,8 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.composite.orchestration;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationHandlers;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.Collections;
 import java.util.List;
@@ -27,22 +26,22 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
 
   private final CallCompositeScenarioConsumerBaseDefinition<?, ?, M> definitionElement;
 
-  private final Set<IntegrationScenarioConsumerDefinition> overallUnhandledConsumers;
+  private final Set<IntegrationScenarioDefinition> overallUnhandledConsumers;
 
   @Getter(lazy = true, value = AccessLevel.PROTECTED)
-  private final Set<IntegrationScenarioConsumerDefinition> handledConsumers =
+  private final Set<IntegrationScenarioDefinition> handledConsumers =
       resolveAndVerifyHandledConsumers();
 
   RouteGeneratorForCallCompositeScenarioConsumerDefinition(
       final CompositeOrchestrationInfo orchestrationInfo,
       final CallCompositeScenarioConsumerBaseDefinition definitionElement,
-      final Set<IntegrationScenarioConsumerDefinition> overallUnhandledConsumers) {
+      final Set<IntegrationScenarioDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);
     this.definitionElement = definitionElement;
     this.overallUnhandledConsumers = overallUnhandledConsumers;
   }
 
-  private Set<IntegrationScenarioConsumerDefinition> resolveAndVerifyHandledConsumers() {
+  private Set<IntegrationScenarioDefinition> resolveAndVerifyHandledConsumers() {
     final var consumers = resolveHandledConsumers();
 
     // verify that given providers are not already handled
@@ -59,7 +58,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
     return consumers;
   }
 
-  private Set<IntegrationScenarioConsumerDefinition> resolveHandledConsumers() {
+  private Set<IntegrationScenarioDefinition> resolveHandledConsumers() {
     if (definitionElement instanceof CallCompositeScenarioConsumerByClassDefinition element) {
       return Collections.singleton(retrieveConsumerFromClassDefinition(element));
     }
@@ -69,7 +68,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
         definitionElement.getClass().getName());
   }
 
-  private IntegrationScenarioConsumerDefinition retrieveConsumerFromClassDefinition(
+  private IntegrationScenarioDefinition retrieveConsumerFromClassDefinition(
       final CallCompositeScenarioConsumerByClassDefinition element) {
     return getConsumers().stream()
         .filter(consumer -> element.getConsumerClass().equals(consumer.getClass()))
@@ -83,9 +82,8 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
                     getConsumers().stream().map(conn -> conn.getClass().getName()).toList()));
   }
 
-  private List<IntegrationScenarioConsumerDefinition> getConsumers() {
-    return getDeclarationsRegistry()
-        .getCompositeProcessConsumerDefinitions(getCompositeId());
+  private List<IntegrationScenarioDefinition> getConsumers() {
+    return getDeclarationsRegistry().getCompositeProcessConsumerDefinitions(getCompositeId());
   }
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
@@ -94,7 +92,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
       routeDefinition
           .transform()
           .method(
-              ScenarioOrchestrationHandlers.handleRequestToConsumer(
+              CompositeScenarioOrchestrationHandlers.handleRequestToConsumer(
                   consumer, definitionElement.getRequestPreparation()))
           .to(getEndpointForConsumer(consumer));
 
@@ -102,7 +100,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
       routeDefinition
           .transform()
           .method(
-              ScenarioOrchestrationHandlers.handleResponseFromConsumer(
+              CompositeScenarioOrchestrationHandlers.handleResponseFromConsumer(
                   consumer,
                   definitionElement.getStepResultCloner(),
                   definitionElement.getResponseConsumer()));
@@ -112,7 +110,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
   }
 
   private EndpointProducerBuilder getEndpointForConsumer(
-      final IntegrationScenarioConsumerDefinition consumer) {
+      final IntegrationScenarioDefinition consumer) {
     return Objects.requireNonNull(getOrchestrationInfo().getConsumerEndpoints().get(consumer));
   }
 }

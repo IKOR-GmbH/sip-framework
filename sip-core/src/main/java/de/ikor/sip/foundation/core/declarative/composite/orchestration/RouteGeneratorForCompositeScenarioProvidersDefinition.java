@@ -72,9 +72,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
         element.getProviderClasses();
 
     final var scenarioProviderMap =
-        getDeclarationsRegistry()
-            .getCompositeProcessProviderDefinitions(getCompositeId())
-            .stream()
+        getDeclarationsRegistry().getCompositeProcessProviderDefinitions(getCompositeId()).stream()
             .collect(Collectors.toMap(IntegrationScenarioDefinition::getClass, con -> con));
     final var unknownProviderNames =
         providerClasses.stream()
@@ -103,8 +101,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
 
     final var routeDef = generateRouteStart(routesDefinition);
     routeDef.bean(
-        CompositeScenarioOrchestrationHandlers.handleContextInitialization(
-            getCompositeProcess()));
+        CompositeScenarioOrchestrationHandlers.handleContextInitialization(getCompositeProcess()));
 
     for (final var element : providerDefinition.getNodes()) {
       if (element instanceof CallCompositeScenarioConsumerBaseDefinition callDef) {
@@ -148,8 +145,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
           .routeId(orchestrationRouteId);
     }
     final var directName =
-        String.format(
-            "sip-scenario-orchestrator-%s-merge-%s", getCompositeId(), providerIds);
+        String.format("sip-scenario-orchestrator-%s-merge-%s", getCompositeId(), providerIds);
     for (final var provider : providers) {
       routesDefinition
           .from(getProviderEndpoint(provider))

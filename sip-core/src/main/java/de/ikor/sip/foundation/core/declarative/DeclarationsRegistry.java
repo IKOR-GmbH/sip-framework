@@ -11,9 +11,7 @@ import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefini
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,7 +43,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   @Getter private final List<CompositeProcessDefinition> compositeProcessDefinitions;
 
   @Override
-  public List<IntegrationScenarioConsumerDefinition> getCompositeProcessConsumerDefinitions(
+  public List<IntegrationScenarioDefinition> getCompositeProcessConsumerDefinitions(
       String compositeProcessID) {
     return compositeProcessDefinitions.stream()
         .filter(scenario -> scenario.getId().equals(compositeProcessID))
@@ -53,9 +51,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .get()
         .getConsumerDefinitions()
         .stream()
-        .map(
-            definition ->
-                (IntegrationScenarioConsumerDefinition) applicationContext.getBean(definition))
+        .map(definition -> (IntegrationScenarioDefinition) applicationContext.getBean(definition))
         .toList();
   }
 
@@ -68,9 +64,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .get()
         .getProviderDefinitions()
         .stream()
-        .map(
-            definition ->
-                (IntegrationScenarioDefinition)applicationContext.getBean(definition))
+        .map(definition -> (IntegrationScenarioDefinition) applicationContext.getBean(definition))
         .toList();
   }
 

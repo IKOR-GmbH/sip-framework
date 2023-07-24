@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.core.declarative.composite.orchestration;
 import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,13 +36,13 @@ public class CompositeScenarioOrchestrationHandlers {
   }
 
   public static <M> ConsumerRequestHandler<M> handleRequestToConsumer(
-      final IntegrationScenarioConsumerDefinition consumerDefinition,
+      final IntegrationScenarioDefinition consumerDefinition,
       final Optional<CompositeScenarioStepRequestExtractor<M>> requestPreparation) {
     return new ConsumerRequestHandler<>(consumerDefinition, requestPreparation);
   }
 
   public static <M> ConsumerResponseHandler<M> handleResponseFromConsumer(
-      final IntegrationScenarioConsumerDefinition consumer,
+      final IntegrationScenarioDefinition consumer,
       final Optional<StepResultCloner<M>> stepResultCloner,
       final Optional<CompositeScenarioStepResponseConsumer<M>> responseConsumer) {
     return new ConsumerResponseHandler<>(consumer, stepResultCloner, responseConsumer);
@@ -68,7 +69,7 @@ public class CompositeScenarioOrchestrationHandlers {
     return context;
   }
 
-  private static List<IntegrationScenarioConsumerDefinition> retrieveCalledConsumerList(
+  private static List<IntegrationScenarioDefinition> retrieveCalledConsumerList(
       final Exchange exchange) {
     return Objects.requireNonNull(
         exchange.<List>getProperty(CALLED_CONSUMER_LIST_PROPERTY, List.class),
@@ -96,11 +97,11 @@ public class CompositeScenarioOrchestrationHandlers {
   }
 
   static class ConsumerRequestHandler<M> {
-    private final IntegrationScenarioConsumerDefinition consumerDefinition;
+    private final IntegrationScenarioDefinition consumerDefinition;
     private final CompositeScenarioStepRequestExtractor<M> requestPreparation;
 
     private ConsumerRequestHandler(
-        final IntegrationScenarioConsumerDefinition consumerDefinition,
+        final IntegrationScenarioDefinition consumerDefinition,
         final Optional<CompositeScenarioStepRequestExtractor<M>> requestPreparation) {
       this.consumerDefinition = consumerDefinition;
       this.requestPreparation =
@@ -120,7 +121,7 @@ public class CompositeScenarioOrchestrationHandlers {
 
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
   static class ConsumerResponseHandler<M> {
-    private final IntegrationScenarioConsumerDefinition consumer;
+    private final IntegrationScenarioDefinition consumer;
     private final Optional<StepResultCloner<M>> stepResultCloner;
     private final Optional<CompositeScenarioStepResponseConsumer<M>> responseConsumer;
 

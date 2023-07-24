@@ -3,6 +3,7 @@ package de.ikor.sip.foundation.core.declarative.composite.orchestration;
 import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,8 +39,7 @@ public class CompositeScenarioOrchestrationContext<M> {
    * @param result Response as received by that consumer
    * @param <M> Response model type as defined by the integration scenario
    */
-  public record OrchestrationStepResponse<M>(
-      IntegrationScenarioConsumerDefinition consumer, M result) {}
+  public record OrchestrationStepResponse<M>(IntegrationScenarioDefinition consumer, M result) {}
 
   public static final String PROPERTY_NAME = "SipComplexScenarioOrchestrationContext";
 
@@ -143,7 +143,7 @@ public class CompositeScenarioOrchestrationContext<M> {
    */
   @Synchronized
   public M addResponseForStep(
-      final IntegrationScenarioConsumerDefinition consumer,
+      final IntegrationScenarioDefinition consumer,
       final M response,
       final Optional<StepResultCloner<M>> cloner) {
     final M maybeClonedResponse = cloner.map(c -> c.apply(response)).orElse(response);

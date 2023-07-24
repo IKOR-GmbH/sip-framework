@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.composite.orchestration;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ final class CompositeScenarioConsumerCallsDelegate<
 
   @Override
   public CallCompositeScenarioConsumerByClassDefinition<S, M> callScenarioConsumer(
-      final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass) {
+      final Class<? extends IntegrationScenarioDefinition> consumerClass) {
     final CallCompositeScenarioConsumerByClassDefinition<S, M> def =
         new CallCompositeScenarioConsumerByClassDefinition<>(
             definitionNode, integrationScenario, consumerClass);

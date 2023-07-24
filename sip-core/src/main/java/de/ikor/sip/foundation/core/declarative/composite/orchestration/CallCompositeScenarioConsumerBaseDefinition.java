@@ -16,10 +16,10 @@ public abstract sealed class CallCompositeScenarioConsumerBaseDefinition<
     permits CallCompositeScenarioConsumerByClassDefinition {
 
   @Getter(AccessLevel.PACKAGE)
-  private Optional<ScenarioStepRequestExtractor<M>> requestPreparation = Optional.empty();
+  private Optional<CompositeScenarioStepRequestExtractor<M>> requestPreparation = Optional.empty();
 
   @Getter(AccessLevel.PACKAGE)
-  private Optional<ScenarioStepResponseConsumer<M>> responseConsumer = Optional.empty();
+  private Optional<CompositeScenarioStepResponseConsumer<M>> responseConsumer = Optional.empty();
 
   @Getter(AccessLevel.PACKAGE)
   private Optional<StepResultCloner<M>> stepResultCloner = Optional.empty();
@@ -37,7 +37,8 @@ public abstract sealed class CallCompositeScenarioConsumerBaseDefinition<
    * @param requestPreparation the extractor for the request
    * @return DSL handle
    */
-  public S withRequestPreparation(final ScenarioStepRequestExtractor<M> requestPreparation) {
+  public S withRequestPreparation(
+      final CompositeScenarioStepRequestExtractor<M> requestPreparation) {
     this.requestPreparation = Optional.of(requestPreparation);
     return self();
   }
@@ -51,7 +52,7 @@ public abstract sealed class CallCompositeScenarioConsumerBaseDefinition<
    * @param responseConsumer Consumer that handles the response
    * @return DSL handle
    */
-  public R andHandleResponse(final ScenarioStepResponseConsumer<M> responseConsumer) {
+  public R andHandleResponse(final CompositeScenarioStepResponseConsumer<M> responseConsumer) {
     this.responseConsumer = Optional.of(responseConsumer);
     return getDslReturnDefinition();
   }

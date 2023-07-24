@@ -1,31 +1,28 @@
 package de.ikor.sip.foundation.core.declarative.composite;
 
-import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.orchestration.OrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrator;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import java.util.Map;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RoutesDefinition;
 
 /**
- * Class that holds information to be used by orchestrators of an integration-scenario.
+ * Class that holds information to be used by orchestrators of an Composite process.
  *
- * @see ScenarioOrchestrator
+ * @see CompositeOrchestrator
  */
 public interface CompositeOrchestrationInfo extends OrchestrationInfo {
+
   /**
-   * Returns the integration scenario that is being orchestrated.
+   * Returns the composite process that is being orchestrated.
    *
-   * @return the integration scenario
+   * @return the composite process definition
    */
   CompositeProcessDefinition getCompositeProcess();
 
   /**
-   * Returns the routes definition that is being used to orchestrate the integration scenario.
+   * Returns the routes definition that is being used to orchestrate the composite process.
    *
    * <p>All Camel routes used for the orchestration must be initialized from this element.
    *
@@ -34,18 +31,18 @@ public interface CompositeOrchestrationInfo extends OrchestrationInfo {
   RoutesDefinition getRoutesDefinition();
 
   /**
-   * Returns the providers and their respective endpoints that are attached to this integration
-   * scenario
+   * Returns the providers and their respective endpoints that are declared for this composite
+   * process
    *
-   * @return providers and their respective endpoints attached to the scenario
+   * @return providers and their respective endpoints attached to the composite process
    */
   Map<IntegrationScenarioDefinition, EndpointConsumerBuilder> getProviderEndpoints();
 
   /**
-   * Returns the consumers and their respective endpoints that are attached to this integration
-   * scenario
+   * Returns the consumers and their respective endpoints that are declared for this composite
+   * process
    *
-   * @return consumers and their respective endpoints attached to the scenario
+   * @return consumers and their respective endpoints attached to the composite process
    */
-  Map<IntegrationScenarioConsumerDefinition, EndpointProducerBuilder> getConsumerEndpoints();
+  Map<IntegrationScenarioDefinition, EndpointProducerBuilder> getConsumerEndpoints();
 }

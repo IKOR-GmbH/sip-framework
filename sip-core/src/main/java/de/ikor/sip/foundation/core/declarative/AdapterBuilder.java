@@ -42,6 +42,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AdapterBuilder extends RouteBuilder {
 
+  private String COMPOSITE_HANDOFF_ROUTE_ID_PATTERN = "sip-composite-handoff-%s";
+  private String COMPOSITE_TAKOVER_ROUTE_ID_PATTERN = "sip-composite-takeover-%s";
   private final DeclarationsRegistry declarationsRegistry;
   private final RoutesRegistry routesRegistry;
 
@@ -100,7 +102,7 @@ public class AdapterBuilder extends RouteBuilder {
               final var endpoint =
                   StaticEndpointBuilders.direct(
                       String.format(
-                          "sip-composite-handoff-%s",
+                          COMPOSITE_HANDOFF_ROUTE_ID_PATTERN,
                           composite.getId() + "-" + scenarioDefinition.getId()));
               providerHandoffEndpoints.put(scenarioDefinition::getId, endpoint);
             });
@@ -127,7 +129,7 @@ public class AdapterBuilder extends RouteBuilder {
               final var endpoint =
                   StaticEndpointBuilders.direct(
                       String.format(
-                          "sip-composite-takeover-%s",
+                          COMPOSITE_TAKOVER_ROUTE_ID_PATTERN,
                           composite.getId() + "-" + scenarioDefinition.getId()));
               consumerTakeoverEndpoints.put(scenarioDefinition::getId, endpoint);
             });
@@ -299,13 +301,9 @@ public class AdapterBuilder extends RouteBuilder {
 
   private void buildCompositeProcess(CompositeProcessDefinition compositeProcess) {
 
-    final Map<
-            IntegrationScenarioDefinition,
-            DirectEndpointBuilderFactory.DirectEndpointBuilder>
+    final Map<IntegrationScenarioDefinition, DirectEndpointBuilderFactory.DirectEndpointBuilder>
         providerHandoffEndpoints = new HashMap<>();
-    final Map<
-            IntegrationScenarioConsumerDefinition,
-            DirectEndpointBuilderFactory.DirectEndpointBuilder>
+    final Map<IntegrationScenarioDefinition, DirectEndpointBuilderFactory.DirectEndpointBuilder>
         consumerTakeoverEndpoints = new HashMap<>();
 
     compositeProcess
@@ -320,10 +318,9 @@ public class AdapterBuilder extends RouteBuilder {
               final var startingEndpoint =
                   StaticEndpointBuilders.direct(
                       String.format(
-                          "sip-composite-takeover-%s",
+                          COMPOSITE_TAKOVER_ROUTE_ID_PATTERN,
                           compositeProcess.getId() + "-" + providerScenario.getId()));
-              providerHandoffEndpoints.put(
-                  providerScenario, startingEndpoint);
+              providerHandoffEndpoints.put(providerScenario, startingEndpoint);
             });
     compositeProcess
         .getConsumerDefinitions()
@@ -337,10 +334,9 @@ public class AdapterBuilder extends RouteBuilder {
               var endingEndpoint =
                   StaticEndpointBuilders.direct(
                       String.format(
-                          "sip-composite-handoff-%s",
+                          COMPOSITE_HANDOFF_ROUTE_ID_PATTERN,
                           compositeProcess.getId() + "-" + consumerScenario.getId()));
-              consumerTakeoverEndpoints.put(
-                  (IntegrationScenarioConsumerDefinition) consumerScenario, endingEndpoint);
+              consumerTakeoverEndpoints.put(consumerScenario, endingEndpoint);
             });
 
     final var orchestrationInfo =
@@ -379,6 +375,6 @@ public class AdapterBuilder extends RouteBuilder {
     CompositeProcessDefinition compositeProcess;
     RoutesDefinition routesDefinition;
     Map<IntegrationScenarioDefinition, EndpointConsumerBuilder> providerEndpoints;
-    Map<IntegrationScenarioConsumerDefinition, EndpointProducerBuilder> consumerEndpoints;
+    Map<IntegrationScenarioDefinition, EndpointProducerBuilder> consumerEndpoints;
   }
 }

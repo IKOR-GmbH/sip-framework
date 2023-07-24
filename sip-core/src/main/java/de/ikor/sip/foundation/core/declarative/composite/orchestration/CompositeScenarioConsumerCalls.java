@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.composite.orchestration;
 
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 
 /** Interface containing various methods to trigger a call to an integration-scenario consumer. * */
 sealed interface CompositeScenarioConsumerCalls<
@@ -15,5 +15,5 @@ sealed interface CompositeScenarioConsumerCalls<
    * @return DSL handle for further call instructions
    */
   CallCompositeScenarioConsumerByClassDefinition<S, M> callScenarioConsumer(
-      Class<? extends IntegrationScenarioConsumerDefinition> consumerClass);
+      Class<? extends IntegrationScenarioDefinition> consumerClass);
 }
