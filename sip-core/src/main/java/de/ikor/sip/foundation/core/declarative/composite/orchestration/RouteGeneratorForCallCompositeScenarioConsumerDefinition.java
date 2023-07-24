@@ -85,7 +85,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
 
   private List<IntegrationScenarioConsumerDefinition> getConsumers() {
     return getDeclarationsRegistry()
-        .getCompositeScenarioConsumerDefinitions(getIntegrationScenarioId());
+        .getCompositeProcessConsumerDefinitions(getIntegrationScenarioId());
   }
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {

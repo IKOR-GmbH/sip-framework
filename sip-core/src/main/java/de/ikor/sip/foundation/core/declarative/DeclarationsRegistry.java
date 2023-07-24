@@ -45,10 +45,10 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   @Getter private final List<CompositeProcessDefinition> compositeProcessDefinitions;
 
   @Override
-  public List<IntegrationScenarioConsumerDefinition> getCompositeScenarioConsumerDefinitions(
-      String scenarioID) {
+  public List<IntegrationScenarioConsumerDefinition> getCompositeProcessConsumerDefinitions(
+      String compositeProcessID) {
     return compositeProcessDefinitions.stream()
-        .filter(scenario -> scenario.getId().equals(scenarioID))
+        .filter(scenario -> scenario.getId().equals(compositeProcessID))
         .findFirst()
         .get()
         .getConsumerDefinitions()
@@ -60,10 +60,10 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   }
 
   @Override
-  public List<IntegrationScenarioProviderDefinition> getCompositeScenarioProviderDefinitions(
-      String scenarioID) {
+  public List<IntegrationScenarioProviderDefinition> getCompositeProcessProviderDefinitions(
+      String compositeProcessID) {
     return compositeProcessDefinitions.stream()
-        .filter(scenario -> scenario.getId().equals(scenarioID))
+        .filter(scenario -> scenario.getId().equals(compositeProcessID))
         .findFirst()
         .get()
         .getProviderDefinitions()
@@ -71,6 +71,28 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .map(
             definition ->
                 (IntegrationScenarioProviderDefinition) applicationContext.getBean(definition))
+        .toList();
+  }
+
+  @Override
+  public List<CompositeProcessDefinition> getCompositeProvidersForScenario(
+      IntegrationScenarioDefinition integrationScenario) {
+    return compositeProcessDefinitions.stream()
+        .filter(
+            composite ->
+                composite.getConsumerDefinitions().stream()
+                    .anyMatch(consumer -> consumer.equals(integrationScenario.getClass())))
+        .toList();
+  }
+
+  @Override
+  public List<CompositeProcessDefinition> getCompositeConsumersForScenario(
+      IntegrationScenarioDefinition integrationScenario) {
+    return compositeProcessDefinitions.stream()
+        .filter(
+            composite ->
+                composite.getProviderDefinitions().stream()
+                    .anyMatch(consumer -> consumer.equals(integrationScenario.getClass())))
         .toList();
   }
 
@@ -267,7 +289,9 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
       List<IntegrationScenarioDefinition> scenarios,
       List<ConnectorGroupDefinition> connectorGroups) {
     return connector -> {
-      if (isDisabled().test(connector)) return true;
+      if (isDisabled().test(connector)) {
+        return true;
+      }
 
       Optional<IntegrationScenarioDefinition> scenarioDefinition =
           scenarios.stream()

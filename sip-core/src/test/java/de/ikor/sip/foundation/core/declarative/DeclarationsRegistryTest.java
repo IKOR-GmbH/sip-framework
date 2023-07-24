@@ -72,7 +72,13 @@ class DeclarationsRegistryTest {
     assertThatThrownBy(
             () -> {
               subject =
-                  new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers, compositeProcessDefinitions, applicationContext);
+                  new DeclarationsRegistry(
+                      connectorGroups,
+                      scenarios,
+                      connectors,
+                      modelMappers,
+                      compositeProcessDefinitions,
+                      applicationContext);
             })
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage("There is unused integration scenario with id %s", SCENARIO_ID);
@@ -92,7 +98,13 @@ class DeclarationsRegistryTest {
     assertThatThrownBy(
             () -> {
               subject =
-                  new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers, compositeProcessDefinitions, applicationContext);
+                  new DeclarationsRegistry(
+                      connectorGroups,
+                      scenarios,
+                      connectors,
+                      modelMappers,
+                      compositeProcessDefinitions,
+                      applicationContext);
             })
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
@@ -106,7 +118,14 @@ class DeclarationsRegistryTest {
     InboundConnectorMock connector = mock(InboundConnectorMock.class);
     when(connector.getId()).thenReturn(INBOUND_CONNECTOR_ID);
     connectors.add(connector);
-    subject = new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers,  compositeProcessDefinitions, applicationContext);
+    subject =
+        new DeclarationsRegistry(
+            connectorGroups,
+            scenarios,
+            connectors,
+            modelMappers,
+            compositeProcessDefinitions,
+            applicationContext);
 
     // act
     Optional<ConnectorDefinition> actual = subject.getConnectorById(INBOUND_CONNECTOR_ID);
@@ -135,7 +154,14 @@ class DeclarationsRegistryTest {
     when(outboundConnector.getConnectorGroupId()).thenReturn(CONNECTOR_GROUP_ID);
     connectors.add(outboundConnector);
 
-    subject = new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers,  compositeProcessDefinitions, applicationContext);
+    subject =
+        new DeclarationsRegistry(
+            connectorGroups,
+            scenarios,
+            connectors,
+            modelMappers,
+            compositeProcessDefinitions,
+            applicationContext);
 
     // act & assert
     assertThatThrownBy(() -> subject.getScenarioById(SECOND_SCENARIO_ID))

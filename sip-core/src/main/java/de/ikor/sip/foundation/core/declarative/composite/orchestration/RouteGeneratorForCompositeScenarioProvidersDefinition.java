@@ -72,7 +72,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
 
     final var scenarioProviderMap =
         getDeclarationsRegistry()
-            .getCompositeScenarioProviderDefinitions(getIntegrationScenarioId())
+            .getCompositeProcessProviderDefinitions(getIntegrationScenarioId())
             .stream()
             .collect(Collectors.toMap(IntegrationScenarioProviderDefinition::getClass, con -> con));
     final var unknownProviderNames =
