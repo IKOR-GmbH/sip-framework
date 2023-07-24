@@ -60,7 +60,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   }
 
   @Override
-  public List<IntegrationScenarioProviderDefinition> getCompositeProcessProviderDefinitions(
+  public List<IntegrationScenarioDefinition> getCompositeProcessProviderDefinitions(
       String compositeProcessID) {
     return compositeProcessDefinitions.stream()
         .filter(scenario -> scenario.getId().equals(compositeProcessID))
@@ -70,7 +70,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .stream()
         .map(
             definition ->
-                (IntegrationScenarioProviderDefinition) applicationContext.getBean(definition))
+                (IntegrationScenarioDefinition)applicationContext.getBean(definition))
         .toList();
   }
 

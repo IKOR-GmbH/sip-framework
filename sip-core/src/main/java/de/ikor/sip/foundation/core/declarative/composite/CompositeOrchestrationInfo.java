@@ -1,8 +1,10 @@
 package de.ikor.sip.foundation.core.declarative.composite;
 
+import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.orchestration.OrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import java.util.Map;
 import org.apache.camel.builder.EndpointConsumerBuilder;
@@ -37,7 +39,7 @@ public interface CompositeOrchestrationInfo extends OrchestrationInfo {
    *
    * @return providers and their respective endpoints attached to the scenario
    */
-  Map<IntegrationScenarioProviderDefinition, EndpointConsumerBuilder> getProviderEndpoints();
+  Map<IntegrationScenarioDefinition, EndpointConsumerBuilder> getProviderEndpoints();
 
   /**
    * Returns the consumers and their respective endpoints that are attached to this integration

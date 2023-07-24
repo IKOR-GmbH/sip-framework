@@ -89,7 +89,7 @@ public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
   List<IntegrationScenarioConsumerDefinition> getCompositeProcessConsumerDefinitions(
       String scenarioID);
 
-  List<IntegrationScenarioProviderDefinition> getCompositeProcessProviderDefinitions(
+  List<IntegrationScenarioDefinition> getCompositeProcessProviderDefinitions(
       String scenarioID);
 
   List<CompositeProcessDefinition> getCompositeProvidersForScenario(

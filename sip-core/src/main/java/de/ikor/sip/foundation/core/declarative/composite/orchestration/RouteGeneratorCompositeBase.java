@@ -33,11 +33,11 @@ abstract class RouteGeneratorCompositeBase {
   private final RoutesRegistry routesRegistry =
       getRoutesDefinition().getCamelContext().getRegistry().findSingleByType(RoutesRegistry.class);
 
-  protected String getIntegrationScenarioId() {
-    return getIntegrationScenario().getId();
+  protected String getCompositeId() {
+    return getCompositeProcess().getId();
   }
 
-  protected CompositeProcessDefinition getIntegrationScenario() {
+  protected CompositeProcessDefinition getCompositeProcess() {
     return getOrchestrationInfo().getCompositeProcess();
   }
 }

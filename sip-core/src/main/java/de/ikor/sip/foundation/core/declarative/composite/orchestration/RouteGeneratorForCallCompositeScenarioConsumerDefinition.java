@@ -51,7 +51,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
     if (!doubleHandledConsumers.isEmpty()) {
       log.warn(
           "The following consumers are used more than once in orchestration for scenario '{}': {}",
-          getIntegrationScenarioId(),
+          getCompositeId(),
           doubleHandledConsumers.stream()
               .map(obj -> obj.getClass().getName())
               .collect(Collectors.joining(",")));
@@ -79,13 +79,13 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
                 SIPFrameworkInitializationException.init(
                     "Consumer-class '%s' is used on orchestration for integration scenario '%s', but it is not registered with that scenario. Registered outbound connector classes are %s",
                     element.getConsumerClass().getName(),
-                    getIntegrationScenarioId(),
+                    getCompositeId(),
                     getConsumers().stream().map(conn -> conn.getClass().getName()).toList()));
   }
 
   private List<IntegrationScenarioConsumerDefinition> getConsumers() {
     return getDeclarationsRegistry()
-        .getCompositeProcessConsumerDefinitions(getIntegrationScenarioId());
+        .getCompositeProcessConsumerDefinitions(getCompositeId());
   }
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {

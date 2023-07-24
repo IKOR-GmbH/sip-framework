@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.composite.orchestration;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.HashSet;
@@ -24,22 +25,22 @@ import org.apache.camel.model.RoutesDefinition;
 final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
     extends RouteGeneratorCompositeBase {
   private final ForCompositeScenarioProvidersBaseDefinition<?, ?, M> providerDefinition;
-  private final Set<IntegrationScenarioProviderDefinition> overallUnhandledProviders;
+  private final Set<IntegrationScenarioDefinition> overallUnhandledProviders;
 
   @Getter(lazy = true)
-  private final Set<IntegrationScenarioProviderDefinition> handledProviders =
+  private final Set<IntegrationScenarioDefinition> handledProviders =
       resolveAndVerifyHandledProviders();
 
   RouteGeneratorForCompositeScenarioProvidersDefinition(
       final CompositeOrchestrationInfo orchestrationInfo,
       final ForCompositeScenarioProvidersBaseDefinition providerDefinition,
-      final Set<IntegrationScenarioProviderDefinition> overallUnhandledProviders) {
+      final Set<IntegrationScenarioDefinition> overallUnhandledProviders) {
     super(orchestrationInfo);
     this.providerDefinition = providerDefinition;
     this.overallUnhandledProviders = overallUnhandledProviders;
   }
 
-  private Set<IntegrationScenarioProviderDefinition> resolveAndVerifyHandledProviders() {
+  private Set<IntegrationScenarioDefinition> resolveAndVerifyHandledProviders() {
     final var providers = resolveHandledProviders();
 
     // verify that given providers are not already handled
@@ -48,7 +49,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
     if (!doubleHandledProviders.isEmpty()) {
       throw SIPFrameworkInitializationException.init(
           "The following providers are used more than once in orchestration for scenario '%s': %s",
-          getIntegrationScenarioId(),
+          getCompositeId(),
           doubleHandledProviders.stream()
               .map(obj -> obj.getClass().getName())
               .collect(Collectors.joining(",")));
@@ -57,7 +58,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
     return providers;
   }
 
-  private Set<IntegrationScenarioProviderDefinition> resolveHandledProviders() {
+  private Set<IntegrationScenarioDefinition> resolveHandledProviders() {
     if (providerDefinition instanceof ForCompositeScenarioProvidersByClassDefinition element) {
       return resolveProvidersFromClasses(element);
     }
@@ -65,25 +66,25 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
         "Unhandled scenario-provider subclass: %s", providerDefinition.getClass().getName());
   }
 
-  private Set<IntegrationScenarioProviderDefinition> resolveProvidersFromClasses(
+  private Set<IntegrationScenarioDefinition> resolveProvidersFromClasses(
       final ForCompositeScenarioProvidersByClassDefinition element) {
     final Set<Class<? extends IntegrationScenarioProviderDefinition>> providerClasses =
         element.getProviderClasses();
 
     final var scenarioProviderMap =
         getDeclarationsRegistry()
-            .getCompositeProcessProviderDefinitions(getIntegrationScenarioId())
+            .getCompositeProcessProviderDefinitions(getCompositeId())
             .stream()
-            .collect(Collectors.toMap(IntegrationScenarioProviderDefinition::getClass, con -> con));
+            .collect(Collectors.toMap(IntegrationScenarioDefinition::getClass, con -> con));
     final var unknownProviderNames =
         providerClasses.stream()
             .filter(clazz -> !scenarioProviderMap.containsKey(clazz))
-            .map(ele -> ele.getClass().getName())
+            .map(Class::getName)
             .toList();
     if (!unknownProviderNames.isEmpty()) {
       throw SIPFrameworkInitializationException.init(
           "The following provider-classes are used in orchestration for scenario '%s', but not registered with that scenario: %s",
-          getIntegrationScenarioId(), String.join(",", unknownProviderNames));
+          getCompositeId(), String.join(",", unknownProviderNames));
     }
     return providerClasses.stream().map(scenarioProviderMap::get).collect(Collectors.toSet());
   }
@@ -93,7 +94,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
     if (getHandledProviders().isEmpty()) {
       log.debug(
           "No providers handled by this route-builder for orchestration of integration-scenario {}",
-          getIntegrationScenarioId());
+          getCompositeId());
       return;
     }
 
@@ -103,7 +104,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
     final var routeDef = generateRouteStart(routesDefinition);
     routeDef.bean(
         CompositeScenarioOrchestrationHandlers.handleContextInitialization(
-            getIntegrationScenario()));
+            getCompositeProcess()));
 
     for (final var element : providerDefinition.getNodes()) {
       if (element instanceof CallCompositeScenarioConsumerBaseDefinition callDef) {
@@ -113,7 +114,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
       } else {
         throw SIPFrameworkInitializationException.init(
             "No handling defined for type %s used in orchestration for scenario %s",
-            element.getClass().getName(), getIntegrationScenarioId());
+            element.getClass().getName(), getCompositeId());
       }
     }
 
@@ -122,7 +123,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
     if (!overallUnhandledScenarioConsumers.isEmpty()) {
       log.warn(
           "Orchestration for integration-scenario '{}' does not call scenario-consumers '{}' for calls coming in from '{}'",
-          getIntegrationScenarioId(),
+          getCompositeId(),
           overallUnhandledScenarioConsumers.stream()
               .map(consumer -> consumer.getClass().getSimpleName())
               .collect(Collectors.joining(",")),
@@ -133,14 +134,14 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
   }
 
   private RouteDefinition generateRouteStart(final RoutesDefinition routesDefinition) {
-    final Set<IntegrationScenarioProviderDefinition> providers = getHandledProviders();
+    final Set<IntegrationScenarioDefinition> providers = getHandledProviders();
     final var providerIds =
         providers.stream()
             .map(prov -> prov.getClass().getSimpleName())
             .collect(Collectors.joining("-"));
     final var orchestrationRouteId =
         getRoutesRegistry()
-            .generateRouteIdForCompositeScenarioOrchestrator(getIntegrationScenario(), providerIds);
+            .generateRouteIdForCompositeScenarioOrchestrator(getCompositeProcess(), providerIds);
     if (providers.size() == 1) {
       return routesDefinition
           .from(getProviderEndpoint(providers.iterator().next()))
@@ -148,14 +149,14 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
     }
     final var directName =
         String.format(
-            "sip-scenario-orchestrator-%s-merge-%s", getIntegrationScenarioId(), providerIds);
+            "sip-scenario-orchestrator-%s-merge-%s", getCompositeId(), providerIds);
     for (final var provider : providers) {
       routesDefinition
           .from(getProviderEndpoint(provider))
           .routeId(
               getRoutesRegistry()
                   .generateRouteIdForCompositeScenarioOrchestrator(
-                      getIntegrationScenario(), "merge", provider.getClass().getSimpleName()))
+                      getCompositeProcess(), "merge", provider.getClass().getSimpleName()))
           .to(StaticEndpointBuilders.direct(directName));
     }
     return routesDefinition
@@ -164,7 +165,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
   }
 
   private EndpointConsumerBuilder getProviderEndpoint(
-      final IntegrationScenarioProviderDefinition provider) {
+      final IntegrationScenarioDefinition provider) {
     return Objects.requireNonNull(getOrchestrationInfo().getProviderEndpoints().get(provider));
   }
 }

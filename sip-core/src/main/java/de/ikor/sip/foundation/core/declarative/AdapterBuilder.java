@@ -300,7 +300,7 @@ public class AdapterBuilder extends RouteBuilder {
   private void buildCompositeProcess(CompositeProcessDefinition compositeProcess) {
 
     final Map<
-            IntegrationScenarioProviderDefinition,
+            IntegrationScenarioDefinition,
             DirectEndpointBuilderFactory.DirectEndpointBuilder>
         providerHandoffEndpoints = new HashMap<>();
     final Map<
@@ -323,7 +323,7 @@ public class AdapterBuilder extends RouteBuilder {
                           "sip-composite-takeover-%s",
                           compositeProcess.getId() + "-" + providerScenario.getId()));
               providerHandoffEndpoints.put(
-                  (IntegrationScenarioProviderDefinition) providerScenario, startingEndpoint);
+                  providerScenario, startingEndpoint);
             });
     compositeProcess
         .getConsumerDefinitions()
@@ -378,7 +378,7 @@ public class AdapterBuilder extends RouteBuilder {
 
     CompositeProcessDefinition compositeProcess;
     RoutesDefinition routesDefinition;
-    Map<IntegrationScenarioProviderDefinition, EndpointConsumerBuilder> providerEndpoints;
+    Map<IntegrationScenarioDefinition, EndpointConsumerBuilder> providerEndpoints;
     Map<IntegrationScenarioConsumerDefinition, EndpointProducerBuilder> consumerEndpoints;
   }
 }
