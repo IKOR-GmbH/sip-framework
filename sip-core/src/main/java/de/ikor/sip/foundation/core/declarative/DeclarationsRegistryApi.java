@@ -1,11 +1,14 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,4 +83,12 @@ public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
    */
   <S, T> Optional<ModelMapper<S, T>> getGlobalModelMapperForModels(
       Class<S> sourceModelClass, Class<T> targetModelClass);
+
+  List<CompositeProcessDefinition> getCompositeProcessDefinitions();
+
+  List<IntegrationScenarioConsumerDefinition> getCompositeScenarioConsumerDefinitions(
+      String scenarioID);
+
+  List<IntegrationScenarioProviderDefinition> getCompositeScenarioProviderDefinitions(
+      String scenarioID);
 }

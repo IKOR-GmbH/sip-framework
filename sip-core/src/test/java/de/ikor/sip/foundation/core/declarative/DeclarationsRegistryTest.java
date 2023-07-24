@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
@@ -20,6 +21,7 @@ import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
 
 class DeclarationsRegistryTest {
 
@@ -35,6 +37,10 @@ class DeclarationsRegistryTest {
   private final List<IntegrationScenarioDefinition> scenarios = new ArrayList<>();
   private final List<ConnectorDefinition> connectors = new ArrayList<>();
   private final List<ModelMapper<?, ?>> modelMappers = new ArrayList<>();
+
+  private final ApplicationContext applicationContext = mock(ApplicationContext.class);
+
+  private final List<CompositeProcessDefinition> compositeProcessDefinitions = new ArrayList<>();
 
   public static class ScenarioMock extends IntegrationScenarioBase {}
 
@@ -66,7 +72,7 @@ class DeclarationsRegistryTest {
     assertThatThrownBy(
             () -> {
               subject =
-                  new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers);
+                  new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers, compositeProcessDefinitions, applicationContext);
             })
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage("There is unused integration scenario with id %s", SCENARIO_ID);
@@ -86,7 +92,7 @@ class DeclarationsRegistryTest {
     assertThatThrownBy(
             () -> {
               subject =
-                  new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers);
+                  new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers, compositeProcessDefinitions, applicationContext);
             })
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
@@ -100,7 +106,7 @@ class DeclarationsRegistryTest {
     InboundConnectorMock connector = mock(InboundConnectorMock.class);
     when(connector.getId()).thenReturn(INBOUND_CONNECTOR_ID);
     connectors.add(connector);
-    subject = new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers);
+    subject = new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers,  compositeProcessDefinitions, applicationContext);
 
     // act
     Optional<ConnectorDefinition> actual = subject.getConnectorById(INBOUND_CONNECTOR_ID);
@@ -129,7 +135,7 @@ class DeclarationsRegistryTest {
     when(outboundConnector.getConnectorGroupId()).thenReturn(CONNECTOR_GROUP_ID);
     connectors.add(outboundConnector);
 
-    subject = new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers);
+    subject = new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers,  compositeProcessDefinitions, applicationContext);
 
     // act & assert
     assertThatThrownBy(() -> subject.getScenarioById(SECOND_SCENARIO_ID))

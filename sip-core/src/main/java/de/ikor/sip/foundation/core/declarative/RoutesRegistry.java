@@ -7,6 +7,7 @@ import static de.ikor.sip.foundation.core.util.CamelProcessorsHelper.isInMemoryU
 import de.ikor.sip.foundation.core.actuator.declarative.model.EndpointInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteInfo;
+import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
@@ -45,13 +46,18 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   private static final String POLL_ENRICH = "pollEnrich";
   public static final String SIP_CONNECTOR_PREFIX = "sip-connector";
   public static final String SIP_SOAP_SERVICE_PREFIX = "sip-soap-service";
-  public static final String SIP_SCENARIO_ORCHESTRATOR_PREFIX = "sip-connector";
+  public static final String SIP_SCENARIO_ORCHESTRATOR_PREFIX = "sip-scenario";
+
+  public static final String SIP_COMPOSITE_ORCHESTRATOR_PREFIX = "sip-composite";
   private final DeclarationsRegistryApi declarationsRegistryApi;
 
   private final MultiValuedMap<ConnectorDefinition, String> routeIdsForConnectorRegister =
       new HashSetValuedHashMap<>();
   private final MultiValuedMap<IntegrationScenarioDefinition, String>
       routeIdsForScenarioOrchestrationRegister = new HashSetValuedHashMap<>();
+
+  private final MultiValuedMap<CompositeProcessDefinition, String>
+      routeIdsForCompositeScenarioOrchestrationRegister = new HashSetValuedHashMap<>();
   private final Map<String, ConnectorDefinition> connectorForRouteIdRegister = new HashMap<>();
   private final Map<String, String> routeIdForSoapServiceRegister = new HashMap<>();
   private final Map<String, RouteRole> roleForRouteIdRegister = new HashMap<>();
@@ -131,6 +137,23 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     }
     roleForRouteIdRegister.put(routeId, RouteRole.SCENARIO_ORCHESTRATION);
     routeIdsForScenarioOrchestrationRegister.put(scenario, routeId);
+    return routeId;
+  }
+
+  @Synchronized
+  public String generateRouteIdForCompositeScenarioOrchestrator(
+      final CompositeProcessDefinition scenario, final String suffix, final String... suffixes) {
+    final var idBuilder = new StringBuilder(SIP_COMPOSITE_ORCHESTRATOR_PREFIX);
+    idBuilder.append("_").append(scenario.getId()).append("_").append(suffix);
+    Arrays.stream(suffixes).forEach(additional -> idBuilder.append("_").append(additional));
+    final var routeId = idBuilder.toString();
+    if (roleForRouteIdRegister.containsKey(routeId)) {
+      throw SIPFrameworkInitializationException.init(
+          "Can't build internal scenario orchestrator route with routeId '%s': routeId already exists",
+          routeId);
+    }
+    roleForRouteIdRegister.put(routeId, RouteRole.COMPOSITE_SCENARIO_ORCHESTRATION);
+    routeIdsForCompositeScenarioOrchestrationRegister.put(scenario, routeId);
     return routeId;
   }
 

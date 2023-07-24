@@ -2,6 +2,8 @@ package de.ikor.sip.foundation.core.declarative;
 
 import static de.ikor.sip.foundation.core.declarative.validator.CDMValidator.*;
 
+import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
@@ -53,6 +55,71 @@ public class AdapterBuilder extends RouteBuilder {
   public void configure() {
     getCamelContext().getGlobalEndpointConfiguration().setBridgeErrorHandler(true);
     declarationsRegistry.getScenarios().forEach(this::buildScenario);
+
+    // composite scenarios build
+    List<CompositeProcessDefinition> compositeScenarios =
+        declarationsRegistry.getCompositeProcessDefinitions();
+    compositeScenarios.forEach(
+        composite -> {
+          final Map<
+                  IntegrationScenarioProviderDefinition,
+                  DirectEndpointBuilderFactory.DirectEndpointBuilder>
+              providerHandoffEndpoints = new HashMap<>();
+          final Map<
+                  IntegrationScenarioConsumerDefinition,
+                  DirectEndpointBuilderFactory.DirectEndpointBuilder>
+              consumerTakeoverEndpoints = new HashMap<>();
+
+          composite
+              .getProviderDefinitions()
+              .forEach(
+                  provider -> {
+                    IntegrationScenarioDefinition providerScenario =
+                        declarationsRegistry.getScenarios().stream()
+                            .filter(s -> s.getClass().equals(provider))
+                            .findFirst()
+                            .get();
+                    final var startingEndpoint =
+                        StaticEndpointBuilders.direct(
+                            String.format(
+                                "sip-composite-takeover-%s",
+                                composite.getId() + "-" + providerScenario.getId()));
+                    providerHandoffEndpoints.put(
+                        (IntegrationScenarioProviderDefinition) providerScenario, startingEndpoint);
+
+                    composite
+                        .getConsumerDefinitions()
+                        .forEach(
+                            consumer -> {
+                              IntegrationScenarioDefinition consumerScenario =
+                                  declarationsRegistry.getScenarios().stream()
+                                      .filter(s -> s.getClass().equals(consumer))
+                                      .findFirst()
+                                      .get();
+                              var endingEndpoint =
+                                  StaticEndpointBuilders.direct(
+                                      String.format(
+                                          "sip-composite-handoff-%s",
+                                          composite.getId() + "-" + consumerScenario.getId()));
+                              consumerTakeoverEndpoints.put(
+                                  (IntegrationScenarioConsumerDefinition) consumerScenario,
+                                  endingEndpoint);
+                            });
+
+                    final var orchestrationInfo =
+                        new CompositeOrchestrationValues(
+                            composite,
+                            getRouteCollection(),
+                            Collections.unmodifiableMap(providerHandoffEndpoints),
+                            Collections.unmodifiableMap(consumerTakeoverEndpoints));
+                    if (!composite.getOrchestrator().canOrchestrate(orchestrationInfo)) {
+                      throw SIPFrameworkInitializationException.init(
+                          "Orchestrator assigned to scenario '%s' declares being unable to orchestrate the scenario layout as it is defined",
+                          composite.getId());
+                    }
+                    composite.getOrchestrator().doOrchestrate(orchestrationInfo);
+                  });
+        });
   }
 
   public AdapterBuilder(DeclarationsRegistry declarationsRegistry, RoutesRegistry routesRegistry) {
@@ -73,6 +140,10 @@ public class AdapterBuilder extends RouteBuilder {
 
   @SuppressWarnings("unchecked")
   private void buildScenario(final IntegrationScenarioDefinition scenarioDefinition) {
+    // check for scenario in composite integration scenario base
+    List<CompositeProcessDefinition> compositeScenarios =
+        declarationsRegistry.getCompositeProcessDefinitions();
+
     final Map<
             IntegrationScenarioProviderDefinition,
             DirectEndpointBuilderFactory.DirectEndpointBuilder>
@@ -82,20 +153,61 @@ public class AdapterBuilder extends RouteBuilder {
             DirectEndpointBuilderFactory.DirectEndpointBuilder>
         consumerTakeoverEndpoints = new HashMap<>();
 
-    for (final var provider : inboundConnectors.get(scenarioDefinition)) {
-      final var endpoint =
-          StaticEndpointBuilders.direct(String.format("sip-scenario-handoff-%s", provider.getId()));
-      providerHandoffEndpoints.put(provider, endpoint);
-      buildInboundConnector(provider, scenarioDefinition, endpoint);
+    if (inboundConnectors.get(scenarioDefinition) != null) {
+      for (final var provider : inboundConnectors.get(scenarioDefinition)) {
+        final var endpoint =
+            StaticEndpointBuilders.direct(
+                String.format("sip-scenario-handoff-%s", provider.getId()));
+        providerHandoffEndpoints.put(provider, endpoint);
+        buildInboundConnector(provider, scenarioDefinition, endpoint);
+      }
     }
 
-    for (final var consumer : outboundConnectors.get(scenarioDefinition)) {
-      final var endpoint =
-          StaticEndpointBuilders.direct(
-              String.format("sip-scenario-takeover-%s", consumer.getId()));
-      consumerTakeoverEndpoints.put(consumer, endpoint);
-      buildOutboundConnector(consumer, scenarioDefinition, endpoint);
+    compositeScenarios.stream()
+        .filter(
+            composite -> composite.getConsumerDefinitions().contains(scenarioDefinition.getClass()))
+        .forEach(
+            composite -> {
+              composite.getConsumerDefinitions().stream()
+                  .filter(consumer -> consumer.equals(scenarioDefinition.getClass()))
+                  .forEach(
+                      consumer -> {
+                        final var endpoint =
+                            StaticEndpointBuilders.direct(
+                                String.format(
+                                    "sip-composite-handoff-%s",
+                                    composite.getId() + "-" + scenarioDefinition.getId()));
+                        providerHandoffEndpoints.put(scenarioDefinition::getId, endpoint);
+                      });
+            });
+
+    if (outboundConnectors.get(scenarioDefinition) != null) {
+      for (final var consumer : outboundConnectors.get(scenarioDefinition)) {
+        final var endpoint =
+            StaticEndpointBuilders.direct(
+                String.format("sip-scenario-takeover-%s", consumer.getId()));
+        consumerTakeoverEndpoints.put(consumer, endpoint);
+        buildOutboundConnector(consumer, scenarioDefinition, endpoint);
+      }
     }
+
+    compositeScenarios.stream()
+        .filter(
+            composite -> composite.getProviderDefinitions().contains(scenarioDefinition.getClass()))
+        .forEach(
+            composite -> {
+              composite.getProviderDefinitions().stream()
+                  .filter(provider -> provider.equals(scenarioDefinition.getClass()))
+                  .forEach(
+                      consumer -> {
+                        final var endpoint =
+                            StaticEndpointBuilders.direct(
+                                String.format(
+                                    "sip-composite-takeover-%s",
+                                    composite.getId() + "-" + scenarioDefinition.getId()));
+                        consumerTakeoverEndpoints.put(scenarioDefinition::getId, endpoint);
+                      });
+            });
 
     final var orchestrationInfo =
         new ScenarioOrchestrationValues(
@@ -271,6 +383,15 @@ public class AdapterBuilder extends RouteBuilder {
   @Value
   private static class ScenarioOrchestrationValues implements ScenarioOrchestrationInfo {
     IntegrationScenarioDefinition integrationScenario;
+    RoutesDefinition routesDefinition;
+    Map<IntegrationScenarioProviderDefinition, EndpointConsumerBuilder> providerEndpoints;
+    Map<IntegrationScenarioConsumerDefinition, EndpointProducerBuilder> consumerEndpoints;
+  }
+
+  @Value
+  private static class CompositeOrchestrationValues implements CompositeOrchestrationInfo {
+
+    CompositeProcessDefinition compositeProcess;
     RoutesDefinition routesDefinition;
     Map<IntegrationScenarioProviderDefinition, EndpointConsumerBuilder> providerEndpoints;
     Map<IntegrationScenarioConsumerDefinition, EndpointProducerBuilder> consumerEndpoints;

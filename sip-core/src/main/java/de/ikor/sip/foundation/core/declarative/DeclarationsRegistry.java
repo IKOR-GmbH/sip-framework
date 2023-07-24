@@ -4,13 +4,16 @@ import static java.util.function.Predicate.not;
 
 import de.ikor.sip.foundation.core.declarative.annonation.Disabled;
 import de.ikor.sip.foundation.core.declarative.annonation.GlobalMapper;
+import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +25,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 @Getter
@@ -32,17 +36,53 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   private static final String SCENARIO = "integration scenario";
   private static final String CONNECTOR = "connector";
 
+  private final ApplicationContext applicationContext;
   private final List<ConnectorGroupDefinition> connectorGroups;
   private final List<IntegrationScenarioDefinition> scenarios;
   private final List<ConnectorDefinition> connectors;
   private final Map<MapperPair, ModelMapper<Object, Object>> globalModelMappersRegistry;
 
+  @Getter private final List<CompositeProcessDefinition> compositeProcessDefinitions;
+
+  @Override
+  public List<IntegrationScenarioConsumerDefinition> getCompositeScenarioConsumerDefinitions(
+      String scenarioID) {
+    return compositeProcessDefinitions.stream()
+        .filter(scenario -> scenario.getId().equals(scenarioID))
+        .findFirst()
+        .get()
+        .getConsumerDefinitions()
+        .stream()
+        .map(
+            definition ->
+                (IntegrationScenarioConsumerDefinition) applicationContext.getBean(definition))
+        .toList();
+  }
+
+  @Override
+  public List<IntegrationScenarioProviderDefinition> getCompositeScenarioProviderDefinitions(
+      String scenarioID) {
+    return compositeProcessDefinitions.stream()
+        .filter(scenario -> scenario.getId().equals(scenarioID))
+        .findFirst()
+        .get()
+        .getProviderDefinitions()
+        .stream()
+        .map(
+            definition ->
+                (IntegrationScenarioProviderDefinition) applicationContext.getBean(definition))
+        .toList();
+  }
+
   public DeclarationsRegistry(
       List<ConnectorGroupDefinition> autowiredConnectorGroups,
       List<IntegrationScenarioDefinition> autowiredScenarios,
       List<ConnectorDefinition> autowiredConnectors,
-      List<ModelMapper<?, ?>> modelMappers) {
+      List<ModelMapper<?, ?>> modelMappers,
+      List<CompositeProcessDefinition> compositeProcessDefinitions,
+      ApplicationContext applicationContext) {
 
+    this.applicationContext = applicationContext;
     this.connectorGroups =
         autowiredConnectorGroups.stream().filter(not(isDisabled())).collect(Collectors.toList());
 
@@ -55,10 +95,12 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
     this.globalModelMappersRegistry = checkAndInitializeGlobalModelMappers(modelMappers);
 
+    this.compositeProcessDefinitions = compositeProcessDefinitions;
+
     createMissingConnectorGroups();
     checkForDuplicateConnectorGroups();
     checkForDuplicateScenarios();
-    checkForUnusedScenarios();
+    // checkForUnusedScenarios();
     checkForDuplicateConnectors();
   }
 
