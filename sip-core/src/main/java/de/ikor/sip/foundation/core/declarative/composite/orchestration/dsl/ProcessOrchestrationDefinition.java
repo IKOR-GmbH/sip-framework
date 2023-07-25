@@ -18,8 +18,7 @@ public class ProcessOrchestrationDefinition<M>
     extends ProcessDslBase<ProcessOrchestrationDefinition<M>, EndOfDsl, M> {
 
   @Getter(AccessLevel.PACKAGE)
-  private final List<ForProcessProvidersBase<?, ?, M>> scenarioProviderDefinitions =
-      new ArrayList<>();
+  private final List<ForProcessProviders<?, M>> scenarioProviderDefinitions = new ArrayList<>();
 
   /**
    * Constructor

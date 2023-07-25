@@ -7,20 +7,20 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-final class CompositeScenarioConsumerCallsDelegate<
+final class CompositeScenarioConsumerCallsImp<
         S extends CompositeScenarioConsumerCalls<S, R, M>, R, M>
     implements CompositeScenarioConsumerCalls<S, R, M> {
 
   private final List<CompositeCallableWithinProviderDefinition> consumerDefinitions;
   private final S definitionNode;
   private final R returnNode;
-  private final CompositeProcessDefinition integrationScenario;
+  private final CompositeProcessDefinition compositeProcess;
 
   @Override
-  public CallProcessConsumerByClass<S, M> callScenarioConsumer(
+  public CallProcessConsumer<S, M> callConsumer(
       final Class<? extends IntegrationScenarioDefinition> consumerClass) {
-    final CallProcessConsumerByClass<S, M> def =
-        new CallProcessConsumerByClass<>(definitionNode, integrationScenario, consumerClass);
+    final CallProcessConsumer<S, M> def =
+        new CallProcessConsumer<>(definitionNode, compositeProcess, consumerClass);
     consumerDefinitions.add(def);
     return def;
   }

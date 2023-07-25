@@ -1,9 +1,9 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration;
+package de.ikor.sip.foundation.core.declarative.composite.orchestration.routes;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeScenarioOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.CallProcessConsumerBase;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.ForProcessProviders;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.ForProcessProvidersBase;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -25,18 +25,17 @@ import org.apache.camel.model.RoutesDefinition;
  */
 @Slf4j
 @SuppressWarnings("rawtypes")
-final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
-    extends RouteGeneratorCompositeBase {
-  private final ForProcessProvidersBase<?, ?, M> providerDefinition;
+final class RouteGeneratorForProcessProviders<M> extends RouteGeneratorProcessBase {
+  private final ForProcessProviders<?, M> providerDefinition;
   private final Set<IntegrationScenarioDefinition> overallUnhandledProviders;
 
   @Getter(lazy = true)
   private final Set<IntegrationScenarioDefinition> handledProviders =
       resolveAndVerifyHandledProviders();
 
-  RouteGeneratorForCompositeScenarioProvidersDefinition(
+  RouteGeneratorForProcessProviders(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final ForProcessProvidersBase providerDefinition,
+      final ForProcessProviders providerDefinition,
       final Set<IntegrationScenarioDefinition> overallUnhandledProviders) {
     super(orchestrationInfo);
     this.providerDefinition = providerDefinition;
@@ -62,8 +61,8 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
   }
 
   private Set<IntegrationScenarioDefinition> resolveHandledProviders() {
-    if (providerDefinition instanceof ForProcessProviders element) {
-      return resolveProvidersFromClasses(element);
+    if (providerDefinition != null) {
+      return resolveProvidersFromClasses(providerDefinition);
     }
     throw SIPFrameworkInitializationException.init(
         "Unhandled scenario-provider subclass: %s", providerDefinition.getClass().getName());
@@ -108,7 +107,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
 
     for (final var element : RouteGeneratorHelper.getNodes(providerDefinition)) {
       if (element instanceof CallProcessConsumerBase callDef) {
-        new RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>(
+        new RouteGeneratorForCallProcessConsumer<M>(
                 getOrchestrationInfo(), callDef, overallUnhandledScenarioConsumers)
             .generateRoute(routeDef);
       } else {

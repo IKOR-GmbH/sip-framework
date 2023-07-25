@@ -1,8 +1,9 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration;
+package de.ikor.sip.foundation.core.declarative.composite.orchestration.routes;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeScenarioOrchestrationHandlers;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.CallProcessConsumer;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.CallProcessConsumerBase;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.CallProcessConsumerByClass;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -24,8 +25,7 @@ import org.apache.camel.model.ProcessorDefinition;
  */
 @Slf4j
 @SuppressWarnings("rawtypes")
-final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
-    extends RouteGeneratorCompositeBase {
+final class RouteGeneratorForCallProcessConsumer<M> extends RouteGeneratorProcessBase {
 
   private final CallProcessConsumerBase<?, ?, M> definitionElement;
 
@@ -35,7 +35,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
   private final Set<IntegrationScenarioDefinition> handledConsumers =
       resolveAndVerifyHandledConsumers();
 
-  RouteGeneratorForCallCompositeScenarioConsumerDefinition(
+  RouteGeneratorForCallProcessConsumer(
       final CompositeOrchestrationInfo orchestrationInfo,
       final CallProcessConsumerBase definitionElement,
       final Set<IntegrationScenarioDefinition> overallUnhandledConsumers) {
@@ -62,7 +62,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
   }
 
   private Set<IntegrationScenarioDefinition> resolveHandledConsumers() {
-    if (definitionElement instanceof CallProcessConsumerByClass element) {
+    if (definitionElement instanceof CallProcessConsumer element) {
       return Collections.singleton(retrieveConsumerFromClassDefinition(element));
     }
 
@@ -72,7 +72,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
   }
 
   private IntegrationScenarioDefinition retrieveConsumerFromClassDefinition(
-      final CallProcessConsumerByClass element) {
+      final CallProcessConsumer element) {
     return getConsumers().stream()
         .filter(
             consumer -> RouteGeneratorHelper.getConsumerClass(element).equals(consumer.getClass()))

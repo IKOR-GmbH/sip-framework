@@ -5,7 +5,7 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 /** Interface containing various methods to trigger a call to an integration-scenario consumer. * */
 sealed interface CompositeScenarioConsumerCalls<
         S extends CompositeScenarioConsumerCalls<S, R, M>, R, M>
-    permits ForProcessProvidersBase, CompositeScenarioConsumerCallsDelegate {
+    permits ForProcessProviders, CompositeScenarioConsumerCallsImp {
 
   /**
    * Specifies that the scenario consumer with the given <code>consumerClass</code> should be
@@ -14,6 +14,6 @@ sealed interface CompositeScenarioConsumerCalls<
    * @param consumerClass Class of the consumer
    * @return DSL handle for further call instructions
    */
-  CallProcessConsumerByClass<S, M> callScenarioConsumer(
+  CallProcessConsumer<S, M> callConsumer(
       Class<? extends IntegrationScenarioDefinition> consumerClass);
 }

@@ -14,7 +14,7 @@ import lombok.Getter;
 public abstract sealed class CallProcessConsumerBase<
         S extends CallProcessConsumerBase<S, R, M>, R, M>
     extends ProcessDslBase<S, R, M> implements CompositeCallableWithinProviderDefinition
-    permits CallProcessConsumerByClass {
+    permits CallProcessConsumer {
 
   @Getter(AccessLevel.PACKAGE)
   private Optional<CompositeScenarioStepRequestExtractor<M>> requestPreparation = Optional.empty();

@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RouteGeneratorHelper {
 
-  public static List<ForProcessProvidersBase> getScenarioProviderDefinitions(
+  public static List<ForProcessProviders> getScenarioProviderDefinitions(
       ProcessOrchestrationDefinition processOrchestrationDefinition) {
     return processOrchestrationDefinition.getScenarioProviderDefinitions();
   }
@@ -28,12 +28,12 @@ public class RouteGeneratorHelper {
   }
 
   public static List<CompositeCallableWithinProviderDefinition> getNodes(
-      ForProcessProvidersBase element) {
-    return element.getNodes();
+      ForProcessProviders element) {
+    return element.getConsumerCalls();
   }
 
   public static Class<? extends IntegrationScenarioDefinition> getConsumerClass(
-      CallProcessConsumerByClass element) {
+      CallProcessConsumer element) {
     return element.getConsumerClass();
   }
 

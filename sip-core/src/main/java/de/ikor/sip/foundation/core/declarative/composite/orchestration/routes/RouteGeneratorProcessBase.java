@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration;
+package de.ikor.sip.foundation.core.declarative.composite.orchestration.routes;
 
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistryApi;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
@@ -15,7 +15,7 @@ import org.apache.camel.model.RoutesDefinition;
  * <p><em>For internal use only</em>
  */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-abstract class RouteGeneratorCompositeBase {
+abstract class RouteGeneratorProcessBase {
   @Getter(AccessLevel.PROTECTED)
   private final CompositeOrchestrationInfo orchestrationInfo;
 
