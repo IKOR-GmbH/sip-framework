@@ -1,6 +1,9 @@
 package de.ikor.sip.foundation.core.declarative.composite.orchestration;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.CallProcessConsumerBase;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.CallProcessConsumerByClass;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.Collections;
@@ -24,7 +27,7 @@ import org.apache.camel.model.ProcessorDefinition;
 final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
     extends RouteGeneratorCompositeBase {
 
-  private final CallProcessConsumerBaseDefinition<?, ?, M> definitionElement;
+  private final CallProcessConsumerBase<?, ?, M> definitionElement;
 
   private final Set<IntegrationScenarioDefinition> overallUnhandledConsumers;
 
@@ -34,7 +37,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
 
   RouteGeneratorForCallCompositeScenarioConsumerDefinition(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final CallProcessConsumerBaseDefinition definitionElement,
+      final CallProcessConsumerBase definitionElement,
       final Set<IntegrationScenarioDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);
     this.definitionElement = definitionElement;
@@ -59,7 +62,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
   }
 
   private Set<IntegrationScenarioDefinition> resolveHandledConsumers() {
-    if (definitionElement instanceof CallProcessConsumerByClassDefinition element) {
+    if (definitionElement instanceof CallProcessConsumerByClass element) {
       return Collections.singleton(retrieveConsumerFromClassDefinition(element));
     }
 
@@ -69,15 +72,16 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
   }
 
   private IntegrationScenarioDefinition retrieveConsumerFromClassDefinition(
-      final CallProcessConsumerByClassDefinition element) {
+      final CallProcessConsumerByClass element) {
     return getConsumers().stream()
-        .filter(consumer -> element.getConsumerClass().equals(consumer.getClass()))
+        .filter(
+            consumer -> RouteGeneratorHelper.getConsumerClass(element).equals(consumer.getClass()))
         .findFirst()
         .orElseThrow(
             () ->
                 SIPFrameworkInitializationException.init(
                     "Consumer-class '%s' is used on orchestration for integration scenario '%s', but it is not registered with that scenario. Registered outbound connector classes are %s",
-                    element.getConsumerClass().getName(),
+                    RouteGeneratorHelper.getConsumerClass(element).getName(),
                     getCompositeId(),
                     getConsumers().stream().map(conn -> conn.getClass().getName()).toList()));
   }
@@ -93,7 +97,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
           .transform()
           .method(
               CompositeScenarioOrchestrationHandlers.handleRequestToConsumer(
-                  consumer, definitionElement.getRequestPreparation()))
+                  consumer, RouteGeneratorHelper.getRequestPreparation(definitionElement)))
           .to(getEndpointForConsumer(consumer));
 
       // store / aggregate the response and place it on the body
@@ -102,8 +106,8 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
           .method(
               CompositeScenarioOrchestrationHandlers.handleResponseFromConsumer(
                   consumer,
-                  definitionElement.getStepResultCloner(),
-                  definitionElement.getResponseConsumer()));
+                  RouteGeneratorHelper.getStepResultCloner(definitionElement),
+                  RouteGeneratorHelper.getResponseConsumer(definitionElement)));
 
       overallUnhandledConsumers.remove(consumer);
     }

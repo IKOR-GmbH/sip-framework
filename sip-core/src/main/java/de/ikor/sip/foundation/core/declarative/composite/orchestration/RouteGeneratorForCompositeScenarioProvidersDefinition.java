@@ -1,8 +1,11 @@
 package de.ikor.sip.foundation.core.declarative.composite.orchestration;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.CallProcessConsumerBase;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.ForProcessProviders;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.ForProcessProvidersBase;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.HashSet;
 import java.util.Objects;
@@ -24,7 +27,7 @@ import org.apache.camel.model.RoutesDefinition;
 @SuppressWarnings("rawtypes")
 final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
     extends RouteGeneratorCompositeBase {
-  private final ForProcessProvidersBaseDefinition<?, ?, M> providerDefinition;
+  private final ForProcessProvidersBase<?, ?, M> providerDefinition;
   private final Set<IntegrationScenarioDefinition> overallUnhandledProviders;
 
   @Getter(lazy = true)
@@ -33,7 +36,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
 
   RouteGeneratorForCompositeScenarioProvidersDefinition(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final ForProcessProvidersBaseDefinition providerDefinition,
+      final ForProcessProvidersBase providerDefinition,
       final Set<IntegrationScenarioDefinition> overallUnhandledProviders) {
     super(orchestrationInfo);
     this.providerDefinition = providerDefinition;
@@ -59,7 +62,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
   }
 
   private Set<IntegrationScenarioDefinition> resolveHandledProviders() {
-    if (providerDefinition instanceof ForProcessProvidersByClassDefinition element) {
+    if (providerDefinition instanceof ForProcessProviders element) {
       return resolveProvidersFromClasses(element);
     }
     throw SIPFrameworkInitializationException.init(
@@ -67,9 +70,9 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
   }
 
   private Set<IntegrationScenarioDefinition> resolveProvidersFromClasses(
-      final ForProcessProvidersByClassDefinition element) {
-    final Set<Class<? extends IntegrationScenarioProviderDefinition>> providerClasses =
-        element.getProviderClasses();
+      final ForProcessProviders element) {
+    final Set<Class<? extends IntegrationScenarioDefinition>> providerClasses =
+        RouteGeneratorHelper.getProviderClasses(element);
 
     final var scenarioProviderMap =
         getDeclarationsRegistry().getCompositeProcessProviderDefinitions(getCompositeId()).stream()
@@ -103,14 +106,14 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
     routeDef.bean(
         CompositeScenarioOrchestrationHandlers.handleContextInitialization(getCompositeProcess()));
 
-    for (final var element : providerDefinition.getNodes()) {
-      if (element instanceof CallProcessConsumerBaseDefinition callDef) {
+    for (final var element : RouteGeneratorHelper.getNodes(providerDefinition)) {
+      if (element instanceof CallProcessConsumerBase callDef) {
         new RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>(
                 getOrchestrationInfo(), callDef, overallUnhandledScenarioConsumers)
             .generateRoute(routeDef);
       } else {
         throw SIPFrameworkInitializationException.init(
-            "No handling defined for type %s used in orchestration for scenario %s",
+            "No handling defined for type %s used in orchestration for process %s",
             element.getClass().getName(), getCompositeId());
       }
     }

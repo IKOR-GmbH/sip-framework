@@ -1,6 +1,8 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration;
+package de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeScenarioStepRequestExtractor;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeScenarioStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioStepRequestExtractor;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioStepResponseConsumer;
@@ -9,10 +11,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /** DSL base class for specifying the call to an integration scenario consumer */
-public abstract sealed class CallProcessConsumerBaseDefinition<
-        S extends CallProcessConsumerBaseDefinition<S, R, M>, R, M>
-    extends ProcessDslDefinitionBase<S, R, M> implements CompositeCallableWithinProviderDefinition
-    permits CallProcessConsumerByClassDefinition {
+public abstract sealed class CallProcessConsumerBase<
+        S extends CallProcessConsumerBase<S, R, M>, R, M>
+    extends ProcessDslBase<S, R, M> implements CompositeCallableWithinProviderDefinition
+    permits CallProcessConsumerByClass {
 
   @Getter(AccessLevel.PACKAGE)
   private Optional<CompositeScenarioStepRequestExtractor<M>> requestPreparation = Optional.empty();
@@ -23,7 +25,7 @@ public abstract sealed class CallProcessConsumerBaseDefinition<
   @Getter(AccessLevel.PACKAGE)
   private Optional<StepResultCloner<M>> stepResultCloner = Optional.empty();
 
-  CallProcessConsumerBaseDefinition(
+  CallProcessConsumerBase(
       final R dslReturnDefinition, final CompositeProcessDefinition integrationScenario) {
     super(dslReturnDefinition, integrationScenario);
   }

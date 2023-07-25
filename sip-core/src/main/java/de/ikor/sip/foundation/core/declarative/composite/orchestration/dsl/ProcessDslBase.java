@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration;
+package de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.DslDefinitionBase;
@@ -10,14 +10,13 @@ import lombok.Getter;
  *
  * @param <M> type of the integration scenario's response model
  */
-public abstract class ProcessDslDefinitionBase<S extends ProcessDslDefinitionBase<S, R, M>, R, M>
+public abstract class ProcessDslBase<S extends ProcessDslBase<S, R, M>, R, M>
     extends DslDefinitionBase<S, R> {
 
   @Getter(AccessLevel.PACKAGE)
   private final CompositeProcessDefinition compositeProcess;
 
-  ProcessDslDefinitionBase(
-      final R dslReturnDefinition, final CompositeProcessDefinition compositeProcess) {
+  ProcessDslBase(final R dslReturnDefinition, final CompositeProcessDefinition compositeProcess) {
     super(dslReturnDefinition);
     this.compositeProcess = compositeProcess;
   }

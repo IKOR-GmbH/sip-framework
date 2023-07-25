@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration;
+package de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import java.util.ArrayList;
@@ -8,10 +8,10 @@ import lombok.Getter;
 import lombok.experimental.Delegate;
 
 /** DSL base class for specifying which consumers should be called for a scenario provider. */
-public abstract sealed class ForProcessProvidersBaseDefinition<
-        S extends ForProcessProvidersBaseDefinition<S, R, M>, R, M>
-    extends ProcessDslDefinitionBase<S, R, M> implements CompositeScenarioConsumerCalls<S, R, M>
-    permits ForProcessProvidersByClassDefinition {
+public abstract sealed class ForProcessProvidersBase<
+        S extends ForProcessProvidersBase<S, R, M>, R, M>
+    extends ProcessDslBase<S, R, M> implements CompositeScenarioConsumerCalls<S, R, M>
+    permits ForProcessProviders {
 
   @Getter(AccessLevel.PACKAGE)
   private final List<CompositeCallableWithinProviderDefinition> nodes = new ArrayList<>();
@@ -22,7 +22,7 @@ public abstract sealed class ForProcessProvidersBaseDefinition<
       new CompositeScenarioConsumerCallsDelegate<>(
           nodes, self(), getDslReturnDefinition(), getCompositeProcess());
 
-  ForProcessProvidersBaseDefinition(
+  ForProcessProvidersBase(
       final R dslReturnDefinition, final CompositeProcessDefinition integrationScenario) {
     super(dslReturnDefinition, integrationScenario);
   }

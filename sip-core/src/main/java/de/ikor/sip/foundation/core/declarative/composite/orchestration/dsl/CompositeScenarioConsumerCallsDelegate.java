@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration;
+package de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -17,11 +17,10 @@ final class CompositeScenarioConsumerCallsDelegate<
   private final CompositeProcessDefinition integrationScenario;
 
   @Override
-  public CallProcessConsumerByClassDefinition<S, M> callScenarioConsumer(
+  public CallProcessConsumerByClass<S, M> callScenarioConsumer(
       final Class<? extends IntegrationScenarioDefinition> consumerClass) {
-    final CallProcessConsumerByClassDefinition<S, M> def =
-        new CallProcessConsumerByClassDefinition<>(
-            definitionNode, integrationScenario, consumerClass);
+    final CallProcessConsumerByClass<S, M> def =
+        new CallProcessConsumerByClass<>(definitionNode, integrationScenario, consumerClass);
     consumerDefinitions.add(def);
     return def;
   }

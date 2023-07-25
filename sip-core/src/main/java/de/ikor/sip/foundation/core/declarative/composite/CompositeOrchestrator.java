@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.composite;
 
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.ProcessOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.RouteGeneratorForCompositeScenarioOrchestrationDefinition;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.ProcessOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import java.util.Objects;

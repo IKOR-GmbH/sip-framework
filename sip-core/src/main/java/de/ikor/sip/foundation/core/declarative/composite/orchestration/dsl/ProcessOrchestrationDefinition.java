@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration;
+package de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.EndOfDsl;
@@ -10,15 +10,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /**
- * DSL class for specifying orchestration of scenario providers
+ * DSL class for specifying orchestration of complex processes
  *
  * @param <M> The response model type of the integration scenario
  */
 public class ProcessOrchestrationDefinition<M>
-    extends ProcessDslDefinitionBase<ProcessOrchestrationDefinition<M>, EndOfDsl, M> {
+    extends ProcessDslBase<ProcessOrchestrationDefinition<M>, EndOfDsl, M> {
 
   @Getter(AccessLevel.PACKAGE)
-  private final List<ForProcessProvidersBaseDefinition<?, ?, M>> scenarioProviderDefinitions =
+  private final List<ForProcessProvidersBase<?, ?, M>> scenarioProviderDefinitions =
       new ArrayList<>();
 
   /**
@@ -26,26 +26,25 @@ public class ProcessOrchestrationDefinition<M>
    *
    * <p><em>For internal use only</em>
    *
-   * @param integrationScenario Integration scenario
+   * @param compositeProcess Composite Process
    */
-  public ProcessOrchestrationDefinition(final CompositeProcessDefinition integrationScenario) {
-    super(null, integrationScenario);
+  public ProcessOrchestrationDefinition(final CompositeProcessDefinition compositeProcess) {
+    super(null, compositeProcess);
   }
 
   /**
-   * Specifies scenario providers that should be orchestrated further by their connector class.
+   * Specifies process providers that should be orchestrated further by their class.
    *
    * <p>No order of execution is guaranteed if more than one class is provided - call this function
    * multiple times if this is necessary.
    *
-   * @param providerClasses The class(es) of the inbound connector
+   * @param providerClasses The class(es) of the providers
    * @return DSL handle for specifying consumer calls
    */
-  public ForProcessProvidersByClassDefinition<ProcessOrchestrationDefinition<M>, M> forProviders(
+  public ForProcessProviders<ProcessOrchestrationDefinition<M>, M> forProviders(
       final Class<? extends IntegrationScenarioDefinition>... providerClasses) {
-    final ForProcessProvidersByClassDefinition<ProcessOrchestrationDefinition<M>, M> def =
-        new ForProcessProvidersByClassDefinition<>(
-            self(), getCompositeProcess(), Set.of(providerClasses));
+    final ForProcessProviders<ProcessOrchestrationDefinition<M>, M> def =
+        new ForProcessProviders<>(self(), getCompositeProcess(), Set.of(providerClasses));
     scenarioProviderDefinitions.add(def);
     return def;
   }

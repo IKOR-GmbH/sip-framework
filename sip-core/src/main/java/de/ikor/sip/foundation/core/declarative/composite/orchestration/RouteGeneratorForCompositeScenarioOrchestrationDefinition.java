@@ -1,6 +1,9 @@
 package de.ikor.sip.foundation.core.declarative.composite.orchestration;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.ForProcessProvidersBase;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.ProcessOrchestrationDefinition;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.RouteGeneratorHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,8 +34,8 @@ public final class RouteGeneratorForCompositeScenarioOrchestrationDefinition<M>
     final List<RouteGeneratorForCompositeScenarioProvidersDefinition> providerBuilders =
         new ArrayList<>();
 
-    for (ForProcessProvidersBaseDefinition providerDefinition :
-        scenarioOrchestrationDefinition.getScenarioProviderDefinitions()) {
+    for (ForProcessProvidersBase providerDefinition :
+        RouteGeneratorHelper.getScenarioProviderDefinitions(scenarioOrchestrationDefinition)) {
 
       final var builder =
           new RouteGeneratorForCompositeScenarioProvidersDefinition<M>(
