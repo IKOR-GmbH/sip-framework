@@ -15,11 +15,11 @@ import java.util.List;
 public final class RouteGeneratorForCompositeScenarioOrchestrationDefinition<M>
     extends RouteGeneratorCompositeBase implements Runnable {
 
-  private final CompositeScenarioOrchestrationDefinition<M> scenarioOrchestrationDefinition;
+  private final ProcessOrchestrationDefinition<M> scenarioOrchestrationDefinition;
 
   public RouteGeneratorForCompositeScenarioOrchestrationDefinition(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final CompositeScenarioOrchestrationDefinition<M> scenarioOrchestrationDefinition) {
+      final ProcessOrchestrationDefinition<M> scenarioOrchestrationDefinition) {
     super(orchestrationInfo);
     this.scenarioOrchestrationDefinition = scenarioOrchestrationDefinition;
   }
@@ -31,7 +31,7 @@ public final class RouteGeneratorForCompositeScenarioOrchestrationDefinition<M>
     final List<RouteGeneratorForCompositeScenarioProvidersDefinition> providerBuilders =
         new ArrayList<>();
 
-    for (ForCompositeScenarioProvidersBaseDefinition providerDefinition :
+    for (ForProcessProvidersBaseDefinition providerDefinition :
         scenarioOrchestrationDefinition.getScenarioProviderDefinitions()) {
 
       final var builder =

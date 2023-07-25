@@ -8,11 +8,10 @@ import lombok.Getter;
 import lombok.experimental.Delegate;
 
 /** DSL base class for specifying which consumers should be called for a scenario provider. */
-public abstract sealed class ForCompositeScenarioProvidersBaseDefinition<
-        S extends ForCompositeScenarioProvidersBaseDefinition<S, R, M>, R, M>
-    extends CompositeScenarioDslDefinitionBase<S, R, M>
-    implements CompositeScenarioConsumerCalls<S, R, M>
-    permits ForCompositeScenarioProvidersByClassDefinition {
+public abstract sealed class ForProcessProvidersBaseDefinition<
+        S extends ForProcessProvidersBaseDefinition<S, R, M>, R, M>
+    extends ProcessDslDefinitionBase<S, R, M> implements CompositeScenarioConsumerCalls<S, R, M>
+    permits ForProcessProvidersByClassDefinition {
 
   @Getter(AccessLevel.PACKAGE)
   private final List<CompositeCallableWithinProviderDefinition> nodes = new ArrayList<>();
@@ -21,9 +20,9 @@ public abstract sealed class ForCompositeScenarioProvidersBaseDefinition<
   @Getter(AccessLevel.PACKAGE)
   private final CompositeScenarioConsumerCallsDelegate<S, R, M> consumerCallsDelegate =
       new CompositeScenarioConsumerCallsDelegate<>(
-          nodes, self(), getDslReturnDefinition(), getIntegrationScenario());
+          nodes, self(), getDslReturnDefinition(), getCompositeProcess());
 
-  ForCompositeScenarioProvidersBaseDefinition(
+  ForProcessProvidersBaseDefinition(
       final R dslReturnDefinition, final CompositeProcessDefinition integrationScenario) {
     super(dslReturnDefinition, integrationScenario);
   }

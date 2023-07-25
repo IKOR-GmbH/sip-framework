@@ -9,11 +9,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /** DSL base class for specifying the call to an integration scenario consumer */
-public abstract sealed class CallCompositeScenarioConsumerBaseDefinition<
-        S extends CallCompositeScenarioConsumerBaseDefinition<S, R, M>, R, M>
-    extends CompositeScenarioDslDefinitionBase<S, R, M>
-    implements CompositeCallableWithinProviderDefinition
-    permits CallCompositeScenarioConsumerByClassDefinition {
+public abstract sealed class CallProcessConsumerBaseDefinition<
+        S extends CallProcessConsumerBaseDefinition<S, R, M>, R, M>
+    extends ProcessDslDefinitionBase<S, R, M> implements CompositeCallableWithinProviderDefinition
+    permits CallProcessConsumerByClassDefinition {
 
   @Getter(AccessLevel.PACKAGE)
   private Optional<CompositeScenarioStepRequestExtractor<M>> requestPreparation = Optional.empty();
@@ -24,7 +23,7 @@ public abstract sealed class CallCompositeScenarioConsumerBaseDefinition<
   @Getter(AccessLevel.PACKAGE)
   private Optional<StepResultCloner<M>> stepResultCloner = Optional.empty();
 
-  CallCompositeScenarioConsumerBaseDefinition(
+  CallProcessConsumerBaseDefinition(
       final R dslReturnDefinition, final CompositeProcessDefinition integrationScenario) {
     super(dslReturnDefinition, integrationScenario);
   }

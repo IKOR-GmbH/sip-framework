@@ -10,7 +10,6 @@ import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -23,8 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * @see IntegrationScenarioBase#getOrchestrator()
  */
 @Slf4j
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-@Accessors(chain = true)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ScenarioOrchestrator implements Orchestrator<ScenarioOrchestrationInfo> {
 
   private final Consumer<ScenarioOrchestrationInfo> orchestrationConsumer;

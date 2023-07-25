@@ -17,10 +17,10 @@ final class CompositeScenarioConsumerCallsDelegate<
   private final CompositeProcessDefinition integrationScenario;
 
   @Override
-  public CallCompositeScenarioConsumerByClassDefinition<S, M> callScenarioConsumer(
+  public CallProcessConsumerByClassDefinition<S, M> callScenarioConsumer(
       final Class<? extends IntegrationScenarioDefinition> consumerClass) {
-    final CallCompositeScenarioConsumerByClassDefinition<S, M> def =
-        new CallCompositeScenarioConsumerByClassDefinition<>(
+    final CallProcessConsumerByClassDefinition<S, M> def =
+        new CallProcessConsumerByClassDefinition<>(
             definitionNode, integrationScenario, consumerClass);
     consumerDefinitions.add(def);
     return def;

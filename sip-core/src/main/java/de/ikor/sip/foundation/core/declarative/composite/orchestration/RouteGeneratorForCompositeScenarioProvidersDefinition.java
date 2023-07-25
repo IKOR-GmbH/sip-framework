@@ -24,7 +24,7 @@ import org.apache.camel.model.RoutesDefinition;
 @SuppressWarnings("rawtypes")
 final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
     extends RouteGeneratorCompositeBase {
-  private final ForCompositeScenarioProvidersBaseDefinition<?, ?, M> providerDefinition;
+  private final ForProcessProvidersBaseDefinition<?, ?, M> providerDefinition;
   private final Set<IntegrationScenarioDefinition> overallUnhandledProviders;
 
   @Getter(lazy = true)
@@ -33,7 +33,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
 
   RouteGeneratorForCompositeScenarioProvidersDefinition(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final ForCompositeScenarioProvidersBaseDefinition providerDefinition,
+      final ForProcessProvidersBaseDefinition providerDefinition,
       final Set<IntegrationScenarioDefinition> overallUnhandledProviders) {
     super(orchestrationInfo);
     this.providerDefinition = providerDefinition;
@@ -59,7 +59,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
   }
 
   private Set<IntegrationScenarioDefinition> resolveHandledProviders() {
-    if (providerDefinition instanceof ForCompositeScenarioProvidersByClassDefinition element) {
+    if (providerDefinition instanceof ForProcessProvidersByClassDefinition element) {
       return resolveProvidersFromClasses(element);
     }
     throw SIPFrameworkInitializationException.init(
@@ -67,7 +67,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
   }
 
   private Set<IntegrationScenarioDefinition> resolveProvidersFromClasses(
-      final ForCompositeScenarioProvidersByClassDefinition element) {
+      final ForProcessProvidersByClassDefinition element) {
     final Set<Class<? extends IntegrationScenarioProviderDefinition>> providerClasses =
         element.getProviderClasses();
 
@@ -104,7 +104,7 @@ final class RouteGeneratorForCompositeScenarioProvidersDefinition<M>
         CompositeScenarioOrchestrationHandlers.handleContextInitialization(getCompositeProcess()));
 
     for (final var element : providerDefinition.getNodes()) {
-      if (element instanceof CallCompositeScenarioConsumerBaseDefinition callDef) {
+      if (element instanceof CallProcessConsumerBaseDefinition callDef) {
         new RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>(
                 getOrchestrationInfo(), callDef, overallUnhandledScenarioConsumers)
             .generateRoute(routeDef);

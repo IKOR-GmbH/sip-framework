@@ -6,13 +6,12 @@ import java.util.Collections;
 import java.util.Set;
 
 /** DSL class specifying all a scenario provider specified by its class */
-public final class ForCompositeScenarioProvidersByClassDefinition<R, M>
-    extends ForCompositeScenarioProvidersBaseDefinition<
-        ForCompositeScenarioProvidersByClassDefinition<R, M>, R, M> {
+public final class ForProcessProvidersByClassDefinition<R, M>
+    extends ForProcessProvidersBaseDefinition<ForProcessProvidersByClassDefinition<R, M>, R, M> {
 
   private final Set<Class<? extends IntegrationScenarioDefinition>> providerClasses;
 
-  ForCompositeScenarioProvidersByClassDefinition(
+  ForProcessProvidersByClassDefinition(
       final R dslReturnDefinition,
       final CompositeProcessDefinition integrationScenario,
       final Set<Class<? extends IntegrationScenarioDefinition>> providerClasses) {

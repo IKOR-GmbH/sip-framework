@@ -5,4 +5,4 @@ package de.ikor.sip.foundation.core.declarative.composite.orchestration;
  * orchestration DSL
  */
 sealed interface CompositeCallableWithinProviderDefinition
-    permits CallCompositeScenarioConsumerBaseDefinition {}
+    permits CallProcessConsumerBaseDefinition {}

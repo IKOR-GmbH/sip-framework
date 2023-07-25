@@ -24,7 +24,7 @@ import org.apache.camel.model.ProcessorDefinition;
 final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
     extends RouteGeneratorCompositeBase {
 
-  private final CallCompositeScenarioConsumerBaseDefinition<?, ?, M> definitionElement;
+  private final CallProcessConsumerBaseDefinition<?, ?, M> definitionElement;
 
   private final Set<IntegrationScenarioDefinition> overallUnhandledConsumers;
 
@@ -34,7 +34,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
 
   RouteGeneratorForCallCompositeScenarioConsumerDefinition(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final CallCompositeScenarioConsumerBaseDefinition definitionElement,
+      final CallProcessConsumerBaseDefinition definitionElement,
       final Set<IntegrationScenarioDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);
     this.definitionElement = definitionElement;
@@ -59,7 +59,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
   }
 
   private Set<IntegrationScenarioDefinition> resolveHandledConsumers() {
-    if (definitionElement instanceof CallCompositeScenarioConsumerByClassDefinition element) {
+    if (definitionElement instanceof CallProcessConsumerByClassDefinition element) {
       return Collections.singleton(retrieveConsumerFromClassDefinition(element));
     }
 
@@ -69,7 +69,7 @@ final class RouteGeneratorForCallCompositeScenarioConsumerDefinition<M>
   }
 
   private IntegrationScenarioDefinition retrieveConsumerFromClassDefinition(
-      final CallCompositeScenarioConsumerByClassDefinition element) {
+      final CallProcessConsumerByClassDefinition element) {
     return getConsumers().stream()
         .filter(consumer -> element.getConsumerClass().equals(consumer.getClass()))
         .findFirst()

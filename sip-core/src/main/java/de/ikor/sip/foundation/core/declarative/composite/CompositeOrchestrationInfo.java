@@ -8,7 +8,7 @@ import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RoutesDefinition;
 
 /**
- * Class that holds information to be used by orchestrators of an Composite process.
+ * Class that holds information to be used by orchestrators of a Composite process.
  *
  * @see CompositeOrchestrator
  */

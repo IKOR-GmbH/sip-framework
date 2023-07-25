@@ -10,16 +10,15 @@ import lombok.Getter;
  *
  * @param <M> type of the integration scenario's response model
  */
-public abstract class CompositeScenarioDslDefinitionBase<
-        S extends CompositeScenarioDslDefinitionBase<S, R, M>, R, M>
+public abstract class ProcessDslDefinitionBase<S extends ProcessDslDefinitionBase<S, R, M>, R, M>
     extends DslDefinitionBase<S, R> {
 
   @Getter(AccessLevel.PACKAGE)
-  private final CompositeProcessDefinition integrationScenario;
+  private final CompositeProcessDefinition compositeProcess;
 
-  CompositeScenarioDslDefinitionBase(
-      final R dslReturnDefinition, final CompositeProcessDefinition integrationScenario) {
+  ProcessDslDefinitionBase(
+      final R dslReturnDefinition, final CompositeProcessDefinition compositeProcess) {
     super(dslReturnDefinition);
-    this.integrationScenario = integrationScenario;
+    this.compositeProcess = compositeProcess;
   }
 }

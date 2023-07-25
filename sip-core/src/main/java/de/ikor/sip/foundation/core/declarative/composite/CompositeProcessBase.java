@@ -10,25 +10,26 @@ import org.apache.commons.lang3.NotImplementedException;
 public class CompositeProcessBase implements CompositeProcessDefinition {
 
   public Orchestrator<CompositeOrchestrationInfo> getOrchestrator() {
+    // TODO: Throw better error
     throw new NotImplementedException();
   }
 
-  private final CompositeProcess scenarioAnnotation =
+  private final CompositeProcess processAnnotation =
       DeclarativeHelper.getAnnotationOrThrow(CompositeProcess.class, this);
 
   public final String getId() {
-    return scenarioAnnotation.compositeScenarioId();
+    return processAnnotation.compositeScenarioId();
   }
 
   public String getPathToDocumentationResource() {
-    return scenarioAnnotation.pathToDocumentationResource();
+    return processAnnotation.pathToDocumentationResource();
   }
 
   public List<Class<? extends IntegrationScenarioDefinition>> getConsumerDefinitions() {
-    return List.of(scenarioAnnotation.consumers());
+    return List.of(processAnnotation.consumers());
   }
 
   public List<Class<? extends IntegrationScenarioDefinition>> getProviderDefinitions() {
-    return List.of(scenarioAnnotation.providers());
+    return List.of(processAnnotation.providers());
   }
 }
