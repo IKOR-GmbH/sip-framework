@@ -38,17 +38,16 @@ public class RouteGeneratorHelper {
   }
 
   public static <M> Optional<CompositeScenarioStepRequestExtractor<M>> getRequestPreparation(
-      CallProcessConsumerBase element) {
+      CallProcessConsumer element) {
     return element.getRequestPreparation();
   }
 
   public static <M> Optional<CompositeScenarioStepResponseConsumer<M>> getResponseConsumer(
-      CallProcessConsumerBase element) {
+      CallProcessConsumer element) {
     return element.getResponseConsumer();
   }
 
-  public static <M> Optional<StepResultCloner<M>> getStepResultCloner(
-      CallProcessConsumerBase element) {
+  public static <M> Optional<StepResultCloner<M>> getStepResultCloner(CallProcessConsumer element) {
     return element.getStepResultCloner();
   }
 }

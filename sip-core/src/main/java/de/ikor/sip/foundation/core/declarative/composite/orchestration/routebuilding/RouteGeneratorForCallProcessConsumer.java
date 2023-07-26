@@ -3,7 +3,6 @@ package de.ikor.sip.foundation.core.declarative.composite.orchestration.routebui
 import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeScenarioOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.CallProcessConsumer;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.CallProcessConsumerBase;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -27,7 +26,7 @@ import org.apache.camel.model.ProcessorDefinition;
 @SuppressWarnings("rawtypes")
 final class RouteGeneratorForCallProcessConsumer<M> extends RouteGeneratorProcessBase {
 
-  private final CallProcessConsumerBase<?, ?, M> definitionElement;
+  private final CallProcessConsumer<?, M> definitionElement;
 
   private final Set<IntegrationScenarioDefinition> overallUnhandledConsumers;
 
@@ -37,7 +36,7 @@ final class RouteGeneratorForCallProcessConsumer<M> extends RouteGeneratorProces
 
   RouteGeneratorForCallProcessConsumer(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final CallProcessConsumerBase definitionElement,
+      final CallProcessConsumer definitionElement,
       final Set<IntegrationScenarioDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);
     this.definitionElement = definitionElement;
@@ -62,13 +61,7 @@ final class RouteGeneratorForCallProcessConsumer<M> extends RouteGeneratorProces
   }
 
   private Set<IntegrationScenarioDefinition> resolveHandledConsumers() {
-    if (definitionElement instanceof CallProcessConsumer element) {
-      return Collections.singleton(retrieveConsumerFromClassDefinition(element));
-    }
-
-    throw SIPFrameworkInitializationException.init(
-        "Unhandled scenario-consumer definition subclass: %s",
-        definitionElement.getClass().getName());
+    return Collections.singleton(retrieveConsumerFromClassDefinition(definitionElement));
   }
 
   private IntegrationScenarioDefinition retrieveConsumerFromClassDefinition(

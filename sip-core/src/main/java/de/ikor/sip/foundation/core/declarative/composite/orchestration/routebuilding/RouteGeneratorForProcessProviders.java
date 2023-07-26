@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.declarative.composite.orchestration.routebui
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeScenarioOrchestrationHandlers;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.CallProcessConsumerBase;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.CallProcessConsumer;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.ForProcessProviders;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -106,7 +106,7 @@ final class RouteGeneratorForProcessProviders<M> extends RouteGeneratorProcessBa
         CompositeScenarioOrchestrationHandlers.handleContextInitialization(getCompositeProcess()));
 
     for (final var element : RouteGeneratorHelper.getNodes(providerDefinition)) {
-      if (element instanceof CallProcessConsumerBase callDef) {
+      if (element instanceof CallProcessConsumer callDef) {
         new RouteGeneratorForCallProcessConsumer<M>(
                 getOrchestrationInfo(), callDef, overallUnhandledScenarioConsumers)
             .generateRoute(routeDef);

@@ -14,7 +14,7 @@ public final class ForProcessProviders<R, M>
     extends ProcessDslBase<ForProcessProviders<R, M>, R, M> {
 
   @Getter(AccessLevel.PACKAGE)
-  private final List<CallProcessConsumerBase> consumerCalls = new ArrayList<>();
+  private final List<CallProcessConsumer> consumerCalls = new ArrayList<>();
 
   @Getter(AccessLevel.PACKAGE)
   private final Set<Class<? extends IntegrationScenarioDefinition>> providerClasses;
@@ -33,6 +33,5 @@ public final class ForProcessProviders<R, M>
         new CallProcessConsumer<>(self(), getCompositeProcess(), consumerClass);
     consumerCalls.add(def);
     return def;
-
   }
 }
