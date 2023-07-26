@@ -18,7 +18,7 @@ public class CompositeProcessBase implements CompositeProcessDefinition {
       DeclarativeHelper.getAnnotationOrThrow(CompositeProcess.class, this);
 
   public final String getId() {
-    return processAnnotation.compositeScenarioId();
+    return processAnnotation.processId();
   }
 
   public String getPathToDocumentationResource() {

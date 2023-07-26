@@ -7,16 +7,17 @@ import lombok.Getter;
 
 /** DSL class for calling a scenario consumer specified by it's class */
 public final class CallProcessConsumer<R, M>
-    extends CallProcessConsumerBase<CallProcessConsumer<R, M>, R, M> {
+    extends CallProcessConsumerBase<CallProcessConsumer<R, M>, R, M>
+{
 
   @Getter(AccessLevel.PACKAGE)
   private final Class<? extends IntegrationScenarioDefinition> consumerClass;
 
   CallProcessConsumer(
       final R dslReturnDefinition,
-      final CompositeProcessDefinition integrationScenario,
+      final CompositeProcessDefinition compositeProcess,
       final Class<? extends IntegrationScenarioDefinition> consumerClass) {
-    super(dslReturnDefinition, integrationScenario);
+    super(dslReturnDefinition, compositeProcess);
     this.consumerClass = consumerClass;
   }
 }

@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration.routes;
+package de.ikor.sip.foundation.core.declarative.composite.orchestration.routebuilding;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeScenarioOrchestrationHandlers;

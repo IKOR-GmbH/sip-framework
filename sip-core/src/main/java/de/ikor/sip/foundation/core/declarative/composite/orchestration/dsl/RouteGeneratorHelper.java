@@ -27,7 +27,7 @@ public class RouteGeneratorHelper {
     return element.getProviderClasses();
   }
 
-  public static List<CompositeCallableWithinProviderDefinition> getNodes(
+  public static List<ProcessCallableWithinProviderDefinition> getNodes(
       ForProcessProviders element) {
     return element.getConsumerCalls();
   }

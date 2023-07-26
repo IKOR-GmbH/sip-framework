@@ -13,7 +13,7 @@ import lombok.Getter;
 /** DSL base class for specifying the call to an integration scenario consumer */
 public abstract sealed class CallProcessConsumerBase<
         S extends CallProcessConsumerBase<S, R, M>, R, M>
-    extends ProcessDslBase<S, R, M> implements CompositeCallableWithinProviderDefinition
+    extends ProcessDslBase<S, R, M> implements ProcessCallableWithinProviderDefinition
     permits CallProcessConsumer {
 
   @Getter(AccessLevel.PACKAGE)

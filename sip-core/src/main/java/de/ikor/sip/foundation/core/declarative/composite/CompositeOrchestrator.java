@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.composite;
 
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.ProcessOrchestrationDefinition;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.routes.RouteGeneratorForProcessOrchestrationDefinition;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.routebuilding.RouteGeneratorForProcessOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import java.util.Objects;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  * <p>Orchestration can be defined in orchestration DSL via {@link #forOrchestrationDsl(Consumer)}.
  *
- * @see CompositeProcessBase#getOrchestrator()
+ * @see CompositeProcessDefinition#getOrchestrator()
  */
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)

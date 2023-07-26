@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public @interface CompositeProcess {
 
-  String compositeScenarioId();
+  String processId();
 
   String pathToDocumentationResource() default "";
 

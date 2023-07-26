@@ -40,7 +40,8 @@ public class ProcessOrchestrationDefinition<M>
    * @param providerClasses The class(es) of the providers
    * @return DSL handle for specifying consumer calls
    */
-  public ForProcessProviders<ProcessOrchestrationDefinition<M>, M> forProviders(
+  @SafeVarargs
+  public final ForProcessProviders<ProcessOrchestrationDefinition<M>, M> forProviders(
       final Class<? extends IntegrationScenarioDefinition>... providerClasses) {
     final ForProcessProviders<ProcessOrchestrationDefinition<M>, M> def =
         new ForProcessProviders<>(self(), getCompositeProcess(), Set.of(providerClasses));
