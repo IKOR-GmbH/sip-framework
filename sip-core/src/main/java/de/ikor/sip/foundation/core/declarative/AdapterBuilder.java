@@ -58,7 +58,7 @@ public class AdapterBuilder extends RouteBuilder {
   public void configure() {
     getCamelContext().getGlobalEndpointConfiguration().setBridgeErrorHandler(true);
     declarationsRegistry.getScenarios().forEach(this::buildScenario);
-    declarationsRegistry.getCompositeProcessDefinitions().forEach(this::buildCompositeProcess);
+    declarationsRegistry.getProcesses().forEach(this::buildCompositeProcess);
   }
 
   public AdapterBuilder(DeclarationsRegistry declarationsRegistry, RoutesRegistry routesRegistry) {

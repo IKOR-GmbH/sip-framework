@@ -82,7 +82,7 @@ public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
   <S, T> Optional<ModelMapper<S, T>> getGlobalModelMapperForModels(
       Class<S> sourceModelClass, Class<T> targetModelClass);
 
-  List<CompositeProcessDefinition> getCompositeProcessDefinitions();
+  List<CompositeProcessDefinition> getProcesses();
 
   List<IntegrationScenarioDefinition> getCompositeProcessConsumerDefinitions(String scenarioID);
 

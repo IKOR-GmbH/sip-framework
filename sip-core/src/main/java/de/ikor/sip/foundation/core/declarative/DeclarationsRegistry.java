@@ -36,59 +36,11 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
   private final ApplicationContext applicationContext;
   private final List<ConnectorGroupDefinition> connectorGroups;
+
+  private final List<CompositeProcessDefinition> processes;
   private final List<IntegrationScenarioDefinition> scenarios;
   private final List<ConnectorDefinition> connectors;
   private final Map<MapperPair, ModelMapper<Object, Object>> globalModelMappersRegistry;
-
-  @Getter private final List<CompositeProcessDefinition> compositeProcessDefinitions;
-
-  @Override
-  public List<IntegrationScenarioDefinition> getCompositeProcessConsumerDefinitions(
-      String compositeProcessID) {
-    return compositeProcessDefinitions.stream()
-        .filter(scenario -> scenario.getId().equals(compositeProcessID))
-        .findFirst()
-        .get()
-        .getConsumerDefinitions()
-        .stream()
-        .map(definition -> (IntegrationScenarioDefinition) applicationContext.getBean(definition))
-        .toList();
-  }
-
-  @Override
-  public List<IntegrationScenarioDefinition> getCompositeProcessProviderDefinitions(
-      String compositeProcessID) {
-    return compositeProcessDefinitions.stream()
-        .filter(scenario -> scenario.getId().equals(compositeProcessID))
-        .findFirst()
-        .get()
-        .getProviderDefinitions()
-        .stream()
-        .map(definition -> (IntegrationScenarioDefinition) applicationContext.getBean(definition))
-        .toList();
-  }
-
-  @Override
-  public List<CompositeProcessDefinition> getCompositeProvidersForScenario(
-      IntegrationScenarioDefinition integrationScenario) {
-    return compositeProcessDefinitions.stream()
-        .filter(
-            composite ->
-                composite.getConsumerDefinitions().stream()
-                    .anyMatch(consumer -> consumer.equals(integrationScenario.getClass())))
-        .toList();
-  }
-
-  @Override
-  public List<CompositeProcessDefinition> getCompositeConsumersForScenario(
-      IntegrationScenarioDefinition integrationScenario) {
-    return compositeProcessDefinitions.stream()
-        .filter(
-            composite ->
-                composite.getProviderDefinitions().stream()
-                    .anyMatch(consumer -> consumer.equals(integrationScenario.getClass())))
-        .toList();
-  }
 
   public DeclarationsRegistry(
       List<ConnectorGroupDefinition> autowiredConnectorGroups,
@@ -111,12 +63,12 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
     this.globalModelMappersRegistry = checkAndInitializeGlobalModelMappers(modelMappers);
 
-    this.compositeProcessDefinitions = compositeProcessDefinitions;
+    this.processes = compositeProcessDefinitions;
 
     createMissingConnectorGroups();
     checkForDuplicateConnectorGroups();
     checkForDuplicateScenarios();
-    // checkForUnusedScenarios();
+    checkForUnusedScenarios();
     checkForDuplicateConnectors();
   }
 
@@ -202,15 +154,23 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .filter(
             scenario ->
                 getInboundConnectorsByScenarioId(scenario.getId()).isEmpty()
-                    || getOutboundConnectorsByScenarioId(scenario.getId()).isEmpty())
-        .map(
+                    && getCompositeProvidersForScenario(scenario).isEmpty())
+        .forEach(
             scenario -> {
               throw SIPFrameworkInitializationException.init(
-                  "There is unused integration scenario with id %s", scenario.getId());
-            })
+                  "Nothing is providing data to the integration scenario with id '%s'",
+                  scenario.getId());
+            });
+    scenarios.stream()
+        .filter(
+            scenario ->
+                getOutboundConnectorsByScenarioId(scenario.getId()).isEmpty()
+                    && getCompositeConsumersForScenario(scenario).isEmpty())
         .forEach(
-            x -> {
-              /* don't need the result */
+            scenario -> {
+              throw SIPFrameworkInitializationException.init(
+                  "Nothing is consuming data from the integration scenario with id '%s'",
+                  scenario.getId());
             });
   }
 
@@ -272,6 +232,54 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         .filter(connector -> connector.getScenarioId().equals(scenarioId))
         .filter(OutboundConnectorDefinition.class::isInstance)
         .map(OutboundConnectorDefinition.class::cast)
+        .toList();
+  }
+
+  @Override
+  public List<IntegrationScenarioDefinition> getCompositeProcessConsumerDefinitions(
+      String compositeProcessID) {
+    return processes.stream()
+        .filter(scenario -> scenario.getId().equals(compositeProcessID))
+        .findFirst()
+        .get()
+        .getConsumerDefinitions()
+        .stream()
+        .map(definition -> (IntegrationScenarioDefinition) applicationContext.getBean(definition))
+        .toList();
+  }
+
+  @Override
+  public List<IntegrationScenarioDefinition> getCompositeProcessProviderDefinitions(
+      String compositeProcessID) {
+    return processes.stream()
+        .filter(scenario -> scenario.getId().equals(compositeProcessID))
+        .findFirst()
+        .get()
+        .getProviderDefinitions()
+        .stream()
+        .map(definition -> (IntegrationScenarioDefinition) applicationContext.getBean(definition))
+        .toList();
+  }
+
+  @Override
+  public List<CompositeProcessDefinition> getCompositeProvidersForScenario(
+      IntegrationScenarioDefinition integrationScenario) {
+    return processes.stream()
+        .filter(
+            composite ->
+                composite.getConsumerDefinitions().stream()
+                    .anyMatch(consumer -> consumer.equals(integrationScenario.getClass())))
+        .toList();
+  }
+
+  @Override
+  public List<CompositeProcessDefinition> getCompositeConsumersForScenario(
+      IntegrationScenarioDefinition integrationScenario) {
+    return processes.stream()
+        .filter(
+            composite ->
+                composite.getProviderDefinitions().stream()
+                    .anyMatch(consumer -> consumer.equals(integrationScenario.getClass())))
         .toList();
   }
 

@@ -81,7 +81,8 @@ class DeclarationsRegistryTest {
                       applicationContext);
             })
         .isInstanceOf(SIPFrameworkInitializationException.class)
-        .hasMessage("There is unused integration scenario with id %s", SCENARIO_ID);
+        .hasMessage(
+            "Nothing is providing data to the integration scenario with id '%s'", SCENARIO_ID);
   }
 
   @Test
