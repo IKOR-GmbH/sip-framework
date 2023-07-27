@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration;
+package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
 /**
  * Interface to extract the request object for a scenario consumer call

@@ -1,7 +1,7 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl;
+package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
-import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.EndOfDsl;
+import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;

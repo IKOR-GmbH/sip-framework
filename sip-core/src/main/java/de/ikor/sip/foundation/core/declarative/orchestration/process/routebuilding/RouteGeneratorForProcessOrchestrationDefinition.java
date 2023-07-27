@@ -1,9 +1,9 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration.routebuilding;
+package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding;
 
-import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.ForProcessProviders;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.ProcessOrchestrationDefinition;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.RouteGeneratorHelper;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ForProcessProviders;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;

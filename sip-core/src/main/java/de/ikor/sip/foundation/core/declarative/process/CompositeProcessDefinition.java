@@ -1,6 +1,7 @@
-package de.ikor.sip.foundation.core.declarative.composite;
+package de.ikor.sip.foundation.core.declarative.process;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.List;
 

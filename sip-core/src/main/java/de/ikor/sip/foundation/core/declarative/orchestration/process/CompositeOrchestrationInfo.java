@@ -1,6 +1,7 @@
-package de.ikor.sip.foundation.core.declarative.composite;
+package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.OrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.Map;
 import org.apache.camel.builder.EndpointConsumerBuilder;

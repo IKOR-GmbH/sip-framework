@@ -2,12 +2,12 @@ package de.ikor.sip.foundation.core.declarative;
 
 import static de.ikor.sip.foundation.core.declarative.validator.CDMValidator.*;
 
-import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;

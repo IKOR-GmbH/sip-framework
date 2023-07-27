@@ -1,9 +1,9 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration.routebuilding;
+package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding;
 
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistryApi;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
-import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

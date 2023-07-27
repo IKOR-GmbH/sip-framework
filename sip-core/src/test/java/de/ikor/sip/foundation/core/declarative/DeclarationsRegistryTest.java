@@ -5,12 +5,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
+import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;

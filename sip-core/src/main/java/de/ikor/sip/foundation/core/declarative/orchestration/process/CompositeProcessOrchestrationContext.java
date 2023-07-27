@@ -1,7 +1,7 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration;
+package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
-import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
+import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;

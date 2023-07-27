@@ -1,10 +1,10 @@
-package de.ikor.sip.foundation.core.declarative.composite.orchestration.routebuilding;
+package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding;
 
-import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeProcessOrchestrationHandlers;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.CallProcessConsumer;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.ForProcessProviders;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.RouteGeneratorHelper;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumer;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ForProcessProviders;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.HashSet;

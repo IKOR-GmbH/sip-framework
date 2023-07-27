@@ -4,13 +4,13 @@ import static java.util.function.Predicate.not;
 
 import de.ikor.sip.foundation.core.declarative.annonation.Disabled;
 import de.ikor.sip.foundation.core.declarative.annonation.GlobalMapper;
-import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
+import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.HashMap;
