@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.composite.orchestration.routebuilding;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeScenarioOrchestrationHandlers;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeProcessOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.CallProcessConsumer;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -89,7 +89,7 @@ final class RouteGeneratorForCallProcessConsumer<M> extends RouteGeneratorProces
       routeDefinition
           .transform()
           .method(
-              CompositeScenarioOrchestrationHandlers.handleRequestToConsumer(
+              CompositeProcessOrchestrationHandlers.handleRequestToConsumer(
                   consumer, RouteGeneratorHelper.getRequestPreparation(definitionElement)))
           .to(getEndpointForConsumer(consumer));
 
@@ -97,7 +97,7 @@ final class RouteGeneratorForCallProcessConsumer<M> extends RouteGeneratorProces
       routeDefinition
           .transform()
           .method(
-              CompositeScenarioOrchestrationHandlers.handleResponseFromConsumer(
+              CompositeProcessOrchestrationHandlers.handleResponseFromConsumer(
                   consumer,
                   RouteGeneratorHelper.getStepResultCloner(definitionElement),
                   RouteGeneratorHelper.getResponseConsumer(definitionElement)));

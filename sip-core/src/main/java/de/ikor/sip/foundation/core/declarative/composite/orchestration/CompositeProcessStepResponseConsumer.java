@@ -10,7 +10,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.Scenar
  * @see ScenarioStepResponseAggregator
  */
 @FunctionalInterface
-public interface CompositeScenarioStepResponseConsumer<M> {
+public interface CompositeProcessStepResponseConsumer<M> {
 
   /**
    * Consumes or handles the response of an individual scenario consumer call.
@@ -22,5 +22,5 @@ public interface CompositeScenarioStepResponseConsumer<M> {
    * @param latestResponse Response received from the scenario consumer
    * @param context Current orchestration context
    */
-  void consumeResponse(M latestResponse, CompositeScenarioOrchestrationContext<M> context);
+  void consumeResponse(M latestResponse, CompositeProcessOrchestrationContext<M> context);
 }

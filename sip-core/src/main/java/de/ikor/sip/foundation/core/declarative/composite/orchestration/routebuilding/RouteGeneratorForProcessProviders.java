@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.composite.orchestration.routebuilding;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeScenarioOrchestrationHandlers;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeProcessOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.CallProcessConsumer;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.ForProcessProviders;
 import de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl.RouteGeneratorHelper;
@@ -103,9 +103,9 @@ final class RouteGeneratorForProcessProviders<M> extends RouteGeneratorProcessBa
 
     final var routeDef = generateRouteStart(routesDefinition);
     routeDef.bean(
-        CompositeScenarioOrchestrationHandlers.handleContextInitialization(getCompositeProcess()));
+        CompositeProcessOrchestrationHandlers.handleContextInitialization(getCompositeProcess()));
 
-    for (final var element : RouteGeneratorHelper.getNodes(providerDefinition)) {
+    for (final var element : RouteGeneratorHelper.getConsumerCalls(providerDefinition)) {
       if (element instanceof CallProcessConsumer callDef) {
         new RouteGeneratorForCallProcessConsumer<M>(
                 getOrchestrationInfo(), callDef, overallUnhandledScenarioConsumers)
@@ -117,7 +117,7 @@ final class RouteGeneratorForProcessProviders<M> extends RouteGeneratorProcessBa
       }
     }
 
-    routeDef.bean(CompositeScenarioOrchestrationHandlers.handleErrorThrownIfNoConsumerWasCalled());
+    routeDef.bean(CompositeProcessOrchestrationHandlers.handleErrorThrownIfNoConsumerWasCalled());
 
     if (!overallUnhandledScenarioConsumers.isEmpty()) {
       log.warn(

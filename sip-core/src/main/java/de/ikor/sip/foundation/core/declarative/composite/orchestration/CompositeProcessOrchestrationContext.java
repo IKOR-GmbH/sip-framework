@@ -30,22 +30,24 @@ import org.apache.camel.Exchange;
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-public class CompositeScenarioOrchestrationContext<M> {
+public class CompositeProcessOrchestrationContext<M> {
 
   /**
    * Record that holds the response for a single orchestration step
    *
    * @param consumer Consumer that was called
-   * @param result Response as received by that consumer
+   * @param request Request that was sent to the consumer
+   * @param response Response as returned by that consumer
    * @param <M> Response model type as defined by the integration scenario
    */
-  public record OrchestrationStepResponse<M>(IntegrationScenarioDefinition consumer, M result) {}
+  public record OrchestrationStepResult<M>(
+      IntegrationScenarioDefinition consumer, Object request, M response) {}
 
   public static final String PROPERTY_NAME = "SipComplexScenarioOrchestrationContext";
 
-  @Getter private final CompositeProcessDefinition integrationScenario;
+  @Getter private final CompositeProcessDefinition compositeProcess;
   private final Object originalRequest;
-  private final List<OrchestrationStepResponse<M>> orchestrationStepResponses =
+  private final List<OrchestrationStepResult<M>> ochestrationStepResults =
       Collections.synchronizedList(new ArrayList<>());
 
   private M aggregatedResponse;
@@ -91,7 +93,7 @@ public class CompositeScenarioOrchestrationContext<M> {
   @Synchronized
   public Optional<M> getResponse() {
     return getAggregatedResponse()
-        .or(() -> getResponseForLatestStep().map(OrchestrationStepResponse::result));
+        .or(() -> getResponseForLatestStep().map(OrchestrationStepResult::response));
   }
 
   /**
@@ -125,10 +127,10 @@ public class CompositeScenarioOrchestrationContext<M> {
    * @return optional response from latest consumer call
    */
   @Synchronized
-  public Optional<OrchestrationStepResponse<M>> getResponseForLatestStep() {
-    return orchestrationStepResponses.isEmpty()
+  public Optional<OrchestrationStepResult<M>> getResponseForLatestStep() {
+    return ochestrationStepResults.isEmpty()
         ? Optional.empty()
-        : Optional.of(orchestrationStepResponses.get(orchestrationStepResponses.size() - 1));
+        : Optional.of(ochestrationStepResults.get(ochestrationStepResults.size() - 1));
   }
 
   /**
@@ -147,15 +149,29 @@ public class CompositeScenarioOrchestrationContext<M> {
       final M response,
       final Optional<StepResultCloner<M>> cloner) {
     final M maybeClonedResponse = cloner.map(c -> c.apply(response)).orElse(response);
-    orchestrationStepResponses.add(new OrchestrationStepResponse<>(consumer, maybeClonedResponse));
+    // TODO: Check if this is the same step that we want to add the response to
+    OrchestrationStepResult<M> lastStep =
+        ochestrationStepResults.remove(ochestrationStepResults.size() - 1);
+    ochestrationStepResults.add(
+        new OrchestrationStepResult<>(consumer, lastStep.request, maybeClonedResponse));
     return maybeClonedResponse;
+  }
+
+  @Synchronized
+  public M addRequestForStep(
+      final IntegrationScenarioDefinition consumer,
+      final M request,
+      final Optional<StepResultCloner<M>> cloner) {
+    final M maybeClonedRequest = cloner.map(c -> c.apply(request)).orElse(request);
+    ochestrationStepResults.add(new OrchestrationStepResult<>(consumer, maybeClonedRequest, null));
+    return maybeClonedRequest;
   }
 
   /**
    * @return Unmodifiable List of responses received from consumers so far
    */
-  public List<OrchestrationStepResponse<M>> getOrchestrationStepResponses() {
-    return Collections.unmodifiableList(orchestrationStepResponses);
+  public List<OrchestrationStepResult<M>> getOrchestrationStepResults() {
+    return Collections.unmodifiableList(ochestrationStepResults);
   }
 
   /**
@@ -165,23 +181,23 @@ public class CompositeScenarioOrchestrationContext<M> {
    * @param consumerClass Class of the consumer for which to retrieve consumer
    * @return Optional first response of this consumer
    */
-  public Optional<OrchestrationStepResponse<M>> getFirstResponseFromConsumer(
+  public Optional<OrchestrationStepResult<M>> getFirstResponseFromConsumer(
       final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass) {
-    return orchestrationStepResponses.stream()
+    return ochestrationStepResults.stream()
         .filter(step -> consumerClass.isInstance(step.consumer()))
         .findFirst();
   }
 
   /**
-   * Retrieves the <em>last</em> response returned by the integration-scenario consumer specified by
-   * its <code>consumerClass</code>.
+   * Retrieves the <em>last</em> response returned by the complex process consumer specified by its
+   * <code>consumerClass</code>.
    *
    * @param consumerClass Class of the consumer for which to retrieve consumer
    * @return Optional last response of this consumer
    */
-  public Optional<OrchestrationStepResponse<M>> getLastResponseFromConsumer(
+  public Optional<OrchestrationStepResult<M>> getLastResponseFromConsumer(
       final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass) {
-    return orchestrationStepResponses.stream()
+    return ochestrationStepResults.stream()
         .filter(step -> consumerClass.isInstance(step.consumer()))
         .reduce((first, second) -> second);
   }

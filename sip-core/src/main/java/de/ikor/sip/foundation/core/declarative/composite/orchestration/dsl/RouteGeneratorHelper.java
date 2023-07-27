@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl;
 
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeScenarioStepRequestExtractor;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeScenarioStepResponseConsumer;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeProcessStepRequestExtractor;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeProcessStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.List;
@@ -27,7 +27,7 @@ public class RouteGeneratorHelper {
     return element.getProviderClasses();
   }
 
-  public static List<ProcessCallableWithinProviderDefinition> getNodes(
+  public static List<ProcessCallableWithinProviderDefinition> getConsumerCalls(
       ForProcessProviders element) {
     return element.getConsumerCalls();
   }
@@ -37,12 +37,12 @@ public class RouteGeneratorHelper {
     return element.getConsumerClass();
   }
 
-  public static <M> Optional<CompositeScenarioStepRequestExtractor<M>> getRequestPreparation(
+  public static <M> Optional<CompositeProcessStepRequestExtractor<M>> getRequestPreparation(
       CallProcessConsumer element) {
     return element.getRequestPreparation();
   }
 
-  public static <M> Optional<CompositeScenarioStepResponseConsumer<M>> getResponseConsumer(
+  public static <M> Optional<CompositeProcessStepResponseConsumer<M>> getResponseConsumer(
       CallProcessConsumer element) {
     return element.getResponseConsumer();
   }

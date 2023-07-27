@@ -26,7 +26,7 @@ import org.apache.camel.Handler;
  */
 @UtilityClass
 @Slf4j
-public class CompositeScenarioOrchestrationHandlers {
+public class CompositeProcessOrchestrationHandlers {
 
   private final String CALLED_CONSUMER_LIST_PROPERTY = "_SipCalledConsumersList";
 
@@ -37,19 +37,19 @@ public class CompositeScenarioOrchestrationHandlers {
 
   public static <M> ConsumerRequestHandler<M> handleRequestToConsumer(
       final IntegrationScenarioDefinition consumerDefinition,
-      final Optional<CompositeScenarioStepRequestExtractor<M>> requestPreparation) {
+      final Optional<CompositeProcessStepRequestExtractor<M>> requestPreparation) {
     return new ConsumerRequestHandler<>(consumerDefinition, requestPreparation);
   }
 
   public static <M> ConsumerResponseHandler<M> handleResponseFromConsumer(
       final IntegrationScenarioDefinition consumer,
       final Optional<StepResultCloner<M>> stepResultCloner,
-      final Optional<CompositeScenarioStepResponseConsumer<M>> responseConsumer) {
+      final Optional<CompositeProcessStepResponseConsumer<M>> responseConsumer) {
     return new ConsumerResponseHandler<>(consumer, stepResultCloner, responseConsumer);
   }
 
   public static <M> ContextPredicateHandler<M> handleContextPredicate(
-      final Predicate<CompositeScenarioOrchestrationContext<M>> predicate) {
+      final Predicate<CompositeProcessOrchestrationContext<M>> predicate) {
     return new ContextPredicateHandler<>(predicate);
   }
 
@@ -57,13 +57,13 @@ public class CompositeScenarioOrchestrationHandlers {
     return new ThrowErrorOnUnhandledRequestHandler();
   }
 
-  private static <M> CompositeScenarioOrchestrationContext<M> retrieveOrchestrationContext(
+  private static <M> CompositeProcessOrchestrationContext<M> retrieveOrchestrationContext(
       final Exchange exchange) {
     final var context =
         Objects.requireNonNull(
             exchange.getProperty(
-                CompositeScenarioOrchestrationContext.PROPERTY_NAME,
-                CompositeScenarioOrchestrationContext.class),
+                CompositeProcessOrchestrationContext.PROPERTY_NAME,
+                CompositeProcessOrchestrationContext.class),
             "Orchestration context for scenario-orchestration could not be retrieved from exchange");
     context.setExchange(exchange);
     return context;
@@ -73,7 +73,7 @@ public class CompositeScenarioOrchestrationHandlers {
       final Exchange exchange) {
     return Objects.requireNonNull(
         exchange.<List>getProperty(CALLED_CONSUMER_LIST_PROPERTY, List.class),
-        "Could not retrieve list of called consumers from Exchange");
+        "Orchestration Exception - Could not retrieve list of called consumers from Exchange");
   }
 
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -87,9 +87,9 @@ public class CompositeScenarioOrchestrationHandlers {
           CALLED_CONSUMER_LIST_PROPERTY,
           Collections.synchronizedList(new ArrayList<IntegrationScenarioConsumerDefinition>()));
       exchange.setProperty(
-          CompositeScenarioOrchestrationContext.PROPERTY_NAME,
-          CompositeScenarioOrchestrationContext.builder()
-              .integrationScenario(integrationScenario)
+          CompositeProcessOrchestrationContext.PROPERTY_NAME,
+          CompositeProcessOrchestrationContext.builder()
+              .compositeProcess(integrationScenario)
               .originalRequest(body)
               .exchange(exchange)
               .build());
@@ -98,24 +98,28 @@ public class CompositeScenarioOrchestrationHandlers {
 
   static class ConsumerRequestHandler<M> {
     private final IntegrationScenarioDefinition consumerDefinition;
-    private final CompositeScenarioStepRequestExtractor<M> requestPreparation;
+    private final CompositeProcessStepRequestExtractor<M> requestPreparation;
 
     private ConsumerRequestHandler(
         final IntegrationScenarioDefinition consumerDefinition,
-        final Optional<CompositeScenarioStepRequestExtractor<M>> requestPreparation) {
+        final Optional<CompositeProcessStepRequestExtractor<M>> requestPreparation) {
       this.consumerDefinition = consumerDefinition;
       this.requestPreparation =
           requestPreparation.orElseGet(ConsumerRequestHandler::defaultRequestExtractor);
     }
 
-    private static <M> CompositeScenarioStepRequestExtractor<M> defaultRequestExtractor() {
-      return CompositeScenarioOrchestrationContext::getOriginalRequest;
+    private static <M> CompositeProcessStepRequestExtractor<M> defaultRequestExtractor() {
+      return CompositeProcessOrchestrationContext::getOriginalRequest;
     }
 
     @Handler
     public <T> Object extractRequest(final T body, final Exchange exchange) {
       retrieveCalledConsumerList(exchange).add(consumerDefinition);
-      return requestPreparation.extractStepRequest(retrieveOrchestrationContext(exchange));
+      final CompositeProcessOrchestrationContext<M> context =
+          retrieveOrchestrationContext(exchange);
+      var request = requestPreparation.extractStepRequest(retrieveOrchestrationContext(exchange));
+      context.addRequestForStep(consumerDefinition, (M) request, Optional.empty());
+      return request;
     }
   }
 
@@ -123,11 +127,11 @@ public class CompositeScenarioOrchestrationHandlers {
   static class ConsumerResponseHandler<M> {
     private final IntegrationScenarioDefinition consumer;
     private final Optional<StepResultCloner<M>> stepResultCloner;
-    private final Optional<CompositeScenarioStepResponseConsumer<M>> responseConsumer;
+    private final Optional<CompositeProcessStepResponseConsumer<M>> responseConsumer;
 
     @Handler
     public M handleResponse(final M body, final Exchange exchange) {
-      final CompositeScenarioOrchestrationContext<M> context =
+      final CompositeProcessOrchestrationContext<M> context =
           retrieveOrchestrationContext(exchange);
       context.addResponseForStep(consumer, body, stepResultCloner);
       responseConsumer.ifPresent(c -> c.consumeResponse(body, context));
@@ -137,11 +141,11 @@ public class CompositeScenarioOrchestrationHandlers {
 
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
   static class ContextPredicateHandler<M> {
-    private final Predicate<CompositeScenarioOrchestrationContext<M>> predicate;
+    private final Predicate<CompositeProcessOrchestrationContext<M>> predicate;
 
     @Handler
     public boolean testPredicate(final Exchange exchange) {
-      final CompositeScenarioOrchestrationContext<M> context =
+      final CompositeProcessOrchestrationContext<M> context =
           retrieveOrchestrationContext(exchange);
       return predicate.test(context);
     }
@@ -155,7 +159,7 @@ public class CompositeScenarioOrchestrationHandlers {
         final var context = retrieveOrchestrationContext(exchange);
         throw SIPFrameworkException.init(
             "No integration-scenario consumer was called during orchestration of integration-scenario '%s'. The orchestration-definition should be modified so that at least one consumer always reacts to a request.",
-            context.getIntegrationScenario().getId());
+            context.getCompositeProcess().getId());
       }
     }
   }

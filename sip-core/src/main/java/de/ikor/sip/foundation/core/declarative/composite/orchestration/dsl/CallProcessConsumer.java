@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.core.declarative.composite.orchestration.dsl;
 
 import de.ikor.sip.foundation.core.declarative.composite.CompositeProcessDefinition;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeScenarioStepRequestExtractor;
-import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeScenarioStepResponseConsumer;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeProcessStepRequestExtractor;
+import de.ikor.sip.foundation.core.declarative.composite.orchestration.CompositeProcessStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioStepRequestExtractor;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioStepResponseConsumer;
@@ -19,10 +19,10 @@ public final class CallProcessConsumer<R, M> extends ProcessDslBase<CallProcessC
   private final Class<? extends IntegrationScenarioDefinition> consumerClass;
 
   @Getter(AccessLevel.PACKAGE)
-  private Optional<CompositeScenarioStepRequestExtractor<M>> requestPreparation = Optional.empty();
+  private Optional<CompositeProcessStepRequestExtractor<M>> requestPreparation = Optional.empty();
 
   @Getter(AccessLevel.PACKAGE)
-  private Optional<CompositeScenarioStepResponseConsumer<M>> responseConsumer = Optional.empty();
+  private Optional<CompositeProcessStepResponseConsumer<M>> responseConsumer = Optional.empty();
 
   @Getter(AccessLevel.PACKAGE)
   private Optional<StepResultCloner<M>> stepResultCloner = Optional.empty();
@@ -44,7 +44,7 @@ public final class CallProcessConsumer<R, M> extends ProcessDslBase<CallProcessC
    * @return DSL handle
    */
   public CallProcessConsumer<R, M> withRequestPreparation(
-      final CompositeScenarioStepRequestExtractor<M> requestPreparation) {
+      final CompositeProcessStepRequestExtractor<M> requestPreparation) {
     this.requestPreparation = Optional.of(requestPreparation);
     return self();
   }
@@ -58,7 +58,7 @@ public final class CallProcessConsumer<R, M> extends ProcessDslBase<CallProcessC
    * @param responseConsumer Consumer that handles the response
    * @return DSL handle
    */
-  public R andHandleResponse(final CompositeScenarioStepResponseConsumer<M> responseConsumer) {
+  public R andHandleResponse(final CompositeProcessStepResponseConsumer<M> responseConsumer) {
     this.responseConsumer = Optional.of(responseConsumer);
     return getDslReturnDefinition();
   }
