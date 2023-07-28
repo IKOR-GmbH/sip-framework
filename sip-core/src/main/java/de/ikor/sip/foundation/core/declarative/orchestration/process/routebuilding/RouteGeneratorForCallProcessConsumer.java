@@ -73,7 +73,7 @@ final class RouteGeneratorForCallProcessConsumer<M> extends RouteGeneratorProces
         .orElseThrow(
             () ->
                 SIPFrameworkInitializationException.init(
-                    "Consumer-class '%s' is used on orchestration for integration scenario '%s', but it is not registered with that scenario. Registered outbound connector classes are %s",
+                    "Consumer-class '%s' is used on orchestration for process '%s', but it is not registered with that scenario. Registered outbound connector classes are %s",
                     RouteGeneratorHelper.getConsumerClass(element).getName(),
                     getCompositeId(),
                     getConsumers().stream().map(conn -> conn.getClass().getName()).toList()));

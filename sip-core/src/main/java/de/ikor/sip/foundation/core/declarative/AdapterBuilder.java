@@ -96,7 +96,7 @@ public class AdapterBuilder extends RouteBuilder {
     }
 
     declarationsRegistry
-        .getCompositeProvidersForScenario(scenarioDefinition)
+        .getCompositeProcessProvidersForScenario(scenarioDefinition)
         .forEach(
             composite -> {
               final var endpoint =
@@ -104,7 +104,7 @@ public class AdapterBuilder extends RouteBuilder {
                       String.format(
                           COMPOSITE_HANDOFF_ROUTE_ID_PATTERN,
                           composite.getId() + "-" + scenarioDefinition.getId()));
-              providerHandoffEndpoints.put(scenarioDefinition::getId, endpoint);
+              providerHandoffEndpoints.put(composite, endpoint);
             });
 
     final Map<
@@ -123,7 +123,7 @@ public class AdapterBuilder extends RouteBuilder {
     }
 
     declarationsRegistry
-        .getCompositeConsumersForScenario(scenarioDefinition)
+        .getCompositeProcessConsumersForScenario(scenarioDefinition)
         .forEach(
             composite -> {
               final var endpoint =
@@ -131,7 +131,7 @@ public class AdapterBuilder extends RouteBuilder {
                       String.format(
                           COMPOSITE_TAKOVER_ROUTE_ID_PATTERN,
                           composite.getId() + "-" + scenarioDefinition.getId()));
-              consumerTakeoverEndpoints.put(scenarioDefinition::getId, endpoint);
+              consumerTakeoverEndpoints.put(composite, endpoint);
             });
 
     final var orchestrationInfo =

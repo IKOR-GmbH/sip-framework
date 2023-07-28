@@ -17,7 +17,7 @@ import lombok.Synchronized;
 import org.apache.camel.Exchange;
 
 /**
- * Context used during the orchestration of an integration-scenario.
+ * Context used during the orchestration of a composite process
  *
  * <p>Holds the original request from the provider that initiated the orchestration, as well as a
  * list of responses received from the consumers called during the orchestration.

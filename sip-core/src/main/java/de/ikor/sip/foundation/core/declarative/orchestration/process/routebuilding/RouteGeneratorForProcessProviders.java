@@ -83,7 +83,7 @@ final class RouteGeneratorForProcessProviders<M> extends RouteGeneratorProcessBa
             .toList();
     if (!unknownProviderNames.isEmpty()) {
       throw SIPFrameworkInitializationException.init(
-          "The following provider-classes are used in orchestration for scenario '%s', but not registered with that scenario: %s",
+          "The following provider-classes are used in orchestration for process '%s', but not registered with that scenario: %s",
           getCompositeId(), String.join(",", unknownProviderNames));
     }
     return providerClasses.stream().map(scenarioProviderMap::get).collect(Collectors.toSet());

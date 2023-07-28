@@ -11,7 +11,9 @@ import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefi
 import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,6 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.context.ApplicationContext;
@@ -151,10 +154,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
   private void checkForUnusedScenarios() {
     scenarios.stream()
-        .filter(
-            scenario ->
-                getInboundConnectorsByScenarioId(scenario.getId()).isEmpty()
-                    && getCompositeProvidersForScenario(scenario).isEmpty())
+        .filter(scenario -> getProvidersForScenario(scenario.getId()).isEmpty())
         .forEach(
             scenario -> {
               throw SIPFrameworkInitializationException.init(
@@ -162,10 +162,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                   scenario.getId());
             });
     scenarios.stream()
-        .filter(
-            scenario ->
-                getOutboundConnectorsByScenarioId(scenario.getId()).isEmpty()
-                    && getCompositeConsumersForScenario(scenario).isEmpty())
+        .filter(scenario -> getConsumersForScenario(scenario.getId()).isEmpty())
         .forEach(
             scenario -> {
               throw SIPFrameworkInitializationException.init(
@@ -262,7 +259,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   }
 
   @Override
-  public List<CompositeProcessDefinition> getCompositeProvidersForScenario(
+  public List<CompositeProcessDefinition> getCompositeProcessProvidersForScenario(
       IntegrationScenarioDefinition integrationScenario) {
     return processes.stream()
         .filter(
@@ -273,7 +270,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   }
 
   @Override
-  public List<CompositeProcessDefinition> getCompositeConsumersForScenario(
+  public List<CompositeProcessDefinition> getCompositeProcessConsumersForScenario(
       IntegrationScenarioDefinition integrationScenario) {
     return processes.stream()
         .filter(
@@ -281,6 +278,23 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                 composite.getProviderDefinitions().stream()
                     .anyMatch(consumer -> consumer.equals(integrationScenario.getClass())))
         .toList();
+  }
+
+  @Override
+  public List<IntegrationScenarioProviderDefinition> getProvidersForScenario(String scenarioID) {
+    List<IntegrationScenarioProviderDefinition> connectors =
+        List.copyOf(getInboundConnectorsByScenarioId(scenarioID));
+    List<IntegrationScenarioProviderDefinition> processes =
+        List.copyOf(getCompositeProcessProvidersForScenario(getScenarioById(scenarioID)));
+    return Stream.concat(connectors.stream(), processes.stream()).toList();
+  }
+
+  public List<IntegrationScenarioConsumerDefinition> getConsumersForScenario(String scenarioID) {
+    List<IntegrationScenarioConsumerDefinition> connectors =
+        List.copyOf(getOutboundConnectorsByScenarioId(scenarioID));
+    List<IntegrationScenarioConsumerDefinition> processes =
+        List.copyOf(getCompositeProcessConsumersForScenario(getScenarioById(scenarioID)));
+    return Stream.concat(connectors.stream(), processes.stream()).toList();
   }
 
   private Predicate<Object> isDisabled() {
