@@ -33,14 +33,4 @@ public class CompositeProcessBase implements CompositeProcessDefinition {
   public List<Class<? extends IntegrationScenarioDefinition>> getProviderDefinitions() {
     return List.of(processAnnotation.providers());
   }
-
-  @Override
-  public String toScenarioId() {
-    return getId();
-  }
-
-  @Override
-  public String fromScenarioId() {
-    return getId();
-  }
 }

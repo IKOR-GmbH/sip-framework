@@ -35,8 +35,5 @@ public non-sealed interface OutboundConnectorDefinition
     return ConnectorType.OUT;
   }
 
-  @Override
-  default String getScenarioId() {
-    return fromScenarioId();
-  }
+  String getScenarioId();
 }

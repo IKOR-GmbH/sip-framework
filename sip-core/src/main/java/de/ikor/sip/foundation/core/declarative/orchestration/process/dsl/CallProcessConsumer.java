@@ -12,8 +12,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /** DSL class for calling a scenario consumer specified by it's class */
-public final class CallProcessConsumer<R, M> extends ProcessDslBase<CallProcessConsumer<R, M>, R, M>
-    implements ProcessCallableWithinProviderDefinition {
+public final class CallProcessConsumer<R, M>
+    extends ProcessDslBase<CallProcessConsumer<R, M>, R, M> {
 
   @Getter(AccessLevel.PACKAGE)
   private final Class<? extends IntegrationScenarioDefinition> consumerClass;

@@ -68,13 +68,14 @@ public class AdapterBuilder extends RouteBuilder {
         declarationsRegistry.getInboundConnectors().stream()
             .collect(
                 Collectors.groupingBy(
-                    connectors -> declarationsRegistry.getScenarioById(connectors.toScenarioId())));
+                    connectors ->
+                        declarationsRegistry.getScenarioById(connectors.getScenarioId())));
     this.outboundConnectors =
         declarationsRegistry.getOutboundConnectors().stream()
             .collect(
                 Collectors.groupingBy(
                     connectors ->
-                        declarationsRegistry.getScenarioById(connectors.fromScenarioId())));
+                        declarationsRegistry.getScenarioById(connectors.getScenarioId())));
   }
 
   @SuppressWarnings("unchecked")

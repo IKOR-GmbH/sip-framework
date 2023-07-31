@@ -2,7 +2,6 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuild
 
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumer;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ForProcessProviders;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -106,15 +105,9 @@ final class RouteGeneratorForProcessProviders<M> extends RouteGeneratorProcessBa
         CompositeProcessOrchestrationHandlers.handleContextInitialization(getCompositeProcess()));
 
     for (final var element : RouteGeneratorHelper.getConsumerCalls(providerDefinition)) {
-      if (element instanceof CallProcessConsumer callDef) {
-        new RouteGeneratorForCallProcessConsumer<M>(
-                getOrchestrationInfo(), callDef, overallUnhandledScenarioConsumers)
-            .generateRoute(routeDef);
-      } else {
-        throw SIPFrameworkInitializationException.init(
-            "No handling defined for type %s used in orchestration for process %s",
-            element.getClass().getName(), getCompositeId());
-      }
+      new RouteGeneratorForCallProcessConsumer<M>(
+              getOrchestrationInfo(), element, overallUnhandledScenarioConsumers)
+          .generateRoute(routeDef);
     }
 
     routeDef.bean(CompositeProcessOrchestrationHandlers.handleErrorThrownIfNoConsumerWasCalled());
