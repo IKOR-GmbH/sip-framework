@@ -25,6 +25,7 @@ import org.apache.camel.model.RoutesDefinition;
 @Slf4j
 @SuppressWarnings("rawtypes")
 final class RouteGeneratorForProcessProviders<M> extends RouteGeneratorProcessBase {
+
   private final ForProcessProviders<?, M> providerDefinition;
   private final Set<IntegrationScenarioDefinition> overallUnhandledProviders;
 
@@ -60,11 +61,7 @@ final class RouteGeneratorForProcessProviders<M> extends RouteGeneratorProcessBa
   }
 
   private Set<IntegrationScenarioDefinition> resolveHandledProviders() {
-    if (providerDefinition != null) {
-      return resolveProvidersFromClasses(providerDefinition);
-    }
-    throw SIPFrameworkInitializationException.init(
-        "Unhandled scenario-provider subclass: %s", providerDefinition.getClass().getName());
+    return resolveProvidersFromClasses(providerDefinition);
   }
 
   private Set<IntegrationScenarioDefinition> resolveProvidersFromClasses(

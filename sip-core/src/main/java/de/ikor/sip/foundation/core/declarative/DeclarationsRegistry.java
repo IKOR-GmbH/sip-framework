@@ -238,7 +238,11 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     return processes.stream()
         .filter(scenario -> scenario.getId().equals(compositeProcessID))
         .findFirst()
-        .get()
+        .orElseThrow(
+            () ->
+                SIPFrameworkInitializationException.init(
+                    "Composite process '%s' can not be found in the registry. Please check your configuration.",
+                    compositeProcessID))
         .getConsumerDefinitions()
         .stream()
         .map(definition -> (IntegrationScenarioDefinition) applicationContext.getBean(definition))
@@ -251,7 +255,11 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     return processes.stream()
         .filter(scenario -> scenario.getId().equals(compositeProcessID))
         .findFirst()
-        .get()
+        .orElseThrow(
+            () ->
+                SIPFrameworkInitializationException.init(
+                    "Composite process '%s' can not be found in the registry. Please check your configuration",
+                    compositeProcessID))
         .getProviderDefinitions()
         .stream()
         .map(definition -> (IntegrationScenarioDefinition) applicationContext.getBean(definition))
@@ -282,19 +290,23 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
   @Override
   public List<IntegrationScenarioProviderDefinition> getProvidersForScenario(String scenarioID) {
-    List<IntegrationScenarioProviderDefinition> connectors =
+    List<IntegrationScenarioProviderDefinition> inboundConnectorsForScenario =
         List.copyOf(getInboundConnectorsByScenarioId(scenarioID));
-    List<IntegrationScenarioProviderDefinition> processes =
+    List<IntegrationScenarioProviderDefinition> compositeProcessProvidersForScenario =
         List.copyOf(getCompositeProcessProvidersForScenario(getScenarioById(scenarioID)));
-    return Stream.concat(connectors.stream(), processes.stream()).toList();
+    return Stream.concat(
+            inboundConnectorsForScenario.stream(), compositeProcessProvidersForScenario.stream())
+        .toList();
   }
 
   public List<IntegrationScenarioConsumerDefinition> getConsumersForScenario(String scenarioID) {
-    List<IntegrationScenarioConsumerDefinition> connectors =
+    List<IntegrationScenarioConsumerDefinition> outboundConnectorsForScenario =
         List.copyOf(getOutboundConnectorsByScenarioId(scenarioID));
-    List<IntegrationScenarioConsumerDefinition> processes =
+    List<IntegrationScenarioConsumerDefinition> compositeProcessConsumersForScenario =
         List.copyOf(getCompositeProcessConsumersForScenario(getScenarioById(scenarioID)));
-    return Stream.concat(connectors.stream(), processes.stream()).toList();
+    return Stream.concat(
+            outboundConnectorsForScenario.stream(), compositeProcessConsumersForScenario.stream())
+        .toList();
   }
 
   private Predicate<Object> isDisabled() {

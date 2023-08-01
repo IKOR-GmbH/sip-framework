@@ -42,8 +42,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AdapterBuilder extends RouteBuilder {
 
-  private String COMPOSITE_HANDOFF_ROUTE_ID_PATTERN = "sip-composite-handoff-%s";
-  private String COMPOSITE_TAKOVER_ROUTE_ID_PATTERN = "sip-composite-takeover-%s";
+  private static final String COMPOSITE_HANDOFF_ROUTE_ID_PATTERN = "sip-composite-handoff-%s";
+  private static final String COMPOSITE_TAKEOVER_ROUTE_ID_PATTERN = "sip-composite-takeover-%s";
   private final DeclarationsRegistry declarationsRegistry;
   private final RoutesRegistry routesRegistry;
 
@@ -130,7 +130,7 @@ public class AdapterBuilder extends RouteBuilder {
               final var endpoint =
                   StaticEndpointBuilders.direct(
                       String.format(
-                          COMPOSITE_TAKOVER_ROUTE_ID_PATTERN,
+                          COMPOSITE_TAKEOVER_ROUTE_ID_PATTERN,
                           composite.getId() + "-" + scenarioDefinition.getId()));
               consumerTakeoverEndpoints.put(composite, endpoint);
             });
@@ -319,7 +319,7 @@ public class AdapterBuilder extends RouteBuilder {
               final var startingEndpoint =
                   StaticEndpointBuilders.direct(
                       String.format(
-                          COMPOSITE_TAKOVER_ROUTE_ID_PATTERN,
+                          COMPOSITE_TAKEOVER_ROUTE_ID_PATTERN,
                           compositeProcess.getId() + "-" + providerScenario.getId()));
               providerHandoffEndpoints.put(providerScenario, startingEndpoint);
             });

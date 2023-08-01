@@ -5,14 +5,15 @@ import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.List;
-import org.apache.commons.lang3.NotImplementedException;
 
 public class CompositeProcessBase implements CompositeProcessDefinition {
 
   public Orchestrator<CompositeOrchestrationInfo> getOrchestrator() {
-    // TODO: Throw better error
-    throw new NotImplementedException();
+    throw SIPFrameworkInitializationException.init(
+        "Orchestration needs to be defined for the process '%s' declared in the class '%s'. Please @Override getOrchestrator() method.",
+        getId(), getClass().getName());
   }
 
   private final CompositeProcess processAnnotation =

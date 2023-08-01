@@ -7,15 +7,15 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Class that exposes the insides of orchestration definition. Those are package private so that
  * they can't be seen on the user side (while the orchestration is written). This class has to stay
  * in the same package as the orchestration definition.
  */
-@RequiredArgsConstructor
 public class RouteGeneratorHelper {
+
+  private RouteGeneratorHelper() {}
 
   public static List<ForProcessProviders> getScenarioProviderDefinitions(
       ProcessOrchestrationDefinition processOrchestrationDefinition) {
