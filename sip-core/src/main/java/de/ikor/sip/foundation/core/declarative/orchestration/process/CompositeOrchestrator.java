@@ -14,7 +14,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Orchestrator meant to be attached to composite process.
+ * Orchestrator meant to be attached to {@link
+ * de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess}
  *
  * <p>Orchestration can be defined in orchestration DSL via {@link #forOrchestrationDsl(Consumer)}.
  *
@@ -24,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class CompositeOrchestrator implements Orchestrator<CompositeOrchestrationInfo> {
 
-  private final Consumer<CompositeOrchestrationInfo> orchestrationConsumer;
+  private final Consumer<CompositeOrchestrationInfo> orchestrationInfoConsumer;
   @Setter private Predicate<CompositeOrchestrationInfo> canOrchestrate = Objects::nonNull;
 
   /**
@@ -51,7 +52,7 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
    * Creates a new orchestrator specified via a consumer for the {@link ScenarioOrchestrationInfo}.
    *
    * <p>This is very low-level, and it is strongly recommended to define the orchestration via DSL
-   * instead.
+   * instead. This can be used to manually create routes between endpoints.
    *
    * @param orchestrationConsumer Consumer for the orchestration-info provided by the framework
    * @return Orchestrator
@@ -68,6 +69,6 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
 
   @Override
   public void doOrchestrate(final CompositeOrchestrationInfo info) {
-    orchestrationConsumer.accept(info);
+    orchestrationInfoConsumer.accept(info);
   }
 }

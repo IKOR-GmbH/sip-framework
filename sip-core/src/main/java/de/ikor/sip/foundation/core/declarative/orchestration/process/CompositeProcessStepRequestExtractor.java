@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
 /**
- * Interface to extract the request object for a scenario consumer call
+ * Interface to extract the request object for a process consumer call
  *
  * @param <M> Response type of the integration call
  */

@@ -9,7 +9,9 @@ import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RoutesDefinition;
 
 /**
- * Class that holds information to be used by orchestrators of a Composite process.
+ * Class that holds information to be used by orchestrators of a {@link
+ * de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess} This is a structural
+ * information that gives orchestrator an ability to generate orchestration routes
  *
  * @see CompositeOrchestrator
  */
@@ -23,7 +25,8 @@ public interface CompositeOrchestrationInfo extends OrchestrationInfo {
   CompositeProcessDefinition getCompositeProcess();
 
   /**
-   * Returns the routes definition that is being used to orchestrate the composite process.
+   * Returns the routes definition that is being used to orchestrate the composite process. It is a
+   * hook where the orchestrator can add its routes.
    *
    * <p>All Camel routes used for the orchestration must be initialized from this element.
    *

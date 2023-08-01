@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
 
 /**
- * Various handlers use in scenario orchestration *
+ * Various handlers use in scenario orchestration. Hanlders will be a part of the generated routes.
  *
  * <p><em>For internal use only</em>
  */
@@ -28,7 +27,8 @@ import org.apache.camel.Handler;
 @Slf4j
 public class CompositeProcessOrchestrationHandlers {
 
-  private final String CALLED_CONSUMER_LIST_PROPERTY = "_SipCalledConsumersList";
+  private final String CALLED_CONSUMER_LIST_PROPERTY =
+      "_SipProcessOrchestrationCalledConsumersList";
 
   public static ContextInitializer handleContextInitialization(
       final CompositeProcessDefinition scenario) {
@@ -48,11 +48,6 @@ public class CompositeProcessOrchestrationHandlers {
     return new ConsumerResponseHandler<>(consumer, stepResultCloner, responseConsumer);
   }
 
-  public static <M> ContextPredicateHandler<M> handleContextPredicate(
-      final Predicate<CompositeProcessOrchestrationContext<M>> predicate) {
-    return new ContextPredicateHandler<>(predicate);
-  }
-
   public static ThrowErrorOnUnhandledRequestHandler handleErrorThrownIfNoConsumerWasCalled() {
     return new ThrowErrorOnUnhandledRequestHandler();
   }
@@ -62,7 +57,7 @@ public class CompositeProcessOrchestrationHandlers {
     final var context =
         Objects.requireNonNull(
             exchange.getProperty(
-                CompositeProcessOrchestrationContext.PROPERTY_NAME,
+                CompositeProcessOrchestrationContext.CAMEL_PROPERTY_NAME,
                 CompositeProcessOrchestrationContext.class),
             "Orchestration context for scenario-orchestration could not be retrieved from exchange");
     context.setExchange(exchange);
@@ -79,7 +74,7 @@ public class CompositeProcessOrchestrationHandlers {
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
   static class ContextInitializer {
 
-    private final CompositeProcessDefinition integrationScenario;
+    private final CompositeProcessDefinition compositeProcess;
 
     @Handler
     public <T> void initializeOrchestrationContext(final T body, final Exchange exchange) {
@@ -87,9 +82,9 @@ public class CompositeProcessOrchestrationHandlers {
           CALLED_CONSUMER_LIST_PROPERTY,
           Collections.synchronizedList(new ArrayList<IntegrationScenarioConsumerDefinition>()));
       exchange.setProperty(
-          CompositeProcessOrchestrationContext.PROPERTY_NAME,
+          CompositeProcessOrchestrationContext.CAMEL_PROPERTY_NAME,
           CompositeProcessOrchestrationContext.builder()
-              .compositeProcess(integrationScenario)
+              .compositeProcess(compositeProcess)
               .originalRequest(body)
               .exchange(exchange)
               .build());
@@ -139,18 +134,6 @@ public class CompositeProcessOrchestrationHandlers {
     }
   }
 
-  @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-  static class ContextPredicateHandler<M> {
-    private final Predicate<CompositeProcessOrchestrationContext<M>> predicate;
-
-    @Handler
-    public boolean testPredicate(final Exchange exchange) {
-      final CompositeProcessOrchestrationContext<M> context =
-          retrieveOrchestrationContext(exchange);
-      return predicate.test(context);
-    }
-  }
-
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   static class ThrowErrorOnUnhandledRequestHandler {
     @Handler
@@ -158,7 +141,7 @@ public class CompositeProcessOrchestrationHandlers {
       if (retrieveCalledConsumerList(exchange).isEmpty()) {
         final var context = retrieveOrchestrationContext(exchange);
         throw SIPFrameworkException.init(
-            "No integration-scenario consumer was called during orchestration of integration-scenario '%s'. The orchestration-definition should be modified so that at least one consumer always reacts to a request.",
+            "No consumer was called during orchestration of composite process '%s'. The orchestration-definition should be modified so that at least one consumer always reacts to a request.",
             context.getCompositeProcess().getId());
       }
     }
