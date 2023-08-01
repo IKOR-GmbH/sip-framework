@@ -36,8 +36,6 @@ public @interface OutboundConnector {
 
   /**
    * @return Identifier of the integration scenario that the connector is consuming from.
-   * @see
-   *     de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition#fromScenarioId()
    */
   String integrationScenario();
 

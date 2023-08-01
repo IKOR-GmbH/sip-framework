@@ -34,10 +34,7 @@ public @interface InboundConnector {
    */
   String connectorGroup();
 
-  /**
-   * @return Identifier of the integration scenario that the connector is providing to.
-   * @see InboundConnectorDefinition#toScenarioId()
-   */
+  /** return Identifier of the integration scenario that the connector is providing to. */
   String integrationScenario();
 
   /**
