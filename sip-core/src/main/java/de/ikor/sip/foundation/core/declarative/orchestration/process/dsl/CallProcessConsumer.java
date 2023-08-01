@@ -11,21 +11,21 @@ import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-/** DSL class for calling a scenario consumer specified by it's class */
-public final class CallProcessConsumer<R, M>
-    extends ProcessDslBase<CallProcessConsumer<R, M>, R, M> {
+/** DSL class for calling a process consumer specified by its class */
+public final class CallProcessConsumer<R>
+    extends ProcessDslBase<CallProcessConsumer<R>, R> {
 
   @Getter(AccessLevel.PACKAGE)
   private final Class<? extends IntegrationScenarioDefinition> consumerClass;
 
   @Getter(AccessLevel.PACKAGE)
-  private Optional<CompositeProcessStepRequestExtractor<M>> requestPreparation = Optional.empty();
+  private Optional<CompositeProcessStepRequestExtractor> requestPreparation = Optional.empty();
 
   @Getter(AccessLevel.PACKAGE)
-  private Optional<CompositeProcessStepResponseConsumer<M>> responseConsumer = Optional.empty();
+  private Optional<CompositeProcessStepResponseConsumer> responseConsumer = Optional.empty();
 
   @Getter(AccessLevel.PACKAGE)
-  private Optional<StepResultCloner<M>> stepResultCloner = Optional.empty();
+  private Optional<StepResultCloner> stepResultCloner = Optional.empty();
 
   CallProcessConsumer(
       final R dslReturnDefinition,
@@ -43,8 +43,8 @@ public final class CallProcessConsumer<R, M>
    * @param requestPreparation the extractor for the request
    * @return DSL handle
    */
-  public CallProcessConsumer<R, M> withRequestPreparation(
-      final CompositeProcessStepRequestExtractor<M> requestPreparation) {
+  public CallProcessConsumer<R> withRequestPreparation(
+      final CompositeProcessStepRequestExtractor requestPreparation) {
     this.requestPreparation = Optional.of(requestPreparation);
     return self();
   }
@@ -58,7 +58,7 @@ public final class CallProcessConsumer<R, M>
    * @param responseConsumer Consumer that handles the response
    * @return DSL handle
    */
-  public R andHandleResponse(final CompositeProcessStepResponseConsumer<M> responseConsumer) {
+  public R andHandleResponse(final CompositeProcessStepResponseConsumer responseConsumer) {
     this.responseConsumer = Optional.of(responseConsumer);
     return getDslReturnDefinition();
   }

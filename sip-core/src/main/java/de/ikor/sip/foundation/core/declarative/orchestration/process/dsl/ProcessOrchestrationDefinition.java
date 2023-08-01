@@ -12,13 +12,12 @@ import lombok.Getter;
 /**
  * DSL class for specifying orchestration of complex processes
  *
- * @param <M> The response model type of the integration scenario
  */
-public class ProcessOrchestrationDefinition<M>
-    extends ProcessDslBase<ProcessOrchestrationDefinition<M>, EndOfDsl, M> {
+public class ProcessOrchestrationDefinition
+    extends ProcessDslBase<ProcessOrchestrationDefinition, EndOfDsl> {
 
   @Getter(AccessLevel.PACKAGE)
-  private final List<ForProcessProviders<?, M>> scenarioProviderDefinitions = new ArrayList<>();
+  private final List<ForProcessProviders> scenarioProviderDefinitions = new ArrayList<>();
 
   /**
    * Constructor
@@ -41,9 +40,9 @@ public class ProcessOrchestrationDefinition<M>
    * @return DSL handle for specifying consumer calls
    */
   @SafeVarargs
-  public final ForProcessProviders<ProcessOrchestrationDefinition<M>, M> forProviders(
+  public final ForProcessProviders<ProcessOrchestrationDefinition> forProviders(
       final Class<? extends IntegrationScenarioDefinition>... providerClasses) {
-    final ForProcessProviders<ProcessOrchestrationDefinition<M>, M> def =
+    final ForProcessProviders<ProcessOrchestrationDefinition> def =
         new ForProcessProviders<>(self(), getCompositeProcess(), Set.of(providerClasses));
     scenarioProviderDefinitions.add(def);
     return def;

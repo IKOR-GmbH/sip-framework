@@ -33,17 +33,16 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
    *
    * @param dslDefinition Consumer that specifies the orchestration via DSL
    * @return Orchestrator as specified in the DSL
-   * @param <T> Response model type
    */
   @SuppressWarnings("java:S1172")
   public static <T> CompositeOrchestrator forOrchestrationDsl(
-      final Consumer<ProcessOrchestrationDefinition<T>> dslDefinition) {
+      final Consumer<ProcessOrchestrationDefinition> dslDefinition) {
     return forOrchestrationConsumer(
         orchestrationInfo -> {
           final var orchestrationDef =
-              new ProcessOrchestrationDefinition<T>(orchestrationInfo.getCompositeProcess());
+              new ProcessOrchestrationDefinition(orchestrationInfo.getCompositeProcess());
           dslDefinition.accept(orchestrationDef);
-          new RouteGeneratorForProcessOrchestrationDefinition<>(orchestrationInfo, orchestrationDef)
+          new RouteGeneratorForProcessOrchestrationDefinition(orchestrationInfo, orchestrationDef)
               .run();
         });
   }

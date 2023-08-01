@@ -10,19 +10,19 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Class for generating Camel routes for scenario orchestration via DSL
+ * Class for generating Camel routes for process orchestration via DSL
  *
  * <p><em>For internal use only</em>
  */
 @SuppressWarnings("rawtypes")
-public final class RouteGeneratorForProcessOrchestrationDefinition<M>
+public final class RouteGeneratorForProcessOrchestrationDefinition
     extends RouteGeneratorProcessBase implements Runnable {
 
-  private final ProcessOrchestrationDefinition<M> scenarioOrchestrationDefinition;
+  private final ProcessOrchestrationDefinition scenarioOrchestrationDefinition;
 
   public RouteGeneratorForProcessOrchestrationDefinition(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final ProcessOrchestrationDefinition<M> scenarioOrchestrationDefinition) {
+      final ProcessOrchestrationDefinition scenarioOrchestrationDefinition) {
     super(orchestrationInfo);
     this.scenarioOrchestrationDefinition = scenarioOrchestrationDefinition;
   }
@@ -37,7 +37,7 @@ public final class RouteGeneratorForProcessOrchestrationDefinition<M>
         RouteGeneratorHelper.getScenarioProviderDefinitions(scenarioOrchestrationDefinition)) {
 
       final var builder =
-          new RouteGeneratorForProcessProviders<M>(
+          new RouteGeneratorForProcessProviders(
               getOrchestrationInfo(),
               providerDefinition,
               Collections.unmodifiableSet(unhandledProvidersOverall));

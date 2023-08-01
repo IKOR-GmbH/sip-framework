@@ -88,7 +88,7 @@ public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
 
   List<IntegrationScenarioDefinition> getCompositeProcessConsumerDefinitions(String scenarioID);
 
-  List<IntegrationScenarioDefinition> getCompositeProcessProviderDefinitions(String scenarioID);
+  IntegrationScenarioDefinition getCompositeProcessProviderDefinition(String scenarioID);
 
   List<CompositeProcessDefinition> getCompositeProcessProvidersForScenario(
       IntegrationScenarioDefinition integrationScenario);

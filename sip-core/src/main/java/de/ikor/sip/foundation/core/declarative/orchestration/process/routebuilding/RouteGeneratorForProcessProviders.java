@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.builder.EndpointConsumerBuilder;
@@ -18,15 +19,15 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 
 /**
- * Class for generating Camel routes for scenario providers via DSL
+ * Class for generating Camel routes for process providers via DSL
  *
  * <p><em>For internal use only</em>
  */
 @Slf4j
 @SuppressWarnings("rawtypes")
-final class RouteGeneratorForProcessProviders<M> extends RouteGeneratorProcessBase {
+final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase {
 
-  private final ForProcessProviders<?, M> providerDefinition;
+  private final ForProcessProviders<?> providerDefinition;
   private final Set<IntegrationScenarioDefinition> overallUnhandledProviders;
 
   @Getter(lazy = true)
@@ -70,7 +71,7 @@ final class RouteGeneratorForProcessProviders<M> extends RouteGeneratorProcessBa
         RouteGeneratorHelper.getProviderClasses(element);
 
     final var scenarioProviderMap =
-        getDeclarationsRegistry().getCompositeProcessProviderDefinitions(getCompositeId()).stream()
+Stream.of(getDeclarationsRegistry().getCompositeProcessProviderDefinition(getCompositeId()))
             .collect(Collectors.toMap(IntegrationScenarioDefinition::getClass, con -> con));
     final var unknownProviderNames =
         providerClasses.stream()
@@ -102,7 +103,7 @@ final class RouteGeneratorForProcessProviders<M> extends RouteGeneratorProcessBa
         CompositeProcessOrchestrationHandlers.handleContextInitialization(getCompositeProcess()));
 
     for (final var element : RouteGeneratorHelper.getConsumerCalls(providerDefinition)) {
-      new RouteGeneratorForCallProcessConsumer<M>(
+      new RouteGeneratorForCallProcessConsumer(
               getOrchestrationInfo(), element, overallUnhandledScenarioConsumers)
           .generateRoute(routeDef);
     }

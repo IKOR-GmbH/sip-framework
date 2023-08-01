@@ -6,11 +6,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /**
- * Base element for DSL classes used to orchestrate in integration scenario
+ * Base element for DSL classes used to orchestrate in process orchestration
  *
- * @param <M> type of the integration scenario's response model
  */
-public abstract class ProcessDslBase<S extends ProcessDslBase<S, R, M>, R, M>
+public abstract class ProcessDslBase<S extends ProcessDslBase<S, R>, R>
     extends DslDefinitionBase<S, R> {
 
   @Getter(AccessLevel.PACKAGE)

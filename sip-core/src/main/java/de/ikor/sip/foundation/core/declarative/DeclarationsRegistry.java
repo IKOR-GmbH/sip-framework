@@ -250,9 +250,9 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   }
 
   @Override
-  public List<IntegrationScenarioDefinition> getCompositeProcessProviderDefinitions(
+  public IntegrationScenarioDefinition getCompositeProcessProviderDefinition(
       String compositeProcessID) {
-    return processes.stream()
+    return (IntegrationScenarioDefinition) applicationContext.getBean( processes.stream()
         .filter(scenario -> scenario.getId().equals(compositeProcessID))
         .findFirst()
         .orElseThrow(
@@ -260,10 +260,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                 SIPFrameworkInitializationException.init(
                     "Composite process '%s' can not be found in the registry. Please check your configuration",
                     compositeProcessID))
-        .getProviderDefinitions()
-        .stream()
-        .map(definition -> (IntegrationScenarioDefinition) applicationContext.getBean(definition))
-        .toList();
+        .getProviderDefinition());
   }
 
   @Override
@@ -283,7 +280,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     return processes.stream()
         .filter(
             composite ->
-                composite.getProviderDefinitions().stream()
+                Stream.of(composite.getProviderDefinition())
                     .anyMatch(consumer -> consumer.equals(integrationScenario.getClass())))
         .toList();
   }

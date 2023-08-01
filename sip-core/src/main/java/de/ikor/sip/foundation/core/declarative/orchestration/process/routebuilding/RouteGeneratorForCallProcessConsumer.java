@@ -18,15 +18,15 @@ import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.ProcessorDefinition;
 
 /**
- * Class for generating Camel routes for scenario consumer calls from a DSL
+ * Class for generating Camel routes for process consumer calls from a DSL
  *
  * <p><em>For internal use only</em>
  */
 @Slf4j
 @SuppressWarnings("rawtypes")
-final class RouteGeneratorForCallProcessConsumer<M> extends RouteGeneratorProcessBase {
+final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBase {
 
-  private final CallProcessConsumer<?, M> definitionElement;
+  private final CallProcessConsumer<?> definitionElement;
 
   private final Set<IntegrationScenarioDefinition> overallUnhandledConsumers;
 

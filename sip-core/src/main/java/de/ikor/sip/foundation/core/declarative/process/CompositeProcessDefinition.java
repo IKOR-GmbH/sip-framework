@@ -18,5 +18,5 @@ public interface CompositeProcessDefinition
 
   List<Class<? extends IntegrationScenarioDefinition>> getConsumerDefinitions();
 
-  List<Class<? extends IntegrationScenarioDefinition>> getProviderDefinitions();
+  Class<? extends IntegrationScenarioDefinition> getProviderDefinition();
 }

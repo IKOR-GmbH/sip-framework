@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.process;
 
 import de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess;
+import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -8,6 +9,13 @@ import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.List;
 
+/**
+ * Base class for a composite process definition.
+ *
+ * <p>Adapter developers should extend this class and annotate it with @{@link CompositeProcess}.
+ *
+ * @see CompositeProcess
+ */
 public class CompositeProcessBase implements CompositeProcessDefinition {
 
   public Orchestrator<CompositeOrchestrationInfo> getOrchestrator() {
@@ -31,7 +39,7 @@ public class CompositeProcessBase implements CompositeProcessDefinition {
     return List.of(processAnnotation.consumers());
   }
 
-  public List<Class<? extends IntegrationScenarioDefinition>> getProviderDefinitions() {
-    return List.of(processAnnotation.providers());
+  public Class<? extends IntegrationScenarioDefinition> getProviderDefinition() {
+    return processAnnotation.provider();
   }
 }

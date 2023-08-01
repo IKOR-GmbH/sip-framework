@@ -18,5 +18,5 @@ public @interface CompositeProcess {
 
   Class<? extends IntegrationScenarioDefinition>[] consumers();
 
-  Class<? extends IntegrationScenarioDefinition>[] providers();
+  Class<? extends IntegrationScenarioDefinition> provider();
 }
