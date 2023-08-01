@@ -10,12 +10,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /** DSL class specifying a process provider specified by its class */
-public final class ForProcessProviders<R>
-    extends ProcessDslBase<ForProcessProviders<R>, R> {
+public final class ForProcessProviders<R> extends ProcessDslBase<ForProcessProviders<R>, R> {
 
   @Getter(AccessLevel.PACKAGE)
-  private final List<CallProcessConsumer<ForProcessProviders<R>>> consumerCalls =
-      new ArrayList<>();
+  private final List<CallProcessConsumer<ForProcessProviders<R>>> consumerCalls = new ArrayList<>();
 
   @Getter(AccessLevel.PACKAGE)
   private final Set<Class<? extends IntegrationScenarioDefinition>> providerClasses;

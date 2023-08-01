@@ -12,8 +12,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /** DSL class for calling a process consumer specified by its class */
-public final class CallProcessConsumer<R>
-    extends ProcessDslBase<CallProcessConsumer<R>, R> {
+public final class CallProcessConsumer<R> extends ProcessDslBase<CallProcessConsumer<R>, R> {
 
   @Getter(AccessLevel.PACKAGE)
   private final Class<? extends IntegrationScenarioDefinition> consumerClass;

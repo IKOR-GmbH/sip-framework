@@ -9,10 +9,7 @@ import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-/**
- * DSL class for specifying orchestration of complex processes
- *
- */
+/** DSL class for specifying orchestration of complex processes */
 public class ProcessOrchestrationDefinition
     extends ProcessDslBase<ProcessOrchestrationDefinition, EndOfDsl> {
 

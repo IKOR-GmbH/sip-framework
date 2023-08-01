@@ -82,8 +82,8 @@ public class AdapterBuilder extends RouteBuilder {
   private void buildScenario(final IntegrationScenarioDefinition scenarioDefinition) {
 
     final Map<
-        IntegrationScenarioProviderDefinition,
-        DirectEndpointBuilderFactory.DirectEndpointBuilder>
+            IntegrationScenarioProviderDefinition,
+            DirectEndpointBuilderFactory.DirectEndpointBuilder>
         providerHandoffEndpoints = new HashMap<>();
 
     if (inboundConnectors.get(scenarioDefinition) != null) {
@@ -109,8 +109,8 @@ public class AdapterBuilder extends RouteBuilder {
             });
 
     final Map<
-        IntegrationScenarioConsumerDefinition,
-        DirectEndpointBuilderFactory.DirectEndpointBuilder>
+            IntegrationScenarioConsumerDefinition,
+            DirectEndpointBuilderFactory.DirectEndpointBuilder>
         consumerTakeoverEndpoints = new HashMap<>();
 
     if (outboundConnectors.get(scenarioDefinition) != null) {
@@ -203,8 +203,8 @@ public class AdapterBuilder extends RouteBuilder {
     final Optional<RouteDefinition> responseRouteDefinition =
         inboundConnector.hasResponseFlow()
             ? Optional.of(
-            from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
-                .routeId(responseOrchestrationRouteId))
+                from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
+                    .routeId(responseOrchestrationRouteId))
             : Optional.empty();
 
     var orchestrationInfo =
@@ -258,8 +258,8 @@ public class AdapterBuilder extends RouteBuilder {
     final Optional<RouteDefinition> responseRouteDefinition =
         outboundConnector.hasResponseFlow()
             ? Optional.of(
-            from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
-                .routeId(responseOrchestrationRouteId))
+                from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
+                    .routeId(responseOrchestrationRouteId))
             : Optional.empty();
 
     var orchestrationInfo =
@@ -309,12 +309,13 @@ public class AdapterBuilder extends RouteBuilder {
 
     IntegrationScenarioDefinition providerScenario =
         declarationsRegistry.getScenarios().stream()
-            .filter(s -> s.getClass().equals(compositeProcess
-                .getProviderDefinition()))
+            .filter(s -> s.getClass().equals(compositeProcess.getProviderDefinition()))
             .findFirst()
-            .orElseThrow(() -> SIPFrameworkInitializationException.init(
-                "Composite process '%s' uses a provider class '%' which couldn't be found in the registry. Please check your configuration.",
-                compositeProcess.getId(), compositeProcess.getProviderDefinition()));
+            .orElseThrow(
+                () ->
+                    SIPFrameworkInitializationException.init(
+                        "Composite process '%s' uses a provider class '%' which couldn't be found in the registry. Please check your configuration.",
+                        compositeProcess.getId(), compositeProcess.getProviderDefinition()));
     final var startingEndpoint =
         StaticEndpointBuilders.direct(
             String.format(

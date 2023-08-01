@@ -15,8 +15,8 @@ import java.util.List;
  * <p><em>For internal use only</em>
  */
 @SuppressWarnings("rawtypes")
-public final class RouteGeneratorForProcessOrchestrationDefinition
-    extends RouteGeneratorProcessBase implements Runnable {
+public final class RouteGeneratorForProcessOrchestrationDefinition extends RouteGeneratorProcessBase
+    implements Runnable {
 
   private final ProcessOrchestrationDefinition scenarioOrchestrationDefinition;
 

@@ -252,15 +252,17 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   @Override
   public IntegrationScenarioDefinition getCompositeProcessProviderDefinition(
       String compositeProcessID) {
-    return (IntegrationScenarioDefinition) applicationContext.getBean( processes.stream()
-        .filter(scenario -> scenario.getId().equals(compositeProcessID))
-        .findFirst()
-        .orElseThrow(
-            () ->
-                SIPFrameworkInitializationException.init(
-                    "Composite process '%s' can not be found in the registry. Please check your configuration",
-                    compositeProcessID))
-        .getProviderDefinition());
+    return (IntegrationScenarioDefinition)
+        applicationContext.getBean(
+            processes.stream()
+                .filter(scenario -> scenario.getId().equals(compositeProcessID))
+                .findFirst()
+                .orElseThrow(
+                    () ->
+                        SIPFrameworkInitializationException.init(
+                            "Composite process '%s' can not be found in the registry. Please check your configuration",
+                            compositeProcessID))
+                .getProviderDefinition());
   }
 
   @Override

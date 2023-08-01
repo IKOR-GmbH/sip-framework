@@ -71,7 +71,7 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
         RouteGeneratorHelper.getProviderClasses(element);
 
     final var scenarioProviderMap =
-Stream.of(getDeclarationsRegistry().getCompositeProcessProviderDefinition(getCompositeId()))
+        Stream.of(getDeclarationsRegistry().getCompositeProcessProviderDefinition(getCompositeId()))
             .collect(Collectors.toMap(IntegrationScenarioDefinition::getClass, con -> con));
     final var unknownProviderNames =
         providerClasses.stream()

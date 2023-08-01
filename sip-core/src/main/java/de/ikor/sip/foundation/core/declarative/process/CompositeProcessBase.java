@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.process;
 
 import de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess;
-import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
