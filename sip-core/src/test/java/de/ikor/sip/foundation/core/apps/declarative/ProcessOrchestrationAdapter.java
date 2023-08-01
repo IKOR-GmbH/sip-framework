@@ -112,7 +112,7 @@ public class ProcessOrchestrationAdapter {
 
   @CompositeProcess(
       processId = GetCustomerDebtByNameOrchestrator.ID,
-      providers = getPartnerDebtByName.class,
+      provider = getPartnerDebtByName.class,
       consumers = {getPartnerDebtById.class, getPartnerByName.class})
   public class GetCustomerDebtByNameOrchestrator extends CompositeProcessBase {
 
