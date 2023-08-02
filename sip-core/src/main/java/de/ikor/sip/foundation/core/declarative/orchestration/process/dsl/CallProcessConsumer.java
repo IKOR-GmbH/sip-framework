@@ -57,7 +57,7 @@ public final class CallProcessConsumer<R> extends ProcessDslBase<CallProcessCons
    * @param responseConsumer Consumer that handles the response
    * @return DSL handle
    */
-  public R andHandleResponse(final CompositeProcessStepResponseConsumer responseConsumer) {
+  public R withResponseHandling(final CompositeProcessStepResponseConsumer responseConsumer) {
     this.responseConsumer = Optional.of(responseConsumer);
     return getDslReturnDefinition();
   }
@@ -68,7 +68,7 @@ public final class CallProcessConsumer<R> extends ProcessDslBase<CallProcessCons
    *
    * @return DSL handle
    */
-  public R andNoResponseHandling() {
+  public R withNoResponseHandling() {
     return getDslReturnDefinition();
   }
 }

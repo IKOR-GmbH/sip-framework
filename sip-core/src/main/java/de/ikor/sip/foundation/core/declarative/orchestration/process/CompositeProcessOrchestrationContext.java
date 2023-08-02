@@ -93,7 +93,7 @@ public class CompositeProcessOrchestrationContext<M> {
    * @return Current response
    */
   @Synchronized
-  public Optional<M> getResponse() {
+  public Optional<M> getLatestResponse() {
     return getAggregatedResponse()
         .or(() -> getResultForLatestStep().map(OrchestrationStepResult::response));
   }
@@ -151,7 +151,7 @@ public class CompositeProcessOrchestrationContext<M> {
       final M response,
       final Optional<StepResultCloner<M>> cloner) {
     final M maybeClonedResponse = cloner.map(c -> c.apply(response)).orElse(response);
-    getLastResponseFromConsumer(consumer.getClass())
+    getResultOfLastStepFromConsumer(consumer.getClass())
         .ifPresent(
             step -> {
               OrchestrationStepResult<M> lastStep =
@@ -186,7 +186,7 @@ public class CompositeProcessOrchestrationContext<M> {
    * @param consumerClass Class of the consumer for which to retrieve consumer
    * @return Optional first response of this consumer
    */
-  public Optional<OrchestrationStepResult<M>> getFirstResponseFromConsumer(
+  public Optional<OrchestrationStepResult<M>> getResultOfFirstStepFromConsumer(
       final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass) {
     return orchestrationStepResults.stream()
         .filter(step -> consumerClass.isInstance(step.consumer()))
@@ -200,23 +200,11 @@ public class CompositeProcessOrchestrationContext<M> {
    * @param consumerClass Class of the consumer for which to retrieve consumer
    * @return Optional last response of this consumer
    */
-  public Optional<OrchestrationStepResult<M>> getLastResponseFromConsumer(
+  public Optional<OrchestrationStepResult<M>> getResultOfLastStepFromConsumer(
       final Class<? extends IntegrationScenarioDefinition> consumerClass) {
     return orchestrationStepResults.stream()
         .filter(step -> consumerClass.isInstance(step.consumer()))
         .reduce((first, second) -> second);
-  }
-
-  /**
-   * Returns the current message body in the requested type, if it exists
-   *
-   * @param type Body type class
-   * @return Optional containing the body if it exists
-   * @param <T> Body type
-   * @see org.apache.camel.Message#getBody(Class)
-   */
-  public <T> Optional<T> getBody(final Class<T> type) {
-    return Optional.ofNullable(getExchange().getMessage().getBody(type));
   }
 
   /**
