@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
-import de.ikor.sip.foundation.core.apps.declarative.ProcessOrchestrationAdapter.PartnerNameRequest;
 import de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
@@ -122,13 +121,14 @@ public class ProcessOrchestrationAdapter {
     public Orchestrator<CompositeOrchestrationInfo> getOrchestrator() {
       return CompositeOrchestrator.forOrchestrationDsl(
           dsl -> {
-            dsl.forProviders(getPartnerDebtByName.class)
+            dsl.forProvider(getPartnerDebtByName.class)
                 .callConsumer(getPartnerByName.class)
-                .andNoResponseHandling()
+                .withNoResponseHandling()
                 .callConsumer(getPartnerDebtById.class)
                 .withRequestPreparation(
                     context -> {
-                      PartnerResponse response = (PartnerResponse) context.getResponse().get();
+                      PartnerResponse response =
+                          (PartnerResponse) context.getLatestResponse().get();
                       return response.id;
                     });
           });

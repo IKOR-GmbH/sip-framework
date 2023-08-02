@@ -6,7 +6,6 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositePr
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -24,9 +23,9 @@ public class RouteGeneratorHelper {
     return processOrchestrationDefinition.getScenarioProviderDefinitions();
   }
 
-  public static Set<Class<? extends IntegrationScenarioDefinition>> getProviderClasses(
+  public static Class<? extends IntegrationScenarioDefinition> getProviderClass(
       ForProcessProviders<ProcessOrchestrationDefinition> element) {
-    return element.getProviderClasses();
+    return element.getProviderClass();
   }
 
   public static List<CallProcessConsumer> getConsumerCalls(ForProcessProviders element) {

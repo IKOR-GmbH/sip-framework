@@ -7,6 +7,8 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.*;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.connector.*;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrator;
+import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.io.IOException;
@@ -26,6 +28,7 @@ public class DeclarativeEndpointInfoTransformer {
   private static final String INTEGRATION_SCENARIO_DEFAULT_DOCS_PATH =
       "documents/structure/integration-scenarios";
   private static final String CONNECTORS_DEFAULT_DOCS_PATH = "documents/structure/connectors";
+  private static final String PROCESSES_DEFAULT_DOCS_PATH = "documents/structure/processes";
 
   private DeclarativeEndpointInfoTransformer() {}
 
@@ -99,6 +102,35 @@ public class DeclarativeEndpointInfoTransformer {
         .requestJsonForm(createJsonSchema(schemaGen, connector.getRequestModelClass()))
         .responseModelClass(connector.getResponseModelClass().map(Class::getName).orElse(null))
         .responseJsonForm(createJsonSchema(schemaGen, responseModelClass))
+        .build();
+  }
+
+  /**
+   * Creates initialized {@link CompositeProcessInfo} from {@link CompositeProcessDefinition}
+   *
+   * @param compositeProcessDefinition from which info object is created
+   * @return CompositeProcessInfo
+   */
+  public static CompositeProcessInfo createCompositeProcessInfo(
+      CompositeProcessDefinition compositeProcessDefinition,
+      IntegrationScenarioDefinition provider,
+      List<IntegrationScenarioDefinition> consumers) {
+
+    return CompositeProcessInfo.builder()
+        .processId(compositeProcessDefinition.getId())
+        .providerId(provider.getId())
+        .consumerIds(consumers.stream().map(IntegrationScenarioDefinition::getId).toList())
+        .orchestrationDefinition(
+            compositeProcessDefinition.getOrchestrator() instanceof CompositeOrchestrator
+                ? ((CompositeOrchestrator) compositeProcessDefinition.getOrchestrator())
+                    .getOrchestrationDefinition()
+                    .orElse(null)
+                : null)
+        .processDescription(
+            readDocumentation(
+                PROCESSES_DEFAULT_DOCS_PATH,
+                compositeProcessDefinition.getPathToDocumentationResource(),
+                compositeProcessDefinition.getId()))
         .build();
   }
 

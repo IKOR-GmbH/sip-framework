@@ -4,6 +4,7 @@ import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpoi
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
+import de.ikor.sip.foundation.core.actuator.declarative.model.CompositeProcessInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.DeclarativeStructureInfo;
@@ -34,6 +35,8 @@ public class DeclarativeDefinitionEndpoint {
   private final List<IntegrationScenarioInfo> scenarios = new ArrayList<>();
   private final List<ConnectorInfo> connectors = new ArrayList<>();
 
+  private final List<CompositeProcessInfo> processes = new ArrayList<>();
+
   /**
    * Constructor for {@link DeclarativeDefinitionEndpoint}
    *
@@ -55,6 +58,7 @@ public class DeclarativeDefinitionEndpoint {
     initializeConnectorInfos();
     initializeIntegrationScenarioInfos();
     initializeConnectorGroupInfos();
+    initializeCompositeProcessInfos();
   }
 
   /**
@@ -68,6 +72,7 @@ public class DeclarativeDefinitionEndpoint {
     return DeclarativeStructureInfo.builder()
         .connectorgroups(getConnectorGroupInfo())
         .scenarios(getScenarioInfo())
+        .processes(getProcessInfo())
         .build();
   }
 
@@ -84,6 +89,11 @@ public class DeclarativeDefinitionEndpoint {
   @GetMapping("/connectors")
   public List<ConnectorInfo> getConnectorInfo() {
     return connectors;
+  }
+
+  @GetMapping("/processes")
+  public List<CompositeProcessInfo> getProcessInfo() {
+    return processes;
   }
 
   private void initializeConnectorInfos() {
@@ -115,5 +125,18 @@ public class DeclarativeDefinitionEndpoint {
                                         .equals(connectorGroup.getId()))
                             .toList(),
                         connectorGroup)));
+  }
+
+  private void initializeCompositeProcessInfos() {
+    declarationsRegistry
+        .getProcesses()
+        .forEach(
+            process ->
+                processes.add(
+                    createCompositeProcessInfo(
+                        process,
+                        declarationsRegistry.getCompositeProcessProviderDefinition(process.getId()),
+                        declarationsRegistry.getCompositeProcessConsumerDefinitions(
+                            process.getId()))));
   }
 }

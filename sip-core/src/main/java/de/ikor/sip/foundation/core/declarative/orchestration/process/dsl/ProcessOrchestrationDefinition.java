@@ -5,7 +5,6 @@ import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinitio
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -34,14 +33,13 @@ public class ProcessOrchestrationDefinition
    * <p>No order of execution is guaranteed if more than one class is provided - call this function
    * multiple times if this is necessary.
    *
-   * @param providerClasses The class(es) of the providers
+   * @param providerClass The class of the provider
    * @return DSL handle for specifying consumer calls
    */
-  @SafeVarargs
-  public final ForProcessProviders<ProcessOrchestrationDefinition> forProviders(
-      final Class<? extends IntegrationScenarioDefinition>... providerClasses) {
+  public final ForProcessProviders<ProcessOrchestrationDefinition> forProvider(
+      final Class<? extends IntegrationScenarioDefinition> providerClass) {
     final ForProcessProviders<ProcessOrchestrationDefinition> def =
-        new ForProcessProviders<>(self(), getCompositeProcess(), Set.of(providerClasses));
+        new ForProcessProviders<>(self(), getCompositeProcess(), providerClass);
     scenarioProviderDefinitions.add(def);
     return def;
   }

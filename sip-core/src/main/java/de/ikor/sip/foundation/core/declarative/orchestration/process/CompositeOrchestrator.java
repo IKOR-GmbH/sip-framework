@@ -6,9 +6,12 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.routebuildi
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +28,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class CompositeOrchestrator implements Orchestrator<CompositeOrchestrationInfo> {
 
-  private final Consumer<CompositeOrchestrationInfo> orchestrationInfoConsumer;
+  private final Function<CompositeOrchestrationInfo, ProcessOrchestrationDefinition>
+      orchestrationInfoConsumer;
   @Setter private Predicate<CompositeOrchestrationInfo> canOrchestrate = Objects::nonNull;
 
+  @Getter private Optional<ProcessOrchestrationDefinition> orchestrationDefinition;
   /**
    * Creates a new orchestrator specified via orchestration-DSL
    *
@@ -44,6 +49,7 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
           dslDefinition.accept(orchestrationDef);
           new RouteGeneratorForProcessOrchestrationDefinition(orchestrationInfo, orchestrationDef)
               .run();
+          return orchestrationDef;
         });
   }
 
@@ -57,7 +63,8 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
    * @return Orchestrator
    */
   public static CompositeOrchestrator forOrchestrationConsumer(
-      final Consumer<CompositeOrchestrationInfo> orchestrationConsumer) {
+      final Function<CompositeOrchestrationInfo, ProcessOrchestrationDefinition>
+          orchestrationConsumer) {
     return new CompositeOrchestrator(orchestrationConsumer);
   }
 
@@ -68,6 +75,7 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
 
   @Override
   public void doOrchestrate(final CompositeOrchestrationInfo info) {
-    orchestrationInfoConsumer.accept(info);
+    ProcessOrchestrationDefinition definition = orchestrationInfoConsumer.apply(info);
+    orchestrationDefinition = Optional.of(definition);
   }
 }

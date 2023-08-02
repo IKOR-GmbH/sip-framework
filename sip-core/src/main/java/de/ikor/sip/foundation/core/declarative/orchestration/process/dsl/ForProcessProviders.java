@@ -2,11 +2,10 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import lombok.AccessLevel;
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 /** DSL class specifying a process provider specified by its class */
 public final class ForProcessProviders<R> extends ProcessDslBase<ForProcessProviders<R>, R> {
