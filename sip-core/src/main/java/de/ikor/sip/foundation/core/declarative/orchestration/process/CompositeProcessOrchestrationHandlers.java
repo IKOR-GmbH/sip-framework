@@ -25,6 +25,7 @@ import org.apache.camel.Handler;
  */
 @UtilityClass
 @Slf4j
+@SuppressWarnings("rawtypes")
 public class CompositeProcessOrchestrationHandlers {
 
   private final String CALLED_CONSUMER_LIST_PROPERTY =
@@ -35,24 +36,24 @@ public class CompositeProcessOrchestrationHandlers {
     return new ContextInitializer(scenario);
   }
 
-  public static <M> ConsumerRequestHandler<M> handleRequestToConsumer(
+  public static ConsumerRequestHandler handleRequestToConsumer(
       final IntegrationScenarioDefinition consumerDefinition,
-      final Optional<CompositeProcessStepRequestExtractor<M>> requestPreparation) {
-    return new ConsumerRequestHandler<>(consumerDefinition, requestPreparation);
+      final Optional<CompositeProcessStepRequestExtractor> requestPreparation) {
+    return new ConsumerRequestHandler(consumerDefinition, requestPreparation);
   }
 
-  public static <M> ConsumerResponseHandler<M> handleResponseFromConsumer(
+  public static ConsumerResponseHandler handleResponseFromConsumer(
       final IntegrationScenarioDefinition consumer,
-      final Optional<StepResultCloner<M>> stepResultCloner,
-      final Optional<CompositeProcessStepResponseConsumer<M>> responseConsumer) {
-    return new ConsumerResponseHandler<>(consumer, stepResultCloner, responseConsumer);
+      final Optional<StepResultCloner> stepResultCloner,
+      final Optional<CompositeProcessStepResponseConsumer> responseConsumer) {
+    return new ConsumerResponseHandler(consumer, stepResultCloner, responseConsumer);
   }
 
   public static ThrowErrorOnUnhandledRequestHandler handleErrorThrownIfNoConsumerWasCalled() {
     return new ThrowErrorOnUnhandledRequestHandler();
   }
 
-  private static <M> CompositeProcessOrchestrationContext<M> retrieveOrchestrationContext(
+  private static CompositeProcessOrchestrationContext retrieveOrchestrationContext(
       final Exchange exchange) {
     final var context =
         Objects.requireNonNull(
@@ -91,43 +92,41 @@ public class CompositeProcessOrchestrationHandlers {
     }
   }
 
-  static class ConsumerRequestHandler<M> {
+  static class ConsumerRequestHandler {
     private final IntegrationScenarioDefinition consumerDefinition;
-    private final CompositeProcessStepRequestExtractor<M> requestPreparation;
+    private final CompositeProcessStepRequestExtractor requestPreparation;
 
     private ConsumerRequestHandler(
         final IntegrationScenarioDefinition consumerDefinition,
-        final Optional<CompositeProcessStepRequestExtractor<M>> requestPreparation) {
+        final Optional<CompositeProcessStepRequestExtractor> requestPreparation) {
       this.consumerDefinition = consumerDefinition;
       this.requestPreparation =
           requestPreparation.orElseGet(ConsumerRequestHandler::defaultRequestExtractor);
     }
 
-    private static <M> CompositeProcessStepRequestExtractor<M> defaultRequestExtractor() {
+    private static CompositeProcessStepRequestExtractor defaultRequestExtractor() {
       return CompositeProcessOrchestrationContext::getOriginalRequest;
     }
 
     @Handler
     public <T> Object extractRequest(final T body, final Exchange exchange) {
       retrieveCalledConsumerList(exchange).add(consumerDefinition);
-      final CompositeProcessOrchestrationContext<M> context =
-          retrieveOrchestrationContext(exchange);
+      final CompositeProcessOrchestrationContext context = retrieveOrchestrationContext(exchange);
       var request = requestPreparation.extractStepRequest(retrieveOrchestrationContext(exchange));
-      context.addRequestForStep(consumerDefinition, (M) request, Optional.empty());
+      context.addRequestForStep(consumerDefinition, request, Optional.empty());
       return request;
     }
   }
 
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-  static class ConsumerResponseHandler<M> {
+  static class ConsumerResponseHandler {
     private final IntegrationScenarioDefinition consumer;
-    private final Optional<StepResultCloner<M>> stepResultCloner;
-    private final Optional<CompositeProcessStepResponseConsumer<M>> responseConsumer;
+    private final Optional<StepResultCloner> stepResultCloner;
+    private final Optional<CompositeProcessStepResponseConsumer> responseConsumer;
 
     @Handler
-    public M handleResponse(final M body, final Exchange exchange) {
-      final CompositeProcessOrchestrationContext<M> context =
-          retrieveOrchestrationContext(exchange);
+    public Object handleResponse(final Object body, final Exchange exchange) {
+      final CompositeProcessOrchestrationContext context = retrieveOrchestrationContext(exchange);
       context.addResponseForStep(consumer, body, stepResultCloner);
       responseConsumer.ifPresent(c -> c.consumeResponse(body, context));
       return context.getAggregatedResponse().orElse(body);

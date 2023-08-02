@@ -7,23 +7,25 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import lombok.experimental.UtilityClass;
 
 /**
  * Class that exposes the insides of orchestration definition. Those are package private so that
  * they can't be seen on the user side (while the orchestration is written). This class has to stay
  * in the same package as the orchestration definition.
  */
+@UtilityClass
+@SuppressWarnings("rawtypes")
 public class RouteGeneratorHelper {
 
-  private RouteGeneratorHelper() {}
-
-  public static List<ForProcessProviders> getScenarioProviderDefinitions(
-      ProcessOrchestrationDefinition processOrchestrationDefinition) {
+  public static List<ForProcessProviders<ProcessOrchestrationDefinition>>
+      getScenarioProviderDefinitions(
+          ProcessOrchestrationDefinition processOrchestrationDefinition) {
     return processOrchestrationDefinition.getScenarioProviderDefinitions();
   }
 
   public static Set<Class<? extends IntegrationScenarioDefinition>> getProviderClasses(
-      ForProcessProviders element) {
+      ForProcessProviders<ProcessOrchestrationDefinition> element) {
     return element.getProviderClasses();
   }
 
@@ -36,17 +38,17 @@ public class RouteGeneratorHelper {
     return element.getConsumerClass();
   }
 
-  public static <M> Optional<CompositeProcessStepRequestExtractor<M>> getRequestPreparation(
+  public static Optional<CompositeProcessStepRequestExtractor> getRequestPreparation(
       CallProcessConsumer element) {
     return element.getRequestPreparation();
   }
 
-  public static <M> Optional<CompositeProcessStepResponseConsumer<M>> getResponseConsumer(
+  public static Optional<CompositeProcessStepResponseConsumer> getResponseConsumer(
       CallProcessConsumer element) {
     return element.getResponseConsumer();
   }
 
-  public static <M> Optional<StepResultCloner<M>> getStepResultCloner(CallProcessConsumer element) {
+  public static Optional<StepResultCloner> getStepResultCloner(CallProcessConsumer element) {
     return element.getStepResultCloner();
   }
 }

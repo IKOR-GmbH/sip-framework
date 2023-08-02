@@ -1,12 +1,8 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
-/**
- * Interface to extract the request object for a process consumer call
- *
- * @param <M> Response type of the integration call
- */
+/** Interface to extract the request object for a process consumer call */
 @FunctionalInterface
-public interface CompositeProcessStepRequestExtractor<M> {
+public interface CompositeProcessStepRequestExtractor {
 
   /**
    * Returns the request object to be used with the consumer call
@@ -14,5 +10,5 @@ public interface CompositeProcessStepRequestExtractor<M> {
    * @param context The current orchestration context
    * @return Request object
    */
-  Object extractStepRequest(final CompositeProcessOrchestrationContext<M> context);
+  Object extractStepRequest(final CompositeProcessOrchestrationContext<Object> context);
 }

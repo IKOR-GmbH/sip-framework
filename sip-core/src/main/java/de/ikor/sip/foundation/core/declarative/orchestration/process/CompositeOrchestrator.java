@@ -35,7 +35,7 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
    * @return Orchestrator as specified in the DSL
    */
   @SuppressWarnings("java:S1172")
-  public static <T> CompositeOrchestrator forOrchestrationDsl(
+  public static CompositeOrchestrator forOrchestrationDsl(
       final Consumer<ProcessOrchestrationDefinition> dslDefinition) {
     return forOrchestrationConsumer(
         orchestrationInfo -> {

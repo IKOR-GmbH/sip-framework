@@ -24,7 +24,7 @@ public final class CallProcessConsumer<R> extends ProcessDslBase<CallProcessCons
   private Optional<CompositeProcessStepResponseConsumer> responseConsumer = Optional.empty();
 
   @Getter(AccessLevel.PACKAGE)
-  private Optional<StepResultCloner> stepResultCloner = Optional.empty();
+  private Optional<StepResultCloner<Object>> stepResultCloner = Optional.empty();
 
   CallProcessConsumer(
       final R dslReturnDefinition,

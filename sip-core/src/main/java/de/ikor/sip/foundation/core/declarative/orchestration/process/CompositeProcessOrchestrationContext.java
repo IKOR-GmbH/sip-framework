@@ -151,11 +151,14 @@ public class CompositeProcessOrchestrationContext<M> {
       final M response,
       final Optional<StepResultCloner<M>> cloner) {
     final M maybeClonedResponse = cloner.map(c -> c.apply(response)).orElse(response);
-    // TODO: Check if this is the same step that we want to add the response to
-    OrchestrationStepResult<M> lastStep =
-        orchestrationStepResults.remove(orchestrationStepResults.size() - 1);
-    orchestrationStepResults.add(
-        new OrchestrationStepResult<>(consumer, lastStep.request, maybeClonedResponse));
+    getLastResponseFromConsumer(consumer.getClass())
+        .ifPresent(
+            step -> {
+              OrchestrationStepResult<M> lastStep =
+                  orchestrationStepResults.remove(orchestrationStepResults.indexOf(step));
+              orchestrationStepResults.add(
+                  new OrchestrationStepResult<>(consumer, lastStep.request, maybeClonedResponse));
+            });
     return maybeClonedResponse;
   }
 
@@ -198,7 +201,7 @@ public class CompositeProcessOrchestrationContext<M> {
    * @return Optional last response of this consumer
    */
   public Optional<OrchestrationStepResult<M>> getLastResponseFromConsumer(
-      final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass) {
+      final Class<? extends IntegrationScenarioDefinition> consumerClass) {
     return orchestrationStepResults.stream()
         .filter(step -> consumerClass.isInstance(step.consumer()))
         .reduce((first, second) -> second);
