@@ -15,7 +15,6 @@ class MessagePropertiesTest {
     subject.setBody("file:body.json");
     FileNotFoundException fileNotFoundException =
         assertThrows(FileNotFoundException.class, () -> subject.getBody());
-    assertThrows(FileNotFoundException.class, () -> subject.getBody());
     assertThat(fileNotFoundException.getMessage()).contains("body.json");
   }
 }
