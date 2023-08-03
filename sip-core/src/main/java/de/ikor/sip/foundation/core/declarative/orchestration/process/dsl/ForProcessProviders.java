@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
@@ -8,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /** DSL class specifying a process provider specified by its class */
+@JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public final class ForProcessProviders<R> extends ProcessDslBase<ForProcessProviders<R>, R> {
 
   @Getter(AccessLevel.PACKAGE)

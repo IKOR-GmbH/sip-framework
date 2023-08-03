@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.DslDefinitionBase;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import lombok.AccessLevel;
@@ -10,6 +11,7 @@ public abstract class ProcessDslBase<S extends ProcessDslBase<S, R>, R>
     extends DslDefinitionBase<S, R> {
 
   @Getter(AccessLevel.PACKAGE)
+  @JsonIgnore
   private final CompositeProcessDefinition compositeProcess;
 
   ProcessDslBase(final R dslReturnDefinition, final CompositeProcessDefinition compositeProcess) {

@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.EndOfDsl;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -9,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /** DSL class for specifying orchestration of complex processes */
+@JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class ProcessOrchestrationDefinition
     extends ProcessDslBase<ProcessOrchestrationDefinition, EndOfDsl> {
 

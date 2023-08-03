@@ -123,8 +123,7 @@ public class DeclarativeEndpointInfoTransformer {
         .orchestrationDefinition(
             compositeProcessDefinition.getOrchestrator() instanceof CompositeOrchestrator
                 ? ((CompositeOrchestrator) compositeProcessDefinition.getOrchestrator())
-                    .getOrchestrationDefinition()
-                    .orElse(null)
+                    .populateOrchestrationDefinition(compositeProcessDefinition)
                 : null)
         .processDescription(
             readDocumentation(
