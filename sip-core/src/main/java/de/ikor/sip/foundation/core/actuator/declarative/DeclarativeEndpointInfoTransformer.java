@@ -3,18 +3,28 @@ package de.ikor.sip.foundation.core.actuator.declarative;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
-import de.ikor.sip.foundation.core.actuator.declarative.model.*;
+import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
-import de.ikor.sip.foundation.core.declarative.connector.*;
+import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrator;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * Util transformer class with methods for transforming framework declarative objects to their
@@ -28,7 +38,10 @@ public class DeclarativeEndpointInfoTransformer {
   private static final String INTEGRATION_SCENARIO_DEFAULT_DOCS_PATH =
       "documents/structure/integration-scenarios";
   private static final String CONNECTORS_DEFAULT_DOCS_PATH = "documents/structure/connectors";
+
   private static final String PROCESSES_DEFAULT_DOCS_PATH = "documents/structure/processes";
+
+  private static final String MARKDOWN_EXTENSION = ".md";
 
   private DeclarativeEndpointInfoTransformer() {}
 
@@ -134,7 +147,35 @@ public class DeclarativeEndpointInfoTransformer {
   }
 
   private static String readDocumentation(String defaultDocsPath, String path, String id) {
-    final var resourcePath = path.isEmpty() ? String.format("%s/%s.md", defaultDocsPath, id) : path;
+    if (path.isEmpty()) {
+      return findFileByIdAndGetContent(defaultDocsPath, id);
+    }
+    return getSpecifiedFileContent(path);
+  }
+
+  private static String findFileByIdAndGetContent(String defaultDocsPath, String id) {
+    try {
+      List<Path> resources = getResourcesFromClasspath(defaultDocsPath);
+
+      Optional<Path> file =
+          resources.stream()
+              .filter(
+                  resource ->
+                      resource.getFileName().toString().equalsIgnoreCase(id + MARKDOWN_EXTENSION))
+              .findFirst();
+
+      if (file.isPresent()) {
+        Path filePath = file.get();
+        return Files.readString(filePath);
+      }
+      return null;
+    } catch (IOException e) {
+      throw SIPFrameworkException.init(
+          "Failed to read documentation resource for element id '%s'", id);
+    }
+  }
+
+  private static String getSpecifiedFileContent(String resourcePath) {
     final var resource = new ClassPathResource(resourcePath);
 
     if (!resource.isReadable()) {
@@ -144,7 +185,8 @@ public class DeclarativeEndpointInfoTransformer {
     try (var input = resource.getInputStream()) {
       return new String(input.readAllBytes());
     } catch (IOException e) {
-      throw new SIPFrameworkException("Failed to read documentation resource", e);
+      throw SIPFrameworkException.init(
+          "Failed to read documentation resource from path %s", resourcePath);
     }
   }
 
@@ -158,5 +200,35 @@ public class DeclarativeEndpointInfoTransformer {
       log.debug("sip.core.runtimetest.json.schema_{}", classModel);
     }
     return null;
+  }
+
+  private static List<Path> getResourcesFromClasspath(String defaultPath) throws IOException {
+    List<Path> resources = new ArrayList<>();
+
+    ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+    PathMatchingResourcePatternResolver resourcePatternResolver =
+        new PathMatchingResourcePatternResolver(classLoader);
+    for (Resource resource : resourcePatternResolver.getResources(defaultPath)) {
+      if (resource.exists()) {
+        Path path = Paths.get(resource.getURI());
+        resources.addAll(getAllFiles(path));
+      }
+    }
+
+    return resources;
+  }
+
+  private static List<Path> getAllFiles(Path directory) throws IOException {
+    List<Path> files = new ArrayList<>();
+    try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
+      for (Path path : stream) {
+        if (Files.isDirectory(path)) {
+          files.addAll(getAllFiles(path));
+        } else {
+          files.add(path);
+        }
+      }
+    }
+    return files;
   }
 }
