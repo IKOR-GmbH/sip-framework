@@ -259,7 +259,8 @@ class DeclarationsRegistryTest {
                     new DeclarationsRegistry(
                         connectorGroups, scenarios, connectors, modelMappers, applicationContext))
         .isInstanceOf(SIPFrameworkInitializationException.class)
-        .hasMessage("Request mapping in connector 'mockConnector' is defined, but overridden");
+        .hasMessage(
+            "Request mapping in connector 'mockConnector' is defined in annotation, but overridden by request route transformator");
   }
 
   @Test
@@ -336,6 +337,7 @@ class DeclarationsRegistryTest {
                     new DeclarationsRegistry(
                         connectorGroups, scenarios, connectors, modelMappers, applicationContext))
         .isInstanceOf(SIPFrameworkInitializationException.class)
-        .hasMessage("Response mapping in connector 'mockConnector' is defined, but overridden");
+        .hasMessage(
+            "Response mapping in connector 'mockConnector' is defined in annotation, but overridden by response route transformator");
   }
 }

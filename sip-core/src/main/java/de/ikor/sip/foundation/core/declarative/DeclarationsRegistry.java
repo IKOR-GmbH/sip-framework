@@ -14,6 +14,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.connector.Connector
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -60,11 +61,12 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
     createMissingConnectorGroups();
     checkForDuplicateConnectorGroups();
-    checkForMissingConnectorGroupParent();
     checkForUnusedMappers();
     checkForDuplicateScenarios();
-    checkForMissingScenarioParent();
-    checkForMissingConnectorParent();
+    checkAnnotatedClassForMissingParent(IntegrationScenario.class, IntegrationScenarioBase.class);
+    checkAnnotatedClassForMissingParent(ConnectorGroup.class, ConnectorGroupBase.class);
+    checkAnnotatedClassForMissingParent(InboundConnector.class, InboundConnectorBase.class);
+    checkAnnotatedClassForMissingParent(OutboundConnector.class, OutboundConnectorDefinition.class);
     checkForUnusedScenarios();
     checkForDuplicateConnectors();
   }
@@ -78,7 +80,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                     mapper -> {
                       if (isRequestMappingOverridden(connectorDefinition, mapper)) {
                         throw SIPFrameworkInitializationException.init(
-                            "Request mapping in connector '%s' is defined, but overridden",
+                            "Request mapping in connector '%s' is defined in annotation, but overridden by request route transformator",
                             connectorDefinition.getId());
                       }
                     });
@@ -87,7 +89,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                     mapper -> {
                       if (isResponseMappingOverridden(connectorDefinition, mapper)) {
                         throw SIPFrameworkInitializationException.init(
-                            "Response mapping in connector '%s' is defined, but overridden",
+                            "Response mapping in connector '%s' is defined in annotation, but overridden by response route transformator",
                             connectorDefinition.getId());
                       }
                     });
@@ -111,56 +113,19 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         && (!mapper.equals(connectorOrchestrator.getResponseRouteTransformer()));
   }
 
-  private void checkForMissingScenarioParent() {
+  private void checkAnnotatedClassForMissingParent(
+      Class<? extends Annotation> annotatedClass, Class<?> parentClass) {
     applicationContext
-        .getBeansWithAnnotation(IntegrationScenario.class)
+        .getBeansWithAnnotation(annotatedClass)
         .values()
         .forEach(
             o -> {
-              if (!(o instanceof IntegrationScenarioBase)) {
+              if (!parentClass.isInstance(o)) {
                 throw SIPFrameworkInitializationException.init(
-                    "Annotated IntegrationScenario %s is missing IntegrationScenarioBase parent class.",
-                    o.getClass().getName());
-              }
-            });
-  }
-
-  private void checkForMissingConnectorGroupParent() {
-    applicationContext
-        .getBeansWithAnnotation(ConnectorGroup.class)
-        .values()
-        .forEach(
-            o -> {
-              if (!(o instanceof ConnectorGroupBase)) {
-                throw SIPFrameworkInitializationException.init(
-                    "Annotated ConnectorGroup %s is missing ConnectorGroupBase parent class.",
-                    o.getClass().getName());
-              }
-            });
-  }
-
-  private void checkForMissingConnectorParent() {
-    applicationContext
-        .getBeansWithAnnotation(InboundConnector.class)
-        .values()
-        .forEach(
-            o -> {
-              if (!(o instanceof InboundConnectorBase)) {
-                throw SIPFrameworkInitializationException.init(
-                    "Annotated InboundConnector %s is missing InboundConnectorBase parent class.",
-                    o.getClass().getName());
-              }
-            });
-
-    applicationContext
-        .getBeansWithAnnotation(OutboundConnector.class)
-        .values()
-        .forEach(
-            o -> {
-              if (!(o instanceof OutboundConnectorDefinition)) {
-                throw SIPFrameworkInitializationException.init(
-                    "Annotated OutboundConnector %s is missing OutboundConnectorDefinition parent class.",
-                    o.getClass().getName());
+                    "Annotated %s %s is missing %s parent class.",
+                    annotatedClass.getSimpleName(),
+                    o.getClass().getName(),
+                    parentClass.getSimpleName());
               }
             });
   }
