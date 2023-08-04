@@ -26,19 +26,11 @@ import org.apache.camel.model.RouteDefinition;
 @Accessors(chain = true)
 public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestrationInfo> {
   private final Supplier<ConnectorDefinition> relatedConnector;
-  private Consumer<RouteDefinition> requestRouteTransformer = this::defaultRequestTransformer;
+  private Consumer<RouteDefinition> requestRouteTransformer = null;
   private Consumer<RouteDefinition> responseRouteTransformer = this::defaultResponseTransformer;
 
   public static ConnectorOrchestrator forConnector(final ConnectorDefinition relatedConnector) {
     return new ConnectorOrchestrator(() -> relatedConnector);
-  }
-
-  private void defaultRequestTransformer(final RouteDefinition definition) {
-    log.warn(
-        "No request transformation definition has been assigned to connector '{}' in connector-class '{}'",
-        relatedConnector.get().getId(),
-        relatedConnector.get().getClass().getName());
-    definition.process(exchange -> {});
   }
 
   private void defaultResponseTransformer(final RouteDefinition definition) {
@@ -56,7 +48,18 @@ public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestratio
 
   @Override
   public void doOrchestrate(final ConnectorOrchestrationInfo info) {
-    requestRouteTransformer.accept(info.getRequestRouteDefinition());
+    buildRequestRouteTransformer(info);
     info.getResponseRouteDefinition().ifPresent(responseRouteTransformer);
+  }
+
+  private void buildRequestRouteTransformer(ConnectorOrchestrationInfo info) {
+    if (requestRouteTransformer == null) {
+      log.warn(
+          "No request transformation definition has been assigned to connector '{}' in connector-class '{}'",
+          relatedConnector.get().getId(),
+          relatedConnector.get().getClass().getName());
+    } else {
+      requestRouteTransformer.accept(info.getRequestRouteDefinition());
+    }
   }
 }
