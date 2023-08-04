@@ -1,12 +1,14 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepConditional;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepRequestExtractor;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import lombok.experimental.UtilityClass;
+
 import java.util.List;
 import java.util.Optional;
-import lombok.experimental.UtilityClass;
 
 /**
  * Class that exposes the insides of orchestration definition. Those are package private so that
@@ -25,6 +27,7 @@ public class RouteGeneratorHelper {
 
   public static Class<? extends IntegrationScenarioDefinition> getProviderClass(
       ForProcessProviders<ProcessOrchestrationDefinition> element) {
+
     return element.getProviderClass();
   }
 
@@ -45,6 +48,16 @@ public class RouteGeneratorHelper {
   public static Optional<CompositeProcessStepResponseConsumer> getResponseConsumer(
       CallProcessConsumer element) {
     return element.getResponseConsumer();
+  }
+
+  public static Optional<CompositeProcessStepConditional> getConditional(
+          CallProcessConsumer element) {
+    return element.getConditional();
+  }
+
+  public static Optional<CompositeProcessStepConditional> getIfConditional(
+          CallProcessConsumer element) {
+    return element.getConditional();
   }
 
   public static Optional<StepResultCloner> getStepResultCloner(CallProcessConsumer element) {

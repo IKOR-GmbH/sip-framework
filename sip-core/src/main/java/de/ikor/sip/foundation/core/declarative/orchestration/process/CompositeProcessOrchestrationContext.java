@@ -4,17 +4,13 @@ import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResu
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import lombok.*;
+import org.apache.camel.Exchange;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.Synchronized;
-import org.apache.camel.Exchange;
 
 /**
  * Context used during the orchestration of a composite process
@@ -170,6 +166,23 @@ public class CompositeProcessOrchestrationContext<M> {
     final M maybeClonedRequest = cloner.map(c -> c.apply(request)).orElse(request);
     orchestrationStepResults.add(new OrchestrationStepResult<>(consumer, maybeClonedRequest, null));
     return maybeClonedRequest;
+  }
+
+  @Synchronized
+  M addCondition(
+          final IntegrationScenarioDefinition consumer,
+          final M response,
+          final Optional<StepResultCloner<M>> cloner) {
+    final M maybeClonedResponse = cloner.map(c -> c.apply(response)).orElse(response);
+    getResultOfLastStepFromConsumer(consumer.getClass())
+            .ifPresent(
+                    step -> {
+                      OrchestrationStepResult<M> lastStep =
+                              orchestrationStepResults.remove(orchestrationStepResults.indexOf(step));
+                      orchestrationStepResults.add(
+                              new OrchestrationStepResult<>(consumer, lastStep.request, maybeClonedResponse));
+                    });
+    return maybeClonedResponse;
   }
 
   /**

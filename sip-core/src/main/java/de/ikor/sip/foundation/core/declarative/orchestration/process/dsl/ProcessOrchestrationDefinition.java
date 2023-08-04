@@ -3,17 +3,18 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.EndOfDsl;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** DSL class for specifying orchestration of complex processes */
 public class ProcessOrchestrationDefinition
     extends ProcessDslBase<ProcessOrchestrationDefinition, EndOfDsl> {
 
   @Getter(AccessLevel.PACKAGE)
-  private final List<ForProcessProviders<ProcessOrchestrationDefinition>>
+  private final List<ForProcessStartCondition<ProcessOrchestrationDefinition>>
       scenarioProviderDefinitions = new ArrayList<>();
 
   /**
@@ -36,11 +37,13 @@ public class ProcessOrchestrationDefinition
    * @param providerClass The class of the provider
    * @return DSL handle for specifying consumer calls
    */
-  public final ForProcessProviders<ProcessOrchestrationDefinition> forProvider(
+  public final ForProcessStartCondition<ProcessOrchestrationDefinition> forProvider(
       final Class<? extends IntegrationScenarioDefinition> providerClass) {
-    final ForProcessProviders<ProcessOrchestrationDefinition> def =
-        new ForProcessProviders<>(self(), getCompositeProcess(), providerClass);
+    final ForProcessStartCondition<ProcessOrchestrationDefinition> def =
+        new ForProcessStartCondition(self(), getCompositeProcess(), providerClass);
     scenarioProviderDefinitions.add(def);
     return def;
   }
+
+
 }

@@ -5,11 +5,6 @@ import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinitio
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +12,8 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
+
+import java.util.*;
 
 /**
  * Various handlers use in scenario orchestration. Hanlders will be a part of the generated routes.
@@ -40,6 +37,14 @@ public class CompositeProcessOrchestrationHandlers {
       final IntegrationScenarioDefinition consumerDefinition,
       final Optional<CompositeProcessStepRequestExtractor> requestPreparation) {
     return new ConsumerRequestHandler(consumerDefinition, requestPreparation);
+  }
+
+  public static Boolean handleConditional(
+          final Exchange exchange,
+          final IntegrationScenarioDefinition consumerDefinition,
+          final Optional<StepResultCloner> stepResultCloner,
+          final Optional<CompositeProcessStepConditional> conditional) {
+    return new ConditionalHandler(consumerDefinition, stepResultCloner, conditional).executeCondition(exchange);
   }
 
   public static ConsumerResponseHandler handleResponseFromConsumer(
@@ -115,6 +120,22 @@ public class CompositeProcessOrchestrationHandlers {
       var request = requestPreparation.extractStepRequest(retrieveOrchestrationContext(exchange));
       context.addRequestForStep(consumerDefinition, request, Optional.empty());
       return request;
+    }
+  }
+
+  @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+  static class ConditionalHandler {
+    private final IntegrationScenarioDefinition consumerDefinition;
+    private final Optional<StepResultCloner> stepResultCloner;
+    private final Optional<CompositeProcessStepConditional> conditional;
+
+
+    @Handler
+    public boolean executeCondition(final Exchange exchange) {
+      final CompositeProcessOrchestrationContext context = retrieveOrchestrationContext(exchange);
+      boolean result = conditional.get().determineCondition(context);
+      context.addCondition(consumerDefinition, context.getLatestResponse(), Optional.empty());
+      return result;
     }
   }
 

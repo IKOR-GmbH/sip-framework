@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @SuppressWarnings("rawtypes")
-final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBase {
+final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGeneratorProcessBase {
 
   private final CallProcessConsumer<?> definitionElement;
 
@@ -35,7 +35,7 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
   private final Set<IntegrationScenarioDefinition> handledConsumers =
       resolveAndVerifyHandledConsumers();
 
-  RouteGeneratorForCallProcessConsumer(
+  RouteGeneratorForCallConditionalProcessConsumer(
       final CompositeOrchestrationInfo orchestrationInfo,
       final CallProcessConsumer definitionElement,
       final Set<IntegrationScenarioDefinition> overallUnhandledConsumers) {
