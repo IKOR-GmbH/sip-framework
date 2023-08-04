@@ -5,15 +5,17 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepRequestExtractor;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepResponseConsumer;
-import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioStepRequestExtractor;
-import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-/** DSL class for calling a process consumer specified by its class */
+/**
+ * DSL class for calling a process consumer specified by its class
+ *
+ * @param <R> DSL handle for the return DSL Verb/type.
+ */
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public final class CallProcessConsumer<R> extends ProcessDslBase<CallProcessConsumer<R>, R> {
 
@@ -38,9 +40,8 @@ public final class CallProcessConsumer<R> extends ProcessDslBase<CallProcessCons
   }
 
   /**
-   * Attaches a {@link ScenarioStepRequestExtractor} that allows to manipulate the request for this
-   * call. The request is only modified for this consumer and does not affect any subsequent
-   * consumer calls, which will receive the original request by default.
+   * Attaches a {@link CompositeProcessStepRequestExtractor} that allows to manipulate the request
+   * for this call.
    *
    * @param requestPreparation the extractor for the request
    * @return DSL handle
@@ -52,8 +53,8 @@ public final class CallProcessConsumer<R> extends ProcessDslBase<CallProcessCons
   }
 
   /**
-   * Attaches a {@link ScenarioStepResponseConsumer} that allows to manipulate the response of this
-   * consumer call.
+   * Attaches a {@link CompositeProcessStepResponseConsumer} that allows to manipulate the response
+   * of this consumer call.
    *
    * <p>This is a terminal operation that will finish the definition of this consumer call.
    *

@@ -8,7 +8,7 @@ public interface CompositeProcessStepRequestExtractor {
    * Returns the request object to be used with the consumer call
    *
    * @param context The current orchestration context
-   * @return Request object
+   * @return Request sent to the process consumer
    */
   Object extractStepRequest(final CompositeProcessOrchestrationContext<Object> context);
 }

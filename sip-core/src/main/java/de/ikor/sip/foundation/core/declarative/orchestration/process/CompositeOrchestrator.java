@@ -70,6 +70,12 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
     return new CompositeOrchestrator(orchestrationInfoConsumer);
   }
 
+  /**
+   * Provides a way to get the definition that is created inside the DSL.
+   *
+   * @param compositeProcessDefinition definition of a composite process
+   * @return orchestration definition
+   */
   public ProcessOrchestrationDefinition populateOrchestrationDefinition(
       CompositeProcessDefinition compositeProcessDefinition) {
     if (dslDefinition.isPresent()) {

@@ -10,7 +10,7 @@ import org.apache.camel.model.RoutesDefinition;
 
 /**
  * Class that holds information to be used by orchestrators of a {@link
- * de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess} This is a structural
+ * de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess} This is structural
  * information that gives orchestrator an ability to generate orchestration routes
  *
  * @see CompositeOrchestrator

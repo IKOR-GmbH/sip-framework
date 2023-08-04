@@ -30,15 +30,15 @@ public class CompositeProcessBase implements CompositeProcessDefinition {
     return processAnnotation.processId();
   }
 
-  public String getPathToDocumentationResource() {
-    return processAnnotation.pathToDocumentationResource();
-  }
-
   public List<Class<? extends IntegrationScenarioDefinition>> getConsumerDefinitions() {
     return List.of(processAnnotation.consumers());
   }
 
   public Class<? extends IntegrationScenarioDefinition> getProviderDefinition() {
     return processAnnotation.provider();
+  }
+
+  public String getPathToDocumentationResource() {
+    return processAnnotation.pathToDocumentationResource();
   }
 }

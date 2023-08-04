@@ -20,7 +20,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 
-/** Actuator endpoints for exposing Connectors, Connector Groups and Integration Scenarios. */
+/**
+ * Actuator endpoints for exposing Connectors, Connector Groups, Integration Scenarios and Composite
+ * Processes.
+ */
 @Component
 @RestControllerEndpoint(id = "adapterdefinition")
 @DependsOn("adapterBuilder")
@@ -34,7 +37,6 @@ public class DeclarativeDefinitionEndpoint {
   private final List<ConnectorGroupInfo> connectorGroups = new ArrayList<>();
   private final List<IntegrationScenarioInfo> scenarios = new ArrayList<>();
   private final List<ConnectorInfo> connectors = new ArrayList<>();
-
   private final List<CompositeProcessInfo> processes = new ArrayList<>();
 
   /**
@@ -62,8 +64,8 @@ public class DeclarativeDefinitionEndpoint {
   }
 
   /**
-   * Base endpoint which exposes adapter structure including connectors, connector groups and
-   * scenarios.
+   * Base endpoint which exposes adapter structure including connectors, connector groups, scenarios
+   * and processes
    *
    * @return DeclarativeStructureInfo
    */

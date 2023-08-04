@@ -9,7 +9,11 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-/** DSL class specifying a process provider specified by its class */
+/**
+ * DSL class specifying a process provider specified by its class
+ *
+ * @param <R> DSL handle for the return DSL Verb/type.
+ */
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public final class ForProcessProviders<R> extends ProcessDslBase<ForProcessProviders<R>, R> {
 
@@ -27,6 +31,12 @@ public final class ForProcessProviders<R> extends ProcessDslBase<ForProcessProvi
     this.providerClass = providerClass;
   }
 
+  /**
+   * Attach consumer calls to this process by their class. Consumer calls can be chained.
+   *
+   * @param consumerClass class of the consumer
+   * @return DSL handle
+   */
   public CallProcessConsumer<ForProcessProviders<R>> callConsumer(
       Class<? extends IntegrationScenarioDefinition> consumerClass) {
     final CallProcessConsumer<ForProcessProviders<R>> def =

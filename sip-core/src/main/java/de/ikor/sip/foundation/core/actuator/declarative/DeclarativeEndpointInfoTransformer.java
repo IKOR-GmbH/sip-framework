@@ -72,6 +72,7 @@ public class DeclarativeEndpointInfoTransformer {
    * Creates initialized {@link IntegrationScenarioInfo} from {@link IntegrationScenarioDefinition}
    *
    * @param scenario from which info object is created
+   * @param schemaGen JSON generator which transforms class to json schema
    * @return IntegrationScenarioInfo
    */
   public static IntegrationScenarioInfo createIntegrationScenarioInfo(
@@ -95,6 +96,8 @@ public class DeclarativeEndpointInfoTransformer {
    * Creates initialized {@link ConnectorInfo} from {@link ConnectorDefinition}
    *
    * @param connector from which info object is created
+   * @param routesRegistry internal routes registry that contains Camel route details
+   * @param schemaGen JSON generator which transforms class to json schema
    * @return ConnectorInfo
    */
   public static ConnectorInfo createAndAddConnectorInfo(
@@ -123,6 +126,8 @@ public class DeclarativeEndpointInfoTransformer {
    * Creates initialized {@link CompositeProcessInfo} from {@link CompositeProcessDefinition}
    *
    * @param compositeProcessDefinition from which info object is created
+   * @param provider process provider
+   * @param consumers process consumers
    * @return CompositeProcessInfo
    */
   public static CompositeProcessInfo createCompositeProcessInfo(

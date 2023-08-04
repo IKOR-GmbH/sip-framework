@@ -6,7 +6,12 @@ import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinitio
 import lombok.AccessLevel;
 import lombok.Getter;
 
-/** Base element for DSL classes used to orchestrate in process orchestration */
+/**
+ * Base element for DSL classes used to orchestrate in process orchestration
+ *
+ * @param <R> DSL handle for the return DSL Verb/type.
+ * @param <S> DSL handle for self - element that extends the base
+ */
 public abstract class ProcessDslBase<S extends ProcessDslBase<S, R>, R>
     extends DslDefinitionBase<S, R> {
 
