@@ -1,0 +1,5 @@
+{
+  "author": "Nemikor",
+  "pullrequestId": "233",
+  "message": "Use RestTemplate in both soap and rest test kit invokers to avoid rest config from ProducerTemplate."
+}
