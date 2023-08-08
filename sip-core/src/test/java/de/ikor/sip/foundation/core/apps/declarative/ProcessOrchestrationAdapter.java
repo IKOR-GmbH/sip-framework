@@ -123,18 +123,17 @@ public class ProcessOrchestrationAdapter {
       return CompositeOrchestrator.forOrchestrationDsl(
           dsl -> {
             dsl.forProvider(getPartnerDebtByName.class)
-                    .ifCase(context -> true)
+//                    .ifCase(context -> true)
                 .callConsumer(getPartnerByName.class)
-
-                .withNoResponseHandling()
-                    .elseIfCase()
-                .callConsumer(getPartnerDebtById.class)
-                .withRequestPreparation(
-                    context -> {
-                      PartnerResponse response =
-                          (PartnerResponse) context.getLatestResponse().get();
-                      return response.id;
-                    });
+                .withNoResponseHandling();
+//                    .elseIfCase(context -> true)
+//                .callConsumer(getPartnerDebtById.class)
+//                .withRequestPreparation(
+//                    context -> {
+//                      PartnerResponse response =
+//                          (PartnerResponse) context.getLatestResponse().get();
+//                      return response.id;
+//                    });
           });
     }
   }

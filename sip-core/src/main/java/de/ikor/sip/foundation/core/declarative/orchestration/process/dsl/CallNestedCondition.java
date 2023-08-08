@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CallNestedCondition<R>
-        extends ProcessDslBase<CallNestedCondition<R>, R> {
+        extends ProcessDslBase<CallNestedCondition<R>, R>
+        implements CallableWithinProcessDefinition{
 
     @Getter(AccessLevel.PACKAGE)
     private final List<ProcessBranchStatements<R>> conditionalStatements = new ArrayList<>();
@@ -22,10 +23,13 @@ public class CallNestedCondition<R>
     private final CompositeProcessDefinition processDefinition;
     private final Class clazz;
 
-    CallNestedCondition(R dslReturnDefinition, CompositeProcessDefinition compositeProcess, Class clazz) {
+    CallNestedCondition(
+            R dslReturnDefinition,
+            CompositeProcessDefinition compositeProcess,
+            Class providerScenarioClass) {
         super(dslReturnDefinition, compositeProcess);
         this.processDefinition = compositeProcess;
-        this.clazz = clazz;
+        this.clazz = providerScenarioClass;
     }
 
 
@@ -48,12 +52,13 @@ public class CallNestedCondition<R>
 
     record ProcessBranchStatements<M>(
             CompositeProcessStepConditional predicate,
-            List<CallProcessConsumer> statements) {}
+            List<CallProcessConsumerBase> statements) {}
 
-    public final class ProcessBranch<I> extends ProcessDslBase<CallNestedCondition<I>.ProcessBranch<I>, I> {
+    public final class ProcessBranch<I> extends ProcessDslBase<CallNestedCondition<I>.ProcessBranch<I>, I>
+        implements ProcessConsumerCalls<ProcessBranch<I>, I> {
 
         @Delegate
-        private final ForProcessProviders<I> delegate;
+        private final ForProcessProvidersDelegate<ProcessBranch<I>, I> delegate;
 
         ProcessBranch(
                 final List<ProcessBranchStatements> statementsList,
@@ -62,7 +67,11 @@ public class CallNestedCondition<R>
                 Class<? extends IntegrationScenarioDefinition> consumerClass) {
             super(dslReturnDefinition, processDefinition);
             delegate =
-                    new ForProcessProviders<>(dslReturnDefinition, processDefinition, consumerClass);
+                    new ForProcessProvidersDelegate(
+                            dslReturnDefinition,
+                            processDefinition,
+                            consumerClass,
+                            self());
         }
 
 

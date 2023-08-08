@@ -19,48 +19,45 @@ import java.util.Optional;
 @SuppressWarnings("rawtypes")
 public class RouteGeneratorHelper {
 
-  public static List<ForProcessProviders<ProcessOrchestrationDefinition>>
+  public static List<ForProcessProviderImpl<?>>
       getScenarioProviderDefinitions(
           ProcessOrchestrationDefinition processOrchestrationDefinition) {
     return processOrchestrationDefinition.getScenarioProviderDefinitions();
   }
 
   public static Class<? extends IntegrationScenarioDefinition> getProviderClass(
-      ForProcessProviders<ProcessOrchestrationDefinition> element) {
+          ForProcessProviderImpl<?> element) {
 
     return element.getProviderClass();
   }
 
-  public static List<CallProcessConsumer> getConsumerCalls(ForProcessProviders element) {
-    return element.getConsumerCalls();
+  public static List<CallProcessConsumerBase> getConsumerCalls(ForProcessProviderImpl element) {
+    return element.getSteps();
   }
 
   public static Class<? extends IntegrationScenarioDefinition> getConsumerClass(
-      CallProcessConsumer element) {
+      CallProcessConsumerBase element) {
     return element.getConsumerClass();
   }
 
   public static Optional<CompositeProcessStepRequestExtractor> getRequestPreparation(
-      CallProcessConsumer element) {
+      CallProcessConsumerBase element) {
     return element.getRequestPreparation();
   }
 
   public static Optional<CompositeProcessStepResponseConsumer> getResponseConsumer(
-      CallProcessConsumer element) {
+      CallProcessConsumerBase element) {
     return element.getResponseConsumer();
   }
 
   public static Optional<CompositeProcessStepConditional> getConditional(
-          CallProcessConsumer element) {
-    return element.getConditional();
+          ForProcessStartCondition element) {
+    //TODO
+    return element.getConditionals().stream().findFirst();
   }
 
-  public static Optional<CompositeProcessStepConditional> getIfConditional(
-          CallProcessConsumer element) {
-    return element.getConditional();
-  }
 
-  public static Optional<StepResultCloner> getStepResultCloner(CallProcessConsumer element) {
+  public static Optional<StepResultCloner> getStepResultCloner(CallProcessConsumerBase element) {
     return element.getStepResultCloner();
   }
 }

@@ -2,21 +2,22 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuild
 
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ForProcessProviders;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ForProcessProviderImpl;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
+
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Class for generating Camel routes for process providers via DSL
@@ -27,7 +28,7 @@ import org.apache.camel.model.RoutesDefinition;
 @SuppressWarnings("rawtypes")
 final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase {
 
-  private final ForProcessProviders<?> providerDefinition;
+  private final ForProcessProviderImpl<?> providerDefinition;
   private final Set<IntegrationScenarioDefinition> overallUnhandledProviders;
 
   @Getter(lazy = true)
@@ -36,7 +37,7 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
 
   RouteGeneratorForProcessProviders(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final ForProcessProviders providerDefinition,
+      final ForProcessProviderImpl providerDefinition,
       final Set<IntegrationScenarioDefinition> overallUnhandledProviders) {
     super(orchestrationInfo);
     this.providerDefinition = providerDefinition;
@@ -66,7 +67,7 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
   }
 
   private Set<IntegrationScenarioDefinition> resolveProvidersFromClasses(
-      final ForProcessProviders element) {
+      final ForProcessProviderImpl element) {
     final Set<Class<? extends IntegrationScenarioDefinition>> providerClasses =
         Set.of(RouteGeneratorHelper.getProviderClass(element));
 

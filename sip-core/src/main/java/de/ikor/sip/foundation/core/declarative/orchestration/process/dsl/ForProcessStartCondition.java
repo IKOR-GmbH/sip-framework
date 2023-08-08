@@ -10,20 +10,27 @@ import lombok.experimental.Delegate;
 import java.util.ArrayList;
 import java.util.List;
 
+//eq ForScenarioProvidersBaseDefinition
 /** DSL class for specifying orchestration of complex processes */
-public class ForProcessStartCondition<R>
-         extends ProcessDslBase<ForProcessStartCondition<R>, R> {
+public abstract class ForProcessStartCondition<
+        S extends ForProcessStartCondition<S, R>, R>
+         extends ProcessDslBase<ForProcessStartCondition<S, R>, R>
+      implements ProcessConsumerCalls<S , R> {
 
 
   @Getter(AccessLevel.PACKAGE)
-  private final List<CallNestedCondition<CompositeProcessStepConditional>> conditionals = new ArrayList<>();
+  private final List<CallableWithinProcessDefinition> steps = new ArrayList<>();
+
+  @Getter(AccessLevel.PACKAGE)
+  private final List<CompositeProcessStepConditional> conditionals = new ArrayList<>();
 
   @Getter(AccessLevel.PACKAGE)
   private final Class<? extends IntegrationScenarioDefinition> providerClass;
 
   @Delegate
   @Getter(AccessLevel.PACKAGE)
-  private final ForProcessProviders<R> forProcessProviders;
+  private final ForProcessProvidersDelegate<S, R> forProcessProvidersDelegate;
+
 
   /**
    * Constructor
@@ -38,19 +45,20 @@ public class ForProcessStartCondition<R>
           final Class<? extends IntegrationScenarioDefinition> providerClass) {
     super(dslReturnDefinition, compositeProcess);
     this.providerClass = providerClass;
-    this.forProcessProviders = new ForProcessProviders<R>(
+    this.forProcessProvidersDelegate = new ForProcessProvidersDelegate<S, R>(
             getDslReturnDefinition(),
             compositeProcess,
-            providerClass
-    );
+            providerClass,
+            null);
   }
 
-  public CallNestedCondition<CompositeProcessStepConditional>
-          .ProcessBranch<CallNestedCondition<CompositeProcessStepConditional>> ifCase(
+  public CallNestedCondition<S>
+          .ProcessBranch<CallNestedCondition<S>> ifCase(
           final CompositeProcessStepConditional predicate) {
-    final CallNestedCondition<CompositeProcessStepConditional> def =
-            new CallNestedCondition<>(predicate, getCompositeProcess(), providerClass);
-    conditionals.add(def);
+    final CallNestedCondition<S> def =
+            new CallNestedCondition(self(), getCompositeProcess(), providerClass);
+    steps.add(def);
+    conditionals.add(predicate);
     return def.elseIfCase(predicate);
   }
 }

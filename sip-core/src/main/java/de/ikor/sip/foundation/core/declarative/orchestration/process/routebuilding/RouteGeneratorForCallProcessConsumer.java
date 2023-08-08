@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuild
 
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumer;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumerBase;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("rawtypes")
 final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBase {
 
-  private final CallProcessConsumer<?> definitionElement;
+  private final CallProcessConsumerBase<?, ?> definitionElement;
 
   private final Set<IntegrationScenarioDefinition> overallUnhandledConsumers;
 
@@ -37,7 +37,7 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
 
   RouteGeneratorForCallProcessConsumer(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final CallProcessConsumer definitionElement,
+      final CallProcessConsumerBase definitionElement,
       final Set<IntegrationScenarioDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);
     this.definitionElement = definitionElement;
@@ -66,7 +66,7 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
   }
 
   private IntegrationScenarioDefinition retrieveConsumerFromClassDefinition(
-      final CallProcessConsumer element) {
+      final CallProcessConsumerBase element) {
     return getConsumers().stream()
         .filter(
             consumer -> RouteGeneratorHelper.getConsumerClass(element).equals(consumer.getClass()))
@@ -86,13 +86,14 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
     for (final var consumer : getHandledConsumers()) {
-        routeDefinition.choice()
-                .when(exchange ->
-                        CompositeProcessOrchestrationHandlers.handleConditional(
-                                exchange,
-                                consumer,
-                                RouteGeneratorHelper.getStepResultCloner(definitionElement),
-                                RouteGeneratorHelper.getConditional(definitionElement)))
+        routeDefinition
+//        .choice() TODO remove
+//                .when(exchange ->
+//                        CompositeProcessOrchestrationHandlers.handleConditional(
+//                                exchange,
+//                                consumer,
+//                                RouteGeneratorHelper.getStepResultCloner(definitionElement),
+//                                RouteGeneratorHelper.getConditional(definitionElement)))
       // prepare request for consumer (as response might still be on the body) and call it
 
           .transform()
@@ -108,8 +109,8 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
               CompositeProcessOrchestrationHandlers.handleResponseFromConsumer(
                   consumer,
                   RouteGeneratorHelper.getStepResultCloner(definitionElement),
-                  RouteGeneratorHelper.getResponseConsumer(definitionElement)))
-        .endChoice().end();
+                  RouteGeneratorHelper.getResponseConsumer(definitionElement)));
+        //.endChoice().end();
       overallUnhandledConsumers.remove(consumer);
     }
   }
