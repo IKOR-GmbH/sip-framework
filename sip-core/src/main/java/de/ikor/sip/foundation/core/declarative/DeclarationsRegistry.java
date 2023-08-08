@@ -66,7 +66,8 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
     this.globalModelMappersRegistry = checkAndInitializeGlobalModelMappers(modelMappers);
 
-    this.processes = compositeProcessDefinitions;
+    this.processes =
+        compositeProcessDefinitions.stream().filter(not(isDisabled())).collect(Collectors.toList());
 
     createMissingConnectorGroups();
     checkForDuplicateConnectorGroups();
