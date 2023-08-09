@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuild
 
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallNestedCondition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumerBase;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("rawtypes")
 final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGeneratorProcessBase {
 
-  private final CallProcessConsumerBase<?, ?> definitionElement;
+  private final CallNestedCondition<?> definitionElement;
 
   private final Set<IntegrationScenarioDefinition> overallUnhandledConsumers;
 
@@ -37,7 +38,7 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
 
   RouteGeneratorForCallConditionalProcessConsumer(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final CallProcessConsumerBase definitionElement,
+      final CallNestedCondition definitionElement,
       final Set<IntegrationScenarioDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);
     this.definitionElement = definitionElement;
@@ -78,6 +79,21 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
                     RouteGeneratorHelper.getConsumerClass(element).getName(),
                     getCompositeId(),
                     getConsumers().stream().map(conn -> conn.getClass().getName()).toList()));
+  }
+
+  private IntegrationScenarioDefinition retrieveConsumerFromClassDefinition(
+          final CallNestedCondition element) {
+    return getConsumers().stream()
+            .filter(
+                    consumer -> RouteGeneratorHelper.getConsumerClass(element).equals(consumer.getClass()))
+            .findFirst()
+            .orElseThrow(
+                    () ->
+                            SIPFrameworkInitializationException.init(
+                                    "Consumer-class '%s' is used on orchestration for process '%s', but it is not registered with that scenario. Registered outbound connector classes are %s",
+                                    RouteGeneratorHelper.getConsumerClass(element).getName(),
+                                    getCompositeId(),
+                                    getConsumers().stream().map(conn -> conn.getClass().getName()).toList()));
   }
 
   private List<IntegrationScenarioDefinition> getConsumers() {

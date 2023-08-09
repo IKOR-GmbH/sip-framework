@@ -2,6 +2,8 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuild
 
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallNestedCondition;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumerBase;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ForProcessProviderImpl;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -104,9 +106,14 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
         CompositeProcessOrchestrationHandlers.handleContextInitialization(getCompositeProcess()));
 
     for (final var element : RouteGeneratorHelper.getConsumerCalls(providerDefinition)) {
-      new RouteGeneratorForCallProcessConsumer(
-              getOrchestrationInfo(), element, overallUnhandledScenarioConsumers)
-          .generateRoute(routeDef);
+      if (element instanceof CallProcessConsumerBase<?, ?> ele) {
+        new RouteGeneratorForCallProcessConsumer(
+                getOrchestrationInfo(), ele, overallUnhandledScenarioConsumers)
+            .generateRoute(routeDef);
+      } else if (element instanceof CallNestedCondition<?> ele) {
+        new RouteGeneratorForCallConditionalProcessConsumer(getOrchestrationInfo(), ele, overallUnhandledScenarioConsumers)
+                .generateRoute(routeDef);
+      }
     }
 
     routeDef.bean(CompositeProcessOrchestrationHandlers.handleErrorThrownIfNoConsumerWasCalled());

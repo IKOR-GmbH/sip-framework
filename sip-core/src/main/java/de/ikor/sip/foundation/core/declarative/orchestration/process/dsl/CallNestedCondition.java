@@ -1,6 +1,9 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
+import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepConditional;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepRequestExtractor;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import lombok.AccessLevel;
@@ -9,8 +12,9 @@ import lombok.experimental.Delegate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class CallNestedCondition<R>
+public final class CallNestedCondition<R>
         extends ProcessDslBase<CallNestedCondition<R>, R>
         implements CallableWithinProcessDefinition{
 
@@ -21,7 +25,17 @@ public class CallNestedCondition<R>
     private final List<ProcessBranchStatements<R>> unconditionalStatements = new ArrayList<>();
 
     private final CompositeProcessDefinition processDefinition;
-    private final Class clazz;
+    @Getter(AccessLevel.PACKAGE)
+    private final Class providerScenarioClass;
+
+    @Getter(AccessLevel.PACKAGE)
+    private Optional<CompositeProcessStepRequestExtractor> requestPreparation = Optional.empty();
+
+    @Getter(AccessLevel.PACKAGE)
+    private Optional<CompositeProcessStepResponseConsumer> responseConsumer = Optional.empty();
+
+    @Getter(AccessLevel.PACKAGE)
+    private Optional<StepResultCloner<Object>> stepResultCloner = Optional.empty();
 
     CallNestedCondition(
             R dslReturnDefinition,
@@ -29,7 +43,7 @@ public class CallNestedCondition<R>
             Class providerScenarioClass) {
         super(dslReturnDefinition, compositeProcess);
         this.processDefinition = compositeProcess;
-        this.clazz = providerScenarioClass;
+        this.providerScenarioClass = providerScenarioClass;
     }
 
 
@@ -37,12 +51,12 @@ public class CallNestedCondition<R>
             final CompositeProcessStepConditional predicate) {
         final var branch = new ProcessBranchStatements(predicate, new ArrayList<>());
         conditionalStatements.add(branch);
-        return new ProcessBranch(branch.statements, self(), processDefinition, clazz);
+        return new ProcessBranch(branch.statements, self(), processDefinition, providerScenarioClass);
     }
 
 
     ProcessBranch<R> elseCase() {
-        return new ProcessBranch(unconditionalStatements, getDslReturnDefinition(), processDefinition, clazz);
+        return new ProcessBranch(unconditionalStatements, getDslReturnDefinition(), processDefinition, providerScenarioClass);
     }
 
 
@@ -67,11 +81,13 @@ public class CallNestedCondition<R>
                 Class<? extends IntegrationScenarioDefinition> consumerClass) {
             super(dslReturnDefinition, processDefinition);
             delegate =
-                    new ForProcessProvidersDelegate(
-                            dslReturnDefinition,
-                            processDefinition,
-                            consumerClass,
-                            self());
+                    new ForProcessProvidersDelegate(statementsList,
+                            self(), getDslReturnDefinition(), consumerClass);
+//                    new ForProcessProvidersDelegate(
+//                            dslReturnDefinition,
+//                            processDefinition,
+//                            statementsList, consumerClass,
+//                            self());
         }
 
 

@@ -39,17 +39,17 @@ public abstract class ForProcessStartCondition<
    *
    * @param compositeProcess Composite Process
    */
-  public ForProcessStartCondition(
+  ForProcessStartCondition(
           final R dslReturnDefinition,
           final CompositeProcessDefinition compositeProcess,
           final Class<? extends IntegrationScenarioDefinition> providerClass) {
     super(dslReturnDefinition, compositeProcess);
     this.providerClass = providerClass;
-    this.forProcessProvidersDelegate = new ForProcessProvidersDelegate<S, R>(
+    this.forProcessProvidersDelegate = new ForProcessProvidersDelegate(
+            steps,
+            self(),
             getDslReturnDefinition(),
-            compositeProcess,
-            providerClass,
-            null);
+            providerClass);
   }
 
   public CallNestedCondition<S>

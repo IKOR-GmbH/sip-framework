@@ -31,7 +31,7 @@ public class RouteGeneratorHelper {
     return element.getProviderClass();
   }
 
-  public static List<CallProcessConsumerBase> getConsumerCalls(ForProcessProviderImpl element) {
+  public static List<CallableWithinProcessDefinition> getConsumerCalls(ForProcessProviderImpl element) {
     return element.getSteps();
   }
 
@@ -40,13 +40,28 @@ public class RouteGeneratorHelper {
     return element.getConsumerClass();
   }
 
+  public static Class<? extends IntegrationScenarioDefinition> getConsumerClass(
+          CallNestedCondition element) {
+    return element.getProviderScenarioClass();
+  }
+
   public static Optional<CompositeProcessStepRequestExtractor> getRequestPreparation(
       CallProcessConsumerBase element) {
     return element.getRequestPreparation();
   }
 
+  public static Optional<CompositeProcessStepRequestExtractor> getRequestPreparation(
+          CallNestedCondition element) {
+    return element.getRequestPreparation();
+  }
+
   public static Optional<CompositeProcessStepResponseConsumer> getResponseConsumer(
       CallProcessConsumerBase element) {
+    return element.getResponseConsumer();
+  }
+
+  public static Optional<CompositeProcessStepResponseConsumer> getResponseConsumer(
+          CallNestedCondition element) {
     return element.getResponseConsumer();
   }
 
@@ -58,6 +73,10 @@ public class RouteGeneratorHelper {
 
 
   public static Optional<StepResultCloner> getStepResultCloner(CallProcessConsumerBase element) {
+    return element.getStepResultCloner();
+  }
+
+  public static Optional<StepResultCloner> getStepResultCloner(CallNestedCondition element) {
     return element.getStepResultCloner();
   }
 }

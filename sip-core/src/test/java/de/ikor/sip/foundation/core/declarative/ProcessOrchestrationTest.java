@@ -82,7 +82,7 @@ class ProcessOrchestrationTest {
     assertThat(responseSecondConnector.getRequestedBy()).isEqualTo("Front-end");
   }
 
- // @Test
+  @Test
   void WHEN_callingProcessOrchestratorInboundConnectors_THEN_ReceiveResponse() {
     // arrange
     mockedGetPartnerByNameOutConnector.expectedBodiesReceivedInAnyOrder(
