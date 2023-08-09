@@ -29,7 +29,8 @@ import org.springframework.context.ApplicationContextAware;
  * allows subclasses to attach an {@link Orchestrator} for the transformation between connector and
  * common domain models through the {@link #defineTransformationOrchestrator()} method.
  */
-abstract non-sealed class ConnectorBase implements ConnectorDefinition, ApplicationContextAware {
+public abstract non-sealed class ConnectorBase
+    implements ConnectorDefinition, ApplicationContextAware {
 
   @Getter(AccessLevel.PROTECTED)
   private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -40,6 +41,9 @@ abstract non-sealed class ConnectorBase implements ConnectorDefinition, Applicat
   @Delegate
   private final Orchestrator<ConnectorOrchestrationInfo> modelTransformationOrchestrator =
       defineTransformationOrchestrator();
+
+  private ResponseMappingRouteTransformer<Object, Object> responseMappingRouteTransformer;
+  private RequestMappingRouteTransformer<Object, Object> requestMappingRouteTransformer;
 
   @Override
   public Orchestrator<ConnectorOrchestrationInfo> getOrchestrator() {
@@ -62,33 +66,39 @@ abstract non-sealed class ConnectorBase implements ConnectorDefinition, Applicat
   }
 
   @SuppressWarnings("unchecked")
-  private Optional<RequestMappingRouteTransformer<Object, Object>> getRequestMapper() {
+  public Optional<RequestMappingRouteTransformer<Object, Object>> getRequestMapper() {
+    if (requestMappingRouteTransformer != null) {
+      return Optional.of(requestMappingRouteTransformer);
+    }
     final var annotation =
         DeclarativeHelper.getAnnotationIfPresent(UseRequestModelMapper.class, this);
     if (annotation.isPresent()) {
-      final var transformer =
+      requestMappingRouteTransformer =
           RequestMappingRouteTransformer.forConnectorWithScenario(this, getScenario());
       if (!FindAutomaticModelMapper.class.equals(annotation.get().value())) {
-        transformer.setMapper(
+        requestMappingRouteTransformer.setMapper(
             Optional.of(DeclarativeHelper.createMapperInstance(annotation.get().value())));
       }
-      return Optional.of(transformer);
+      return Optional.of(requestMappingRouteTransformer);
     }
     return Optional.empty();
   }
 
   @SuppressWarnings("unchecked")
-  private Optional<ResponseMappingRouteTransformer<Object, Object>> getResponseMapper() {
+  public Optional<ResponseMappingRouteTransformer<Object, Object>> getResponseMapper() {
+    if (responseMappingRouteTransformer != null) {
+      return Optional.of(responseMappingRouteTransformer);
+    }
     final var annotation =
         DeclarativeHelper.getAnnotationIfPresent(UseResponseModelMapper.class, this);
     if (annotation.isPresent()) {
-      final var transformer =
+      responseMappingRouteTransformer =
           ResponseMappingRouteTransformer.forConnectorWithScenario(this, getScenario());
       if (!FindAutomaticModelMapper.class.equals(annotation.get().value())) {
-        transformer.setMapper(
+        responseMappingRouteTransformer.setMapper(
             Optional.of(DeclarativeHelper.createMapperInstance(annotation.get().value())));
       }
-      return Optional.of(transformer);
+      return Optional.of(responseMappingRouteTransformer);
     }
     return Optional.empty();
   }

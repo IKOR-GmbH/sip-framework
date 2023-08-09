@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepRequestExtractor;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepResponseConsumer;
@@ -10,7 +12,11 @@ import lombok.Getter;
 
 import java.util.Optional;
 // eq CallScenarioConsumerBaseDefinition
-/** DSL class for calling a process consumer specified by its class */
+
+/** DSL class for calling a process consumer specified by its class
+* @param <R> DSL handle for the return DSL Verb/type.
+*/
+@JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class CallProcessConsumerBase<
         S extends CallProcessConsumerBase<S, R>, R>
         extends ProcessDslBase<S, R>
@@ -37,18 +43,39 @@ public class CallProcessConsumerBase<
   }
 
 
-
+  /**
+   * Attaches a {@link CompositeProcessStepRequestExtractor} that allows to manipulate the request
+   * for this call.
+   *
+   * @param requestPreparation the extractor for the request
+   * @return DSL handle
+   */
   public S withRequestPreparation(
       final CompositeProcessStepRequestExtractor requestPreparation) {
     this.requestPreparation = Optional.of(requestPreparation);
     return self();
   }
 
+  /**
+   * Attaches a {@link CompositeProcessStepResponseConsumer} that allows to manipulate the response
+   * of this consumer call.
+   *
+   * <p>This is a terminal operation that will finish the definition of this consumer call.
+   *
+   * @param responseConsumer Consumer that handles the response
+   * @return DSL handle
+   */
   public R withResponseHandling(final CompositeProcessStepResponseConsumer responseConsumer) {
     this.responseConsumer = Optional.of(responseConsumer);
     return getDslReturnDefinition();
   }
 
+  /**
+   * Declares that no specific response handling is required for this call. If the consumer provides
+   * a response, it will not be modified.
+   *
+   * @return DSL handle
+   */
   public R withNoResponseHandling() {
     return getDslReturnDefinition();
   }

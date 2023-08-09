@@ -16,7 +16,7 @@ import org.apache.camel.Handler;
 import java.util.*;
 
 /**
- * Various handlers use in scenario orchestration. Hanlders will be a part of the generated routes.
+ * Various handlers use in scenario orchestration. Handlers will be a part of the generated routes.
  *
  * <p><em>For internal use only</em>
  */

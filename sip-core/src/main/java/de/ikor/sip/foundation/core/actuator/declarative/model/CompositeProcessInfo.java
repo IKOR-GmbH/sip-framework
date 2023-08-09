@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * Represents POJO model for exposing {@link
- * de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess}
+ * POJO model for exposing {@link
+ * de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess} on the actuator endpoint
  */
 @Getter
 @NoArgsConstructor

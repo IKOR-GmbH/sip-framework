@@ -14,6 +14,8 @@ import java.util.Optional;
  * Class that exposes the insides of orchestration definition. Those are package private so that
  * they can't be seen on the user side (while the orchestration is written). This class has to stay
  * in the same package as the orchestration definition.
+ *
+ * <p><em>For internal use only</em>
  */
 @UtilityClass
 @SuppressWarnings("rawtypes")

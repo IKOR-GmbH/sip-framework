@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Context used during the orchestration of a composite process
+ * Context used during the orchestration of a composite process.
  *
  * <p>Holds the original request from the provider that initiated the orchestration, as well as a
  * list of requests and responses received from the consumers called during the orchestration.
@@ -55,8 +55,8 @@ public class CompositeProcessOrchestrationContext<M> {
   private Exchange exchange;
 
   /**
-   * Returns the request as retrieved from the provider that initiated the integration call with the
-   * given type.
+   * Returns the original request as retrieved from the provider that initiated the integration call
+   * with the given type.
    *
    * @param requestType Request model class
    * @return Original request
@@ -67,7 +67,8 @@ public class CompositeProcessOrchestrationContext<M> {
   }
 
   /**
-   * Returns the request as retrieved from the provider that initiated the integration call.
+   * Returns the original request as retrieved from the provider that initiated the integration
+   * call.
    *
    * @return Original request
    * @param <T> Type of the request-model
@@ -139,10 +140,9 @@ public class CompositeProcessOrchestrationContext<M> {
    * @param consumer Consumer that provided the response
    * @param response Response as it was received from the consumer
    * @param cloner Optional cloner for the response
-   * @return The response
    */
   @Synchronized
-  M addResponseForStep(
+  void addResponseForStep(
       final IntegrationScenarioDefinition consumer,
       final M response,
       final Optional<StepResultCloner<M>> cloner) {
@@ -155,17 +155,24 @@ public class CompositeProcessOrchestrationContext<M> {
               orchestrationStepResults.add(
                   new OrchestrationStepResult<>(consumer, lastStep.request, maybeClonedResponse));
             });
-    return maybeClonedResponse;
   }
 
+  /**
+   * Stores a request from the call to a consumer.
+   *
+   * <p><em>Internal use only</em>
+   *
+   * @param consumer Consumer that provided the response
+   * @param request Request as it was sent to the consumer
+   * @param cloner Optional cloner for the response
+   */
   @Synchronized
-  M addRequestForStep(
+  void addRequestForStep(
       final IntegrationScenarioDefinition consumer,
       final M request,
       final Optional<StepResultCloner<M>> cloner) {
     final M maybeClonedRequest = cloner.map(c -> c.apply(request)).orElse(request);
     orchestrationStepResults.add(new OrchestrationStepResult<>(consumer, maybeClonedRequest, null));
-    return maybeClonedRequest;
   }
 
   @Synchronized
@@ -192,8 +199,8 @@ public class CompositeProcessOrchestrationContext<M> {
   }
 
   /**
-   * Retrieves the <em>first</em> response returned by the consumer specified by its <code>
-   * consumerClass</code>.
+   * Retrieves the <em>first</em> result returned by the consumer specified by its {@code
+   * consumerClass}. The result holds both request and response objects.
    *
    * @param consumerClass Class of the consumer for which to retrieve consumer
    * @return Optional first response of this consumer
@@ -206,8 +213,8 @@ public class CompositeProcessOrchestrationContext<M> {
   }
 
   /**
-   * Retrieves the <em>last</em> response returned by the consumer specified by its <code>
-   * consumerClass</code>.
+   * Retrieves the <em>last</em> response returned by the consumer specified by its {@code
+   * consumerClass}. The result holds both request and response objects.
    *
    * @param consumerClass Class of the consumer for which to retrieve consumer
    * @return Optional last response of this consumer
@@ -220,7 +227,8 @@ public class CompositeProcessOrchestrationContext<M> {
   }
 
   /**
-   * Returns the header with the given name and type, if it exists
+   * Returns the header with the given name and type, if it exists. It is a Camel's low level header
+   * and should be used with care.
    *
    * @param name Name of the header to retrieve
    * @param type Header type class

@@ -1,19 +1,13 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
-import de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl.ScenarioStepResponseAggregator;
-
-/**
- * Interface to consume or handle the response of an individual process consumer call
- *
- * @see ScenarioStepResponseAggregator
- */
+/** Interface to consume or handle the response of an individual process consumer call */
 @FunctionalInterface
 public interface CompositeProcessStepResponseConsumer {
 
   /**
    * Consumes or handles the response of an individual consumer call.
    *
-   * @param latestResponse Response received from the scenario consumer
+   * @param latestResponse Response received from the process consumer
    * @param context Current orchestration context
    */
   void consumeResponse(Object latestResponse, CompositeProcessOrchestrationContext<Object> context);

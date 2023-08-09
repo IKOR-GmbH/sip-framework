@@ -3,15 +3,12 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding.RouteGeneratorForProcessOrchestrationDefinition;
-import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +25,17 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class CompositeOrchestrator implements Orchestrator<CompositeOrchestrationInfo> {
 
-  private final Function<CompositeOrchestrationInfo, ProcessOrchestrationDefinition>
-      orchestrationInfoConsumer;
+  private final Consumer<CompositeOrchestrationInfo> orchestrationInfoConsumer;
   @Setter private Predicate<CompositeOrchestrationInfo> canOrchestrate = Objects::nonNull;
 
-  @Getter private Optional<ProcessOrchestrationDefinition> orchestrationDefinition;
+  private Optional<Consumer<ProcessOrchestrationDefinition>> dslDefinition = Optional.empty();
+
+  private CompositeOrchestrator(
+      Consumer<CompositeOrchestrationInfo> orchestrationInfoConsumer,
+      Consumer<ProcessOrchestrationDefinition> dslDefinition) {
+    this.orchestrationInfoConsumer = orchestrationInfoConsumer;
+    this.dslDefinition = Optional.of(dslDefinition);
+  }
   /**
    * Creates a new orchestrator specified via orchestration-DSL
    *
@@ -42,30 +45,45 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
   @SuppressWarnings("java:S1172")
   public static CompositeOrchestrator forOrchestrationDsl(
       final Consumer<ProcessOrchestrationDefinition> dslDefinition) {
-    return forOrchestrationConsumer(
+    return new CompositeOrchestrator(
         orchestrationInfo -> {
           final var orchestrationDef =
               new ProcessOrchestrationDefinition(orchestrationInfo.getCompositeProcess());
           dslDefinition.accept(orchestrationDef);
           new RouteGeneratorForProcessOrchestrationDefinition(orchestrationInfo, orchestrationDef)
               .run();
-          return orchestrationDef;
-        });
+        },
+        dslDefinition);
   }
 
   /**
-   * Creates a new orchestrator specified via a consumer for the {@link ScenarioOrchestrationInfo}.
+   * Creates a new orchestrator specified via a consumer for the {@link CompositeOrchestrationInfo}.
    *
    * <p>This is very low-level, and it is strongly recommended to define the orchestration via DSL
    * instead. This can be used to manually create routes between endpoints.
    *
-   * @param orchestrationConsumer Consumer for the orchestration-info provided by the framework
+   * @param orchestrationInfoConsumer Consumer for the orchestration-info provided by the framework
    * @return Orchestrator
    */
   public static CompositeOrchestrator forOrchestrationConsumer(
-      final Function<CompositeOrchestrationInfo, ProcessOrchestrationDefinition>
-          orchestrationConsumer) {
-    return new CompositeOrchestrator(orchestrationConsumer);
+      final Consumer<CompositeOrchestrationInfo> orchestrationInfoConsumer) {
+    return new CompositeOrchestrator(orchestrationInfoConsumer);
+  }
+
+  /**
+   * Provides a way to get the definition that is created inside the DSL.
+   *
+   * @param compositeProcessDefinition definition of a composite process
+   * @return orchestration definition
+   */
+  public ProcessOrchestrationDefinition populateOrchestrationDefinition(
+      CompositeProcessDefinition compositeProcessDefinition) {
+    if (dslDefinition.isPresent()) {
+      final var orchestrationDef = new ProcessOrchestrationDefinition(compositeProcessDefinition);
+      dslDefinition.get().accept(orchestrationDef);
+      return orchestrationDef;
+    }
+    return null;
   }
 
   @Override
@@ -75,7 +93,6 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
 
   @Override
   public void doOrchestrate(final CompositeOrchestrationInfo info) {
-    ProcessOrchestrationDefinition definition = orchestrationInfoConsumer.apply(info);
-    orchestrationDefinition = Optional.of(definition);
+    orchestrationInfoConsumer.accept(info);
   }
 }
