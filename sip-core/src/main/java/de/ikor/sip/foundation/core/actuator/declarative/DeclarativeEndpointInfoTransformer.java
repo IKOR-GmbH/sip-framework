@@ -140,9 +140,9 @@ public class DeclarativeEndpointInfoTransformer {
         .providerId(provider.getId())
         .consumerIds(consumers.stream().map(IntegrationScenarioDefinition::getId).toList())
         .orchestrationDefinition(
-            compositeProcessDefinition.getOrchestrator() instanceof CompositeOrchestrator
-                ? ((CompositeOrchestrator) compositeProcessDefinition.getOrchestrator())
-                    .populateOrchestrationDefinition(compositeProcessDefinition)
+            compositeProcessDefinition.getOrchestrator()
+                    instanceof CompositeOrchestrator compositeOrchestrator
+                ? compositeOrchestrator.populateOrchestrationDefinition(compositeProcessDefinition)
                 : null)
         .processDescription(
             readDocumentation(

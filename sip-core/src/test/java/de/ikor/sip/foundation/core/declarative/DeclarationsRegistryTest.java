@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
+import de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess;
 import de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
@@ -179,92 +181,46 @@ class DeclarationsRegistryTest {
   }
 
   @Test
-  void
-      When_CheckAnnotatedInboundConnector_With_NoParent_Then_SIPFrameworkInitializationExceptionThrown() {
-    when(applicationContext.getBeansWithAnnotation(InboundConnector.class))
-        .thenReturn(Map.of("key", 1));
-    assertThatThrownBy(
-            () -> {
-              subject =
-                  new DeclarationsRegistry(
-                      connectorGroups,
-                      scenarios,
-                      connectors,
-                      modelMappers,
-                      compositeProcessDefinitions,
-                      applicationContext);
-            })
-        .isInstanceOf(SIPFrameworkInitializationException.class)
-        .hasMessage(
-            "Annotated InboundConnector java.lang.Integer is missing InboundConnectorBase parent class.");
+  void WHEN_AnnotatedClass_WITH_NoParent_THEN_SIPFrameworkInitializationExceptionThrown() {
+
+    Map.of(
+            IntegrationScenario.class,
+            "IntegrationScenarioBase",
+            ConnectorGroup.class,
+            "ConnectorGroupBase",
+            InboundConnector.class,
+            "InboundConnectorBase",
+            OutboundConnector.class,
+            "GenericOutboundConnectorBase",
+            CompositeProcess.class,
+            "CompositeProcessBase")
+        .forEach(
+            (annotationClass, baseClass) -> {
+              reset(applicationContext);
+              when(applicationContext.getBeansWithAnnotation(annotationClass))
+                  .thenReturn(Map.of("key", 1));
+
+              assertThatThrownBy(
+                      () -> {
+                        subject =
+                            new DeclarationsRegistry(
+                                connectorGroups,
+                                scenarios,
+                                connectors,
+                                modelMappers,
+                                compositeProcessDefinitions,
+                                applicationContext);
+                      })
+                  .isInstanceOf(SIPFrameworkInitializationException.class)
+                  .hasMessage(
+                      "Annotated %s java.lang.Integer is not inheriting %s parent class or any of it's child classes. Please inherit the proper class.",
+                      annotationClass.getSimpleName(), baseClass);
+            });
   }
 
   @Test
   void
-      When_CheckAnnotatedOutboundConnector_With_NoParent_Then_SIPFrameworkInitializationExceptionThrown() {
-    when(applicationContext.getBeansWithAnnotation(OutboundConnector.class))
-        .thenReturn(Map.of("key", 1));
-    assertThatThrownBy(
-            () -> {
-              subject =
-                  new DeclarationsRegistry(
-                      connectorGroups,
-                      scenarios,
-                      connectors,
-                      modelMappers,
-                      compositeProcessDefinitions,
-                      applicationContext);
-            })
-        .isInstanceOf(SIPFrameworkInitializationException.class)
-        .hasMessage(
-            "Annotated OutboundConnector java.lang.Integer is missing OutboundConnectorDefinition parent class.");
-  }
-
-  @Test
-  void
-      When_CheckAnnotatedIntegrationScenario_With_NoParent_Then_SIPFrameworkInitializationExceptionThrown() {
-    when(applicationContext.getBeansWithAnnotation(IntegrationScenario.class))
-        .thenReturn(Map.of("key", 1));
-    assertThatThrownBy(
-            () -> {
-              subject =
-                  new DeclarationsRegistry(
-                      connectorGroups,
-                      scenarios,
-                      connectors,
-                      modelMappers,
-                      compositeProcessDefinitions,
-                      applicationContext);
-            })
-        .isInstanceOf(SIPFrameworkInitializationException.class)
-        .hasMessage(
-            "Annotated IntegrationScenario java.lang.Integer is missing IntegrationScenarioBase parent class.");
-  }
-
-  @Test
-  void
-      When_CheckAnnotatedConnectorGroup_With_NoParent_Then_SIPFrameworkInitializationExceptionThrown() {
-    when(applicationContext.getBeansWithAnnotation(ConnectorGroup.class))
-        .thenReturn(Map.of("key", 1));
-    assertThatThrownBy(
-            () -> {
-              subject =
-                  new DeclarationsRegistry(
-                      connectorGroups,
-                      scenarios,
-                      connectors,
-                      modelMappers,
-                      compositeProcessDefinitions,
-                      applicationContext);
-            })
-        .isInstanceOf(SIPFrameworkInitializationException.class)
-        .hasMessage(
-            "Annotated ConnectorGroup java.lang.Integer is missing ConnectorGroupBase parent class.");
-  }
-
-  @Test
-  void
-      When_CheckControllerMapping_With_OverriddenRequestMapping_Then_SIPFrameworkInitializationExceptionThrown() {
+      WHEN_CheckControllerMapping_WITH_OverriddenRequestMapping_THEN_SIPFrameworkInitializationExceptionThrown() {
     // arrange
     InboundConnectorMock connector = mock(InboundConnectorMock.class);
     final var transformer =
@@ -304,7 +260,7 @@ class DeclarationsRegistryTest {
   }
 
   @Test
-  void When_CheckingConnectorMapping_With_NoMappingsOrTransformation_Then_NoExceptionThrown() {
+  void WHEN_CheckingConnectorMapping_WITH_NoMappingsOrTransformation_THEN_NoExceptionThrown() {
     // arrange
     InboundConnectorMock connector = mock(InboundConnectorMock.class);
     connectors.add(connector);
@@ -324,7 +280,7 @@ class DeclarationsRegistryTest {
   }
 
   @Test
-  void When_CheckingConnectorMapping_With_MappingsAndNoTransformation_Then_NoExceptionThrown() {
+  void WHEN_CheckingConnectorMapping_WITH_MappingsAndNoTransformation_THEN_NoExceptionThrown() {
     // arrange
     InboundConnectorMock connector = mock(InboundConnectorMock.class);
     RequestMappingRouteTransformer<Object, Object> routeTransformer =
@@ -357,7 +313,7 @@ class DeclarationsRegistryTest {
 
   @Test
   void
-      When_CheckControllerMapping_With_OverriddenResponseMapping_Then_SIPFrameworkInitializationExceptionThrown() {
+      WHEN_CheckControllerMapping_WITH_OverriddenResponseMapping_THEN_SIPFrameworkInitializationExceptionThrown() {
     // arrange
     OutboundConnectorMock connector = mock(OutboundConnectorMock.class);
     final var transformer =

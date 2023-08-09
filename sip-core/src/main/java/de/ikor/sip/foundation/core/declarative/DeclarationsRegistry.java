@@ -11,6 +11,7 @@ import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.model.ResponseMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
+import de.ikor.sip.foundation.core.declarative.process.CompositeProcessBase;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
@@ -76,7 +77,9 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     checkAnnotatedClassForMissingParent(IntegrationScenario.class, IntegrationScenarioBase.class);
     checkAnnotatedClassForMissingParent(ConnectorGroup.class, ConnectorGroupBase.class);
     checkAnnotatedClassForMissingParent(InboundConnector.class, InboundConnectorBase.class);
-    checkAnnotatedClassForMissingParent(OutboundConnector.class, OutboundConnectorDefinition.class);
+    checkAnnotatedClassForMissingParent(
+        OutboundConnector.class, GenericOutboundConnectorBase.class);
+    checkAnnotatedClassForMissingParent(CompositeProcess.class, CompositeProcessBase.class);
     checkForUnusedScenarios();
     checkForDuplicateConnectors();
   }
@@ -132,7 +135,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
             o -> {
               if (!parentClass.isInstance(o)) {
                 throw SIPFrameworkInitializationException.init(
-                    "Annotated %s %s is missing %s parent class.",
+                    "Annotated %s %s is not inheriting %s parent class or any of it's child classes. Please inherit the proper class.",
                     annotatedClass.getSimpleName(),
                     o.getClass().getName(),
                     parentClass.getSimpleName());
