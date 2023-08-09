@@ -14,7 +14,7 @@ public class ProcessOrchestrationDefinition
     extends ProcessDslBase<ProcessOrchestrationDefinition, EndOfDsl> {
 
   @Getter(AccessLevel.PACKAGE)
-  private final List<ForProcessProviderImpl<?>>
+  private final List<ForProcessStartConditionalImpl<?>>
       scenarioProviderDefinitions = new ArrayList<>();
 
   /**
@@ -37,10 +37,10 @@ public class ProcessOrchestrationDefinition
    * @param providerClass The class of the provider
    * @return DSL handle for specifying consumer calls
    */
-  public final ForProcessProviderImpl<ProcessOrchestrationDefinition> forProvider(
+  public final ForProcessStartConditionalImpl<ProcessOrchestrationDefinition> forProvider(
       final Class<? extends IntegrationScenarioDefinition> providerClass) {
-    final ForProcessProviderImpl<ProcessOrchestrationDefinition> def =
-        new ForProcessProviderImpl(self(), getCompositeProcess(), providerClass);
+    final ForProcessStartConditionalImpl<ProcessOrchestrationDefinition> def =
+        new ForProcessStartConditionalImpl(self(), getCompositeProcess(), providerClass);
     scenarioProviderDefinitions.add(def);
     return def;
   }

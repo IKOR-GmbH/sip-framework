@@ -87,15 +87,6 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
     for (final var consumer : getHandledConsumers()) {
         routeDefinition
-//        .choice() TODO remove
-//                .when(exchange ->
-//                        CompositeProcessOrchestrationHandlers.handleConditional(
-//                                exchange,
-//                                consumer,
-//                                RouteGeneratorHelper.getStepResultCloner(definitionElement),
-//                                RouteGeneratorHelper.getConditional(definitionElement)))
-      // prepare request for consumer (as response might still be on the body) and call it
-
           .transform()
           .method(
               CompositeProcessOrchestrationHandlers.handleRequestToConsumer(
@@ -110,7 +101,6 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
                   consumer,
                   RouteGeneratorHelper.getStepResultCloner(definitionElement),
                   RouteGeneratorHelper.getResponseConsumer(definitionElement)));
-        //.endChoice().end();
       overallUnhandledConsumers.remove(consumer);
     }
   }

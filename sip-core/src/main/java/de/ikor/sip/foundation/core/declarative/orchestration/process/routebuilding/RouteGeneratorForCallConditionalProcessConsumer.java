@@ -4,20 +4,16 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOr
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallNestedCondition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumerBase;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallableWithinProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.ProcessorDefinition;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Class for generating Camel routes for process consumer calls from a DSL
@@ -28,42 +24,17 @@ import java.util.stream.Collectors;
 @SuppressWarnings("rawtypes")
 final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGeneratorProcessBase {
 
-  private final CallNestedCondition<?> definitionElement;
+  private final CallNestedCondition<?> conditionalDefinition;
 
   private final Set<IntegrationScenarioDefinition> overallUnhandledConsumers;
 
-  @Getter(lazy = true, value = AccessLevel.PROTECTED)
-  private final Set<IntegrationScenarioDefinition> handledConsumers =
-      resolveAndVerifyHandledConsumers();
-
   RouteGeneratorForCallConditionalProcessConsumer(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final CallNestedCondition definitionElement,
+      final CallNestedCondition conditionalDefinition,
       final Set<IntegrationScenarioDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);
-    this.definitionElement = definitionElement;
+    this.conditionalDefinition = conditionalDefinition;
     this.overallUnhandledConsumers = overallUnhandledConsumers;
-  }
-
-  private Set<IntegrationScenarioDefinition> resolveAndVerifyHandledConsumers() {
-    final var consumers = resolveHandledConsumers();
-
-    // verify that given providers are not already handled
-    final var doubleHandledConsumers =
-        consumers.stream().filter(handled -> !overallUnhandledConsumers.contains(handled)).toList();
-    if (!doubleHandledConsumers.isEmpty()) {
-      log.warn(
-          "The following consumers are used more than once in orchestration for scenario '{}': {}",
-          getCompositeId(),
-          doubleHandledConsumers.stream()
-              .map(obj -> obj.getClass().getName())
-              .collect(Collectors.joining(",")));
-    }
-    return consumers;
-  }
-
-  private Set<IntegrationScenarioDefinition> resolveHandledConsumers() {
-    return Collections.singleton(retrieveConsumerFromClassDefinition(definitionElement));
   }
 
   private IntegrationScenarioDefinition retrieveConsumerFromClassDefinition(
@@ -101,37 +72,52 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
   }
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
-    for (final var consumer : getHandledConsumers()) {
-        routeDefinition.choice()
-                .when(exchange ->
-                        CompositeProcessOrchestrationHandlers.handleConditional(
-                                exchange,
-                                consumer,
-                                RouteGeneratorHelper.getStepResultCloner(definitionElement),
-                                null))//TODO RouteGeneratorHelper.getConditional(definitionElement)))
-      // prepare request for consumer (as response might still be on the body) and call it
-
-          .transform()
-          .method(
-              CompositeProcessOrchestrationHandlers.handleRequestToConsumer(
-                  consumer, RouteGeneratorHelper.getRequestPreparation(definitionElement)))
-          .to(getEndpointForConsumer(consumer))
-
-      // store / aggregate the response and place it on the body
-
-          .transform()
-          .method(
-              CompositeProcessOrchestrationHandlers.handleResponseFromConsumer(
-                  consumer,
-                  RouteGeneratorHelper.getStepResultCloner(definitionElement),
-                  RouteGeneratorHelper.getResponseConsumer(definitionElement)))
-        .endChoice().end();
-      overallUnhandledConsumers.remove(consumer);
+    List<CallNestedCondition.ProcessBranchStatements> conditionalStatements = RouteGeneratorHelper.getConditionalStatements(conditionalDefinition);
+    if (conditionalStatements.isEmpty()) {
+      SIPFrameworkInitializationException.init(
+              "Empty conditional statement attached in orchestration for integration-scenario %s");
     }
+
+    final var choiceDef = routeDefinition.choice();
+    for (final var branch : conditionalStatements) {
+      if (branch.statements().isEmpty()) {
+        var branchIndex = conditionalStatements.indexOf(branch) + 1;
+        log.warn(
+                "Orchestration for integration-scenario {} contains a conditional-statement that does not specify any actions in branch #{}",
+                branchIndex);
+      }
+      choiceDef
+              .when(exchange -> CompositeProcessOrchestrationHandlers.handleConditional(
+                      exchange,
+                      RouteGeneratorHelper.getStepResultCloner(conditionalDefinition),
+                      Optional.ofNullable(branch.predicate())));
+      branch.statements().forEach(statement -> {
+        buildRouteForStatement(choiceDef, (CallableWithinProcessDefinition) statement);
+      });
+      choiceDef.endChoice();
+    }
+    List<CallableWithinProcessDefinition> unconditionalStatements = RouteGeneratorHelper.getUnonditionalStatements(conditionalDefinition);
+
+    if (!unconditionalStatements.isEmpty()) {
+      choiceDef.otherwise();
+      unconditionalStatements
+              .forEach(statement -> buildRouteForStatement(choiceDef, statement));
+      choiceDef.endChoice();
+    }
+
+    choiceDef.end();
   }
 
-  private EndpointProducerBuilder getEndpointForConsumer(
-      final IntegrationScenarioDefinition consumer) {
-    return Objects.requireNonNull(getOrchestrationInfo().getConsumerEndpoints().get(consumer));
+
+  private <T extends ProcessorDefinition<T>> void buildRouteForStatement(
+          final T routeDefinition, final CallableWithinProcessDefinition statement) {
+    if (statement instanceof CallProcessConsumerBase callDef) {
+      new RouteGeneratorForCallProcessConsumer(
+              getOrchestrationInfo(), callDef, overallUnhandledConsumers)
+              .generateRoute(routeDefinition);
+    } else {
+      throw SIPFrameworkInitializationException.init(
+              "Unhandled statement type '%s' used in conditional-branch of orchestration for integration-scenario %s");
+    }
   }
 }

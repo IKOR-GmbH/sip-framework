@@ -41,10 +41,9 @@ public class CompositeProcessOrchestrationHandlers {
 
   public static Boolean handleConditional(
           final Exchange exchange,
-          final IntegrationScenarioDefinition consumerDefinition,
           final Optional<StepResultCloner> stepResultCloner,
           final Optional<CompositeProcessStepConditional> conditional) {
-    return new ConditionalHandler(consumerDefinition, stepResultCloner, conditional).executeCondition(exchange);
+    return new ConditionalHandler(stepResultCloner, conditional).executeCondition(exchange);
   }
 
   public static ConsumerResponseHandler handleResponseFromConsumer(
@@ -125,7 +124,6 @@ public class CompositeProcessOrchestrationHandlers {
 
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
   static class ConditionalHandler {
-    private final IntegrationScenarioDefinition consumerDefinition;
     private final Optional<StepResultCloner> stepResultCloner;
     private final Optional<CompositeProcessStepConditional> conditional;
 
@@ -133,9 +131,12 @@ public class CompositeProcessOrchestrationHandlers {
     @Handler
     public boolean executeCondition(final Exchange exchange) {
       final CompositeProcessOrchestrationContext context = retrieveOrchestrationContext(exchange);
-      boolean result = conditional.get().determineCondition(context);
-      context.addCondition(consumerDefinition, context.getLatestResponse(), Optional.empty());
-      return result;
+      if (conditional.isPresent()) {
+        boolean result = conditional.get().determineCondition(context);
+        context.addCondition(context.getLatestResponse(), Optional.empty());
+        return result;
+        }
+      return true;
     }
   }
 

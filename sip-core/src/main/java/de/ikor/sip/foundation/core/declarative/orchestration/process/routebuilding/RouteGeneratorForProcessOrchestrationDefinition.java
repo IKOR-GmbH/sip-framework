@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ForProcessProviderImpl;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ForProcessStartConditionalImpl;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 
@@ -34,7 +34,7 @@ public final class RouteGeneratorForProcessOrchestrationDefinition extends Route
     final var unhandledProvidersOverall = new HashSet<>(scenarioProvidersOverall);
     final List<RouteGeneratorForProcessProviders> providerBuilders = new ArrayList<>();
 
-    for (ForProcessProviderImpl providerDefinition :
+    for (ForProcessStartConditionalImpl providerDefinition :
         RouteGeneratorHelper.getScenarioProviderDefinitions(scenarioOrchestrationDefinition)) {
 
       final var builder =

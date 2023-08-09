@@ -4,8 +4,8 @@ import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinitio
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import lombok.Getter;
 
-public class ForProcessProviderImpl<R>
-        extends ForProcessStartCondition<ForProcessProviderImpl<R>, R>{
+public class ForProcessStartConditionalImpl<R>
+        extends ForProcessStartConditional<ForProcessStartConditionalImpl<R>, R> {
 
     @Getter
     private final Class<? extends IntegrationScenarioDefinition> providerClass;
@@ -18,7 +18,7 @@ public class ForProcessProviderImpl<R>
      * @param compositeProcess    Composite Process
      * @param providerClass
      */
-    public ForProcessProviderImpl(
+    public ForProcessStartConditionalImpl(
             R dslReturnDefinition,
             CompositeProcessDefinition compositeProcess,
             Class<? extends IntegrationScenarioDefinition> providerClass) {

@@ -4,7 +4,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOr
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallNestedCondition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumerBase;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ForProcessProviderImpl;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ForProcessStartConditionalImpl;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 @SuppressWarnings("rawtypes")
 final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase {
 
-  private final ForProcessProviderImpl<?> providerDefinition;
+  private final ForProcessStartConditionalImpl<?> providerDefinition;
   private final Set<IntegrationScenarioDefinition> overallUnhandledProviders;
 
   @Getter(lazy = true)
@@ -39,7 +39,7 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
 
   RouteGeneratorForProcessProviders(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final ForProcessProviderImpl providerDefinition,
+      final ForProcessStartConditionalImpl providerDefinition,
       final Set<IntegrationScenarioDefinition> overallUnhandledProviders) {
     super(orchestrationInfo);
     this.providerDefinition = providerDefinition;
@@ -69,7 +69,7 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
   }
 
   private Set<IntegrationScenarioDefinition> resolveProvidersFromClasses(
-      final ForProcessProviderImpl element) {
+      final ForProcessStartConditionalImpl element) {
     final Set<Class<? extends IntegrationScenarioDefinition>> providerClasses =
         Set.of(RouteGeneratorHelper.getProviderClass(element));
 

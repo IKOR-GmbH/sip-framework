@@ -123,11 +123,10 @@ public class ProcessOrchestrationAdapter {
       return CompositeOrchestrator.forOrchestrationDsl(
           dsl -> {
             dsl.forProvider(getPartnerDebtByName.class)
-                 //   .ifCase(context -> true)
+                   // .ifCase(context -> true)
                 .callConsumer(getPartnerByName.class)
                 .withNoResponseHandling()
-                   // .elseIfCase(context -> true)
-                   // .endCases()
+                  //  .elseIfCase(context -> true)
                 .callConsumer(getPartnerDebtById.class)
                 .withRequestPreparation(
                     context -> {

@@ -170,17 +170,16 @@ public class CompositeProcessOrchestrationContext<M> {
 
   @Synchronized
   M addCondition(
-          final IntegrationScenarioDefinition consumer,
           final M response,
           final Optional<StepResultCloner<M>> cloner) {
     final M maybeClonedResponse = cloner.map(c -> c.apply(response)).orElse(response);
-    getResultOfLastStepFromConsumer(consumer.getClass())
+    getResultForLatestStep()
             .ifPresent(
                     step -> {
                       OrchestrationStepResult<M> lastStep =
                               orchestrationStepResults.remove(orchestrationStepResults.indexOf(step));
                       orchestrationStepResults.add(
-                              new OrchestrationStepResult<>(consumer, lastStep.request, maybeClonedResponse));
+                              new OrchestrationStepResult<>(null, lastStep.request, maybeClonedResponse));
                     });
     return maybeClonedResponse;
   }

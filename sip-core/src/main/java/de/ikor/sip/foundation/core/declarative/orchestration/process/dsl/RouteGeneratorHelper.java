@@ -19,19 +19,19 @@ import java.util.Optional;
 @SuppressWarnings("rawtypes")
 public class RouteGeneratorHelper {
 
-  public static List<ForProcessProviderImpl<?>>
+  public static List<ForProcessStartConditionalImpl<?>>
       getScenarioProviderDefinitions(
           ProcessOrchestrationDefinition processOrchestrationDefinition) {
     return processOrchestrationDefinition.getScenarioProviderDefinitions();
   }
 
   public static Class<? extends IntegrationScenarioDefinition> getProviderClass(
-          ForProcessProviderImpl<?> element) {
+          ForProcessStartConditionalImpl<?> element) {
 
     return element.getProviderClass();
   }
 
-  public static List<CallableWithinProcessDefinition> getConsumerCalls(ForProcessProviderImpl element) {
+  public static List<CallableWithinProcessDefinition> getConsumerCalls(ForProcessStartConditionalImpl element) {
     return element.getSteps();
   }
 
@@ -50,6 +50,12 @@ public class RouteGeneratorHelper {
     return element.getRequestPreparation();
   }
 
+  public static Optional<CompositeProcessStepConditional> getPredicate(Object element) {
+    if(element instanceof CallNestedCondition.ProcessBranchStatements ele)
+    return Optional.ofNullable(ele.predicate());
+    return Optional.empty();
+  }
+
   public static Optional<CompositeProcessStepRequestExtractor> getRequestPreparation(
           CallNestedCondition element) {
     return element.getRequestPreparation();
@@ -66,9 +72,17 @@ public class RouteGeneratorHelper {
   }
 
   public static Optional<CompositeProcessStepConditional> getConditional(
-          ForProcessStartCondition element) {
+          ForProcessStartConditional element) {
     //TODO
     return element.getConditionals().stream().findFirst();
+  }
+
+  public static List<CallNestedCondition.ProcessBranchStatements> getConditionalStatements(CallNestedCondition element) {
+    return element.getConditionalStatements();
+  }
+
+  public static List<CallableWithinProcessDefinition> getUnonditionalStatements(CallNestedCondition element) {
+    return element.getUnconditionalStatements();
   }
 
 

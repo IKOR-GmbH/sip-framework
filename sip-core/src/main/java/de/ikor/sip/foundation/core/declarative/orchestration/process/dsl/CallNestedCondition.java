@@ -22,7 +22,7 @@ public final class CallNestedCondition<R>
     private final List<ProcessBranchStatements<R>> conditionalStatements = new ArrayList<>();
 
     @Getter(AccessLevel.PACKAGE)
-    private final List<ProcessBranchStatements<R>> unconditionalStatements = new ArrayList<>();
+    private final List<CallableWithinProcessDefinition> unconditionalStatements = new ArrayList<>();
 
     private final CompositeProcessDefinition processDefinition;
     @Getter(AccessLevel.PACKAGE)
@@ -64,7 +64,7 @@ public final class CallNestedCondition<R>
         return getDslReturnDefinition();
     }
 
-    record ProcessBranchStatements<M>(
+    public record ProcessBranchStatements<M>(
             CompositeProcessStepConditional predicate,
             List<CallProcessConsumerBase> statements) {}
 
@@ -83,11 +83,6 @@ public final class CallNestedCondition<R>
             delegate =
                     new ForProcessProvidersDelegate(statementsList,
                             self(), getDslReturnDefinition(), consumerClass);
-//                    new ForProcessProvidersDelegate(
-//                            dslReturnDefinition,
-//                            processDefinition,
-//                            statementsList, consumerClass,
-//                            self());
         }
 
 

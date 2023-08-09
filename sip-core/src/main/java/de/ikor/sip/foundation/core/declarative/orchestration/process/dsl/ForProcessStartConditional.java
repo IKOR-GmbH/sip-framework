@@ -12,9 +12,9 @@ import java.util.List;
 
 //eq ForScenarioProvidersBaseDefinition
 /** DSL class for specifying orchestration of complex processes */
-public abstract class ForProcessStartCondition<
-        S extends ForProcessStartCondition<S, R>, R>
-         extends ProcessDslBase<ForProcessStartCondition<S, R>, R>
+public abstract class ForProcessStartConditional<
+        S extends ForProcessStartConditional<S, R>, R>
+         extends ProcessDslBase<ForProcessStartConditional<S, R>, R>
       implements ProcessConsumerCalls<S , R> {
 
 
@@ -39,7 +39,7 @@ public abstract class ForProcessStartCondition<
    *
    * @param compositeProcess Composite Process
    */
-  ForProcessStartCondition(
+  ForProcessStartConditional(
           final R dslReturnDefinition,
           final CompositeProcessDefinition compositeProcess,
           final Class<? extends IntegrationScenarioDefinition> providerClass) {
