@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static java.util.Map.entry;
 import static java.util.function.Predicate.not;
 
 import de.ikor.sip.foundation.core.declarative.annonation.*;
@@ -67,19 +68,13 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
     this.globalModelMappersRegistry = checkAndInitializeGlobalModelMappers(modelMappers);
 
-    this.processes =
-        compositeProcessDefinitions.stream().filter(not(isDisabled())).collect(Collectors.toList());
+    this.processes = compositeProcessDefinitions.stream().filter(not(isDisabled())).toList();
 
     createMissingConnectorGroups();
     checkForDuplicateConnectorGroups();
     checkForUnusedMappers();
     checkForDuplicateScenarios();
-    checkAnnotatedClassForMissingParent(IntegrationScenario.class, IntegrationScenarioBase.class);
-    checkAnnotatedClassForMissingParent(ConnectorGroup.class, ConnectorGroupBase.class);
-    checkAnnotatedClassForMissingParent(InboundConnector.class, InboundConnectorBase.class);
-    checkAnnotatedClassForMissingParent(
-        OutboundConnector.class, GenericOutboundConnectorBase.class);
-    checkAnnotatedClassForMissingParent(CompositeProcess.class, CompositeProcessBase.class);
+    checkAnnotatedClassForMissingParents();
     checkForUnusedScenarios();
     checkForDuplicateConnectors();
   }
@@ -124,6 +119,16 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     return connectorDefinition.getOrchestrator()
             instanceof ConnectorOrchestrator connectorOrchestrator
         && (!mapper.equals(connectorOrchestrator.getResponseRouteTransformer()));
+  }
+
+  private void checkAnnotatedClassForMissingParents() {
+    Map.ofEntries(
+            entry(IntegrationScenario.class, IntegrationScenarioBase.class),
+            entry(ConnectorGroup.class, ConnectorGroupBase.class),
+            entry(InboundConnector.class, InboundConnectorBase.class),
+            entry(OutboundConnector.class, GenericOutboundConnectorBase.class),
+            entry(CompositeProcess.class, CompositeProcessBase.class))
+        .forEach(this::checkAnnotatedClassForMissingParent);
   }
 
   private void checkAnnotatedClassForMissingParent(
