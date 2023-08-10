@@ -10,5 +10,5 @@ public interface CompositeProcessStepResponseConsumer {
    * @param latestResponse Response received from the process consumer
    * @param context Current orchestration context
    */
-  void consumeResponse(Object latestResponse, CompositeProcessOrchestrationContext<Object> context);
+  void consumeResponse(Object latestResponse, CompositeProcessOrchestrationContext context);
 }

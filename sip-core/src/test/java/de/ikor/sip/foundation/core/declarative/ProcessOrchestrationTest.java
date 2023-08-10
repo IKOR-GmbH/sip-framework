@@ -1,8 +1,12 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import de.ikor.sip.foundation.core.apps.declarative.ProcessOrchestrationAdapter;
 import de.ikor.sip.foundation.core.apps.declarative.ProcessOrchestrationAdapter.DebtResponse;
 import de.ikor.sip.foundation.core.apps.declarative.ProcessOrchestrationAdapter.PartnerResponse;
+import java.math.BigDecimal;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import org.apache.camel.FluentProducerTemplate;
@@ -16,11 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.math.BigDecimal;
-
-import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.direct;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @CamelSpringBootTest
 @SpringBootTest(classes = {ProcessOrchestrationAdapter.class})

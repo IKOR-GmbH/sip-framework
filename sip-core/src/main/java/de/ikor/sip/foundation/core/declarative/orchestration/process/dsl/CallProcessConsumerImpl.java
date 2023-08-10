@@ -6,16 +6,16 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 public final class CallProcessConsumerImpl<R>
-        extends CallProcessConsumerBase<CallProcessConsumerImpl<R>, R>{
+    extends CallProcessConsumerBase<CallProcessConsumerImpl<R>, R> {
 
-    @Getter(AccessLevel.PACKAGE)
-    private final Class<? extends IntegrationScenarioDefinition> consumerClass;
+  @Getter(AccessLevel.PACKAGE)
+  private final Class<? extends IntegrationScenarioDefinition> consumerClass;
 
-    CallProcessConsumerImpl(
-            R dslReturnDefinition,
-            CompositeProcessDefinition compositeProcess,
-            Class<? extends IntegrationScenarioDefinition> consumerClass) {
-        super(dslReturnDefinition, compositeProcess, consumerClass);
-        this.consumerClass = consumerClass;
-    }
+  CallProcessConsumerImpl(
+      R dslReturnDefinition,
+      CompositeProcessDefinition compositeProcess,
+      Class<? extends IntegrationScenarioDefinition> consumerClass) {
+    super(dslReturnDefinition, compositeProcess, consumerClass);
+    this.consumerClass = consumerClass;
+  }
 }

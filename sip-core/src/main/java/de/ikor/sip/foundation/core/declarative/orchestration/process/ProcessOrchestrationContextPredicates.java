@@ -1,15 +1,14 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationContext;
-import lombok.experimental.UtilityClass;
-
 import java.util.Objects;
 import java.util.function.Predicate;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ProcessOrchestrationContextPredicates {
 
-  public static <T, M> Predicate<CompositeProcessOrchestrationContext<M>> headerEquals(
+  public static <T> Predicate<CompositeProcessOrchestrationContext> headerEquals(
       final String headerName, final T expectedValue) {
     Objects.requireNonNull(expectedValue);
     return context ->
@@ -35,7 +34,8 @@ public class ProcessOrchestrationContextPredicates {
    * @param requestPredicate Predicate to test against the original request
    * @return Test result
    */
-  public static CompositeProcessStepConditional originalRequestMatches(final Predicate<?> requestPredicate) {
+  public static CompositeProcessStepConditional originalRequestMatches(
+      final Predicate<?> requestPredicate) {
     return context -> requestPredicate.test(context.getOriginalRequest());
   }
 
@@ -48,6 +48,7 @@ public class ProcessOrchestrationContextPredicates {
    */
   public static CompositeProcessStepConditional responseMatches(
       final Predicate<Object> responsePredicate) {
-    return context -> context.getLatestResponse().map(responsePredicate::test).orElse(false);
+    return context ->
+        (boolean) context.getLatestResponse().map(responsePredicate::test).orElse(false);
   }
 }

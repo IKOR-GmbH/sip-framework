@@ -4,7 +4,6 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOr
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ForProcessStartConditionalImpl;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;

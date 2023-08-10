@@ -16,6 +16,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOr
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrator;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.camel.builder.EndpointConsumerBuilder;
@@ -23,8 +24,6 @@ import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
-
-import java.math.BigDecimal;
 
 @SIPIntegrationAdapter
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))
@@ -92,8 +91,7 @@ public class ProcessOrchestrationAdapter {
 
     @Override
     public Orchestrator<ScenarioOrchestrationInfo> getOrchestrator() {
-      return ScenarioOrchestrator
-              .forOrchestrationDslWithResponse(
+      return ScenarioOrchestrator.forOrchestrationDslWithResponse(
           DebtResponse.class,
           dsl -> {
             dsl.forAnyUnspecifiedScenarioProvider()

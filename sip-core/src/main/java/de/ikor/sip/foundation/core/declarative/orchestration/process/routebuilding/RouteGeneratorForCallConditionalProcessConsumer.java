@@ -8,12 +8,11 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.Callabl
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.model.ProcessorDefinition;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.model.ProcessorDefinition;
 
 /**
  * Class for generating Camel routes for process consumer calls from a DSL
@@ -53,18 +52,18 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
   }
 
   private IntegrationScenarioDefinition retrieveConsumerFromClassDefinition(
-          final CallNestedCondition element) {
+      final CallNestedCondition element) {
     return getConsumers().stream()
-            .filter(
-                    consumer -> RouteGeneratorHelper.getConsumerClass(element).equals(consumer.getClass()))
-            .findFirst()
-            .orElseThrow(
-                    () ->
-                            SIPFrameworkInitializationException.init(
-                                    "Consumer-class '%s' is used on orchestration for process '%s', but it is not registered with that scenario. Registered outbound connector classes are %s",
-                                    RouteGeneratorHelper.getConsumerClass(element).getName(),
-                                    getCompositeId(),
-                                    getConsumers().stream().map(conn -> conn.getClass().getName()).toList()));
+        .filter(
+            consumer -> RouteGeneratorHelper.getConsumerClass(element).equals(consumer.getClass()))
+        .findFirst()
+        .orElseThrow(
+            () ->
+                SIPFrameworkInitializationException.init(
+                    "Consumer-class '%s' is used on orchestration for process '%s', but it is not registered with that scenario. Registered outbound connector classes are %s",
+                    RouteGeneratorHelper.getConsumerClass(element).getName(),
+                    getCompositeId(),
+                    getConsumers().stream().map(conn -> conn.getClass().getName()).toList()));
   }
 
   private List<IntegrationScenarioDefinition> getConsumers() {
@@ -72,10 +71,11 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
   }
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
-    List<CallNestedCondition.ProcessBranchStatements> conditionalStatements = RouteGeneratorHelper.getConditionalStatements(conditionalDefinition);
+    List<CallNestedCondition.ProcessBranchStatements> conditionalStatements =
+        RouteGeneratorHelper.getConditionalStatements(conditionalDefinition);
     if (conditionalStatements.isEmpty()) {
       SIPFrameworkInitializationException.init(
-              "Empty conditional statement attached in orchestration for integration-scenario %s");
+          "Empty conditional statement attached in orchestration for integration-scenario %s");
     }
 
     final var choiceDef = routeDefinition.choice();
@@ -83,41 +83,44 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
       if (branch.statements().isEmpty()) {
         var branchIndex = conditionalStatements.indexOf(branch) + 1;
         log.warn(
-                "Orchestration for integration-scenario {} contains a conditional-statement that does not specify any actions in branch #{}",
-                branchIndex);
+            "Orchestration for integration-scenario {} contains a conditional-statement that does not specify any actions in branch #{}",
+            branchIndex);
       }
-      choiceDef
-              .when(exchange -> CompositeProcessOrchestrationHandlers.handleConditional(
-                      exchange,
-                      RouteGeneratorHelper.getStepResultCloner(conditionalDefinition),
-                      Optional.ofNullable(branch.predicate())));
-      branch.statements().forEach(statement -> {
-        buildRouteForStatement(choiceDef, (CallableWithinProcessDefinition) statement);
-      });
+      choiceDef.when(
+          exchange ->
+              CompositeProcessOrchestrationHandlers.handleConditional(
+                  exchange,
+                  RouteGeneratorHelper.getStepResultCloner(conditionalDefinition),
+                  Optional.ofNullable(branch.predicate())));
+      branch
+          .statements()
+          .forEach(
+              statement -> {
+                buildRouteForStatement(choiceDef, (CallableWithinProcessDefinition) statement);
+              });
       choiceDef.endChoice();
     }
-    List<CallableWithinProcessDefinition> unconditionalStatements = RouteGeneratorHelper.getUnonditionalStatements(conditionalDefinition);
+    List<CallableWithinProcessDefinition> unconditionalStatements =
+        RouteGeneratorHelper.getUnonditionalStatements(conditionalDefinition);
 
     if (!unconditionalStatements.isEmpty()) {
       choiceDef.otherwise();
-      unconditionalStatements
-              .forEach(statement -> buildRouteForStatement(choiceDef, statement));
+      unconditionalStatements.forEach(statement -> buildRouteForStatement(choiceDef, statement));
       choiceDef.endChoice();
     }
 
     choiceDef.end();
   }
 
-
   private <T extends ProcessorDefinition<T>> void buildRouteForStatement(
-          final T routeDefinition, final CallableWithinProcessDefinition statement) {
+      final T routeDefinition, final CallableWithinProcessDefinition statement) {
     if (statement instanceof CallProcessConsumerBase callDef) {
       new RouteGeneratorForCallProcessConsumer(
               getOrchestrationInfo(), callDef, overallUnhandledConsumers)
-              .generateRoute(routeDefinition);
+          .generateRoute(routeDefinition);
     } else {
       throw SIPFrameworkInitializationException.init(
-              "Unhandled statement type '%s' used in conditional-branch of orchestration for integration-scenario %s");
+          "Unhandled statement type '%s' used in conditional-branch of orchestration for integration-scenario %s");
     }
   }
 }

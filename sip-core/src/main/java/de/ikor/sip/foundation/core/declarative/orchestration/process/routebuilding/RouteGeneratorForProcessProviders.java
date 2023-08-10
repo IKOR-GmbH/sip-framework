@@ -8,18 +8,17 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ForProc
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
-
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Class for generating Camel routes for process providers via DSL
@@ -111,8 +110,9 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
                 getOrchestrationInfo(), ele, overallUnhandledScenarioConsumers)
             .generateRoute(routeDef);
       } else if (element instanceof CallNestedCondition<?> ele) {
-        new RouteGeneratorForCallConditionalProcessConsumer(getOrchestrationInfo(), ele, overallUnhandledScenarioConsumers)
-                .generateRoute(routeDef);
+        new RouteGeneratorForCallConditionalProcessConsumer(
+                getOrchestrationInfo(), ele, overallUnhandledScenarioConsumers)
+            .generateRoute(routeDef);
       }
     }
 

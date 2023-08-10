@@ -3,20 +3,16 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepConditional;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 /** DSL class for specifying orchestration of complex processes */
-public abstract class ForProcessStartConditional<
-        S extends ForProcessStartConditional<S, R>, R>
-         extends ProcessDslBase<ForProcessStartConditional<S, R>, R>
-      implements ProcessConsumerCalls<S , R> {
-
+public abstract class ForProcessStartConditional<S extends ForProcessStartConditional<S, R>, R>
+    extends ProcessDslBase<ForProcessStartConditional<S, R>, R>
+    implements ProcessConsumerCalls<S, R> {
 
   @Getter(AccessLevel.PACKAGE)
   private final List<CallableWithinProcessDefinition> steps = new ArrayList<>();
@@ -31,7 +27,6 @@ public abstract class ForProcessStartConditional<
   @Getter(AccessLevel.PACKAGE)
   private final ForProcessProvidersDelegate<S, R> forProcessProvidersDelegate;
 
-
   /**
    * Constructor
    *
@@ -40,23 +35,19 @@ public abstract class ForProcessStartConditional<
    * @param compositeProcess Composite Process
    */
   ForProcessStartConditional(
-          final R dslReturnDefinition,
-          final CompositeProcessDefinition compositeProcess,
-          final Class<? extends IntegrationScenarioDefinition> providerClass) {
+      final R dslReturnDefinition,
+      final CompositeProcessDefinition compositeProcess,
+      final Class<? extends IntegrationScenarioDefinition> providerClass) {
     super(dslReturnDefinition, compositeProcess);
     this.providerClass = providerClass;
-    this.forProcessProvidersDelegate = new ForProcessProvidersDelegate(
-            steps,
-            self(),
-            getDslReturnDefinition(),
-            providerClass);
+    this.forProcessProvidersDelegate =
+        new ForProcessProvidersDelegate(steps, self(), getDslReturnDefinition(), providerClass);
   }
 
-  public CallNestedCondition<S>
-          .ProcessBranch<CallNestedCondition<S>> ifCase(
-          final CompositeProcessStepConditional predicate) {
+  public CallNestedCondition<S>.ProcessBranch<CallNestedCondition<S>> ifCase(
+      final CompositeProcessStepConditional predicate) {
     final CallNestedCondition<S> def =
-            new CallNestedCondition(self(), getCompositeProcess(), providerClass);
+        new CallNestedCondition(self(), getCompositeProcess(), providerClass);
     steps.add(def);
     conditionals.add(predicate);
     return def.elseIfCase(predicate);

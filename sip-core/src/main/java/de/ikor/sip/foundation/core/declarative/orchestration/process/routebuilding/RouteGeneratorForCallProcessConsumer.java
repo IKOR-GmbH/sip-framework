@@ -6,17 +6,16 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallPro
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.builder.EndpointProducerBuilder;
-import org.apache.camel.model.ProcessorDefinition;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.builder.EndpointProducerBuilder;
+import org.apache.camel.model.ProcessorDefinition;
 
 /**
  * Class for generating Camel routes for process consumer calls from a DSL
@@ -86,14 +85,14 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
     for (final var consumer : getHandledConsumers()) {
-        routeDefinition
+      routeDefinition
           .transform()
           .method(
               CompositeProcessOrchestrationHandlers.handleRequestToConsumer(
                   consumer, RouteGeneratorHelper.getRequestPreparation(definitionElement)))
           .to(getEndpointForConsumer(consumer))
 
-      // store / aggregate the response and place it on the body
+          // store / aggregate the response and place it on the body
 
           .transform()
           .method(

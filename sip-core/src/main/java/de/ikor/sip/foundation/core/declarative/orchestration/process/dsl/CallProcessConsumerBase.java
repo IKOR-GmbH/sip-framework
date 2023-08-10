@@ -7,19 +7,18 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositePr
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-import java.util.Optional;
-
-/** DSL class for calling a process consumer specified by its class
-* @param <R> DSL handle for the return DSL Verb/type.
-*/
+/**
+ * DSL class for calling a process consumer specified by its class
+ *
+ * @param <R> DSL handle for the return DSL Verb/type.
+ */
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
-public class CallProcessConsumerBase<
-        S extends CallProcessConsumerBase<S, R>, R>
-        extends ProcessDslBase<S, R>
-        implements CallableWithinProcessDefinition {
+public class CallProcessConsumerBase<S extends CallProcessConsumerBase<S, R>, R>
+    extends ProcessDslBase<S, R> implements CallableWithinProcessDefinition {
 
   @Getter(AccessLevel.PACKAGE)
   private final Class<? extends IntegrationScenarioDefinition> consumerClass;
@@ -41,7 +40,6 @@ public class CallProcessConsumerBase<
     this.consumerClass = consumerClass;
   }
 
-
   /**
    * Attaches a {@link CompositeProcessStepRequestExtractor} that allows to manipulate the request
    * for this call.
@@ -49,8 +47,7 @@ public class CallProcessConsumerBase<
    * @param requestPreparation the extractor for the request
    * @return DSL handle
    */
-  public S withRequestPreparation(
-      final CompositeProcessStepRequestExtractor requestPreparation) {
+  public S withRequestPreparation(final CompositeProcessStepRequestExtractor requestPreparation) {
     this.requestPreparation = Optional.of(requestPreparation);
     return self();
   }

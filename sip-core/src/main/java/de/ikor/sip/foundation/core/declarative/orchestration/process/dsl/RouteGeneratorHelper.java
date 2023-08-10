@@ -5,10 +5,9 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositePr
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepRequestExtractor;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import lombok.experimental.UtilityClass;
-
 import java.util.List;
 import java.util.Optional;
+import lombok.experimental.UtilityClass;
 
 /**
  * Class that exposes the insides of orchestration definition. Those are package private so that
@@ -21,19 +20,19 @@ import java.util.Optional;
 @SuppressWarnings("rawtypes")
 public class RouteGeneratorHelper {
 
-  public static List<ForProcessStartConditionalImpl<?>>
-      getScenarioProviderDefinitions(
-          ProcessOrchestrationDefinition processOrchestrationDefinition) {
+  public static List<ForProcessStartConditionalImpl<?>> getScenarioProviderDefinitions(
+      ProcessOrchestrationDefinition processOrchestrationDefinition) {
     return processOrchestrationDefinition.getScenarioProviderDefinitions();
   }
 
   public static Class<? extends IntegrationScenarioDefinition> getProviderClass(
-          ForProcessStartConditionalImpl<?> element) {
+      ForProcessStartConditionalImpl<?> element) {
 
     return element.getProviderClass();
   }
 
-  public static List<CallableWithinProcessDefinition> getConsumerCalls(ForProcessStartConditionalImpl element) {
+  public static List<CallableWithinProcessDefinition> getConsumerCalls(
+      ForProcessStartConditionalImpl element) {
     return element.getSteps();
   }
 
@@ -43,7 +42,7 @@ public class RouteGeneratorHelper {
   }
 
   public static Class<? extends IntegrationScenarioDefinition> getConsumerClass(
-          CallNestedCondition element) {
+      CallNestedCondition element) {
     return element.getProviderScenarioClass();
   }
 
@@ -53,13 +52,13 @@ public class RouteGeneratorHelper {
   }
 
   public static Optional<CompositeProcessStepConditional> getPredicate(Object element) {
-    if(element instanceof CallNestedCondition.ProcessBranchStatements ele)
-    return Optional.ofNullable(ele.predicate());
+    if (element instanceof CallNestedCondition.ProcessBranchStatements ele)
+      return Optional.ofNullable(ele.predicate());
     return Optional.empty();
   }
 
   public static Optional<CompositeProcessStepRequestExtractor> getRequestPreparation(
-          CallNestedCondition element) {
+      CallNestedCondition element) {
     return element.getRequestPreparation();
   }
 
@@ -69,24 +68,25 @@ public class RouteGeneratorHelper {
   }
 
   public static Optional<CompositeProcessStepResponseConsumer> getResponseConsumer(
-          CallNestedCondition element) {
+      CallNestedCondition element) {
     return element.getResponseConsumer();
   }
 
   public static Optional<CompositeProcessStepConditional> getConditional(
-          ForProcessStartConditional element) {
-    //TODO
+      ForProcessStartConditional element) {
+    // TODO
     return element.getConditionals().stream().findFirst();
   }
 
-  public static List<CallNestedCondition.ProcessBranchStatements> getConditionalStatements(CallNestedCondition element) {
+  public static List<CallNestedCondition.ProcessBranchStatements> getConditionalStatements(
+      CallNestedCondition element) {
     return element.getConditionalStatements();
   }
 
-  public static List<CallableWithinProcessDefinition> getUnonditionalStatements(CallNestedCondition element) {
+  public static List<CallableWithinProcessDefinition> getUnonditionalStatements(
+      CallNestedCondition element) {
     return element.getUnconditionalStatements();
   }
-
 
   public static Optional<StepResultCloner> getStepResultCloner(CallProcessConsumerBase element) {
     return element.getStepResultCloner();

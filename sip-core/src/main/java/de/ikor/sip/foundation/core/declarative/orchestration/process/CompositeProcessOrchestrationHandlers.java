@@ -5,6 +5,7 @@ import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinitio
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
+import java.util.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +13,6 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
-
-import java.util.*;
 
 /**
  * Various handlers use in scenario orchestration. Handlers will be a part of the generated routes.
@@ -40,9 +39,9 @@ public class CompositeProcessOrchestrationHandlers {
   }
 
   public static Boolean handleConditional(
-          final Exchange exchange,
-          final Optional<StepResultCloner> stepResultCloner,
-          final Optional<CompositeProcessStepConditional> conditional) {
+      final Exchange exchange,
+      final Optional<StepResultCloner> stepResultCloner,
+      final Optional<CompositeProcessStepConditional> conditional) {
     return new ConditionalHandler(stepResultCloner, conditional).executeCondition(exchange);
   }
 
@@ -127,7 +126,6 @@ public class CompositeProcessOrchestrationHandlers {
     private final Optional<StepResultCloner> stepResultCloner;
     private final Optional<CompositeProcessStepConditional> conditional;
 
-
     @Handler
     public boolean executeCondition(final Exchange exchange) {
       final CompositeProcessOrchestrationContext context = retrieveOrchestrationContext(exchange);
@@ -135,7 +133,7 @@ public class CompositeProcessOrchestrationHandlers {
         boolean result = conditional.get().determineCondition(context);
         context.addCondition(context.getLatestResponse().orElse(null), Optional.empty());
         return result;
-        }
+      }
       return true;
     }
   }
