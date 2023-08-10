@@ -4,7 +4,7 @@ import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinitio
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import lombok.AccessLevel;
 import lombok.Getter;
-// eq CallScenarioConsumerByClassDefinition
+
 public final class CallProcessConsumerImpl<R>
         extends CallProcessConsumerBase<CallProcessConsumerImpl<R>, R>{
 

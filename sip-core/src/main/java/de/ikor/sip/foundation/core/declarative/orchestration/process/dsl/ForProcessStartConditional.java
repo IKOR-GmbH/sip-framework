@@ -10,7 +10,7 @@ import lombok.experimental.Delegate;
 import java.util.ArrayList;
 import java.util.List;
 
-//eq ForScenarioProvidersBaseDefinition
+
 /** DSL class for specifying orchestration of complex processes */
 public abstract class ForProcessStartConditional<
         S extends ForProcessStartConditional<S, R>, R>

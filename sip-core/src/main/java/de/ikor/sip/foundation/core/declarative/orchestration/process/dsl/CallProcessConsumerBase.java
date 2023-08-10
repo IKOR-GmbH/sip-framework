@@ -11,7 +11,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.util.Optional;
-// eq CallScenarioConsumerBaseDefinition
 
 /** DSL class for calling a process consumer specified by its class
 * @param <R> DSL handle for the return DSL Verb/type.
