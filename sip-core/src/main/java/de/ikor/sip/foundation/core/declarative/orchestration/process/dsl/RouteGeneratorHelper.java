@@ -25,12 +25,6 @@ public class RouteGeneratorHelper {
     return processOrchestrationDefinition.getScenarioProviderDefinitions();
   }
 
-  public static Class<? extends IntegrationScenarioDefinition> getProviderClass(
-      ForProcessStartConditionalImpl<?> element) {
-
-    return element.getProviderClass();
-  }
-
   public static List<CallableWithinProcessDefinition> getConsumerCalls(
       ForProcessStartConditionalImpl element) {
     return element.getSteps();
@@ -39,11 +33,6 @@ public class RouteGeneratorHelper {
   public static Class<? extends IntegrationScenarioDefinition> getConsumerClass(
       CallProcessConsumerBase element) {
     return element.getConsumerClass();
-  }
-
-  public static Class<? extends IntegrationScenarioDefinition> getConsumerClass(
-      CallNestedCondition element) {
-    return element.getProviderScenarioClass();
   }
 
   public static Optional<CompositeProcessStepRequestExtractor> getRequestPreparation(

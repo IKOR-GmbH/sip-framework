@@ -27,9 +27,6 @@ public final class ForProcessProvidersDelegate<S extends ProcessConsumerCalls<S,
   @Getter(AccessLevel.PACKAGE)
   private final R returningNode;
 
-  @Getter(AccessLevel.PACKAGE)
-  private final Class<? extends IntegrationScenarioDefinition> providerClass;
-
   @Override
   public CallProcessConsumerImpl<S> callConsumer(
       Class<? extends IntegrationScenarioDefinition> consumerClass) {

@@ -2,7 +2,6 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepConditional;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -20,9 +19,6 @@ public abstract class ForProcessStartConditional<S extends ForProcessStartCondit
   @Getter(AccessLevel.PACKAGE)
   private final List<CompositeProcessStepConditional> conditionals = new ArrayList<>();
 
-  @Getter(AccessLevel.PACKAGE)
-  private final Class<? extends IntegrationScenarioDefinition> providerClass;
-
   @Delegate
   @Getter(AccessLevel.PACKAGE)
   private final ForProcessProvidersDelegate<S, R> forProcessProvidersDelegate;
@@ -35,19 +31,15 @@ public abstract class ForProcessStartConditional<S extends ForProcessStartCondit
    * @param compositeProcess Composite Process
    */
   ForProcessStartConditional(
-      final R dslReturnDefinition,
-      final CompositeProcessDefinition compositeProcess,
-      final Class<? extends IntegrationScenarioDefinition> providerClass) {
+      final R dslReturnDefinition, final CompositeProcessDefinition compositeProcess) {
     super(dslReturnDefinition, compositeProcess);
-    this.providerClass = providerClass;
     this.forProcessProvidersDelegate =
-        new ForProcessProvidersDelegate(steps, self(), getDslReturnDefinition(), providerClass);
+        new ForProcessProvidersDelegate(steps, self(), getDslReturnDefinition());
   }
 
   public CallNestedCondition<S>.ProcessBranch<CallNestedCondition<S>> ifCase(
       final CompositeProcessStepConditional predicate) {
-    final CallNestedCondition<S> def =
-        new CallNestedCondition(self(), getCompositeProcess(), providerClass);
+    final CallNestedCondition<S> def = new CallNestedCondition(self(), getCompositeProcess());
     steps.add(def);
     conditionals.add(predicate);
     return def.elseIfCase(predicate);

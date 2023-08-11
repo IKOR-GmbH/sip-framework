@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.builder.EndpointConsumerBuilder;
@@ -64,28 +63,8 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
   }
 
   private Set<IntegrationScenarioDefinition> resolveHandledProviders() {
-    return resolveProvidersFromClasses(providerDefinition);
-  }
-
-  private Set<IntegrationScenarioDefinition> resolveProvidersFromClasses(
-      final ForProcessStartConditionalImpl element) {
-    final Set<Class<? extends IntegrationScenarioDefinition>> providerClasses =
-        Set.of(RouteGeneratorHelper.getProviderClass(element));
-
-    final var scenarioProviderMap =
-        Stream.of(getDeclarationsRegistry().getCompositeProcessProviderDefinition(getCompositeId()))
-            .collect(Collectors.toMap(IntegrationScenarioDefinition::getClass, con -> con));
-    final var unknownProviderNames =
-        providerClasses.stream()
-            .filter(clazz -> !scenarioProviderMap.containsKey(clazz))
-            .map(Class::getName)
-            .toList();
-    if (!unknownProviderNames.isEmpty()) {
-      throw SIPFrameworkInitializationException.init(
-          "The following provider-classes are used in orchestration for process '%s', but not registered with that scenario: %s",
-          getCompositeId(), String.join(",", unknownProviderNames));
-    }
-    return providerClasses.stream().map(scenarioProviderMap::get).collect(Collectors.toSet());
+    return Set.of(
+        getDeclarationsRegistry().getCompositeProcessProviderDefinition(getCompositeId()));
   }
 
   void generateRoutes(final RoutesDefinition routesDefinition) {

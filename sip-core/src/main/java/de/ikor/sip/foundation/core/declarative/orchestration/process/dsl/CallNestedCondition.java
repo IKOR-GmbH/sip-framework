@@ -5,7 +5,6 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositePr
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepRequestExtractor;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,9 +24,6 @@ public final class CallNestedCondition<R> extends ProcessDslBase<CallNestedCondi
   private final CompositeProcessDefinition processDefinition;
 
   @Getter(AccessLevel.PACKAGE)
-  private final Class providerScenarioClass;
-
-  @Getter(AccessLevel.PACKAGE)
   private Optional<CompositeProcessStepRequestExtractor> requestPreparation = Optional.empty();
 
   @Getter(AccessLevel.PACKAGE)
@@ -36,28 +32,20 @@ public final class CallNestedCondition<R> extends ProcessDslBase<CallNestedCondi
   @Getter(AccessLevel.PACKAGE)
   private Optional<StepResultCloner<Object>> stepResultCloner = Optional.empty();
 
-  CallNestedCondition(
-      R dslReturnDefinition,
-      CompositeProcessDefinition compositeProcess,
-      Class providerScenarioClass) {
+  CallNestedCondition(R dslReturnDefinition, CompositeProcessDefinition compositeProcess) {
     super(dslReturnDefinition, compositeProcess);
     this.processDefinition = compositeProcess;
-    this.providerScenarioClass = providerScenarioClass;
   }
 
   ProcessBranch<CallNestedCondition<R>> elseIfCase(
       final CompositeProcessStepConditional predicate) {
     final var branch = new ProcessBranchStatements(predicate, new ArrayList<>());
     conditionalStatements.add(branch);
-    return new ProcessBranch(branch.statements, self(), processDefinition, providerScenarioClass);
+    return new ProcessBranch(branch.statements, self(), processDefinition);
   }
 
   ProcessBranch<R> elseCase() {
-    return new ProcessBranch(
-        unconditionalStatements,
-        getDslReturnDefinition(),
-        processDefinition,
-        providerScenarioClass);
+    return new ProcessBranch(unconditionalStatements, getDslReturnDefinition(), processDefinition);
   }
 
   R endCases() {
@@ -76,12 +64,9 @@ public final class CallNestedCondition<R> extends ProcessDslBase<CallNestedCondi
     ProcessBranch(
         final List<ProcessBranchStatements> statementsList,
         final I dslReturnDefinition,
-        final CompositeProcessDefinition processDefinition,
-        Class<? extends IntegrationScenarioDefinition> consumerClass) {
+        final CompositeProcessDefinition processDefinition) {
       super(dslReturnDefinition, processDefinition);
-      delegate =
-          new ForProcessProvidersDelegate(
-              statementsList, self(), getDslReturnDefinition(), consumerClass);
+      delegate = new ForProcessProvidersDelegate(statementsList, self(), getDslReturnDefinition());
     }
 
     public ProcessBranch<CallNestedCondition<R>> elseIfCase(

@@ -36,40 +36,6 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
     this.overallUnhandledConsumers = overallUnhandledConsumers;
   }
 
-  private IntegrationScenarioDefinition retrieveConsumerFromClassDefinition(
-      final CallProcessConsumerBase element) {
-    return getConsumers().stream()
-        .filter(
-            consumer -> RouteGeneratorHelper.getConsumerClass(element).equals(consumer.getClass()))
-        .findFirst()
-        .orElseThrow(
-            () ->
-                SIPFrameworkInitializationException.init(
-                    "Consumer-class '%s' is used on orchestration for process '%s', but it is not registered with that scenario. Registered outbound connector classes are %s",
-                    RouteGeneratorHelper.getConsumerClass(element).getName(),
-                    getCompositeId(),
-                    getConsumers().stream().map(conn -> conn.getClass().getName()).toList()));
-  }
-
-  private IntegrationScenarioDefinition retrieveConsumerFromClassDefinition(
-      final CallNestedCondition element) {
-    return getConsumers().stream()
-        .filter(
-            consumer -> RouteGeneratorHelper.getConsumerClass(element).equals(consumer.getClass()))
-        .findFirst()
-        .orElseThrow(
-            () ->
-                SIPFrameworkInitializationException.init(
-                    "Consumer-class '%s' is used on orchestration for process '%s', but it is not registered with that scenario. Registered outbound connector classes are %s",
-                    RouteGeneratorHelper.getConsumerClass(element).getName(),
-                    getCompositeId(),
-                    getConsumers().stream().map(conn -> conn.getClass().getName()).toList()));
-  }
-
-  private List<IntegrationScenarioDefinition> getConsumers() {
-    return getDeclarationsRegistry().getCompositeProcessConsumerDefinitions(getCompositeId());
-  }
-
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
     List<CallNestedCondition.ProcessBranchStatements> conditionalStatements =
         RouteGeneratorHelper.getConditionalStatements(conditionalDefinition);
@@ -83,7 +49,8 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
       if (branch.statements().isEmpty()) {
         var branchIndex = conditionalStatements.indexOf(branch) + 1;
         log.warn(
-            "Orchestration for integration-scenario {} contains a conditional-statement that does not specify any actions in branch #{}",
+            "Orchestration for composite process {} contains a conditional-statement that does not specify any actions in branch #{}",
+            getCompositeProcess().getId(),
             branchIndex);
       }
       choiceDef.when(

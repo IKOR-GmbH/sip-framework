@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.EndOfDsl;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -36,13 +35,11 @@ public class ProcessOrchestrationDefinition
    * <p>No order of execution is guaranteed if more than one class is provided - call this function
    * multiple times if this is necessary.
    *
-   * @param providerClass The class of the provider
    * @return DSL handle for specifying consumer calls
    */
-  public final ForProcessStartConditionalImpl<ProcessOrchestrationDefinition> forProvider(
-      final Class<? extends IntegrationScenarioDefinition> providerClass) {
+  public final ForProcessStartConditionalImpl<ProcessOrchestrationDefinition> forProvider() {
     final ForProcessStartConditionalImpl<ProcessOrchestrationDefinition> def =
-        new ForProcessStartConditionalImpl(self(), getCompositeProcess(), providerClass);
+        new ForProcessStartConditionalImpl(self(), getCompositeProcess());
     scenarioProviderDefinitions.add(def);
     return def;
   }

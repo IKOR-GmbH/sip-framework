@@ -121,7 +121,7 @@ public class ProcessOrchestrationAdapter {
     public Orchestrator<CompositeOrchestrationInfo> getOrchestrator() {
       return CompositeOrchestrator.forOrchestrationDsl(
           dsl -> {
-            dsl.forProvider(getPartnerDebtByName.class)
+            dsl.forProvider()
                 .callConsumer(getPartnerByName.class)
                 .withNoResponseHandling()
                 .callConsumer(getPartnerDebtById.class)
