@@ -92,12 +92,7 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
                   exchange,
                   RouteGeneratorHelper.getStepResultCloner(conditionalDefinition),
                   Optional.ofNullable(branch.predicate())));
-      branch
-          .statements()
-          .forEach(
-              statement -> {
-                buildRouteForStatement(choiceDef, (CallableWithinProcessDefinition) statement);
-              });
+      branch.statements().forEach(statement -> buildRouteForStatement(choiceDef, statement));
       choiceDef.endChoice();
     }
     List<CallableWithinProcessDefinition> unconditionalStatements =

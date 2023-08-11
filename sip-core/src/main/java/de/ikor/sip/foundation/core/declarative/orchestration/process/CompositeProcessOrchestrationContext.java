@@ -33,7 +33,7 @@ public class CompositeProcessOrchestrationContext {
    * @param request Request that was sent to the consumer
    * @param response Response as returned by that consumer
    */
-  public record OrchestrationStepResult(
+  public record OrchestrationStep(
       IntegrationScenarioDefinition consumer, Object request, Object response) {}
 
   /** Key that is used inside Camel's exchange ot save the context. */
@@ -41,7 +41,7 @@ public class CompositeProcessOrchestrationContext {
 
   @Getter private final CompositeProcessDefinition compositeProcess;
   private final Object originalRequest;
-  private final List<OrchestrationStepResult> orchestrationStepResults =
+  private final List<OrchestrationStep> orchestrationSteps =
       Collections.synchronizedList(new ArrayList<>());
 
   private Object aggregatedResponse;
@@ -76,13 +76,26 @@ public class CompositeProcessOrchestrationContext {
   }
 
   /**
+   * Returns the last response payload (if exists) with the given type
+   *
+   * @param responseType Response model class
+   * @return last response
+   * @param <T> Type of the response model
+   */
+  @Synchronized
+  public <T> Optional<T> getLatestResponse(final Class<T> responseType) {
+    return getLatestResponse();
+  }
+
+  /**
    * Returns the last response payload (if exists)
    *
    * @return last response
+   * @param <T> Type of the response model
    */
   @Synchronized
-  public Optional getLatestResponse() {
-    return getResultForLatestStep().map(OrchestrationStepResult::response);
+  public <T> Optional<T> getLatestResponse() {
+    return (Optional<T>) getResultForLatestStep().map(OrchestrationStep::response);
   }
 
   /**
@@ -117,10 +130,10 @@ public class CompositeProcessOrchestrationContext {
    * @return optional response from latest consumer call
    */
   @Synchronized
-  public Optional<OrchestrationStepResult> getResultForLatestStep() {
-    return orchestrationStepResults.isEmpty()
+  public Optional<OrchestrationStep> getResultForLatestStep() {
+    return orchestrationSteps.isEmpty()
         ? Optional.empty()
-        : Optional.of(orchestrationStepResults.get(orchestrationStepResults.size() - 1));
+        : Optional.of(orchestrationSteps.get(orchestrationSteps.size() - 1));
   }
 
   /**
@@ -141,10 +154,10 @@ public class CompositeProcessOrchestrationContext {
     getResultOfLastStepFromConsumer(consumer.getClass())
         .ifPresent(
             step -> {
-              OrchestrationStepResult lastStep =
-                  orchestrationStepResults.remove(orchestrationStepResults.indexOf(step));
-              orchestrationStepResults.add(
-                  new OrchestrationStepResult(consumer, lastStep.request, maybeClonedResponse));
+              OrchestrationStep lastStep =
+                  orchestrationSteps.remove(orchestrationSteps.indexOf(step));
+              orchestrationSteps.add(
+                  new OrchestrationStep(consumer, lastStep.request, maybeClonedResponse));
             });
   }
 
@@ -163,7 +176,7 @@ public class CompositeProcessOrchestrationContext {
       final Object request,
       final Optional<StepResultCloner> cloner) {
     final Object maybeClonedRequest = cloner.map(c -> c.apply(request)).orElse(request);
-    orchestrationStepResults.add(new OrchestrationStepResult(consumer, maybeClonedRequest, null));
+    orchestrationSteps.add(new OrchestrationStep(consumer, maybeClonedRequest, null));
   }
 
   @Synchronized
@@ -172,10 +185,10 @@ public class CompositeProcessOrchestrationContext {
     getResultForLatestStep()
         .ifPresent(
             step -> {
-              OrchestrationStepResult lastStep =
-                  orchestrationStepResults.remove(orchestrationStepResults.indexOf(step));
-              orchestrationStepResults.add(
-                  new OrchestrationStepResult(null, lastStep.request, maybeClonedResponse));
+              OrchestrationStep lastStep =
+                  orchestrationSteps.remove(orchestrationSteps.indexOf(step));
+              orchestrationSteps.add(
+                  new OrchestrationStep(null, lastStep.request, maybeClonedResponse));
             });
     return maybeClonedResponse;
   }
@@ -183,8 +196,8 @@ public class CompositeProcessOrchestrationContext {
   /**
    * @return Unmodifiable List of responses received from consumers so far
    */
-  public List<OrchestrationStepResult> getOrchestrationStepResults() {
-    return Collections.unmodifiableList(orchestrationStepResults);
+  public List<OrchestrationStep> getOrchestrationSteps() {
+    return Collections.unmodifiableList(orchestrationSteps);
   }
 
   /**
@@ -194,9 +207,9 @@ public class CompositeProcessOrchestrationContext {
    * @param consumerClass Class of the consumer for which to retrieve consumer
    * @return Optional first response of this consumer
    */
-  public Optional<OrchestrationStepResult> getResultOfFirstStepFromConsumer(
+  public Optional<OrchestrationStep> getResultOfFirstStepFromConsumer(
       final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass) {
-    return orchestrationStepResults.stream()
+    return orchestrationSteps.stream()
         .filter(step -> consumerClass.isInstance(step.consumer()))
         .findFirst();
   }
@@ -208,9 +221,9 @@ public class CompositeProcessOrchestrationContext {
    * @param consumerClass Class of the consumer for which to retrieve consumer
    * @return Optional last response of this consumer
    */
-  public Optional<OrchestrationStepResult> getResultOfLastStepFromConsumer(
+  public Optional<OrchestrationStep> getResultOfLastStepFromConsumer(
       final Class<? extends IntegrationScenarioDefinition> consumerClass) {
-    return orchestrationStepResults.stream()
+    return orchestrationSteps.stream()
         .filter(step -> consumerClass.isInstance(step.consumer()))
         .reduce((first, second) -> second);
   }
