@@ -4,7 +4,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOr
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallNestedCondition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumerBase;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ForProcessStartConditionalImpl;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -28,7 +28,7 @@ import org.apache.camel.model.RoutesDefinition;
 @SuppressWarnings("rawtypes")
 final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase {
 
-  private final ForProcessStartConditionalImpl<?> providerDefinition;
+  private final ProcessOrchestrationDefinition providerDefinition;
   private final Set<IntegrationScenarioDefinition> overallUnhandledProviders;
 
   @Getter(lazy = true)
@@ -37,7 +37,7 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
 
   RouteGeneratorForProcessProviders(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final ForProcessStartConditionalImpl providerDefinition,
+      final ProcessOrchestrationDefinition providerDefinition,
       final Set<IntegrationScenarioDefinition> overallUnhandledProviders) {
     super(orchestrationInfo);
     this.providerDefinition = providerDefinition;

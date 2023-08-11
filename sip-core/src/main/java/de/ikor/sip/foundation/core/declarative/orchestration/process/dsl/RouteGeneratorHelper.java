@@ -20,13 +20,8 @@ import lombok.experimental.UtilityClass;
 @SuppressWarnings("rawtypes")
 public class RouteGeneratorHelper {
 
-  public static List<ForProcessStartConditionalImpl<?>> getScenarioProviderDefinitions(
-      ProcessOrchestrationDefinition processOrchestrationDefinition) {
-    return processOrchestrationDefinition.getScenarioProviderDefinitions();
-  }
-
   public static List<CallableWithinProcessDefinition> getConsumerCalls(
-      ForProcessStartConditionalImpl element) {
+      ProcessOrchestrationDefinition element) {
     return element.getSteps();
   }
 
@@ -62,7 +57,7 @@ public class RouteGeneratorHelper {
   }
 
   public static Optional<CompositeProcessStepConditional> getConditional(
-      ForProcessStartConditional element) {
+      ProcessOrchestrationDefinition element) {
     // TODO
     return element.getConditionals().stream().findFirst();
   }

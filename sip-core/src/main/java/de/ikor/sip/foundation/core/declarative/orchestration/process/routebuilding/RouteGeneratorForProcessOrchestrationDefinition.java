@@ -1,9 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ForProcessStartConditionalImpl;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -18,13 +16,13 @@ import java.util.List;
 public final class RouteGeneratorForProcessOrchestrationDefinition extends RouteGeneratorProcessBase
     implements Runnable {
 
-  private final ProcessOrchestrationDefinition scenarioOrchestrationDefinition;
+  private final ProcessOrchestrationDefinition processOrchestrationDefinition;
 
   public RouteGeneratorForProcessOrchestrationDefinition(
       final CompositeOrchestrationInfo orchestrationInfo,
-      final ProcessOrchestrationDefinition scenarioOrchestrationDefinition) {
+      final ProcessOrchestrationDefinition processOrchestrationDefinition) {
     super(orchestrationInfo);
-    this.scenarioOrchestrationDefinition = scenarioOrchestrationDefinition;
+    this.processOrchestrationDefinition = processOrchestrationDefinition;
   }
 
   @Override
@@ -33,22 +31,13 @@ public final class RouteGeneratorForProcessOrchestrationDefinition extends Route
     final var unhandledProvidersOverall = new HashSet<>(scenarioProvidersOverall);
     final List<RouteGeneratorForProcessProviders> providerBuilders = new ArrayList<>();
 
-    for (ForProcessStartConditionalImpl providerDefinition :
-        RouteGeneratorHelper.getScenarioProviderDefinitions(scenarioOrchestrationDefinition)) {
-
-      final var builder =
-          new RouteGeneratorForProcessProviders(
-              getOrchestrationInfo(),
-              providerDefinition,
-              Collections.unmodifiableSet(unhandledProvidersOverall));
-
-      if (builder.getHandledProviders().isEmpty()) {
-        continue;
-      }
-      unhandledProvidersOverall.removeAll(builder.getHandledProviders());
-      providerBuilders.add(builder);
-    }
-
-    providerBuilders.forEach(builder -> builder.generateRoutes(getRoutesDefinition()));
+    final var builder =
+        new RouteGeneratorForProcessProviders(
+            getOrchestrationInfo(),
+            processOrchestrationDefinition,
+            Collections.unmodifiableSet(unhandledProvidersOverall));
+    unhandledProvidersOverall.removeAll(builder.getHandledProviders());
+    providerBuilders.add(builder);
+    builder.generateRoutes(getRoutesDefinition());
   }
 }
