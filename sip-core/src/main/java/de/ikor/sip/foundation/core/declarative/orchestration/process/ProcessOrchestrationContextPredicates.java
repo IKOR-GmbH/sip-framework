@@ -1,21 +1,19 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationContext;
+import lombok.experimental.UtilityClass;
+
 import java.util.Objects;
 import java.util.function.Predicate;
-import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ProcessOrchestrationContextPredicates {
 
-  public static <T> Predicate<CompositeProcessOrchestrationContext> headerEquals(
-      final String headerName, final T expectedValue) {
+  public static CompositeProcessStepConditional headerEquals(
+      final String headerName, final Object expectedValue, Class<?> valueType) {
     Objects.requireNonNull(expectedValue);
     return context ->
-        context
-            .getHeader(headerName, expectedValue.getClass())
-            .map(expectedValue::equals)
-            .orElse(false);
+        context.getHeader(headerName, valueType).map(expectedValue::equals).orElse(false);
   }
 
   /**

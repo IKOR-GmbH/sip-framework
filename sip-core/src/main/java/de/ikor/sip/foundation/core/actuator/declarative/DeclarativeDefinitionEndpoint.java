@@ -1,24 +1,21 @@
 package de.ikor.sip.foundation.core.actuator.declarative;
 
-import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpointInfoTransformer.*;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
-import de.ikor.sip.foundation.core.actuator.declarative.model.CompositeProcessInfo;
-import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
-import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
-import de.ikor.sip.foundation.core.actuator.declarative.model.DeclarativeStructureInfo;
-import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.*;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpointInfoTransformer.*;
 
 /**
  * Actuator endpoints for exposing Connectors, Connector Groups, Integration Scenarios and Composite
@@ -137,8 +134,9 @@ public class DeclarativeDefinitionEndpoint {
                 processes.add(
                     createCompositeProcessInfo(
                         process,
-                        declarationsRegistry.getCompositeProcessProviderDefinition(process.getId()),
-                        declarationsRegistry.getCompositeProcessConsumerDefinitions(
+                        declarationsRegistry.getCompositeProcessProviderDefinitionDto(
+                            process.getId()),
+                        declarationsRegistry.getCompositeProcessConsumerDefinitionDtos(
                             process.getId()))));
   }
 }

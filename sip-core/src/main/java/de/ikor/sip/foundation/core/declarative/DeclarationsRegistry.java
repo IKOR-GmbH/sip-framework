@@ -339,6 +339,14 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   }
 
   @Override
+  public IntegrationScenarioDefinitionDto getCompositeProcessProviderDefinitionDto(
+      String compositeProcessID) {
+    IntegrationScenarioBase provider =
+        (IntegrationScenarioBase) getCompositeProcessProviderDefinition(compositeProcessID);
+    return IntegrationScenarioDefinitionDto.builder().id(provider.getId()).build();
+  }
+
+  @Override
   public List<CompositeProcessDefinition> getCompositeProcessProvidersForScenario(
       IntegrationScenarioDefinition integrationScenario) {
     return processes.stream()
@@ -378,6 +386,20 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         List.copyOf(getCompositeProcessConsumersForScenario(getScenarioById(scenarioID)));
     return Stream.concat(
             outboundConnectorsForScenario.stream(), compositeProcessConsumersForScenario.stream())
+        .toList();
+  }
+
+  @Override
+  public List<IntegrationScenarioDefinitionDto> getCompositeProcessConsumerDefinitionDtos(
+      String compositeProcessID) {
+    List<IntegrationScenarioDefinition> consumers =
+        getCompositeProcessConsumerDefinitions(compositeProcessID);
+    return consumers.stream()
+        .map(
+            consumer ->
+                IntegrationScenarioDefinitionDto.builder()
+                    .id(consumer.getId())
+                    .build())
         .toList();
   }
 
