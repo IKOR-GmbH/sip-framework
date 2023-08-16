@@ -66,8 +66,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- manage all versions via properties, so that they can be overridden in a project if necessary -->
-        <spring.boot.version>3.0.8</spring.boot.version>
-        <camel.version>4.0.0-RC1</camel.version>
+        <spring.boot.version>3.0.9</spring.boot.version>
+        <camel.version>4.0.0</camel.version>
         <jackson-jsr310.version>2.12.7</jackson-jsr310.version>
         <springdoc-openapi.version>1.6.14</springdoc-openapi.version>
         <snakeyaml.version>2.0</snakeyaml.version>
