@@ -17,6 +17,8 @@ import org.apache.camel.component.kafka.KafkaEndpoint;
 import org.apache.camel.impl.engine.DefaultRouteController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.env.Environment;
 
 class CamelContextLifecycleHandlerTest {
 
@@ -37,7 +39,8 @@ class CamelContextLifecycleHandlerTest {
     routes.add(route);
 
     RestRouteInvoker restRouteInvoker =
-        new RestRouteInvoker(mock(ProducerTemplate.class), camelContext);
+        new RestRouteInvoker(
+            camelContext, mock(Environment.class), mock(RestTemplateBuilder.class));
     FileRouteInvoker fileRouteInvoker = new FileRouteInvoker(camelContext);
     FtpRouteInvoker ftpRouteInvoker = new FtpRouteInvoker(camelContext);
     JmsRouteInvoker jmsRouteInvoker = new JmsRouteInvoker(camelContext);
