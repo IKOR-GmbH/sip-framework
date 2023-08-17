@@ -1,11 +1,12 @@
 package de.ikor.sip.foundation.core.actuator.declarative.model;
 
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
-import java.util.List;
+import de.ikor.sip.foundation.core.declarative.dto.ProcessOrchestrationDefinitionDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * POJO model for exposing {@link
@@ -25,5 +26,5 @@ public class CompositeProcessInfo {
 
   private String processDescription;
 
-  private ProcessOrchestrationDefinition orchestrationDefinition;
+  private ProcessOrchestrationDefinitionDto orchestrationDefinition;
 }

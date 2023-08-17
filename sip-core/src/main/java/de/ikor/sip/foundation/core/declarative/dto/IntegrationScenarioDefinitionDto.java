@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative;
+package de.ikor.sip.foundation.core.declarative.dto;
 
 import lombok.Builder;
 import lombok.Data;

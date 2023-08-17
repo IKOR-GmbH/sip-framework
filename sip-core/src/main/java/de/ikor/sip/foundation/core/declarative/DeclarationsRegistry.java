@@ -8,6 +8,7 @@ import de.ikor.sip.foundation.core.declarative.connector.*;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupBase;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
+import de.ikor.sip.foundation.core.declarative.dto.IntegrationScenarioDefinitionDto;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.model.ResponseMappingRouteTransformer;

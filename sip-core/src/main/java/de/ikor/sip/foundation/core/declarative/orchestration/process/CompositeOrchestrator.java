@@ -1,17 +1,25 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
+import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
+import de.ikor.sip.foundation.core.declarative.dto.ProcessOrchestrationDefinitionDto;
+import de.ikor.sip.foundation.core.declarative.dto.StepDto;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.*;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding.RouteGeneratorForProcessOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Orchestrator meant to be attached to {@link
@@ -76,12 +84,62 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
    * @param compositeProcessDefinition definition of a composite process
    * @return orchestration definition
    */
-  public ProcessOrchestrationDefinition populateOrchestrationDefinition(
+  public ProcessOrchestrationDefinitionDto populateOrchestrationDefinition(
       CompositeProcessDefinition compositeProcessDefinition) {
     if (dslDefinition.isPresent()) {
       final var orchestrationDef = new ProcessOrchestrationDefinition(compositeProcessDefinition);
       dslDefinition.get().accept(orchestrationDef);
-      return orchestrationDef;
+      ProcessOrchestrationDefinitionDto processOrchestrationDefinitionDto =
+              ProcessOrchestrationDefinitionDto.builder()
+                      //.conditions(getConditions(orchestrationDef))
+                      .steps(getSteps(orchestrationDef))
+                      .build();
+      return processOrchestrationDefinitionDto;
+    }
+    return null;
+  }
+
+  private List<StepDto> getSteps(ProcessOrchestrationDefinition orchestrationDef) {
+    return RouteGeneratorHelper.getSteps(orchestrationDef).stream().flatMap(this::getStep).collect(Collectors.toList());
+  }
+
+  private Stream<StepDto> getStep(CallableWithinProcessDefinition callableWithinProcessDefinition) {
+    List<StepDto> steps = new ArrayList<>();
+    if(callableWithinProcessDefinition instanceof CallNestedCondition<?> nestedCondition) {
+      var conditionalStatements = RouteGeneratorHelper.getConditionalStatements(nestedCondition);
+      var unconditionalStatements = RouteGeneratorHelper.getUnonditionalStatements(nestedCondition);
+      List<StepDto> nestedStepsCond = new ArrayList<>();
+      List<StepDto> nestedStepsUn = new ArrayList<>();
+      conditionalStatements.forEach(statement -> {
+        statement.statements().forEach(inner -> nestedStepsCond.add(extracted(inner, true)));
+      });
+      unconditionalStatements.forEach(statement -> {
+        nestedStepsUn.add(extracted(statement, true));
+      });
+      steps.add(StepDto.builder()
+              .conditioned(true)
+              .nested(nestedStepsCond)
+              .build());
+      steps.add(StepDto.builder()
+              .conditioned(true)
+              .nested(nestedStepsUn)
+              .build());
+    }
+    if(callableWithinProcessDefinition instanceof CallProcessConsumerImpl<?> unconditionedStep){
+      steps.add(extracted(callableWithinProcessDefinition, false));
+    }
+    return steps.stream();
+  }
+
+  private StepDto extracted(CallableWithinProcessDefinition statement, boolean conditioned) {
+    if(statement instanceof CallProcessConsumerImpl<?> impl) {
+      String consumer = RouteGeneratorHelper.getConsumerClass(impl).getAnnotation(IntegrationScenario.class).scenarioId();
+      return StepDto.builder()
+              .conditioned(conditioned)
+              .consumerId(consumer)
+              .requestPreparation(RouteGeneratorHelper.getRequestPreparation(impl).isPresent())
+              .responseHandling(RouteGeneratorHelper.getResponseConsumer(impl).isPresent())
+              .build();
     }
     return null;
   }
