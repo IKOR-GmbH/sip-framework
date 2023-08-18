@@ -396,11 +396,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     List<IntegrationScenarioDefinition> consumers =
         getCompositeProcessConsumerDefinitions(compositeProcessID);
     return consumers.stream()
-        .map(
-            consumer ->
-                IntegrationScenarioDefinitionDto.builder()
-                    .id(consumer.getId())
-                    .build())
+        .map(consumer -> IntegrationScenarioDefinitionDto.builder().id(consumer.getId()).build())
         .toList();
   }
 

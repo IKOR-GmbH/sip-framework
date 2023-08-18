@@ -1,10 +1,9 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationContext;
-import lombok.experimental.UtilityClass;
-
 import java.util.Objects;
 import java.util.function.Predicate;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ProcessOrchestrationContextPredicates {

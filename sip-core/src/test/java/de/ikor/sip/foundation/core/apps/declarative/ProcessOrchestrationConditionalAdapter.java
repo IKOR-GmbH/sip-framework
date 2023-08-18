@@ -1,5 +1,7 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
+import static de.ikor.sip.foundation.core.declarative.orchestration.process.ProcessOrchestrationContextPredicates.hasHeader;
+
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
@@ -16,6 +18,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOr
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrator;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.camel.builder.EndpointConsumerBuilder;
@@ -23,10 +26,6 @@ import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
-
-import java.math.BigDecimal;
-
-import static de.ikor.sip.foundation.core.declarative.orchestration.process.ProcessOrchestrationContextPredicates.hasHeader;
 
 @SIPIntegrationAdapter
 @ComponentScan(excludeFilters = @Filter(SIPIntegrationAdapter.class))

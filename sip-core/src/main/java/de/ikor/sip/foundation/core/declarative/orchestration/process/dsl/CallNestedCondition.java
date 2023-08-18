@@ -53,7 +53,8 @@ public final class CallNestedCondition<R> extends ProcessDslBase<CallNestedCondi
   }
 
   public record ProcessBranchStatements(
-      CompositeProcessStepConditional predicate, List<CallProcessConsumerBase> statements) {}
+      CompositeProcessStepConditional predicate,
+      List<CallableWithinProcessDefinition> statements) {}
 
   public final class ProcessBranch<I>
       extends ProcessDslBase<CallNestedCondition<I>.ProcessBranch<I>, I>

@@ -7,19 +7,14 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.CompositeProcessIn
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
-import de.ikor.sip.foundation.core.declarative.dto.IntegrationScenarioDefinitionDto;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
+import de.ikor.sip.foundation.core.declarative.dto.IntegrationScenarioDefinitionDto;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrator;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -28,6 +23,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * Util transformer class with methods for transforming framework declarative objects to their

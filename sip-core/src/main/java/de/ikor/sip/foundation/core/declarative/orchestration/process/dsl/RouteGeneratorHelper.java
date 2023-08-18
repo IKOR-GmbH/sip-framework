@@ -5,10 +5,9 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositePr
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepRequestExtractor;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import lombok.experimental.UtilityClass;
-
 import java.util.List;
 import java.util.Optional;
+import lombok.experimental.UtilityClass;
 
 /**
  * Class that exposes the insides of orchestration definition. Those are package private so that
@@ -81,11 +80,13 @@ public class RouteGeneratorHelper {
     return element.getStepResultCloner();
   }
 
-    public static List<CompositeProcessStepConditional> getConditionals(ProcessOrchestrationDefinition element) {
-      return element.getConditionals();
-    }
+  public static List<CompositeProcessStepConditional> getConditionals(
+      ProcessOrchestrationDefinition element) {
+    return element.getConditionals();
+  }
 
-  public static List<CallableWithinProcessDefinition> getSteps(ProcessOrchestrationDefinition orchestrationDef) {
+  public static List<CallableWithinProcessDefinition> getSteps(
+      ProcessOrchestrationDefinition orchestrationDef) {
     return orchestrationDef.getSteps();
   }
 }
