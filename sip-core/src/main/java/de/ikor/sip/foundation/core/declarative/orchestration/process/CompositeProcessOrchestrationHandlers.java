@@ -68,6 +68,7 @@ public class CompositeProcessOrchestrationHandlers {
     return context;
   }
 
+  @SuppressWarnings("unchecked")
   private static List<IntegrationScenarioDefinition> retrieveCalledConsumerList(
       final Exchange exchange) {
     return Objects.requireNonNull(

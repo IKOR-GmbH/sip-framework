@@ -36,7 +36,7 @@ final class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGene
 
   RouteGeneratorForCallScenarioConsumerDefinition(
       final ScenarioOrchestrationInfo orchestrationInfo,
-      final CallScenarioConsumerBaseDefinition definitionElement,
+      final CallScenarioConsumerBaseDefinition<?, ?, M> definitionElement,
       final Set<IntegrationScenarioConsumerDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);
     this.definitionElement = definitionElement;

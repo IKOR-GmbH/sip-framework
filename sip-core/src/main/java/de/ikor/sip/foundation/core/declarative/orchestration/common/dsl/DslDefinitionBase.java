@@ -25,6 +25,7 @@ public abstract class DslDefinitionBase<S extends DslDefinitionBase<S, R>, R> {
    *
    * @return <code>this</code> casted to the declared element type
    */
+  @SuppressWarnings("unchecked")
   protected S self() {
     return (S) this;
   }

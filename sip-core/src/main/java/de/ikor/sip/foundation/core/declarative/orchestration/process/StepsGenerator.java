@@ -37,9 +37,7 @@ public class StepsGenerator {
       List<StepDto> steps,
       List<CallNestedCondition.ProcessBranchStatements> conditionalStatements) {
     conditionalStatements.forEach(
-        conditionalStatement -> {
-          fillUnconditionalSteps(steps, conditionalStatement.statements());
-        });
+        conditionalStatement -> fillUnconditionalSteps(steps, conditionalStatement.statements()));
   }
 
   private void fillUnconditionalSteps(

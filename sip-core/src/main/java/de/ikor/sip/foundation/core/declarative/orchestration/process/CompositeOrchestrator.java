@@ -82,11 +82,9 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
     if (dslDefinition.isPresent()) {
       final var orchestrationDef = new ProcessOrchestrationDefinition(compositeProcessDefinition);
       dslDefinition.get().accept(orchestrationDef);
-      ProcessOrchestrationDefinitionDto processOrchestrationDefinitionDto =
-          ProcessOrchestrationDefinitionDto.builder()
-              .steps(new StepsGenerator(orchestrationDef).generateSteps())
-              .build();
-      return processOrchestrationDefinitionDto;
+      return ProcessOrchestrationDefinitionDto.builder()
+          .steps(new StepsGenerator(orchestrationDef).generateSteps())
+          .build();
     }
     return null;
   }

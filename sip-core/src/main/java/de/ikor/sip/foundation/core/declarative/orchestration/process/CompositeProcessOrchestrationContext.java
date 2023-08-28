@@ -94,6 +94,7 @@ public class CompositeProcessOrchestrationContext {
    * @param <T> Type of the response model
    */
   @Synchronized
+  @SuppressWarnings("unchecked")
   public <T> Optional<T> getLatestResponse() {
     return (Optional<T>) getResultForLatestStep().map(OrchestrationStep::response);
   }

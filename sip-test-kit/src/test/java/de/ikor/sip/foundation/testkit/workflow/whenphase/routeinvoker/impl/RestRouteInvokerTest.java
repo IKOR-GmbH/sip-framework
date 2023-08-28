@@ -45,7 +45,7 @@ class RestRouteInvokerTest {
             anyString(),
             any(HttpMethod.class),
             any(),
-            ArgumentMatchers.<ParameterizedTypeReference>any()))
+            ArgumentMatchers.<ParameterizedTypeReference<String>>any()))
         .thenReturn(routeExpectedResponse);
 
     when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
