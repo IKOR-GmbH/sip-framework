@@ -119,7 +119,7 @@ class DeclarationsRegistryTest {
             })
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessageContaining(
-            "There is a duplicate %s id %s in class %s",
+            "There is a non-unique %s ID '%s' in class %s. A unique ID should be provided in the element's annotation.",
             "integration scenario", SCENARIO_ID, secondScenario.getClass().getName());
   }
 
@@ -256,13 +256,14 @@ class DeclarationsRegistryTest {
                         applicationContext))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
-            "Request mapping in connector 'mockConnector' is defined in annotation, but overridden by request route transformator");
+            "Request mapping in connector 'mockConnector' is defined in annotation, but overridden by request route transformation");
   }
 
   @Test
   void WHEN_CheckingConnectorMapping_WITH_NoMappingsOrTransformation_THEN_NoExceptionThrown() {
     // arrange
     InboundConnectorMock connector = mock(InboundConnectorMock.class);
+    when(connector.getConnectorGroupId()).thenReturn(CONNECTOR_GROUP_ID);
     connectors.add(connector);
 
     // assert
@@ -349,6 +350,6 @@ class DeclarationsRegistryTest {
                         applicationContext))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
-            "Response mapping in connector 'mockConnector' is defined in annotation, but overridden by response route transformator");
+            "Response mapping in connector 'mockConnector' is defined in annotation, but overridden by response route transformation");
   }
 }

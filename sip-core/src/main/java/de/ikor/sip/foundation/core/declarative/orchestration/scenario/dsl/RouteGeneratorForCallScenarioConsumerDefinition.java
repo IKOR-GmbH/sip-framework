@@ -76,7 +76,7 @@ final class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGene
 
   private IntegrationScenarioConsumerDefinition retrieveConsumerFromClassDefinition(
       final CallScenarioConsumerByClassDefinition element) {
-    return getDeclarationsRegistry().getConsumersForScenario(getIntegrationScenarioId()).stream()
+    return getDeclarationsRegistry().getConsumersForScenario(getIntegrationScenario()).stream()
         .filter(
             outboundConnectorDefinition ->
                 element.getConsumerClass().equals(outboundConnectorDefinition.getClass()))

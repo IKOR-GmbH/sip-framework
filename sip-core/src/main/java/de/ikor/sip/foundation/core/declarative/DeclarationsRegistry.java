@@ -36,13 +36,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public final class DeclarationsRegistry implements DeclarationsRegistryApi {
 
-  private static final String CONNECTOR_GROUP = "connector group";
-  private static final String SCENARIO = "integration scenario";
-  private static final String CONNECTOR = "connector";
-
   private final ApplicationContext applicationContext;
   private final List<ConnectorGroupDefinition> connectorGroups;
-
   private final List<CompositeProcessDefinition> processes;
   private final List<IntegrationScenarioDefinition> scenarios;
   private final List<ConnectorDefinition> connectors;
@@ -67,17 +62,15 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
             .filter(not(isDisabled(autowiredScenarios, autowiredConnectorGroups)))
             .toList();
 
-    this.globalModelMappersRegistry = checkAndInitializeGlobalModelMappers(modelMappers);
-
     this.processes = compositeProcessDefinitions.stream().filter(not(isDisabled())).toList();
 
+    this.globalModelMappersRegistry = checkAndInitializeGlobalModelMappers(modelMappers);
+
     createMissingConnectorGroups();
-    checkForDuplicateConnectorGroups();
+    checkForDuplicateDeclarativeElements();
     checkForUnusedMappers();
-    checkForDuplicateScenarios();
     checkAnnotatedClassForMissingParents();
     checkForUnusedScenarios();
-    checkForDuplicateConnectors();
   }
 
   private void checkForUnusedMappers() {
@@ -89,7 +82,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                     mapper -> {
                       if (isRequestMappingOverridden(connectorDefinition, mapper)) {
                         throw SIPFrameworkInitializationException.init(
-                            "Request mapping in connector '%s' is defined in annotation, but overridden by request route transformator",
+                            "Request mapping in connector '%s' is defined in annotation, but overridden by request route transformation",
                             connectorDefinition.getId());
                       }
                     });
@@ -98,7 +91,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                     mapper -> {
                       if (isResponseMappingOverridden(connectorDefinition, mapper)) {
                         throw SIPFrameworkInitializationException.init(
-                            "Response mapping in connector '%s' is defined in annotation, but overridden by response route transformator",
+                            "Response mapping in connector '%s' is defined in annotation, but overridden by response route transformation",
                             connectorDefinition.getId());
                       }
                     });
@@ -186,50 +179,58 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   }
 
   private void createMissingConnectorGroups() {
-    connectors.forEach(
-        connector -> {
-          Optional<ConnectorGroupDefinition> connectorGroup =
-              getConnectorGroupById(connector.getConnectorGroupId());
-          if (connectorGroup.isEmpty()) {
-            connectorGroups.add(new DefaultConnectorGroup(connector.getConnectorGroupId()));
-          }
-        });
+    connectors.stream()
+        .filter(connector -> getConnectorGroupById(connector.getConnectorGroupId()).isEmpty())
+        .forEach(
+            connector ->
+                connectorGroups.add(new DefaultConnectorGroup(connector.getConnectorGroupId())));
   }
 
-  private void checkForDuplicateConnectorGroups() {
+  private Optional<ConnectorGroupDefinition> getConnectorGroupById(final String connectorGroupId) {
+    return connectorGroups.stream()
+        .filter(connector -> connector.getId().equals(connectorGroupId))
+        .findFirst();
+  }
+
+  private void checkForDuplicateDeclarativeElements() {
     Set<String> set = new HashSet<>();
-    connectorGroups.forEach(
-        connectorGroup ->
-            checkIfDuplicate(
-                set, connectorGroup.getId(), connectorGroup.getClass().getName(), CONNECTOR_GROUP));
+    scenarios.stream()
+        .filter(n -> !set.add(n.getId()))
+        .forEach(
+            scenario ->
+                throwDuplicateException(
+                    scenario.getId(), scenario.getClass().getName(), "integration scenario"));
+    connectors.stream()
+        .filter(n -> !set.add(n.getId()))
+        .forEach(
+            connector ->
+                throwDuplicateException(
+                    connector.getId(), connector.getClass().getName(), "connector"));
+    processes.stream()
+        .filter(n -> !set.add(n.getId()))
+        .forEach(
+            process ->
+                throwDuplicateException(
+                    process.getId(), process.getClass().getName(), "composite process"));
+    connectorGroups.stream()
+        .filter(n -> !set.add(n.getId()))
+        .forEach(
+            connectorGroup ->
+                throwDuplicateException(
+                    connectorGroup.getId(),
+                    connectorGroup.getClass().getName(),
+                    "connector group"));
   }
 
-  private void checkForDuplicateScenarios() {
-    Set<String> set = new HashSet<>();
-    scenarios.forEach(
-        scenario ->
-            checkIfDuplicate(set, scenario.getId(), scenario.getClass().getName(), SCENARIO));
-  }
-
-  private void checkForDuplicateConnectors() {
-    Set<String> set = new HashSet<>();
-    connectors.forEach(
-        connector ->
-            checkIfDuplicate(set, connector.getId(), connector.getClass().getName(), CONNECTOR));
-  }
-
-  private void checkIfDuplicate(
-      Set<String> set, String id, String className, String declarativeElement) {
-    if (!set.add(id)) {
-      throw SIPFrameworkInitializationException.init(
-          "There is a duplicate %s id %s in class %s. A unique connectorId should be provided in the connector's annotation.",
-          declarativeElement, id, className);
-    }
+  private void throwDuplicateException(String id, String className, String declarativeElement) {
+    throw SIPFrameworkInitializationException.init(
+        "There is a non-unique %s ID '%s' in class %s. A unique ID should be provided in the element's annotation.",
+        declarativeElement, id, className);
   }
 
   private void checkForUnusedScenarios() {
     scenarios.stream()
-        .filter(scenario -> getProvidersForScenario(scenario.getId()).isEmpty())
+        .filter(scenario -> getProvidersForScenario(scenario).isEmpty())
         .forEach(
             scenario -> {
               throw SIPFrameworkInitializationException.init(
@@ -237,20 +238,13 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
                   scenario.getId());
             });
     scenarios.stream()
-        .filter(scenario -> getConsumersForScenario(scenario.getId()).isEmpty())
+        .filter(scenario -> getConsumersForScenario(scenario).isEmpty())
         .forEach(
             scenario -> {
               throw SIPFrameworkInitializationException.init(
                   "Nothing is consuming data from the integration scenario with id '%s'",
                   scenario.getId());
             });
-  }
-
-  @Override
-  public Optional<ConnectorGroupDefinition> getConnectorGroupById(final String connectorGroupId) {
-    return connectorGroups.stream()
-        .filter(connector -> connector.getId().equals(connectorGroupId))
-        .findFirst();
   }
 
   @Override
@@ -310,16 +304,7 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   @Override
   public List<IntegrationScenarioDefinition> getCompositeProcessConsumerDefinitions(
       String compositeProcessID) {
-    return processes.stream()
-        .filter(scenario -> scenario.getId().equals(compositeProcessID))
-        .findFirst()
-        .orElseThrow(
-            () ->
-                SIPFrameworkInitializationException.init(
-                    "Composite process '%s' can not be found in the registry. Please check your configuration.",
-                    compositeProcessID))
-        .getConsumerDefinitions()
-        .stream()
+    return getProcessById(compositeProcessID).getConsumerDefinitions().stream()
         .map(definition -> (IntegrationScenarioDefinition) applicationContext.getBean(definition))
         .toList();
   }
@@ -327,16 +312,18 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   @Override
   public IntegrationScenarioDefinition getCompositeProcessProviderDefinition(
       String compositeProcessID) {
-    return applicationContext.getBean(
-        processes.stream()
-            .filter(scenario -> scenario.getId().equals(compositeProcessID))
-            .findFirst()
-            .orElseThrow(
-                () ->
-                    SIPFrameworkInitializationException.init(
-                        "Composite process '%s' can not be found in the registry. Please check your configuration",
-                        compositeProcessID))
-            .getProviderDefinition());
+    return applicationContext.getBean(getProcessById(compositeProcessID).getProviderDefinition());
+  }
+
+  private CompositeProcessDefinition getProcessById(String compositeProcessID) {
+    return processes.stream()
+        .filter(process -> process.getId().equals(compositeProcessID))
+        .findFirst()
+        .orElseThrow(
+            () ->
+                SIPFrameworkInitializationException.init(
+                    "Composite process '%s' can not be found in the registry. Please check your configuration",
+                    compositeProcessID));
   }
 
   @Override
@@ -370,21 +357,23 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   }
 
   @Override
-  public List<IntegrationScenarioProviderDefinition> getProvidersForScenario(String scenarioID) {
+  public List<IntegrationScenarioProviderDefinition> getProvidersForScenario(
+      IntegrationScenarioDefinition integrationScenario) {
     List<IntegrationScenarioProviderDefinition> inboundConnectorsForScenario =
-        List.copyOf(getInboundConnectorsByScenarioId(scenarioID));
+        List.copyOf(getInboundConnectorsByScenarioId(integrationScenario.getId()));
     List<IntegrationScenarioProviderDefinition> compositeProcessProvidersForScenario =
-        List.copyOf(getCompositeProcessProvidersForScenario(getScenarioById(scenarioID)));
+        List.copyOf(getCompositeProcessProvidersForScenario(integrationScenario));
     return Stream.concat(
             inboundConnectorsForScenario.stream(), compositeProcessProvidersForScenario.stream())
         .toList();
   }
 
-  public List<IntegrationScenarioConsumerDefinition> getConsumersForScenario(String scenarioID) {
+  public List<IntegrationScenarioConsumerDefinition> getConsumersForScenario(
+      IntegrationScenarioDefinition integrationScenario) {
     List<IntegrationScenarioConsumerDefinition> outboundConnectorsForScenario =
-        List.copyOf(getOutboundConnectorsByScenarioId(scenarioID));
+        List.copyOf(getOutboundConnectorsByScenarioId(integrationScenario.getId()));
     List<IntegrationScenarioConsumerDefinition> compositeProcessConsumersForScenario =
-        List.copyOf(getCompositeProcessConsumersForScenario(getScenarioById(scenarioID)));
+        List.copyOf(getCompositeProcessConsumersForScenario(integrationScenario));
     return Stream.concat(
             outboundConnectorsForScenario.stream(), compositeProcessConsumersForScenario.stream())
         .toList();
@@ -398,10 +387,6 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
     return consumers.stream()
         .map(consumer -> IntegrationScenarioDefinitionDto.builder().id(consumer.getId()).build())
         .toList();
-  }
-
-  private Predicate<Object> isDisabled() {
-    return elem -> elem.getClass().isAnnotationPresent(Disabled.class);
   }
 
   private Predicate<ConnectorDefinition> isDisabled(
@@ -427,6 +412,10 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
       return connectorGroupDefinition.isPresent()
           && isDisabled().test(connectorGroupDefinition.get());
     };
+  }
+
+  private Predicate<Object> isDisabled() {
+    return elem -> elem.getClass().isAnnotationPresent(Disabled.class);
   }
 
   @Builder

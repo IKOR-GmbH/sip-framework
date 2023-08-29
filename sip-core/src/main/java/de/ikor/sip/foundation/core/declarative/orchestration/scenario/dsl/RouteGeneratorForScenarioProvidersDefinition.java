@@ -75,7 +75,7 @@ final class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenerat
     final Set<Class<? extends IntegrationScenarioProviderDefinition>> providerClasses =
         element.getProviderClasses();
     final var scenarioProviderMap =
-        getDeclarationsRegistry().getProvidersForScenario(getIntegrationScenarioId()).stream()
+        getDeclarationsRegistry().getProvidersForScenario(getIntegrationScenario()).stream()
             .collect(Collectors.toMap(IntegrationScenarioProviderDefinition::getClass, con -> con));
 
     final var unknownProviderNames =
