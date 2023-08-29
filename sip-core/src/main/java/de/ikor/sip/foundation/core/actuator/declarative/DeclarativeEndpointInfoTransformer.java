@@ -11,7 +11,7 @@ import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.dto.IntegrationScenarioDefinitionDto;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.ProcessOrchestrator;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
@@ -142,8 +142,8 @@ public class DeclarativeEndpointInfoTransformer {
         .consumerIds(consumers.stream().map(IntegrationScenarioDefinitionDto::getId).toList())
         .orchestrationDefinition(
             compositeProcessDefinition.getOrchestrator()
-                    instanceof CompositeOrchestrator compositeOrchestrator
-                ? compositeOrchestrator.populateOrchestrationDefinition(compositeProcessDefinition)
+                    instanceof ProcessOrchestrator processOrchestrator
+                ? processOrchestrator.populateOrchestrationDefinition(compositeProcessDefinition)
                 : null)
         .processDescription(
             readDocumentation(

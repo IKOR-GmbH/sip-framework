@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding;
 
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +19,7 @@ public final class RouteGeneratorForProcessOrchestrationDefinition extends Route
   private final ProcessOrchestrationDefinition processOrchestrationDefinition;
 
   public RouteGeneratorForProcessOrchestrationDefinition(
-      final CompositeOrchestrationInfo orchestrationInfo,
+      final CompositeProcessOrchestrationInfo orchestrationInfo,
       final ProcessOrchestrationDefinition processOrchestrationDefinition) {
     super(orchestrationInfo);
     this.processOrchestrationDefinition = processOrchestrationDefinition;

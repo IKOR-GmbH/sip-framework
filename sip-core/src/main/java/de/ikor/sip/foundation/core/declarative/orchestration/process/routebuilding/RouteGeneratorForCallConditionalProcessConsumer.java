@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding;
 
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallNestedCondition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumerBase;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallableWithinProcessDefinition;
@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.model.ProcessorDefinition;
 
 /**
- * Class for generating Camel routes for process consumer calls from a DSL
+ * Class for generating Camel routes for conditional process consumer calls from a DSL
  *
  * <p><em>For internal use only</em>
  */
@@ -28,7 +28,7 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
   private final Set<IntegrationScenarioDefinition> overallUnhandledConsumers;
 
   RouteGeneratorForCallConditionalProcessConsumer(
-      final CompositeOrchestrationInfo orchestrationInfo,
+      final CompositeProcessOrchestrationInfo orchestrationInfo,
       final CallNestedCondition conditionalDefinition,
       final Set<IntegrationScenarioDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);

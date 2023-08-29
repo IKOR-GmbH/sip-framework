@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.process;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
@@ -23,7 +23,7 @@ import java.util.List;
  * @see de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess
  */
 public interface CompositeProcessDefinition
-    extends Orchestratable<CompositeOrchestrationInfo>,
+    extends Orchestratable<CompositeProcessOrchestrationInfo>,
         IntegrationScenarioProviderDefinition,
         IntegrationScenarioConsumerDefinition {
 

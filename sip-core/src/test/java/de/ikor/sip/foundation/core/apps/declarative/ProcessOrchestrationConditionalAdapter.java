@@ -12,8 +12,8 @@ import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnecto
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.ProcessOrchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrator;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessBase;
@@ -131,8 +131,8 @@ public class ProcessOrchestrationConditionalAdapter {
     private static final String ID = "GetCustomerDebtByNameOrchestratorCond";
 
     @Override
-    public Orchestrator<CompositeOrchestrationInfo> getOrchestrator() {
-      return CompositeOrchestrator.forOrchestrationDsl(
+    public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
+      return ProcessOrchestrator.forOrchestrationDsl(
           dsl -> {
             dsl.ifCase(hasHeader("partner-name"))
                 .callConsumer(ConditionalGetPartnerByCode.class)

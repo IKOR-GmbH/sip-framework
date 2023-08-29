@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuild
 
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistryApi;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import org.apache.camel.model.RoutesDefinition;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 abstract class RouteGeneratorProcessBase {
   @Getter(AccessLevel.PROTECTED)
-  private final CompositeOrchestrationInfo orchestrationInfo;
+  private final CompositeProcessOrchestrationInfo orchestrationInfo;
 
   @Getter(value = AccessLevel.PROTECTED, lazy = true)
   private final RoutesDefinition routesDefinition = orchestrationInfo.getRoutesDefinition();
@@ -33,7 +33,7 @@ abstract class RouteGeneratorProcessBase {
   private final RoutesRegistry routesRegistry =
       getRoutesDefinition().getCamelContext().getRegistry().findSingleByType(RoutesRegistry.class);
 
-  protected String getCompositeId() {
+  protected String getCompositeProcessId() {
     return getCompositeProcess().getId();
   }
 

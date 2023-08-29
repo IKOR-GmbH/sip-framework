@@ -24,6 +24,7 @@ import org.apache.camel.Exchange;
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
+@SuppressWarnings("rawtypes")
 public class CompositeProcessOrchestrationContext {
 
   /**
@@ -180,6 +181,13 @@ public class CompositeProcessOrchestrationContext {
     orchestrationSteps.add(new OrchestrationStep(consumer, maybeClonedRequest, null));
   }
 
+  /**
+   * Adds a condition to the context using the cloner
+   *
+   * @param response - response added to the step
+   * @param cloner - cloner for the response
+   * @return - cloned response object
+   */
   @Synchronized
   Object addCondition(final Object response, final Optional<StepResultCloner> cloner) {
     final Object maybeClonedResponse = cloner.map(c -> c.apply(response)).orElse(response);

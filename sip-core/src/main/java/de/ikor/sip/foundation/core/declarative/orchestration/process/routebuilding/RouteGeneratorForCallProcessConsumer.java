@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding;
 
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumerBase;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -35,7 +35,7 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
       resolveAndVerifyHandledConsumers();
 
   RouteGeneratorForCallProcessConsumer(
-      final CompositeOrchestrationInfo orchestrationInfo,
+      final CompositeProcessOrchestrationInfo orchestrationInfo,
       final CallProcessConsumerBase definitionElement,
       final Set<IntegrationScenarioDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);
@@ -52,7 +52,7 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
     if (!doubleHandledConsumers.isEmpty()) {
       log.warn(
           "The following consumers are used more than once in orchestration for scenario '{}': {}",
-          getCompositeId(),
+          getCompositeProcessId(),
           doubleHandledConsumers.stream()
               .map(obj -> obj.getClass().getName())
               .collect(Collectors.joining(",")));
@@ -75,12 +75,13 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
                 SIPFrameworkInitializationException.init(
                     "Consumer-class '%s' is used on orchestration for process '%s', but it is not registered with that scenario. Registered outbound connector classes are %s",
                     RouteGeneratorHelper.getConsumerClass(element).getName(),
-                    getCompositeId(),
+                    getCompositeProcessId(),
                     getConsumers().stream().map(conn -> conn.getClass().getName()).toList()));
   }
 
   private List<IntegrationScenarioDefinition> getConsumers() {
-    return getDeclarationsRegistry().getCompositeProcessConsumerDefinitions(getCompositeId());
+    return getDeclarationsRegistry()
+        .getCompositeProcessConsumerDefinitions(getCompositeProcessId());
   }
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {

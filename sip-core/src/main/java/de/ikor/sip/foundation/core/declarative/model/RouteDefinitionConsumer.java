@@ -1,4 +1,4 @@
-package de.ikor.sip.foundation.core.declarative;
+package de.ikor.sip.foundation.core.declarative.model;
 
 import java.util.function.Consumer;
 import org.apache.camel.model.RouteDefinition;

@@ -5,7 +5,7 @@ import static de.ikor.sip.foundation.core.declarative.validator.CDMValidator.*;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
@@ -42,8 +42,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AdapterBuilder extends RouteBuilder {
 
-  private static final String COMPOSITE_HANDOFF_ROUTE_ID_PATTERN = "sip-composite-handoff-%s";
-  private static final String COMPOSITE_TAKEOVER_ROUTE_ID_PATTERN = "sip-composite-takeover-%s";
+  private static final String PROCESS_HANDOFF_ROUTE_ID_PATTERN = "sip-process-handoff-%s";
+  private static final String PROCESS_TAKEOVER_ROUTE_ID_PATTERN = "sip-process-takeover-%s";
   private final DeclarationsRegistry declarationsRegistry;
   private final RoutesRegistry routesRegistry;
 
@@ -103,7 +103,7 @@ public class AdapterBuilder extends RouteBuilder {
               final var endpoint =
                   StaticEndpointBuilders.direct(
                       String.format(
-                          COMPOSITE_HANDOFF_ROUTE_ID_PATTERN,
+                          PROCESS_HANDOFF_ROUTE_ID_PATTERN,
                           composite.getId() + "-" + scenarioDefinition.getId()));
               providerHandoffEndpoints.put(composite, endpoint);
             });
@@ -130,7 +130,7 @@ public class AdapterBuilder extends RouteBuilder {
               final var endpoint =
                   StaticEndpointBuilders.direct(
                       String.format(
-                          COMPOSITE_TAKEOVER_ROUTE_ID_PATTERN,
+                          PROCESS_TAKEOVER_ROUTE_ID_PATTERN,
                           composite.getId() + "-" + scenarioDefinition.getId()));
               consumerTakeoverEndpoints.put(composite, endpoint);
             });
@@ -319,7 +319,7 @@ public class AdapterBuilder extends RouteBuilder {
     final var startingEndpoint =
         StaticEndpointBuilders.direct(
             String.format(
-                COMPOSITE_TAKEOVER_ROUTE_ID_PATTERN,
+                PROCESS_TAKEOVER_ROUTE_ID_PATTERN,
                 compositeProcess.getId() + "-" + providerScenario.getId()));
     providerHandoffEndpoints.put(providerScenario, startingEndpoint);
 
@@ -331,17 +331,21 @@ public class AdapterBuilder extends RouteBuilder {
                   declarationsRegistry.getScenarios().stream()
                       .filter(s -> s.getClass().equals(consumer))
                       .findFirst()
-                      .get();
+                      .orElseThrow(
+                          () ->
+                              SIPFrameworkInitializationException.init(
+                                  "Composite process '%s' uses a consumer class '%' which couldn't be found in the registry. Please check your configuration.",
+                                  compositeProcess.getId(), consumer));
               var endingEndpoint =
                   StaticEndpointBuilders.direct(
                       String.format(
-                          COMPOSITE_HANDOFF_ROUTE_ID_PATTERN,
+                          PROCESS_HANDOFF_ROUTE_ID_PATTERN,
                           compositeProcess.getId() + "-" + consumerScenario.getId()));
               consumerTakeoverEndpoints.put(consumerScenario, endingEndpoint);
             });
 
     final var orchestrationInfo =
-        new CompositeOrchestrationValues(
+        new CompositeProcessOrchestrationValues(
             compositeProcess,
             getRouteCollection(),
             Collections.unmodifiableMap(providerHandoffEndpoints),
@@ -371,7 +375,8 @@ public class AdapterBuilder extends RouteBuilder {
   }
 
   @Value
-  private static class CompositeOrchestrationValues implements CompositeOrchestrationInfo {
+  private static class CompositeProcessOrchestrationValues
+      implements CompositeProcessOrchestrationInfo {
 
     CompositeProcessDefinition compositeProcess;
     RoutesDefinition routesDefinition;

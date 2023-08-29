@@ -24,15 +24,15 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class CompositeOrchestrator implements Orchestrator<CompositeOrchestrationInfo> {
+public class ProcessOrchestrator implements Orchestrator<CompositeProcessOrchestrationInfo> {
 
-  private final Consumer<CompositeOrchestrationInfo> orchestrationInfoConsumer;
-  @Setter private Predicate<CompositeOrchestrationInfo> canOrchestrate = Objects::nonNull;
+  private final Consumer<CompositeProcessOrchestrationInfo> orchestrationInfoConsumer;
+  @Setter private Predicate<CompositeProcessOrchestrationInfo> canOrchestrate = Objects::nonNull;
 
   private Optional<Consumer<ProcessOrchestrationDefinition>> dslDefinition = Optional.empty();
 
-  private CompositeOrchestrator(
-      Consumer<CompositeOrchestrationInfo> orchestrationInfoConsumer,
+  private ProcessOrchestrator(
+      Consumer<CompositeProcessOrchestrationInfo> orchestrationInfoConsumer,
       Consumer<ProcessOrchestrationDefinition> dslDefinition) {
     this.orchestrationInfoConsumer = orchestrationInfoConsumer;
     this.dslDefinition = Optional.of(dslDefinition);
@@ -44,9 +44,9 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
    * @return Orchestrator as specified in the DSL
    */
   @SuppressWarnings("java:S1172")
-  public static CompositeOrchestrator forOrchestrationDsl(
+  public static ProcessOrchestrator forOrchestrationDsl(
       final Consumer<ProcessOrchestrationDefinition> dslDefinition) {
-    return new CompositeOrchestrator(
+    return new ProcessOrchestrator(
         orchestrationInfo -> {
           final var orchestrationDef =
               new ProcessOrchestrationDefinition(orchestrationInfo.getCompositeProcess());
@@ -58,7 +58,8 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
   }
 
   /**
-   * Creates a new orchestrator specified via a consumer for the {@link CompositeOrchestrationInfo}.
+   * Creates a new orchestrator specified via a consumer for the {@link
+   * CompositeProcessOrchestrationInfo}.
    *
    * <p>This is very low-level, and it is strongly recommended to define the orchestration via DSL
    * instead. This can be used to manually create routes between endpoints.
@@ -66,9 +67,9 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
    * @param orchestrationInfoConsumer Consumer for the orchestration-info provided by the framework
    * @return Orchestrator
    */
-  public static CompositeOrchestrator forOrchestrationConsumer(
-      final Consumer<CompositeOrchestrationInfo> orchestrationInfoConsumer) {
-    return new CompositeOrchestrator(orchestrationInfoConsumer);
+  public static ProcessOrchestrator forOrchestrationConsumer(
+      final Consumer<CompositeProcessOrchestrationInfo> orchestrationInfoConsumer) {
+    return new ProcessOrchestrator(orchestrationInfoConsumer);
   }
 
   /**
@@ -90,12 +91,12 @@ public class CompositeOrchestrator implements Orchestrator<CompositeOrchestratio
   }
 
   @Override
-  public boolean canOrchestrate(final CompositeOrchestrationInfo info) {
+  public boolean canOrchestrate(final CompositeProcessOrchestrationInfo info) {
     return canOrchestrate.test(info);
   }
 
   @Override
-  public void doOrchestrate(final CompositeOrchestrationInfo info) {
+  public void doOrchestrate(final CompositeProcessOrchestrationInfo info) {
     orchestrationInfoConsumer.accept(info);
   }
 }

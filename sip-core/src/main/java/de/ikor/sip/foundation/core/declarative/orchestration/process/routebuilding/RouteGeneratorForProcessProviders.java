@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding;
 
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallNestedCondition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumerBase;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
@@ -20,7 +20,7 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 
 /**
- * Class for generating Camel routes for process providers via DSL
+ * Class for generating Camel routes for process provider via DSL
  *
  * <p><em>For internal use only</em>
  */
@@ -36,7 +36,7 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
       resolveAndVerifyHandledProviders();
 
   RouteGeneratorForProcessProviders(
-      final CompositeOrchestrationInfo orchestrationInfo,
+      final CompositeProcessOrchestrationInfo orchestrationInfo,
       final ProcessOrchestrationDefinition providerDefinition,
       final Set<IntegrationScenarioDefinition> overallUnhandledProviders) {
     super(orchestrationInfo);
@@ -53,7 +53,7 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
     if (!doubleHandledProviders.isEmpty()) {
       throw SIPFrameworkInitializationException.init(
           "The following providers are used more than once in orchestration for scenario '%s': %s",
-          getCompositeId(),
+          getCompositeProcessId(),
           doubleHandledProviders.stream()
               .map(obj -> obj.getClass().getName())
               .collect(Collectors.joining(",")));
@@ -64,7 +64,7 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
 
   private Set<IntegrationScenarioDefinition> resolveHandledProviders() {
     return Set.of(
-        getDeclarationsRegistry().getCompositeProcessProviderDefinition(getCompositeId()));
+        getDeclarationsRegistry().getCompositeProcessProviderDefinition(getCompositeProcessId()));
   }
 
   void generateRoutes(final RoutesDefinition routesDefinition) {
@@ -72,7 +72,7 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
     if (getHandledProviders().isEmpty()) {
       log.debug(
           "No providers handled by this route-builder for orchestration of integration-scenario {}",
-          getCompositeId());
+          getCompositeProcessId());
       return;
     }
 
@@ -100,7 +100,7 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
     if (!overallUnhandledScenarioConsumers.isEmpty()) {
       log.warn(
           "Orchestration for integration-scenario '{}' does not call scenario-consumers '{}' for calls coming in from '{}'",
-          getCompositeId(),
+          getCompositeProcessId(),
           overallUnhandledScenarioConsumers.stream()
               .map(consumer -> consumer.getClass().getSimpleName())
               .collect(Collectors.joining(",")),
@@ -125,7 +125,8 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
           .routeId(orchestrationRouteId);
     }
     final var directName =
-        String.format("sip-scenario-orchestrator-%s-merge-%s", getCompositeId(), providerIds);
+        String.format(
+            "sip-scenario-orchestrator-%s-merge-%s", getCompositeProcessId(), providerIds);
     for (final var provider : providers) {
       routesDefinition
           .from(getProviderEndpoint(provider))

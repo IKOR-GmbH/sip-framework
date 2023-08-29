@@ -13,9 +13,9 @@ import org.apache.camel.model.RoutesDefinition;
  * de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess} This is structural
  * information that gives orchestrator an ability to generate orchestration routes
  *
- * @see CompositeOrchestrator
+ * @see ProcessOrchestrator
  */
-public interface CompositeOrchestrationInfo extends OrchestrationInfo {
+public interface CompositeProcessOrchestrationInfo extends OrchestrationInfo {
 
   /**
    * Returns the composite process that is being orchestrated.
