@@ -1,7 +1,7 @@
-package de.ikor.sip.foundation.core.declarative.orchestration.process;
+package de.ikor.sip.foundation.core.actuator.declarative;
 
+import de.ikor.sip.foundation.core.actuator.declarative.model.dto.StepDto;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
-import de.ikor.sip.foundation.core.declarative.dto.StepDto;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,17 +49,17 @@ public class StepsGenerator {
   }
 
   private StepDto createBaseStep(CallableWithinProcessDefinition statement) {
-    if (statement instanceof CallProcessConsumerImpl<?> impl) {
+    if (statement instanceof CallProcessConsumerImpl<?> base) {
       String consumer =
-          RouteGeneratorHelper.getConsumerClass(impl)
+          RouteGeneratorHelper.getConsumerClass(base)
               .getAnnotation(IntegrationScenario.class)
               .scenarioId();
       return StepDto.builder()
           .stepOrder(stepOrder++)
           .conditioned(false)
           .consumerId(consumer)
-          .requestPreparation(RouteGeneratorHelper.getRequestPreparation(impl).isPresent())
-          .responseHandling(RouteGeneratorHelper.getResponseConsumer(impl).isPresent())
+          .requestPreparation(RouteGeneratorHelper.getRequestPreparation(base).isPresent())
+          .responseHandling(RouteGeneratorHelper.getResponseConsumer(base).isPresent())
           .build();
     }
     return null;

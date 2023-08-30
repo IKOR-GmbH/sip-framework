@@ -51,17 +51,6 @@ public class RouteGeneratorHelper {
     return element.getResponseConsumer();
   }
 
-  public static Optional<CompositeProcessStepResponseConsumer> getResponseConsumer(
-      CallNestedCondition element) {
-    return element.getResponseConsumer();
-  }
-
-  public static Optional<CompositeProcessStepConditional> getConditional(
-      ProcessOrchestrationDefinition element) {
-    // TODO
-    return element.getConditionals().stream().findFirst();
-  }
-
   public static List<CallNestedCondition.ProcessBranchStatements> getConditionalStatements(
       CallNestedCondition element) {
     return element.getConditionalStatements();
@@ -78,11 +67,6 @@ public class RouteGeneratorHelper {
 
   public static Optional<StepResultCloner> getStepResultCloner(CallNestedCondition element) {
     return element.getStepResultCloner();
-  }
-
-  public static List<CompositeProcessStepConditional> getConditionals(
-      ProcessOrchestrationDefinition element) {
-    return element.getConditionals();
   }
 
   public static List<CallableWithinProcessDefinition> getSteps(

@@ -3,9 +3,9 @@ package de.ikor.sip.foundation.core.declarative;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.OutboundConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.dto.IntegrationScenarioDefinitionDto;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
@@ -95,8 +95,7 @@ public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
    */
   IntegrationScenarioDefinition getCompositeProcessProviderDefinition(String compositeProcessID);
 
-  IntegrationScenarioDefinitionDto getCompositeProcessProviderDefinitionDto(
-      String compositeProcessID);
+  IntegrationScenarioBase getIntegrationScenarioBase(String compositeProcessID);
 
   /**
    * Returns all the processes that are providers for a scenario.
@@ -135,7 +134,4 @@ public sealed interface DeclarationsRegistryApi permits DeclarationsRegistry {
    */
   List<IntegrationScenarioConsumerDefinition> getConsumersForScenario(
       IntegrationScenarioDefinition integrationScenario);
-
-  List<IntegrationScenarioDefinitionDto> getCompositeProcessConsumerDefinitionDtos(
-      String compositeProcessID);
 }

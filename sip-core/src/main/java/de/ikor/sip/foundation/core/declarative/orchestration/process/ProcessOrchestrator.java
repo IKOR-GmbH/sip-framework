@@ -1,6 +1,7 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
-import de.ikor.sip.foundation.core.declarative.dto.ProcessOrchestrationDefinitionDto;
+import de.ikor.sip.foundation.core.actuator.declarative.StepsGenerator;
+import de.ikor.sip.foundation.core.actuator.declarative.model.dto.ProcessOrchestrationDefinitionDto;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding.RouteGeneratorForProcessOrchestrationDefinition;

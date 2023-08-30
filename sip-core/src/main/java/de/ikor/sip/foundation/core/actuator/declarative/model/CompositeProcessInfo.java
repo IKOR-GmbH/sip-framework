@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.actuator.declarative.model;
 
-import de.ikor.sip.foundation.core.declarative.dto.ProcessOrchestrationDefinitionDto;
+import de.ikor.sip.foundation.core.actuator.declarative.model.dto.ProcessOrchestrationDefinitionDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

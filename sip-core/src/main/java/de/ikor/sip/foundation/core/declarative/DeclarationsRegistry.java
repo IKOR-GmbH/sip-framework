@@ -8,7 +8,6 @@ import de.ikor.sip.foundation.core.declarative.connector.*;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupBase;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.DefaultConnectorGroup;
-import de.ikor.sip.foundation.core.declarative.dto.IntegrationScenarioDefinitionDto;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
 import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
 import de.ikor.sip.foundation.core.declarative.model.ResponseMappingRouteTransformer;
@@ -327,11 +326,8 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   }
 
   @Override
-  public IntegrationScenarioDefinitionDto getCompositeProcessProviderDefinitionDto(
-      String compositeProcessID) {
-    IntegrationScenarioBase provider =
-        (IntegrationScenarioBase) getCompositeProcessProviderDefinition(compositeProcessID);
-    return IntegrationScenarioDefinitionDto.builder().id(provider.getId()).build();
+  public IntegrationScenarioBase getIntegrationScenarioBase(String compositeProcessID) {
+    return (IntegrationScenarioBase) getCompositeProcessProviderDefinition(compositeProcessID);
   }
 
   @Override
@@ -376,16 +372,6 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
         List.copyOf(getCompositeProcessConsumersForScenario(integrationScenario));
     return Stream.concat(
             outboundConnectorsForScenario.stream(), compositeProcessConsumersForScenario.stream())
-        .toList();
-  }
-
-  @Override
-  public List<IntegrationScenarioDefinitionDto> getCompositeProcessConsumerDefinitionDtos(
-      String compositeProcessID) {
-    List<IntegrationScenarioDefinition> consumers =
-        getCompositeProcessConsumerDefinitions(compositeProcessID);
-    return consumers.stream()
-        .map(consumer -> IntegrationScenarioDefinitionDto.builder().id(consumer.getId()).build())
         .toList();
   }
 

@@ -5,8 +5,10 @@ import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpoi
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import de.ikor.sip.foundation.core.actuator.declarative.model.*;
+import de.ikor.sip.foundation.core.actuator.declarative.model.dto.IntegrationScenarioDefinitionDto;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
@@ -133,9 +135,21 @@ public class DeclarativeDefinitionEndpoint {
                 processes.add(
                     createCompositeProcessInfo(
                         process,
-                        declarationsRegistry.getCompositeProcessProviderDefinitionDto(
-                            process.getId()),
-                        declarationsRegistry.getCompositeProcessConsumerDefinitionDtos(
-                            process.getId()))));
+                        IntegrationScenarioDefinitionDto.builder()
+                            .id(
+                                declarationsRegistry
+                                    .getIntegrationScenarioBase(process.getId())
+                                    .getId())
+                            .build(),
+                        mapConsumers(
+                            declarationsRegistry.getCompositeProcessConsumerDefinitions(
+                                process.getId())))));
+  }
+
+  private List<IntegrationScenarioDefinitionDto> mapConsumers(
+      List<IntegrationScenarioDefinition> consumers) {
+    return consumers.stream()
+        .map(consumer -> IntegrationScenarioDefinitionDto.builder().id(consumer.getId()).build())
+        .toList();
   }
 }

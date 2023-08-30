@@ -7,10 +7,10 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.CompositeProcessIn
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.dto.IntegrationScenarioDefinitionDto;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
-import de.ikor.sip.foundation.core.declarative.dto.IntegrationScenarioDefinitionDto;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.ProcessOrchestrator;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
