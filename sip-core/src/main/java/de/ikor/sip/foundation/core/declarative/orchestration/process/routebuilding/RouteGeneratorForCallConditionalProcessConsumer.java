@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuild
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallNestedCondition;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumerBase;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumer;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallableWithinProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -76,7 +76,7 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
 
   private <T extends ProcessorDefinition<T>> void buildRouteForStatement(
       final T routeDefinition, final CallableWithinProcessDefinition statement) {
-    if (statement instanceof CallProcessConsumerBase callDef) {
+    if (statement instanceof CallProcessConsumer callDef) {
       new RouteGeneratorForCallProcessConsumer(
               getOrchestrationInfo(), callDef, overallUnhandledConsumers)
           .generateRoute(routeDefinition);

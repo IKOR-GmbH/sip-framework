@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuild
 
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumerBase;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumer;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
@@ -26,7 +26,7 @@ import org.apache.camel.model.ProcessorDefinition;
 @SuppressWarnings("rawtypes")
 final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBase {
 
-  private final CallProcessConsumerBase<?, ?> definitionElement;
+  private final CallProcessConsumer<?, ?> definitionElement;
 
   private final Set<IntegrationScenarioDefinition> overallUnhandledConsumers;
 
@@ -36,7 +36,7 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
 
   RouteGeneratorForCallProcessConsumer(
       final CompositeProcessOrchestrationInfo orchestrationInfo,
-      final CallProcessConsumerBase definitionElement,
+      final CallProcessConsumer definitionElement,
       final Set<IntegrationScenarioDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);
     this.definitionElement = definitionElement;
@@ -65,7 +65,7 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
   }
 
   private IntegrationScenarioDefinition retrieveConsumerFromClassDefinition(
-      final CallProcessConsumerBase element) {
+      final CallProcessConsumer element) {
     return getConsumers().stream()
         .filter(
             consumer -> RouteGeneratorHelper.getConsumerClass(element).equals(consumer.getClass()))

@@ -26,12 +26,12 @@ public class RouteGeneratorHelper {
   }
 
   public static Class<? extends IntegrationScenarioDefinition> getConsumerClass(
-      CallProcessConsumerBase element) {
+      CallProcessConsumer element) {
     return element.getConsumerClass();
   }
 
   public static Optional<CompositeProcessStepRequestExtractor> getRequestPreparation(
-      CallProcessConsumerBase element) {
+      CallProcessConsumer element) {
     return element.getRequestPreparation();
   }
 
@@ -47,7 +47,7 @@ public class RouteGeneratorHelper {
   }
 
   public static Optional<CompositeProcessStepResponseConsumer> getResponseConsumer(
-      CallProcessConsumerBase element) {
+      CallProcessConsumer element) {
     return element.getResponseConsumer();
   }
 
@@ -61,7 +61,7 @@ public class RouteGeneratorHelper {
     return element.getUnconditionalStatements();
   }
 
-  public static Optional<StepResultCloner> getStepResultCloner(CallProcessConsumerBase element) {
+  public static Optional<StepResultCloner> getStepResultCloner(CallProcessConsumer element) {
     return element.getStepResultCloner();
   }
 

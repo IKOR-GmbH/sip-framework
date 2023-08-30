@@ -27,7 +27,7 @@ public class StepsGenerator {
       fillUnconditionalSteps(
           steps, RouteGeneratorHelper.getUnonditionalStatements(nestedCondition));
     }
-    if (callableWithinProcessDefinition instanceof CallProcessConsumerImpl<?>) {
+    if (callableWithinProcessDefinition instanceof CallProcessConsumer<?, ?>) {
       steps.add(createBaseStep(callableWithinProcessDefinition));
     }
     return steps.stream();
@@ -49,7 +49,7 @@ public class StepsGenerator {
   }
 
   private StepDto createBaseStep(CallableWithinProcessDefinition statement) {
-    if (statement instanceof CallProcessConsumerImpl<?> base) {
+    if (statement instanceof CallProcessConsumer<?, ?> base) {
       String consumer =
           RouteGeneratorHelper.getConsumerClass(base)
               .getAnnotation(IntegrationScenario.class)

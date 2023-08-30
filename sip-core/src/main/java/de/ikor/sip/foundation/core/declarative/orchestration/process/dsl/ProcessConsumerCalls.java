@@ -4,6 +4,6 @@ import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefin
 
 interface ProcessConsumerCalls<S extends ProcessConsumerCalls<S, R>, R> {
 
-  CallProcessConsumerImpl<S> callConsumer(
+  CallProcessConsumer<? extends CallProcessConsumer, S> callConsumer(
       Class<? extends IntegrationScenarioDefinition> consumerClass);
 }

@@ -28,10 +28,10 @@ public final class ForProcessProvidersDelegate<S extends ProcessConsumerCalls<S,
   private final R returningNode;
 
   @Override
-  public CallProcessConsumerImpl<S> callConsumer(
+  public CallProcessConsumer<? extends CallProcessConsumer, S> callConsumer(
       Class<? extends IntegrationScenarioDefinition> consumerClass) {
-    final CallProcessConsumerImpl<S> def =
-        new CallProcessConsumerImpl(callerNode, null, consumerClass);
+    final CallProcessConsumer<? extends CallProcessConsumer, S> def =
+        new CallProcessConsumer(callerNode, null, consumerClass);
     consumerCalls.add(def);
     return def;
   }

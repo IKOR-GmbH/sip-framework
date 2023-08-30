@@ -17,7 +17,7 @@ import lombok.Getter;
  * @param <R> DSL handle for the return DSL Verb/type.
  */
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
-public class CallProcessConsumerBase<S extends CallProcessConsumerBase<S, R>, R>
+public class CallProcessConsumer<S extends CallProcessConsumer<S, R>, R>
     extends ProcessDslBase<S, R> implements CallableWithinProcessDefinition {
 
   @Getter(AccessLevel.PACKAGE)
@@ -32,7 +32,7 @@ public class CallProcessConsumerBase<S extends CallProcessConsumerBase<S, R>, R>
   @Getter(AccessLevel.PACKAGE)
   private Optional<StepResultCloner<Object>> stepResultCloner = Optional.empty();
 
-  CallProcessConsumerBase(
+  CallProcessConsumer(
       final R dslReturnDefinition,
       final CompositeProcessDefinition compositeProcess,
       final Class<? extends IntegrationScenarioDefinition> consumerClass) {
