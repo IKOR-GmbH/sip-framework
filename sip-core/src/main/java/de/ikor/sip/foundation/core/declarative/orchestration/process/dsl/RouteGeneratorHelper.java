@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepConditional;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepRequestExtractor;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
@@ -35,17 +34,6 @@ public class RouteGeneratorHelper {
     return element.getRequestPreparation();
   }
 
-  public static Optional<CompositeProcessStepConditional> getPredicate(Object element) {
-    if (element instanceof CallNestedCondition.ProcessBranchStatements ele)
-      return Optional.ofNullable(ele.predicate());
-    return Optional.empty();
-  }
-
-  public static Optional<CompositeProcessStepRequestExtractor> getRequestPreparation(
-      CallNestedCondition element) {
-    return element.getRequestPreparation();
-  }
-
   public static Optional<CompositeProcessStepResponseConsumer> getResponseConsumer(
       CallProcessConsumer element) {
     return element.getResponseConsumer();
@@ -56,7 +44,7 @@ public class RouteGeneratorHelper {
     return element.getConditionalStatements();
   }
 
-  public static List<CallableWithinProcessDefinition> getUnonditionalStatements(
+  public static List<CallableWithinProcessDefinition> getUnconditionalStatements(
       CallNestedCondition element) {
     return element.getUnconditionalStatements();
   }

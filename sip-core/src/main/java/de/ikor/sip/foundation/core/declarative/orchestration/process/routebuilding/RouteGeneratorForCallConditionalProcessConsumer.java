@@ -63,7 +63,7 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
       choiceDef.endChoice();
     }
     List<CallableWithinProcessDefinition> unconditionalStatements =
-        RouteGeneratorHelper.getUnonditionalStatements(conditionalDefinition);
+        RouteGeneratorHelper.getUnconditionalStatements(conditionalDefinition);
 
     if (!unconditionalStatements.isEmpty()) {
       choiceDef.otherwise();

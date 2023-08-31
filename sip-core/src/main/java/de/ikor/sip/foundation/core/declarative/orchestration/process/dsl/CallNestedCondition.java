@@ -2,8 +2,6 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepConditional;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepRequestExtractor;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +20,6 @@ public final class CallNestedCondition<R> extends ProcessDslBase<CallNestedCondi
   private final List<CallableWithinProcessDefinition> unconditionalStatements = new ArrayList<>();
 
   private final CompositeProcessDefinition processDefinition;
-
-  @Getter(AccessLevel.PACKAGE)
-  private Optional<CompositeProcessStepRequestExtractor> requestPreparation = Optional.empty();
-
-  @Getter(AccessLevel.PACKAGE)
-  private Optional<CompositeProcessStepResponseConsumer> responseConsumer = Optional.empty();
 
   @Getter(AccessLevel.PACKAGE)
   private Optional<StepResultCloner<Object>> stepResultCloner = Optional.empty();
