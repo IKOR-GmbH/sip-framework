@@ -120,7 +120,7 @@ public class SecurityConfig {
     http.addFilterAt(
             new CompositeAuthenticationFilter(tokenExtractors, config, authenticationManagerBean()),
             BasicAuthenticationFilter.class)
-        .authorizeRequests()
+        .authorizeHttpRequests()
         .anyRequest()
         .authenticated();
 
@@ -143,10 +143,9 @@ public class SecurityConfig {
       config
           .getIgnoredEndpoints()
           .forEach(
-              endpoint -> {
-                ignoredRequestConfigurer.requestMatchers(
-                    AntPathRequestMatcher.antMatcher(endpoint));
-              });
+              endpoint ->
+                  ignoredRequestConfigurer.requestMatchers(
+                      AntPathRequestMatcher.antMatcher(endpoint)));
     });
   }
 }
