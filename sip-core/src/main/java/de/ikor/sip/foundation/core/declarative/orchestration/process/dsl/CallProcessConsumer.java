@@ -2,11 +2,13 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepRequestExtractor;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepResponseConsumer;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -48,6 +50,11 @@ public class CallProcessConsumer<S extends CallProcessConsumer<S, R>, R>
    * @return DSL handle
    */
   public S withRequestPreparation(final CompositeProcessStepRequestExtractor requestPreparation) {
+    if (this.requestPreparation.isPresent()) {
+      throw SIPFrameworkInitializationException.init(
+          "Chaining request preparation for consumer '%s' is not allowed!",
+          consumerClass.getAnnotation(IntegrationScenario.class).scenarioId());
+    }
     this.requestPreparation = Optional.of(requestPreparation);
     return self();
   }
