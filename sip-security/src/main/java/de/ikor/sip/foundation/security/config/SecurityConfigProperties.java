@@ -32,9 +32,6 @@ import org.springframework.util.PathMatcher;
 @AllArgsConstructor
 public class SecurityConfigProperties {
 
-  /** indicates if sip security is enabled overall */
-  private boolean enabled = false;
-
   /** endpoints that should be left out of the complete authentication checks */
   private List<String> ignoredEndpoints = Collections.emptyList();
 

@@ -1,8 +1,7 @@
-package de.ikor.sip.foundation.security.autoconfigure;
+package de.ikor.sip.foundation.security;
 
 import de.ikor.sip.foundation.core.util.YamlPropertSourceFactory;
 import de.ikor.sip.foundation.security.config.SecurityConfig;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
@@ -14,7 +13,6 @@ import org.springframework.context.annotation.PropertySource;
  *
  * @author thomas.stieglmaier
  */
-@AutoConfiguration
 @ConditionalOnClass(SecurityConfig.class)
 @ComponentScan("de.ikor.sip.foundation.security")
 @PropertySource(

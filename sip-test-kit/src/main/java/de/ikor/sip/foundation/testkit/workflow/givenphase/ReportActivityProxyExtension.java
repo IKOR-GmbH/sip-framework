@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.testkit.workflow.givenphase;
 
 import static de.ikor.sip.foundation.testkit.configurationproperties.models.MessageProperties.mapToMessageProperties;
-import static jakarta.xml.bind.DatatypeConverter.parseBoolean;
 
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.core.proxies.extension.ProxyExtension;
@@ -40,7 +39,7 @@ public class ReportActivityProxyExtension implements ProxyExtension {
   }
 
   private boolean isTest(Exchange exchange) {
-    return parseBoolean(exchange.getIn().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class));
+    return "true".equals(exchange.getIn().getHeader(ProcessorProxy.TEST_MODE_HEADER, String.class));
   }
 
   private TestExecutionStatus findTestReport(Exchange exchange) {
