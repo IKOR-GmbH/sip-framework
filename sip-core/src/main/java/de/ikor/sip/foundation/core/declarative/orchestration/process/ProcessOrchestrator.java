@@ -1,7 +1,5 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
-import de.ikor.sip.foundation.core.actuator.declarative.StepsGenerator;
-import de.ikor.sip.foundation.core.actuator.declarative.model.dto.ProcessOrchestrationDefinitionDto;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding.RouteGeneratorForProcessOrchestrationDefinition;
@@ -79,14 +77,12 @@ public class ProcessOrchestrator implements Orchestrator<CompositeProcessOrchest
    * @param compositeProcessDefinition definition of a composite process
    * @return orchestration definition
    */
-  public ProcessOrchestrationDefinitionDto populateOrchestrationDefinition(
+  public ProcessOrchestrationDefinition populateOrchestrationDefinition(
       CompositeProcessDefinition compositeProcessDefinition) {
     if (dslDefinition.isPresent()) {
       final var orchestrationDef = new ProcessOrchestrationDefinition(compositeProcessDefinition);
       dslDefinition.get().accept(orchestrationDef);
-      return ProcessOrchestrationDefinitionDto.builder()
-          .steps(new StepsGenerator(orchestrationDef).generateSteps())
-          .build();
+      return orchestrationDef;
     }
     return null;
   }

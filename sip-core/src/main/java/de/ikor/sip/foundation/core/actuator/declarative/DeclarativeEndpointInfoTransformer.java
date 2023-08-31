@@ -8,10 +8,12 @@ import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.dto.IntegrationScenarioDefinitionDto;
+import de.ikor.sip.foundation.core.actuator.declarative.model.dto.ProcessOrchestrationDefinitionDto;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.ProcessOrchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
@@ -143,13 +145,24 @@ public class DeclarativeEndpointInfoTransformer {
         .orchestrationDefinition(
             compositeProcessDefinition.getOrchestrator()
                     instanceof ProcessOrchestrator processOrchestrator
-                ? processOrchestrator.populateOrchestrationDefinition(compositeProcessDefinition)
+                ? generateProcessOrchestrationDefinition(
+                    compositeProcessDefinition, processOrchestrator)
                 : null)
         .processDescription(
             readDocumentation(
                 PROCESSES_DEFAULT_DOCS_PATH,
                 compositeProcessDefinition.getPathToDocumentationResource(),
                 compositeProcessDefinition.getId()))
+        .build();
+  }
+
+  private static ProcessOrchestrationDefinitionDto generateProcessOrchestrationDefinition(
+      CompositeProcessDefinition compositeProcessDefinition,
+      ProcessOrchestrator processOrchestrator) {
+    ProcessOrchestrationDefinition definition =
+        processOrchestrator.populateOrchestrationDefinition(compositeProcessDefinition);
+    return ProcessOrchestrationDefinitionDto.builder()
+        .steps(new StepsGenerator(definition).generateSteps())
         .build();
   }
 
