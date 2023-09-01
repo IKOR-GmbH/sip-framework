@@ -107,16 +107,8 @@
             </plugin>
 #if (${useSoap} == "y" || ${useSoap} == "Y")
             <plugin>
-                <groupId>de.codecentric</groupId>
-                <artifactId>cxf-spring-boot-starter-maven-plugin</artifactId>
-                <version>2.3.0.RELEASE</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
+              <groupId>org.apache.cxf</groupId>
+              <artifactId>cxf-codegen-plugin</artifactId>
             </plugin>
 #end
         </plugins>
