@@ -22,7 +22,8 @@ public class SIPX509TokenExtractor implements SIPTokenExtractor<SIPX509Authentic
       throw new BadCredentialsException("No client certificate found in request");
     }
 
-    return new SIPX509AuthenticationToken(clientCertificate.getSubjectDN().toString(), false);
+    return new SIPX509AuthenticationToken(
+        clientCertificate.getSubjectX500Principal().toString(), false);
   }
 
   @Override
