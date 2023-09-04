@@ -8,9 +8,9 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
-import java.security.Principal;
 import java.security.cert.X509Certificate;
 import java.util.List;
+import javax.security.auth.x500.X500Principal;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -32,9 +32,8 @@ class SIPX509TokenExtractorTest {
     // arrange
     ((Logger) LoggerFactory.getLogger(SIPX509TokenExtractor.class)).setLevel(Level.INFO);
     X509Certificate certMock = mock(X509Certificate.class);
-    Principal principalMock = mock(Principal.class);
-    when(certMock.getSubjectDN()).thenReturn(principalMock);
-    when(principalMock.toString()).thenReturn(EXPECTED_DN);
+    X500Principal principal = new X500Principal(EXPECTED_DN);
+    when(certMock.getSubjectX500Principal()).thenReturn(principal);
 
     X509Certificate[] certs = {certMock};
 
@@ -58,9 +57,8 @@ class SIPX509TokenExtractorTest {
     logger.addAppender(listAppender);
     List<ILoggingEvent> logsList = listAppender.list;
     X509Certificate certMock = mock(X509Certificate.class);
-    Principal principalMock = mock(Principal.class);
-    when(certMock.getSubjectDN()).thenReturn(principalMock);
-    when(principalMock.toString()).thenReturn(EXPECTED_DN);
+    X500Principal principal = new X500Principal(EXPECTED_DN);
+    when(certMock.getSubjectX500Principal()).thenReturn(principal);
 
     X509Certificate[] certs = {certMock};
 
