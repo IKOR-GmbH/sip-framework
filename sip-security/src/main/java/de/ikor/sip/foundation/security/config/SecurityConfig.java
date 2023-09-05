@@ -111,7 +111,7 @@ public class SecurityConfig {
    * @throws Exception if security isn't properly configured
    */
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain SIPDefaultSecurityFilterChain(HttpSecurity http) throws Exception {
     // disable sessions completely
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -137,7 +137,7 @@ public class SecurityConfig {
    * @return Spring WebSecurityCustomizer
    */
   @Bean
-  public WebSecurityCustomizer webSecurityCustomizer() {
+  public WebSecurityCustomizer SIPDefaultWebSecurityCustomizer() {
     return (web -> {
       final WebSecurity.IgnoredRequestConfigurer ignoredRequestConfigurer = web.ignoring();
       config
