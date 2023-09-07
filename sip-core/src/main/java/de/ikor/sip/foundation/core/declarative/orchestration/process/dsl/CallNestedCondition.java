@@ -10,6 +10,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 
+/**
+ * DSL class used for construction conditional calls after main condition
+ *
+ * @param <R> DSL handle for the return DSL Verb/type.
+ */
 public final class CallNestedCondition<R> extends ProcessDslBase<CallNestedCondition<R>, R>
     implements CallableWithinProcessDefinition {
 
@@ -33,11 +38,12 @@ public final class CallNestedCondition<R> extends ProcessDslBase<CallNestedCondi
       final CompositeProcessStepConditional predicate) {
     final var branch = new ProcessBranchStatements(predicate, new ArrayList<>());
     conditionalStatements.add(branch);
-    return new ProcessBranch(branch.statements, self(), processDefinition);
+    return new ProcessBranch<>(branch.statements, self(), processDefinition);
   }
 
   ProcessBranch<R> elseCase() {
-    return new ProcessBranch(unconditionalStatements, getDslReturnDefinition(), processDefinition);
+    return new ProcessBranch<>(
+        unconditionalStatements, getDslReturnDefinition(), processDefinition);
   }
 
   R endCases() {
@@ -48,18 +54,18 @@ public final class CallNestedCondition<R> extends ProcessDslBase<CallNestedCondi
       CompositeProcessStepConditional predicate,
       List<CallableWithinProcessDefinition> statements) {}
 
-  public final class ProcessBranch<I>
-      extends ProcessDslBase<CallNestedCondition<I>.ProcessBranch<I>, I>
+  public final class ProcessBranch<I> extends ProcessDslBase<ProcessBranch<I>, I>
       implements ProcessConsumerCalls<ProcessBranch<I>, I> {
 
     @Delegate private final ForProcessProvidersDelegate<ProcessBranch<I>, I> delegate;
 
     ProcessBranch(
-        final List<ProcessBranchStatements> statementsList,
+        final List<CallableWithinProcessDefinition> statementsList,
         final I dslReturnDefinition,
         final CompositeProcessDefinition processDefinition) {
       super(dslReturnDefinition, processDefinition);
-      delegate = new ForProcessProvidersDelegate(statementsList, self(), getDslReturnDefinition());
+      delegate =
+          new ForProcessProvidersDelegate<>(statementsList, self(), getDslReturnDefinition());
     }
 
     public ProcessBranch<CallNestedCondition<R>> elseIfCase(

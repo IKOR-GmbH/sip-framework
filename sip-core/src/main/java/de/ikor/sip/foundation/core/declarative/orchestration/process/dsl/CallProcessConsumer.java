@@ -1,7 +1,5 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepRequestExtractor;
@@ -14,11 +12,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 /**
- * DSL class for calling a process consumer specified by its class
+ * DSL class for calling a process consumer request or response handlers
  *
+ * @param <S> DSL handle for caller
  * @param <R> DSL handle for the return DSL Verb/type.
  */
-@JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class CallProcessConsumer<S extends CallProcessConsumer<S, R>, R>
     extends ProcessDslBase<S, R> implements CallableWithinProcessDefinition {
 

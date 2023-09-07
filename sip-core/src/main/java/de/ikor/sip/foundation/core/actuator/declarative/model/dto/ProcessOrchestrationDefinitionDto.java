@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
+/** DTO representing definition of composite process */
 @Data
 @Builder
 public class ProcessOrchestrationDefinitionDto {

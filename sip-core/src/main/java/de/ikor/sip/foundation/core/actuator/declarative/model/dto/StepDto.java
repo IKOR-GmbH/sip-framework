@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
+/** DTO representing a step in process orchestration definition */
 @Data
 @Builder
 public class StepDto {

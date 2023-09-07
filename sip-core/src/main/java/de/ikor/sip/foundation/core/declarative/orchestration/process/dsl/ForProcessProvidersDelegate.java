@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.List;
 import lombok.AccessLevel;
@@ -8,12 +7,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * DSL class specifying a process provider specified by its class
+ * DSL class calling a consumer by its {@link IntegrationScenarioDefinition}
  *
  * @param <S> DSL handle for caller
  * @param <R> DSL handle for the return DSL Verb/type.
  */
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public final class ForProcessProvidersDelegate<S extends ProcessConsumerCalls<S, R>, R>
     implements ProcessConsumerCalls<S, R> {
@@ -28,10 +26,10 @@ public final class ForProcessProvidersDelegate<S extends ProcessConsumerCalls<S,
   private final R returningNode;
 
   @Override
-  public CallProcessConsumer<? extends CallProcessConsumer, S> callConsumer(
+  public CallProcessConsumer<? extends CallProcessConsumer<?, ?>, S> callConsumer(
       Class<? extends IntegrationScenarioDefinition> consumerClass) {
-    final CallProcessConsumer<? extends CallProcessConsumer, S> def =
-        new CallProcessConsumer(callerNode, null, consumerClass);
+    final CallProcessConsumer<? extends CallProcessConsumer<?, ?>, S> def =
+        new CallProcessConsumer<>(callerNode, null, consumerClass);
     consumerCalls.add(def);
     return def;
   }

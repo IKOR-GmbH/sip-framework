@@ -1,7 +1,5 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.dsl;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.EndOfDsl;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessStepConditional;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
@@ -11,8 +9,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 
-/** DSL class for specifying orchestration of complex processes */
-@JsonAutoDetect(fieldVisibility = Visibility.ANY)
+/** DSL class for specifying orchestration of complex processes with or without conditions */
 public class ProcessOrchestrationDefinition
     extends ProcessDslBase<ProcessOrchestrationDefinition, EndOfDsl>
     implements ProcessConsumerCalls<ProcessOrchestrationDefinition, EndOfDsl> {
@@ -27,7 +24,7 @@ public class ProcessOrchestrationDefinition
   @Getter(AccessLevel.PACKAGE)
   private final ForProcessProvidersDelegate<ProcessOrchestrationDefinition, EndOfDsl>
       forProcessProvidersDelegate =
-          new ForProcessProvidersDelegate(steps, self(), getDslReturnDefinition());
+          new ForProcessProvidersDelegate<>(steps, self(), getDslReturnDefinition());
 
   /**
    * Constructor
@@ -44,7 +41,7 @@ public class ProcessOrchestrationDefinition
           CallNestedCondition<ProcessOrchestrationDefinition>>
       ifCase(final CompositeProcessStepConditional predicate) {
     final CallNestedCondition<ProcessOrchestrationDefinition> def =
-        new CallNestedCondition(self(), getCompositeProcess());
+        new CallNestedCondition<>(self(), getCompositeProcess());
     steps.add(def);
     conditionals.add(predicate);
     return def.elseIfCase(predicate);

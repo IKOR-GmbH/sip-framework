@@ -8,11 +8,17 @@ import java.util.List;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 
+/** Generator for steps of a {@link ProcessOrchestrationDefinition} */
 @RequiredArgsConstructor
 public class StepsGenerator {
   private int stepOrder = 0;
   private final ProcessOrchestrationDefinition orchestrationDef;
 
+  /**
+   * Generate {@link StepDto}s of the {@link ProcessOrchestrationDefinition}
+   *
+   * @return list of {@link StepDto}s
+   */
   public List<StepDto> generateSteps() {
     return RouteGeneratorHelper.getSteps(orchestrationDef).stream()
         .flatMap(this::createStepsFromDefinition)
