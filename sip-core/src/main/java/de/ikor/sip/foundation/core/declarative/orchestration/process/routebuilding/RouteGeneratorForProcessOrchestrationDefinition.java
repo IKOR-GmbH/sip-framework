@@ -3,7 +3,6 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuild
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -33,10 +32,8 @@ public final class RouteGeneratorForProcessOrchestrationDefinition extends Route
 
     final var builder =
         new RouteGeneratorForProcessProviders(
-            getOrchestrationInfo(),
-            processOrchestrationDefinition,
-            Collections.unmodifiableSet(unhandledProvidersOverall));
-    unhandledProvidersOverall.removeAll(builder.getHandledProviders());
+            getOrchestrationInfo(), processOrchestrationDefinition);
+    unhandledProvidersOverall.remove(builder.getHandledProvider());
     providerBuilders.add(builder);
     builder.generateRoutes(getRoutesDefinition());
   }
