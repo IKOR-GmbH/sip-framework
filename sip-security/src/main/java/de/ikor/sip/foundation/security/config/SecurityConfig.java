@@ -12,11 +12,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.authentication.AuthenticationManagerBeanDefinitionParser.NullAuthenticationProvider;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -29,6 +31,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  * authentication features
  */
 @Configuration
+@EnableWebSecurity(debug = true)
 public class SecurityConfig {
 
   private final List<SIPAuthenticationProvider<?>> authProviders;
@@ -37,6 +40,7 @@ public class SecurityConfig {
 
   private final TokenExtractors tokenExtractors;
 
+  private final Environment environment;
   /**
    * Autowired constructor for creating SIP Security Configuration
    *
@@ -48,10 +52,12 @@ public class SecurityConfig {
   public SecurityConfig(
       Optional<List<SIPAuthenticationProvider<?>>> authProviders,
       SecurityConfigProperties config,
-      Optional<TokenExtractors> tokenExtractors) {
+      Optional<TokenExtractors> tokenExtractors,
+      Environment environment) {
     this.authProviders = authProviders.orElse(Collections.emptyList());
     this.config = config;
     this.tokenExtractors = tokenExtractors.orElse(null);
+    this.environment = environment;
   }
 
   /**
@@ -114,19 +120,24 @@ public class SecurityConfig {
   public SecurityFilterChain sipDefaultSecurityFilterChain(HttpSecurity http) throws Exception {
     // disable sessions completely
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
     // add our composite authentication Filter for all requests (besides the ones ignored separately
     // in the WebSecurity configure method
+    if (config.isDisableCsrf()) {
+      http.csrf().disable();
+    }
+
+    // workaround for batch tests, no need to secure the request issued by testkit
+    if ("true".equals(environment.getProperty("sip.testkit.batch-test"))) {
+      http.authorizeHttpRequests().anyRequest().permitAll();
+      return http.build();
+    }
+
     http.addFilterAt(
             new CompositeAuthenticationFilter(tokenExtractors, config, authenticationManagerBean()),
             BasicAuthenticationFilter.class)
         .authorizeHttpRequests()
         .anyRequest()
         .authenticated();
-
-    if (config.isDisableCsrf()) {
-      http.csrf().disable();
-    }
 
     return http.build();
   }
