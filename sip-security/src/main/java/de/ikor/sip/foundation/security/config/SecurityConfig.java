@@ -18,7 +18,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.authentication.AuthenticationManagerBeanDefinitionParser.NullAuthenticationProvider;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -31,7 +30,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  * authentication features
  */
 @Configuration
-@EnableWebSecurity(debug = true)
 public class SecurityConfig {
 
   private final List<SIPAuthenticationProvider<?>> authProviders;
