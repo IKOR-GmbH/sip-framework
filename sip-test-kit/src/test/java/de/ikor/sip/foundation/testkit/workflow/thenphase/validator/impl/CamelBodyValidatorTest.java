@@ -1,122 +1,117 @@
 package de.ikor.sip.foundation.testkit.workflow.thenphase.validator.impl;
 
+import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
+import org.apache.camel.Exchange;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
-import org.apache.camel.Exchange;
-import org.apache.camel.Message;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 @ExtendWith(MockitoExtension.class)
 class CamelBodyValidatorTest {
 
-  private static final ValidationResult VALIDATION_RESULT_SUCCESSFUL =
-      new ValidationResult(true, "Body validation successful");
-  private static final ValidationResult VALIDATION_RESULT_UNSUCCESSFUL =
-      new ValidationResult(false, "Body validation unsuccessful");
+    private static final ValidationResult VALIDATION_RESULT_SUCCESSFUL =
+            new ValidationResult(true, "Body validation successful");
+    private static final ValidationResult VALIDATION_RESULT_UNSUCCESSFUL =
+            new ValidationResult(false, "Body validation unsuccessful");
 
-  CamelBodyValidator bodyValidatorSubject;
-  Exchange result;
-  Exchange expected;
-  private static final String RESULT = "test";
+    private final CamelBodyValidator bodyValidatorSubject = new CamelBodyValidator();
+    private Exchange actual;
+    private Exchange expected;
 
-  @BeforeEach
-  public void setUp() {
-    bodyValidatorSubject = new CamelBodyValidator();
-    result = mock(Exchange.class, RETURNS_DEEP_STUBS);
-    expected = mock(Exchange.class, RETURNS_DEEP_STUBS);
-  }
+    @BeforeEach
+    public void setUp() {
+        // reset mocks
+        actual = mock(Exchange.class, RETURNS_DEEP_STUBS);
+        expected = mock(Exchange.class, RETURNS_DEEP_STUBS);
+    }
 
-  @Test
-  void When_execute_Expect_Success() {
-    Message resultMessage = mock(Message.class);
-    Message expectedMessage = mock(Message.class);
-    when(result.getMessage()).thenReturn(resultMessage);
-    when(expected.getMessage()).thenReturn(expectedMessage);
-    when(resultMessage.getBody()).thenReturn(RESULT);
-    when(expectedMessage.getBody()).thenReturn(RESULT);
+    @ParameterizedTest
+    @ValueSource(strings = {EMPTY, "some value", "null"})
+    void When_expectedBodyHasValue_Then_validatorIsApplicableForAnyValueOfActual(String actualValue) {
+        when(expected.getMessage().getBody()).thenReturn("any content");
+        actualValue = parserNullStringToNull(actualValue);
+        lenient().when(actual.getMessage().getBody()).thenReturn(actualValue);
 
-    ValidationResult validationResult = bodyValidatorSubject.execute(result, expected);
+        boolean isApplicable = bodyValidatorSubject.isApplicable(actual, expected);
 
-    assertEquals(VALIDATION_RESULT_SUCCESSFUL, validationResult);
-  }
+        assertThat(isApplicable).describedAs("Body validator should be applicable if expected has concrete value, regardless of actual value").isTrue();
+    }
 
-  @Test
-  void When_execute_With_DifferentActualAndExpected_Then_Fail() {
-    Message resultMessage = mock(Message.class);
-    Message expectedMessage = mock(Message.class);
-    when(result.getMessage()).thenReturn(resultMessage);
-    when(expected.getMessage()).thenReturn(expectedMessage);
-    when(resultMessage.getBody()).thenReturn(RESULT);
-    when(expectedMessage.getBody()).thenReturn("null");
+    @ParameterizedTest
+    @ValueSource(strings = {EMPTY, "some value", "null"})
+    void When_expectedBodyHasEmptyStringAsValue_Then_validatorIsApplicableForAnyValueOfActual(String actualValue) {
+        when(expected.getMessage().getBody()).thenReturn(EMPTY);
+        actualValue = parserNullStringToNull(actualValue);
+        lenient().when(actual.getMessage().getBody()).thenReturn(actualValue);
 
-    ValidationResult validationResult = bodyValidatorSubject.execute(result, expected);
+        boolean isApplicable = bodyValidatorSubject.isApplicable(actual, expected);
 
-    assertThat(validationResult).isEqualTo(VALIDATION_RESULT_UNSUCCESSFUL);
-  }
+        assertThat(isApplicable).describedAs("Body validator should be applicable if expected has empty string value, regardless of actual value").isTrue();
+    }
 
-  @Test
-  void When_execute_With_NullActual_Then_Fail() {
-    Message resultMessage = mock(Message.class);
-    Message expectedMessage = mock(Message.class);
-    when(result.getMessage()).thenReturn(resultMessage);
-    when(expected.getMessage()).thenReturn(expectedMessage);
-    when(resultMessage.getBody()).thenReturn("null");
-    when(expectedMessage.getBody()).thenReturn("test");
+    @ParameterizedTest
+    @ValueSource(strings = {EMPTY, "some value", "null"})
+    void When_expectedBodyIsNull_Then_validatorIsNotApplicableForAnyValueOfActual(String actualValue) {
+        when(expected.getMessage().getBody()).thenReturn(null);
+        actualValue = parserNullStringToNull(actualValue);
+        lenient().when(actual.getMessage().getBody()).thenReturn(actualValue);
 
-    ValidationResult validationResult = bodyValidatorSubject.execute(result, expected);
+        boolean isApplicable = bodyValidatorSubject.isApplicable(actual, expected);
 
-    assertThat(validationResult).isEqualTo(VALIDATION_RESULT_UNSUCCESSFUL);
-  }
+        assertThat(isApplicable).describedAs("Body validator should not be applicable if expected value is null, regardless of actual value").isFalse();
+    }
 
-  @Test
-  void When_execute_With_NullActualAndEmptyExpected_Then_Success() {
-    Message resultMessage = mock(Message.class);
-    Message expectedMessage = mock(Message.class);
-    when(result.getMessage()).thenReturn(resultMessage);
-    when(expected.getMessage()).thenReturn(expectedMessage);
-    when(resultMessage.getBody()).thenReturn("test");
-    when(expectedMessage.getBody()).thenReturn("test");
+    @Test
+    void When_actualAndExpectedAreTheSame_Then_validationPasses() {
+        when(actual.getMessage().getBody()).thenReturn("some content");
+        when(expected.getMessage().getBody()).thenReturn("some content");
 
-    ValidationResult validationResult = bodyValidatorSubject.execute(result, expected);
+        ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected);
 
-    assertThat(validationResult).isEqualTo(VALIDATION_RESULT_SUCCESSFUL);
-  }
+        assertEquals(VALIDATION_RESULT_SUCCESSFUL, validationResult);
+    }
 
-  @Test
-  void When_execute_With_EmptyActualAndExpected_Then_Success() {
-    Message resultMessage = mock(Message.class);
-    Message expectedMessage = mock(Message.class);
-    when(result.getMessage()).thenReturn(resultMessage);
-    when(expected.getMessage()).thenReturn(expectedMessage);
-    when(resultMessage.getBody()).thenReturn("");
-    when(expectedMessage.getBody()).thenReturn("");
+    @Test
+    void When_actualAndExpectedAreDifferent_Then_validationFails() {
+        when(actual.getMessage().getBody()).thenReturn("some content");
+        when(expected.getMessage().getBody()).thenReturn("some other content");
 
-    ValidationResult validationResult = bodyValidatorSubject.execute(result, expected);
+        ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected);
 
-    assertThat(validationResult).isEqualTo(VALIDATION_RESULT_SUCCESSFUL);
-  }
+        assertThat(validationResult).isEqualTo(VALIDATION_RESULT_UNSUCCESSFUL);
+    }
 
-  @Test
-  void When_isApplicable_Expect_Success() {
-    when(expected.getMessage().getBody()).thenReturn(RESULT);
+    @Test
+    void When_expectedHasValueAndActualIsNull_Then_validationFails() {
+        when(actual.getMessage().getBody()).thenReturn(null);
+        when(actual.getMessage().getBody()).thenReturn("test");
 
-    boolean isApplicable = bodyValidatorSubject.isApplicable(result, expected);
+        ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected);
 
-    assertThat(isApplicable).isTrue();
-  }
+        assertThat(validationResult).isEqualTo(VALIDATION_RESULT_UNSUCCESSFUL);
+    }
 
-  @Test
-  void When_isApplicable_With_MissingBody_Then_Fail() {
-    when(expected.getMessage().getBody()).thenReturn(null);
+    @ParameterizedTest
+    @ValueSource(strings = {"null", ""})
+    void When_expectedIsEmptyAndActualIsNullOrEmpty_Then_validationPasses(String actualValue) {
+        actualValue = parserNullStringToNull(actualValue);
+        when(actual.getMessage().getBody()).thenReturn(actualValue);
+        when(expected.getMessage().getBody()).thenReturn(EMPTY);
 
-    boolean isApplicable = bodyValidatorSubject.isApplicable(result, expected);
+        ValidationResult validationResult = bodyValidatorSubject.execute(actual, expected);
 
-    assertThat(isApplicable).isFalse();
-  }
+        assertThat(validationResult).isEqualTo(VALIDATION_RESULT_SUCCESSFUL);
+    }
+
+    private static String parserNullStringToNull(String actualValue) {
+        return "null".equals(actualValue) ? null : actualValue;
+    }
 }
