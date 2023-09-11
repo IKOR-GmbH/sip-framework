@@ -24,7 +24,7 @@ and change it to:
   <artifactId>cxf-codegen-plugin</artifactId>
 </plugin>
 ```
-Plugin is now managed in the parent pom so no furhter configuration is necessary. It is a standard CXF plugin and adapter developers can customize its behaviour if needed.
+Plugin is now managed in the parent pom so no further configuration is necessary. It is a standard CXF plugin and adapter developers can customize its behaviour if needed.
 
 
 * Adapters redefining **Spring Security**:
