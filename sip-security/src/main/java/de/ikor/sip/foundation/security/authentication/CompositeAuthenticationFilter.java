@@ -40,46 +40,47 @@ public class CompositeAuthenticationFilter extends GenericFilterBean {
   public final void doFilter(
       ServletRequest request, ServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    System.out.println(request);
-    if (request instanceof HttpServletRequest httpRequest) {
-      if (response instanceof HttpServletResponse httpResponse) {
-        String urlPath = httpRequest.getRequestURI();
-        List<SIPAuthenticationToken<?>> authenticatedTokens = new ArrayList<>();
 
-        for (AuthProviderSettings aps : config.getAuthProviders()) {
-          if (aps.isResponsibleFor(urlPath)) {
-            try {
-              Authentication token =
-                  tokenExtractors.extractTokenFor(aps.getClassname(), httpRequest);
-              authenticatedTokens.add((SIPAuthenticationToken<?>) authManager.authenticate(token));
+    if (!(request instanceof HttpServletRequest httpRequest)
+        || !(response instanceof HttpServletResponse httpResponse)) {
+      filterChain.doFilter(request, response);
+      return; // No need to process further, let the filter chain handle it
+    }
 
-            } catch (BadCredentialsException e) {
-              SecurityContextHolder.clearContext();
-              httpResponse.setStatus(401);
-              return;
+    List<SIPAuthenticationToken<?>> authenticatedTokens = new ArrayList<>();
 
-            } catch (AuthenticationException e) {
-              SecurityContextHolder.clearContext();
-              httpResponse.setStatus(403);
-              return;
+    for (AuthProviderSettings aps : config.getAuthProviders()) {
+      if (aps.isResponsibleFor(httpRequest.getRequestURI())) {
+        try {
+          Authentication token = tokenExtractors.extractTokenFor(aps.getClassname(), httpRequest);
+          authenticatedTokens.add((SIPAuthenticationToken<?>) authManager.authenticate(token));
 
-            } catch (Exception e) {
-              log.info("sip.security.requestautherror_{}", e);
-              SecurityContextHolder.clearContext();
-              httpResponse.setStatus(500);
-              return;
-            }
-          }
+        } catch (BadCredentialsException e) {
+          SecurityContextHolder.clearContext();
+          httpResponse.setStatus(401);
+          return;
+
+        } catch (AuthenticationException e) {
+          SecurityContextHolder.clearContext();
+          httpResponse.setStatus(403);
+          return;
+
+        } catch (Exception e) {
+          log.info("sip.security.requestautherror_{}", e);
+          SecurityContextHolder.clearContext();
+          httpResponse.setStatus(500);
+          return;
         }
-
-        // if no auth-provider was responsible this means that the requested url doesn't need
-        // authentication, in our configuration we require every endpoint to be authenticated,
-        // so we also set the security context to be authenticated in those cases (even though
-        // no inner auth tokens exist, but this is fine)
-        SecurityContextHolder.getContext()
-            .setAuthentication(new CompositeAuthenticationToken(authenticatedTokens));
       }
     }
+
+    // if no auth-provider was responsible this means that the requested url doesn't need
+    // authentication, in our configuration we require every endpoint to be authenticated,
+    // so we also set the security context to be authenticated in those cases (even though
+    // no inner auth tokens exist, but this is fine)
+    SecurityContextHolder.getContext()
+        .setAuthentication(new CompositeAuthenticationToken(authenticatedTokens));
+
     filterChain.doFilter(request, response);
   }
 }
