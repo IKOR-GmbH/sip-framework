@@ -42,12 +42,12 @@ de.ikor.sip.foundation.core.util
 de.ikor.sip.foundation.core.util.exception
 de.ikor.sip.foundation.mvnplugin
 de.ikor.sip.foundation.mvnplugin.model
+de.ikor.sip.foundation.security
 de.ikor.sip.foundation.security.authentication
 de.ikor.sip.foundation.security.authentication.basic
 de.ikor.sip.foundation.security.authentication.common.extractors
 de.ikor.sip.foundation.security.authentication.common.validators
 de.ikor.sip.foundation.security.authentication.x509
-de.ikor.sip.foundation.security.autoconfigure
 de.ikor.sip.foundation.security.config
 de.ikor.sip.foundation.soap
 de.ikor.sip.foundation.soap.autoconfigure
