@@ -3,10 +3,10 @@ package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.impl;
 import static de.ikor.sip.foundation.testkit.util.TestKitHelper.resolveConsumer;
 
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
 import java.util.*;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;

@@ -1,0 +1,13 @@
+de.ikor.sip.foundation.core.SIPCoreAutoConfiguration
+de.ikor.sip.foundation.core.translate.TranslationsAutoConfig
+de.ikor.sip.foundation.core.trace.TraceAutoConfig
+de.ikor.sip.foundation.core.proxies.ProxyAutoConfig
+de.ikor.sip.foundation.core.actuator.routes.ActuatorRoutesAutoConfig
+de.ikor.sip.foundation.core.actuator.health.ActuatorHealthAutoConfig
+de.ikor.sip.foundation.core.actuator.info.ActuatorInfoAutoConfig
+de.ikor.sip.foundation.core.openapi.OpenApiResolverAutoConfig
+de.ikor.sip.foundation.core.scope.ConversationAutoConfig
+de.ikor.sip.foundation.core.configuration.CamelContextConfiguration
+de.ikor.sip.foundation.core.configuration.errorhandler.SIPDefaultErrorHandler
+de.ikor.sip.foundation.core.actuator.declarative.ActuatorDefinitionAutoConfig
+de.ikor.sip.foundation.core.declarative.DeclarativeStructureAutoConfig

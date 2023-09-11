@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import java.util.Optional;
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.builder.ExchangeBuilder;
@@ -15,12 +16,13 @@ class ExecutionWrapperTest {
 
   private static final String TEST_NAME = "test";
 
-  private ExtendedCamelContext camelContext;
+  private CamelContext camelContext;
 
   @Test
   void GIVEN_mockExchange_WHEN_execute_THEN_validateTestKitHeaders() {
     // arrange
-    camelContext = mock(ExtendedCamelContext.class);
+    camelContext = mock(CamelContext.class);
+    when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
     Exchange inputExchange = createEmptyExchange();
     RouteInvoker routeInvoker = mock(RouteInvoker.class);
     ExecutionWrapper subject = new ExecutionWrapper(TEST_NAME, inputExchange, routeInvoker);

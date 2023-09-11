@@ -10,6 +10,7 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import de.ikor.sip.foundation.core.translate.SIPTranslateMessageService;
+import java.time.Instant;
 import org.apache.logging.log4j.ThreadContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,7 @@ class TranslateMessageLayoutTest {
     subject.start();
     loggingEvent = mock(LoggingEvent.class);
     when(loggingEvent.getMessage()).thenReturn(MESSAGE);
+    when(loggingEvent.getInstant()).thenReturn(Instant.now());
   }
 
   @Test

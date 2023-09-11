@@ -5,6 +5,7 @@ import de.ikor.sip.foundation.security.authentication.CompositeAuthenticationFil
 import de.ikor.sip.foundation.security.authentication.SIPAuthenticationProvider;
 import de.ikor.sip.foundation.security.authentication.common.extractors.TokenExtractors;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties.AuthProviderSettings;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -12,23 +13,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.authentication.AuthenticationManagerBeanDefinitionParser.NullAuthenticationProvider;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
- * Central place of all config related stuff for spring-security settings regarding the sip
+ * Central place of all configs related for spring-security settings regarding the sip
  * authentication features
- *
- * @author thomas.stieglmaier
  */
 @Configuration
-@EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
   private final List<SIPAuthenticationProvider<?>> authProviders;
 
@@ -48,22 +49,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       Optional<List<SIPAuthenticationProvider<?>>> authProviders,
       SecurityConfigProperties config,
       Optional<TokenExtractors> tokenExtractors) {
-    super();
     this.authProviders = authProviders.orElse(Collections.emptyList());
     this.config = config;
     this.tokenExtractors = tokenExtractors.orElse(null);
   }
 
-  /** Register Spring-security provided authenticationManager as a @Bean */
+  /**
+   * Register custom authenticationManager as a @Bean
+   *
+   * @return Spring's Authentication Manager
+   * @throws SIPFrameworkException due to misconfiguration
+   */
   @Bean
-  @Override
-  public AuthenticationManager authenticationManagerBean() throws Exception {
-    return super.authenticationManagerBean();
-  }
-
-  @Override
-  protected void configure(AuthenticationManagerBuilder authManagerBuilder)
-      throws IllegalStateException {
+  public AuthenticationManager authenticationManagerBean() throws SIPFrameworkException {
     List<Class<?>> autowiredAuthProviders =
         List.copyOf(authProviders.stream().map(Object::getClass).toList());
 
@@ -84,15 +82,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       throw new SIPFrameworkException(
           "Each auth provider may only be configured once, duplicates are not allowed");
     }
-
+    if (authProviders.isEmpty()) {
+      return new ProviderManager(new NullAuthenticationProvider());
+    }
     // Register all auth providers that exist in the config
+    List<AuthenticationProvider> authenticationProviders = new ArrayList<>();
     authProviders.stream()
         .filter(
             a ->
                 config.getAuthProviders().stream()
                     .map(AuthProviderSettings::getClassname)
                     .anyMatch(n -> n.equals(a.getClass())))
-        .forEach(authManagerBuilder::authenticationProvider);
+        .forEach(authenticationProviders::add);
+    return new ProviderManager(authenticationProviders);
   }
 
   private boolean configHasDuplicateAuthProviders() {
@@ -103,29 +105,46 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .count();
   }
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  /**
+   * @param http Spring provided http security object used for configuring rules
+   * @return Spring's SecurityFilterChain
+   * @throws Exception if security isn't properly configured
+   */
+  @Bean
+  public SecurityFilterChain sipDefaultSecurityFilterChain(HttpSecurity http) throws Exception {
     // disable sessions completely
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
     // add our composite authentication Filter for all requests (besides the ones ignored separately
     // in the WebSecurity configure method
-    http.addFilterAt(
-            new CompositeAuthenticationFilter(tokenExtractors, config, authenticationManagerBean()),
-            BasicAuthenticationFilter.class)
-        .authorizeRequests()
-        .anyRequest()
-        .authenticated();
-
     if (config.isDisableCsrf()) {
       http.csrf().disable();
     }
+
+    http.addFilterAt(
+            new CompositeAuthenticationFilter(tokenExtractors, config, authenticationManagerBean()),
+            BasicAuthenticationFilter.class)
+        .authorizeHttpRequests()
+        .anyRequest()
+        .authenticated();
+
+    return http.build();
   }
 
-  /** Set globally ignored endpoints from config */
-  @Override
-  public void configure(WebSecurity web) {
-    final WebSecurity.IgnoredRequestConfigurer ignoredRequestConfigurer = web.ignoring();
-    config.getIgnoredEndpoints().forEach(ignoredRequestConfigurer::antMatchers);
+  /**
+   * Set globally ignored endpoints from config
+   *
+   * @return Spring WebSecurityCustomizer
+   */
+  @Bean
+  public WebSecurityCustomizer sipDefaultWebSecurityCustomizer() {
+    return (web -> {
+      final WebSecurity.IgnoredRequestConfigurer ignoredRequestConfigurer = web.ignoring();
+      config
+          .getIgnoredEndpoints()
+          .forEach(
+              endpoint ->
+                  ignoredRequestConfigurer.requestMatchers(
+                      AntPathRequestMatcher.antMatcher(endpoint)));
+    });
   }
 }

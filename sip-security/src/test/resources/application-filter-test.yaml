@@ -1,6 +1,5 @@
 sip.security:
   authentication:
-    enabled: true
     disable-csrf: true
     auth-providers:
       - classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationProvider

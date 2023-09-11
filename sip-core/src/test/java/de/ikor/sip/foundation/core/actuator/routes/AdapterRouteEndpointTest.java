@@ -154,7 +154,8 @@ class AdapterRouteEndpointTest {
     when(managedRoute.getExchangesFailed()).thenReturn((long) 0);
     when(managedRoute.getExchangesInflight()).thenReturn((long) 0);
     when(managedCamelContext.getManagedRoute(anyString())).thenReturn(managedRoute);
-    when(camelContext.getExtension(any())).thenReturn(managedCamelContext);
+    when(camelContext.getCamelContextExtension().getContextPlugin(any()))
+        .thenReturn(managedCamelContext);
   }
 
   private void mockRoutesInContext() throws Exception {

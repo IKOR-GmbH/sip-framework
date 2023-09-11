@@ -39,7 +39,7 @@ class FtpRouteInvokerTest {
   @SuppressWarnings("unchecked")
   @BeforeEach
   void setup() {
-    ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
+    CamelContext camelContext = mock(CamelContext.class);
     subject = new FtpRouteInvoker(camelContext);
     inputExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
     inputExchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);
@@ -50,6 +50,7 @@ class FtpRouteInvokerTest {
     processor = mock(Processor.class);
     ftpEndpoint = mock(RemoteFileEndpoint.class);
 
+    when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
     when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
     when(route.getEndpoint()).thenReturn(ftpEndpoint);
     when(route.getConsumer()).thenReturn(ftpConsumer);
