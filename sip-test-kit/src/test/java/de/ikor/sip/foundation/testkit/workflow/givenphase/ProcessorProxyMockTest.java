@@ -113,9 +113,10 @@ class ProcessorProxyMockTest {
               proxyRegistry, new ObjectMapper(), Optional.of(declarationsRegistry));
 
       when(proxyRegistry.getProxy(PROXY_ID)).thenReturn(Optional.of(proxySubject));
+      CamelContext camelContext = mock(CamelContext.class);
+      when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
 
-      actualExchange =
-          TestKitHelper.parseExchangeProperties(null, mock(ExtendedCamelContext.class));
+      actualExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
       actualExchange.setProperty(ENDPOINT_ID_EXCHANGE_PROPERTY, PROXY_ID);
       actualExchange.getMessage().setHeader(TEST_MODE_HEADER, "true");
 

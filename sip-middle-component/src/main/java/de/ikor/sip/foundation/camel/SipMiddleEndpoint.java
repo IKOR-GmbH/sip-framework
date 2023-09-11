@@ -19,7 +19,7 @@ import org.apache.camel.support.DefaultEndpoint;
     scheme = "sipmc",
     title = "sipmc",
     syntax = "sipmc:name",
-    category = {Category.JAVA})
+    category = {Category.CORE})
 public final class SipMiddleEndpoint extends DefaultEndpoint {
   /**
    * The endpointAlias is the path parameter from the endpoint URI. While unused here, this variable

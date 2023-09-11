@@ -29,7 +29,7 @@ public class SIPAuthProviderCondition extends SpringBootCondition {
     Collection<AuthProviderSettings> authSettings =
         AuthProviderSettings.bindFromPropertySource(context.getEnvironment());
 
-    if (isNotEmpty(authSettings)) {
+    if (isNotEmpty(authSettings) && attributes != null) {
       Class<?> listItemValue = (Class<?>) attributes.get("listItemValue").get(0);
       Class<?> validationClass = (Class<?>) attributes.get("validationClass").get(0);
 

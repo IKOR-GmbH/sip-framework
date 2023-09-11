@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.testkit.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
@@ -9,9 +10,7 @@ import de.ikor.sip.foundation.testkit.workflow.TestExecutionStatus;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
 import org.apache.camel.ExtendedCamelContext;
-import org.apache.camel.builder.ExchangeBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,11 +22,11 @@ class TestExecutionStatusFactoryTest {
 
   private TestExecutionStatusFactory subject;
   private TestCaseDefinition testCaseDefinition;
-  private ExtendedCamelContext camelContext;
 
   @BeforeEach
   void setup() {
-    camelContext = mock(ExtendedCamelContext.class);
+    CamelContext camelContext = mock(CamelContext.class);
+    when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
     subject = new TestExecutionStatusFactory(camelContext);
     EndpointProperties whenExecute = new EndpointProperties();
     whenExecute.setEndpointId(ENDPOINT_ID);
@@ -55,9 +54,6 @@ class TestExecutionStatusFactoryTest {
 
   @Test
   void When_generateTestReport_With_missingWhenExecute_Then_emptyExchange() {
-    // arrange
-    Exchange expected = createEmptyExchange(camelContext);
-
     // act
     TestExecutionStatus testExecutionStatus = subject.generateTestReport(testCaseDefinition);
 
@@ -68,10 +64,5 @@ class TestExecutionStatusFactoryTest {
     assertThat(
             testExecutionStatus.getAdapterReport().getExpectedResponse().getMessage().getHeaders())
         .isEmpty();
-  }
-
-  private Exchange createEmptyExchange(CamelContext camelContext) {
-    ExchangeBuilder exchangeBuilder = ExchangeBuilder.anExchange(camelContext);
-    return exchangeBuilder.build();
   }
 }

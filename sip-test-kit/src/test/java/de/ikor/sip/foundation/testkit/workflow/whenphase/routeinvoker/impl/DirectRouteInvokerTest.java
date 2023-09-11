@@ -45,7 +45,7 @@ public class DirectRouteInvokerTest {
 
   @BeforeEach
   void setup() {
-    ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
+    CamelContext camelContext = mock(CamelContext.class);
     producerTemplate = mock(ProducerTemplate.class);
     declarationsRegistry = mock(DeclarationsRegistry.class);
     ObjectMapper mapper = new ObjectMapper();

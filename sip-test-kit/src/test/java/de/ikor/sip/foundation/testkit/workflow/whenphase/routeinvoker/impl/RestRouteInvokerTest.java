@@ -7,8 +7,8 @@ import de.ikor.sip.foundation.core.proxies.ProcessorProxy;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvoker;
 import java.util.Optional;
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
-import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Route;
 import org.apache.camel.component.rest.RestEndpoint;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class RestRouteInvokerTest {
   @Test
   void GIVEN_mockedExchangeAndEndpoint_WHEN_executeTask_THEN_verifySendingToGoodEndpointUri() {
     // arrange
-    ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
+    CamelContext camelContext = mock(CamelContext.class);
     RestTemplateBuilder restTemplateBuilder = mock(RestTemplateBuilder.class);
     RestTemplate restTemplate = mock(RestTemplate.class);
     RestRouteInvoker subject =

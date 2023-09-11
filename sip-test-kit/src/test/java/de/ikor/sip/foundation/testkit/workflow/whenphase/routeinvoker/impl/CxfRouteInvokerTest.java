@@ -7,10 +7,7 @@ import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import org.apache.camel.Endpoint;
-import org.apache.camel.Exchange;
-import org.apache.camel.ExtendedCamelContext;
-import org.apache.camel.Route;
+import org.apache.camel.*;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,17 +28,18 @@ class CxfRouteInvokerTest {
 
   private CxfRouteInvoker subject;
   private RestTemplate restTemplate;
-  private ExtendedCamelContext camelContext;
+  private CamelContext camelContext;
 
   @BeforeEach
   void setup() {
-    camelContext = mock(ExtendedCamelContext.class);
+    camelContext = mock(CamelContext.class);
     RestTemplateBuilder restTemplateBuilder = mock(RestTemplateBuilder.class);
     restTemplate = mock(RestTemplate.class);
     Environment environment = mock(Environment.class);
     subject = new CxfRouteInvoker(camelContext, environment, restTemplateBuilder);
 
     Route route = mock(Route.class);
+    when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
     when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
     when(route.getEndpoint()).thenReturn(mock(Endpoint.class));
 

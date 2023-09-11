@@ -2,10 +2,10 @@ package de.ikor.sip.foundation.core.configuration.errorhandler;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteConfigurationBuilder;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 
 /** Default logging onException definition */
-@Configuration
+@AutoConfiguration
 public class SIPDefaultErrorHandler extends RouteConfigurationBuilder {
   @Override
   public void configuration() throws Exception {

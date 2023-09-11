@@ -50,7 +50,8 @@ public class AdapterRouteEndpoint {
     this.camelContext = camelContext;
     this.routeController = routeController;
     this.routesRegistry = routesRegistry;
-    this.mbeanContext = camelContext.getExtension(ManagedCamelContext.class);
+    this.mbeanContext =
+        camelContext.getCamelContextExtension().getContextPlugin(ManagedCamelContext.class);
   }
 
   /**
