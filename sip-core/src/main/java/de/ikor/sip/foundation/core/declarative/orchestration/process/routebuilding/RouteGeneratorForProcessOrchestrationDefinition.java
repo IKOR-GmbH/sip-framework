@@ -1,21 +1,41 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding;
 
+import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallNestedCondition;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumer;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
-import java.util.ArrayList;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorInternalHelper;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.builder.EndpointConsumerBuilder;
+import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.RoutesDefinition;
 
 /**
- * Class for generating Camel routes for process orchestration via DSL
+ * Class for generating Camel routes for process orchestration via DSL This class generates route
+ * starts and delegate creating routes for consumer calls and conditionals to other route
+ * generators.
  *
  * <p><em>For internal use only</em>
  */
 @SuppressWarnings("rawtypes")
+@Slf4j
 public final class RouteGeneratorForProcessOrchestrationDefinition extends RouteGeneratorProcessBase
     implements Runnable {
 
   private final ProcessOrchestrationDefinition processOrchestrationDefinition;
+
+  @Getter(lazy = true)
+  private final IntegrationScenarioDefinition orchestrationProvider =
+      getDeclarationsRegistry().getCompositeProcessProviderDefinition(getCompositeProcessId());
+
+  ;
 
   public RouteGeneratorForProcessOrchestrationDefinition(
       final CompositeProcessOrchestrationInfo orchestrationInfo,
@@ -26,15 +46,62 @@ public final class RouteGeneratorForProcessOrchestrationDefinition extends Route
 
   @Override
   public void run() {
-    final var scenarioProvidersOverall = getOrchestrationInfo().getProviderEndpoints().keySet();
-    final var unhandledProvidersOverall = new HashSet<>(scenarioProvidersOverall);
-    final List<RouteGeneratorForProcessProviders> providerBuilders = new ArrayList<>();
+    this.generateRoutes(getRoutesDefinition());
+  }
 
-    final var builder =
-        new RouteGeneratorForProcessProviders(
-            getOrchestrationInfo(), processOrchestrationDefinition);
-    unhandledProvidersOverall.remove(builder.getHandledProvider());
-    providerBuilders.add(builder);
-    builder.generateRoutes(getRoutesDefinition());
+  void generateRoutes(final RoutesDefinition routesDefinition) {
+
+    if (this.getOrchestrationProvider() == null) {
+      throw SIPFrameworkInitializationException.init(
+          "Orchestration for composite process '%s' doesn't have a provider. Please define it.",
+          getCompositeProcessId());
+    }
+
+    final var unhandledProcessConsumers =
+        new HashSet<>(getOrchestrationInfo().getConsumerEndpoints().keySet());
+
+    final var routeDef = generateRouteStart(routesDefinition);
+
+    routeDef.bean(
+        CompositeProcessOrchestrationHandlers.handleContextInitialization(getCompositeProcess()));
+
+    for (final var element :
+        RouteGeneratorInternalHelper.getConsumerCalls(processOrchestrationDefinition)) {
+      if (element instanceof CallProcessConsumer<?, ?> ele) {
+        new RouteGeneratorForCallProcessConsumer(
+                getOrchestrationInfo(), ele, unhandledProcessConsumers)
+            .generateRoute(routeDef);
+      } else if (element instanceof CallNestedCondition<?> ele) {
+        new RouteGeneratorForCallConditionalProcessConsumer(
+                getOrchestrationInfo(), ele, unhandledProcessConsumers)
+            .generateRoute(routeDef);
+      }
+    }
+
+    routeDef.bean(CompositeProcessOrchestrationHandlers.handleErrorThrownIfNoConsumerWasCalled());
+
+    if (!unhandledProcessConsumers.isEmpty()) {
+      log.warn(
+          "Orchestration for composite process '{}' does not call consumers '{}' for calls coming in from '{}'. Consider removing the consumer from the process definition.",
+          getCompositeProcessId(),
+          unhandledProcessConsumers.stream()
+              .map(consumer -> consumer.getClass().getSimpleName())
+              .collect(Collectors.joining(",")),
+          this.getOrchestrationProvider().getClass().getSimpleName());
+    }
+  }
+
+  private RouteDefinition generateRouteStart(final RoutesDefinition routesDefinition) {
+    final IntegrationScenarioDefinition provider = this.getOrchestrationProvider();
+    final var providerIds = provider.getClass().getSimpleName();
+    final var orchestrationRouteId =
+        getRoutesRegistry()
+            .generateRouteIdForCompositeScenarioOrchestrator(getCompositeProcess(), providerIds);
+    return routesDefinition.from(getProviderCamelEndpoint(provider)).routeId(orchestrationRouteId);
+  }
+
+  private EndpointConsumerBuilder getProviderCamelEndpoint(
+      final IntegrationScenarioDefinition provider) {
+    return Objects.requireNonNull(getOrchestrationInfo().getProviderEndpoints().get(provider));
   }
 }
