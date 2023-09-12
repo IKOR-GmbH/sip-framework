@@ -24,7 +24,6 @@ import org.apache.camel.model.RoutesDefinition;
  *
  * <p><em>For internal use only</em>
  */
-@SuppressWarnings("rawtypes")
 @Slf4j
 public final class RouteGeneratorForProcessOrchestrationDefinition extends RouteGeneratorProcessBase
     implements Runnable {
@@ -34,8 +33,6 @@ public final class RouteGeneratorForProcessOrchestrationDefinition extends Route
   @Getter(lazy = true)
   private final IntegrationScenarioDefinition orchestrationProvider =
       getDeclarationsRegistry().getCompositeProcessProviderDefinition(getCompositeProcessId());
-
-  ;
 
   public RouteGeneratorForProcessOrchestrationDefinition(
       final CompositeProcessOrchestrationInfo orchestrationInfo,
