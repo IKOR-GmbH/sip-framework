@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * DSL class calling a consumer by its {@link IntegrationScenarioDefinition}
+ * DSL class calling a consumer by its {@link IntegrationScenarioDefinition} class
  *
  * @param <S> DSL handle for caller
  * @param <R> DSL handle for the return DSL Verb/type.

@@ -20,7 +20,7 @@ public class StepsGenerator {
    * @return list of {@link StepDto}s
    */
   public List<StepDto> generateSteps() {
-    return RouteGeneratorHelper.getSteps(orchestrationDef).stream()
+    return RouteGeneratorInternalHelper.getSteps(orchestrationDef).stream()
         .flatMap(this::createStepsFromDefinition)
         .toList();
   }
@@ -29,9 +29,10 @@ public class StepsGenerator {
       CallableWithinProcessDefinition callableWithinProcessDefinition) {
     List<StepDto> steps = new ArrayList<>();
     if (callableWithinProcessDefinition instanceof CallNestedCondition<?> nestedCondition) {
-      fillConditionalSteps(steps, RouteGeneratorHelper.getConditionalStatements(nestedCondition));
+      fillConditionalSteps(
+          steps, RouteGeneratorInternalHelper.getConditionalStatements(nestedCondition));
       fillUnconditionalSteps(
-          steps, RouteGeneratorHelper.getUnconditionalStatements(nestedCondition));
+          steps, RouteGeneratorInternalHelper.getUnconditionalStatements(nestedCondition));
     }
     if (callableWithinProcessDefinition instanceof CallProcessConsumer<?, ?>) {
       steps.add(createBaseStep(callableWithinProcessDefinition));
@@ -57,15 +58,15 @@ public class StepsGenerator {
   private StepDto createBaseStep(CallableWithinProcessDefinition statement) {
     if (statement instanceof CallProcessConsumer<?, ?> base) {
       String consumer =
-          RouteGeneratorHelper.getConsumerClass(base)
+          RouteGeneratorInternalHelper.getConsumerClass(base)
               .getAnnotation(IntegrationScenario.class)
               .scenarioId();
       return StepDto.builder()
           .stepOrder(stepOrder++)
           .conditioned(false)
           .consumerId(consumer)
-          .requestPreparation(RouteGeneratorHelper.getRequestPreparation(base).isPresent())
-          .responseHandling(RouteGeneratorHelper.getResponseConsumer(base).isPresent())
+          .requestPreparation(RouteGeneratorInternalHelper.getRequestPreparation(base).isPresent())
+          .responseHandling(RouteGeneratorInternalHelper.getResponseConsumer(base).isPresent())
           .build();
     }
     return null;

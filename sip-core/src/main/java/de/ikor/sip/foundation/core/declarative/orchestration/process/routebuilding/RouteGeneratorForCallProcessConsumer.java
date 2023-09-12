@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process.routebuild
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumer;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorInternalHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.Collections;
@@ -51,7 +51,7 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
         consumers.stream().filter(handled -> !overallUnhandledConsumers.contains(handled)).toList();
     if (!doubleHandledConsumers.isEmpty()) {
       log.warn(
-          "The following consumers are used more than once in orchestration for scenario '{}': {}",
+          "The following consumers are used more than once in orchestration for process '{}': {}",
           getCompositeProcessId(),
           doubleHandledConsumers.stream()
               .map(obj -> obj.getClass().getName())
@@ -68,13 +68,14 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
       final CallProcessConsumer element) {
     return getConsumers().stream()
         .filter(
-            consumer -> RouteGeneratorHelper.getConsumerClass(element).equals(consumer.getClass()))
+            consumer ->
+                RouteGeneratorInternalHelper.getConsumerClass(element).equals(consumer.getClass()))
         .findFirst()
         .orElseThrow(
             () ->
                 SIPFrameworkInitializationException.init(
-                    "Consumer-class '%s' is used on orchestration for process '%s', but it is not registered with that scenario. Registered outbound connector classes are %s",
-                    RouteGeneratorHelper.getConsumerClass(element).getName(),
+                    "Consumer-class '%s' is used on orchestration for process '%s', but it is not registered with that process. Registered consumer classes are %s",
+                    RouteGeneratorInternalHelper.getConsumerClass(element).getName(),
                     getCompositeProcessId(),
                     getConsumers().stream().map(conn -> conn.getClass().getName()).toList()));
   }
@@ -90,7 +91,7 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
           .transform()
           .method(
               CompositeProcessOrchestrationHandlers.handleRequestToConsumer(
-                  consumer, RouteGeneratorHelper.getRequestPreparation(definitionElement)))
+                  consumer, RouteGeneratorInternalHelper.getRequestPreparation(definitionElement)))
           .to(getEndpointForConsumer(consumer))
 
           // store / aggregate the response and place it on the body
@@ -99,8 +100,9 @@ final class RouteGeneratorForCallProcessConsumer extends RouteGeneratorProcessBa
           .method(
               CompositeProcessOrchestrationHandlers.handleResponseFromConsumer(
                   consumer,
-                  RouteGeneratorHelper.getStepResultCloner(definitionElement),
-                  RouteGeneratorHelper.getResponseConsumer(definitionElement)));
+                  RouteGeneratorInternalHelper.getStepResultCloner(definitionElement),
+                  RouteGeneratorInternalHelper.getResponseConsumer(definitionElement)));
+
       overallUnhandledConsumers.remove(consumer);
     }
   }

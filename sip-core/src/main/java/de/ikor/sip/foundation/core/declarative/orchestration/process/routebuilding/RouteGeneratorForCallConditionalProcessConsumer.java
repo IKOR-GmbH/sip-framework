@@ -5,7 +5,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositePr
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallNestedCondition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumer;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallableWithinProcessDefinition;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorInternalHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.List;
@@ -38,10 +38,11 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
 
   <T extends ProcessorDefinition<T>> void generateRoute(final T routeDefinition) {
     List<CallNestedCondition.ProcessBranchStatements> conditionalStatements =
-        RouteGeneratorHelper.getConditionalStatements(conditionalDefinition);
+        RouteGeneratorInternalHelper.getConditionalStatements(conditionalDefinition);
     if (conditionalStatements.isEmpty()) {
       SIPFrameworkInitializationException.init(
-          "Empty conditional statement attached in orchestration for integration-scenario %s");
+          "Empty conditional statement attached in orchestration for composite process '%s'",
+          getCompositeProcessId());
     }
 
     final var choiceDef = routeDefinition.choice();
@@ -57,13 +58,13 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
           exchange ->
               CompositeProcessOrchestrationHandlers.handleConditional(
                   exchange,
-                  RouteGeneratorHelper.getStepResultCloner(conditionalDefinition),
+                  RouteGeneratorInternalHelper.getStepResultCloner(conditionalDefinition),
                   Optional.ofNullable(branch.predicate())));
       branch.statements().forEach(statement -> buildRouteForStatement(choiceDef, statement));
       choiceDef.endChoice();
     }
     List<CallableWithinProcessDefinition> unconditionalStatements =
-        RouteGeneratorHelper.getUnconditionalStatements(conditionalDefinition);
+        RouteGeneratorInternalHelper.getUnconditionalStatements(conditionalDefinition);
 
     if (!unconditionalStatements.isEmpty()) {
       choiceDef.otherwise();
@@ -82,7 +83,8 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
           .generateRoute(routeDefinition);
     } else {
       throw SIPFrameworkInitializationException.init(
-          "Unhandled statement type '%s' used in conditional-branch of orchestration for integration-scenario %s");
+          "Unhandled statement type '%s' used in conditional-branch of orchestration for composite process '%s'",
+          getCompositeProcessId());
     }
   }
 }

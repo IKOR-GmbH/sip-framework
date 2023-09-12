@@ -37,6 +37,12 @@ public class ProcessOrchestrationDefinition
     super(null, compositeProcess);
   }
 
+  /**
+   * Standard if clause defined in the DSL way
+   *
+   * @param predicate Predicate to be checked for condition
+   * @return DSL Handle
+   */
   public CallNestedCondition<ProcessOrchestrationDefinition>.ProcessBranch<
           CallNestedCondition<ProcessOrchestrationDefinition>>
       ifCase(final CompositeProcessStepConditional predicate) {

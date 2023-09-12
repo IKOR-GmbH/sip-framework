@@ -68,15 +68,31 @@ public final class CallNestedCondition<R> extends ProcessDslBase<CallNestedCondi
           new ForProcessProvidersDelegate<>(statementsList, self(), getDslReturnDefinition());
     }
 
+    /**
+     * Standard if-else clause defined in the DSL way
+     *
+     * @param predicate Predicate to be checked for condition
+     * @return DSL Handle
+     */
     public ProcessBranch<CallNestedCondition<R>> elseIfCase(
         final CompositeProcessStepConditional predicate) {
       return CallNestedCondition.this.elseIfCase(predicate);
     }
 
+    /**
+     * Standard else clause defined in the DSL way
+     *
+     * @return DSL Handle
+     */
     public ProcessBranch<R> elseCase() {
       return CallNestedCondition.this.elseCase();
     }
 
+    /**
+     * Standard end clause which closes the current conditional
+     *
+     * @return DSL Handle
+     */
     public R endCases() {
       return CallNestedCondition.this.endCases();
     }

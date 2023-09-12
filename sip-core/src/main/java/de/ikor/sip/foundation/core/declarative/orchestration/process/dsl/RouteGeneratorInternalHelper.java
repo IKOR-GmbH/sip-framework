@@ -17,7 +17,7 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class RouteGeneratorHelper {
+public class RouteGeneratorInternalHelper {
 
   public static List<CallableWithinProcessDefinition> getConsumerCalls(
       ProcessOrchestrationDefinition element) {

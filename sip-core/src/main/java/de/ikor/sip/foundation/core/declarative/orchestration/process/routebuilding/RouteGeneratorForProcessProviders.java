@@ -5,7 +5,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositePr
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallNestedCondition;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.CallProcessConsumer;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
-import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorHelper;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.RouteGeneratorInternalHelper;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.HashSet;
 import java.util.Objects;
@@ -56,7 +56,7 @@ final class RouteGeneratorForProcessProviders extends RouteGeneratorProcessBase 
     routeDef.bean(
         CompositeProcessOrchestrationHandlers.handleContextInitialization(getCompositeProcess()));
 
-    for (final var element : RouteGeneratorHelper.getConsumerCalls(providerDefinition)) {
+    for (final var element : RouteGeneratorInternalHelper.getConsumerCalls(providerDefinition)) {
       if (element instanceof CallProcessConsumer<?, ?> ele) {
         new RouteGeneratorForCallProcessConsumer(
                 getOrchestrationInfo(), ele, overallUnhandledScenarioConsumers)
