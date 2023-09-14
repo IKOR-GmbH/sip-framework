@@ -100,6 +100,7 @@ class ProcessOrchestrationConditionalTest {
     Exchange exchange =
         template
             .withBody("MyOrchestratedPartner")
+            .withHeader("partner-name", "other")
             .to(direct("GetPartnerDebtByNameInConnectorCond"))
             .send();
     DebtResponse response = exchange.getMessage().getBody(DebtResponse.class);
@@ -133,6 +134,32 @@ class ProcessOrchestrationConditionalTest {
     assertThat(response).isInstanceOf(DebtResponse.class);
     assertThat(exchange.getException()).isNull();
     assertThat(response.getAmount()).isEqualTo(new BigDecimal("100000.00"));
+    assertThat(response.getRequestedBy()).isEqualTo("Process Orchestrator");
+  }
+
+  @Test
+  void
+      WHEN_callingProcessOrchestratorInboundConnectorsWithHeaderAndDedicatedName_THEN_ReceiveResponse() {
+    // arrange
+    mockedGetPartnerByCodeOutConnector.expectedBodiesReceivedInAnyOrder(
+        "PartnerNameRequest[name=MyOrchestratedPartner]");
+    mockedGetPartnerDebtByOutConnector.expectedBodiesReceivedInAnyOrder(2);
+    mockedGetPartnerDebtByNameOutLogConnector.expectedBodiesReceivedInAnyOrder(
+        "PartnerNameRequest[name=a name-LOG THIS]");
+
+    // act
+    Exchange exchange =
+        template
+            .withBody("a name")
+            .withHeader("partner-name", "any")
+            .to(direct("GetPartnerDebtByNameInConnectorCond"))
+            .send();
+    DebtResponse response = exchange.getMessage().getBody(DebtResponse.class);
+
+    // assert
+    assertThat(response).isInstanceOf(DebtResponse.class);
+    assertThat(exchange.getException()).isNull();
+    assertThat(response.getAmount()).isEqualTo(new BigDecimal("100001.00"));
     assertThat(response.getRequestedBy()).isEqualTo("Process Orchestrator");
   }
 }

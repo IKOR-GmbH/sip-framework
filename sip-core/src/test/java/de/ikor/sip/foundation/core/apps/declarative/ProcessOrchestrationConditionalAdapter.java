@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
-import static de.ikor.sip.foundation.core.declarative.orchestration.process.ProcessOrchestrationContextPredicates.hasHeader;
+import static de.ikor.sip.foundation.core.declarative.orchestration.process.ProcessOrchestrationContextPredicates.*;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
 import de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess;
@@ -64,6 +64,15 @@ public class ProcessOrchestrationConditionalAdapter {
   }
 
   @IntegrationScenario(
+      scenarioId = LoggingScenario.ID,
+      requestModel = DebtResponse.class,
+      responseModel = DebtResponse.class)
+  public class LoggingScenario extends IntegrationScenarioBase {
+
+    public static final String ID = "logging-scenario";
+  }
+
+  @IntegrationScenario(
       scenarioId = ConditionalGetPartnerDebtById.ID,
       requestModel = Integer.class,
       responseModel = DebtResponse.class)
@@ -124,7 +133,8 @@ public class ProcessOrchestrationConditionalAdapter {
       consumers = {
         ConditionalGetPartnerDebtById.class,
         ConditionalGetPartnerByName.class,
-        ConditionalGetPartnerByCode.class
+        ConditionalGetPartnerByCode.class,
+        LoggingScenario.class
       })
   public class ConditionalGetCustomerDebtByNameOrchestrator extends CompositeProcessBase {
 
@@ -134,10 +144,10 @@ public class ProcessOrchestrationConditionalAdapter {
     public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
       return ProcessOrchestrator.forOrchestrationDsl(
           dsl -> {
-            dsl.ifCase(hasHeader("partner-name"))
+            dsl.ifCase(headerEquals("partner-name", "any", String.class))
                 .callConsumer(ConditionalGetPartnerByCode.class)
                 .withNoResponseHandling()
-                .elseCase()
+                .elseIfCase(hasHeader("partner-name"))
                 .callConsumer(ConditionalGetPartnerByName.class)
                 .withNoResponseHandling()
                 .endCases()
@@ -147,7 +157,35 @@ public class ProcessOrchestrationConditionalAdapter {
                       PartnerResponse response =
                           (PartnerResponse) context.getLatestResponse().get();
                       return response.id;
-                    });
+                    })
+                .withNoResponseHandling()
+                .ifCase(
+                    responseMatches(
+                        o -> {
+                          System.out.println(o);
+                          return o instanceof DebtResponse;
+                        }))
+                .callConsumer(LoggingScenario.class)
+                .withRequestPreparation(
+                    context -> {
+                      System.out.println();
+                      return context.getLatestResponse().get();
+                    })
+                .withNoResponseHandling()
+                .endCases()
+                .ifCase(
+                    originalRequestMatches(
+                        o ->
+                            o instanceof PartnerNameRequest partnerNameRequest
+                                && partnerNameRequest.name().equals("a name")))
+                .callConsumer(LoggingScenario.class)
+                .withRequestPreparation(context -> context.getLatestResponse().get())
+                .withResponseHandling(
+                    ((latestResponse, context) -> {
+                      if (latestResponse instanceof DebtResponse r) {
+                        r.setAmount(r.getAmount().add(new BigDecimal(1)));
+                      }
+                    }));
           });
     }
   }
@@ -352,6 +390,33 @@ public class ProcessOrchestrationConditionalAdapter {
                                     2,
                                     e.getIn().getBody(PartnerNameRequest.class).name() + "Code"));
                       }));
+    }
+  }
+
+  @InboundConnector(
+      connectorGroup = GROUP_ID,
+      integrationScenario = LoggingScenario.ID,
+      requestModel = DebtResponse.class,
+      responseModel = DebtResponse.class)
+  public class LoggingInboundConnector extends GenericInboundConnectorBase {
+
+    @Override
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+      return StaticEndpointBuilders.direct("Logging");
+    }
+  }
+
+  @OutboundConnector(
+      connectorId = "out-logging-connector",
+      connectorGroup = GROUP_ID,
+      integrationScenario = LoggingScenario.ID,
+      requestModel = PartnerNameRequest.class,
+      responseModel = PartnerNameRequest.class)
+  public class LoggingOutboundConnector extends GenericOutboundConnectorBase {
+
+    @Override
+    protected EndpointProducerBuilder defineOutgoingEndpoint() {
+      return StaticEndpointBuilders.log("Logging").plain(true);
     }
   }
 }
