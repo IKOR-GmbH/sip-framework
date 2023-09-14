@@ -115,7 +115,7 @@ public class ProcessOrchestrationAdapter {
       processId = GetCustomerDebtByNameOrchestrator.ID,
       provider = getPartnerDebtByName.class,
       consumers = {getPartnerDebtById.class, getPartnerByName.class})
-  public class GetCustomerDebtByNameOrchestrator extends CompositeProcessBase {
+  public static class GetCustomerDebtByNameOrchestrator extends CompositeProcessBase {
 
     private static final String ID = "GetCustomerDebtByNameOrchestrator";
 
