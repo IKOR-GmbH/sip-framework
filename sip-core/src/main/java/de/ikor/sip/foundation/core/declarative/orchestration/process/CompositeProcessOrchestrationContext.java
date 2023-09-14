@@ -181,27 +181,6 @@ public class CompositeProcessOrchestrationContext {
   }
 
   /**
-   * Adds a condition to the context using the cloner
-   *
-   * @param response - response added to the step
-   * @param cloner - cloner for the response
-   * @return - cloned response object
-   */
-  @Synchronized
-  Object addCondition(final Object response, final Optional<StepResultCloner> cloner) {
-    final Object maybeClonedResponse = cloner.map(c -> c.apply(response)).orElse(response);
-    getResultForLatestStep()
-        .ifPresent(
-            step -> {
-              OrchestrationStep lastStep =
-                  orchestrationSteps.remove(orchestrationSteps.indexOf(step));
-              orchestrationSteps.add(
-                  new OrchestrationStep(null, lastStep.request, maybeClonedResponse));
-            });
-    return maybeClonedResponse;
-  }
-
-  /**
    * @return Unmodifiable List of responses received from consumers so far
    */
   public List<OrchestrationStep> getOrchestrationSteps() {

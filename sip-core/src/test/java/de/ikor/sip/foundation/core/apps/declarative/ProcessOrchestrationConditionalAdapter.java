@@ -185,7 +185,10 @@ public class ProcessOrchestrationConditionalAdapter {
                       if (latestResponse instanceof DebtResponse r) {
                         r.setAmount(r.getAmount().add(new BigDecimal(1)));
                       }
-                    }));
+                    }))
+                .endCases()
+                .ifCase(hasHeader(""))
+                .endCases();
           });
     }
   }

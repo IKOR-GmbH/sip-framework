@@ -132,7 +132,6 @@ public class CompositeProcessOrchestrationHandlers {
       final CompositeProcessOrchestrationContext context = retrieveOrchestrationContext(exchange);
       if (conditional.isPresent()) {
         boolean result = conditional.get().determineCondition(context);
-        context.addCondition(context.getLatestResponse().orElse(null), Optional.empty());
         return result;
       }
       return true;

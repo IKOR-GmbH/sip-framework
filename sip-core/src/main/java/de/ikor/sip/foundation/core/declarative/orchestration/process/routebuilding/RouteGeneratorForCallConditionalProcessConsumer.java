@@ -40,7 +40,7 @@ final class RouteGeneratorForCallConditionalProcessConsumer extends RouteGenerat
     List<CallNestedCondition.ProcessBranchStatements> conditionalStatements =
         RouteGeneratorInternalHelper.getConditionalStatements(conditionalDefinition);
     if (conditionalStatements.isEmpty()) {
-      SIPFrameworkInitializationException.init(
+      throw SIPFrameworkInitializationException.init(
           "Empty conditional statement attached in orchestration for composite process '%s'",
           getCompositeProcessId());
     }
