@@ -19,7 +19,7 @@ public class CompositeProcessBase implements CompositeProcessDefinition {
 
   public Orchestrator<CompositeProcessOrchestrationInfo> getOrchestrator() {
     throw SIPFrameworkInitializationException.init(
-        "Orchestration needs to be defined for the process '%s' declared in the class '%s'. Please @Override getOrchestrator() method.",
+        "Orchestration needs to be defined for the process '%s' declared in the class '%s'. Please @Override the getOrchestrator() method.",
         getId(), getClass().getName());
   }
 

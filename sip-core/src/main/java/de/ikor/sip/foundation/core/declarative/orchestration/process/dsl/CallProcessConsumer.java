@@ -50,8 +50,9 @@ public class CallProcessConsumer<S extends CallProcessConsumer<S, R>, R>
   public S withRequestPreparation(final CompositeProcessStepRequestExtractor requestPreparation) {
     if (this.requestPreparation.isPresent()) {
       throw SIPFrameworkInitializationException.init(
-          "Chaining request preparation for consumer '%s' is not allowed!",
-          consumerClass.getAnnotation(IntegrationScenario.class).scenarioId());
+          "Request preparation is already defined for the consumer '%s' for process '%s'. Chaining request preparation is not allowed.",
+          consumerClass.getAnnotation(IntegrationScenario.class).scenarioId(),
+          getCompositeProcess().getId());
     }
     this.requestPreparation = Optional.of(requestPreparation);
     return self();
