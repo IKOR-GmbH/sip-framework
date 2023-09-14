@@ -150,7 +150,7 @@ public class CompositeProcessOrchestrationHandlers {
       final CompositeProcessOrchestrationContext context = retrieveOrchestrationContext(exchange);
       context.addResponseForStep(consumer, body, stepResultCloner);
       responseConsumer.ifPresent(c -> c.consumeResponse(body, context));
-      return context.getAggregatedResponse().orElse(body);
+      return context.getProcessResponse().orElse(body);
     }
   }
 
