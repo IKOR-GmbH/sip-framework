@@ -102,6 +102,7 @@ class ProcessOrchestrationTest {
     assertThat(response).isInstanceOf(DebtResponse.class);
     assertThat(exchange.getException()).isNull();
     assertThat(response.getAmount()).isEqualTo(new BigDecimal("100000.00"));
+    assertThat(response.getRequestedPartnerName()).isEqualTo("MyOrchestratedPartner");
     assertThat(response.getRequestedBy()).isEqualTo("Process Orchestrator");
   }
 }

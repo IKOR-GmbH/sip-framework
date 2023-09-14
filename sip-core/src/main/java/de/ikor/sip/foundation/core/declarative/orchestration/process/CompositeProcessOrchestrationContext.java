@@ -2,7 +2,6 @@ package de.ikor.sip.foundation.core.declarative.orchestration.process;
 
 import de.ikor.sip.foundation.core.declarative.orchestration.common.dsl.StepResultCloner;
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
-import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +18,7 @@ import org.apache.camel.Exchange;
  *
  * <p>It also supports storing an aggregated response for the integration-call, which can be created
  * during the orchestration-run by integrating consumer-responses via {@link
- * #setAggregatedResponse(Object, Optional)}. Aggregated response can be used as a temporary object
+ * #setProcessResponse(Object, Optional)}. Aggregated response can be used as a temporary object
  * that is filled through the orchestration.
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -45,7 +44,7 @@ public class CompositeProcessOrchestrationContext {
   private final List<OrchestrationStep> orchestrationSteps =
       Collections.synchronizedList(new ArrayList<>());
 
-  private Object aggregatedResponse;
+  private Object processResponse;
 
   /** Raw underlying Camel exchange. To be used with care! */
   @Getter(AccessLevel.PACKAGE)
@@ -101,29 +100,29 @@ public class CompositeProcessOrchestrationContext {
   }
 
   /**
-   * Returns the current aggregated response (if exists)
+   * Returns the response of the process (if exists)
    *
-   * @return aggregated response
-   * @see #setAggregatedResponse(Object, Optional)
+   * @return process response
+   * @see #setProcessResponse(Object, Optional)
    */
   @Synchronized
-  public Optional getAggregatedResponse() {
-    return Optional.ofNullable(aggregatedResponse);
+  public Optional getProcessResponse() {
+    return Optional.ofNullable(processResponse);
   }
 
   /**
-   * Sets the overall aggregated response for the integration call.
+   * Sets the overall process response for the integration call. If the response isn't set then the
+   * last response is automatically returned as a process response.
    *
-   * @param response the aggregated response
+   * @param response response that should be saved
    * @param cloner optional cloner for the response object
    * @return the aggregated response
-   * @see #getAggregatedResponse()
+   * @see #getProcessResponse()
    */
   @Synchronized
-  public Object setAggregatedResponse(
-      final Object response, final Optional<StepResultCloner> cloner) {
-    aggregatedResponse = cloner.map(c -> c.apply(response)).orElse(response);
-    return aggregatedResponse;
+  public Object setProcessResponse(final Object response, final Optional<StepResultCloner> cloner) {
+    processResponse = cloner.map(c -> c.apply(response)).orElse(response);
+    return processResponse;
   }
 
   /**
@@ -217,8 +216,8 @@ public class CompositeProcessOrchestrationContext {
    * @return Optional first response of this consumer
    */
   public Optional<OrchestrationStep> getResultOfFirstStepFromConsumer(
-      final Class<? extends IntegrationScenarioConsumerDefinition> consumerClass) {
-    return orchestrationSteps.stream()
+      final Class<? extends IntegrationScenarioDefinition> consumerClass) {
+    return getOrchestrationSteps().stream()
         .filter(step -> consumerClass.isInstance(step.consumer()))
         .findFirst();
   }
@@ -232,7 +231,7 @@ public class CompositeProcessOrchestrationContext {
    */
   public Optional<OrchestrationStep> getResultOfLastStepFromConsumer(
       final Class<? extends IntegrationScenarioDefinition> consumerClass) {
-    return orchestrationSteps.stream()
+    return getOrchestrationSteps().stream()
         .filter(step -> consumerClass.isInstance(step.consumer()))
         .reduce((first, second) -> second);
   }

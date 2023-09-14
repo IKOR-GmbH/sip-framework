@@ -1,6 +1,9 @@
 package de.ikor.sip.foundation.core.apps.declarative;
 
 import de.ikor.sip.foundation.core.annotation.SIPIntegrationAdapter;
+import de.ikor.sip.foundation.core.apps.declarative.ProcessOrchestrationAdapter.getPartnerByName;
+import de.ikor.sip.foundation.core.apps.declarative.ProcessOrchestrationAdapter.getPartnerDebtById;
+import de.ikor.sip.foundation.core.apps.declarative.ProcessOrchestrationAdapter.getPartnerDebtByName;
 import de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess;
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
 import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
@@ -17,6 +20,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOr
 import de.ikor.sip.foundation.core.declarative.process.CompositeProcessBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import java.math.BigDecimal;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.camel.builder.EndpointConsumerBuilder;
@@ -39,12 +43,10 @@ public class ProcessOrchestrationAdapter {
   @AllArgsConstructor
   public static class DebtResponse {
 
+    private String requestedPartnerName;
     private BigDecimal amount;
     private String requestedBy;
   }
-  //  public record DebtResponse(BigDecimal amount, String requestedBy) {
-  //
-  //  }
 
   @IntegrationScenario(
       scenarioId = getPartnerByName.ID,
@@ -69,11 +71,11 @@ public class ProcessOrchestrationAdapter {
           DebtResponse.class,
           dsl -> {
             dsl.forInboundConnectors(getPartnerDebtByIdInConnector.class)
-                .callOutboundConnector(getPartnerDebtByOutConnector.class)
+                .callOutboundConnector(getPartnerDebtByIdOutConnector.class)
                 .andHandleResponse(
                     (latestResponse, context) -> latestResponse.setRequestedBy("Front-end"));
             dsl.forScenarioProviders(GetCustomerDebtByNameOrchestrator.class)
-                .callOutboundConnector(getPartnerDebtByOutConnector.class)
+                .callOutboundConnector(getPartnerDebtByIdOutConnector.class)
                 .andHandleResponse(
                     (latestResponse, context) ->
                         latestResponse.setRequestedBy("Process Orchestrator"));
@@ -127,8 +129,25 @@ public class ProcessOrchestrationAdapter {
                 .withRequestPreparation(
                     context -> {
                       PartnerResponse response =
-                          (PartnerResponse) context.getLatestResponse().get();
+                          context.getLatestResponse(PartnerResponse.class).get();
                       return response.id;
+                    })
+                .withResponseHandling(
+                    (latestResponse, context) -> {
+                      PartnerNameRequest originalRequest =
+                          context.getOriginalRequest(PartnerNameRequest.class);
+                      DebtResponse debtByIdResponse =
+                          (DebtResponse)
+                              context
+                                  .getResultOfFirstStepFromConsumer(getPartnerDebtById.class)
+                                  .get()
+                                  .response();
+                      DebtResponse debtResponse =
+                          new DebtResponse(
+                              originalRequest.name,
+                              debtByIdResponse.amount,
+                              debtByIdResponse.requestedBy);
+                      context.setProcessResponse(debtResponse, Optional.empty());
                     });
           });
     }
@@ -209,12 +228,12 @@ public class ProcessOrchestrationAdapter {
   }
 
   @OutboundConnector(
-      connectorId = getPartnerDebtByOutConnector.ID,
+      connectorId = getPartnerDebtByIdOutConnector.ID,
       connectorGroup = GROUP_ID,
       integrationScenario = getPartnerDebtById.ID,
       requestModel = Integer.class,
       responseModel = DebtResponse.class)
-  public class getPartnerDebtByOutConnector extends GenericOutboundConnectorBase {
+  public class getPartnerDebtByIdOutConnector extends GenericOutboundConnectorBase {
 
     public static final String ID = "getPartnerDebtByOutConnector";
 
@@ -230,7 +249,8 @@ public class ProcessOrchestrationAdapter {
               routeDefinition ->
                   routeDefinition.process(
                       e -> {
-                        e.getIn().setBody(new DebtResponse(new BigDecimal("100000.00"), null));
+                        e.getIn()
+                            .setBody(new DebtResponse(null, new BigDecimal("100000.00"), null));
                       }));
     }
   }
