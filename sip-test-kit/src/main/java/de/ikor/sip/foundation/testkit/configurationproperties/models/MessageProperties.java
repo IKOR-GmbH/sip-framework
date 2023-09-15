@@ -1,18 +1,17 @@
 package de.ikor.sip.foundation.testkit.configurationproperties.models;
 
+import static de.ikor.sip.foundation.core.util.SIPExchangeHelper.filterNonSerializableHeaders;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.apache.camel.Exchange;
 import org.apache.camel.support.MessageHelper;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
-
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-
-import static de.ikor.sip.foundation.core.util.SIPExchangeHelper.filterNonSerializableHeaders;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /** Class that holds a single message used in test cases */
 @Data
