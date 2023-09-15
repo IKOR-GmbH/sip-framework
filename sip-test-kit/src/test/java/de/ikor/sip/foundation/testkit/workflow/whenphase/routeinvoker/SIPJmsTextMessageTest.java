@@ -4,11 +4,11 @@ import static de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.SIP
 import static org.apache.camel.component.jms.JmsConstants.JMS_X_GROUP_ID;
 import static org.assertj.core.api.Assertions.*;
 
+import jakarta.jms.Message;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import javax.jms.Message;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

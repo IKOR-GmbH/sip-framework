@@ -2,24 +2,34 @@ package de.ikor.sip.foundation.core.declarative;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup;
+import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
+import de.ikor.sip.foundation.core.declarative.annonation.IntegrationScenario;
+import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
 import de.ikor.sip.foundation.core.declarative.model.ModelMapper;
+import de.ikor.sip.foundation.core.declarative.model.RequestMappingRouteTransformer;
+import de.ikor.sip.foundation.core.declarative.model.ResponseMappingRouteTransformer;
+import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioBase;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
 
 class DeclarationsRegistryTest {
 
@@ -35,6 +45,8 @@ class DeclarationsRegistryTest {
   private final List<IntegrationScenarioDefinition> scenarios = new ArrayList<>();
   private final List<ConnectorDefinition> connectors = new ArrayList<>();
   private final List<ModelMapper<?, ?>> modelMappers = new ArrayList<>();
+
+  private final ApplicationContext applicationContext = mock(ApplicationContext.class);
 
   public static class ScenarioMock extends IntegrationScenarioBase {}
 
@@ -66,7 +78,12 @@ class DeclarationsRegistryTest {
     assertThatThrownBy(
             () -> {
               subject =
-                  new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers);
+                  new DeclarationsRegistry(
+                      connectorGroups,
+                      scenarios,
+                      connectors,
+                      modelMappers,
+                      mock(ApplicationContext.class));
             })
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage("There is unused integration scenario with id %s", SCENARIO_ID);
@@ -86,10 +103,15 @@ class DeclarationsRegistryTest {
     assertThatThrownBy(
             () -> {
               subject =
-                  new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers);
+                  new DeclarationsRegistry(
+                      connectorGroups,
+                      scenarios,
+                      connectors,
+                      modelMappers,
+                      mock(ApplicationContext.class));
             })
         .isInstanceOf(SIPFrameworkInitializationException.class)
-        .hasMessage(
+        .hasMessageContaining(
             "There is a duplicate %s id %s in class %s",
             "integration scenario", SCENARIO_ID, secondScenario.getClass().getName());
   }
@@ -100,7 +122,9 @@ class DeclarationsRegistryTest {
     InboundConnectorMock connector = mock(InboundConnectorMock.class);
     when(connector.getId()).thenReturn(INBOUND_CONNECTOR_ID);
     connectors.add(connector);
-    subject = new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers);
+    subject =
+        new DeclarationsRegistry(
+            connectorGroups, scenarios, connectors, modelMappers, mock(ApplicationContext.class));
 
     // act
     Optional<ConnectorDefinition> actual = subject.getConnectorById(INBOUND_CONNECTOR_ID);
@@ -129,11 +153,191 @@ class DeclarationsRegistryTest {
     when(outboundConnector.getConnectorGroupId()).thenReturn(CONNECTOR_GROUP_ID);
     connectors.add(outboundConnector);
 
-    subject = new DeclarationsRegistry(connectorGroups, scenarios, connectors, modelMappers);
+    subject =
+        new DeclarationsRegistry(
+            connectorGroups, scenarios, connectors, modelMappers, mock(ApplicationContext.class));
 
     // act & assert
     assertThatThrownBy(() -> subject.getScenarioById(SECOND_SCENARIO_ID))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage("There is no integration scenario with id: %s", SECOND_SCENARIO_ID);
+  }
+
+  @Test
+  void
+      When_CheckAnnotatedInboundConnector_With_NoParent_Then_SIPFrameworkInitializationExceptionThrown() {
+    when(applicationContext.getBeansWithAnnotation(InboundConnector.class))
+        .thenReturn(Map.of("key", new Object()));
+    assertThatThrownBy(
+            () -> {
+              subject =
+                  new DeclarationsRegistry(
+                      connectorGroups, scenarios, connectors, modelMappers, applicationContext);
+            })
+        .isInstanceOf(SIPFrameworkInitializationException.class)
+        .hasMessage(
+            "Annotated InboundConnector java.lang.Object is missing InboundConnectorBase parent class.");
+  }
+
+  @Test
+  void
+      When_CheckAnnotatedOutboundConnector_With_NoParent_Then_SIPFrameworkInitializationExceptionThrown() {
+    when(applicationContext.getBeansWithAnnotation(OutboundConnector.class))
+        .thenReturn(Map.of("key", new Object()));
+    assertThatThrownBy(
+            () -> {
+              subject =
+                  new DeclarationsRegistry(
+                      connectorGroups, scenarios, connectors, modelMappers, applicationContext);
+            })
+        .isInstanceOf(SIPFrameworkInitializationException.class)
+        .hasMessage(
+            "Annotated OutboundConnector java.lang.Object is missing OutboundConnectorDefinition parent class.");
+  }
+
+  @Test
+  void
+      When_CheckAnnotatedIntegrationScenario_With_NoParent_Then_SIPFrameworkInitializationExceptionThrown() {
+    when(applicationContext.getBeansWithAnnotation(IntegrationScenario.class))
+        .thenReturn(Map.of("key", new Object()));
+    assertThatThrownBy(
+            () -> {
+              subject =
+                  new DeclarationsRegistry(
+                      connectorGroups, scenarios, connectors, modelMappers, applicationContext);
+            })
+        .isInstanceOf(SIPFrameworkInitializationException.class)
+        .hasMessage(
+            "Annotated IntegrationScenario java.lang.Object is missing IntegrationScenarioBase parent class.");
+  }
+
+  @Test
+  void
+      When_CheckAnnotatedConnectorGroup_With_NoParent_Then_SIPFrameworkInitializationExceptionThrown() {
+    when(applicationContext.getBeansWithAnnotation(ConnectorGroup.class))
+        .thenReturn(Map.of("key", new Object()));
+    assertThatThrownBy(
+            () -> {
+              subject =
+                  new DeclarationsRegistry(
+                      connectorGroups, scenarios, connectors, modelMappers, applicationContext);
+            })
+        .isInstanceOf(SIPFrameworkInitializationException.class)
+        .hasMessage(
+            "Annotated ConnectorGroup java.lang.Object is missing ConnectorGroupBase parent class.");
+  }
+
+  @Test
+  void
+      When_CheckControllerMapping_With_OverriddenRequestMapping_Then_SIPFrameworkInitializationExceptionThrown() {
+    // arrange
+    InboundConnectorMock connector = mock(InboundConnectorMock.class);
+    final var transformer =
+        RequestMappingRouteTransformer.forConnectorWithScenario(
+            connector,
+            () -> {
+              return null;
+            });
+    RequestMappingRouteTransformer<Object, Object> routeTransformer =
+        RequestMappingRouteTransformer.forConnectorWithScenario(
+            connector,
+            () -> {
+              return null;
+            });
+    Optional<RequestMappingRouteTransformer<Object, Object>> mapper = Optional.of(transformer);
+    ConnectorOrchestrator connectorOrchestrator = mock(ConnectorOrchestrator.class);
+    when(connector.getId()).thenReturn("mockConnector");
+    when(connectorOrchestrator.getRequestRouteTransformer()).thenReturn(routeTransformer);
+    when(connector.getRequestMapper()).thenReturn(mapper);
+    when(connector.getOrchestrator()).thenReturn(connectorOrchestrator);
+    connectors.add(connector);
+
+    // assert
+    assertThatThrownBy(
+            () ->
+                subject =
+                    new DeclarationsRegistry(
+                        connectorGroups, scenarios, connectors, modelMappers, applicationContext))
+        .isInstanceOf(SIPFrameworkInitializationException.class)
+        .hasMessage(
+            "Request mapping in connector 'mockConnector' is defined in annotation, but overridden by request route transformator");
+  }
+
+  @Test
+  void When_CheckingConnectorMapping_With_NoMappingsOrTransformation_Then_NoExceptionThrown() {
+    // arrange
+    InboundConnectorMock connector = mock(InboundConnectorMock.class);
+    connectors.add(connector);
+
+    // assert
+    assertDoesNotThrow(
+        () -> {
+          subject =
+              new DeclarationsRegistry(
+                  connectorGroups, scenarios, connectors, modelMappers, applicationContext);
+        });
+  }
+
+  @Test
+  void When_CheckingConnectorMapping_With_MappingsAndNoTransformation_Then_NoExceptionThrown() {
+    // arrange
+    InboundConnectorMock connector = mock(InboundConnectorMock.class);
+    RequestMappingRouteTransformer<Object, Object> routeTransformer =
+        RequestMappingRouteTransformer.forConnectorWithScenario(
+            connector,
+            () -> {
+              return null;
+            });
+    Optional<RequestMappingRouteTransformer<Object, Object>> mapper = Optional.of(routeTransformer);
+    ConnectorOrchestrator connectorOrchestrator = mock(ConnectorOrchestrator.class);
+    when(connector.getId()).thenReturn("mockConnector");
+    when(connectorOrchestrator.getRequestRouteTransformer()).thenReturn(routeTransformer);
+    when(connector.getRequestMapper()).thenReturn(mapper);
+    when(connector.getOrchestrator()).thenReturn(connectorOrchestrator);
+    connectors.add(connector);
+
+    // assert
+    assertDoesNotThrow(
+        () -> {
+          subject =
+              new DeclarationsRegistry(
+                  connectorGroups, scenarios, connectors, modelMappers, applicationContext);
+        });
+  }
+
+  @Test
+  void
+      When_CheckControllerMapping_With_OverriddenResponseMapping_Then_SIPFrameworkInitializationExceptionThrown() {
+    // arrange
+    OutboundConnectorMock connector = mock(OutboundConnectorMock.class);
+    final var transformer =
+        ResponseMappingRouteTransformer.forConnectorWithScenario(
+            connector,
+            () -> {
+              return null;
+            });
+    ResponseMappingRouteTransformer<Object, Object> routeTransformer =
+        ResponseMappingRouteTransformer.forConnectorWithScenario(
+            connector,
+            () -> {
+              return null;
+            });
+    Optional<ResponseMappingRouteTransformer<Object, Object>> mapper = Optional.of(transformer);
+    ConnectorOrchestrator connectorOrchestrator = mock(ConnectorOrchestrator.class);
+    when(connector.getId()).thenReturn("mockConnector");
+    when(connectorOrchestrator.getResponseRouteTransformer()).thenReturn(routeTransformer);
+    when(connector.getResponseMapper()).thenReturn(mapper);
+    when(connector.getOrchestrator()).thenReturn(connectorOrchestrator);
+    connectors.add(connector);
+
+    // assert
+    assertThatThrownBy(
+            () ->
+                subject =
+                    new DeclarationsRegistry(
+                        connectorGroups, scenarios, connectors, modelMappers, applicationContext))
+        .isInstanceOf(SIPFrameworkInitializationException.class)
+        .hasMessage(
+            "Response mapping in connector 'mockConnector' is defined in annotation, but overridden by response route transformator");
   }
 }

@@ -14,8 +14,8 @@ import de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenti
 import de.ikor.sip.foundation.security.authentication.common.extractors.TokenExtractors;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties.AuthProviderSettings;
+import jakarta.servlet.FilterChain;
 import java.util.Collections;
-import javax.servlet.FilterChain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

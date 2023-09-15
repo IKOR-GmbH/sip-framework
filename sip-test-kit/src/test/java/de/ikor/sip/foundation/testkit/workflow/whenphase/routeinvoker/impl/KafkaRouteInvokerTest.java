@@ -32,7 +32,8 @@ class KafkaRouteInvokerTest {
 
   @BeforeEach
   void setup() {
-    ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
+    CamelContext camelContext = mock(CamelContext.class);
+    when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
     subject = new KafkaRouteInvoker(camelContext);
 
     inputExchange = TestKitHelper.parseExchangeProperties(null, camelContext);

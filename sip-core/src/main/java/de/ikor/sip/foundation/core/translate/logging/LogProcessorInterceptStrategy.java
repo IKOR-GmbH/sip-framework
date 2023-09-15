@@ -45,7 +45,7 @@ public class LogProcessorInterceptStrategy implements InterceptStrategy, Ordered
       CamelContext context, LogProcessor logProcessor) {
     Expression translatedExpression =
         this.translateExpression(context, logProcessor.getExpression());
-    Set<LogListener> listeners = context.adapt(ExtendedCamelContext.class).getLogListeners();
+    Set<LogListener> listeners = context.getCamelContextExtension().getLogListeners();
 
     LogProcessor newLogProcessor =
         new LogProcessor(

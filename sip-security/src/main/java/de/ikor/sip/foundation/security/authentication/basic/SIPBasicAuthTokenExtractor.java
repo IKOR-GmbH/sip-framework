@@ -1,7 +1,7 @@
 package de.ikor.sip.foundation.security.authentication.basic;
 
 import de.ikor.sip.foundation.security.authentication.common.extractors.SIPTokenExtractor;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.authentication.www.BasicAuthenticationConverter;

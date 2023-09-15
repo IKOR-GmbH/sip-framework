@@ -122,11 +122,14 @@ class RoutesRegistryTest {
     // arrange
     subject.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, connector);
     CamelEvent.CamelContextEvent event = mock(CamelEvent.CamelContextEvent.class);
-    CamelContext camelContext = mock(ExtendedCamelContext.class);
+    CamelContext camelContext = mock(CamelContext.class);
+    ExtendedCamelContext extendedCamelContext = mock(ExtendedCamelContext.class);
     ProcessorProxyRegistry proxyRegistry = mock(ProcessorProxyRegistry.class);
     when(proxyRegistry.getProxies()).thenReturn(new HashMap<>());
     when(event.getContext()).thenReturn(camelContext);
-    when(camelContext.getExtension(ProcessorProxyRegistry.class)).thenReturn(proxyRegistry);
+    when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
+    when(extendedCamelContext.getContextPlugin(ProcessorProxyRegistry.class))
+        .thenReturn(proxyRegistry);
     List<Route> routes = new ArrayList<>();
     Route route = mock(Route.class);
     when(route.getRouteId()).thenReturn(GENERATED_ROUTE_ID);
@@ -159,11 +162,14 @@ class RoutesRegistryTest {
     // ARRANGE
     subject.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, connector);
     CamelEvent.CamelContextEvent event = mock(CamelEvent.CamelContextEvent.class);
-    CamelContext camelContext = mock(ExtendedCamelContext.class);
+    CamelContext camelContext = mock(CamelContext.class);
+    ExtendedCamelContext extendedCamelContext = mock(ExtendedCamelContext.class);
     ProcessorProxyRegistry proxyRegistry = mock(ProcessorProxyRegistry.class);
     when(proxyRegistry.getProxies()).thenReturn(new HashMap<>());
     when(event.getContext()).thenReturn(camelContext);
-    when(camelContext.getExtension(ProcessorProxyRegistry.class)).thenReturn(proxyRegistry);
+    when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
+    when(extendedCamelContext.getContextPlugin(ProcessorProxyRegistry.class))
+        .thenReturn(proxyRegistry);
     List<Route> routes = new ArrayList<>();
     Route route = mock(Route.class);
     when(route.getRouteId()).thenReturn(GENERATED_ROUTE_ID);

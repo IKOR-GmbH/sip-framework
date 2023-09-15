@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import de.ikor.sip.foundation.core.translate.SIPTranslateMessageService;
+import org.apache.camel.CamelContext;
 import org.apache.camel.Expression;
 import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Processor;
@@ -28,7 +29,10 @@ class LogProcessorInterceptStrategyTest {
   @Mock private LogProcessor logProcessor;
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private static ExtendedCamelContext camelContext;
+  private static CamelContext camelContext;
+
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private static ExtendedCamelContext extendedCamelContext;
 
   @BeforeAll
   public static void setup() {
@@ -70,7 +74,7 @@ class LogProcessorInterceptStrategyTest {
         .thenReturn(translatedExpression);
 
     this.initLogProcessor();
-    when(camelContext.adapt(any())).thenReturn(camelContext);
+    when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
 
     // act
     Processor processor =
@@ -104,7 +108,7 @@ class LogProcessorInterceptStrategyTest {
         .thenReturn(translatedExpression);
 
     this.initLogProcessor();
-    when(camelContext.adapt(any())).thenReturn(camelContext);
+    when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
 
     WrapProcessor wrappedProcessor = mock(WrapProcessor.class);
     when(wrappedProcessor.getWrapped()).thenReturn(logProcessor);
@@ -130,7 +134,7 @@ class LogProcessorInterceptStrategyTest {
         .thenReturn(translatedExpression);
 
     this.initLogProcessor(TRANSLATION_MESSAGE_KEY.concat(" ${body} ${header.type}"));
-    when(camelContext.adapt(any())).thenReturn(camelContext);
+    when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
 
     // act
     Processor processor =

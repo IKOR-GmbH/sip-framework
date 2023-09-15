@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.security.config;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.http.HttpComponent;

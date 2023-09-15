@@ -9,10 +9,7 @@ import de.ikor.sip.foundation.testkit.util.TestKitHelper;
 import de.ikor.sip.foundation.testkit.workflow.givenphase.Mock;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.RouteInvokerException;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.UnsupportedJmsHeaderException;
-import org.apache.camel.Exchange;
-import org.apache.camel.ExtendedCamelContext;
-import org.apache.camel.Processor;
-import org.apache.camel.Route;
+import org.apache.camel.*;
 import org.apache.camel.component.jms.JmsBinding;
 import org.apache.camel.component.jms.JmsConsumer;
 import org.apache.camel.component.jms.JmsEndpoint;
@@ -31,7 +28,8 @@ class JmsRouteInvokerTest {
 
   @BeforeEach
   void setup() {
-    ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
+    CamelContext camelContext = mock(CamelContext.class);
+    when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
     subject = new JmsRouteInvoker(camelContext);
 
     inputExchange = TestKitHelper.parseExchangeProperties(null, camelContext);

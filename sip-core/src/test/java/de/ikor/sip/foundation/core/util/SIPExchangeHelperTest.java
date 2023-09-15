@@ -6,8 +6,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
-import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Message;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,11 +21,11 @@ class SIPExchangeHelperTest {
   private Exchange exchange;
   private Message message;
   private Map<String, Object> headers;
-  private ExtendedCamelContext camelContext;
+  private CamelContext camelContext;
 
   @BeforeEach
   void setup() {
-    camelContext = mock(ExtendedCamelContext.class);
+    camelContext = mock(CamelContext.class);
     exchange = mock(Exchange.class);
     headers = new HashMap<>();
     message = mock(Message.class);

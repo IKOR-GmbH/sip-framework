@@ -7,7 +7,6 @@ sip.security:
     key-password: password
 
   authentication:
-    enabled: true
     disable-csrf: true
     auth-providers:
       - classname: de.ikor.sip.foundation.security.authentication.basic.SIPBasicAuthAuthenticationProvider

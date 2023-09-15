@@ -1,8 +1,8 @@
 package de.ikor.sip.foundation.security.authentication.x509;
 
 import de.ikor.sip.foundation.security.authentication.common.extractors.SIPTokenExtractor;
+import jakarta.servlet.http.HttpServletRequest;
 import java.security.cert.X509Certificate;
-import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 
@@ -22,7 +22,8 @@ public class SIPX509TokenExtractor implements SIPTokenExtractor<SIPX509Authentic
       throw new BadCredentialsException("No client certificate found in request");
     }
 
-    return new SIPX509AuthenticationToken(clientCertificate.getSubjectDN().toString(), false);
+    return new SIPX509AuthenticationToken(
+        clientCertificate.getSubjectX500Principal().toString(), false);
   }
 
   @Override
