@@ -2,6 +2,7 @@ package de.ikor.sip.foundation.testkit.configurationproperties.models;
 
 import static de.ikor.sip.foundation.core.util.SIPExchangeHelper.filterNonSerializableHeaders;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.springframework.util.ResourceUtils.FILE_URL_PREFIX;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -16,7 +17,6 @@ import org.springframework.core.io.ClassPathResource;
 /** Class that holds a single message used in test cases */
 @Data
 public class MessageProperties {
-  public static final String FILE_PREXIX = "file:";
   private String body;
   private Map<String, Object> headers = new HashMap<>();
 
@@ -35,8 +35,8 @@ public class MessageProperties {
 
   @SneakyThrows
   public String getBody() {
-    if (isNotBlank(body) && body.startsWith(FILE_PREXIX)) {
-      String bodyLocation = body.substring(FILE_PREXIX.length());
+    if (isNotBlank(body) && body.startsWith(FILE_URL_PREFIX)) {
+      String bodyLocation = body.substring(FILE_URL_PREFIX.length());
       body =
           FileUtils.readFileToString(
               new ClassPathResource(bodyLocation).getFile(), StandardCharsets.UTF_8);
