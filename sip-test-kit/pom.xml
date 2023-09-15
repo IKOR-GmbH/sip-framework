@@ -20,8 +20,8 @@
             <artifactId>jaxb-api</artifactId>
             <exclusions>
                 <exclusion>
-                    <artifactId>javax.xml.stream</artifactId>
-                    <groupId>stax-api</groupId>
+                    <groupId>javax.xml.stream</groupId>
+                    <artifactId>stax-api</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>javax.activation</groupId>
