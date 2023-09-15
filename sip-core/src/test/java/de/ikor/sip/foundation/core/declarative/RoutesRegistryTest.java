@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative;
 
+import static de.ikor.sip.foundation.core.declarative.RoutesRegistry.SIP_SCENARIO_ORCHESTRATOR_PREFIX;
 import static de.ikor.sip.foundation.core.declarative.RoutesRegistry.SIP_SOAP_SERVICE_PREFIX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -7,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import de.ikor.sip.foundation.core.actuator.declarative.model.RouteDeclarativeStructureInfo;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.proxies.ProcessorProxyRegistry;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.*;
@@ -23,6 +25,7 @@ import org.junit.jupiter.api.Test;
 class RoutesRegistryTest {
 
   private static final String CONNECTOR_ID = "connectorId";
+  private static final String SCENARIO_ID = "scenarioId";
   private static final String GENERATED_ROUTE_ID = "sip-connector_connectorId_externalEndpoint";
   private static final String SOAP_SERVICE_NAME = "customer";
   private static final String GENERATED_SOAP_ROUTE_ID =
@@ -80,6 +83,20 @@ class RoutesRegistryTest {
   }
 
   @Test
+  void GIVEN_connectorId_WHEN_getConnectorIdByRouteId_THEN_connectorIDReturned() {
+    // arrange
+    subject.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, connector);
+
+    // act
+    String connectorId =
+        subject.getConnectorIdByRouteId(
+            "sip-connector_connectorId_" + RouteRole.EXTERNAL_ENDPOINT.roleSuffixInRouteId);
+
+    // assert
+    assertThat(connectorId).isEqualTo(CONNECTOR_ID);
+  }
+
+  @Test
   void
       GIVEN_alreadyExistingConnectorId_WHEN_generateRouteIdForConnector_THEN_SIPFrameworkInitializationException() {
     // arrange
@@ -90,8 +107,26 @@ class RoutesRegistryTest {
             () -> subject.generateRouteIdForConnector(RouteRole.EXTERNAL_ENDPOINT, connector))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
-            "Can't build internal connector route with routeId '%s': routeId already exists",
+            "Internal SIP Error - Can't build internal connector route with ID '%s': Route already exists",
             GENERATED_ROUTE_ID);
+  }
+
+  @Test
+  void
+      GIVEN_alreadyExistingScenarioOrchestration_WHEN_generateRouteIdForScenarioOrchestrator_THEN_SIPFrameworkInitializationException() {
+    // arrange
+    IntegrationScenarioDefinition scenario = mock(IntegrationScenarioDefinition.class);
+    when(scenario.getId()).thenReturn(SCENARIO_ID);
+    final String TEST_SUFFIX = "test-suffix";
+    subject.generateRouteIdForScenarioOrchestrator(scenario, TEST_SUFFIX);
+
+    // act & assert
+    assertThatThrownBy(
+            () -> subject.generateRouteIdForScenarioOrchestrator(scenario, "test-suffix"))
+        .isInstanceOf(SIPFrameworkInitializationException.class)
+        .hasMessage(
+            "Internal SIP Error - Can't build internal orchestrator route with ID '%s': Route already exists",
+            SIP_SCENARIO_ORCHESTRATOR_PREFIX + "_" + SCENARIO_ID + "_" + TEST_SUFFIX);
   }
 
   @Test
@@ -113,7 +148,7 @@ class RoutesRegistryTest {
     assertThatThrownBy(() -> subject.generateRouteIdForSoapService(SOAP_SERVICE_NAME))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
-            "Can't build internal soap-service route with routeId '%s': routeId already exists",
+            "Internal SIP Error - Can't build internal soap-service route with ID '%s': Route already exists",
             GENERATED_SOAP_ROUTE_ID);
   }
 
