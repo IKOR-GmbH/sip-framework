@@ -2,15 +2,15 @@ package de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker;
 
 import static org.apache.camel.component.jms.JmsConstants.JMS_X_GROUP_ID;
 
+import jakarta.jms.Destination;
+import jakarta.jms.Message;
+import jakarta.jms.TextMessage;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
-import javax.jms.Destination;
-import javax.jms.Message;
-import javax.jms.TextMessage;
 
 /**
  * SIP implementation of TextMessage from JMS API. Used in Test Kit as a jms Message general

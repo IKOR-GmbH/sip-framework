@@ -27,7 +27,8 @@ class FileRouteInvokerTest {
 
   @BeforeEach
   void setup() {
-    ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
+    CamelContext camelContext = mock(CamelContext.class);
+    when(camelContext.getCamelContextExtension()).thenReturn(mock(ExtendedCamelContext.class));
     subject = new FileRouteInvoker(camelContext);
     inputExchange = TestKitHelper.parseExchangeProperties(null, camelContext);
     inputExchange.setProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY, ROUTE_ID);

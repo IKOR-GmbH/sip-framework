@@ -23,7 +23,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @CamelSpringBootTest
 @SpringBootTest(
     classes = {SimpleAdapter.class},
-    properties = {"camel.rest.binding-mode=auto"},
+    properties = {"camel.rest.binding-mode=auto", "camel.openapi.enabled=false"},
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisableJmx(false)
 @MockEndpoints("log:message*")

@@ -25,6 +25,7 @@ while read line; do
       [[ $line == *"(Apache-2.0)"* ]] ||
       [[ $line == *"(Apache License 2.0)"* ]] ||
       [[ $line == *"(The Apache License, Version 2.0)"* ]] ||
+      [[ $line == *"(Apache Software License, version 2.0)"* ]] ||
       [[ $line == *"(Apache 2)"* ]] ||
       [[ $line == *"(Apache 2.0)"* ]] ||
       [[ $line == *"(BSD 2-Clause License)"* ]] ||
@@ -47,6 +48,7 @@ while read line; do
       [[ $line == *"(MIT License)"* ]] ||
       [[ $line == *"(MIT license)"* ]] ||
       [[ $line == *"(MIT)"* ]] ||
+      [[ $line == *"(Mozilla Public License, Version 2.0)"* ]] ||
       [[ $line == *"(Unicode/ICU License)"* ]] ||
       [[ $line == *"(Public Domain)"* ]] ||
       [[ $line == *"(Public Domain, per Creative Commons CC0)"* ]]; then

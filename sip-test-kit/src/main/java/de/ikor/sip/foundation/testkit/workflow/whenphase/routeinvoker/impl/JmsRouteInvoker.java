@@ -7,9 +7,9 @@ import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.RouteInvok
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.SIPJmsTextMessage;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.RouteInvokerException;
 import de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions.UnsupportedJmsHeaderException;
+import jakarta.jms.*;
 import java.util.Map;
 import java.util.Optional;
-import javax.jms.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.*;

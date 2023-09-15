@@ -13,10 +13,10 @@ import java.io.IOException;
 import java.util.List;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.DisableJmx;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,7 +26,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @CamelSpringBootTest
 @SpringBootTest(
     classes = {SimpleAdapter.class},
-    properties = {"camel.openapi.enabled=false"},
+    properties = {"camel.rest.binding-mode=auto", "camel.openapi.enabled=false"},
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisableJmx(false)
 @DirtiesContext
@@ -47,12 +47,12 @@ class DeclarativeDefinitionEndpointTest {
         new HttpGet("http://localhost:" + localServerPort + "/actuator/adapterdefinition");
 
     // act
-    HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+    CloseableHttpResponse response = HttpClientBuilder.create().build().execute(request);
     DeclarativeStructureInfo declarativeStructureInfo =
-        mapper.readValue(httpResponse.getEntity().getContent(), DeclarativeStructureInfo.class);
+        mapper.readValue(response.getEntity().getContent(), DeclarativeStructureInfo.class);
 
     // assert
-    assertThat(httpResponse.getStatusLine().getStatusCode()).isEqualTo(200);
+    assertThat(response.getCode()).isEqualTo(200);
     assertThat(declarativeStructureInfo.getScenarios()).hasSize(SCENARIOS_IN_TEST_ADAPTER);
     assertThat(
             declarativeStructureInfo.getConnectorgroups().stream()
@@ -72,14 +72,14 @@ class DeclarativeDefinitionEndpointTest {
             "http://localhost:" + localServerPort + "/actuator/adapterdefinition/scenarios");
 
     // act
-    HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+    CloseableHttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
     CollectionType collectionType =
         mapper.getTypeFactory().constructCollectionType(List.class, IntegrationScenarioInfo.class);
     List<IntegrationScenarioInfo> scenarios =
         mapper.readValue(httpResponse.getEntity().getContent(), collectionType);
 
     // assert
-    assertThat(httpResponse.getStatusLine().getStatusCode()).isEqualTo(200);
+    assertThat(httpResponse.getCode()).isEqualTo(200);
     assertThat(scenarios)
         .anyMatch(
             scenarioInfo ->
@@ -96,14 +96,14 @@ class DeclarativeDefinitionEndpointTest {
             "http://localhost:" + localServerPort + "/actuator/adapterdefinition/connectorgroups");
 
     // act
-    HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+    CloseableHttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
     CollectionType collectionType =
         mapper.getTypeFactory().constructCollectionType(List.class, ConnectorGroupInfo.class);
     List<ConnectorGroupInfo> connectorGroups =
         mapper.readValue(httpResponse.getEntity().getContent(), collectionType);
 
     // assert
-    assertThat(httpResponse.getStatusLine().getStatusCode()).isEqualTo(200);
+    assertThat(httpResponse.getCode()).isEqualTo(200);
     assertThat(connectorGroups)
         .anyMatch(
             connectorGroupInfo ->
@@ -124,14 +124,14 @@ class DeclarativeDefinitionEndpointTest {
             "http://localhost:" + localServerPort + "/actuator/adapterdefinition/connectors");
 
     // act
-    HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+    CloseableHttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
     CollectionType collectionType =
         mapper.getTypeFactory().constructCollectionType(List.class, ConnectorInfo.class);
     List<ConnectorInfo> connectors =
         mapper.readValue(httpResponse.getEntity().getContent(), collectionType);
 
     // assert
-    assertThat(httpResponse.getStatusLine().getStatusCode()).isEqualTo(200);
+    assertThat(httpResponse.getCode()).isEqualTo(200);
     assertThat(connectors)
         .anyMatch(
             connectorInfo ->

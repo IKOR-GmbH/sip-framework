@@ -3,13 +3,15 @@ package de.ikor.sip.foundation.security.authentication;
 import de.ikor.sip.foundation.security.authentication.common.extractors.TokenExtractors;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties;
 import de.ikor.sip.foundation.security.config.SecurityConfigProperties.AuthProviderSettings;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +19,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.filter.GenericFilterBean;
 
 /**
  * The authentication filter which handles composite authentication, which means that in contrast to
@@ -29,39 +31,44 @@ import org.springframework.web.filter.OncePerRequestFilter;
  */
 @Slf4j
 @AllArgsConstructor
-public class CompositeAuthenticationFilter extends OncePerRequestFilter {
+public class CompositeAuthenticationFilter extends GenericFilterBean {
 
   private final TokenExtractors tokenExtractors;
   private final SecurityConfigProperties config;
   private final AuthenticationManager authManager;
 
-  @Override
-  protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+  public final void doFilter(
+      ServletRequest request, ServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    String urlPath = request.getRequestURI();
+
+    if (!(request instanceof HttpServletRequest httpRequest)
+        || !(response instanceof HttpServletResponse httpResponse)) {
+      filterChain.doFilter(request, response);
+      return; // No need to process further, let the filter chain handle it
+    }
+
     List<SIPAuthenticationToken<?>> authenticatedTokens = new ArrayList<>();
 
     for (AuthProviderSettings aps : config.getAuthProviders()) {
-      if (aps.isResponsibleFor(urlPath)) {
+      if (aps.isResponsibleFor(httpRequest.getRequestURI())) {
         try {
-          Authentication token = tokenExtractors.extractTokenFor(aps.getClassname(), request);
+          Authentication token = tokenExtractors.extractTokenFor(aps.getClassname(), httpRequest);
           authenticatedTokens.add((SIPAuthenticationToken<?>) authManager.authenticate(token));
 
         } catch (BadCredentialsException e) {
           SecurityContextHolder.clearContext();
-          response.setStatus(401);
+          httpResponse.setStatus(401);
           return;
 
         } catch (AuthenticationException e) {
           SecurityContextHolder.clearContext();
-          response.setStatus(403);
+          httpResponse.setStatus(403);
           return;
 
         } catch (Exception e) {
           log.info("sip.security.requestautherror_{}", e);
           SecurityContextHolder.clearContext();
-          response.setStatus(500);
+          httpResponse.setStatus(500);
           return;
         }
       }
@@ -74,6 +81,6 @@ public class CompositeAuthenticationFilter extends OncePerRequestFilter {
     SecurityContextHolder.getContext()
         .setAuthentication(new CompositeAuthenticationToken(authenticatedTokens));
 
-    chain.doFilter(request, response);
+    filterChain.doFilter(request, response);
   }
 }

@@ -14,7 +14,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.2.11</version>
+      <version>1.4.8</version>
       <licenses>
         <license>
           <name>Eclipse Public License - v 1.0</name>
@@ -31,7 +31,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
-      <version>1.2.11</version>
+      <version>1.4.8</version>
       <licenses>
         <license>
           <name>Eclipse Public License - v 1.0</name>
@@ -48,11 +48,11 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
-      <version>2.13.5</version>
+      <version>2.14.3</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
@@ -61,11 +61,11 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-      <version>2.13.5</version>
+      <version>2.14.3</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
@@ -74,11 +74,11 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.13.5</version>
+      <version>2.14.3</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
@@ -87,11 +87,11 @@
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-yaml</artifactId>
-      <version>2.13.5</version>
+      <version>2.14.3</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
@@ -100,7 +100,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jdk8</artifactId>
-      <version>2.13.5</version>
+      <version>2.14.3</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -113,11 +113,11 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-joda</artifactId>
-      <version>2.13.5</version>
+      <version>2.14.3</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
@@ -137,26 +137,26 @@
       </licenses>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.jaxrs</groupId>
-      <artifactId>jackson-jaxrs-base</artifactId>
-      <version>2.13.5</version>
+      <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
+      <artifactId>jackson-jakarta-rs-base</artifactId>
+      <version>2.14.3</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.jaxrs</groupId>
-      <artifactId>jackson-jaxrs-json-provider</artifactId>
-      <version>2.13.5</version>
+      <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
+      <artifactId>jackson-jakarta-rs-json-provider</artifactId>
+      <version>2.14.3</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
@@ -164,12 +164,12 @@
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
-      <artifactId>jackson-module-jaxb-annotations</artifactId>
-      <version>2.13.5</version>
+      <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
+      <version>2.14.3</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
@@ -178,7 +178,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-jsonSchema</artifactId>
-      <version>2.13.5</version>
+      <version>2.14.3</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -191,7 +191,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-parameter-names</artifactId>
-      <version>2.13.5</version>
+      <version>2.14.3</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -204,7 +204,7 @@
     <dependency>
       <groupId>com.fasterxml.woodstox</groupId>
       <artifactId>woodstox-core</artifactId>
-      <version>6.4.0</version>
+      <version>6.5.1</version>
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
@@ -223,14 +223,166 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>btf</artifactId>
+      <version>1.3</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>http://www.gnu.org/licenses/lgpl.html</url>
+          <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>jackson-coreutils-equivalence</artifactId>
+      <version>1.0</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>http://www.gnu.org/licenses/lgpl.html</url>
+          <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>jackson-coreutils</artifactId>
+      <version>2.0</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>http://www.gnu.org/licenses/lgpl.html</url>
+          <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>json-patch</artifactId>
+      <version>1.13</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>http://www.gnu.org/licenses/lgpl.html</url>
+          <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>json-schema-core</artifactId>
+      <version>1.2.14</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>http://www.gnu.org/licenses/lgpl.html</url>
+          <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>json-schema-validator</artifactId>
+      <version>2.2.14</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>http://www.gnu.org/licenses/lgpl.html</url>
+          <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>msg-simple</artifactId>
+      <version>1.2</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>http://www.gnu.org/licenses/lgpl.html</url>
+          <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>uri-template</artifactId>
+      <version>0.10</version>
+      <licenses>
+        <license>
+          <name>Lesser General Public License, version 3 or greater</name>
+          <url>http://www.gnu.org/licenses/lgpl.html</url>
+          <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
+        </license>
+        <license>
+          <name>Apache Software License, version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>com.github.luben</groupId>
       <artifactId>zstd-jni</artifactId>
-      <version>1.5.0-4</version>
+      <version>1.5.2-1</version>
       <licenses>
         <license>
           <name>BSD 2-Clause License</name>
@@ -242,7 +394,7 @@
     <dependency>
       <groupId>com.github.mwiede</groupId>
       <artifactId>jsch</artifactId>
-      <version>0.2.1</version>
+      <version>0.2.11</version>
       <licenses>
         <license>
           <name>Revised BSD</name>
@@ -250,9 +402,9 @@
           <file>revised bsd - license.html</file>
         </license>
         <license>
-          <name>BSD</name>
+          <name>Revised BSD</name>
           <url>https://github.com/mwiede/jsch/blob/master/LICENSE.JZlib.txt</url>
-          <file>bsd - license.jzlib.html</file>
+          <file>revised bsd - license.jzlib.html</file>
         </license>
         <license>
           <name>ISC</name>
@@ -262,9 +414,60 @@
       </licenses>
     </dependency>
     <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <version>3.0.2</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>error_prone_annotations</artifactId>
+      <version>2.18.0</version>
+      <licenses>
+        <license>
+          <name>Apache 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>failureaccess</artifactId>
+      <version>1.0.1</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>20.0</version>
+      <version>32.1.2-jre</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>listenablefuture</artifactId>
+      <version>9999.0-empty-to-avoid-conflict-with-guava</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -288,9 +491,34 @@
       </licenses>
     </dependency>
     <dependency>
+      <groupId>com.google.j2objc</groupId>
+      <artifactId>j2objc-annotations</artifactId>
+      <version>2.8</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.libphonenumber</groupId>
+      <artifactId>libphonenumber</artifactId>
+      <version>8.11.1</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
       <groupId>com.ibm.icu</groupId>
       <artifactId>icu4j</artifactId>
-      <version>72.1</version>
+      <version>73.2</version>
       <licenses>
         <license>
           <name>Unicode/ICU License</name>
@@ -314,106 +542,41 @@
       </licenses>
     </dependency>
     <dependency>
-      <groupId>com.sun.activation</groupId>
-      <artifactId>jakarta.activation</artifactId>
-      <version>1.2.2</version>
-      <licenses>
-        <license>
-          <name>EDL 1.0</name>
-          <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
-          <distribution>repo</distribution>
-          <file>edl 1.0 - edl-v10.html</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.activation</groupId>
-      <artifactId>javax.activation</artifactId>
-      <version>1.2.0</version>
-      <licenses>
-        <license>
-          <name>CDDL/GPLv2+CE</name>
-          <url>https://github.com/javaee/activation/blob/master/LICENSE.txt</url>
-          <distribution>repo</distribution>
-          <file>cddl_gplv2+ce - license.html</file>
-          <comments>CDDL or GPL version 2 plus the Classpath Exception</comments>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
       <groupId>com.sun.istack</groupId>
       <artifactId>istack-commons-runtime</artifactId>
-      <version>3.0.12</version>
+      <version>4.1.2</version>
       <licenses>
         <license>
           <name>Eclipse Distribution License - v 1.0</name>
           <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
           <distribution>repo</distribution>
-          <file>edl 1.0 - edl-v10.html</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.mail</groupId>
-      <artifactId>jakarta.mail</artifactId>
-      <version>1.6.7</version>
-      <licenses>
-        <license>
-          <name>EPL 2.0</name>
-          <url>http://www.eclipse.org/legal/epl-2.0</url>
-          <distribution>repo</distribution>
-          <file>epl 2.0 - epl-2.0.html</file>
-        </license>
-        <license>
-          <name>GPL2 w/ CPE</name>
-          <url>https://www.gnu.org/software/classpath/license.html</url>
-          <distribution>repo</distribution>
-          <file>gpl2 w_ cpe - license.html</file>
-        </license>
-        <license>
-          <name>EDL 1.0</name>
-          <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
-          <distribution>repo</distribution>
-          <file>edl 1.0 - edl-v10.html</file>
+          <file>eclipse distribution license - v 1.0 - edl-v10.html</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>com.sun.xml.bind</groupId>
       <artifactId>jaxb-core</artifactId>
-      <version>2.3.0</version>
+      <version>4.0.3</version>
       <licenses>
         <license>
-          <name>CDDL+GPL License</name>
-          <url>http://glassfish.java.net/public/CDDL+GPL_1_1.html</url>
+          <name>Eclipse Distribution License - v 1.0</name>
+          <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
           <distribution>repo</distribution>
-          <file>cddl+gpl license - cddl+gpl_1_1.html</file>
+          <file>eclipse distribution license - v 1.0 - edl-v10.html</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>com.sun.xml.bind</groupId>
       <artifactId>jaxb-impl</artifactId>
-      <version>2.3.3</version>
+      <version>4.0.3</version>
       <licenses>
         <license>
           <name>Eclipse Distribution License - v 1.0</name>
           <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
           <distribution>repo</distribution>
-          <file>edl 1.0 - edl-v10.html</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.messaging.saaj</groupId>
-      <artifactId>saaj-impl</artifactId>
-      <version>1.5.3</version>
-      <licenses>
-        <license>
-          <name>Eclipse Distribution License - v 1.0</name>
-          <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
-          <distribution>repo</distribution>
-          <file>edl 1.0 - edl-v10.html</file>
+          <file>eclipse distribution license - v 1.0 - edl-v10.html</file>
         </license>
       </licenses>
     </dependency>
@@ -439,7 +602,7 @@
           <name>Apache License 2.0</name>
           <url>http://www.apache.org/licenses/LICENSE-2.0</url>
           <distribution>repo</distribution>
-          <file>apache license 2.0 - license-2.0.txt</file>
+          <file>apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -452,7 +615,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -465,7 +628,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -478,7 +641,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -543,19 +706,6 @@
       </licenses>
     </dependency>
     <dependency>
-      <groupId>io.apicurio</groupId>
-      <artifactId>apicurio-data-models</artifactId>
-      <version>1.1.26</version>
-      <licenses>
-        <license>
-          <name>The Apache Software License, Version 2.0</name>
-          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-          <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
       <groupId>io.github.classgraph</groupId>
       <artifactId>classgraph</artifactId>
       <version>4.8.149</version>
@@ -569,14 +719,53 @@
     </dependency>
     <dependency>
       <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-core</artifactId>
-      <version>1.9.8</version>
+      <artifactId>micrometer-commons</artifactId>
+      <version>1.10.9</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
           <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-core</artifactId>
+      <version>1.10.9</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-observation</artifactId>
+      <version>1.10.9</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-annotations-jakarta</artifactId>
+      <version>2.2.15</version>
+      <licenses>
+        <license>
+          <name>Apache License 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+          <distribution>repo</distribution>
+          <file>apache license 2.0 - license-2.0.html</file>
         </license>
       </licenses>
     </dependency>
@@ -595,8 +784,8 @@
     </dependency>
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
-      <artifactId>swagger-core</artifactId>
-      <version>2.2.7</version>
+      <artifactId>swagger-core-jakarta</artifactId>
+      <version>2.2.15</version>
       <licenses>
         <license>
           <name>Apache License 2.0</name>
@@ -609,7 +798,7 @@
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-models</artifactId>
-      <version>2.2.7</version>
+      <version>2.2.15</version>
       <licenses>
         <license>
           <name>Apache License 2.0</name>
@@ -622,7 +811,7 @@
     <dependency>
       <groupId>io.swagger.parser.v3</groupId>
       <artifactId>swagger-parser-core</artifactId>
-      <version>2.1.9</version>
+      <version>2.1.16</version>
       <licenses>
         <license>
           <name>Apache License 2.0</name>
@@ -634,8 +823,86 @@
     </dependency>
     <dependency>
       <groupId>io.swagger.parser.v3</groupId>
-      <artifactId>swagger-parser-v3</artifactId>
-      <version>2.1.9</version>
+      <artifactId>swagger-parser-v2-converter</artifactId>
+      <version>2.1.16</version>
+      <licenses>
+        <license>
+          <name>Apache License 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+          <distribution>repo</distribution>
+          <file>apache license 2.0 - license-2.0.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger.parser.v3</groupId>
+      <artifactId>swagger-parser</artifactId>
+      <version>2.1.16</version>
+      <licenses>
+        <license>
+          <name>Apache License 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+          <distribution>repo</distribution>
+          <file>apache license 2.0 - license-2.0.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-annotations</artifactId>
+      <version>1.6.11</version>
+      <licenses>
+        <license>
+          <name>Apache License 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+          <distribution>repo</distribution>
+          <file>apache license 2.0 - license-2.0.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-compat-spec-parser</artifactId>
+      <version>1.0.67</version>
+      <licenses>
+        <license>
+          <name>Apache License 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+          <distribution>repo</distribution>
+          <file>apache license 2.0 - license-2.0.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-core</artifactId>
+      <version>1.6.11</version>
+      <licenses>
+        <license>
+          <name>Apache License 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+          <distribution>repo</distribution>
+          <file>apache license 2.0 - license-2.0.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-models</artifactId>
+      <version>1.6.11</version>
+      <licenses>
+        <license>
+          <name>Apache License 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+          <distribution>repo</distribution>
+          <file>apache license 2.0 - license-2.0.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-parser</artifactId>
+      <version>1.0.67</version>
       <licenses>
         <license>
           <name>Apache License 2.0</name>
@@ -648,20 +915,20 @@
     <dependency>
       <groupId>jakarta.activation</groupId>
       <artifactId>jakarta.activation-api</artifactId>
-      <version>1.2.2</version>
+      <version>2.1.2</version>
       <licenses>
         <license>
           <name>EDL 1.0</name>
           <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
           <distribution>repo</distribution>
-          <file>edl 1.0 - edl-v10.html</file>
+          <file>eclipse distribution license - v 1.0 - edl-v10.html</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>jakarta.annotation</groupId>
       <artifactId>jakarta.annotation-api</artifactId>
-      <version>1.3.5</version>
+      <version>2.1.1</version>
       <licenses>
         <license>
           <name>EPL 2.0</name>
@@ -678,22 +945,104 @@
       </licenses>
     </dependency>
     <dependency>
+      <groupId>jakarta.el</groupId>
+      <artifactId>jakarta.el-api</artifactId>
+      <version>5.0.1</version>
+      <licenses>
+        <license>
+          <name>Eclipse Public License v. 2.0</name>
+          <url>https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>eclipse public license v. 2.0 - epl-2.0.txt</file>
+        </license>
+        <license>
+          <name>GNU General Public License, version 2 with the GNU Classpath Exception</name>
+          <url>https://www.gnu.org/software/classpath/license.html</url>
+          <distribution>repo</distribution>
+          <file>gpl2 w_ cpe - license.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.jms</groupId>
+      <artifactId>jakarta.jms-api</artifactId>
+      <version>3.1.0</version>
+      <licenses>
+        <license>
+          <name>Eclipse Public License 2.0</name>
+          <url>https://projects.eclipse.org/license/epl-2.0</url>
+          <distribution>repo</distribution>
+          <file>eclipse public license 2.0 - epl-2.0.html</file>
+        </license>
+        <license>
+          <name>GNU General Public License, version 2 with the GNU Classpath Exception</name>
+          <url>https://projects.eclipse.org/license/secondary-gpl-2.0-cp</url>
+          <distribution>repo</distribution>
+          <file>gnu general public license, version 2 with the gnu classpath exception - secondary-gpl-2.0-cp.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
       <groupId>jakarta.jws</groupId>
       <artifactId>jakarta.jws-api</artifactId>
-      <version>2.1.0</version>
+      <version>3.0.0</version>
       <licenses>
         <license>
           <name>Eclipse Distribution License - v 1.0</name>
           <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
           <distribution>repo</distribution>
-          <file>edl 1.0 - edl-v10.html</file>
+          <file>eclipse distribution license - v 1.0 - edl-v10.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.mail</groupId>
+      <artifactId>jakarta.mail-api</artifactId>
+      <version>2.1.2</version>
+      <licenses>
+        <license>
+          <name>EPL 2.0</name>
+          <url>http://www.eclipse.org/legal/epl-2.0</url>
+          <distribution>repo</distribution>
+          <file>epl 2.0 - epl-2.0.html</file>
+        </license>
+        <license>
+          <name>GPL2 w/ CPE</name>
+          <url>https://www.gnu.org/software/classpath/license.html</url>
+          <distribution>repo</distribution>
+          <file>gpl2 w_ cpe - license.html</file>
+        </license>
+        <license>
+          <name>EDL 1.0</name>
+          <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
+          <distribution>repo</distribution>
+          <file>eclipse distribution license - v 1.0 - edl-v10.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>6.0.0</version>
+      <licenses>
+        <license>
+          <name>EPL 2.0</name>
+          <url>http://www.eclipse.org/legal/epl-2.0</url>
+          <distribution>repo</distribution>
+          <file>epl 2.0 - epl-2.0.html</file>
+        </license>
+        <license>
+          <name>GPL2 w/ CPE</name>
+          <url>https://www.gnu.org/software/classpath/license.html</url>
+          <distribution>repo</distribution>
+          <file>gpl2 w_ cpe - license.html</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>jakarta.validation</groupId>
       <artifactId>jakarta.validation-api</artifactId>
-      <version>2.0.2</version>
+      <version>3.0.2</version>
       <licenses>
         <license>
           <name>Apache License 2.0</name>
@@ -705,60 +1054,46 @@
     <dependency>
       <groupId>jakarta.xml.bind</groupId>
       <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>2.3.3</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Eclipse Distribution License - v 1.0</name>
           <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
           <distribution>repo</distribution>
-          <file>edl 1.0 - edl-v10.html</file>
+          <file>eclipse distribution license - v 1.0 - edl-v10.html</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>jakarta.xml.soap</groupId>
       <artifactId>jakarta.xml.soap-api</artifactId>
-      <version>1.4.2</version>
+      <version>3.0.0</version>
       <licenses>
         <license>
           <name>Eclipse Distribution License - v 1.0</name>
           <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
           <distribution>repo</distribution>
-          <file>edl 1.0 - edl-v10.html</file>
+          <file>eclipse distribution license - v 1.0 - edl-v10.html</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>jakarta.xml.ws</groupId>
       <artifactId>jakarta.xml.ws-api</artifactId>
-      <version>2.3.3</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Eclipse Distribution License - v 1.0</name>
           <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
           <distribution>repo</distribution>
-          <file>edl 1.0 - edl-v10.html</file>
+          <file>eclipse distribution license - v 1.0 - edl-v10.html</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>javax.annotation</groupId>
       <artifactId>javax.annotation-api</artifactId>
-      <version>1.3.2</version>
-      <licenses>
-        <license>
-          <name>CDDL + GPLv2 with classpath exception</name>
-          <url>https://github.com/javaee/javax.annotation/blob/master/LICENSE</url>
-          <distribution>repo</distribution>
-          <file>cddl + gplv2 with classpath exception - license.html</file>
-          <comments>A business-friendly OSS license</comments>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>javax.el</groupId>
-      <artifactId>javax.el-api</artifactId>
-      <version>3.0.1-b04</version>
+      <version>1.2</version>
       <licenses>
         <license>
           <name>CDDL + GPLv2 with classpath exception</name>
@@ -782,26 +1117,12 @@
       </licenses>
     </dependency>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>4.0.1</version>
-      <licenses>
-        <license>
-          <name>CDDL + GPLv2 with classpath exception</name>
-          <url>https://oss.oracle.com/licenses/CDDL+GPL-1.1</url>
-          <distribution>repo</distribution>
-          <file>cddl + gplv2 with classpath exception - cddl+gpl-1.1.txt</file>
-          <comments>A business-friendly OSS license</comments>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
-      <version>2.0.1.Final</version>
+      <version>1.1.0.Final</version>
       <licenses>
         <license>
-          <name>Apache License 2.0</name>
+          <name>The Apache Software License, Version 2.0</name>
           <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
@@ -816,7 +1137,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -842,7 +1163,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
           <comments>A business-friendly OSS license</comments>
         </license>
       </licenses>
@@ -856,7 +1177,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
           <comments>A business-friendly OSS license</comments>
         </license>
       </licenses>
@@ -864,7 +1185,7 @@
     <dependency>
       <groupId>net.minidev</groupId>
       <artifactId>accessors-smart</artifactId>
-      <version>2.4.8</version>
+      <version>2.4.11</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -878,7 +1199,7 @@
     <dependency>
       <groupId>net.minidev</groupId>
       <artifactId>json-smart</artifactId>
-      <version>2.4.8</version>
+      <version>2.4.11</version>
       <licenses>
         <license>
           <name>The Apache Software License, Version 2.0</name>
@@ -890,1484 +1211,1457 @@
       </licenses>
     </dependency>
     <dependency>
+      <groupId>net.sf.jopt-simple</groupId>
+      <artifactId>jopt-simple</artifactId>
+      <version>5.0.4</version>
+      <licenses>
+        <license>
+          <name>The MIT License</name>
+          <url>http://www.opensource.org/licenses/mit-license.php</url>
+          <distribution>repo</distribution>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-bean-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-bean-validator-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-bindy-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-browse-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-controlbus-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-core-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-cxf-soap-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-dataformat-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-dataset-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-direct-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel.springboot</groupId>
-      <artifactId>camel-directvm-starter</artifactId>
-      <version>3.20.2</version>
-      <licenses>
-        <license>
-          <name>Apache License, Version 2.0</name>
-          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-          <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-file-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-ftp-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-http-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-jackson-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-jaxb-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-jms-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-jmx-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-kafka-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-language-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-log-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-mail-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-mock-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-openapi-java-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-ref-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-rest-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-saga-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-scheduler-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-seda-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-servlet-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-spring-boot-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-spring-boot</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-stub-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-timer-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-validator-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel.springboot</groupId>
-      <artifactId>camel-vm-starter</artifactId>
-      <version>3.20.2</version>
-      <licenses>
-        <license>
-          <name>Apache License, Version 2.0</name>
-          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-          <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-xml-jaxp-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-xpath-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-xslt-starter</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-api</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-attachments</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-base-engine</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-base</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-bean-validator</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-bean</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-bindy</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-browse</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cloud</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cluster</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-controlbus</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-catalog</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-engine</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-languages</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-model</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-processor</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-reifier</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-xml</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cxf-common</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cxf-soap</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cxf-spring-common</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cxf-spring-soap</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cxf-spring-transport</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-cxf-transport</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-dataformat</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-dataset</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-direct</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-directvm</artifactId>
-      <version>3.20.2</version>
-      <licenses>
-        <license>
-          <name>Apache License, Version 2.0</name>
-          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-          <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-dsl-support</artifactId>
-      <version>3.20.2</version>
-      <licenses>
-        <license>
-          <name>Apache License, Version 2.0</name>
-          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-          <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-endpointdsl</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-file</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-ftp</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-health</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-http-base</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-http-common</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-http</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jackson</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jaxb</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jms</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jmx</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-kafka</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-language</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-log</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-mail</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-main</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-management-api</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-management</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-mock</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-openapi-java</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-ref</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-rest</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-saga</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-scheduler</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-seda</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-servlet</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-spring-main</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-spring-xml</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-spring</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-stub</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-support</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test-junit5</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test-spring-junit5</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-timer</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-tooling-model</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-util-json</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-util</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-validator</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-vm</artifactId>
-      <version>3.20.2</version>
-      <licenses>
-        <license>
-          <name>Apache License, Version 2.0</name>
-          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-          <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xml-io-util</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-xml-jaxb-dsl</artifactId>
-      <version>3.20.2</version>
+      <artifactId>camel-xml-io</artifactId>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xml-jaxb</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-xml-jaxp-util</artifactId>
+      <version>4.0.0</version>
+      <licenses>
+        <license>
+          <name>Apache-2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xml-jaxp</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xpath</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-xslt</artifactId>
-      <version>3.20.2</version>
+      <version>4.0.0</version>
       <licenses>
         <license>
-          <name>Apache License, Version 2.0</name>
+          <name>Apache-2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-yaml-io</artifactId>
+      <version>4.0.0</version>
+      <licenses>
+        <license>
+          <name>Apache-2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2380,7 +2674,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2406,7 +2700,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2419,226 +2713,226 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-core</artifactId>
-      <version>3.5.5</version>
+      <version>4.0.2</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-bindings-soap</artifactId>
-      <version>3.5.5</version>
+      <version>4.0.2</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-bindings-xml</artifactId>
-      <version>3.5.5</version>
+      <version>4.0.2</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-databinding-jaxb</artifactId>
-      <version>3.5.5</version>
+      <version>4.0.2</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-features-logging</artifactId>
-      <version>3.5.5</version>
+      <version>4.0.2</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-features-metrics</artifactId>
-      <version>3.5.5</version>
+      <version>4.0.2</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-frontend-jaxws</artifactId>
-      <version>3.5.5</version>
+      <version>4.0.2</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-frontend-simple</artifactId>
-      <version>3.5.5</version>
+      <version>4.0.2</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-transports-http</artifactId>
-      <version>3.5.5</version>
+      <version>4.0.2</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-ws-addr</artifactId>
-      <version>3.5.5</version>
+      <version>4.0.2</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-ws-policy</artifactId>
-      <version>3.5.5</version>
+      <version>4.0.2</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-wsdl</artifactId>
-      <version>3.5.5</version>
+      <version>4.0.2</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-spring-boot-autoconfigure</artifactId>
-      <version>3.5.5</version>
+      <version>4.0.2</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
-      <version>3.5.5</version>
+      <version>4.0.2</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-jms_1.1_spec</artifactId>
-      <version>1.1.1</version>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+      <artifactId>httpclient5</artifactId>
+      <version>5.1.4</version>
       <licenses>
         <license>
-          <name>The Apache Software License, Version 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-jms_2.0_spec</artifactId>
-      <version>1.0-alpha-2</version>
+      <groupId>org.apache.httpcomponents.core5</groupId>
+      <artifactId>httpcore5-h2</artifactId>
+      <version>5.1.5</version>
       <licenses>
         <license>
-          <name>The Apache Software License, Version 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-jta_1.1_spec</artifactId>
-      <version>1.1.1</version>
+      <groupId>org.apache.httpcomponents.core5</groupId>
+      <artifactId>httpcore5</artifactId>
+      <version>5.1.5</version>
       <licenses>
         <license>
-          <name>The Apache Software License, Version 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
@@ -2673,7 +2967,7 @@
     <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka-clients</artifactId>
-      <version>3.1.2</version>
+      <version>3.3.2</version>
       <licenses>
         <license>
           <name>The Apache License, Version 2.0</name>
@@ -2686,26 +2980,26 @@
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
-      <version>2.17.2</version>
+      <version>2.19.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-to-slf4j</artifactId>
-      <version>2.17.2</version>
+      <version>2.19.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2718,7 +3012,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2731,7 +3025,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2744,7 +3038,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2757,7 +3051,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2770,7 +3064,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2783,7 +3077,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2796,7 +3090,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2809,7 +3103,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2822,7 +3116,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2835,7 +3129,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2848,7 +3142,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2861,7 +3155,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2874,7 +3168,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2887,7 +3181,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2900,7 +3194,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2913,7 +3207,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2926,14 +3220,14 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-core</artifactId>
-      <version>9.0.71</version>
+      <version>10.1.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -2946,7 +3240,7 @@
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-el</artifactId>
-      <version>9.0.71</version>
+      <version>10.1.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -2959,7 +3253,7 @@
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-websocket</artifactId>
-      <version>9.0.71</version>
+      <version>10.1.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -2978,7 +3272,7 @@
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -2997,13 +3291,25 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.22.0</version>
+      <version>3.23.1</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
           <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.checkerframework</groupId>
+      <artifactId>checker-qual</artifactId>
+      <version>3.33.0</version>
+      <licenses>
+        <license>
+          <name>The MIT License</name>
+          <url>http://opensource.org/licenses/MIT</url>
+          <distribution>repo</distribution>
         </license>
       </licenses>
     </dependency>
@@ -3098,6 +3404,44 @@
       </licenses>
     </dependency>
     <dependency>
+      <groupId>org.eclipse.angus</groupId>
+      <artifactId>angus-activation</artifactId>
+      <version>2.0.1</version>
+      <licenses>
+        <license>
+          <name>EDL 1.0</name>
+          <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
+          <distribution>repo</distribution>
+          <file>eclipse distribution license - v 1.0 - edl-v10.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.angus</groupId>
+      <artifactId>angus-mail</artifactId>
+      <version>1.0.0</version>
+      <licenses>
+        <license>
+          <name>EPL 2.0</name>
+          <url>http://www.eclipse.org/legal/epl-2.0</url>
+          <distribution>repo</distribution>
+          <file>epl 2.0 - epl-2.0.html</file>
+        </license>
+        <license>
+          <name>GPL2 w/ CPE</name>
+          <url>https://www.gnu.org/software/classpath/license.html</url>
+          <distribution>repo</distribution>
+          <file>gpl2 w_ cpe - license.html</file>
+        </license>
+        <license>
+          <name>EDL 1.0</name>
+          <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
+          <distribution>repo</distribution>
+          <file>eclipse distribution license - v 1.0 - edl-v10.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
       <groupId>org.eclipse.sisu</groupId>
       <artifactId>org.eclipse.sisu.inject</artifactId>
       <version>0.3.5</version>
@@ -3137,41 +3481,60 @@
       </licenses>
     </dependency>
     <dependency>
+      <groupId>org.glassfish.expressly</groupId>
+      <artifactId>expressly</artifactId>
+      <version>5.0.0</version>
+      <licenses>
+        <license>
+          <name>Eclipse Public License v. 2.0</name>
+          <url>https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>eclipse public license v. 2.0 - epl-2.0.txt</file>
+        </license>
+        <license>
+          <name>GNU General Public License, version 2 with the GNU Classpath Exception</name>
+          <url>https://www.gnu.org/software/classpath/license.html</url>
+          <distribution>repo</distribution>
+          <file>gpl2 w_ cpe - license.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
       <groupId>org.glassfish.jaxb</groupId>
-      <artifactId>jaxb-runtime</artifactId>
-      <version>2.3.8</version>
+      <artifactId>jaxb-core</artifactId>
+      <version>4.0.3</version>
       <licenses>
         <license>
           <name>Eclipse Distribution License - v 1.0</name>
           <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
           <distribution>repo</distribution>
-          <file>edl 1.0 - edl-v10.html</file>
+          <file>eclipse distribution license - v 1.0 - edl-v10.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+      <version>4.0.3</version>
+      <licenses>
+        <license>
+          <name>Eclipse Distribution License - v 1.0</name>
+          <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
+          <distribution>repo</distribution>
+          <file>eclipse distribution license - v 1.0 - edl-v10.html</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jaxb</groupId>
       <artifactId>txw2</artifactId>
-      <version>2.3.8</version>
+      <version>4.0.3</version>
       <licenses>
         <license>
           <name>Eclipse Distribution License - v 1.0</name>
           <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
           <distribution>repo</distribution>
-          <file>edl 1.0 - edl-v10.html</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
-      <version>3.0.1-b10</version>
-      <licenses>
-        <license>
-          <name>CDDL + GPLv2 with classpath exception</name>
-          <url>https://glassfish.dev.java.net/nonav/public/CDDL+GPL.html</url>
-          <distribution>repo</distribution>
-          <comments>A business-friendly OSS license</comments>
+          <file>eclipse distribution license - v 1.0 - edl-v10.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3218,7 +3581,7 @@
     <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>6.2.5.Final</version>
+      <version>8.0.1.Final</version>
       <licenses>
         <license>
           <name>Apache License 2.0</name>
@@ -3230,20 +3593,20 @@
     <dependency>
       <groupId>org.jboss.logging</groupId>
       <artifactId>jboss-logging</artifactId>
-      <version>3.4.3.Final</version>
+      <version>3.5.3.Final</version>
       <licenses>
         <license>
-          <name>Apache License, version 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <name>Apache License 2.0</name>
+          <url>https://repository.jboss.org/licenses/apache-2.0.txt</url>
           <distribution>repo</distribution>
-          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+          <file>apache license 2.0 - apache-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.8.2</version>
+      <version>5.9.3</version>
       <licenses>
         <license>
           <name>Eclipse Public License v2.0</name>
@@ -3255,7 +3618,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.8.2</version>
+      <version>5.9.3</version>
       <licenses>
         <license>
           <name>Eclipse Public License v2.0</name>
@@ -3267,7 +3630,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
-      <version>5.8.2</version>
+      <version>5.9.3</version>
       <licenses>
         <license>
           <name>Eclipse Public License v2.0</name>
@@ -3279,7 +3642,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.8.2</version>
+      <version>5.9.3</version>
       <licenses>
         <license>
           <name>Eclipse Public License v2.0</name>
@@ -3291,7 +3654,7 @@
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-commons</artifactId>
-      <version>1.8.2</version>
+      <version>1.9.3</version>
       <licenses>
         <license>
           <name>Eclipse Public License v2.0</name>
@@ -3303,25 +3666,12 @@
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-engine</artifactId>
-      <version>1.8.2</version>
+      <version>1.9.3</version>
       <licenses>
         <license>
           <name>Eclipse Public License v2.0</name>
           <url>https://www.eclipse.org/legal/epl-v20.html</url>
           <file>eclipse public license v2.0 - epl-v20.html</file>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>org.jvnet.staxex</groupId>
-      <artifactId>stax-ex</artifactId>
-      <version>1.8.3</version>
-      <licenses>
-        <license>
-          <name>Eclipse Distribution License - v 1.0</name>
-          <url>http://www.eclipse.org/org/documents/edl-v10.php</url>
-          <distribution>repo</distribution>
-          <file>edl 1.0 - edl-v10.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3368,7 +3718,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>4.5.1</version>
+      <version>4.8.1</version>
       <licenses>
         <license>
           <name>The MIT License</name>
@@ -3381,7 +3731,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-inline</artifactId>
-      <version>4.5.1</version>
+      <version>4.8.1</version>
       <licenses>
         <license>
           <name>The MIT License</name>
@@ -3394,13 +3744,25 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>4.5.1</version>
+      <version>4.8.1</version>
       <licenses>
         <license>
           <name>The MIT License</name>
           <url>https://github.com/mockito/mockito/blob/main/LICENSE</url>
           <distribution>repo</distribution>
           <file>the mit license - license.html</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.mozilla</groupId>
+      <artifactId>rhino</artifactId>
+      <version>1.7.7.2</version>
+      <licenses>
+        <license>
+          <name>Mozilla Public License, Version 2.0</name>
+          <url>http://www.mozilla.org/MPL/2.0/index.txt</url>
+          <file>mozilla public license, version 2.0 - index.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -3470,7 +3832,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jul-to-slf4j</artifactId>
-      <version>1.7.36</version>
+      <version>2.0.7</version>
       <licenses>
         <license>
           <name>MIT License</name>
@@ -3482,7 +3844,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.36</version>
+      <version>2.0.7</version>
       <licenses>
         <license>
           <name>MIT License</name>
@@ -3499,7 +3861,7 @@
         <license>
           <name>The Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -3511,7 +3873,7 @@
         <license>
           <name>The Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -3523,14 +3885,14 @@
         <license>
           <name>The Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-          <file>apache license, version 2.0 - license-2.0.txt</file>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-actuator-autoconfigure</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3542,7 +3904,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-actuator</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3554,7 +3916,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-autoconfigure</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3566,7 +3928,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3578,7 +3940,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3590,7 +3952,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3602,7 +3964,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-freemarker</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3614,7 +3976,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-json</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3626,7 +3988,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-logging</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3638,7 +4000,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3650,7 +4012,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3662,7 +4024,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-tomcat</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3674,7 +4036,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3686,7 +4048,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3698,7 +4060,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3710,7 +4072,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-test-autoconfigure</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3722,7 +4084,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-test</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3734,7 +4096,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
-      <version>2.7.9</version>
+      <version>3.0.9</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3746,7 +4108,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-config</artifactId>
-      <version>5.7.7</version>
+      <version>6.0.5</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3758,7 +4120,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-core</artifactId>
-      <version>5.7.7</version>
+      <version>6.0.5</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3770,7 +4132,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-crypto</artifactId>
-      <version>5.7.7</version>
+      <version>6.0.5</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3782,7 +4144,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-test</artifactId>
-      <version>5.7.7</version>
+      <version>6.0.5</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3794,7 +4156,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-web</artifactId>
-      <version>5.7.7</version>
+      <version>6.0.5</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3806,7 +4168,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
-      <version>5.3.25</version>
+      <version>6.0.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3819,7 +4181,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
-      <version>5.3.25</version>
+      <version>6.0.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3832,7 +4194,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context-support</artifactId>
-      <version>5.3.25</version>
+      <version>6.0.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3845,7 +4207,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>5.3.25</version>
+      <version>6.0.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3858,7 +4220,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      <version>5.3.25</version>
+      <version>6.0.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3871,7 +4233,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-expression</artifactId>
-      <version>5.3.25</version>
+      <version>6.0.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3884,7 +4246,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jcl</artifactId>
-      <version>5.3.25</version>
+      <version>6.0.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3897,7 +4259,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jms</artifactId>
-      <version>5.3.25</version>
+      <version>6.0.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3910,7 +4272,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-messaging</artifactId>
-      <version>5.3.25</version>
+      <version>6.0.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3923,7 +4285,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>5.3.25</version>
+      <version>6.0.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3936,7 +4298,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-tx</artifactId>
-      <version>5.3.25</version>
+      <version>6.0.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3949,7 +4311,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
-      <version>5.3.25</version>
+      <version>6.0.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3962,7 +4324,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
-      <version>5.3.25</version>
+      <version>6.0.11</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
@@ -3988,7 +4350,7 @@
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>webjars-locator-core</artifactId>
-      <version>0.50</version>
+      <version>0.52</version>
       <licenses>
         <license>
           <name>MIT</name>
@@ -4028,6 +4390,19 @@
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
       <version>1.33</version>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>2.0</version>
       <licenses>
         <license>
           <name>Apache License, Version 2.0</name>
