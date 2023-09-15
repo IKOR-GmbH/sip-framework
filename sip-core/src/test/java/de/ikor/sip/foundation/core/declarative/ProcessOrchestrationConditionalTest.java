@@ -113,6 +113,30 @@ class ProcessOrchestrationConditionalTest {
   }
 
   @Test
+  void WHEN_callingProcessOrchestratorInboundConnectors_WITH_noHeader_THEN_ReceiveResponse() {
+    // arrange
+    mockedGetPartnerByNameOutConnector.expectedBodiesReceivedInAnyOrder(
+        "PartnerNameRequest[name=MyOrchestratedPartner]");
+    mockedGetPartnerDebtByOutConnector.expectedBodiesReceivedInAnyOrder(1);
+    mockedGetPartnerDebtByNameOutLogConnector.expectedBodiesReceivedInAnyOrder(
+        "PartnerNameRequest[name=MyOrchestratedPartner-LOG THIS]");
+
+    // act
+    Exchange exchange =
+        template
+            .withBody("MyOrchestratedPartner")
+            .to(direct("GetPartnerDebtByNameInConnectorCond"))
+            .send();
+    DebtResponse response = exchange.getMessage().getBody(DebtResponse.class);
+
+    // assert
+    assertThat(response).isInstanceOf(DebtResponse.class);
+    assertThat(exchange.getException()).isNull();
+    assertThat(response.getAmount()).isEqualTo(new BigDecimal("100000.00"));
+    assertThat(response.getRequestedBy()).isEqualTo("Process Orchestrator");
+  }
+
+  @Test
   void WHEN_callingProcessOrchestratorInboundConnectorsWithHeader_THEN_ReceiveResponse() {
     // arrange
     mockedGetPartnerByCodeOutConnector.expectedBodiesReceivedInAnyOrder(

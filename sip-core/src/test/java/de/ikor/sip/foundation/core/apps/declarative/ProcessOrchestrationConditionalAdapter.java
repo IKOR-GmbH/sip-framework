@@ -150,6 +150,9 @@ public class ProcessOrchestrationConditionalAdapter {
                 .elseIfCase(hasHeader("partner-name"))
                 .callConsumer(ConditionalGetPartnerByName.class)
                 .withNoResponseHandling()
+                .elseCase()
+                .callConsumer(ConditionalGetPartnerByName.class)
+                .withNoResponseHandling()
                 .endCases()
                 .callConsumer(ConditionalGetPartnerDebtById.class)
                 .withRequestPreparation(
