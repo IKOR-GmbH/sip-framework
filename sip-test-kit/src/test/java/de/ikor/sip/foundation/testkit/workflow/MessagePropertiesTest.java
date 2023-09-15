@@ -11,8 +11,8 @@ class MessagePropertiesTest {
   MessageProperties subject = new MessageProperties();
 
   @Test
-  void ifBodyIsFile_thenBodyIsReadFromFile() {
-    subject.setBody("file:body.json");
+  void when_BodyReferencesFile_thenBodyContentIsReadFromFile() {
+    subject.setBody("resource-file:body.json");
     FileNotFoundException fileNotFoundException =
         assertThrows(FileNotFoundException.class, () -> subject.getBody());
     assertThat(fileNotFoundException.getMessage()).contains("body.json");
