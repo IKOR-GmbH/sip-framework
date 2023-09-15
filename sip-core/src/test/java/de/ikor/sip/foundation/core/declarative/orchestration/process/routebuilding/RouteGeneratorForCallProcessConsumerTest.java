@@ -17,7 +17,8 @@ import org.junit.jupiter.api.Test;
 class RouteGeneratorForCallProcessConsumerTest {
 
   @Test
-  void init() throws NoSuchMethodException, IllegalAccessException {
+  void When_NoConsumersPresent_Expect_SIPFrameworkInitializationException()
+      throws NoSuchMethodException, IllegalAccessException {
     // arrange
     CompositeProcessOrchestrationInfo orchestrationInfo =
         mock(CompositeProcessOrchestrationInfo.class, RETURNS_DEEP_STUBS);
@@ -42,6 +43,8 @@ class RouteGeneratorForCallProcessConsumerTest {
     } catch (InvocationTargetException e) {
       // assert
       assertThat(e.getTargetException()).isInstanceOf(SIPFrameworkInitializationException.class);
+      assertThat(e.getTargetException().getMessage())
+          .contains("Consumer-class ", " is used on orchestration");
     }
   }
 }
