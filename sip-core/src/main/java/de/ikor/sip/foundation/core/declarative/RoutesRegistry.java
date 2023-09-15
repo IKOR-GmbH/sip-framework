@@ -35,6 +35,11 @@ import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+/**
+ * Internal registry that holds mapping between declarative elements and Camel Routes.
+ *
+ * <p><em>For internal use only</em>
+ */
 @Service
 public class RoutesRegistry extends SimpleEventNotifierSupport {
 
@@ -44,16 +49,12 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
   public static final String SIP_SOAP_SERVICE_PREFIX = "sip-soap-service";
   public static final String SIP_SCENARIO_ORCHESTRATOR_PREFIX = "sip-scenario";
 
-  public static final String SIP_COMPOSITE_ORCHESTRATOR_PREFIX = "sip-composite";
+  public static final String SIP_COMPOSITE_ORCHESTRATOR_PREFIX = "sip-process";
   private final DeclarationsRegistryApi declarationsRegistryApi;
 
   private final MultiValuedMap<ConnectorDefinition, String> routeIdsForConnectorRegister =
       new HashSetValuedHashMap<>();
-  private final MultiValuedMap<IntegrationScenarioDefinition, String>
-      routeIdsForScenarioOrchestrationRegister = new HashSetValuedHashMap<>();
 
-  private final MultiValuedMap<CompositeProcessDefinition, String>
-      routeIdsForCompositeScenarioOrchestrationRegister = new HashSetValuedHashMap<>();
   private final Map<String, ConnectorDefinition> connectorForRouteIdRegister = new HashMap<>();
   private final Map<String, String> routeIdForSoapServiceRegister = new HashMap<>();
   private final Map<String, RouteRole> roleForRouteIdRegister = new HashMap<>();
@@ -97,7 +98,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     final var routeId = idBuilder.toString();
     if (roleForRouteIdRegister.containsKey(routeId)) {
       throw SIPFrameworkInitializationException.init(
-          "Can't build internal connector route with routeId '%s': routeId already exists",
+          "Internal SIP Error - Can't build internal connector route with ID '%s': Route already exists",
           routeId);
     }
     connectorForRouteIdRegister.put(routeId, connector);
@@ -111,7 +112,7 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
     final var routeId = String.format("%s_%s", SIP_SOAP_SERVICE_PREFIX, soapServiceName);
     if (roleForRouteIdRegister.containsKey(routeId)) {
       throw SIPFrameworkInitializationException.init(
-          "Can't build internal soap-service route with routeId '%s': routeId already exists",
+          "Internal SIP Error - Can't build internal soap-service route with ID '%s': Route already exists",
           routeId);
     }
     routeIdForSoapServiceRegister.put(routeId, soapServiceName);
@@ -121,35 +122,37 @@ public class RoutesRegistry extends SimpleEventNotifierSupport {
 
   @Synchronized
   public String generateRouteIdForScenarioOrchestrator(
-      final IntegrationScenarioDefinition scenario, final String suffix, final String... suffixes) {
-    final var idBuilder = new StringBuilder(SIP_SCENARIO_ORCHESTRATOR_PREFIX);
-    idBuilder.append("_").append(scenario.getId()).append("_").append(suffix);
-    Arrays.stream(suffixes).forEach(additional -> idBuilder.append("_").append(additional));
-    final var routeId = idBuilder.toString();
-    if (roleForRouteIdRegister.containsKey(routeId)) {
-      throw SIPFrameworkInitializationException.init(
-          "Can't build internal scenario orchestrator route with routeId '%s': routeId already exists",
-          routeId);
-    }
-    roleForRouteIdRegister.put(routeId, RouteRole.SCENARIO_ORCHESTRATION);
-    routeIdsForScenarioOrchestrationRegister.put(scenario, routeId);
-    return routeId;
+      final IntegrationScenarioDefinition scenario, final String... suffixes) {
+    return generateRouteIdForOrchestration(
+        scenario.getId(),
+        RouteRole.SCENARIO_ORCHESTRATION,
+        SIP_SCENARIO_ORCHESTRATOR_PREFIX,
+        suffixes);
   }
 
   @Synchronized
   public String generateRouteIdForCompositeScenarioOrchestrator(
-      final CompositeProcessDefinition scenario, final String suffix, final String... suffixes) {
-    final var idBuilder = new StringBuilder(SIP_COMPOSITE_ORCHESTRATOR_PREFIX);
-    idBuilder.append("_").append(scenario.getId()).append("_").append(suffix);
-    Arrays.stream(suffixes).forEach(additional -> idBuilder.append("_").append(additional));
+      final CompositeProcessDefinition process, final String suffix) {
+    return generateRouteIdForOrchestration(
+        process.getId(),
+        RouteRole.COMPOSITE_SCENARIO_ORCHESTRATION,
+        SIP_COMPOSITE_ORCHESTRATOR_PREFIX,
+        suffix);
+  }
+
+  @Synchronized
+  private String generateRouteIdForOrchestration(
+      final String scenarioId, RouteRole routeRole, String prefix, String... suffixes) {
+    final var idBuilder = new StringBuilder(prefix);
+    idBuilder.append("_").append(scenarioId);
+    Arrays.stream(suffixes).forEach(suffix -> idBuilder.append("_").append(suffix));
     final var routeId = idBuilder.toString();
     if (roleForRouteIdRegister.containsKey(routeId)) {
       throw SIPFrameworkInitializationException.init(
-          "Can't build internal scenario orchestrator route with routeId '%s': routeId already exists",
+          "Internal SIP Error - Can't build internal orchestrator route with ID '%s': Route already exists",
           routeId);
     }
-    roleForRouteIdRegister.put(routeId, RouteRole.COMPOSITE_SCENARIO_ORCHESTRATION);
-    routeIdsForCompositeScenarioOrchestrationRegister.put(scenario, routeId);
+    roleForRouteIdRegister.put(routeId, routeRole);
     return routeId;
   }
 
