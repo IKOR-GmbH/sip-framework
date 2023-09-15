@@ -10,7 +10,7 @@ import java.util.HashSet;
 import org.apache.camel.model.RouteDefinition;
 import org.junit.jupiter.api.Test;
 
-public class RouteGeneratorForCallConditionalProcessConsumerTest {
+class RouteGeneratorForCallConditionalProcessConsumerTest {
 
   @Test
   void when_NoStatements_expect_InitException() {
@@ -19,11 +19,10 @@ public class RouteGeneratorForCallConditionalProcessConsumerTest {
     CallNestedCondition callNestedCondition = mock(CallNestedCondition.class);
     when(compositeProcessOrchestrationInfo.getCompositeProcess().getId())
         .thenReturn("ID of process");
-    assertThatThrownBy(
-            () ->
-                new RouteGeneratorForCallConditionalProcessConsumer(
-                        compositeProcessOrchestrationInfo, callNestedCondition, new HashSet<>())
-                    .generateRoute(mock(RouteDefinition.class)))
+    RouteGeneratorForCallConditionalProcessConsumer subject =
+        new RouteGeneratorForCallConditionalProcessConsumer(
+            compositeProcessOrchestrationInfo, callNestedCondition, new HashSet<>());
+    assertThatThrownBy(() -> subject.generateRoute(mock(RouteDefinition.class)))
         .isInstanceOf(SIPFrameworkInitializationException.class);
   }
 }
