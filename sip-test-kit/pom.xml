@@ -18,6 +18,16 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>javax.xml.stream</artifactId>
+                    <groupId>stax-api</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.xmlunit</groupId>
