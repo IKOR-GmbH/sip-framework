@@ -42,6 +42,7 @@ while read line; do
       [[ $line == *"(CDDL/GPLv2+CE)"* ]] ||
       [[ $line == *"(CDDL+GPL License)"* ]] ||
       [[ $line == *"(CDDL + GPLv2 with classpath exception)"* ]] ||
+      [[ $line == *"(CDDL 1.1) (GPL2 w/ CPE)"* ]] ||
       [[ $line == *"(GNU Lesser General Public License)"* ]] ||
       [[ $line == *"(The MIT License (MIT))"* ]] ||
       [[ $line == *"(The MIT License)"* ]] ||
