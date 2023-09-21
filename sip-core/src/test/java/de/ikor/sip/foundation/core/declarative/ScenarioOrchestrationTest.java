@@ -131,7 +131,6 @@ class ScenarioOrchestrationTest {
     Exchange exchange = template.withBody(payload).to(direct("autoOrchestratedInput")).send();
 
     // assert
-    // TODO : should this be left on the exchange?
     assertThat(exchange.getException()).isNull();
     assertThat(exchange.getMessage().getBody()).isInstanceOf(String.class);
     assertThat(exchange.getMessage().getBody(String.class))

@@ -4,12 +4,11 @@ import static de.ikor.sip.foundation.core.actuator.declarative.DeclarativeEndpoi
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
-import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
-import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
-import de.ikor.sip.foundation.core.actuator.declarative.model.DeclarativeStructureInfo;
-import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.*;
+import de.ikor.sip.foundation.core.actuator.declarative.model.dto.IntegrationScenarioDefinitionDto;
 import de.ikor.sip.foundation.core.declarative.DeclarationsRegistry;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
+import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
@@ -19,7 +18,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 
-/** Actuator endpoints for exposing Connectors, Connector Groups and Integration Scenarios. */
+/**
+ * Actuator endpoints for exposing Connectors, Connector Groups, Integration Scenarios and Composite
+ * Processes.
+ */
 @Component
 @RestControllerEndpoint(id = "adapterdefinition")
 @DependsOn("adapterBuilder")
@@ -33,6 +35,7 @@ public class DeclarativeDefinitionEndpoint {
   private final List<ConnectorGroupInfo> connectorGroups = new ArrayList<>();
   private final List<IntegrationScenarioInfo> scenarios = new ArrayList<>();
   private final List<ConnectorInfo> connectors = new ArrayList<>();
+  private final List<CompositeProcessInfo> processes = new ArrayList<>();
 
   /**
    * Constructor for {@link DeclarativeDefinitionEndpoint}
@@ -55,11 +58,12 @@ public class DeclarativeDefinitionEndpoint {
     initializeConnectorInfos();
     initializeIntegrationScenarioInfos();
     initializeConnectorGroupInfos();
+    initializeCompositeProcessInfos();
   }
 
   /**
-   * Base endpoint which exposes adapter structure including connectors, connector groups and
-   * scenarios.
+   * Base endpoint which exposes adapter structure including connectors, connector groups, scenarios
+   * and processes
    *
    * @return DeclarativeStructureInfo
    */
@@ -68,6 +72,7 @@ public class DeclarativeDefinitionEndpoint {
     return DeclarativeStructureInfo.builder()
         .connectorgroups(getConnectorGroupInfo())
         .scenarios(getScenarioInfo())
+        .processes(getProcessInfo())
         .build();
   }
 
@@ -84,6 +89,11 @@ public class DeclarativeDefinitionEndpoint {
   @GetMapping("/connectors")
   public List<ConnectorInfo> getConnectorInfo() {
     return connectors;
+  }
+
+  @GetMapping("/processes")
+  public List<CompositeProcessInfo> getProcessInfo() {
+    return processes;
   }
 
   private void initializeConnectorInfos() {
@@ -115,5 +125,31 @@ public class DeclarativeDefinitionEndpoint {
                                         .equals(connectorGroup.getId()))
                             .toList(),
                         connectorGroup)));
+  }
+
+  private void initializeCompositeProcessInfos() {
+    declarationsRegistry
+        .getProcesses()
+        .forEach(
+            process ->
+                processes.add(
+                    createCompositeProcessInfo(
+                        process,
+                        IntegrationScenarioDefinitionDto.builder()
+                            .id(
+                                declarationsRegistry
+                                    .getIntegrationScenarioBase(process.getId())
+                                    .getId())
+                            .build(),
+                        mapConsumers(
+                            declarationsRegistry.getCompositeProcessConsumerDefinitions(
+                                process.getId())))));
+  }
+
+  private List<IntegrationScenarioDefinitionDto> mapConsumers(
+      List<IntegrationScenarioDefinition> consumers) {
+    return consumers.stream()
+        .map(consumer -> IntegrationScenarioDefinitionDto.builder().id(consumer.getId()).build())
+        .toList();
   }
 }

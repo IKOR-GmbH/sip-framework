@@ -20,6 +20,11 @@ import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.endpoint.dsl.JmsEndpointBuilderFactory;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Helper methods for the declarative structure adapter building.
+ *
+ * <p><em>Intended for internal use only</em>
+ */
 @UtilityClass
 public class DeclarativeHelper {
 

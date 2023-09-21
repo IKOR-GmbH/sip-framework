@@ -98,6 +98,16 @@ test-case-definitions:
         header-key: "Regex expression (java) which will be compered to the header key value from request which arrived on the adapter"
 ```
 
+Given that body can vary in length, it can be set as a reference to a file where the content resides. For example:
+``` yaml
+  WHEN-execute:
+    endpointId: "id of starting route under test"
+    with:
+      body: "file:SOAP request.xml"
+```
+This approach is possible in all three phases of test: WHEN-execute, WITH-mocks and THEN-expect. It this case, payload 
+files must be on classpath.
+ 
 The default file for placing your test case definitions is `test-case-definition.yml` which can be found under
 `test/resources` path within the SIP archetype generated adapter. When using default file, you can avoid any additional 
 setting.

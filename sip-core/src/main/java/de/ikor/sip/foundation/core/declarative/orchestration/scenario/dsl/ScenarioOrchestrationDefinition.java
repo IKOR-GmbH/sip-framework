@@ -46,7 +46,8 @@ public class ScenarioOrchestrationDefinition<M>
    * @param connectorClass The class(es) of the inbound connector
    * @return DSL handle for specifying consumer calls
    */
-  public ForScenarioProvidersByClassDefinition<ScenarioOrchestrationDefinition<M>, M>
+  @SafeVarargs
+  public final ForScenarioProvidersByClassDefinition<ScenarioOrchestrationDefinition<M>, M>
       forInboundConnectors(final Class<? extends InboundConnectorDefinition<?>>... connectorClass) {
     return forScenarioProviders(connectorClass);
   }
@@ -60,7 +61,8 @@ public class ScenarioOrchestrationDefinition<M>
    * @param providerClass The class(es) of the inbound connector
    * @return DSL handle for specifying consumer calls
    */
-  public ForScenarioProvidersByClassDefinition<ScenarioOrchestrationDefinition<M>, M>
+  @SafeVarargs
+  public final ForScenarioProvidersByClassDefinition<ScenarioOrchestrationDefinition<M>, M>
       forScenarioProviders(
           final Class<? extends IntegrationScenarioProviderDefinition>... providerClass) {
     verifyNoCatchAllOrThrow();

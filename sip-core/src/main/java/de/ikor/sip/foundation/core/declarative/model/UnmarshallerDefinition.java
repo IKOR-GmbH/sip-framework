@@ -1,6 +1,5 @@
 package de.ikor.sip.foundation.core.declarative.model;
 
-import de.ikor.sip.foundation.core.declarative.RouteDefinitionConsumer;
 import java.util.function.Consumer;
 import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.model.DataFormatDefinition;

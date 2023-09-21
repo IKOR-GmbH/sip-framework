@@ -29,11 +29,11 @@ class BaseMappingRouteTransformerTest {
       mock(IntegrationScenarioDefinition.class);
 
   static RouteDefinition routeDefinition = new RouteDefinition();
-  ResponseMappingRouteTransformer inboundResponseTransformerUnderTest =
+  ResponseMappingRouteTransformer<Integer, Integer> inboundResponseTransformerUnderTest =
       new ResponseMappingRouteTransformer<>(
           () -> inboundConnectorDefinition, () -> integrationScenarioDefinition);
 
-  ResponseMappingRouteTransformer outboundResponseTransformerUnderTest =
+  ResponseMappingRouteTransformer<Integer, Integer> outboundResponseTransformerUnderTest =
       new ResponseMappingRouteTransformer<>(
           () -> outboundConnectorDefinition, () -> integrationScenarioDefinition);
 

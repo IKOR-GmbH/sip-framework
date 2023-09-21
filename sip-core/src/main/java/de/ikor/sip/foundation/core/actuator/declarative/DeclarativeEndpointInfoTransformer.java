@@ -3,12 +3,18 @@ package de.ikor.sip.foundation.core.actuator.declarative;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
+import de.ikor.sip.foundation.core.actuator.declarative.model.CompositeProcessInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorGroupInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.ConnectorInfo;
 import de.ikor.sip.foundation.core.actuator.declarative.model.IntegrationScenarioInfo;
+import de.ikor.sip.foundation.core.actuator.declarative.model.dto.IntegrationScenarioDefinitionDto;
+import de.ikor.sip.foundation.core.actuator.declarative.model.dto.ProcessOrchestrationDefinitionDto;
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.ProcessOrchestrator;
+import de.ikor.sip.foundation.core.declarative.orchestration.process.dsl.ProcessOrchestrationDefinition;
+import de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import java.io.IOException;
@@ -36,6 +42,9 @@ public class DeclarativeEndpointInfoTransformer {
   private static final String INTEGRATION_SCENARIO_DEFAULT_DOCS_PATH =
       "documents/structure/integration-scenarios";
   private static final String CONNECTORS_DEFAULT_DOCS_PATH = "documents/structure/connectors";
+
+  private static final String PROCESSES_DEFAULT_DOCS_PATH = "documents/structure/processes";
+
   private static final String MARKDOWN_EXTENSION = ".md";
 
   private DeclarativeEndpointInfoTransformer() {}
@@ -66,6 +75,7 @@ public class DeclarativeEndpointInfoTransformer {
    * Creates initialized {@link IntegrationScenarioInfo} from {@link IntegrationScenarioDefinition}
    *
    * @param scenario from which info object is created
+   * @param schemaGen JSON generator which transforms class to json schema
    * @return IntegrationScenarioInfo
    */
   public static IntegrationScenarioInfo createIntegrationScenarioInfo(
@@ -89,6 +99,8 @@ public class DeclarativeEndpointInfoTransformer {
    * Creates initialized {@link ConnectorInfo} from {@link ConnectorDefinition}
    *
    * @param connector from which info object is created
+   * @param routesRegistry internal routes registry that contains Camel route details
+   * @param schemaGen JSON generator which transforms class to json schema
    * @return ConnectorInfo
    */
   public static ConnectorInfo createAndAddConnectorInfo(
@@ -110,6 +122,47 @@ public class DeclarativeEndpointInfoTransformer {
         .requestJsonForm(createJsonSchema(schemaGen, connector.getRequestModelClass()))
         .responseModelClass(connector.getResponseModelClass().map(Class::getName).orElse(null))
         .responseJsonForm(createJsonSchema(schemaGen, responseModelClass))
+        .build();
+  }
+
+  /**
+   * Creates initialized {@link CompositeProcessInfo} from {@link CompositeProcessDefinition}
+   *
+   * @param compositeProcessDefinition from which info object is created
+   * @param provider process provider
+   * @param consumers process consumers
+   * @return CompositeProcessInfo
+   */
+  public static CompositeProcessInfo createCompositeProcessInfo(
+      CompositeProcessDefinition compositeProcessDefinition,
+      IntegrationScenarioDefinitionDto provider,
+      List<IntegrationScenarioDefinitionDto> consumers) {
+
+    return CompositeProcessInfo.builder()
+        .processId(compositeProcessDefinition.getId())
+        .providerId(provider.getId())
+        .consumerIds(consumers.stream().map(IntegrationScenarioDefinitionDto::getId).toList())
+        .orchestrationDefinition(
+            compositeProcessDefinition.getOrchestrator()
+                    instanceof ProcessOrchestrator processOrchestrator
+                ? generateProcessOrchestrationDefinition(
+                    compositeProcessDefinition, processOrchestrator)
+                : null)
+        .processDescription(
+            readDocumentation(
+                PROCESSES_DEFAULT_DOCS_PATH,
+                compositeProcessDefinition.getPathToDocumentationResource(),
+                compositeProcessDefinition.getId()))
+        .build();
+  }
+
+  private static ProcessOrchestrationDefinitionDto generateProcessOrchestrationDefinition(
+      CompositeProcessDefinition compositeProcessDefinition,
+      ProcessOrchestrator processOrchestrator) {
+    ProcessOrchestrationDefinition definition =
+        processOrchestrator.populateOrchestrationDefinition(compositeProcessDefinition);
+    return ProcessOrchestrationDefinitionDto.builder()
+        .steps(new StepsGenerator(definition).generateSteps())
         .build();
   }
 

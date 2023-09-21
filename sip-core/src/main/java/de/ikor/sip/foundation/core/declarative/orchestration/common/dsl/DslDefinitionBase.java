@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.common.dsl;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public abstract class DslDefinitionBase<S extends DslDefinitionBase<S, R>, R> {
 
   @Getter(AccessLevel.PROTECTED)
+  @JsonIgnore
   private final R dslReturnDefinition;
 
   /**
@@ -23,6 +25,7 @@ public abstract class DslDefinitionBase<S extends DslDefinitionBase<S, R>, R> {
    *
    * @return <code>this</code> casted to the declared element type
    */
+  @SuppressWarnings("unchecked")
   protected S self() {
     return (S) this;
   }

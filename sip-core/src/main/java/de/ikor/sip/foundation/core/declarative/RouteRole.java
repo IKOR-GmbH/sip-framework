@@ -12,7 +12,9 @@ public enum RouteRole {
   CONNECTOR_RESPONSE_ORCHESTRATION("responseOrchestration", "CONNECTOR_RESPONSE_ORCHESTRATION"),
   SCENARIO_HANDOFF("scenarioHandoff", "SCENARIO_HANDOFF"),
   SCENARIO_TAKEOVER("scenarioTakeover", "SCENARIO_TAKEOVER"),
-  SCENARIO_ORCHESTRATION("scenarioOrchestration", "SCENARIO_ORCHESTRATION");
+  SCENARIO_ORCHESTRATION("scenarioOrchestration", "SCENARIO_ORCHESTRATION"),
+  COMPOSITE_SCENARIO_ORCHESTRATION(
+      "compositeScenarioOrchestration", "COMPOSITE_SCENARIO_ORCHESTRATION");
 
   @Getter final String roleSuffixInRouteId;
   @Getter final String externalName;

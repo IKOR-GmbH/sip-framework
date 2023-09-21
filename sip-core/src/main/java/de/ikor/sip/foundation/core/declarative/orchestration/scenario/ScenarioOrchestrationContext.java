@@ -142,7 +142,7 @@ public class ScenarioOrchestrationContext<M> {
    * @return The response
    */
   @Synchronized
-  public M addResponseForStep(
+  M addResponseForStep(
       final IntegrationScenarioConsumerDefinition consumer,
       final M response,
       final Optional<StepResultCloner<M>> cloner) {

@@ -42,9 +42,8 @@ public @interface IntegrationScenario {
 
   /**
    * Optional path to the resource (typically a markdown file) that describes this integration
-   * scenario. If not given, an attempt is made to retrieve documentation from <code>
-   * document/structure/integration-scenarios/&lt;integration-scenario-id&gt;.md</code>
-   * automatically.
+   * scenario. If not given, an attempt is made to retrieve documentation from {@code
+   * document/structure/integration-scenarios/<integration-scenario-id>.md} automatically.
    *
    * @return Optional path to documentation resource file
    */

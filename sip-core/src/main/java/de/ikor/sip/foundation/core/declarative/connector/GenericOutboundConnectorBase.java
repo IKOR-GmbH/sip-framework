@@ -62,16 +62,11 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
   /**
    * Defines the outgoing endpoint for this connector.
    *
+   * @return the outgoing endpoint
    * @see org.apache.camel.builder.endpoint.StaticEndpointBuilders
    * @see org.apache.camel.builder.endpoint.dsl.FileEndpointBuilderFactory.FileEndpointBuilder
-   * @return the outgoing endpoint
    */
   protected abstract EndpointProducerBuilder defineOutgoingEndpoint();
-
-  @Override
-  public final String fromScenarioId() {
-    return outboundConnectorAnnotation.integrationScenario();
-  }
 
   @Override
   public final String getId() {
@@ -106,6 +101,6 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
 
   @Override
   public final String getScenarioId() {
-    return OutboundConnectorDefinition.super.getScenarioId();
+    return outboundConnectorAnnotation.integrationScenario();
   }
 }
