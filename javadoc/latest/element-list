@@ -4,6 +4,7 @@ de.ikor.sip.foundation.core.actuator.common
 de.ikor.sip.foundation.core.actuator.config
 de.ikor.sip.foundation.core.actuator.declarative
 de.ikor.sip.foundation.core.actuator.declarative.model
+de.ikor.sip.foundation.core.actuator.declarative.model.dto
 de.ikor.sip.foundation.core.actuator.health
 de.ikor.sip.foundation.core.actuator.health.camel
 de.ikor.sip.foundation.core.actuator.health.ftp
@@ -24,8 +25,12 @@ de.ikor.sip.foundation.core.declarative.model
 de.ikor.sip.foundation.core.declarative.orchestration
 de.ikor.sip.foundation.core.declarative.orchestration.common.dsl
 de.ikor.sip.foundation.core.declarative.orchestration.connector
+de.ikor.sip.foundation.core.declarative.orchestration.process
+de.ikor.sip.foundation.core.declarative.orchestration.process.dsl
+de.ikor.sip.foundation.core.declarative.orchestration.process.routebuilding
 de.ikor.sip.foundation.core.declarative.orchestration.scenario
 de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl
+de.ikor.sip.foundation.core.declarative.process
 de.ikor.sip.foundation.core.declarative.scenario
 de.ikor.sip.foundation.core.declarative.utils
 de.ikor.sip.foundation.core.declarative.validator
