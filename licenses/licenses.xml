@@ -24,6 +24,7 @@
         <license>
           <name>GNU Lesser General Public License</name>
           <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+          <file>gnu lesser general public license - lgpl-2.1.html</file>
         </license>
       </licenses>
     </dependency>
@@ -40,6 +41,7 @@
         <license>
           <name>GNU Lesser General Public License</name>
           <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+          <file>gnu lesser general public license - lgpl-2.1.html</file>
         </license>
       </licenses>
     </dependency>
@@ -234,6 +236,7 @@
           <name>Lesser General Public License, version 3 or greater</name>
           <url>http://www.gnu.org/licenses/lgpl.html</url>
           <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
         </license>
         <license>
           <name>Apache Software License, version 2.0</name>
@@ -252,6 +255,7 @@
           <name>Lesser General Public License, version 3 or greater</name>
           <url>http://www.gnu.org/licenses/lgpl.html</url>
           <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
         </license>
         <license>
           <name>Apache Software License, version 2.0</name>
@@ -270,6 +274,7 @@
           <name>Lesser General Public License, version 3 or greater</name>
           <url>http://www.gnu.org/licenses/lgpl.html</url>
           <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
         </license>
         <license>
           <name>Apache Software License, version 2.0</name>
@@ -288,6 +293,7 @@
           <name>Lesser General Public License, version 3 or greater</name>
           <url>http://www.gnu.org/licenses/lgpl.html</url>
           <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
         </license>
         <license>
           <name>Apache Software License, version 2.0</name>
@@ -306,6 +312,7 @@
           <name>Lesser General Public License, version 3 or greater</name>
           <url>http://www.gnu.org/licenses/lgpl.html</url>
           <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
         </license>
         <license>
           <name>Apache Software License, version 2.0</name>
@@ -324,6 +331,7 @@
           <name>Lesser General Public License, version 3 or greater</name>
           <url>http://www.gnu.org/licenses/lgpl.html</url>
           <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
         </license>
         <license>
           <name>Apache Software License, version 2.0</name>
@@ -342,6 +350,7 @@
           <name>Lesser General Public License, version 3 or greater</name>
           <url>http://www.gnu.org/licenses/lgpl.html</url>
           <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
         </license>
         <license>
           <name>Apache Software License, version 2.0</name>
@@ -360,6 +369,7 @@
           <name>Lesser General Public License, version 3 or greater</name>
           <url>http://www.gnu.org/licenses/lgpl.html</url>
           <distribution>repo</distribution>
+          <file>lesser general public license, version 3 or greater - lgpl.html</file>
         </license>
         <license>
           <name>Apache Software License, version 2.0</name>
@@ -943,6 +953,7 @@
           <name>GPL2 w/ CPE</name>
           <url>https://www.gnu.org/software/classpath/license.html</url>
           <distribution>repo</distribution>
+          <file>gpl2 w_ cpe - license.html</file>
         </license>
       </licenses>
     </dependency>
@@ -961,6 +972,7 @@
           <name>GNU General Public License, version 2 with the GNU Classpath Exception</name>
           <url>https://www.gnu.org/software/classpath/license.html</url>
           <distribution>repo</distribution>
+          <file>gpl2 w_ cpe - license.html</file>
         </license>
       </licenses>
     </dependency>
@@ -1011,6 +1023,7 @@
           <name>GPL2 w/ CPE</name>
           <url>https://www.gnu.org/software/classpath/license.html</url>
           <distribution>repo</distribution>
+          <file>gpl2 w_ cpe - license.html</file>
         </license>
         <license>
           <name>EDL 1.0</name>
@@ -1035,6 +1048,7 @@
           <name>GPL2 w/ CPE</name>
           <url>https://www.gnu.org/software/classpath/license.html</url>
           <distribution>repo</distribution>
+          <file>gpl2 w_ cpe - license.html</file>
         </license>
       </licenses>
     </dependency>
@@ -1090,6 +1104,20 @@
       </licenses>
     </dependency>
     <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>javax.activation-api</artifactId>
+      <version>1.2.0</version>
+      <licenses>
+        <license>
+          <name>CDDL/GPLv2+CE</name>
+          <url>https://github.com/javaee/activation/blob/master/LICENSE.txt</url>
+          <distribution>repo</distribution>
+          <file>cddl_gplv2+ce - license.html</file>
+          <comments>CDDL or GPL version 2 plus the Classpath Exception</comments>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
       <groupId>javax.annotation</groupId>
       <artifactId>javax.annotation-api</artifactId>
       <version>1.2</version>
@@ -1124,6 +1152,25 @@
           <name>The Apache Software License, Version 2.0</name>
           <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.3.1</version>
+      <licenses>
+        <license>
+          <name>CDDL 1.1</name>
+          <url>https://oss.oracle.com/licenses/CDDL+GPL-1.1</url>
+          <distribution>repo</distribution>
+          <file>cddl 1.1 - cddl+gpl-1.1.txt</file>
+        </license>
+        <license>
+          <name>GPL2 w/ CPE</name>
+          <url>https://oss.oracle.com/licenses/CDDL+GPL-1.1</url>
+          <distribution>repo</distribution>
+          <file>cddl 1.1 - cddl+gpl-1.1.txt</file>
         </license>
       </licenses>
     </dependency>
@@ -3430,6 +3477,7 @@
           <name>GPL2 w/ CPE</name>
           <url>https://www.gnu.org/software/classpath/license.html</url>
           <distribution>repo</distribution>
+          <file>gpl2 w_ cpe - license.html</file>
         </license>
         <license>
           <name>EDL 1.0</name>
@@ -3493,6 +3541,7 @@
           <name>GNU General Public License, version 2 with the GNU Classpath Exception</name>
           <url>https://www.gnu.org/software/classpath/license.html</url>
           <distribution>repo</distribution>
+          <file>gpl2 w_ cpe - license.html</file>
         </license>
       </licenses>
     </dependency>
@@ -4373,6 +4422,19 @@
     <dependency>
       <groupId>org.xmlunit</groupId>
       <artifactId>xmlunit-core</artifactId>
+      <version>2.9.1</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+          <file>the apache software license, version 2.0 - license-2.0.txt</file>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>org.xmlunit</groupId>
+      <artifactId>xmlunit-matchers</artifactId>
       <version>2.9.1</version>
       <licenses>
         <license>
