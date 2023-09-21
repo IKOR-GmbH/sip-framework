@@ -80,6 +80,7 @@
         <asm.version>9.4</asm.version>      <!-- Spring is using 9.1, Cxf is using 9.4, when Spring upgrades to 9.4, then explicit dependency can be removed -->
         <cxf.version>4.0.2</cxf.version>    <!-- keep in sync with camel-dependencies cxf-version property -->
         <snakeyaml.version>2.0</snakeyaml.version>
+        <jaxb-api.version>2.3.1</jaxb-api.version>
         <!-- maven dependancies -->
         <maven-core.version>3.8.6</maven-core.version>
         <maven-project-dependecies.version>3.8.4</maven-project-dependecies.version>
@@ -262,6 +263,11 @@
 
 
             <!--            additional dependencies-->
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${jaxb-api.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jsr310</artifactId>
