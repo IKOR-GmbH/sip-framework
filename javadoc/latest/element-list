@@ -72,6 +72,8 @@ de.ikor.sip.foundation.testkit.workflow.reporting.resultprocessor.impl
 de.ikor.sip.foundation.testkit.workflow.thenphase.result
 de.ikor.sip.foundation.testkit.workflow.thenphase.validator
 de.ikor.sip.foundation.testkit.workflow.thenphase.validator.impl
+de.ikor.sip.foundation.testkit.workflow.thenphase.validator.impl.comparators
+de.ikor.sip.foundation.testkit.workflow.thenphase.validator.impl.comparators.util
 de.ikor.sip.foundation.testkit.workflow.whenphase
 de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker
 de.ikor.sip.foundation.testkit.workflow.whenphase.routeinvoker.exceptions
