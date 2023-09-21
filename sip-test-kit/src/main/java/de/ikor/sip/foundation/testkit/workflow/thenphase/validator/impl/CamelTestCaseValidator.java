@@ -7,7 +7,6 @@ import de.ikor.sip.foundation.testkit.workflow.reporting.model.SIPAdapterExecuti
 import de.ikor.sip.foundation.testkit.workflow.thenphase.result.ValidationResult;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.ExchangeValidator;
 import de.ikor.sip.foundation.testkit.workflow.thenphase.validator.TestCaseValidator;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,14 +98,10 @@ public class CamelTestCaseValidator implements TestCaseValidator {
 
   private List<ValidationResult> runValidators(
       Exchange executionResult, Exchange expectedResponse) {
-    List<ValidationResult> validationResults = new ArrayList<>();
-    for (ExchangeValidator validator : this.exchangeValidators) {
-      if (validator.isApplicable(executionResult, expectedResponse)) {
-        validationResults.add(validator.execute(executionResult, expectedResponse));
-      }
-    }
-
-    return validationResults;
+    return this.exchangeValidators.stream()
+        .filter(validator -> validator.isApplicable(executionResult, expectedResponse))
+        .map(validator -> validator.execute(executionResult, expectedResponse))
+        .toList();
   }
 
   @Override
