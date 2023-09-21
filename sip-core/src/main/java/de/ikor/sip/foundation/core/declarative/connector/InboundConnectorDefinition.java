@@ -46,10 +46,7 @@ public non-sealed interface InboundConnectorDefinition<T extends OptionalIdentif
     return ConnectorType.IN;
   }
 
-  @Override
-  default String getScenarioId() {
-    return toScenarioId();
-  }
+  String getScenarioId();
 
   /**
    * Returns the class of the type that is required to define the inbound endpoint(s).

@@ -52,7 +52,8 @@ public abstract class InboundConnectorBase extends ConnectorBase {
     return inboundConnectorAnnotation.pathToDocumentationResource();
   }
 
-  protected String getIntegrationScenario() {
+  @Override
+  public String getScenarioId() {
     return inboundConnectorAnnotation.integrationScenario();
   }
 }

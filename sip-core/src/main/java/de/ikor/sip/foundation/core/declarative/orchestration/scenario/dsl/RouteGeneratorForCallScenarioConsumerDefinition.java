@@ -36,7 +36,7 @@ final class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGene
 
   RouteGeneratorForCallScenarioConsumerDefinition(
       final ScenarioOrchestrationInfo orchestrationInfo,
-      final CallScenarioConsumerBaseDefinition definitionElement,
+      final CallScenarioConsumerBaseDefinition<?, ?, M> definitionElement,
       final Set<IntegrationScenarioConsumerDefinition> overallUnhandledConsumers) {
     super(orchestrationInfo);
     this.definitionElement = definitionElement;
@@ -74,9 +74,9 @@ final class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGene
         definitionElement.getClass().getName());
   }
 
-  private OutboundConnectorDefinition retrieveConsumerFromClassDefinition(
+  private IntegrationScenarioConsumerDefinition retrieveConsumerFromClassDefinition(
       final CallScenarioConsumerByClassDefinition element) {
-    return getOutboundConnectors().stream()
+    return getDeclarationsRegistry().getConsumersForScenario(getIntegrationScenario()).stream()
         .filter(
             outboundConnectorDefinition ->
                 element.getConsumerClass().equals(outboundConnectorDefinition.getClass()))
@@ -84,7 +84,7 @@ final class RouteGeneratorForCallScenarioConsumerDefinition<M> extends RouteGene
         .orElseThrow(
             () ->
                 SIPFrameworkInitializationException.init(
-                    "Consumer-class '%s' is used on orchestration for integration scenario '%s', but it is not registered with that scenario. Registered outbound connector classes are %s",
+                    "Consumer-class '%s' is used on orchestration for integration scenario '%s', but it is not registered with that scenario. Registered consumer classes are %s",
                     element.getConsumerClass().getName(),
                     getIntegrationScenarioId(),
                     getOutboundConnectors().stream()

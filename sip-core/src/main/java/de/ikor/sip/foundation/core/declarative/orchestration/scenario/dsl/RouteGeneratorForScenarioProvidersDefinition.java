@@ -1,7 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.scenario.dsl;
 
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.connector.InboundConnectorDefinition;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationHandlers;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
@@ -76,14 +75,13 @@ final class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGenerat
     final Set<Class<? extends IntegrationScenarioProviderDefinition>> providerClasses =
         element.getProviderClasses();
     final var scenarioProviderMap =
-        getDeclarationsRegistry()
-            .getInboundConnectorsByScenarioId(getIntegrationScenarioId())
-            .stream()
-            .collect(Collectors.toMap(InboundConnectorDefinition::getClass, con -> con));
+        getDeclarationsRegistry().getProvidersForScenario(getIntegrationScenario()).stream()
+            .collect(Collectors.toMap(IntegrationScenarioProviderDefinition::getClass, con -> con));
+
     final var unknownProviderNames =
         providerClasses.stream()
             .filter(clazz -> !scenarioProviderMap.containsKey(clazz))
-            .map(ele -> ele.getClass().getName())
+            .map(Class::getName)
             .toList();
     if (!unknownProviderNames.isEmpty()) {
       throw SIPFrameworkInitializationException.init(

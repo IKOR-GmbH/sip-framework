@@ -54,9 +54,4 @@ public abstract class RestInboundConnectorBase extends InboundConnectorBase
   public final Class<RestsDefinition> getEndpointDefinitionTypeClass() {
     return RestsDefinition.class;
   }
-
-  @Override
-  public final String toScenarioId() {
-    return getIntegrationScenario();
-  }
 }

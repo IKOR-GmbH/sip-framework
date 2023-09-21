@@ -73,9 +73,4 @@ public abstract class GenericInboundConnectorBase extends InboundConnectorBase
   public final Class<RoutesDefinition> getEndpointDefinitionTypeClass() {
     return RoutesDefinition.class;
   }
-
-  @Override
-  public final String toScenarioId() {
-    return getIntegrationScenario();
-  }
 }

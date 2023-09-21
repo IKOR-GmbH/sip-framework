@@ -13,7 +13,8 @@ import java.lang.annotation.Target;
  *   <li>{@link de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition}s,
  *       which also disables all consumers and providers attached to the scenario
  *   <li>{@link de.ikor.sip.foundation.core.declarative.connectorgroup.ConnectorGroupDefinition}s,
- *       which also disables all connectors attached to it *
+ *       which also disables all connectors attached to it
+ *   <li>{@link de.ikor.sip.foundation.core.declarative.process.CompositeProcessDefinition}s
  * </ul>
  */
 @Target(ElementType.TYPE)

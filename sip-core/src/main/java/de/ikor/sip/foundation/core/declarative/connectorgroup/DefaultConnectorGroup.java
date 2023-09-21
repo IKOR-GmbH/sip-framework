@@ -3,8 +3,8 @@ package de.ikor.sip.foundation.core.declarative.connectorgroup;
 import lombok.AllArgsConstructor;
 
 /**
- * Default connector which is automatically created by framework when connector is not specified by
- * user.
+ * Default connector group which is automatically created by framework when connector group is not
+ * specified by user.
  *
  * <p><em>For internal use only.</em>
  */
@@ -13,11 +13,11 @@ public final class DefaultConnectorGroup implements ConnectorGroupDefinition {
 
   private static final String EMPTY_PATH = "";
 
-  private String connectorId;
+  private String connectorGroupId;
 
   @Override
   public String getId() {
-    return connectorId;
+    return connectorGroupId;
   }
 
   @Override
