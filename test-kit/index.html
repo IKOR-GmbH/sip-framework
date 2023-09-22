@@ -8,7 +8,7 @@
     <title>Test Kit - SIP Framework Documentation</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
         <link href="../css/extra.css" rel="stylesheet" />
     
       <script>
@@ -18,12 +18,11 @@
         var mkdocs_page_url = null;
       </script>
     
-    <script src="../js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
       <script src="../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -108,6 +107,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/3.2.0/index.html">JavaDoc 3.2.0</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/3.1.0/index.html">JavaDoc 3.1.0</a>
                 </li>
               </ul>
@@ -164,8 +167,8 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
-      <li>Test Kit</li>
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Test Kit</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/test-kit.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
@@ -234,8 +237,8 @@ we want to validate. It could be the entering endpoint of the adapter, for examp
 adapter, or it could be any external system (mocked) endpoint, where we can validate the input that mocked endpoint has received;
 this way we could validate, for instance, if a properly transformed file reached the outgoing FTP endpoint.<br />
 Validation is performed on two levels, <em><em>body</em></em> - where the data is validated and <em><em>headers</em></em> - where metadata is validated. Body 
-validation is performed as plain text comparison, binary payload is not yet supported. Headers comparison is comparing 
-textual key value maps. Both body and header validation support regex pattern as expected value.
+validation is performed as plain text comparison, XML comparison and JSON comparison. Binary payload is not yet supported.
+Headers comparison is comparing textual key value maps. Both body and header validation support regex pattern as expected value.
 Given that all SIP mocks are internal, meaning that the actual endpoint is replaced with the mock, any URI options defined 
 on the mock will not apply and behavior produced by them is not possible to verify. </p>
 <h2 id="reports">Reports<a class="headerlink" href="#reports" title="Permanent link">&para;</a></h2>
@@ -283,6 +286,13 @@ Running this class would execute the test, but also it will be executed in the t
       body: "Regex expression (java) which will be compered to the request which arrived on the adapter"
       headers:
         header-key: "Regex expression (java) which will be compered to the header key value from request which arrived on the adapter"</code></pre></p>
+<p>Given that body can vary in length, it can be set as a reference to a file where the content resides. For example:
+<pre class="highlight"><code class="language-yaml">  WHEN-execute:
+    endpointId: "id of starting route under test"
+    with:
+      body: "file:SOAP request.xml"</code></pre>
+This approach is possible in all three phases of test: WHEN-execute, WITH-mocks and THEN-expect. It this case, payload 
+files must be on classpath.</p>
 <p>The default file for placing your test case definitions is <code>test-case-definition.yml</code> which can be found under
 <code>test/resources</code> path within the SIP archetype generated adapter. When using default file, you can avoid any additional 
 setting.</p>
@@ -543,16 +553,17 @@ supported.</p>
     
   </span>
 </div>
-    <script>var base_url = '..';</script>
-    <script src="../js/theme_extra.js" defer></script>
-    <script src="../js/theme.js" defer></script>
-      <script src="../javascript/javadoc_menu_dropdown.js" defer></script>
-      <script src="../javascript/copy_to_clipboard.js" defer></script>
-      <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascript/javadoc_menu_dropdown.js"></script>
+      <script src="../javascript/copy_to_clipboard.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>

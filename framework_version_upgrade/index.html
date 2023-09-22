@@ -8,7 +8,7 @@
     <title>Framework Version Upgrade - SIP Framework Documentation</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
         <link href="../css/extra.css" rel="stylesheet" />
     
       <script>
@@ -18,12 +18,11 @@
         var mkdocs_page_url = null;
       </script>
     
-    <script src="../js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
       <script src="../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -84,7 +83,7 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Framework Version Upgrade</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#upgrade-from-200-to-300">Upgrade from 2.0.0 to 3.0.0</a>
+    <li class="toctree-l2"><a class="reference internal" href="#upgrade-from-310-to-320">Upgrade from 3.1.0 to 3.2.0</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#upgrade-from-100-to-200">Upgrade from 1.0.0 to 2.0.0</a>
     </li>
@@ -109,6 +108,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/3.2.0/index.html">JavaDoc 3.2.0</a>
                 </li>
               </ul>
               <ul>
@@ -168,8 +171,8 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
-      <li>Framework Version Upgrade</li>
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Framework Version Upgrade</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/framework_version_upgrade.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
@@ -183,14 +186,36 @@
 <div class="toc">
 <ul>
 <li><a href="#sip-framework-version-upgrade">SIP Framework version upgrade</a><ul>
-<li><a href="#upgrade-from-200-to-300">Upgrade from 2.0.0 to 3.0.0</a></li>
+<li><a href="#upgrade-from-310-to-320">Upgrade from 3.1.0 to 3.2.0</a></li>
 <li><a href="#upgrade-from-100-to-200">Upgrade from 1.0.0 to 2.0.0</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<h2 id="upgrade-from-200-to-300">Upgrade from 2.0.0 to 3.0.0<a class="headerlink" href="#upgrade-from-200-to-300" title="Permanent link">&para;</a></h2>
-<p>Version 3.0.0 is backwards compatible with version 2.0.0. All of the adapters written in version 2.0.0 will work with version 3.0.0 without any changes, but it's highly encouraged to use v3.0.0 concepts (Declarative structure).</p>
+<h2 id="upgrade-from-310-to-320">Upgrade from 3.1.0 to 3.2.0<a class="headerlink" href="#upgrade-from-310-to-320" title="Permanent link">&para;</a></h2>
+<p>Version 3.2.0 introduces changes in dependencies - most notably Spring 6, Apache Camel 4 and CXF 4. 
+There should be no breaking changes in this release. If the adapter developers relied on deprecated features from underlying frameworks then some changes are necessary but those should be fixed on case-by-case basis.</p>
+<p>Upgrade guide for specific use-cases:
+* Adapters using <strong>SOAP</strong> Connectors</p>
+<p>From adapter pom.xml file remove this plugin:
+<pre class="highlight"><code class="language-xml">&lt;plugin&gt;
+  &lt;groupId&gt;de.codecentric&lt;/groupId&gt;
+  &lt;artifactId&gt;cxf-spring-boot-starter-maven-plugin&lt;/artifactId&gt;
+...
+&lt;/plugin&gt;</code></pre>
+and change it to:
+<pre class="highlight"><code class="language-xml">&lt;plugin&gt;
+  &lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;
+  &lt;artifactId&gt;cxf-codegen-plugin&lt;/artifactId&gt;
+&lt;/plugin&gt;</code></pre>
+Plugin is now managed in the parent pom so no further configuration is necessary. It is a standard CXF plugin and adapter developers can customize its behaviour if needed.</p>
+<ul>
+<li>Adapters redefining <strong>Spring Security</strong>:
+If the adapter has redefined Spring Security configuration, exclusion of SIP Security was necessary:
+For example: 
+<pre class="highlight"><code class="language-java">@SIPIntegrationAdapter(exclude = SIPSecurityAutoConfiguration.class)</code></pre>
+That should no longer be necessary, SIP has upgraded to Spring Security 6 and should work with specific behaviour redefined in the adapter.</li>
+</ul>
 <h2 id="upgrade-from-100-to-200">Upgrade from 1.0.0 to 2.0.0<a class="headerlink" href="#upgrade-from-100-to-200" title="Permanent link">&para;</a></h2>
 <p>The following text represents the complete guide how to update SIP framework version in your adapter from version 
 <code>1.0.0</code> to <code>2.0.0</code>.</p>
@@ -323,16 +348,17 @@ directory with test profile configured:</p>
     
   </span>
 </div>
-    <script>var base_url = '..';</script>
-    <script src="../js/theme_extra.js" defer></script>
-    <script src="../js/theme.js" defer></script>
-      <script src="../javascript/javadoc_menu_dropdown.js" defer></script>
-      <script src="../javascript/copy_to_clipboard.js" defer></script>
-      <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascript/javadoc_menu_dropdown.js"></script>
+      <script src="../javascript/copy_to_clipboard.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>

@@ -8,7 +8,7 @@
     <title>Middle Component - SIP Framework Documentation</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
         <link href="../css/extra.css" rel="stylesheet" />
     
       <script>
@@ -18,12 +18,11 @@
         var mkdocs_page_url = null;
       </script>
     
-    <script src="../js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
       <script src="../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -118,6 +117,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/3.2.0/index.html">JavaDoc 3.2.0</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/3.1.0/index.html">JavaDoc 3.1.0</a>
                 </li>
               </ul>
@@ -174,8 +177,8 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
-      <li>Middle Component</li>
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Middle Component</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/middle-component.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
@@ -300,16 +303,17 @@ void test() throws Exception {
     
   </span>
 </div>
-    <script>var base_url = '..';</script>
-    <script src="../js/theme_extra.js" defer></script>
-    <script src="../js/theme.js" defer></script>
-      <script src="../javascript/javadoc_menu_dropdown.js" defer></script>
-      <script src="../javascript/copy_to_clipboard.js" defer></script>
-      <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascript/javadoc_menu_dropdown.js"></script>
+      <script src="../javascript/copy_to_clipboard.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>

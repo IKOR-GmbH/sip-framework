@@ -8,7 +8,7 @@
     <title>Declarative Structure - SIP Framework Documentation</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
         <link href="../css/extra.css" rel="stylesheet" />
     
       <script>
@@ -18,12 +18,11 @@
         var mkdocs_page_url = null;
       </script>
     
-    <script src="../js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
       <script src="../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -72,6 +71,10 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#connector">Connector</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#composite-process">Composite Process</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#orchestration">Orchestration</a>
+    </li>
         </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
@@ -83,6 +86,8 @@
     <li class="toctree-l3"><a class="reference internal" href="#connector-groups">Connector Groups</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#connectors">Connectors</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#composite-processes">Composite Processes</a>
     </li>
         </ul>
     </li>
@@ -131,6 +136,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/latest/index.html">JavaDoc Latest Development</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/3.2.0/index.html">JavaDoc 3.2.0</a>
                 </li>
               </ul>
               <ul>
@@ -190,8 +199,8 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
-      <li>Declarative Structure</li>
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Declarative Structure</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/IKOR-GmbH/sip-framework/edit/main/docs/declarative.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
@@ -211,6 +220,8 @@
 <li><a href="#integration-scenario">Integration Scenario</a></li>
 <li><a href="#connector-group">Connector group</a></li>
 <li><a href="#connector">Connector</a></li>
+<li><a href="#composite-process">Composite Process</a></li>
+<li><a href="#orchestration">Orchestration</a></li>
 </ul>
 </li>
 <li><a href="#configuration">Configuration</a></li>
@@ -218,6 +229,7 @@
 <li><a href="#integration-scenarios">Integration Scenarios</a></li>
 <li><a href="#connector-groups">Connector Groups</a></li>
 <li><a href="#connectors">Connectors</a></li>
+<li><a href="#composite-processes">Composite Processes</a></li>
 </ul>
 </li>
 </ul>
@@ -226,19 +238,43 @@
 </div>
 <h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
 <p>SIP Declarative Adapter concept relies on using best practices in order to provide developers
-with a tool for building unified adapters. It is a structured approach for building integration adapters.</p>
+with a tool for building unified adapters. It is a structured approach for building integration adapters.
+By using predefined SIP constructs (Connector, Integration scenario, Connector Group, Composite process) 
+the adapter development is streamlined and built by the SIP Framework. </p>
 <h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">&para;</a></h2>
 <h3 id="common-domain-model-cdm">Common Domain Model (CDM)<a class="headerlink" href="#common-domain-model-cdm" title="Permanent link">&para;</a></h3>
-<p>CDM is a model which is used in connecting different non-compatible systems. It is also referred to as <em>Canonical Data Model</em> in the standard integration patterns. It is the shared data model that needs to be understood by all <strong>Connectors</strong> participating in an <strong>Integration scenario</strong>. Each <strong>Integration scenario</strong> specifies the CDM that is used for it, while the <strong>Connectors</strong> participating in the scenario act as interpreters and translate between the CDM and the model used by the external system they are connecting to.</p>
+<p>CDM is a model which is used in connecting different non-compatible systems. 
+It is also referred to as <em>Canonical Data Model</em> in the standard integration patterns. 
+It is the shared data model that needs to be understood by all <strong>Connectors</strong> participating in an <strong>Integration scenario</strong>. 
+Each <strong>Integration scenario</strong> specifies the CDM that is used for it, 
+while the <strong>Connectors</strong> participating in the scenario act as interpreters 
+and translate between the CDM and the model used by the external system they are connecting to.</p>
 <h3 id="integration-scenario">Integration Scenario<a class="headerlink" href="#integration-scenario" title="Permanent link">&para;</a></h3>
 <p>A scenario is a means of linking connectors into one fluent flow.
-It is used for definition a specific integration flow, usually one concrete operation, between integration sides. Each adapter contains one or more scenarios that are related to the scope of the adapter itself.</p>
+They are used to define a specific integration flow, usually one concrete operation, between integration sides. 
+Each adapter contains one or more scenarios that are related to the scope of the adapter itself.</p>
 <h3 id="connector-group">Connector group<a class="headerlink" href="#connector-group" title="Permanent link">&para;</a></h3>
 <p>Connector groups are used for grouping connectors based on the system they belong to.</p>
 <h3 id="connector">Connector<a class="headerlink" href="#connector" title="Permanent link">&para;</a></h3>
-<p>A connector is a holder of <strong>external</strong> endpoint and represents one integration side. One connector would typically only talk to multiple external systems if they form a dependent unit - otherwise, for independent systems, separate connectors should be chosen, one for each individual system. 
-Its duty is to provide necessary processing and transformation into/from the common domain model. 
-They can be either Inbound or Outbound, with Inbound having Rest and SOAP as pre-built subtypes.</p>
+<p>A connector is a holder of an <strong>external</strong> endpoint and represents one integration side. 
+One connector would typically only talk to multiple external systems if they form a dependent unit - otherwise, 
+for independent systems, separate connectors should be provided, one for each individual system. 
+Their duty is to provide necessary processing and transformation into/from the Common Domain Model. 
+They can be either <em>Inbound</em> or <em>Outbound</em>, with Inbound having Rest and SOAP as pre-built subtypes.</p>
+<h3 id="composite-process">Composite Process<a class="headerlink" href="#composite-process" title="Permanent link">&para;</a></h3>
+<p>Combines multiple Integration Scenarios into one flow. 
+Its purpose is to allow reuse of the integration scenarios and provide mappings between different CDMs, 
+define order of execution and conditional execution.</p>
+<h3 id="orchestration">Orchestration<a class="headerlink" href="#orchestration" title="Permanent link">&para;</a></h3>
+<p>SIP Framework allows custom code to be added to multiple predefined points in the adapter
+that can control the behaviour of the specific declarative element. 
+At the end SIP framework builds the adapter using predefined SIP constructs (mapping, control flow, etc.) 
+and custom code defined by the developer. 
+Custom behaviour supplied by the developer in different places in the adapter is called "orchestration".</p>
+<p>There are 3 points of orchestration:
+* Connectors - Behavior of the connector that influences request and (optional) response flow. This orchestration can be written in <strong>Camel and Java</strong>.
+* Integration scenario - Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom <strong>SIP Orchestration DSL and Java</strong>. 
+* Composite process - Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom <strong>SIP Orchestration DSL and Java</strong>.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <p>To enable or disable declarative adapter building the following configuration property is used:</p>
 <pre class="highlight"><code class="language-yaml">sip:
@@ -246,10 +282,10 @@ They can be either Inbound or Outbound, with Inbound having Rest and SOAP as pre
     declarativestructure:
       enabled: true # enabled by default</code></pre>
 <h2 id="how-to-build">How to build<a class="headerlink" href="#how-to-build" title="Permanent link">&para;</a></h2>
-<p>Building one adapter requires all previously mentioned concept to be implemented.</p>
+<p>Building one adapter requires implementation of previously mentioned concepts.</p>
 <h3 id="integration-scenarios">Integration Scenarios<a class="headerlink" href="#integration-scenarios" title="Permanent link">&para;</a></h3>
-<p>In order to create a scenario first we need to extend IntegrationScenarioBase. 
-Then, annotate the class with @IntegrationScenario and fill in the required fields:</p>
+<p>In order to create a scenario first we need to create a class which extends IntegrationScenarioBase. 
+Then, annotate it with @IntegrationScenario and fill in the required fields:</p>
 <ul>
 <li><em>scenarioId</em> - unique identifier of a scenario, used in connectors to link them</li>
 <li><em>requestModel</em> - represents the common domain model, that both integration sides communicate through</li>
@@ -257,14 +293,17 @@ Then, annotate the class with @IntegrationScenario and fill in the required fiel
 <li><em>pathToDocumentationResource</em> (optional) - provides path to scenario documentation files
   (By default it will look for file in <em>document/structure/integration-scenarios/{scenarioId}.md</em>)</li>
 </ul>
-<pre class="highlight"><code class="language-java">  @IntegrationScenario(scenarioId = DemoScenario.ID, requestModel = DemoCDMRequest.class, responseModel = DemoCDMResponse.class)
+<pre class="highlight"><code class="language-java">  @IntegrationScenario(
+        scenarioId = DemoScenario.ID, 
+        requestModel = DemoCDMRequest.class, 
+        responseModel = DemoCDMResponse.class)
   public class DemoScenario extends IntegrationScenarioBase {
     public static final String ID = "Demo scenario";
   }</code></pre>
 <h3 id="connector-groups">Connector Groups<a class="headerlink" href="#connector-groups" title="Permanent link">&para;</a></h3>
 <p>Similar to scenarios, we first need to extend ConnectorGroupBase and also annotate the class with @ConnectorGroup.
-Defining connector group is optional. If a connector group is not represented in code, but is used in a connector, it will be automatically generated by the framework
-with the ID declared in the connector.
+Defining connector group is optional. If a connector group is not represented in code, but is used in a connector, 
+it will be automatically generated by the framework with the ID declared in the connector.
 Fields that are available are:</p>
 <ul>
 <li><em>groupId</em> - unique connector group identifier</li>
@@ -278,8 +317,9 @@ Fields that are available are:</p>
 <h3 id="connectors">Connectors<a class="headerlink" href="#connectors" title="Permanent link">&para;</a></h3>
 <p><strong>Inbound</strong></p>
 <p>Inbound connectors are the entry point to an adapter. 
-They need to extend <em>GenericInboundConnectorBase</em> and override necessary methods, 
-but also to be annotated with @InboundConnector, with the following fields:</p>
+They need to extend <em>GenericInboundConnectorBase</em>, or one of the dedicated implementations (REST and SOAP),
+and override necessary methods.
+Also, @InboundConnector annotation is required, with the following fields:</p>
 <ul>
 <li><em>connectorId</em> (optional) - unique identifier of a connector (automatically generated if missing)</li>
 <li><em>connectorGroup</em> - id of the connector group it belongs to</li>
@@ -292,7 +332,8 @@ but also to be annotated with @InboundConnector, with the following fields:</p>
 </ul>
 <p>Defining connector behavior is done by overriding certain methods and adding custom implementation.</p>
 <p>First, <em>EndpointConsumerBuilder defineInitiatingEndpoint()</em> it is used to define the input endpoint.
-StaticEndpointBuilders can be used to provide the endpoint definition. Under the hood connector uses <strong>Apache Camel</strong> endpoints.</p>
+StaticEndpointBuilders can be used to provide the endpoint definition. 
+Under the hood connector uses <strong>Apache Camel</strong> endpoints.</p>
 <p>Next is defining processing and transformation. 
 This is done in <em>Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator()</em>.
 Here an Orchestrator needs to be returned, which is available from ConnectorOrchestrator 
@@ -309,6 +350,12 @@ This is illustrated in the example below.</p>
       responseModel = InboundConnectorResponse.class)
   public class DemoConnector extends GenericInboundConnectorBase {
 
+    // Input endpoint
+    @Override
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+      return StaticEndpointBuilders.direct("entry-point");
+    }
+
     @Override
     protected Orchestrator&lt;ConnectorOrchestrationInfo&gt; defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
@@ -322,12 +369,6 @@ This is illustrated in the example below.</p>
 
     protected void defineResponseRoute(final RouteDefinition definition) {
         definition.process(exchange -&gt; System.out.println("Processing and transformation post-orchestration"));
-    }
-
-    // Input endpoint
-    @Override
-    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
-      return StaticEndpointBuilders.direct("entry-point");
     }
   }</code></pre>
 <p><strong>Rest connector</strong></p>
@@ -366,7 +407,7 @@ but also to be annotated with @OutboundConnector, with the following fields:</p>
 <li><em>connectorId</em> (optional) - unique identifier of a connector (automatically generated if missing)</li>
 <li><em>connectorGroup</em> - id of the connector group it belongs to</li>
 <li><em>integrationScenario</em> - id of the scenario from which it consumes data</li>
-<li><em>requestModel</em> - model which is expected be received on the input endpoint</li>
+<li><em>requestModel</em> - model which is expected to be received in the input endpoint from scenario</li>
 <li><em>responseModel</em> (optional) - model which is expected be returned to the caller</li>
 <li><em>domains</em> (optional) - domains this connector is a part of</li>
 <li><em>pathToDocumentationResource</em> (optional) - provides path to documentation files.
@@ -390,6 +431,12 @@ This is illustrated in the example below.</p>
       responseModel = OutboundConnectorResponse.class)
   public class DemoOutboundConnector extends GenericOutboundConnectorBase {
 
+    // external endpoint definition
+    @Override
+    protected EndpointProducerBuilder defineOutgoingEndpoint() {
+      return StaticEndpointBuilders.http("localhost:8080/update");
+    }
+
     @Override
     protected Orchestrator&lt;ConnectorOrchestrationInfo&gt; defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
@@ -404,12 +451,22 @@ This is illustrated in the example below.</p>
     protected void defineResponseRoute(final RouteDefinition definition) {
         definition.process(exchange -&gt; System.out.println("Processing and transformation after external system call"));
     }
-
-    // external endpoint definition
-    @Override
-    protected EndpointProducerBuilder defineOutgoingEndpoint() {
-      return StaticEndpointBuilders.http("localhost:8080/update");
-    }
+  }</code></pre>
+<h3 id="composite-processes">Composite Processes<a class="headerlink" href="#composite-processes" title="Permanent link">&para;</a></h3>
+<p>Similar procedure should be followed as on the other declarative elements.
+We first need to extend CompositeProcessBase.
+Then, annotate the class with @CompositeProcess and fill in the required fields:</p>
+<ul>
+<li><em>processId</em> - unique identifier of a process, used to identify it in SIP, should be unique</li>
+<li><em>provider</em> - represents the integration scenario that provides the data to the process</li>
+<li><em>consumers</em> (array) - represents integration scenarios that consume data from the process</li>
+<li><em>pathToDocumentationResource</em> (optional) - provides path to process documentation files
+  (By default it will look for file in <em>document/structure/processes/<composite-process-id>.md</em>)</li>
+</ul>
+<pre class="highlight"><code class="language-java">  @CompositeProcess(processId = "demo-process", consumers = {DemoScenarioConsumer1.class, DemoScenarioConsumer2.class},
+        provider = DemoScenario.class)  
+  public class DemoProcess extends CompositeProcessBase {
+    public static final String ID = "demo-process";
   }</code></pre>
               
             </div>
@@ -451,16 +508,17 @@ This is illustrated in the example below.</p>
     
   </span>
 </div>
-    <script>var base_url = '..';</script>
-    <script src="../js/theme_extra.js" defer></script>
-    <script src="../js/theme.js" defer></script>
-      <script src="../javascript/javadoc_menu_dropdown.js" defer></script>
-      <script src="../javascript/copy_to_clipboard.js" defer></script>
-      <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascript/javadoc_menu_dropdown.js"></script>
+      <script src="../javascript/copy_to_clipboard.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>
