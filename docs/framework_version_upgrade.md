@@ -2,8 +2,39 @@
 
 [TOC]
 
-## Upgrade from 2.0.0 to 3.0.0
-Version 3.0.0 is backwards compatible with version 2.0.0. All of the adapters written in version 2.0.0 will work with version 3.0.0 without any changes, but it's highly encouraged to use v3.0.0 concepts (Declarative structure).
+## Upgrade from 3.1.0 to 3.2.0
+Version 3.2.0 introduces changes in dependencies - most notably Spring 6, Apache Camel 4 and CXF 4. 
+There should be no breaking changes in this release. If the adapter developers relied on deprecated features from underlying frameworks then some changes are necessary but those should be fixed on case-by-case basis.
+
+Upgrade guide for specific use-cases:
+* Adapters using **SOAP** Connectors
+
+From adapter pom.xml file remove this plugin:
+```xml
+<plugin>
+  <groupId>de.codecentric</groupId>
+  <artifactId>cxf-spring-boot-starter-maven-plugin</artifactId>
+...
+</plugin>
+```
+and change it to:
+```xml
+<plugin>
+  <groupId>org.apache.cxf</groupId>
+  <artifactId>cxf-codegen-plugin</artifactId>
+</plugin>
+```
+Plugin is now managed in the parent pom so no further configuration is necessary. It is a standard CXF plugin and adapter developers can customize its behaviour if needed.
+
+
+* Adapters redefining **Spring Security**:
+If the adapter has redefined Spring Security configuration, exclusion of SIP Security was necessary:
+For example: 
+```java
+@SIPIntegrationAdapter(exclude = SIPSecurityAutoConfiguration.class)
+```
+That should no longer be necessary, SIP has upgraded to Spring Security 6 and should work with specific behaviour redefined in the adapter.
+
 
 ## Upgrade from 1.0.0 to 2.0.0
 

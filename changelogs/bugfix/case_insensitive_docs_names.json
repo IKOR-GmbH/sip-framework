@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "232",
-  "message": "Switched to using case insensitive IDs to find docs for Scenarios, Connectors and Groups."
-}

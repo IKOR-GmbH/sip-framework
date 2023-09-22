@@ -6,17 +6,26 @@
 
 SIP Declarative Adapter concept relies on using best practices in order to provide developers
 with a tool for building unified adapters. It is a structured approach for building integration adapters.
+By using predefined SIP constructs (Connector, Integration scenario, Connector Group, Composite process) 
+the adapter development is streamlined and built by the SIP Framework. 
+
 
 ## Concepts
 
 ### Common Domain Model (CDM)
 
-CDM is a model which is used in connecting different non-compatible systems. It is also referred to as _Canonical Data Model_ in the standard integration patterns. It is the shared data model that needs to be understood by all **Connectors** participating in an **Integration scenario**. Each **Integration scenario** specifies the CDM that is used for it, while the **Connectors** participating in the scenario act as interpreters and translate between the CDM and the model used by the external system they are connecting to.
+CDM is a model which is used in connecting different non-compatible systems. 
+It is also referred to as _Canonical Data Model_ in the standard integration patterns. 
+It is the shared data model that needs to be understood by all **Connectors** participating in an **Integration scenario**. 
+Each **Integration scenario** specifies the CDM that is used for it, 
+while the **Connectors** participating in the scenario act as interpreters 
+and translate between the CDM and the model used by the external system they are connecting to.
 
 ### Integration Scenario
 
 A scenario is a means of linking connectors into one fluent flow.
-It is used for definition a specific integration flow, usually one concrete operation, between integration sides. Each adapter contains one or more scenarios that are related to the scope of the adapter itself.
+They are used to define a specific integration flow, usually one concrete operation, between integration sides. 
+Each adapter contains one or more scenarios that are related to the scope of the adapter itself.
 
 ### Connector group
 
@@ -24,9 +33,31 @@ Connector groups are used for grouping connectors based on the system they belon
 
 ### Connector
 
-A connector is a holder of **external** endpoint and represents one integration side. One connector would typically only talk to multiple external systems if they form a dependent unit - otherwise, for independent systems, separate connectors should be chosen, one for each individual system. 
-Its duty is to provide necessary processing and transformation into/from the common domain model. 
-They can be either Inbound or Outbound, with Inbound having Rest and SOAP as pre-built subtypes.
+A connector is a holder of an **external** endpoint and represents one integration side. 
+One connector would typically only talk to multiple external systems if they form a dependent unit - otherwise, 
+for independent systems, separate connectors should be provided, one for each individual system. 
+Their duty is to provide necessary processing and transformation into/from the Common Domain Model. 
+They can be either _Inbound_ or _Outbound_, with Inbound having Rest and SOAP as pre-built subtypes.
+
+### Composite Process
+
+Combines multiple Integration Scenarios into one flow. 
+Its purpose is to allow reuse of the integration scenarios and provide mappings between different CDMs, 
+define order of execution and conditional execution.
+
+### Orchestration
+
+SIP Framework allows custom code to be added to multiple predefined points in the adapter
+that can control the behaviour of the specific declarative element. 
+At the end SIP framework builds the adapter using predefined SIP constructs (mapping, control flow, etc.) 
+and custom code defined by the developer. 
+Custom behaviour supplied by the developer in different places in the adapter is called "orchestration".
+
+There are 3 points of orchestration:
+* Connectors - Behavior of the connector that influences request and (optional) response flow. This orchestration can be written in **Camel and Java**.
+* Integration scenario - Execution order of Connectors, control flow, and response aggregation. This orchestration can be written in custom **SIP Orchestration DSL and Java**. 
+* Composite process - Execution order of integration scenarios, control flow and mappings. This orchestration can be written in custom **SIP Orchestration DSL and Java**.
+
 
 ## Configuration
 
@@ -41,12 +72,12 @@ sip:
 
 ## How to build
 
-Building one adapter requires all previously mentioned concept to be implemented.
+Building one adapter requires implementation of previously mentioned concepts.
 
 ### Integration Scenarios
 
-In order to create a scenario first we need to extend IntegrationScenarioBase. 
-Then, annotate the class with @IntegrationScenario and fill in the required fields:
+In order to create a scenario first we need to create a class which extends IntegrationScenarioBase. 
+Then, annotate it with @IntegrationScenario and fill in the required fields:
 
 - *scenarioId* - unique identifier of a scenario, used in connectors to link them
 - *requestModel* - represents the common domain model, that both integration sides communicate through
@@ -55,7 +86,10 @@ Then, annotate the class with @IntegrationScenario and fill in the required fiel
   (By default it will look for file in _document/structure/integration-scenarios/{scenarioId}.md_)
 
 ```java
-  @IntegrationScenario(scenarioId = DemoScenario.ID, requestModel = DemoCDMRequest.class, responseModel = DemoCDMResponse.class)
+  @IntegrationScenario(
+        scenarioId = DemoScenario.ID, 
+        requestModel = DemoCDMRequest.class, 
+        responseModel = DemoCDMResponse.class)
   public class DemoScenario extends IntegrationScenarioBase {
     public static final String ID = "Demo scenario";
   }
@@ -64,8 +98,8 @@ Then, annotate the class with @IntegrationScenario and fill in the required fiel
 ### Connector Groups
 
 Similar to scenarios, we first need to extend ConnectorGroupBase and also annotate the class with @ConnectorGroup.
-Defining connector group is optional. If a connector group is not represented in code, but is used in a connector, it will be automatically generated by the framework
-with the ID declared in the connector.
+Defining connector group is optional. If a connector group is not represented in code, but is used in a connector, 
+it will be automatically generated by the framework with the ID declared in the connector.
 Fields that are available are:
 
 - *groupId* - unique connector group identifier
@@ -84,8 +118,9 @@ Fields that are available are:
 **Inbound**
 
 Inbound connectors are the entry point to an adapter. 
-They need to extend _GenericInboundConnectorBase_ and override necessary methods, 
-but also to be annotated with @InboundConnector, with the following fields:
+They need to extend _GenericInboundConnectorBase_, or one of the dedicated implementations (REST and SOAP),
+and override necessary methods.
+Also, @InboundConnector annotation is required, with the following fields:
 
 - *connectorId* (optional) - unique identifier of a connector (automatically generated if missing)
 - *connectorGroup* - id of the connector group it belongs to
@@ -99,7 +134,8 @@ but also to be annotated with @InboundConnector, with the following fields:
 Defining connector behavior is done by overriding certain methods and adding custom implementation.
 
 First, *EndpointConsumerBuilder defineInitiatingEndpoint()* it is used to define the input endpoint.
-StaticEndpointBuilders can be used to provide the endpoint definition. Under the hood connector uses **Apache Camel** endpoints.
+StaticEndpointBuilders can be used to provide the endpoint definition. 
+Under the hood connector uses **Apache Camel** endpoints.
 
 Next is defining processing and transformation. 
 This is done in *Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator()*.
@@ -119,6 +155,12 @@ This is illustrated in the example below.
       responseModel = InboundConnectorResponse.class)
   public class DemoConnector extends GenericInboundConnectorBase {
 
+    // Input endpoint
+    @Override
+    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
+      return StaticEndpointBuilders.direct("entry-point");
+    }
+
     @Override
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
@@ -132,12 +174,6 @@ This is illustrated in the example below.
 
     protected void defineResponseRoute(final RouteDefinition definition) {
         definition.process(exchange -> System.out.println("Processing and transformation post-orchestration"));
-    }
-
-    // Input endpoint
-    @Override
-    protected EndpointConsumerBuilder defineInitiatingEndpoint() {
-      return StaticEndpointBuilders.direct("entry-point");
     }
   }
 ```
@@ -185,7 +221,7 @@ but also to be annotated with @OutboundConnector, with the following fields:
 - *connectorId* (optional) - unique identifier of a connector (automatically generated if missing)
 - *connectorGroup* - id of the connector group it belongs to
 - *integrationScenario* - id of the scenario from which it consumes data
-- *requestModel* - model which is expected be received on the input endpoint
+- *requestModel* - model which is expected to be received in the input endpoint from scenario
 - *responseModel* (optional) - model which is expected be returned to the caller
 - *domains* (optional) - domains this connector is a part of
 - *pathToDocumentationResource* (optional) - provides path to documentation files.
@@ -213,6 +249,12 @@ This is illustrated in the example below.
       responseModel = OutboundConnectorResponse.class)
   public class DemoOutboundConnector extends GenericOutboundConnectorBase {
 
+    // external endpoint definition
+    @Override
+    protected EndpointProducerBuilder defineOutgoingEndpoint() {
+      return StaticEndpointBuilders.http("localhost:8080/update");
+    }
+
     @Override
     protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
       return ConnectorOrchestrator.forConnector(this)
@@ -227,13 +269,25 @@ This is illustrated in the example below.
     protected void defineResponseRoute(final RouteDefinition definition) {
         definition.process(exchange -> System.out.println("Processing and transformation after external system call"));
     }
-    
-    // external endpoint definition
-    @Override
-    protected EndpointProducerBuilder defineOutgoingEndpoint() {
-      return StaticEndpointBuilders.http("localhost:8080/update");
-    }
   }
 ```
 
+### Composite Processes
 
+Similar procedure should be followed as on the other declarative elements.
+We first need to extend CompositeProcessBase.
+Then, annotate the class with @CompositeProcess and fill in the required fields:
+
+- *processId* - unique identifier of a process, used to identify it in SIP, should be unique
+- *provider* - represents the integration scenario that provides the data to the process
+- *consumers* (array) - represents integration scenarios that consume data from the process
+- *pathToDocumentationResource* (optional) - provides path to process documentation files
+  (By default it will look for file in _document/structure/processes/<composite-process-id>.md_)
+
+```java
+  @CompositeProcess(processId = "demo-process", consumers = {DemoScenarioConsumer1.class, DemoScenarioConsumer2.class},
+        provider = DemoScenario.class)  
+  public class DemoProcess extends CompositeProcessBase {
+    public static final String ID = "demo-process";
+  }
+```

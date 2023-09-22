@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "231",
-  "message": "Updated error messages for connectors without parent class, connectors with overridden mappings, connectors with duplicate ids and show default request or response transformer message only once."
-}

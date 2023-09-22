@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "227",
-  "message": "Improved validation for inputs related to package naming in order to follow Java conventions."
-}

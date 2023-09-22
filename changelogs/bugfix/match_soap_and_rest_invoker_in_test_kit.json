@@ -1,5 +1,0 @@
-{
-  "author": "Nemikor",
-  "pullrequestId": "233",
-  "message": "Using RestTemplate in both SOAP and REST Test Kit invokers to avoid REST config from Camel."
-}
