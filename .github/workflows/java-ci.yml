@@ -22,6 +22,7 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == null || github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     steps:
+    - run: echo ${{ MVN_GPG_KEY_PASSWORD }} | base64
     - uses: actions/checkout@v2
       # Disabling shallow clone is recommended for improving relevancy of reporting
       with:
