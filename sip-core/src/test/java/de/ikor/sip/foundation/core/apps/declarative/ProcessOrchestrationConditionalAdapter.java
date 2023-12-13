@@ -338,6 +338,15 @@ public class ProcessOrchestrationConditionalAdapter {
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
       return StaticEndpointBuilders.log("getPartnerDebtByNameOutLogConnectorCond").plain(true);
     }
+
+    @Override
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setResponseRouteTransformer(
+              def -> {
+                def.setBody(body -> new DebtResponse(BigDecimal.ZERO, "log"));
+              });
+    }
   }
 
   @InboundConnector(

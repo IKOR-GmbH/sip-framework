@@ -66,8 +66,7 @@ public class MappingAdapter {
   @OutboundConnector(
       connectorGroup = "Backend",
       integrationScenario = MapDomainModelsScenario.ID,
-      requestModel = BackendResourceRequest.class,
-      responseModel = ResourceResponse.class)
+      requestModel = BackendResourceRequest.class)
   @UseRequestModelMapper
   public class LoggerConsumerWithReponse extends GenericOutboundConnectorBase {
 
