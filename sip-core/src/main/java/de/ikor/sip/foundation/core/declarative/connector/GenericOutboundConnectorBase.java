@@ -88,9 +88,6 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
     return outboundConnectorAnnotation.requestModel();
   }
 
-  //  boolean hasResponseFlow() {
-  //    return getResponseModelClass().isPresent();
-  //  }
   @Override
   public boolean hasResponseFlow() {
     var scenarioResponseModel = getScenario().get().getResponseModelClass();
