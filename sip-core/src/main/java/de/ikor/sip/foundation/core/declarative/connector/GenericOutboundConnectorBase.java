@@ -89,12 +89,6 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
   }
 
   @Override
-  public boolean hasResponseFlow() {
-    var scenarioResponseModel = getScenario().get().getResponseModelClass();
-    return scenarioResponseModel.isPresent() && !scenarioResponseModel.get().equals(Void.class);
-  }
-
-  @Override
   public final Optional<Class<?>> getResponseModelClass() {
     var clazz = outboundConnectorAnnotation.responseModel();
     return clazz.equals(Void.class) ? Optional.empty() : Optional.of(clazz);

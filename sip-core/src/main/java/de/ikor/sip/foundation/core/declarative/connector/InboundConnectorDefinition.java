@@ -2,7 +2,6 @@ package de.ikor.sip.foundation.core.declarative.connector;
 
 import de.ikor.sip.foundation.core.declarative.RoutesRegistry;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioProviderDefinition;
-import java.util.Optional;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.OptionalIdentifiedDefinition;
 
@@ -48,17 +47,6 @@ public non-sealed interface InboundConnectorDefinition<T extends OptionalIdentif
   }
 
   String getScenarioId();
-
-  /**
-   * Returns whether this connector has a response flow in the connected scenario. The default
-   * implementation returns <code>true</code> if {@link #getResponseModelClass()} returns a
-   * non-empty {@link Optional}.
-   *
-   * @return <code>true</code> if the connector has a response flow, <code>false</code> otherwise
-   */
-  default boolean hasResponseFlow() {
-    return getResponseModelClass().isPresent();
-  }
 
   /**
    * Returns the class of the type that is required to define the inbound endpoint(s).
