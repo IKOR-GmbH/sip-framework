@@ -1,14 +1,13 @@
-package de.ikor.sip.foundation.testkit.config.configurationproperties;
+package de.ikor.sip.foundation.testkit.configurationproperties;
 
 import static de.ikor.sip.foundation.testkit.config.TestCasesConfig.*;
+import static de.ikor.sip.foundation.testkit.configurationproperties.TestCaseBatchDefinition.DUPLICATE_TEST_TITLE_MESSAGE;
 import static de.ikor.sip.foundation.testkit.util.TestCaseDefinitionValidator.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
-import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseBatchDefinition;
-import de.ikor.sip.foundation.testkit.configurationproperties.TestCaseDefinition;
 import de.ikor.sip.foundation.testkit.configurationproperties.models.EndpointProperties;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -145,6 +144,18 @@ class TestCaseBatchDefinitionTest {
     assertThatThrownBy(() -> subject.validate(subject, mock(Errors.class)))
         .isInstanceOf(SIPFrameworkException.class)
         .hasMessage(String.format(BOTH_PARAMETERS_PROVIDED_EXCEPTION_MSG, THEN_EXPECT, TEST_NAME));
+  }
+
+  @Test
+  void WHEN_givenMultipleTestsWithSameName_THEN_SIPFrameworkException() {
+    // arrange
+    TestCaseDefinition duplicateTest = createValidTestCaseDefinition();
+    subject.setTestCaseDefinitions(List.of(testCaseDefinition, duplicateTest));
+
+    // act & assertmvn com.spotify.fmt:fmt-maven-plugin:format
+    assertThatThrownBy(() -> subject.validate(subject, mock(Errors.class)))
+        .isInstanceOf(SIPFrameworkException.class)
+        .hasMessage(String.format(DUPLICATE_TEST_TITLE_MESSAGE, TEST_NAME));
   }
 
   private TestCaseDefinition createValidTestCaseDefinition() {

@@ -1,12 +1,17 @@
 package de.ikor.sip.foundation.testkit.configurationproperties;
 
+import de.ikor.sip.foundation.core.util.exception.SIPFrameworkException;
 import de.ikor.sip.foundation.testkit.config.AutoBatchTestCaseLoading;
 import de.ikor.sip.foundation.testkit.util.TestCaseDefinitionValidator;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -25,6 +30,9 @@ import org.springframework.validation.annotation.Validated;
 @ConditionalOnBean(AutoBatchTestCaseLoading.class)
 public class TestCaseBatchDefinition implements Validator {
 
+  static final String DUPLICATE_TEST_TITLE_MESSAGE =
+      "Non unique test case titles detected: [\"%s\"]. Please assign an unique title to each test case.";
+
   @Valid private List<TestCaseDefinition> testCaseDefinitions = new ArrayList<>();
 
   @Override
@@ -37,6 +45,24 @@ public class TestCaseBatchDefinition implements Validator {
     TestCaseBatchDefinition testCaseBatchDefinition = (TestCaseBatchDefinition) target;
     for (TestCaseDefinition definition : testCaseBatchDefinition.getTestCaseDefinitions()) {
       TestCaseDefinitionValidator.validate(definition);
+    }
+
+    validateUniqueTestTitles(testCaseBatchDefinition);
+  }
+
+  private static void validateUniqueTestTitles(TestCaseBatchDefinition testCaseBatchDefinition) {
+    List<String> duplicateCases =
+        testCaseBatchDefinition.getTestCaseDefinitions().stream()
+            .map(TestCaseDefinition::getTitle)
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+            .entrySet()
+            .stream()
+            .filter(m -> m.getValue() > 1)
+            .map(Map.Entry::getKey)
+            .toList();
+    if (!duplicateCases.isEmpty()) {
+      throw SIPFrameworkException.init(
+          DUPLICATE_TEST_TITLE_MESSAGE, StringUtils.join(duplicateCases, "\",\""));
     }
   }
 }
