@@ -125,5 +125,5 @@ If the archetype isn't used, then this configuration can be added to the .pom fi
 </plugin>
 ```
 
-_Note_: Please refer to the _sip-starter-parent_ pom.xml for the plugin configuration. By default, it scans only *.wsdl files inside _resources_ folder.
+_Note_: Please refer to the _sip-starter-parent_ pom.xml for the default plugin configuration. By default, it scans only *.wsdl files inside _resources_ folder.
 That can be overridden in the adapter's own <plugin> configuration by providing an alternative configuration.
