@@ -314,8 +314,9 @@ public class AdapterBuilder extends RouteBuilder {
             .orElseThrow(
                 () ->
                     SIPFrameworkInitializationException.init(
-                        "Composite process '%s' uses a provider class '%' which couldn't be found in the registry. Please check your configuration.",
-                        compositeProcess.getId(), compositeProcess.getProviderDefinition()));
+                        "Composite process '%s' uses a provider scenario '%s' which couldn't be found in the registry. Please check your configuration.",
+                        compositeProcess.getId(),
+                        compositeProcess.getProviderDefinition().getName()));
     final var startingEndpoint =
         StaticEndpointBuilders.direct(
             String.format(
@@ -334,8 +335,8 @@ public class AdapterBuilder extends RouteBuilder {
                       .orElseThrow(
                           () ->
                               SIPFrameworkInitializationException.init(
-                                  "Composite process '%s' uses a consumer class '%' which couldn't be found in the registry. Please check your configuration.",
-                                  compositeProcess.getId(), consumer));
+                                  "Composite process '%s' uses a consumer scenario '%s' which couldn't be found in the registry. Please check your configuration.",
+                                  compositeProcess.getId(), consumer.getName()));
               var endingEndpoint =
                   StaticEndpointBuilders.direct(
                       String.format(
