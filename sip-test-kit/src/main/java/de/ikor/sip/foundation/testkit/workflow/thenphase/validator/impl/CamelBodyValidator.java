@@ -38,22 +38,33 @@ public class CamelBodyValidator implements ExchangeValidator {
     String expected = extractBodyAsString(expectedResponse.getMessage());
     String actual = extractBodyAsString(actualResult.getMessage());
 
-    if (!isMatchPossible(actual, expected)) {
+    if (areSurelyDifferent(actual, expected)) {
       return new ValidationResult(false, BODY_VALIDATION_UNSUCCESSFUL);
     }
 
-    Map<Boolean, List<ComparatorResult>> results =
-        comparators.stream()
+    Map<Boolean, List<ComparatorResult>> resultsByOutcome = compareAndGroupResults(expected, actual);
+
+    return isValidationSuccess(resultsByOutcome)
+        ? new ValidationResult(true, BODY_VALIDATION_SUCCESSFUL)
+        : getFirstFailedOrDefault(resultsByOutcome, new ValidationResult(false, BODY_VALIDATION_UNSUCCESSFUL));
+  }
+
+  private Map<Boolean, List<ComparatorResult>> compareAndGroupResults(String expected, String actual) {
+    return comparators.stream()
             .map(comparator -> safeCompare(expected, actual, comparator))
             .filter(comparatorResult -> comparatorResult.getStatus() != null)
             .collect(groupingBy(ComparatorResult::getStatus));
+  }
 
-    return isValidationSuccess(results)
-        ? new ValidationResult(true, BODY_VALIDATION_SUCCESSFUL)
-        : results.get(false).stream()
+  private ValidationResult getFirstFailedOrDefault(Map<Boolean, List<ComparatorResult>> results, ValidationResult defaultResult) {
+    return results.get(false).stream()
             .map(this::toValidationResult)
             .findFirst()
-            .orElse(new ValidationResult(false, BODY_VALIDATION_UNSUCCESSFUL));
+            .orElse(defaultResult);
+  }
+
+  private static boolean areSurelyDifferent(String actual, String expected) {
+    return isNoneBlank(expected) && isBlank(actual);
   }
 
   @Override
@@ -88,11 +99,4 @@ public class CamelBodyValidator implements ExchangeValidator {
     return validationResults.containsKey(true) && !validationResults.get(true).isEmpty();
   }
 
-  private boolean isMatchPossible(String actual, String expected) {
-    return !areSurelyDifferent(actual, expected);
-  }
-
-  private static boolean areSurelyDifferent(String actual, String expected) {
-    return isNoneBlank(expected) && isBlank(actual);
-  }
 }
