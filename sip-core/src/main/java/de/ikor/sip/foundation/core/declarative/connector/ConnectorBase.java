@@ -65,20 +65,6 @@ public abstract non-sealed class ConnectorBase
     return orchestrator;
   }
 
-  /**
-   * Returns whether this connector has a response flow in the connected scenario. The default
-   * implementation returns <code>true</code> if integration scenario's {@link
-   * #getResponseModelClass()} returns a non-empty {@link Optional} and it's not a default value -
-   * Void.class
-   *
-   * @return <code>true</code> if the connector has a response flow, <code>false</code> otherwise
-   */
-  @Override
-  public boolean hasResponseFlow() {
-    var scenarioResponseModel = getScenario().get().getResponseModelClass();
-    return scenarioResponseModel.isPresent() && !scenarioResponseModel.get().equals(Void.class);
-  }
-
   @SuppressWarnings("unchecked")
   public Optional<RequestMappingRouteTransformer<Object, Object>> getRequestMapper() {
     if (requestMappingRouteTransformer != null) {

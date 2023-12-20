@@ -60,13 +60,6 @@ public sealed interface ConnectorDefinition extends Orchestratable<ConnectorOrch
   Class<?> getRequestModelClass();
 
   /**
-   * Returns whether this connector has a response flow in the connected scenario.
-   *
-   * @return <code>true</code> if the connector has a response flow, <code>false</code> otherwise
-   */
-  boolean hasResponseFlow();
-
-  /**
    * Returns the base class of the response model used by the connector. This is the response model
    * that is used by the adapter to communicate with the external system.
    *
