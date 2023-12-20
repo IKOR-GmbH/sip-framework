@@ -42,25 +42,29 @@ public class CamelBodyValidator implements ExchangeValidator {
       return new ValidationResult(false, BODY_VALIDATION_UNSUCCESSFUL);
     }
 
-    Map<Boolean, List<ComparatorResult>> resultsByOutcome = compareAndGroupResults(expected, actual);
+    Map<Boolean, List<ComparatorResult>> resultsByOutcome =
+        compareAndGroupResults(expected, actual);
 
     return isValidationSuccess(resultsByOutcome)
         ? new ValidationResult(true, BODY_VALIDATION_SUCCESSFUL)
-        : getFirstFailedOrDefault(resultsByOutcome, new ValidationResult(false, BODY_VALIDATION_UNSUCCESSFUL));
+        : getFirstFailedOrDefault(
+            resultsByOutcome, new ValidationResult(false, BODY_VALIDATION_UNSUCCESSFUL));
   }
 
-  private Map<Boolean, List<ComparatorResult>> compareAndGroupResults(String expected, String actual) {
+  private Map<Boolean, List<ComparatorResult>> compareAndGroupResults(
+      String expected, String actual) {
     return comparators.stream()
-            .map(comparator -> safeCompare(expected, actual, comparator))
-            .filter(comparatorResult -> comparatorResult.getStatus() != null)
-            .collect(groupingBy(ComparatorResult::getStatus));
+        .map(comparator -> safeCompare(expected, actual, comparator))
+        .filter(comparatorResult -> comparatorResult.getStatus() != null)
+        .collect(groupingBy(ComparatorResult::getStatus));
   }
 
-  private ValidationResult getFirstFailedOrDefault(Map<Boolean, List<ComparatorResult>> results, ValidationResult defaultResult) {
+  private ValidationResult getFirstFailedOrDefault(
+      Map<Boolean, List<ComparatorResult>> results, ValidationResult defaultResult) {
     return results.get(false).stream()
-            .map(this::toValidationResult)
-            .findFirst()
-            .orElse(defaultResult);
+        .map(this::toValidationResult)
+        .findFirst()
+        .orElse(defaultResult);
   }
 
   private static boolean areSurelyDifferent(String actual, String expected) {
@@ -98,5 +102,4 @@ public class CamelBodyValidator implements ExchangeValidator {
       Map<Boolean, List<ComparatorResult>> validationResults) {
     return validationResults.containsKey(true) && !validationResults.get(true).isEmpty();
   }
-
 }
