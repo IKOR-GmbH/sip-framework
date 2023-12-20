@@ -152,7 +152,7 @@ class TestCaseBatchDefinitionTest {
     TestCaseDefinition duplicateTest = createValidTestCaseDefinition();
     subject.setTestCaseDefinitions(List.of(testCaseDefinition, duplicateTest));
 
-    // act & assertmvn com.spotify.fmt:fmt-maven-plugin:format
+    // act & assert
     assertThatThrownBy(() -> subject.validate(subject, mock(Errors.class)))
         .isInstanceOf(SIPFrameworkException.class)
         .hasMessage(String.format(DUPLICATE_TEST_TITLE_MESSAGE, TEST_NAME));
