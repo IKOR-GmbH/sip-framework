@@ -169,7 +169,6 @@
                                 <wsdlRoot>${basedir}/src/main/resources</wsdlRoot>
                                 <includes>
                                     <include>**/*.wsdl</include>
-                                    <include>**/*.xsd</include>
                                 </includes>
                             </configuration>
                             <goals>
