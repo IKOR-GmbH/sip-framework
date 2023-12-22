@@ -31,7 +31,7 @@ import org.springframework.validation.annotation.Validated;
 public class TestCaseBatchDefinition implements Validator {
 
   static final String DUPLICATE_TEST_TITLE_MESSAGE =
-      "Non unique test case titles detected: [\"%s\"]. Please assign an unique title to each test case.";
+      "Non unique test case titles detected: [\"%s\"]. Please assign a unique title to each test case.";
 
   @Valid private List<TestCaseDefinition> testCaseDefinitions = new ArrayList<>();
 
