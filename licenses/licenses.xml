@@ -388,7 +388,6 @@
           <name>BSD 2-Clause License</name>
           <url>https://opensource.org/licenses/BSD-2-Clause</url>
           <distribution>repo</distribution>
-          <file>bsd 2-clause license - bsd-2-clause.html</file>
         </license>
       </licenses>
     </dependency>
@@ -1267,7 +1266,6 @@
           <name>The MIT License</name>
           <url>http://www.opensource.org/licenses/mit-license.php</url>
           <distribution>repo</distribution>
-          <file>the mit license - mit-license.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3450,7 +3448,6 @@
           <name>The BSD License</name>
           <url>http://www.opensource.org/licenses/bsd-license.php</url>
           <distribution>repo</distribution>
-          <file>the bsd license - bsd-license.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3628,7 +3625,6 @@
         <license>
           <name>BSD-2-Clause</name>
           <url>https://opensource.org/licenses/BSD-2-Clause</url>
-          <file>bsd 2-clause license - bsd-2-clause.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3892,7 +3888,6 @@
           <name>MIT License</name>
           <url>http://www.opensource.org/licenses/mit-license.php</url>
           <distribution>repo</distribution>
-          <file>the mit license - mit-license.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3905,7 +3900,6 @@
           <name>MIT License</name>
           <url>http://www.opensource.org/licenses/mit-license.php</url>
           <distribution>repo</distribution>
-          <file>the mit license - mit-license.html</file>
         </license>
       </licenses>
     </dependency>
