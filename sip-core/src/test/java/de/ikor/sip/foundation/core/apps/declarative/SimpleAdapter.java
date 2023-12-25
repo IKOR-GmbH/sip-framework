@@ -27,7 +27,10 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 public class SimpleAdapter {
 
   // ----> AppendStaticMessage SCENARIO
-  @IntegrationScenario(scenarioId = AppendStaticMessageScenario.ID, requestModel = String.class)
+  @IntegrationScenario(
+      scenarioId = AppendStaticMessageScenario.ID,
+      requestModel = String.class,
+      responseModel = String.class)
   public class AppendStaticMessageScenario extends IntegrationScenarioBase {
     public static final String ID = "AppendStaticMessage";
   }
@@ -79,7 +82,10 @@ public class SimpleAdapter {
   // <---- AppendStaticMessage SCENARIO
 
   // ----> RestDSL SCENARIO
-  @IntegrationScenario(scenarioId = RestDSLScenario.ID, requestModel = String.class)
+  @IntegrationScenario(
+      scenarioId = RestDSLScenario.ID,
+      requestModel = String.class,
+      responseModel = String.class)
   public class RestDSLScenario extends IntegrationScenarioBase {
     public static final String ID = "RestDSL";
   }

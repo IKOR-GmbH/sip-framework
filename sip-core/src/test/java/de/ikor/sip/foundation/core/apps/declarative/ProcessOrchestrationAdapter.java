@@ -296,5 +296,14 @@ public class ProcessOrchestrationAdapter {
     protected EndpointProducerBuilder defineOutgoingEndpoint() {
       return StaticEndpointBuilders.log("getPartnerDebtByNameOutLogConnector").plain(true);
     }
+
+    @Override
+    protected Orchestrator<ConnectorOrchestrationInfo> defineTransformationOrchestrator() {
+      return ConnectorOrchestrator.forConnector(this)
+          .setResponseRouteTransformer(
+              def -> {
+                def.setBody(body -> new DebtResponse("partner", BigDecimal.ZERO, "log"));
+              });
+    }
   }
 }
