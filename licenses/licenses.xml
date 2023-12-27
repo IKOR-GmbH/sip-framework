@@ -727,6 +727,7 @@
           <name>The MIT License (MIT)</name>
           <url>http://opensource.org/licenses/MIT</url>
           <distribution>repo</distribution>
+          <file>the mit license (mit) - mit.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3356,6 +3357,7 @@
           <name>The MIT License</name>
           <url>http://opensource.org/licenses/MIT</url>
           <distribution>repo</distribution>
+          <file>the mit license (mit) - mit.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3592,6 +3594,7 @@
         <license>
           <name>BSD License 3</name>
           <url>http://opensource.org/licenses/BSD-3-Clause</url>
+          <file>bsd license 3 - bsd-3-clause.html</file>
         </license>
       </licenses>
     </dependency>
@@ -3603,6 +3606,7 @@
         <license>
           <name>BSD License 3</name>
           <url>http://opensource.org/licenses/BSD-3-Clause</url>
+          <file>bsd license 3 - bsd-3-clause.html</file>
         </license>
       </licenses>
     </dependency>

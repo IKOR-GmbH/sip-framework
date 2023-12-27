@@ -182,33 +182,29 @@ public class AdapterBuilder extends RouteBuilder {
                     TO_CDM_EXCEPTION_MESSAGE))
             .to(handoffToEndpoint);
 
-    if (inboundConnector.hasResponseFlow()) {
-      scenarioDefinition
-          .getResponseModelClass()
-          .ifPresent(
-              cdmModel ->
-                  handoffRouteDefinition.process(
-                      new CDMValidator(
-                          scenarioDefinition.getId(),
-                          inboundConnector.getId(),
-                          cdmModel,
-                          FROM_CDM_EXCEPTION_MESSAGE)));
-      handoffRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
-    }
+    scenarioDefinition
+        .getResponseModelClass()
+        .ifPresent(
+            cdmModel ->
+                handoffRouteDefinition.process(
+                    new CDMValidator(
+                        scenarioDefinition.getId(),
+                        inboundConnector.getId(),
+                        cdmModel,
+                        FROM_CDM_EXCEPTION_MESSAGE)));
+    handoffRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
 
     // Build orchestration route(s) to/from scenario
     final var requestRouteDefinition =
         from(StaticEndpointBuilders.direct(requestOrchestrationRouteId))
             .routeId(requestOrchestrationRouteId);
-    final Optional<RouteDefinition> responseRouteDefinition =
-        inboundConnector.hasResponseFlow()
-            ? Optional.of(
-                from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
-                    .routeId(responseOrchestrationRouteId))
-            : Optional.empty();
+    final RouteDefinition responseRouteDefinition =
+        from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
+            .routeId(responseOrchestrationRouteId);
 
     var orchestrationInfo =
-        new OrchestrationRoutes(requestRouteDefinition, responseRouteDefinition);
+        new OrchestrationRoutes(requestRouteDefinition, Optional.of(responseRouteDefinition));
+
     if (inboundConnector.getOrchestrator().canOrchestrate(orchestrationInfo)) {
       inboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
     }
@@ -247,23 +243,20 @@ public class AdapterBuilder extends RouteBuilder {
         from(StaticEndpointBuilders.direct(externalEndpointRouteId))
             .routeId(externalEndpointRouteId);
     outboundConnector.defineOutboundEndpoints(endpointRouteDefinition);
-    if (outboundConnector.hasResponseFlow()) {
-      endpointRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
-    }
+
+    endpointRouteDefinition.to(StaticEndpointBuilders.direct(responseOrchestrationRouteId));
 
     // Build orchestration route(s) to/from scenario
     final var requestRouteDefinition =
         from(StaticEndpointBuilders.direct(requestOrchestrationRouteId))
             .routeId(requestOrchestrationRouteId);
-    final Optional<RouteDefinition> responseRouteDefinition =
-        outboundConnector.hasResponseFlow()
-            ? Optional.of(
-                from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
-                    .routeId(responseOrchestrationRouteId))
-            : Optional.empty();
+
+    final RouteDefinition responseRouteDefinition =
+        from(StaticEndpointBuilders.direct(responseOrchestrationRouteId))
+            .routeId(responseOrchestrationRouteId);
 
     var orchestrationInfo =
-        new OrchestrationRoutes(requestRouteDefinition, responseRouteDefinition);
+        new OrchestrationRoutes(requestRouteDefinition, Optional.of(responseRouteDefinition));
     if (outboundConnector.getOrchestrator().canOrchestrate(orchestrationInfo)) {
       outboundConnector.getOrchestrator().doOrchestrate(orchestrationInfo);
     }
@@ -273,14 +266,12 @@ public class AdapterBuilder extends RouteBuilder {
         .getResponseModelClass()
         .ifPresent(
             cdmModel ->
-                responseRouteDefinition.ifPresent(
-                    route ->
-                        route.process(
-                            new CDMValidator(
-                                scenarioDefinition.getId(),
-                                outboundConnector.getId(),
-                                cdmModel,
-                                TO_CDM_EXCEPTION_MESSAGE))));
+                responseRouteDefinition.process(
+                    new CDMValidator(
+                        scenarioDefinition.getId(),
+                        outboundConnector.getId(),
+                        cdmModel,
+                        TO_CDM_EXCEPTION_MESSAGE)));
   }
 
   @SuppressWarnings("unchecked")
