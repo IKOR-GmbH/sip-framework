@@ -110,7 +110,7 @@ public class AdapterRouteEndpoint {
    */
   @GetMapping("/{routeId}")
   @Operation(summary = "Get route details", description = "Get route details")
-  public AdapterRouteDetails route(@RouteIdParameter @PathVariable String routeId) {
+  public AdapterRouteDetails route(@RouteIdParameter @PathVariable("routeId") String routeId) {
     return new AdapterRouteDetails(getRouteMBean(routeId));
   }
 
@@ -123,8 +123,8 @@ public class AdapterRouteEndpoint {
   @PostMapping("/{routeId}/{operation}")
   @Operation(summary = "Execute operation", description = "Executes operation on route")
   public void execute(
-      @RouteIdParameter @PathVariable String routeId,
-      @RouteOperationParameter @PathVariable String operation) {
+      @RouteIdParameter @PathVariable("routeId") String routeId,
+      @RouteOperationParameter @PathVariable("operation") String operation) {
     RouteOperation routeOperation = RouteOperation.fromId(operation);
     routeOperation.execute(routeController, routeId);
   }
@@ -143,7 +143,7 @@ public class AdapterRouteEndpoint {
    */
   @PostMapping("/{routeId}/reset")
   @Operation(summary = "Reset route", description = "Reset route")
-  public void resetStatistics(@RouteIdParameter @PathVariable String routeId) {
+  public void resetStatistics(@RouteIdParameter @PathVariable("routeId") String routeId) {
     getRouteMBean(routeId).reset();
   }
 
@@ -157,7 +157,8 @@ public class AdapterRouteEndpoint {
       summary = "Execute operation on sipmc",
       description =
           "Execute operation on all routes which use consumer from SIP Middle component (sipmc)")
-  public void executeOnSipmcRoute(@RouteOperationParameter @PathVariable String operation) {
+  public void executeOnSipmcRoute(
+      @RouteOperationParameter @PathVariable("operation") String operation) {
     Stream<Route> sipMcRoutes = filterMiddleComponentProducerRoutes(this.camelContext.getRoutes());
     sipMcRoutes.forEach(route -> this.execute(route.getRouteId(), operation));
   }
