@@ -58,6 +58,7 @@ public class ScenarioOrchestrationHandlers {
     return new ThrowErrorOnUnhandledRequestHandler();
   }
 
+  @SuppressWarnings("unchecked")
   private static <M> ScenarioOrchestrationContext<M> retrieveOrchestrationContext(
       final Exchange exchange) {
     final var context =
@@ -69,6 +70,7 @@ public class ScenarioOrchestrationHandlers {
     return context;
   }
 
+  @SuppressWarnings("unchecked")
   private static List<IntegrationScenarioConsumerDefinition> retrieveCalledConsumerList(
       final Exchange exchange) {
     return Objects.requireNonNull(

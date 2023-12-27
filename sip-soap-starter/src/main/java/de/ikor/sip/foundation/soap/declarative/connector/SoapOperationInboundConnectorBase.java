@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.soap.declarative.connector;
 import de.ikor.sip.foundation.core.declarative.connector.GenericInboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
-import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointConsumerBuilder;
@@ -38,7 +38,7 @@ public abstract class SoapOperationInboundConnectorBase<T> extends GenericInboun
     try {
       this.serviceClass =
           (Class<T>)
-              DeclarativeHelper.getClassFromGeneric(
+              DeclarativeReflectionUtils.getClassFromGeneric(
                   getClass(), SoapOperationInboundConnectorBase.class);
     } catch (Exception e) {
       this.serviceClass = null;

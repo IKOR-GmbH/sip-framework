@@ -5,7 +5,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.AutoMagicScenarioOrchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.ScenarioOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.orchestration.scenario.StandardScenarioOrchestrators;
-import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 public abstract class IntegrationScenarioBase implements IntegrationScenarioDefinition {
 
   private final IntegrationScenario scenarioAnnotation =
-      DeclarativeHelper.getAnnotationOrThrow(IntegrationScenario.class, this);
+      DeclarativeReflectionUtils.getAnnotationOrThrow(IntegrationScenario.class, this);
 
   /**
    * Returns the orchestrator for this scenario.

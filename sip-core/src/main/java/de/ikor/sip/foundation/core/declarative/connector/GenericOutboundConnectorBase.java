@@ -5,7 +5,7 @@ import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.fo
 import de.ikor.sip.foundation.core.declarative.annonation.OutboundConnector;
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
-import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import java.util.Optional;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.RouteDefinition;
@@ -26,7 +26,7 @@ public abstract class GenericOutboundConnectorBase extends ConnectorBase
     implements OutboundConnectorDefinition {
 
   private final OutboundConnector outboundConnectorAnnotation =
-      DeclarativeHelper.getAnnotationOrThrow(OutboundConnector.class, this);
+      DeclarativeReflectionUtils.getAnnotationOrThrow(OutboundConnector.class, this);
 
   private final String connectorId =
       StringUtils.defaultIfEmpty(

@@ -106,7 +106,7 @@ public class CompositeProcessOrchestrationContext {
    * @see #setProcessResponse(Object, Optional)
    */
   @Synchronized
-  public Optional getProcessResponse() {
+  public Optional<Object> getProcessResponse() {
     return Optional.ofNullable(processResponse);
   }
 
@@ -120,7 +120,8 @@ public class CompositeProcessOrchestrationContext {
    * @see #getProcessResponse()
    */
   @Synchronized
-  public Object setProcessResponse(final Object response, final Optional<StepResultCloner> cloner) {
+  public Object setProcessResponse(
+      final Object response, final Optional<StepResultCloner<Object>> cloner) {
     processResponse = cloner.map(c -> c.apply(response)).orElse(response);
     return processResponse;
   }
@@ -150,7 +151,7 @@ public class CompositeProcessOrchestrationContext {
   void addResponseForStep(
       final IntegrationScenarioDefinition consumer,
       final Object response,
-      final Optional<StepResultCloner> cloner) {
+      final Optional<StepResultCloner<Object>> cloner) {
     final Object maybeClonedResponse = cloner.map(c -> c.apply(response)).orElse(response);
     getResultOfLastStepFromConsumer(consumer.getClass())
         .ifPresent(
@@ -175,7 +176,7 @@ public class CompositeProcessOrchestrationContext {
   void addRequestForStep(
       final IntegrationScenarioDefinition consumer,
       final Object request,
-      final Optional<StepResultCloner> cloner) {
+      final Optional<StepResultCloner<Object>> cloner) {
     final Object maybeClonedRequest = cloner.map(c -> c.apply(request)).orElse(request);
     orchestrationSteps.add(new OrchestrationStep(consumer, maybeClonedRequest, null));
   }

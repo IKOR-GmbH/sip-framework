@@ -34,10 +34,16 @@ public class ConnectorOrchestrator implements Orchestrator<ConnectorOrchestratio
   }
 
   private void defaultResponseTransformer(final RouteDefinition definition) {
-    log.warn(
-        "No response transformation definition has been assigned to connector '{}' in connector-class '{}'",
-        relatedConnector.get().getId(),
-        relatedConnector.get().getClass().getName());
+    ConnectorDefinition connector = relatedConnector.get();
+    connector
+        .getResponseModelClass()
+        .ifPresent(
+            aClass ->
+                log.warn(
+                    "No response transformation definition has been assigned to connector '{}' in connector-class '{}'",
+                    connector.getId(),
+                    connector.getClass().getName()));
+
     definition.process(exchange -> {});
   }
 

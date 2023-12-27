@@ -4,7 +4,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,7 @@ public class TranslationServiceDetailsOnStartup {
   private final TranslateConfiguration translateConfiguration;
 
   /** Display TranslateConfiguration information after application startup */
-  @EventListener(ApplicationReadyEvent.class)
+  @EventListener(ApplicationStartedEvent.class)
   public void logTranslationDetails() {
     log.info("sip.core.translation.on");
     log.info("sip.core.translation.lang_{}", translateConfiguration.getLang());

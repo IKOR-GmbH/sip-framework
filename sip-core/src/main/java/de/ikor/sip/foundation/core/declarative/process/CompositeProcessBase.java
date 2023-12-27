@@ -4,7 +4,7 @@ import de.ikor.sip.foundation.core.declarative.annonation.CompositeProcess;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestrator;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
-import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class CompositeProcessBase implements CompositeProcessDefinition {
   }
 
   private final CompositeProcess processAnnotation =
-      DeclarativeHelper.getAnnotationOrThrow(CompositeProcess.class, this);
+      DeclarativeReflectionUtils.getAnnotationOrThrow(CompositeProcess.class, this);
 
   public final String getId() {
     return processAnnotation.processId();
