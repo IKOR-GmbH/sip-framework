@@ -7,12 +7,14 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.Optional;
 import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 
 /**
  * Helper methods that rely on Java Reflection.
  *
  * <p><em>Intended for internal use only</em>
  */
+@UtilityClass
 public class DeclarativeReflectionUtils {
 
   public static <A extends Annotation> A getAnnotationOrThrow(Class<A> annotation, Object from) {
