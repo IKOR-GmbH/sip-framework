@@ -15,7 +15,7 @@ Usage of the soap-starter reduces boilerplate code and configuration needed to d
 - Bean based configuration
 - CXF generator plugin
 
-## Instalation
+## Installation
 
 If **[SIP Archetype](./archetype.md)** was used during the adapter creation and **useSoap** question was answered positively then there is no need
 to add any dependencies manually.
