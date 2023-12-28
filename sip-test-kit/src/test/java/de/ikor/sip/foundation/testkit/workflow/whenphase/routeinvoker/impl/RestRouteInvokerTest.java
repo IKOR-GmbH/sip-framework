@@ -40,7 +40,8 @@ class RestRouteInvokerTest {
     CamelContext camelContext = mock(CamelContext.class);
     RestTemplateBuilder restTemplateBuilder = mock(RestTemplateBuilder.class);
     restTemplate = mock(RestTemplate.class);
-    restRouteInvoker = new RestRouteInvoker(camelContext, mock(Environment.class), restTemplateBuilder);
+    restRouteInvoker =
+        new RestRouteInvoker(camelContext, mock(Environment.class), restTemplateBuilder);
     exchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
     ResponseEntity<String> routeExpectedResponse =
         new ResponseEntity<>(TEST_RESPONSE, HttpStatus.OK);
@@ -49,10 +50,10 @@ class RestRouteInvokerTest {
     when(restEndpoint.getMethod()).thenReturn("post");
     when(restEndpoint.getPath()).thenReturn("test");
     when(restTemplate.exchange(
-        anyString(),
-        any(HttpMethod.class),
-        any(),
-        ArgumentMatchers.<ParameterizedTypeReference<String>>any()))
+            anyString(),
+            any(HttpMethod.class),
+            any(),
+            ArgumentMatchers.<ParameterizedTypeReference<String>>any()))
         .thenReturn(routeExpectedResponse);
 
     when(exchange.getProperty(Mock.ENDPOINT_ID_EXCHANGE_PROPERTY)).thenReturn(ROUTE_ID);
@@ -64,8 +65,8 @@ class RestRouteInvokerTest {
     Route route = mock(Route.class);
     when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
     when(route.getEndpoint()).thenReturn(restEndpoint);
-
   }
+
   @Test
   void GIVEN_mockedExchangeAndEndpoint_WHEN_executeTask_THEN_verifySendingToGoodEndpointUri() {
     // act
@@ -85,10 +86,12 @@ class RestRouteInvokerTest {
 
     // assert
     assertThat(target).isPresent();
-    verify(restTemplate).exchange( anyString(),
-        eq(HttpMethod.POST),
-        any(),
-        ArgumentMatchers.<ParameterizedTypeReference<String>>any());
+    verify(restTemplate)
+        .exchange(
+            anyString(),
+            eq(HttpMethod.POST),
+            any(),
+            ArgumentMatchers.<ParameterizedTypeReference<String>>any());
   }
 
   @Test
@@ -100,10 +103,12 @@ class RestRouteInvokerTest {
 
     // assert
     assertThat(target).isPresent();
-    verify(restTemplate).exchange( anyString(),
-        eq(HttpMethod.GET),
-        any(),
-        ArgumentMatchers.<ParameterizedTypeReference<String>>any());
+    verify(restTemplate)
+        .exchange(
+            anyString(),
+            eq(HttpMethod.GET),
+            any(),
+            ArgumentMatchers.<ParameterizedTypeReference<String>>any());
   }
 
   @Test
@@ -115,10 +120,11 @@ class RestRouteInvokerTest {
 
     // assert
     assertThat(target).isPresent();
-    verify(restTemplate).exchange( anyString(),
-        eq(HttpMethod.POST),
-        any(),
-        ArgumentMatchers.<ParameterizedTypeReference<String>>any());
+    verify(restTemplate)
+        .exchange(
+            anyString(),
+            eq(HttpMethod.POST),
+            any(),
+            ArgumentMatchers.<ParameterizedTypeReference<String>>any());
   }
-
 }

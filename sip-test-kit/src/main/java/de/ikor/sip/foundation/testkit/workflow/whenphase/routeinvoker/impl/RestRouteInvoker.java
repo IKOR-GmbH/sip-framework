@@ -74,7 +74,8 @@ public class RestRouteInvoker implements RouteInvoker {
   }
 
   private HttpMethod resolveHttpMethod(Endpoint endpoint) {
-    if (endpoint instanceof RestEndpoint restEndpoint && StringUtils.isNotEmpty(restEndpoint.getMethod())) {
+    if (endpoint instanceof RestEndpoint restEndpoint
+        && StringUtils.isNotEmpty(restEndpoint.getMethod())) {
       return HttpMethod.valueOf(restEndpoint.getMethod().toUpperCase());
     }
     return HttpMethod.POST;
