@@ -11,6 +11,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Route;
 import org.apache.camel.component.rest.RestEndpoint;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -26,18 +27,25 @@ class RestRouteInvokerTest {
   private static final String ROUTE_ID = "routeId";
   public static final String TEST_RESPONSE = "test response";
 
-  @Test
-  void GIVEN_mockedExchangeAndEndpoint_WHEN_executeTask_THEN_verifySendingToGoodEndpointUri() {
-    // arrange
+  private RestRouteInvoker restRouteInvoker;
+  private Exchange exchange;
+
+  private RestTemplate restTemplate;
+
+  private RestEndpoint restEndpoint;
+
+  @BeforeEach
+  void setUp() {
+
     CamelContext camelContext = mock(CamelContext.class);
     RestTemplateBuilder restTemplateBuilder = mock(RestTemplateBuilder.class);
-    RestTemplate restTemplate = mock(RestTemplate.class);
-    RestRouteInvoker subject =
+    restTemplate = mock(RestTemplate.class);
+    restRouteInvoker =
         new RestRouteInvoker(camelContext, mock(Environment.class), restTemplateBuilder);
-    RestEndpoint restEndpoint = mock(RestEndpoint.class);
-    Exchange exchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
+    exchange = mock(Exchange.class, RETURNS_DEEP_STUBS);
     ResponseEntity<String> routeExpectedResponse =
         new ResponseEntity<>(TEST_RESPONSE, HttpStatus.OK);
+    restEndpoint = mock(RestEndpoint.class);
     when(restTemplateBuilder.build()).thenReturn(restTemplate);
     when(restEndpoint.getMethod()).thenReturn("post");
     when(restEndpoint.getPath()).thenReturn("test");
@@ -57,12 +65,66 @@ class RestRouteInvokerTest {
     Route route = mock(Route.class);
     when(camelContext.getRoute(ROUTE_ID)).thenReturn(route);
     when(route.getEndpoint()).thenReturn(restEndpoint);
+  }
 
+  @Test
+  void GIVEN_mockedExchangeAndEndpoint_WHEN_executeTask_THEN_verifySendingToGoodEndpointUri() {
     // act
-    Optional<Exchange> target = subject.invoke(exchange);
+    Optional<Exchange> target = restRouteInvoker.invoke(exchange);
 
     // assert
     assertThat(target).isPresent();
     assertThat(target.get().getMessage().getBody(String.class)).isEqualTo(TEST_RESPONSE);
+  }
+
+  @Test
+  void GIVEN_EndpointWithPOSTMethod_WHEN_executeTask_THEN_verifyPOSTmethodUsed() {
+    // arrange
+    when(restEndpoint.getMethod()).thenReturn("post");
+    // act
+    Optional<Exchange> target = restRouteInvoker.invoke(exchange);
+
+    // assert
+    assertThat(target).isPresent();
+    verify(restTemplate)
+        .exchange(
+            anyString(),
+            eq(HttpMethod.POST),
+            any(),
+            ArgumentMatchers.<ParameterizedTypeReference<String>>any());
+  }
+
+  @Test
+  void GIVEN_EndpointWithGETMethod_WHEN_executeTask_THEN_verifyGETmethodUsed() {
+    // arrange
+    when(restEndpoint.getMethod()).thenReturn("get");
+    // act
+    Optional<Exchange> target = restRouteInvoker.invoke(exchange);
+
+    // assert
+    assertThat(target).isPresent();
+    verify(restTemplate)
+        .exchange(
+            anyString(),
+            eq(HttpMethod.GET),
+            any(),
+            ArgumentMatchers.<ParameterizedTypeReference<String>>any());
+  }
+
+  @Test
+  void GIVEN_EndpointWithNullMethod_WHEN_executeTask_THEN_verifyPOSTmethodUsed() {
+    // arrange
+    when(restEndpoint.getMethod()).thenReturn(null);
+    // act
+    Optional<Exchange> target = restRouteInvoker.invoke(exchange);
+
+    // assert
+    assertThat(target).isPresent();
+    verify(restTemplate)
+        .exchange(
+            anyString(),
+            eq(HttpMethod.POST),
+            any(),
+            ArgumentMatchers.<ParameterizedTypeReference<String>>any());
   }
 }

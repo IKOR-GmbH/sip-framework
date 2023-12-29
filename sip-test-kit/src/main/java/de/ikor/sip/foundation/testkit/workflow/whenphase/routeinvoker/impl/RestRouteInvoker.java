@@ -12,6 +12,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.rest.RestEndpoint;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
@@ -47,7 +48,7 @@ public class RestRouteInvoker implements RouteInvoker {
             .build()
             .exchange(
                 createUri(endpoint),
-                HttpMethod.POST,
+                resolveHttpMethod(endpoint),
                 testRequest,
                 new ParameterizedTypeReference<>() {});
     log.trace("sip.testkit.workflow.whenphase.routeinvoker.rest.response_{}", response);
@@ -70,5 +71,13 @@ public class RestRouteInvoker implements RouteInvoker {
 
   private String resolveContextPath() {
     return contextPath.replaceAll("/[*]$", "");
+  }
+
+  private HttpMethod resolveHttpMethod(Endpoint endpoint) {
+    if (endpoint instanceof RestEndpoint restEndpoint
+        && StringUtils.isNotEmpty(restEndpoint.getMethod())) {
+      return HttpMethod.valueOf(restEndpoint.getMethod().toUpperCase());
+    }
+    return HttpMethod.POST;
   }
 }
