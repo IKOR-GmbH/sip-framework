@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.connector;
 
+import de.ikor.sip.foundation.core.declarative.DeclarativeElement;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrationInfo;
 import java.util.Optional;
@@ -18,15 +19,9 @@ import java.util.Optional;
  * @see InboundConnectorDefinition
  * @see OutboundConnectorDefinition
  */
-public sealed interface ConnectorDefinition extends Orchestratable<ConnectorOrchestrationInfo>
+public sealed interface ConnectorDefinition
+    extends Orchestratable<ConnectorOrchestrationInfo>, DeclarativeElement
     permits ConnectorBase, InboundConnectorDefinition, OutboundConnectorDefinition {
-
-  /**
-   * Returns the ID of the connector. Must be unique within the scope of the adapter.
-   *
-   * @return Unique connector identifier
-   */
-  String getId();
 
   /**
    * Returns the type of the connector.
@@ -67,13 +62,4 @@ public sealed interface ConnectorDefinition extends Orchestratable<ConnectorOrch
    *     a response flow
    */
   Optional<Class<?>> getResponseModelClass();
-
-  /**
-   * Returns the path to the documentation resource for this connector. The documentation resource
-   * is a file that contains documentation for the connector, such as a description of the external
-   * system's API.
-   *
-   * @return Path to the documentation resource
-   */
-  String getPathToDocumentationResource();
 }

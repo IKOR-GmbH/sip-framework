@@ -192,39 +192,23 @@ public final class DeclarationsRegistry implements DeclarationsRegistryApi {
   }
 
   private void checkForDuplicateDeclarativeElements() {
-    Set<String> set = new HashSet<>();
-    scenarios.stream()
-        .filter(n -> !set.add(n.getId()))
-        .forEach(
-            scenario ->
-                throwDuplicateException(
-                    scenario.getId(), scenario.getClass().getName(), "integration scenario"));
-    connectors.stream()
-        .filter(n -> !set.add(n.getId()))
-        .forEach(
-            connector ->
-                throwDuplicateException(
-                    connector.getId(), connector.getClass().getName(), "connector"));
-    processes.stream()
-        .filter(n -> !set.add(n.getId()))
-        .forEach(
-            process ->
-                throwDuplicateException(
-                    process.getId(), process.getClass().getName(), "composite process"));
-    connectorGroups.stream()
-        .filter(n -> !set.add(n.getId()))
-        .forEach(
-            connectorGroup ->
-                throwDuplicateException(
-                    connectorGroup.getId(),
-                    connectorGroup.getClass().getName(),
-                    "connector group"));
+    checkForDuplicatesAndThrowError(scenarios, "integration scenario");
+    checkForDuplicatesAndThrowError(connectors, "connector");
+    checkForDuplicatesAndThrowError(processes, "composite process");
+    checkForDuplicatesAndThrowError(connectorGroups, "connector group");
   }
 
-  private void throwDuplicateException(String id, String className, String declarativeElement) {
-    throw SIPFrameworkInitializationException.init(
-        "There is a non-unique %s ID '%s' in class %s. A unique ID should be provided in the element's annotation.",
-        declarativeElement, id, className);
+  private <T extends DeclarativeElement> void checkForDuplicatesAndThrowError(
+      List<T> elements, String elementType) {
+    Set<String> set = new HashSet<>();
+    elements.stream()
+        .filter(n -> !set.add(n.getId()))
+        .forEach(
+            element -> {
+              throw SIPFrameworkInitializationException.init(
+                  "There is a non-unique %s ID '%s' in class %s. A unique ID should be provided in the element's annotation.",
+                  elementType, element.getId(), element.getClass().getName());
+            });
   }
 
   private void checkForUnusedScenarios() {
