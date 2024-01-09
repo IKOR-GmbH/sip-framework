@@ -1,6 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.orchestration.common.dsl;
 
-import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import java.io.Serializable;
 import java.util.function.Function;
 import org.apache.commons.lang3.SerializationUtils;
@@ -17,7 +17,7 @@ import org.apache.commons.lang3.SerializationUtils;
 public interface StepResultCloner<T> extends Function<T, T> {
 
   static <T extends Cloneable> StepResultCloner<T> forCloneable() {
-    return element -> DeclarativeHelper.invokeMethod(element, "clone");
+    return element -> DeclarativeReflectionUtils.invokeMethod(element, "clone");
   }
 
   static <T extends Serializable> StepResultCloner<T> forSerializable() {
@@ -26,6 +26,6 @@ public interface StepResultCloner<T> extends Function<T, T> {
 
   @SuppressWarnings("unchecked")
   static <T> StepResultCloner<T> forCopyConstructor() {
-    return element -> (T) DeclarativeHelper.invokeConstructor(element.getClass(), element);
+    return element -> (T) DeclarativeReflectionUtils.invokeConstructor(element.getClass(), element);
   }
 }

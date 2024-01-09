@@ -2,7 +2,7 @@ package de.ikor.sip.foundation.core.declarative.connectorgroup;
 
 import de.ikor.sip.foundation.core.declarative.annonation.ConnectorGroup;
 import de.ikor.sip.foundation.core.declarative.connector.ConnectorDefinition;
-import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 
 /**
  * Base class for a connector group definition.
@@ -17,7 +17,7 @@ import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
 public class ConnectorGroupBase implements ConnectorGroupDefinition {
 
   private final ConnectorGroup annotation =
-      DeclarativeHelper.getAnnotationOrThrow(ConnectorGroup.class, this);
+      DeclarativeReflectionUtils.getAnnotationOrThrow(ConnectorGroup.class, this);
 
   @Override
   public final String getId() {

@@ -59,6 +59,7 @@ final class RouteGeneratorForConditionalCallScenarioConsumerDefinition<M>
     choiceDef.end();
   }
 
+  @SuppressWarnings("unchecked")
   private <T extends ProcessorDefinition<T>> void buildRouteForStatement(
       final T routeDefinition, final CallableWithinProviderDefinition statement) {
     if (statement instanceof CallScenarioConsumerBaseDefinition callDef) {

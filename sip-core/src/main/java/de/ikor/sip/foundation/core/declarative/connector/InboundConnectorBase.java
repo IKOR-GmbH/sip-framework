@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.core.declarative.connector;
 import static de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper.formatConnectorId;
 
 import de.ikor.sip.foundation.core.declarative.annonation.InboundConnector;
-import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,7 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 public abstract class InboundConnectorBase extends ConnectorBase {
 
   private final InboundConnector inboundConnectorAnnotation =
-      DeclarativeHelper.getAnnotationOrThrow(InboundConnector.class, this);
+      DeclarativeReflectionUtils.getAnnotationOrThrow(InboundConnector.class, this);
 
   private final String connectorId =
       StringUtils.defaultIfEmpty(

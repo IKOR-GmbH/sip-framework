@@ -22,7 +22,7 @@ import org.apache.camel.model.RoutesDefinition;
  * <p><em>For internal use only</em>
  */
 @Slf4j
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes", "unchecked"})
 final class RouteGeneratorForScenarioProvidersDefinition<M> extends RouteGeneratorBase {
   private final ForScenarioProvidersBaseDefinition<?, ?, M> providerDefinition;
   private final Set<IntegrationScenarioProviderDefinition> overallUnhandledProviders;

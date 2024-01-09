@@ -49,7 +49,8 @@ public class RouteGeneratorInternalHelper {
     return element.getUnconditionalStatements();
   }
 
-  public static Optional<StepResultCloner> getStepResultCloner(CallProcessConsumer element) {
+  public static Optional<StepResultCloner<Object>> getStepResultCloner(
+      CallProcessConsumer element) {
     return element.getStepResultCloner();
   }
 

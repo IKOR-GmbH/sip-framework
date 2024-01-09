@@ -11,6 +11,7 @@ import de.ikor.sip.foundation.core.declarative.orchestration.connector.Connector
 import de.ikor.sip.foundation.core.declarative.orchestration.connector.ConnectorOrchestrator;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioDefinition;
 import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.AccessLevel;
@@ -71,7 +72,7 @@ public abstract non-sealed class ConnectorBase
       return Optional.of(requestMappingRouteTransformer);
     }
     final var annotation =
-        DeclarativeHelper.getAnnotationIfPresent(UseRequestModelMapper.class, this);
+        DeclarativeReflectionUtils.getAnnotationIfPresent(UseRequestModelMapper.class, this);
     if (annotation.isPresent()) {
       requestMappingRouteTransformer =
           RequestMappingRouteTransformer.forConnectorWithScenario(this, getScenario());
@@ -90,7 +91,7 @@ public abstract non-sealed class ConnectorBase
       return Optional.of(responseMappingRouteTransformer);
     }
     final var annotation =
-        DeclarativeHelper.getAnnotationIfPresent(UseResponseModelMapper.class, this);
+        DeclarativeReflectionUtils.getAnnotationIfPresent(UseResponseModelMapper.class, this);
     if (annotation.isPresent()) {
       responseMappingRouteTransformer =
           ResponseMappingRouteTransformer.forConnectorWithScenario(this, getScenario());

@@ -1,5 +1,6 @@
 package de.ikor.sip.foundation.core.declarative.process;
 
+import de.ikor.sip.foundation.core.declarative.DeclarativeElement;
 import de.ikor.sip.foundation.core.declarative.orchestration.Orchestratable;
 import de.ikor.sip.foundation.core.declarative.orchestration.process.CompositeProcessOrchestrationInfo;
 import de.ikor.sip.foundation.core.declarative.scenario.IntegrationScenarioConsumerDefinition;
@@ -25,11 +26,8 @@ import java.util.List;
 public interface CompositeProcessDefinition
     extends Orchestratable<CompositeProcessOrchestrationInfo>,
         IntegrationScenarioProviderDefinition,
-        IntegrationScenarioConsumerDefinition {
-
-  String getId();
-
-  String getPathToDocumentationResource();
+        IntegrationScenarioConsumerDefinition,
+        DeclarativeElement {
 
   List<Class<? extends IntegrationScenarioDefinition>> getConsumerDefinitions();
 

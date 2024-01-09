@@ -3,7 +3,7 @@ package de.ikor.sip.foundation.soap.declarative.connector;
 import de.ikor.sip.foundation.core.declarative.connector.GenericOutboundConnectorBase;
 import de.ikor.sip.foundation.core.declarative.model.MarshallerDefinition;
 import de.ikor.sip.foundation.core.declarative.model.UnmarshallerDefinition;
-import de.ikor.sip.foundation.core.declarative.utils.DeclarativeHelper;
+import de.ikor.sip.foundation.core.declarative.utils.DeclarativeReflectionUtils;
 import de.ikor.sip.foundation.core.util.exception.SIPFrameworkInitializationException;
 import de.ikor.sip.foundation.soap.utils.OutboundSOAPMarshallerDefinition;
 import de.ikor.sip.foundation.soap.utils.SOAPEndpointBuilder;
@@ -35,7 +35,7 @@ public abstract class SoapOperationOutboundConnectorBase<T> extends GenericOutbo
     try {
       this.serviceClass =
           (Class<T>)
-              DeclarativeHelper.getClassFromGeneric(
+              DeclarativeReflectionUtils.getClassFromGeneric(
                   getClass(), SoapOperationOutboundConnectorBase.class);
     } catch (Exception e) {
       this.serviceClass = null;

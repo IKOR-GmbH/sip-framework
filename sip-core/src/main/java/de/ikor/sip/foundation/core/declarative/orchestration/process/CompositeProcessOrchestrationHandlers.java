@@ -47,7 +47,7 @@ public class CompositeProcessOrchestrationHandlers {
 
   public static ConsumerResponseHandler handleResponseFromConsumer(
       final IntegrationScenarioDefinition consumer,
-      final Optional<StepResultCloner> stepResultCloner,
+      final Optional<StepResultCloner<Object>> stepResultCloner,
       final Optional<CompositeProcessStepResponseConsumer> responseConsumer) {
     return new ConsumerResponseHandler(consumer, stepResultCloner, responseConsumer);
   }
@@ -140,7 +140,7 @@ public class CompositeProcessOrchestrationHandlers {
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
   static class ConsumerResponseHandler {
     private final IntegrationScenarioDefinition consumer;
-    private final Optional<StepResultCloner> stepResultCloner;
+    private final Optional<StepResultCloner<Object>> stepResultCloner;
     private final Optional<CompositeProcessStepResponseConsumer> responseConsumer;
 
     @Handler

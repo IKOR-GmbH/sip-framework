@@ -22,7 +22,8 @@ class DeclarativeHelperTest {
 
   @Test
   void WHEN_annotationNotPresent_THEN_throwSIPFrameworkException() {
-    assertThatThrownBy(() -> DeclarativeHelper.getAnnotationOrThrow(Test.class, new Random()))
+    assertThatThrownBy(
+            () -> DeclarativeReflectionUtils.getAnnotationOrThrow(Test.class, new Random()))
         .isInstanceOf(SIPFrameworkInitializationException.class)
         .hasMessage(
             "Annotation @%s required on class %s", Test.class.getSimpleName(), Random.class);
@@ -77,7 +78,8 @@ class DeclarativeHelperTest {
 
     // act
     Class<?> genericClass =
-        DeclarativeHelper.getClassFromGeneric(MyExtendedIntegerList.class, ArrayList.class);
+        DeclarativeReflectionUtils.getClassFromGeneric(
+            MyExtendedIntegerList.class, ArrayList.class);
 
     // assert
     assertThat(genericClass.getTypeName()).isEqualTo("java.lang.Integer");
