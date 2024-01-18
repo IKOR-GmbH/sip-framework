@@ -2,9 +2,9 @@
 
 [TOC]
 
-## Upgrade from 3.2.0 to 3.2.1
+## Upgrade from 3.2.0 to 3.3.0
 
-This is a bugfix version, so it's shouldn't introduce any braking changes. 
+This is mostly a dependencies update and bugfix version, so it's shouldn't introduce any braking changes. 
 However, in the previous version, Integration Scenario model validation was triggered conditionally
 depending on the presence of Connector's response model (instead of Integration Scenario's).
 This has been changed, and the response transformation in the connector is now triggered unconditionally as well.
