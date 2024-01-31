@@ -1,5 +1,0 @@
-{
-  "author": "LetoBukarica",
-  "pullrequestId": "246",
-  "message": "Added startup message, fixed build warnings, reorganized utility class and added a common interface for declarative elements to reduce code duplication."
-}

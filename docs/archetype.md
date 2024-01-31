@@ -37,15 +37,22 @@ as they set the properties for the adapter. It is recommended to follow the Mave
 
 After executing given Maven command, you will be requested to insert additional parameters about project structure:
 
+- **connectorGroup1**/**connectorGroup2** are representing names of your connector group packages inside the project. It will also be reflected in the generated package structure (for example - all of the sources for connectorGroup1 will be in the _de.ikor.sip.adapter.sufix.connectorGroup1_ package)
 - **packageSuffix** is used to create project package name by concatenating its value to the **groupId**. There is a strict validation
   for using only lower case letters and should be a single word. This will reflect the generated package structure for the generated project files. (for example - all of the sources will be in the _de.ikor.sip.adapter.sufix_ java package) 
-- **package** (optional) is used to override previous package naming and provide full package name. This can be skipped by leaving value empty.
-  It is strongly recommended to follow package naming convention, otherwise your project will be created but it will have
-  package naming errors.
-- **connectorGroup1**/**connectorGroup2** are representing names of your connector group packages inside the project. It will also be reflected in the generated package structure (for example - all of the sources for connectorGroup1 will be in the _de.ikor.sip.adapter.sufix.connectorGroup1_ package)
 - **useLombok** is used for including or excluding Lombok dependency in adapter. Lombok is included by default. If you wish to exclude lombok you should set 
   useLombok to anything other than 'y' or 'Y'.
 - **useSoap** is used for including or excluding _SIP SOAP Starter_ dependency in adapter. It is useful to include this starter if the adapter is planned to use SOAP since it has pre-built bootstrap elements included. It is false by default.
+- **package** (optional) is used to override previous package naming and provide full package name. This can be skipped by leaving value empty.
+  It is strongly recommended to follow package naming convention, otherwise your project will be created but it will have
+  package naming errors.
+
+
+_Note_: All the parameters can be provided via command line if needed:
+
+```shell
+mvn archetype:generate -DarchetypeGroupId=de.ikor.sip.foundation -DarchetypeArtifactId=sip-archetype -DarchetypeVersion=<latest.sip-framework.version> -DgroupId=de.ikor.sip.adapter -DartifactId=demo -DprojectName=DemoAdapter -Dversion=1.0.0-SNAPSHOT -DconnectorGroup1=group1 -DconnectorGroup2=group2 -DpackageSuffix=project -DuseLombok=y -DuseSoap=n -Dpackage=de.ikor.sip.adapter.demo.project
+```
 
 After a successful build, a project with the following structure will be created:
 

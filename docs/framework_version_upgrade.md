@@ -2,6 +2,15 @@
 
 [TOC]
 
+## Upgrade from 3.2.0 to 3.3.0
+
+This is mostly a dependencies update and bugfix version, so it's shouldn't introduce any braking changes. 
+However, in the previous version, Integration Scenario model validation was triggered conditionally
+depending on the presence of Connector's response model (instead of Integration Scenario's).
+This has been changed, and the response transformation in the connector is now triggered unconditionally as well.
+
+A runtime **validation** error will occur if an Adapter relied on that condition and **didn't conform** to Scenario's **domain model**.
+
 ## Upgrade from 3.1.0 to 3.2.0
 Version 3.2.0 introduces changes in dependencies - most notably Spring 6, Apache Camel 4 and CXF 4. 
 There should be no breaking changes in this release. If the adapter developers relied on deprecated features from underlying frameworks then some changes are necessary but those should be fixed on case-by-case basis.

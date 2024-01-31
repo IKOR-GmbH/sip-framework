@@ -15,10 +15,14 @@ Usage of the soap-starter reduces boilerplate code and configuration needed to d
 - Bean based configuration
 - CXF generator plugin
 
+## Installation
 
-## Usage
+If **[SIP Archetype](./archetype.md)** was used during the adapter creation and **useSoap** question was answered positively then there is no need
+to add any dependencies manually.
 
-Add sip-soap-starter dependency to project.
+If that is not the case, or if the adapter was made before the SOAP support was added to SIP Framework,
+then this manual steps are needed:
+1. Add SIP SOAP Starter dependency to project _pom.xml_ (in the \<dependencies\> section):
 
 ```xml
 <dependency>
@@ -26,6 +30,24 @@ Add sip-soap-starter dependency to project.
   <artifactId>sip-soap-starter</artifactId>
 </dependency>
 ```
+
+2. Add Wsdl4j dependency to the project _pom.xml_ (in the \<dependencies\> section):
+```xml
+<dependency>
+  <groupId>wsdl4j</groupId>
+  <artifactId>wsdl4j</artifactId>
+</dependency>
+```
+
+3. Add CXF Codegen Plugin to the project _pom.xml_ (in the \<build\>\<plugins\> section):
+
+```xml
+<plugin>
+  <groupId>org.apache.cxf</groupId>
+  <artifactId>cxf-codegen-plugin</artifactId>
+</plugin>
+```
+## Usage
 
 Exposed SOAP services (and their respective WSDL) can be seen on the address: **{base_url}/soap-ws** 
 
@@ -120,15 +142,10 @@ Adding a .wsdl file to the adapter's resources and running `mvn compile` will ge
 If the archetype isn't used, then this configuration can be added to the .pom file of the adapter to enable the CXF generator plugin:
 ```xml
 <plugin>
-  <groupId>de.codecentric</groupId>
-  <artifactId>cxf-spring-boot-starter-maven-plugin</artifactId>
-  <version>2.3.0.RELEASE</version>
-  <executions>
-    <execution>
-      <goals>
-        <goal>generate</goal>
-      </goals>
-    </execution>
-  </executions>
+  <groupId>org.apache.cxf</groupId>
+  <artifactId>cxf-codegen-plugin</artifactId>
 </plugin>
 ```
+
+_Note_: Please refer to the _sip-starter-parent_ pom.xml for the default plugin configuration. By default, it scans only *.wsdl files inside _resources_ folder.
+That can be overridden in the adapter's own <plugin> configuration by providing an alternative configuration.
