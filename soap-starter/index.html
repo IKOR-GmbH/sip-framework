@@ -105,6 +105,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="" href="../javadoc/3.3.0/index.html">JavaDoc 3.3.0</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="" href="../javadoc/3.2.0/index.html">JavaDoc 3.2.0</a>
                 </li>
               </ul>
@@ -182,6 +186,7 @@
 <li><a href="#sip-integration-starter">SIP Integration Starter</a><ul>
 <li><a href="#description">Description</a></li>
 <li><a href="#features">Features</a></li>
+<li><a href="#installation">Installation</a></li>
 <li><a href="#usage">Usage</a><ul>
 <li><a href="#inbound-connector">Inbound connector</a></li>
 <li><a href="#outbound-connector">Outbound connector</a></li>
@@ -204,12 +209,33 @@ Usage of the soap-starter reduces boilerplate code and configuration needed to d
 <li>Bean based configuration</li>
 <li>CXF generator plugin</li>
 </ul>
-<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<p>Add sip-soap-starter dependency to project.</p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p>If <strong><a href="../archetype/">SIP Archetype</a></strong> was used during the adapter creation and <strong>useSoap</strong> question was answered positively then there is no need
+to add any dependencies manually.</p>
+<p>If that is not the case, or if the adapter was made before the SOAP support was added to SIP Framework,
+then this manual steps are needed:
+1. Add SIP SOAP Starter dependency to project <em>pom.xml</em> (in the \&lt;dependencies&gt; section):</p>
 <pre class="highlight"><code class="language-xml">&lt;dependency&gt;
   &lt;groupId&gt;de.ikor.sip.foundation&lt;/groupId&gt;
   &lt;artifactId&gt;sip-soap-starter&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+<ol start="2">
+<li>
+<p>Add Wsdl4j dependency to the project <em>pom.xml</em> (in the \&lt;dependencies&gt; section):
+<pre class="highlight"><code class="language-xml">&lt;dependency&gt;
+  &lt;groupId&gt;wsdl4j&lt;/groupId&gt;
+  &lt;artifactId&gt;wsdl4j&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre></p>
+</li>
+<li>
+<p>Add CXF Codegen Plugin to the project <em>pom.xml</em> (in the \&lt;build&gt;\&lt;plugins&gt; section):</p>
+</li>
+</ol>
+<pre class="highlight"><code class="language-xml">&lt;plugin&gt;
+  &lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;
+  &lt;artifactId&gt;cxf-codegen-plugin&lt;/artifactId&gt;
+&lt;/plugin&gt;</code></pre>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <p>Exposed SOAP services (and their respective WSDL) can be seen on the address: <strong>{base_url}/soap-ws</strong> </p>
 <h3 id="inbound-connector">Inbound connector<a class="headerlink" href="#inbound-connector" title="Permanent link">&para;</a></h3>
 <p>One SOAP service has, potentially, multiple methods that are exposed. Each method is represented by a separate SIP connector.
@@ -273,17 +299,11 @@ public class GetCustomersByNameOutboundConnector
 <p>Adding a .wsdl file to the adapter's resources and running <code>mvn compile</code> will generate all the CXF service classes.</p>
 <p>If the archetype isn't used, then this configuration can be added to the .pom file of the adapter to enable the CXF generator plugin:
 <pre class="highlight"><code class="language-xml">&lt;plugin&gt;
-  &lt;groupId&gt;de.codecentric&lt;/groupId&gt;
-  &lt;artifactId&gt;cxf-spring-boot-starter-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;2.3.0.RELEASE&lt;/version&gt;
-  &lt;executions&gt;
-    &lt;execution&gt;
-      &lt;goals&gt;
-        &lt;goal&gt;generate&lt;/goal&gt;
-      &lt;/goals&gt;
-    &lt;/execution&gt;
-  &lt;/executions&gt;
+  &lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;
+  &lt;artifactId&gt;cxf-codegen-plugin&lt;/artifactId&gt;
 &lt;/plugin&gt;</code></pre></p>
+<p><em>Note</em>: Please refer to the <em>sip-starter-parent</em> pom.xml for the default plugin configuration. By default, it scans only *.wsdl files inside <em>resources</em> folder.
+That can be overridden in the adapter's own <plugin> configuration by providing an alternative configuration.</p>
               
             </div>
           </div><footer>
