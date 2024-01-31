@@ -69,8 +69,8 @@
         <spring.boot.version>3.2.1</spring.boot.version>
         <camel.version>4.3.0</camel.version>
         <jackson-jsr310.version>2.12.7</jackson-jsr310.version>
-        <springdoc-openapi.version>1.6.15</springdoc-openapi.version>
-        <springdoc-openapi-starter-webmvc-ui.version>2.0.3</springdoc-openapi-starter-webmvc-ui.version>
+        <springdoc-openapi.version>1.7.0</springdoc-openapi.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
         <swagger-annotation.version>2.2.8</swagger-annotation.version>
         <lombok.version>1.18.30</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>

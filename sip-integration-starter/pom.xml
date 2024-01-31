@@ -60,6 +60,10 @@
                     <artifactId>swagger-models</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>io.swagger.core.v3</groupId>
+                    <artifactId>swagger-core-jakarta</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>io.swagger.parser.v3</groupId>
                     <artifactId>swagger-parser-v3</artifactId>
                 </exclusion>
@@ -93,19 +97,5 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.swagger.core.v3</groupId>
-                    <artifactId>swagger-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.swagger.parser.v3</groupId>
-                    <artifactId>swagger-parser-v3</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-    </dependencies>
+           </dependencies>
 </project>
